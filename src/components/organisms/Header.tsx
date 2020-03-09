@@ -4,12 +4,12 @@ import { NavItemProps } from 'components/atoms/navigation/NavItem';
 import { ROUTES } from 'routes';
 import UserStore from 'store/User/UserStore';
 import Button from 'components/atoms/buttons/Button';
-import { Form } from 'components/atoms/forms';
+import { Form, FormControl } from 'components/atoms/forms';
 
 const Header = () => {
   const {
     state: {
-      UserState: { user, isSigningIn },
+      UserState: { user, isSigningIn = true },
     },
   } = useContext(UserStore);
 
@@ -26,9 +26,30 @@ const Header = () => {
 
   // TODO: Extract component
   const login = () => {
-    if (!isSigningIn) return <Button onClick={login}>Login</Button>;
+    if (!isSigningIn)
+      return (
+        <Button
+          onClick={login}
+          style={{
+            color: '#FFFFFF',
+            backgroundColor: '#008CFF',
+            borderColor: '#008CFF',
+            fontWeight: 500,
+            borderRadius: '40px',
+            fontFamily: 'Rubik',
+            fontSize: '14px',
+            padding: '3px 15px!important',
+          }}
+        >
+          Login
+        </Button>
+      );
 
-    return <Form></Form>;
+    return (
+      <Form>
+        <FormControl size="sm" type="text"></FormControl>
+      </Form>
+    );
   };
 
   return <Navbar items={navItems} login={login} />;
