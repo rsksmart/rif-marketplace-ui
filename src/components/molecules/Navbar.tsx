@@ -10,19 +10,26 @@ import NavBrand from 'components/atoms/navigation/NavBrand';
 import Button from 'components/atoms/buttons/Button';
 import { LogoNavbar } from 'rifui';
 import { ROUTES } from 'routes';
+import { Form } from 'components/atoms/forms';
+import { LinkContainer } from 'react-router-bootstrap';
+import User from 'models/User';
 // import Nav from 'components/atoms/navigation/Nav';
 
 export interface NavbarProps extends BSNavbarProps {
   items: NavItemProps[];
-  login: Function;
+  login: React.ElementType;
 }
 
 const Navbar: FC<NavbarProps> = ({ items, login }) => {
+  const Login = login;
+
   return (
     <BSNavbar bg="white" expand="lg">
-      <BSNavbar.Brand href={ROUTES.LANDING}>
-        <LogoNavbar />
-      </BSNavbar.Brand>
+      <LinkContainer to={ROUTES.LANDING}>
+        <BSNavbar.Brand>
+          <LogoNavbar />
+        </BSNavbar.Brand>
+      </LinkContainer>
       <Nav
         className="mr-auto"
         variant="tabs"
@@ -37,11 +44,13 @@ const Navbar: FC<NavbarProps> = ({ items, login }) => {
         {!!items.length &&
           items.map((item: NavItemProps, i) => (
             <Nav.Item key={item.text + i}>
-              <Nav.Link href={item.to}>{item.text}</Nav.Link>
+              <LinkContainer to={item.to}>
+                <Nav.Link>{item.text}</Nav.Link>
+              </LinkContainer>
             </Nav.Item>
           ))}
       </Nav>
-      <Button onClick={login}>Login</Button>
+      <Login />
     </BSNavbar>
   );
 };
