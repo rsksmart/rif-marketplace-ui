@@ -1,0 +1,76 @@
+version: 2.1
+
+jobs:
+  check:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            # when lock file changes, use increasingly general patterns to restore cache
+            - node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - node-v1-{{ .Branch }}-
+            - node-v1-
+      - run:
+          name: "Install deps"
+          command: npm ci
+      - save_cache:
+          paths:
+            - ~/usr/local/lib/node_modules # location depends on npm version
+          key: node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
+      - run:
+          name: "Commit linting"
+          command: |
+            git config --global user.email "you@example.com"
+            git config --global user.name "Your Name"
+            npx tasegir commitlint --circleci
+      #      - run:
+      #          name: "Dependency check"
+      #          command: npx tasegir dep-check -- --unused --no-dev
+      - run:
+          name: "Code linting"
+          command: npm run lint
+  node-tests:
+    parameters:
+      version:
+        type: string
+    docker:
+      - image: circleci/node:<< parameters.version >>
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            # when lock file changes, use increasingly general patterns to restore cache
+            - node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - node-v1-{{ .Branch }}-
+            - node-v1-
+      - run:
+          name: "Install deps"
+          command: npm ci
+      - save_cache:
+          paths:
+            - ~/usr/local/lib/node_modules # location depends on npm version
+          key: node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
+      - setup_remote_docker
+      - run:
+          name: "Node tests"
+          command: npx nyc -s npm run test
+      - run:
+          name: "Test coverage"
+          command: npx nyc report --reporter=text-lcov > coverage.lcov && npx codecov
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - check
+      - node-tests:
+          version: "10"
+          name: node-10
+      - node-tests:
+          version: "12"
+          name: node-12
+      - node-tests:
+          version: "13"
+          name: node-13

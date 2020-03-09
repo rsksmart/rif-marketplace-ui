@@ -2,8 +2,7 @@
 
 > Main Website for the RIF Marketplace
 
-**Warning: This project is in alpha state.
-
+\*\*Warning: This project is in alpha state.
 
 ## Install
 

@@ -1,0 +1,537 @@
+﻿textarea:focus,
+textarea.form-control:focus,
+input.form-control:focus,
+input[type=text]:focus,
+input[type=password]:focus,
+input[type=email]:focus,
+input[type=number]:focus,
+[type=text].form-control:focus,
+[type=password].form-control:focus,
+[type=email].form-control:focus,
+[type=tel].form-control:focus,
+[contenteditable].form-control:focus {
+    box-shadow: inset 0 -1px 0 #ddd;
+}
+
+
+/*  TEXT    */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 300;
+}
+
+h5 strong,
+h6 strong {
+    font-weight: 700;
+}
+
+h1 strong,
+h2 strong,
+h3 strong,
+h4 strong,
+h1 b,
+h2 b,
+h3 b,
+h4 b {
+    font-weight: 700;
+    color: #008CFF;
+}
+
+h5 strong,
+h6 strong,
+h5 b,
+h6 b {
+    font-weight: 700;
+}
+
+b,
+strong {
+    font-weight: 700;
+}
+
+h1 {
+    font-size: 55px;
+}
+
+h2 {
+    font-size: 30px;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+h4 {
+    font-size: 16px;
+}
+
+h5 {
+    font-size: 14px;
+}
+
+h6 {
+    font-size: 12px;
+}
+
+p {
+    font-family: 'Rubik', sans-serif;
+    color: black;
+    font-size: 16px;
+}
+
+
+.custom-dot {
+  list-style: none;
+}
+
+.custom-dot >li::before {
+    content: "\2022";
+    color: #008CFF;
+    font-weight: bold;
+    display: inline-block;
+    width: 12px;
+    margin-left: -1em;
+    font-size: 20px;
+    position: relative;
+    top: 1px;
+}
+
+.custom-dot >li>ul{list-style: none;}
+
+.custom-dot >li>ul>li:before{
+ content: "\2022";
+    color: #989898;
+    font-weight: bold;
+    display: inline-block;
+    width: 12px;
+    margin-left: -1em;
+    position: relative;
+    top: 2px;
+}
+
+
+
+
+a {
+    color: #008CFF;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #000000;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+
+/* COMPONENTS */
+
+
+/*  ALERT  */
+
+.alert {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    word-break: break-all;
+}
+
+.alert-primary {
+    color: #FFFFFF;
+    background: #71A1FB;
+    border-color: #71A1FB;
+}
+
+.alert-secondary {
+    color: #32B4F0;
+    background: #BEE6FF;
+    border-color: #BEE6FF;
+}
+
+.alert-info {
+    color: #5FDCC8;
+    background: #DFF8F4;
+    border-color: #DFF8F4;
+}
+
+.alert-success {
+    color: #65B436;
+    background: #C8F08C;
+    border-color: #C8F08C;
+}
+
+.alert-danger {
+    color: #FFFFFF;
+    background: #FF6B6B;
+    border-color: #FF6B6B;
+}
+
+.alert-warning {
+    color: #FFAA28;
+    background: #FFDDA9;
+    border-color: #FFDDA9;
+}
+
+.alert-light {
+    color: #333333;
+    background: #EBEBEB;
+    border-color: #EBEBEB;
+}
+
+.alert-dark {
+    color: #FFFFFF;
+    background: #989898;
+    border-color: #989898;
+}
+
+.alert-rsk {
+    color: #FFFFFF;
+    background: #00B520;
+    border-color: #00B520;
+}
+
+.alert-dismissible .close {
+    color: #FFFFFF;
+    opacity: 1;
+    font-weight: 400;
+}
+
+.alert-dismissible .close {
+    padding: 0.75rem 1.75rem;
+}
+
+
+/*  BUTTON  */
+
+.btn {
+    border-radius: 40px;
+    font-family: 'Rubik', sans-serif;
+    font-size: 14px;
+    padding: 3px 15px!important;
+}
+
+.btn:focus,
+.btn:active {
+    border-color: transparent!important;
+    outline: none !important;
+    box-shadow: none;
+}
+
+.btn-primary {
+    color: #FFFFFF;
+    background-color: #008CFF;
+    border-color: #008CFF;
+    font-weight: 500;
+}
+
+.btn-secondary {
+    color: #008CFF;
+    background-color: #FFFFFF;
+    border-color: #FFFFFF;
+    font-weight: 500;
+}
+
+.btn-success {
+    color: #FFFFFF;
+    background-color: #65B436;
+    border-color: #65B436;
+    font-weight: 500;
+}
+
+.btn-info {
+    color: #008CFF;
+    background-color: #FFFFFF;
+    border-color: #008CFF;
+    font-weight: 400;
+}
+
+.btn-light {
+    color: #FFFFFF;
+    background-color: #008CFF;
+    border-color: #008CFF;
+    font-weight: 500;
+}
+
+.btn-primary:hover {
+    color: #008CFF;
+    background-color: #FFFFFF;
+    border-color: #FFFFFF;
+    font-weight: 700;
+    box-shadow: 5px 5px 5px #333333;
+}
+
+.btn-secondary:hover {
+    color: #FFFFFF;
+    background-color: #008CFF;
+    border-color: #008CFF;
+    font-weight: 700;
+    box-shadow: 5px 5px 5px #333333;
+}
+
+.btn-success:hover {
+    color: #65B436;
+    background-color: #FFFFFF;
+    border-color: #FFFFFF;
+    font-weight: 500;
+    box-shadow: 5px 5px 5px #333333
+}
+
+.btn-info:hover {
+    color: #FFFFFF;
+    background-color: #008CFF;
+    border-color: #FFFFFF;
+    font-weight: 400;
+}
+
+.btn-light:hover {
+    color: #008CFF;
+    background-color: #FFFFFF;
+    border-color: #FFFFFF;
+    font-weight: 500;
+    box-shadow: 5px 5px 5px #333333;
+}
+
+.btn-dark:hover {
+    color: #808080;
+    background-color: #FFFFFF;
+    border-color: #FFFFFF;
+    font-weight: 500;
+    box-shadow: 5px 5px 5px #333333;
+}
+
+
+/*  BADGE   */
+
+.badge-warning {
+    color: #FFFFFF;
+    background-color: #FFAA28;
+}
+
+.badge-success {
+    color: #FFFFFF;
+    background-color: #91C832;
+}
+
+.badge-danger {
+    color: #FFFFFF;
+    background-color: #FF4646;
+}
+
+
+/*  PROGRESS  */
+
+.progress {
+    background-color: #E5E5E5;
+}
+
+.progress-bar {
+    background-color: #008DFF;
+}
+
+
+/*  GROW    */
+
+.spinner-grow {
+    background-color: #008DFF;
+}
+
+
+/*  MODAL   */
+
+.modal-header {
+    background-color: #008CFF;
+    color: #FFFFFF;
+    font-family: 'Rubik', sans-serif;
+    padding: 0.50rem 30px;
+}
+
+.modal-title {
+    font-weight: 700;
+}
+
+.modal-header button.close {
+    color: #FFFFFF;
+    opacity: 1;
+}
+
+.modal-body,
+.modal-footer {
+    background-color: #FDFFFD;
+    border-top: none!important;
+}
+
+.modal-footer button.btn.btn-secondary {
+    display: none;
+}
+
+.modal-footer {
+    justify-content: flex-start;
+    padding: 0 30px 15px;
+}
+
+.modal-content {
+    box-shadow: 0px 0px 5px #e6d8e6;
+}
+
+
+/*  TOAST   */
+
+.toast-header {
+    color: black;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+}
+
+.toast-body {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 300;
+    text-align: left;
+}
+
+
+/*  POPOVER */
+
+.popover {
+    border-color: #008CFF;
+}
+
+.popover-header {
+    background-color: white;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+}
+
+.popover-body {
+    background-color: white;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 300;
+}
+
+.popover-body span {
+    font-weight: 500;
+}
+
+.popover .arrow {
+    color: #008CFF;
+}
+
+
+/* INPUT */
+
+.form-control {
+    color: #000000;
+    font-size: 14px;
+    background: transparent;
+    font-weight: 300;
+    border: solid 1px #008CFF;
+}
+
+.form-control::-webkit-input-placeholder {
+    /* Edge */
+    color: #000000;
+    font-weight: 300;
+}
+
+.form-control:-ms-input-placeholder {
+    /* Internet Explorer */
+    color: #000000;
+    font-weight: 300;
+}
+
+.form-control::placeholder {
+    color: #000000;
+    font-weight: 300;
+}
+
+.form-control-reverse {
+    color: #FFFFFF;
+    font-size: 14px;
+    background: transparent;
+    font-weight: 300;
+}
+
+.form-control-reverse::-webkit-input-placeholder {
+    /* Edge */
+    color: #FFFFFF;
+    font-weight: 300;
+}
+
+.form-control-reverse:-ms-input-placeholder {
+    /* Internet Explorer */
+    color: #FFFFFF;
+    font-weight: 300;
+}
+
+.form-control-reverse::placeholder {
+    color: #FFFFFF;
+    font-weight: 300;
+}
+
+.form-control-2 {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-radius: 0px;
+}
+
+.form-control-3 {
+    border: none;
+}
+
+.input-group-text {
+    color: #008CFF;
+    background-color: transparent;
+    border: none;
+    border-radius: 0rem;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: transparent!important;
+}
+
+.input-group>.form-control:not(:last-child),
+.input-group>.custom-select:not(:last-child) {
+    border-radius: 0rem!important;
+}
+
+
+/* DROPDOWN */
+
+option {
+    height: 33px;
+    border: solid 1px white;
+    border-radius: 40px;
+}
+
+
+/* IMAGE */
+
+.img-thumbnail {
+    border: 2px solid #71A1FB;
+    border-radius: 0px;
+}
+
+
+/*TOAST */
+
+.toast-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0)
+}
+
+
+
+
+@media (max-width: 400px) {
+    h1 {
+        font-size: 35px;
+    }
+}
