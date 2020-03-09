@@ -3,15 +3,15 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import Header from 'components/organisms/Header';
 import Routes from 'components/Routes';
-import { AppStoreProvider } from 'store/App/AppStore';
 import Logger from 'utils/Logger';
+import { UserStoreProvider } from 'store/User/UserStore';
 const logger = Logger.getInstance();
 
 logger.info('App -> RNS_SERVER:', process.env.REACT_APP_RNS_SERVER);
 
 const App = () => {
   return (
-    <AppStoreProvider>
+    <UserStoreProvider>
       <Router>
         <div
           data-testid="wrapper"
@@ -30,7 +30,7 @@ const App = () => {
           <div style={{ flexGrow: 1 }} />
         </div>
       </Router>
-    </AppStoreProvider>
+    </UserStoreProvider>
   );
 };
 
