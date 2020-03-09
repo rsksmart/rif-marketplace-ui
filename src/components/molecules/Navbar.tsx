@@ -24,7 +24,7 @@ const Navbar: FC<NavbarProps> = ({ items, login }) => {
   const Login = login;
 
   return (
-    <BSNavbar bg="white" expand="lg">
+    <BSNavbar expand="lg">
       <LinkContainer to={ROUTES.LANDING}>
         <BSNavbar.Brand>
           <LogoNavbar />

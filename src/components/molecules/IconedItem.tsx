@@ -18,7 +18,14 @@ const IconedItem: FC<IconedItemProps> = ({
 }) => {
   return (
     <LinkContainer to={to} className={`iconedItem ${className}`.trim()}>
-      <Button variant="link">
+      <Button
+        variant="link"
+        style={{
+          color: '#008cff',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         <Icon {...iconProps} />
         {text}
       </Button>

@@ -8,7 +8,7 @@ export interface LandingPageTemplateProps {}
 export const LandingPageTemplate: FC<LandingPageTemplateProps> = () => {
   return (
     <PageTemplate className="Landing" style={{ textAlign: 'center' }}>
-      <Heading hLevel={1} style={{ marginTop: '2em' }}>
+      <Heading className="title" hLevel={1} style={{ marginTop: '2em' }}>
         RIF Marketplace
       </Heading>
       RIF Marketplace provides a digital catalogue with a wide range of
