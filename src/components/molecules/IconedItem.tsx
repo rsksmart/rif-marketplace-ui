@@ -1,22 +1,28 @@
 import React, { FC } from 'react';
 import Icon, { IconProps } from 'components/atoms/Icon';
+import { Button } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 
 export interface IconedItemProps {
   className: string;
+  to: string;
   text: string;
   iconProps: IconProps;
 }
 
 const IconedItem: FC<IconedItemProps> = ({
   className = '',
+  to,
   text,
   iconProps,
 }) => {
   return (
-    <div className={`iconedItem ${className}`.trim()}>
-      <Icon {...iconProps} />
-      {text}
-    </div>
+    <LinkContainer to={to} className={`iconedItem ${className}`.trim()}>
+      <Button variant="link">
+        <Icon {...iconProps} />
+        {text}
+      </Button>
+    </LinkContainer>
   );
 };
 

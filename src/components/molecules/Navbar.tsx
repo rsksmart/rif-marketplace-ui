@@ -30,17 +30,7 @@ const Navbar: FC<NavbarProps> = ({ items, login }) => {
           <LogoNavbar />
         </BSNavbar.Brand>
       </LinkContainer>
-      <Nav
-        className="mr-auto"
-        variant="tabs"
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-          marginBottom: 0,
-          border: 0,
-        }}
-      >
+      <Nav className="mr-auto" variant="pills" activeKey="/">
         {!!items.length &&
           items.map((item: NavItemProps, i) => (
             <Nav.Item key={item.text + i}>
@@ -50,7 +40,9 @@ const Navbar: FC<NavbarProps> = ({ items, login }) => {
             </Nav.Item>
           ))}
       </Nav>
-      <Login />
+      <Nav className="justify-content-end">
+        <Login />
+      </Nav>
     </BSNavbar>
   );
 };
