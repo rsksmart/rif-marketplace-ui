@@ -1,0 +1,52 @@
+{
+    "extends": [
+        "tslint:latest",
+        "tslint-react",
+        "tslint-config-airbnb",
+        "tslint-config-prettier"
+    ],
+    "rules": {
+        "import-name": false,
+        "no-this-assignment": [
+            true,
+            {
+                "allow-destructuring": true
+            }
+        ],
+        "no-implicit-dependencies": [
+            true,
+            [
+                "assets",
+                "models",
+                "providers",
+                "views",
+                "rifui",
+                "components",
+                "routes"
+            ]
+        ],
+        "no-submodule-imports": false,
+        "no-empty-interface": false,
+        "object-shorthand-properties-first": false,
+        "no-empty": [
+            true,
+            "allow-empty-functions"
+        ],
+        "no-console": {
+            "severity": "warning",
+            "options": [
+                "debug",
+                "info",
+                "log",
+                "time",
+                "timeEnd",
+                "trace"
+            ]
+        },
+        "variable-name": {
+            "options": [
+                "allow-pascal-case"
+            ]
+        }
+    }
+}
