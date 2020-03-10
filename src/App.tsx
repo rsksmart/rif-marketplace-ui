@@ -24,10 +24,10 @@ const App = () => {
           <Header />
 
           {/* Content of the dapp*/}
-          <div style={{ paddingTop: '1em' }}>
-            <Routes />
-          </div>
-          <div style={{ flexGrow: 1 }} />
+          {/* <div style={{ paddingTop: '1em' }}> */}
+          <Routes />
+          {/* </div> */}
+          {/* <div style={{ flexGrow: 1 }} /> */}
         </div>
       </Router>
     </UserStoreProvider>

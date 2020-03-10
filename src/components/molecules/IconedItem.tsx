@@ -17,7 +17,7 @@ const IconedItem: FC<IconedItemProps> = ({
   iconProps,
 }) => {
   return (
-    <LinkContainer to={to} className={`iconedItem ${className}`.trim()}>
+    <LinkContainer to={to} className={`iconedItem ${className}`}>
       <Button
         variant="link"
         style={{

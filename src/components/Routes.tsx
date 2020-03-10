@@ -6,6 +6,7 @@ import NotFound from 'components/pages/NotFound';
 import { ROUTES } from 'routes';
 import Logger from 'utils/Logger';
 import { LandingPage } from './pages/LandingPage';
+import DomainsPage from './pages/DomainsPage';
 
 const logger = Logger.getInstance();
 
@@ -25,6 +26,7 @@ const Routes = () => {
   return (
     <Switch>
       <Route exact={true} path={ROUTES.LANDING} component={LandingPage} />
+      <Route exact={true} path={ROUTES.DOMAINS} component={DomainsPage} />
       <Route component={NotFound} />
     </Switch>
   );
