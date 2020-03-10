@@ -1,22 +1,34 @@
 import React, { FC } from 'react';
+import rifDir from 'rifui/assets/rifDir.png';
+import rifCom from 'rifui/assets/rifCom.png';
+import rifGat from 'rifui/assets/rifGat.png';
+import rifMar from 'rifui/assets/rifMar.png';
+import rifPay from 'rifui/assets/rifPay.png';
+import rifSto from 'rifui/assets/rifSto.png';
 
-export enum IconsEnum {
-  BLANK = 'blank',
-}
-
-export interface IconProps {
-  name: IconsEnum;
-}
-
-const styles = {
-  icon: {
-    width: 48,
-    height: 48 * 2,
-  },
+export const Icons = {
+  DOMAINS: rifDir,
+  COMMUNICATIONS: rifCom,
+  GATEWAY: rifGat,
+  MARKETPLACE: rifGat,
+  PAYMENTS: rifPay,
+  STORAGE: rifSto,
 };
 
-const Icon: FC<IconProps> = () => {
-  return <div style={styles.icon}></div>;
+export interface IconProps {
+  name: string;
+}
+
+const Icon: FC<IconProps> = ({ name }) => {
+  return (
+    <img
+      style={{
+        width: 100,
+        height: 75,
+      }}
+      src={name}
+    />
+  );
 };
 
 export default Icon;

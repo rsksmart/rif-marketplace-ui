@@ -1,6 +1,6 @@
 import React from 'react';
 import IconedItem, { IconedItemProps } from 'components/molecules/IconedItem';
-import { IconsEnum } from 'components/atoms/Icon';
+import { Icons } from 'components/atoms/Icon';
 import Heading from 'components/atoms/Heading';
 import { ROUTES } from 'routes';
 
@@ -10,31 +10,31 @@ function ServiceCategories() {
       className: 'nameService',
       to: ROUTES.DOMAINS,
       text: 'Name Service',
-      iconProps: { name: IconsEnum.BLANK },
+      iconProps: { name: Icons.DOMAINS },
     },
     {
       className: 'storage',
       to: ROUTES.STORAGE,
       text: 'Storage',
-      iconProps: { name: IconsEnum.BLANK },
+      iconProps: { name: Icons.STORAGE },
     },
     {
       className: 'payments',
       to: ROUTES.LANDING,
       text: 'Payments',
-      iconProps: { name: IconsEnum.BLANK },
+      iconProps: { name: Icons.PAYMENTS },
     },
     {
       className: 'dataService',
       to: ROUTES.LANDING,
       text: 'Data Services',
-      iconProps: { name: IconsEnum.BLANK },
+      iconProps: { name: Icons.GATEWAY },
     },
     {
       className: 'communications',
       to: ROUTES.LANDING,
       text: 'Communications',
-      iconProps: { name: IconsEnum.BLANK },
+      iconProps: { name: Icons.COMMUNICATIONS },
     },
   ];
 
