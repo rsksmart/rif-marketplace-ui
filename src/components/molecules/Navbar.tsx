@@ -24,13 +24,13 @@ const Navbar: FC<NavbarProps> = ({ items, login }) => {
   const Login = login;
 
   return (
-    <BSNavbar expand="lg">
+    <BSNavbar expand="lg" sticky="top">
       <LinkContainer to={ROUTES.LANDING}>
         <BSNavbar.Brand>
           <LogoNavbar />
         </BSNavbar.Brand>
       </LinkContainer>
-      <Nav className="mr-auto" variant="pills" activeKey="/">
+      <Nav className="mr-auto flex-row" variant="pills" activeKey="/">
         {!!items.length &&
           items.map((item: NavItemProps, i) => (
             <Nav.Item key={item.text + i}>
