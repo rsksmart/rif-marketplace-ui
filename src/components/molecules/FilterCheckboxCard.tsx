@@ -14,11 +14,9 @@ const FilterCheckboxCard: FC<FilterCheckboxCardProps> = ({
 }) => {
   return (
     <div className={('filter-checkbox-card ' + className).trim()}>
-      <Container>
-        {items.map((item: CheckboxProps) => (
-          <Checkbox {...item} />
-        ))}
-      </Container>
+      {items.map((item: CheckboxProps) => (
+        <Checkbox {...item} />
+      ))}
     </div>
   );
 };

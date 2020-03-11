@@ -28,7 +28,7 @@ const FilterInput: FC<FilterInputProps> = ({
         boxSizing: 'border-box',
       }}
     >
-      <FormControl value={value} onChange={handleChange} name={name} />
+      <FormControl value={value} onChange={handleChange} name={name} readOnly />
       <InputGroupAppend>
         <InputGroupText>{append}</InputGroupText>
       </InputGroupAppend>
