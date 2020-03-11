@@ -6,14 +6,9 @@ import {
 } from 'react-bootstrap';
 
 import { NavItemProps } from 'components/atoms/navigation/NavItem';
-import NavBrand from 'components/atoms/navigation/NavBrand';
-import Button from 'components/atoms/buttons/Button';
 import { LogoNavbar } from 'rifui';
 import { ROUTES } from 'routes';
-import { Form } from 'components/atoms/forms';
 import { LinkContainer } from 'react-router-bootstrap';
-import User from 'models/User';
-// import Nav from 'components/atoms/navigation/Nav';
 
 export interface NavbarProps extends BSNavbarProps {
   items: NavItemProps[];
@@ -24,7 +19,10 @@ const Navbar: FC<NavbarProps> = ({ items, login }) => {
   const Login = login;
 
   return (
-    <BSNavbar expand="lg" sticky="top">
+    <BSNavbar
+      style={{ border: '1px solid #ced4da', borderRadius: '.25rem' }}
+      expand="lg"
+    >
       <LinkContainer to={ROUTES.LANDING}>
         <BSNavbar.Brand>
           <LogoNavbar />
