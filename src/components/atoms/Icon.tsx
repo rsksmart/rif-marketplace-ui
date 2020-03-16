@@ -10,7 +10,7 @@ export const Icons = {
   DOMAINS: rifDir,
   COMMUNICATIONS: rifCom,
   GATEWAY: rifGat,
-  MARKETPLACE: rifGat,
+  MARKETPLACE: rifMar,
   PAYMENTS: rifPay,
   STORAGE: rifSto,
 };
