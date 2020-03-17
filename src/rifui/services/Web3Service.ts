@@ -15,26 +15,24 @@ export enum EProvider {
 }
 
 export function getWeb3(provider: EProvider = EProvider.METAMASK) {
-  return new Promise<Web3>((resolve, reject) => {
+  return new Promise<Web3>(async (resolve, reject) => {
     switch (provider) {
       // Injected Web3 wallet like MetaMask
       case EProvider.METAMASK: {
-        window.addEventListener('load', async () => {
-          // New MetaMask
-          if (window.ethereum) {
-            const web3 = new Web3(window.ethereum);
-            try {
-              await window.ethereum.enable();
-              resolve(web3);
-            } catch (error) {
-              reject(error);
-            }
+        // New MetaMask
+        if (window.ethereum) {
+          const web3 = new Web3(window.ethereum);
+          try {
+            await window.ethereum.enable();
+            resolve(web3);
+          } catch (error) {
+            reject(error);
           }
-          // Older versions of MetaMask or other
-          else if (window.web3) {
-            resolve(new Web3(window.web3.currentProvider));
-          } else reject(new Error('No injected web3 found'));
-        });
+        }
+        // Older versions of MetaMask or other
+        else if (window.web3) {
+          resolve(new Web3(window.web3.currentProvider));
+        } else reject(new Error('No injected web3 found'));
         break;
       }
 
