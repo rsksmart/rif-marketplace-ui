@@ -3,8 +3,21 @@ import React, { useContext } from 'react';
 import { NavItemProps } from 'components/atoms/navigation/NavItem';
 import { ROUTES } from 'routes';
 import UserStore from 'store/User/UserStore';
-import Button from 'components/atoms/buttons/Button';
-import { Form, FormControl } from 'components/atoms/forms';
+import Account from 'rifui/components/Account';
+import Web3Provider from 'rifui/providers/Web3Provider';
+
+const Login = () => (
+  <Web3Provider.Consumer>
+    {({ state: { web3, networkName, accounts }, actions: { setProvider } }) => (
+      <Account
+        web3={web3}
+        networkName={networkName}
+        accounts={accounts}
+        setProvider={setProvider}
+      />
+    )}
+  </Web3Provider.Consumer>
+);
 
 const Header = () => {
   const {
@@ -24,35 +37,7 @@ const Header = () => {
     },
   ];
 
-  // TODO: Extract component
-  const login = () => {
-    if (!isSigningIn)
-      return (
-        <Button
-          onClick={login}
-          style={{
-            color: '#FFFFFF',
-            backgroundColor: '#008CFF',
-            borderColor: '#008CFF',
-            fontWeight: 500,
-            borderRadius: '40px',
-            fontFamily: 'Rubik',
-            fontSize: '14px',
-            padding: '3px 15px!important',
-          }}
-        >
-          Login
-        </Button>
-      );
-
-    return (
-      <Form>
-        <FormControl size="sm" type="text"></FormControl>
-      </Form>
-    );
-  };
-
-  return <Navbar items={navItems} login={login} />;
+  return <Navbar items={navItems} login={Login} />;
 };
 
 export default Header;
