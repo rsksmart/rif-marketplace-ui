@@ -8,7 +8,7 @@ export interface IWeb3Provider {
   state: {
     provider: EProvider | null;
     web3: Web3 | null;
-    accounts: string[] | string | null;
+    account: string | null;
     networkName: string | null;
   };
   actions: {
@@ -19,7 +19,7 @@ export interface IWeb3Provider {
 const defaultState = {
   provider: null,
   web3: null,
-  accounts: null,
+  account: null,
   networkName: null,
 };
 
@@ -34,7 +34,7 @@ interface IWeb3ProviderProps {}
 interface IWeb3ProviderState {
   provider: EProvider | null;
   web3: Web3 | null;
-  accounts: string[] | string | null;
+  account: string | null;
   networkName: string | null;
 }
 
@@ -78,12 +78,15 @@ class Web3Provider extends Component<IWeb3ProviderProps, IWeb3ProviderState> {
     try {
       const web3 = await getWeb3(provider);
       const accounts = await web3.eth.getAccounts();
+      let account: string;
+      if (Array.isArray(accounts)) account = accounts[0];
+      else account = accounts;
       let networkId = await web3.eth.net.getId();
       if (networkId === 1) networkId = await web3.eth.getChainId();
       this.setState({
         web3,
         provider,
-        accounts,
+        account,
         networkName: getNetworkName(networkId),
       });
     } catch (e) {
@@ -92,7 +95,7 @@ class Web3Provider extends Component<IWeb3ProviderProps, IWeb3ProviderState> {
   }
 
   public render() {
-    const { provider, web3, accounts, networkName } = this.state;
+    const { provider, web3, account, networkName } = this.state;
     const { setProvider } = this;
 
     return (
@@ -104,7 +107,7 @@ class Web3Provider extends Component<IWeb3ProviderProps, IWeb3ProviderState> {
           state: {
             provider,
             web3,
-            accounts,
+            account,
             networkName,
           },
         }}
