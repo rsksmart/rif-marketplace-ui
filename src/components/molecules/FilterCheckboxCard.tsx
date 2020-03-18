@@ -1,7 +1,6 @@
-import React, { FC } from 'react';
-import { Container } from 'react-bootstrap';
-import {} from 'react-bootstrap';
 import Checkbox, { CheckboxProps } from 'components/atoms/forms/Checkbox';
+import React, { FC } from 'react';
+import {} from 'react-bootstrap';
 
 export interface FilterCheckboxCardProps {
   className?: string;
@@ -14,8 +13,8 @@ const FilterCheckboxCard: FC<FilterCheckboxCardProps> = ({
 }) => {
   return (
     <div className={('filter-checkbox-card ' + className).trim()}>
-      {items.map((item: CheckboxProps) => (
-        <Checkbox {...item} />
+      {items.map((item: CheckboxProps, i) => (
+        <Checkbox {...item} key={item.id || i} />
       ))}
     </div>
   );

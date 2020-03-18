@@ -11,6 +11,7 @@ import { CheckboxProps } from 'components/atoms/forms/Checkbox';
 
 export interface MarketFilterProps {
   className?: string;
+  filters: {}[];
 }
 
 const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
