@@ -1,43 +1,25 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { EProvider } from 'rifui/services/Web3Service';
+import LoginOption from './LoginOption';
+import { shortenAddress } from '../utils';
+import Web3 from 'web3';
 
-const Option = ({ text, onClick, disabled = false }) => (
-  <>
-    {disabled && (
-      <div
-        style={{
-          padding: 5,
-          margin: 5,
-          border: '1px solid #ccc',
-          borderRadius: '4px',
-          color: '#ccc',
-          cursor: 'default',
-          textAlign: 'center',
-        }}
-      >
-        {text}
-      </div>
-    )}
-    {!disabled && (
-      <div
-        style={{
-          padding: 5,
-          margin: 5,
-          border: '1px solid #222',
-          borderRadius: '4px',
-          cursor: 'pointer',
-          textAlign: 'center',
-        }}
-        onClick={onClick}
-      >
-        {text}
-      </div>
-    )}
-  </>
-);
+interface IProps {
+  web3: Web3 | null;
+  networkName: string | null;
+  account: string | null;
+  setProvider: (provider: EProvider) => void;
+  providers?: EProvider[];
+}
 
-export default ({ web3, networkName, accounts, setProvider }) => {
+export default ({
+  web3,
+  networkName,
+  account,
+  setProvider,
+  providers,
+}: IProps) => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -52,10 +34,18 @@ export default ({ web3, networkName, accounts, setProvider }) => {
           border: '1px solid #222',
           padding: '5px',
           cursor: 'pointer',
+          fontSize: '12px',
+          width: '250px',
+          height: '40px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'nowrap',
         }}
       >
-        {!web3 && 'Connect wallet'}
-        {web3 && `${networkName} ${accounts}`}
+        {!web3 && <div>Connect wallet</div>}
+        {web3 && <div>{networkName}</div>}
+        {web3 && account && <div>{shortenAddress(account)}</div>}
       </div>
 
       <Modal show={show} onHide={handleClose}>
@@ -67,36 +57,17 @@ export default ({ web3, networkName, accounts, setProvider }) => {
               listStyle: 'none',
             }}
           >
-            <Option
-              text={'MetaMask'}
-              onClick={() => {
-                setProvider(EProvider.METAMASK);
-                handleClose();
-              }}
-            />
-            <Option
-              text={'Ledger'}
-              disabled
-              onClick={() => {
-                setProvider(EProvider.LEDGER);
-                handleClose();
-              }}
-            />
-            <Option
-              text={'Trezor'}
-              disabled
-              onClick={() => {
-                setProvider(EProvider.TREZOR);
-                handleClose();
-              }}
-            />
-            <Option
-              text={'localhost:4444'}
-              onClick={() => {
-                setProvider(EProvider.LOCAL);
-                handleClose();
-              }}
-            />
+            {(providers || [EProvider.METAMASK, EProvider.LOCAL]).map(
+              provider => (
+                <LoginOption
+                  text={provider}
+                  onClick={() => {
+                    setProvider(provider);
+                    handleClose();
+                  }}
+                />
+              ),
+            )}
           </div>
         </Modal.Body>
         <Modal.Footer>

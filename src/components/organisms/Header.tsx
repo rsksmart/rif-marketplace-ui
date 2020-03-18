@@ -8,11 +8,11 @@ import Web3Provider from 'rifui/providers/Web3Provider';
 
 const Login = () => (
   <Web3Provider.Consumer>
-    {({ state: { web3, networkName, accounts }, actions: { setProvider } }) => (
+    {({ state: { web3, networkName, account }, actions: { setProvider } }) => (
       <Account
         web3={web3}
         networkName={networkName}
-        accounts={accounts}
+        account={account}
         setProvider={setProvider}
       />
     )}
