@@ -3,10 +3,14 @@ import React, { Dispatch } from 'react';
 import Middleware from 'store/storeUtils/middleware';
 import { MarketAction } from './marketActions';
 import marketReducer from './marketReducer';
-import { MarketData } from 'models/Market';
+import { MarketItemType } from 'models/Market';
 
 export interface IMarketState {
-  data: MarketData;
+  // TODO: Extract Listings
+  listings: {
+    domainListing: MarketItemType[];
+    storageListing: MarketItemType[];
+  };
 }
 
 interface IMarketStoreProps {
@@ -15,9 +19,9 @@ interface IMarketStoreProps {
 }
 
 export const initialState: IMarketState = {
-  data: {
-    headers: [],
-    content: [],
+  listings: {
+    domainListing: [],
+    storageListing: [],
   },
 };
 
