@@ -1,8 +1,8 @@
-import { getMarketItem } from 'api/rif-marketplace-cache/cacheController';
+import { getItem } from 'api/rif-marketplace-cache/cacheController';
 import { APP_ACTIONS } from 'store/App/appActions';
 import { MarketItem } from 'models/Market';
 
-export const getItem = async (
+export const getMarketItem = async (
     item: {
         item_id: string,
         itemType: string //TODO: make enum
@@ -19,7 +19,7 @@ export const getItem = async (
   payload: { isLoading: true, message: `Getting item id ${item_id}` },
   })
   try {
-    marketItem = await getMarketItem(item_id, itemType)
+    marketItem = await getItem(item_id, itemType)
       
   } catch (err) {
     error = err

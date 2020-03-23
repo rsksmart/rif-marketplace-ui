@@ -60,6 +60,7 @@ export default ({
             {(providers || [EProvider.METAMASK, EProvider.LOCAL]).map(
               provider => (
                 <LoginOption
+                  key={provider}
                   text={provider}
                   onClick={() => {
                     setProvider(provider);
