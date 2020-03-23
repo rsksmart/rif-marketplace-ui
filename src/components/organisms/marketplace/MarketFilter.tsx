@@ -3,14 +3,15 @@ import { Formik } from 'formik';
 
 import './MarketFilter.css';
 import MarketFilterItem from 'components/molecules/MarketFilterItem';
-import Accordion from 'components/molecules/Accordion';
+// import Accordion from 'components/molecules/Accordion';
+// .ito ^
 import { Form, FormControl } from 'components/atoms/forms';
 import FilterSliderCard from 'components/molecules/FilterSliderCard';
 import FilterCheckboxCard from 'components/molecules/FilterCheckboxCard';
 import { CheckboxProps } from 'components/atoms/forms/Checkbox';
 
-import { RangeSlider } from 'rifui';
 import RangeSliderWithInputs from 'components/molecules/RangeSliderWithInputs';
+import { Accordion } from 'rifui';
 
 export interface MarketFilterProps {
   className?: string;
@@ -25,8 +26,8 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
   const minPriceVal = -10;
   const maxPriceVal = 110;
   const sizeUnit = 'GB';
-  const sizeMin = '0';
-  const sizeMax = '100';
+  const sizeMin = 0;
+  const sizeMax = 100;
   const minSizeVal = -10;
   const maxSizeVal = 110;
   const curRif: CheckboxProps = {
@@ -68,8 +69,8 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
         initialValues={{
           priceMin: priceMin,
           priceMax: priceMax,
-          sizeMin: sizeMin.toString(),
-          sizeMax: sizeMax.toString(),
+          sizeMin: sizeMin,
+          sizeMax: sizeMax,
           curRif: curRif.checked,
           curRbtc: curRbtc.checked,
           curDoc: curDoc.checked,
@@ -108,11 +109,14 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
               <FormControl onChange={formik.handleChange} name="search" />
               <MarketFilterItem name="Price">
                 <Accordion
+                  id="price"
                   className="Price"
+                  expanded={true}
                   style={{
                     display: 'flex',
                     flexDirection: 'row',
                   }}
+                  title="Price"
                 >
                   <RangeSliderWithInputs
                     values={{
@@ -125,7 +129,7 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
                     className="w-100"
                   // handleChange={formik.handleChange}
                   />
-                  <FilterSliderCard
+                  {/* <FilterSliderCard
                     values={{
                       start: formik.values.priceMin.toString(),
                       end: formik.values.priceMax.toString(),
@@ -134,28 +138,50 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
                     maxVal={maxPriceVal}
                     handleChange={formik.handleChange}
                     unit={priceUnit}
-                  />
+                  /> */}
                 </Accordion>
               </MarketFilterItem>
               <MarketFilterItem name="Currency">
-                <Accordion className="Curreny">
+                <Accordion
+                  id="currency"
+                  className="Currency"
+                  expanded={true}
+                  title="Currency">
                   <FilterCheckboxCard items={currencyItems} />
                 </Accordion>
               </MarketFilterItem>
               <MarketFilterItem name="Storage Type">
-                <Accordion className="Storage Type">
+                <Accordion
+                  id="storage_type"
+                  className="Storage Type"
+                  expanded={true}
+                  title="Storage Type">
                   <FilterCheckboxCard items={storageTypeItems} />
                 </Accordion>
               </MarketFilterItem>
               <MarketFilterItem name="Size">
                 <Accordion
+                  id="size"
                   className="Size"
+                  expanded={true}
                   style={{
                     display: 'flex',
                     flexDirection: 'row',
                   }}
+                  title="Size"
                 >
-                  <FilterSliderCard
+                  <RangeSliderWithInputs
+                    values={{
+                      start: formik.values.sizeMin,
+                      end: formik.values.sizeMax
+                    }}
+                    max={maxSizeVal}
+                    min={minSizeVal}
+                    units={sizeUnit}
+                    className="w-100"
+                  // handleChange={formik.handleChange}
+                  />
+                  {/* <FilterSliderCard
                     values={{
                       start: formik.values.sizeMin,
                       end: formik.values.sizeMax,
@@ -164,7 +190,7 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
                     maxVal={maxSizeVal}
                     handleChange={formik.handleChange}
                     unit={sizeUnit}
-                  />
+                  /> */}
                 </Accordion>
               </MarketFilterItem>
             </Form>
