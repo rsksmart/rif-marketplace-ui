@@ -1,61 +1,48 @@
-import { addMarketItem, updateMarketItem, getMarketItem } from './cacheController';
+import { addItem, updateItem, getItem } from './cacheController';
 import { DomainItemType } from 'models/Market';
 import { domainListing } from 'models/marketItems/DomainItem';
 import LocalStorage from 'utils/LocalStorage'
 const persistence = LocalStorage.getInstance()
 
-
-// const localStorageMock = {
-//   getItem: jest.fn(),
-//   setItem: jest.fn(),
-//   removeItem: jest.fn(),
-//   clear: jest.fn(),
-// };
-
-// const localStorageSetItem_spy = jest.spyOn(window.localStorage.__proto__, 'setItem');
 const persistenceSpy = {
     getItem: jest.spyOn(persistence, 'getItem'),
     setItem: jest.spyOn(persistence, 'setItem'),
 }
 
-// globalAny.localStorage = localStorageMock;
-
 describe('api/cacheController', () => {
     const ItemType = {
-        storage: 'storage',
-        domain: 'domain'
+        storageListings: 'storageListings',
+        domainListings: 'domainListings'
     }
 
     beforeEach(() => {
-        window.localStorage.clear()
+        persistence.clear()
     })
 
     test('adds item to cache', () => {
         const item: DomainItemType = domainListing[0];
-        addMarketItem(item, ItemType.domain);
+        addItem(item, ItemType.domainListings);
         
-        expect(persistenceSpy.setItem).toBeCalledWith(ItemType.domain, [item]);
-        // expect(localStorage.setItem).toBeCalledWith(ItemType.domain, `[${JSON.stringify(item)}]`);
-        // expect(localStorageSetItem_spy).toBeCalledWith(ItemType.domain, `[${JSON.stringify(item)}]`);
+        expect(persistenceSpy.setItem).toBeCalledWith(ItemType.domainListings, [item]);
     })
 
     test('updates item in cache', () => {
         const item: DomainItemType = domainListing[0];
-        addMarketItem(item, ItemType.domain)
+        addItem(item, ItemType.domainListings)
 
         const newItem = item;
         newItem.currency = 'GBP';
 
-        updateMarketItem(item._id, newItem, ItemType.domain);
+        updateItem(item._id, newItem, ItemType.domainListings);
 
-        expect(persistenceSpy.setItem).toBeCalledWith(ItemType.domain, [newItem]);
-        // expect(localStorage.setItem).toBeCalledWith(ItemType.domain, `[${JSON.stringify(newItem)}]`);
+        expect(persistenceSpy.setItem).toBeCalledWith(ItemType.domainListings, [newItem]);
     })
 
-    test('get items', () => {
+    test('get item from cache', () => {
         const expectedItem: DomainItemType = domainListing[0];
-        addMarketItem(expectedItem, ItemType.domain);
+        addItem(expectedItem, ItemType.domainListings);
 
-        getMarketItem(expectedItem._id, ItemType.domain).then(item => expect(item).toBe(expectedItem))
+        expect(persistenceSpy.getItem).toBeCalledWith(ItemType.domainListings);
+        getItem(expectedItem._id, ItemType.domainListings).then(item => expect(item).toStrictEqual(expectedItem))
     })
 })

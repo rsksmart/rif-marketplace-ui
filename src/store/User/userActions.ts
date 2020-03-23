@@ -1,5 +1,5 @@
-import { IAction } from 'store/storeUtils/interfaces'
-import User from 'models/User'
+import User from 'models/User';
+import { IAction } from 'store/storeUtils/interfaces';
 
 export enum USER_ACTIONS {
   LOGIN = 'LOGIN',

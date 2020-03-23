@@ -17,9 +17,10 @@ export const Icons = {
 
 export interface IconProps {
   name: string;
+  alt?: string;
 }
 
-const Icon: FC<IconProps> = ({ name }) => {
+const Icon: FC<IconProps> = ({ name, alt }) => {
   return (
     <img
       style={{
@@ -27,7 +28,7 @@ const Icon: FC<IconProps> = ({ name }) => {
         height: 75,
       }}
       src={name}
-      alt={`icon-${name}`}
+      alt={alt || name}
     />
   );
 };

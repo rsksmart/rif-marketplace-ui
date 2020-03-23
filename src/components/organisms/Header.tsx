@@ -19,6 +19,11 @@ const Login = () => (
 );
 
 const Header = () => {
+  // const {
+  //   state: {
+  //     UserState: { user, isSigningIn = true },
+  //   },
+  // } = useContext(UserStore);
 
   const navItems: NavItemProps[] = [
     {

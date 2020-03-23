@@ -1,5 +1,5 @@
 import React from 'react';
-import logo_full_blk from '../../assets/logo-full-blk.svg';
+import logo_full_blk from './assets/logo-full-blk.svg';
 
 interface ILogo extends React.Props<HTMLImageElement> {
   alt?: string;
