@@ -4,6 +4,8 @@ import {
   MARKET_ACTIONS,
   MarketAction,
   MarketPayload,
+  ItemPayload,
+  FilterPayload,
 } from './marketActions'
 import { initialState, IMarketState } from './MarketStore'
 
@@ -25,10 +27,28 @@ type IMarketActions = {
 }
 
 const {
-  NOOP
+  NOOP,
+  GET_ITEM,
+  FILTER_ITEMS
 } = MARKET_ACTIONS
 
 const marketActions: IMarketActions = {
-  [NOOP]: (state: IMarketState, _: MarketPayload) => state
+  [NOOP]: (state: IMarketState, _: MarketPayload) => state,
+  [GET_ITEM]: (state: IMarketState, payload: ItemPayload) => {
+    const newState = state;
+    // const { itemType, item_id } = payload;
+    return newState;
+  },
+  [FILTER_ITEMS]: (state: IMarketState, payload: FilterPayload) => {
+    const { filterType, filterData } = payload;
+    const {filterParam, itemType } = filterData;
+
+    const itemCollection = persistence.getItem(itemType);
+    const filteredItems = filterType(filterParam, itemCollection);
+    return {
+      ...state,
+      filteredItems
+    }
+  }
 }
 
