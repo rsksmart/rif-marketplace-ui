@@ -2,15 +2,19 @@ import React, { FC } from 'react';
 import { Table } from 'react-bootstrap';
 
 import './Marketplace.css';
-import { MarketData } from 'models/Market';
+import { MarketItemType } from 'models/Market';
 
 export interface MarketplaceProps {
   className?: string;
-  data: MarketData;
+  items: MarketItemType[];
+  headers: string[];
 }
 
-const Marketplace: FC<MarketplaceProps> = ({ className = '', data }) => {
-  const { headers, content } = data;
+const Marketplace: FC<MarketplaceProps> = ({
+  className = '',
+  items,
+  headers,
+}) => {
   return (
     <div className={'marketplace ' + className}>
       <div className="content">
@@ -20,21 +24,14 @@ const Marketplace: FC<MarketplaceProps> = ({ className = '', data }) => {
               {headers.map(header => (
                 <th>{header}</th>
               ))}
-              {/* <th>PROVIDER</th>
-              <th>AVAILABLE SIZE</th>
-              <th>PRICE PER GB/MONTH</th>
-              <th>REPUTATION</th>
-              <th>CONTRACT LENGTH</th> */}
             </tr>
           </thead>
           <tbody>
-            {content.map(row => (
-              <tr>
-                {row.map(cell => (
-                  <th>{cell}</th>
-                ))}
-              </tr>
-            ))}
+            <tr>
+              {items.map(item => (
+                <th>{item}</th>
+              ))}
+            </tr>
           </tbody>
         </Table>
       </div>

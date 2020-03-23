@@ -3,23 +3,25 @@ import React, { FC } from 'react';
 import './MarketPageTemplate.css';
 import MarketFilter from 'components/organisms/marketplace/MarketFilter';
 import Marketplace from 'components/organisms/marketplace/Marketplace';
-import { MarketData } from 'models/Market';
+import { MarketItemType } from 'models/Market';
 
 export interface MarketPageTemplateProps {
   className: string;
   filters: {}[];
-  data: MarketData;
+  itemCollection: MarketItemType[];
+  headers: string[];
 }
 
 const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   className,
   filters,
-  data,
+  itemCollection,
+  headers,
 }) => {
   return (
     <div className={`market-page ${className}`}>
       <MarketFilter filters={filters} />
-      <Marketplace data={data} />
+      <Marketplace items={itemCollection} headers={headers} />
     </div>
   );
 };
