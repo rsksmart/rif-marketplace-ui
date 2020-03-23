@@ -9,6 +9,9 @@ import FilterSliderCard from 'components/molecules/FilterSliderCard';
 import FilterCheckboxCard from 'components/molecules/FilterCheckboxCard';
 import { CheckboxProps } from 'components/atoms/forms/Checkbox';
 
+import { RangeSlider } from 'rifui';
+import RangeSliderWithInputs from 'components/molecules/RangeSliderWithInputs';
+
 export interface MarketFilterProps {
   className?: string;
   filters: {}[];
@@ -17,8 +20,8 @@ export interface MarketFilterProps {
 const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
   /* Temporary constants to be replaced by store */
   const priceUnit = 'USD';
-  const priceMin = '0';
-  const priceMax = '100';
+  const priceMin = 0;
+  const priceMax = 100;
   const minPriceVal = -10;
   const maxPriceVal = 110;
   const sizeUnit = 'GB';
@@ -63,8 +66,8 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
     <div className={`filter ${className}`}>
       <Formik
         initialValues={{
-          priceMin: priceMin.toString(),
-          priceMax: priceMax.toString(),
+          priceMin: priceMin,
+          priceMax: priceMax,
           sizeMin: sizeMin.toString(),
           sizeMax: sizeMax.toString(),
           curRif: curRif.checked,
@@ -111,10 +114,21 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
                     flexDirection: 'row',
                   }}
                 >
-                  <FilterSliderCard
+                  <RangeSliderWithInputs
                     values={{
                       start: formik.values.priceMin,
-                      end: formik.values.priceMax,
+                      end: formik.values.priceMax
+                    }}
+                    max={maxPriceVal}
+                    min={minPriceVal}
+                    units={priceUnit}
+                    className="w-100"
+                  // handleChange={formik.handleChange}
+                  />
+                  <FilterSliderCard
+                    values={{
+                      start: formik.values.priceMin.toString(),
+                      end: formik.values.priceMax.toString(),
                     }}
                     minVal={minPriceVal}
                     maxVal={maxPriceVal}
