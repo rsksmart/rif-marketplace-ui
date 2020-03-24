@@ -1,7 +1,7 @@
 import React from 'react';
 import MarketPageTemplate from 'components/templates/MarketPageTemplate';
 import MarketStore from 'store/Market/MarketStore';
-import { DomainItemType } from 'models/Market';
+import { DomainItemType } from 'models/marketItems/DomainItem';
 
 const DomainsPage = () => {
   const {

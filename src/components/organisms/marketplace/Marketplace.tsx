@@ -21,15 +21,15 @@ const Marketplace: FC<MarketplaceProps> = ({
         <Table striped borderless hover responsive="sm">
           <thead>
             <tr>
-              {headers.map(header => (
-                <th>{header}</th>
+              {headers.map((header, i) => (
+                <th key={i}>{header}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             <tr>
               {items.map(item => (
-                <th>{item}</th>
+                <th key={item._id}>{item}</th>
               ))}
             </tr>
           </tbody>
