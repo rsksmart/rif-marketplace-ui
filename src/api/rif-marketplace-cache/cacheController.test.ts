@@ -1,6 +1,6 @@
 import { addItem, updateItem, getItem } from './cacheController';
-import { DomainItemType } from 'models/Market';
-import { domainListing } from 'models/marketItems/DomainItem';
+import { MarketListingType } from 'models/Market';
+import { domainListing, DomainItemType } from 'models/marketItems/DomainItem';
 import LocalStorage from 'utils/LocalStorage'
 const persistence = LocalStorage.getInstance()
 
@@ -10,39 +10,38 @@ const persistenceSpy = {
 }
 
 describe('api/cacheController', () => {
-    const ItemType = {
-        storageListings: 'storageListings',
-        domainListings: 'domainListings'
-    }
-
     beforeEach(() => {
+        persistence.clear()
+    })
+
+    afterAll(() => {
         persistence.clear()
     })
 
     test('adds item to cache', () => {
         const item: DomainItemType = domainListing[0];
-        addItem(item, ItemType.domainListings);
+        addItem(item, MarketListingType.domainListing);
         
-        expect(persistenceSpy.setItem).toBeCalledWith(ItemType.domainListings, [item]);
+        expect(persistenceSpy.setItem).toBeCalledWith(MarketListingType.domainListing, [item]);
     })
 
     test('updates item in cache', () => {
         const item: DomainItemType = domainListing[0];
-        addItem(item, ItemType.domainListings)
+        addItem(item, MarketListingType.domainListing)
 
-        const newItem = item;
+        const newItem = {...item};
         newItem.currency = 'GBP';
 
-        updateItem(item._id, newItem, ItemType.domainListings);
+        updateItem(item._id, newItem, MarketListingType.domainListing);
 
-        expect(persistenceSpy.setItem).toBeCalledWith(ItemType.domainListings, [newItem]);
+        expect(persistenceSpy.setItem).toBeCalledWith(MarketListingType.domainListing, [newItem]);
     })
 
     test('get item from cache', () => {
         const expectedItem: DomainItemType = domainListing[0];
-        addItem(expectedItem, ItemType.domainListings);
+        addItem(expectedItem, MarketListingType.domainListing);
 
-        expect(persistenceSpy.getItem).toBeCalledWith(ItemType.domainListings);
-        getItem(expectedItem._id, ItemType.domainListings).then(item => expect(item).toStrictEqual(expectedItem))
+        expect(persistenceSpy.getItem).toBeCalledWith(MarketListingType.domainListing);
+        getItem(expectedItem._id, MarketListingType.domainListing).then(item => expect(item).toStrictEqual(expectedItem))
     })
 })

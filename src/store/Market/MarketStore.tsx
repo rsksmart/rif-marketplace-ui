@@ -1,4 +1,4 @@
-import React, { Dispatch } from 'react';
+import React, { Dispatch, useContext } from 'react';
 
 import Middleware from 'store/storeUtils/middleware';
 import { MarketAction } from './marketActions';
@@ -6,7 +6,6 @@ import marketReducer from './marketReducer';
 import { MarketItemType } from 'models/Market';
 
 export interface IMarketState {
-  // TODO: Extract Listings
   listings: {
     domainListing: MarketItemType[];
     storageListing: MarketItemType[];
@@ -24,6 +23,8 @@ export const initialState: IMarketState = {
     storageListing: [],
   },
 };
+
+export const useMarketContext = () => useContext(MarketStore);
 
 const MarketStore = React.createContext({} as IMarketStoreProps | any);
 
