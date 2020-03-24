@@ -3,15 +3,13 @@ import { Formik } from 'formik';
 
 import './MarketFilter.css';
 import MarketFilterItem from 'components/molecules/MarketFilterItem';
-// import Accordion from 'components/molecules/Accordion';
-// .ito ^
 import { Form, FormControl } from 'components/atoms/forms';
-import FilterSliderCard from 'components/molecules/FilterSliderCard';
 import FilterCheckboxCard from 'components/molecules/FilterCheckboxCard';
-import { CheckboxProps } from 'components/atoms/forms/Checkbox';
 
 import RangeSliderWithInputs from 'components/molecules/RangeSliderWithInputs';
-import { Accordion } from 'rifui';
+import { Accordion, TextField } from 'rifui';
+import { ILabeledCheckboxProps } from 'components/molecules/FilterCheckboxCard';
+
 
 export interface MarketFilterProps {
   className?: string;
@@ -30,33 +28,34 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
   const sizeMax = 100;
   const minSizeVal = -10;
   const maxSizeVal = 110;
-  const curRif: CheckboxProps = {
+
+  const curRif: ILabeledCheckboxProps = {
     label: 'RIF',
     id: 'check-rif',
     checked: true,
   };
-  const curRbtc: CheckboxProps = {
+  const curRbtc: ILabeledCheckboxProps = {
     label: 'R-BTC',
     id: 'check-rbtc',
     checked: true,
   };
-  const curDoc: CheckboxProps = {
+  const curDoc: ILabeledCheckboxProps = {
     label: 'DOC (Dollar on Chain)',
     id: 'check-doc',
     checked: true,
   };
 
-  const curSwarm: CheckboxProps = {
+  const curSwarm: ILabeledCheckboxProps = {
     label: 'RIF',
     id: 'check-rif',
     checked: true,
   };
-  const curIpfs: CheckboxProps = {
+  const curIpfs: ILabeledCheckboxProps = {
     label: 'R-BTC',
     id: 'check-rbtc',
     checked: true,
   };
-  const curSia: CheckboxProps = {
+  const curSia: ILabeledCheckboxProps = {
     label: 'DOC (Dollar on Chain)',
     id: 'check-doc',
     checked: true,
@@ -106,7 +105,7 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
 
           return (
             <Form>
-              <FormControl onChange={formik.handleChange} name="search" />
+              <TextField onChange={formik.handleChange} name="search" label="Search" className='w-100' />
               <MarketFilterItem name="Price">
                 <Accordion
                   id="price"
@@ -127,18 +126,7 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
                     min={minPriceVal}
                     units={priceUnit}
                     className="w-100"
-                  // handleChange={formik.handleChange}
                   />
-                  {/* <FilterSliderCard
-                    values={{
-                      start: formik.values.priceMin.toString(),
-                      end: formik.values.priceMax.toString(),
-                    }}
-                    minVal={minPriceVal}
-                    maxVal={maxPriceVal}
-                    handleChange={formik.handleChange}
-                    unit={priceUnit}
-                  /> */}
                 </Accordion>
               </MarketFilterItem>
               <MarketFilterItem name="Currency">
@@ -179,18 +167,7 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
                     min={minSizeVal}
                     units={sizeUnit}
                     className="w-100"
-                  // handleChange={formik.handleChange}
                   />
-                  {/* <FilterSliderCard
-                    values={{
-                      start: formik.values.sizeMin,
-                      end: formik.values.sizeMax,
-                    }}
-                    minVal={minSizeVal}
-                    maxVal={maxSizeVal}
-                    handleChange={formik.handleChange}
-                    unit={sizeUnit}
-                  /> */}
                 </Accordion>
               </MarketFilterItem>
             </Form>
