@@ -2,7 +2,7 @@ import React, { FC, FormEvent} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Slider, { SliderProps as MUISliderProps } from '@material-ui/core/Slider';
 
-interface RangeSliderProps extends MUISliderProps {
+interface IRangeSliderProps extends MUISliderProps {
   handleChange: (event: FormEvent<Element>, newValue: number | number[]) => void;
 }
 
@@ -12,7 +12,7 @@ const useStyles = makeStyles({
   },
 });
 
-const RangeSlider: FC<RangeSliderProps> = ({ handleChange, ...rest }) => {
+const RangeSlider: FC<IRangeSliderProps> = ({ handleChange, ...rest }) => {
 
   const classes = useStyles();
   const onChange = (event: any, newValue: number | number[]) => {

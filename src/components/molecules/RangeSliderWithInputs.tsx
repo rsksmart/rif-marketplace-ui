@@ -5,7 +5,7 @@ import Input from '@material-ui/core/Input';
 
 import { RangeSlider } from 'rifui';
 
-interface IRangeSliderWithInputsProps extends MUISliderProps {
+export interface IRangeSliderWithInputsProps extends MUISliderProps {
   values: {
     start: number,
     end: number

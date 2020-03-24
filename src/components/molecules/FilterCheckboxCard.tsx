@@ -1,23 +1,29 @@
-import Checkbox, { CheckboxProps } from 'components/atoms/forms/Checkbox';
 import React, { FC } from 'react';
-import {} from 'react-bootstrap';
+import { Checkbox, FormControlLabel, IFormControlLabelProps, ICheckboxProps } from 'rifui';
 
-export interface FilterCheckboxCardProps {
+export interface IFilterCheckboxCardProps {
   className?: string;
-  items: CheckboxProps[];
+  items: ILabeledCheckboxProps[];
 }
 
-const FilterCheckboxCard: FC<FilterCheckboxCardProps> = ({
-  className = '',
-  items,
-}) => {
+export interface ILabeledCheckboxProps extends ICheckboxProps {
+  label?: string;
+}
+
+const FilterCheckboxCard: FC<IFilterCheckboxCardProps> = ({ className = '', items }) => {
   return (
-    <div className={('filter-checkbox-card ' + className).trim()}>
-      {items.map((item: CheckboxProps, i) => (
-        <Checkbox {...item} key={item.id || i} />
+    <div className={className}>
+      {items.map((item: ILabeledCheckboxProps, i) => (
+        <FormControlLabel
+          key={`fcl-${item.id}` || `fcl-${i}-${className.trim()}`}
+          className={item.className}
+          label={item.label}
+          control={
+            <Checkbox key={`cb-${item.id}` || `cbf-${i}-${className.trim()}`} {...item} checked={item.checked} />
+          } />
       ))}
     </div>
-  );
-};
+  )
+}
 
 export default FilterCheckboxCard;
