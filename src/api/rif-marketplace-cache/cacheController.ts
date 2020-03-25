@@ -1,5 +1,5 @@
-import { MarketItem, MarketListingType } from 'models/Market';
-import LocalStorage from 'utils/LocalStorage'
+import { MarketItem, MarketListingType, MarketItemType } from 'models/Market';
+import LocalStorage from 'utils/LocalStorage';
 const persistence = LocalStorage.getInstance()
 
 export const addItem = async (item: MarketItem, type: MarketListingType) => {
@@ -20,4 +20,8 @@ export const updateItem = async (item_id: string, updated_item: MarketItem, type
 export const getItem = async (item_id: string, type: MarketListingType) => {
     const itemCollection: MarketItem[] = persistence.getItem(type) || []
     return itemCollection.find(item => item._id === item_id)
+}
+
+export const fetchMarketDataFor = async (listingType: MarketListingType): Promise<MarketItemType[]> => {
+    return persistence.getItem(listingType) || [];
 }

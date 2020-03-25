@@ -3,7 +3,7 @@ import {
   MARKET_ACTIONS,
   MarketAction,
   MarketPayload,
-  ItemPayload,
+  ListingPayload,
 } from './marketActions'
 import { initialState, IMarketState } from './MarketStore'
 
@@ -11,11 +11,11 @@ const logger = Logger.getInstance()
 
 const marketReducer = (state = initialState, action: MarketAction) => {
   const { type, payload } = action
-  // const marketAction = marketActions[type]
-  // if (!!marketAction) logger.debug('marketReducer -> action', action)
-  // const newState = (!!marketAction && marketAction(state, payload)) || state
+  const marketAction = marketActions[type]
+  if (!!marketAction) logger.debug('marketReducer -> action', action)
+  const newState = (!!marketAction && marketAction(state, payload)) || state
 
-  // return newState
+  return newState
 }
 export default marketReducer
 
@@ -25,22 +25,19 @@ type IMarketActions = {
 
 const {
   NOOP,
-  GET_ITEM,
+  SET_ITEMS
 } = MARKET_ACTIONS
 
-// const marketActions: IMarketActions = {
-//   [NOOP]: (state: IMarketState, _: MarketPayload) => state,
-//   // [SET_ITEM]: (state: IMarketState, payload: ItemPayload) => {
-//   //   const newState = state;
-//   //   const { listingType, item } = payload;
-//   //   const { listings } = state;
-//   //   const newListing = {
-//   //     ...listings,
-//   //     [listingType]: 
-//   //   }
-//   //   return {marketItem};
-//   // },
-//   [ADD_ITEM]: (state: IMarketState, payload: ItemPayload) => {
-//   }
-// }
+const marketActions: IMarketActions = {
+  [NOOP]: (state: IMarketState, _: MarketPayload) => state,
+  [SET_ITEMS]: (state: IMarketState, payload: ListingPayload) => {
+    const { listingType, items } = payload;
+
+    const newState = { ...state }
+    newState.listings[listingType] = items
+    newState.metadata.domain.lastUpdated = Date.now();
+
+    return newState;
+  }
+}
 

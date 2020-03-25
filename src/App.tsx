@@ -5,35 +5,41 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Web3Provider from 'rifui/providers/Web3Provider';
 import { MarketStoreProvider } from 'store/Market/MarketStore';
-import { UserStoreProvider } from 'store/User/UserStore';
+
+// TODO: Remove this once connected to cache
+import { MarketListingType } from 'models/Market';
+import LocalStorage from 'utils/LocalStorage';
+import { domainListing } from 'data/domains';
+const persistence = LocalStorage.getInstance();
+// End of the block to be removed
+
+persistence.setItem(MarketListingType.domainListing, domainListing);
 
 const App = () => {
   return (
-    <UserStoreProvider>
-      <MarketStoreProvider>
-        <Web3Provider.Provider>
-          <Router>
-            <div
-              data-testid="wrapper"
-              style={{
-                minHeight: '100vh',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <Header />
+    <MarketStoreProvider>
+      <Web3Provider.Provider>
+        <Router>
+          <div
+            data-testid="wrapper"
+            style={{
+              minHeight: '100vh',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <Header />
 
-              {/* Content of the dapp*/}
-              {/* <div style={{ paddingTop: '1em' }}> */}
-              <Routes />
-              {/* </div> */}
-              {/* <div style={{ flexGrow: 1 }} /> */}
-              <Footer />
-            </div>
-          </Router>
-        </Web3Provider.Provider>
-      </MarketStoreProvider>
-    </UserStoreProvider>
+            {/* Content of the dapp*/}
+            {/* <div style={{ paddingTop: '1em' }}> */}
+            <Routes />
+            {/* </div> */}
+            {/* <div style={{ flexGrow: 1 }} /> */}
+            <Footer />
+          </div>
+        </Router>
+      </Web3Provider.Provider>
+    </MarketStoreProvider>
   );
 };
 

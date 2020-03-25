@@ -1,7 +1,8 @@
 import { addItem, updateItem, getItem } from './../../api/rif-marketplace-cache/cacheController';
 import { MarketListingType } from '../../models/Market';
-import { DomainItemType, domainListing } from '../../models/marketItems/DomainItem';
+import { DomainItemType } from '../../models/marketItems/DomainItem';
 import LocalStorage from '../../utils/LocalStorage'
+import { domainListing } from 'data/domains';
 
 const persistence = LocalStorage.getInstance()
 
