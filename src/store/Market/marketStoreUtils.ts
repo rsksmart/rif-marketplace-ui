@@ -1,12 +1,15 @@
-import { getItem, addItem, updateItem } from 'api/rif-marketplace-cache/cacheController';
+import { getItem, addItem, updateItem, fetchMarketDataFor } from 'api/rif-marketplace-cache/cacheController';
 import { APP_ACTIONS } from 'store/App/appActions';
-import { MarketItem } from 'models/Market';
+import { MarketItem, MarketListingType, MarketItemType } from 'models/Market';
 import { ItemPayload } from './marketActions';
 
-export const getMarketItem = async (
+
+const getMarketItem = (dispatch) => async (
     itemPayload: ItemPayload,
-    dispatch: any,
-) => {
+): Promise<{
+  marketItem: MarketItem | undefined,
+  error: Error | undefined
+}> => {
   let marketItem: MarketItem | undefined;
   let error: Error | undefined;
 
@@ -41,10 +44,12 @@ export const getMarketItem = async (
   return {marketItem, error}
 }
 
-export const addMarketItem = async (
+const addMarketItem = (dispatch) => async (
   itemPayload: ItemPayload,
-  dispatch: any,
-) => {
+): Promise<{
+  marketItem: MarketItem | undefined,
+  error: Error | undefined
+}> => {
   let marketItem: MarketItem | undefined;
   let error: Error | undefined;
   const { item,
@@ -76,10 +81,12 @@ export const addMarketItem = async (
   return {marketItem, error}
 }
 
-export const updateMarketItem = async (
+const updateMarketItem = (dispatch) => async (
   itemPayload: ItemPayload,
-  dispatch: any,
-) => {
+): Promise<{
+  marketItem: MarketItem | undefined,
+  error: Error | undefined
+}> => {
   let marketItem: MarketItem | undefined;
   let error: Error | undefined;
   const { item,
@@ -110,3 +117,44 @@ export const updateMarketItem = async (
     }
   return {marketItem, error}
 }
+
+const fetchListingItems = (dispatch) => async (
+  listingType: MarketListingType,
+): Promise<{
+  marketItems: MarketItemType[] | undefined,
+  error: Error | undefined
+}> => {
+  let marketItems: MarketItemType[] | undefined;
+  let error: Error | undefined;
+
+  dispatch({
+    type: APP_ACTIONS.SET_IS_LOADING,
+    payload: { isLoading: true, message: `Fetching ${listingType} from cache.` },
+  })
+
+  try {
+    marketItems = await fetchMarketDataFor(listingType)
+  } catch (err) {
+    error = err
+    const { message } = err
+    dispatch({
+      type: APP_ACTIONS.SET_MESSAGE, payload: {
+        isError: true,
+        message
+      }
+    })
+  } finally {
+    dispatch({
+      type: APP_ACTIONS.SET_IS_LOADING,
+      payload: { isLoading: false },
+    })
+    }
+  return {marketItems, error}
+}
+
+export const useMarketUtils = (dispatch) => ({
+  getMarketItem: getMarketItem(dispatch),
+  addMarketItem: addMarketItem(dispatch),
+  updateMarketItem: updateMarketItem(dispatch),
+  fetchListingItems: fetchListingItems(dispatch)
+})

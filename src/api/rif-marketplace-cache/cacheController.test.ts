@@ -1,47 +1,62 @@
-import { addItem, updateItem, getItem } from './cacheController';
+import { addItem, updateItem, getItem, fetchMarketDataFor } from './cacheController';
 import { MarketListingType } from 'models/Market';
-import { domainListing, DomainItemType } from 'models/marketItems/DomainItem';
+import { DomainItemType } from 'models/marketItems/DomainItem';
 import LocalStorage from 'utils/LocalStorage'
+import { domainListing } from 'data/domains';
 const persistence = LocalStorage.getInstance()
-
-const persistenceSpy = {
-    getItem: jest.spyOn(persistence, 'getItem'),
-    setItem: jest.spyOn(persistence, 'setItem'),
-}
 
 describe('api/cacheController', () => {
     beforeEach(() => {
         persistence.clear()
+        persistence.setItem(MarketListingType.domainListing, domainListing);
     })
 
     afterAll(() => {
         persistence.clear()
+        persistence.setItem(MarketListingType.domainListing, domainListing);
     })
 
-    test('adds item to cache', () => {
-        const item: DomainItemType = domainListing[0];
-        addItem(item, MarketListingType.domainListing);
+    test('adds item to cache', async () => {
+        const newItem: DomainItemType = {
+            _id: 'test_id',
+            currency: 'TEST_COIN',
+            domain: 'test_domain',
+            price: 9999999,
+            price_usd: 99999,
+            tld: 'test_tld',
+            user: 'test_user'
+        };
+        await addItem(newItem, MarketListingType.domainListing);
+
+        expect(persistence.getItem(MarketListingType.domainListing)).toContainEqual(newItem)
         
-        expect(persistenceSpy.setItem).toBeCalledWith(MarketListingType.domainListing, [item]);
     })
 
-    test('updates item in cache', () => {
+    test('updates item in cache', async () => {
         const item: DomainItemType = domainListing[0];
-        addItem(item, MarketListingType.domainListing)
 
         const newItem = {...item};
-        newItem.currency = 'GBP';
+        newItem.currency = 'TEST_COIN';
 
-        updateItem(item._id, newItem, MarketListingType.domainListing);
+        await updateItem(item._id, newItem, MarketListingType.domainListing);
 
-        expect(persistenceSpy.setItem).toBeCalledWith(MarketListingType.domainListing, [newItem]);
+        expect(persistence.getItem('domainListing')).toContainEqual(newItem)
     })
 
-    test('get item from cache', () => {
+    test('get item from cache', async () => {
         const expectedItem: DomainItemType = domainListing[0];
-        addItem(expectedItem, MarketListingType.domainListing);
 
-        expect(persistenceSpy.getItem).toBeCalledWith(MarketListingType.domainListing);
-        getItem(expectedItem._id, MarketListingType.domainListing).then(item => expect(item).toStrictEqual(expectedItem))
+        const item = await getItem(expectedItem._id, MarketListingType.domainListing);
+        expect(item).toStrictEqual(expectedItem)
+    })
+
+    test('fetchMarketDataFor(listingType) should return promise with list of items for the given listing type', async () => {
+        const expectedListing: DomainItemType[] = domainListing;
+        const listingType: MarketListingType = MarketListingType.domainListing;
+        persistence.setItem(listingType, domainListing)
+
+        const data = await fetchMarketDataFor(listingType);
+        
+        expect(data).toStrictEqual(expectedListing);
     })
 })

@@ -27,11 +27,18 @@ const Marketplace: FC<MarketplaceProps> = ({
             </tr>
           </thead>
           <tbody>
-            <tr>
-              {items.map(item => (
-                <th key={item._id}>{item}</th>
-              ))}
-            </tr>
+            {items.map(item => {
+              const cells = Object.keys(item);
+              return (
+                <tr key={item._id}>
+                  {cells
+                    .filter(cell => cell !== '_id')
+                    .map(cell => (
+                      <th key={cell + item._id}>{item[cell]}</th>
+                    ))}
+                </tr>
+              );
+            })}
           </tbody>
         </Table>
       </div>

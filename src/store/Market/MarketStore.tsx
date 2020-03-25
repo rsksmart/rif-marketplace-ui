@@ -10,6 +10,14 @@ export interface IMarketState {
     domainListing: MarketItemType[];
     storageListing: MarketItemType[];
   };
+  metadata: {
+    domain: {
+      lastUpdated: number;
+    };
+    storage: {
+      lastUpdated: number;
+    };
+  };
 }
 
 interface IMarketStoreProps {
@@ -21,6 +29,14 @@ export const initialState: IMarketState = {
   listings: {
     domainListing: [],
     storageListing: [],
+  },
+  metadata: {
+    domain: {
+      lastUpdated: -1,
+    },
+    storage: {
+      lastUpdated: -1,
+    },
   },
 };
 
