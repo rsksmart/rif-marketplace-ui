@@ -1,9 +1,8 @@
 import React from 'react';
-import logo_new from './assets/logo_new.svg';
+import logo_full_blk from '../../assets/logo-full-blk.svg';
 
 interface ILogo extends React.Props<HTMLImageElement> {
   alt?: string;
-  height?: string | number;
   style?: React.CSSProperties;
 }
 
@@ -11,7 +10,7 @@ export default React.forwardRef(function LogoFooter(
   props: ILogo,
   ref?: React.Ref<HTMLImageElement> | null,
 ) {
-  const { alt = 'RIF OS', height = '40px', ...other } = props;
+  const { alt = 'RIF OS', ...other } = props;
 
-  return <img src={logo_new} alt={alt} height={height} ref={ref} {...other} />;
+  return <img src={logo_full_blk} alt={alt} ref={ref} {...other} />;
 });

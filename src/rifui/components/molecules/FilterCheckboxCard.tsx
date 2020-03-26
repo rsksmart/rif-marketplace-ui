@@ -1,6 +1,4 @@
 import React, { FC } from 'react';
-import Checkbox, { ICheckboxProps } from '../atoms/forms/Checkbox';
-import FormControlLabel from '../atoms/forms/FormControlLabel';
 import LabeledCheckbox, { LabeledCheckboxProps } from './LabeledCheckbox';
 
 export interface FilterCheckboxCardProps {
