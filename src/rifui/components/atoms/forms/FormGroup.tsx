@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { FormGroup as MUIFormGroup, FormGroupProps as MUIFormGroupProps } from '@material-ui/core';
 
-export type IFormGroupProps = MUIFormGroupProps;
+export interface IFormGroupProps extends MUIFormGroupProps { };
 
 const FormGroup: FC<IFormGroupProps> = ({ children, ...rest }) => {
   return (
@@ -9,6 +9,6 @@ const FormGroup: FC<IFormGroupProps> = ({ children, ...rest }) => {
       {children}
     </MUIFormGroup>
   );
-}
+};
 
 export default FormGroup;

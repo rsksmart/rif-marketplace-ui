@@ -3,13 +3,12 @@ import { Formik } from 'formik';
 
 import './MarketFilter.css';
 import MarketFilterItem from 'components/molecules/MarketFilterItem';
-import { Form, FormControl } from 'components/atoms/forms';
-import FilterCheckboxCard from 'components/molecules/FilterCheckboxCard';
+import { Form } from 'components/atoms/forms';
+import FilterCheckboxCard from 'rifui/components/molecules/FilterCheckboxCard';
 
 import RangeSliderWithInputs from 'components/molecules/RangeSliderWithInputs';
 import { Accordion, TextField } from 'rifui';
-import { ILabeledCheckboxProps } from 'components/molecules/FilterCheckboxCard';
-
+import { LabeledCheckboxProps } from 'rifui/components/molecules/LabeledCheckbox';
 
 export interface MarketFilterProps {
   className?: string;
@@ -29,36 +28,42 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
   const minSizeVal = -10;
   const maxSizeVal = 110;
 
-  const curRif: ILabeledCheckboxProps = {
-    label: 'RIF',
+  const curRif: LabeledCheckboxProps = {
+    checked: true,
     id: 'check-rif',
-    checked: true,
+    label: 'RIF',
+    labelClassName: '',
   };
-  const curRbtc: ILabeledCheckboxProps = {
-    label: 'R-BTC',
+  const curRbtc: LabeledCheckboxProps = {
+    checked: true,
     id: 'check-rbtc',
-    checked: true,
+    label: 'R-BTC',
+    labelClassName: '',
   };
-  const curDoc: ILabeledCheckboxProps = {
-    label: 'DOC (Dollar on Chain)',
-    id: 'check-doc',
+  const curDoc: LabeledCheckboxProps = {
     checked: true,
+    id: 'check-doc',
+    label: 'DOC (Dollar on Chain)',
+    labelClassName: '',
   };
 
-  const curSwarm: ILabeledCheckboxProps = {
-    label: 'RIF',
+  const curSwarm: LabeledCheckboxProps = {
+    checked: true,
     id: 'check-rif',
-    checked: true,
+    label: 'RIF',
+    labelClassName: '',
   };
-  const curIpfs: ILabeledCheckboxProps = {
-    label: 'R-BTC',
+  const curIpfs: LabeledCheckboxProps = {
+    checked: true,
     id: 'check-rbtc',
-    checked: true,
+    label: 'R-BTC',
+    labelClassName: '',
   };
-  const curSia: ILabeledCheckboxProps = {
-    label: 'DOC (Dollar on Chain)',
-    id: 'check-doc',
+  const curSia: LabeledCheckboxProps = {
     checked: true,
+    id: 'check-doc',
+    label: 'DOC (Dollar on Chain)',
+    labelClassName: '',
   };
   /* End of temp constants */
 
