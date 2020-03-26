@@ -27,6 +27,7 @@ const Icon: FC<IconProps> = ({ name }) => {
         height: 75,
       }}
       src={name}
+      alt={`icon-${name}`}
     />
   );
 };
