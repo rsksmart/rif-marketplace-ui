@@ -5,7 +5,7 @@ import Input from '@material-ui/core/Input';
 
 import { RangeSlider } from '../atoms/index';
 
-export interface IRangeSliderWithInputsProps extends MUISliderProps {
+export interface RangeSliderWithInputsProps extends MUISliderProps {
   values: {
     start: number,
     end: number
@@ -22,91 +22,62 @@ const useStyles = makeStyles({
   },
 });
 
-interface ISliderData {
-  endValue: number;
-  sliderRange: number | number[];
-  startValue: number;
-}
-
-const RangeSliderWithInputs: FC<IRangeSliderWithInputsProps> = ({ values, units, ...rest }) => {
+const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ values, units, ...rest }) => {
   const classes = useStyles();
 
   const maxValue = rest.max || values.end;
   const minValue = rest.min || values.start;
   const step = rest.step || 1;
 
-  const [state, setState] = useState<ISliderData>({
-    endValue: values.end,
-    startValue: values.start,
-    sliderRange: [values.start, values.end]
-  });
+  const [startValue, setStartValue] = useState<number>(values.start);
+  const [endValue, setEndValue] = useState<number>(values.end);
+  const [sliderRangeValues, setSliderRangeValues] = useState<number | number[]>([startValue, endValue]);
 
   const handleStartInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value === '' ? values.start : Number(event.target.value);
-    if (newValue <= state.endValue) {
-      setState({
-        ...state,
-        sliderRange: [newValue, state.sliderRange[1]],
-        startValue: newValue,
-      })
+    const newStartValue = event.target.value === '' ? values.start : Number(event.target.value);
+    if (newStartValue <= endValue) {
+      setStartValue(newStartValue);
+      setSliderRangeValues([newStartValue, sliderRangeValues[1]]);
     }
   };
 
   const handleEndInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value === '' ? values.end : Number(event.target.value);
-    if (newValue >= state.startValue) {
-      setState({
-        ...state,
-        endValue: newValue,
-        sliderRange: [state.sliderRange[0], newValue]
-      });
+    const newEndValue = event.target.value === '' ? values.end : Number(event.target.value);
+    if (newEndValue >= startValue) {
+      setSliderRangeValues([sliderRangeValues[0], newEndValue]);
+      setEndValue(newEndValue);
     }
   };
 
-  const handleSliderChange = (event: any, newValue: number | number[]) => {
-    setState({
-      ...state,
-      endValue: newValue[1],
-      sliderRange: newValue,
-      startValue: newValue[0]
-    });
+  const handleSliderChange = (event: any, newSliderValue: number | number[]) => {
+    setEndValue(newSliderValue[1]);
+    setStartValue(newSliderValue[0]);
+    setSliderRangeValues(newSliderValue);
   }
 
   const handleStartValueBlur = () => {
-    if (state.startValue < minValue) {
-      setState({
-        ...state,
-        startValue: minValue
-      });
-    } else if (state.startValue > state.endValue) {
-      setState({
-        ...state,
-        startValue: state.endValue
-      });
+    if (startValue < minValue) {
+      setStartValue(minValue);
+    } else if (startValue > endValue) {
+      setStartValue(endValue);
     }
   };
 
   const handleEndValueBlur = () => {
-    if (state.endValue < state.startValue) {
-      setState({
-        ...state,
-        endValue: state.startValue
-      });
-    } else if (state.endValue > maxValue) {
-      setState({
-        ...state,
-        endValue: maxValue
-      });
+    if (endValue < startValue) {
+      setEndValue(startValue);
+    } else if (endValue > maxValue) {
+      setEndValue(maxValue);
     }
   };
 
   return (
     <div className={classes.root}>
-      <RangeSlider value={state.sliderRange} {...rest} handleChange={handleSliderChange} />
+      <RangeSlider value={sliderRangeValues} {...rest} handleChange={handleSliderChange} />
 
       <Input
         className={classes.input}
-        value={state.startValue}
+        value={startValue}
         margin="dense"
         onChange={handleStartInputChange}
         onBlur={handleStartValueBlur}
@@ -122,7 +93,7 @@ const RangeSliderWithInputs: FC<IRangeSliderWithInputsProps> = ({ values, units,
       <b> to </b>
       <Input
         className={classes.input}
-        value={state.endValue}
+        value={endValue}
         margin="dense"
         onChange={handleEndInputChange}
         onBlur={handleEndValueBlur}
