@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { SliderProps as MUISliderProps } from '@material-ui/core/Slider';
 import Input from '@material-ui/core/Input';
 
-import { RangeSlider } from 'rifui';
+import { RangeSlider } from '../atoms/index';
 
 export interface IRangeSliderWithInputsProps extends MUISliderProps {
   values: {

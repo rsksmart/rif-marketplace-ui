@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './assets/logo-footer.png';
+import logo from '../../assets/logo-footer.png';
 
 interface ILogoFooter extends React.Props<HTMLImageElement> {
   alt?: string;

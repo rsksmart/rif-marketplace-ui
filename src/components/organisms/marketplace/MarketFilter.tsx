@@ -4,11 +4,14 @@ import { Formik } from 'formik';
 import './MarketFilter.css';
 import MarketFilterItem from 'components/molecules/MarketFilterItem';
 import { Form } from 'components/atoms/forms';
-import FilterCheckboxCard from 'rifui/components/molecules/FilterCheckboxCard';
 
-import RangeSliderWithInputs from 'components/molecules/RangeSliderWithInputs';
-import { Accordion, TextField } from 'rifui';
 import { LabeledCheckboxProps } from 'rifui/components/molecules/LabeledCheckbox';
+import {
+  Accordion,
+  FilterCheckboxCard,
+  RangeSliderWithInputs,
+  TextField
+} from 'rifui';
 
 export interface MarketFilterProps {
   className?: string;
