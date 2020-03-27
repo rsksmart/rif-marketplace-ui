@@ -3,7 +3,6 @@ import { Formik } from 'formik';
 
 import './MarketFilter.css';
 import MarketFilterItem from 'components/molecules/MarketFilterItem';
-import { Form } from 'components/atoms/forms';
 
 import { LabeledCheckboxProps } from 'rifui/components/molecules/LabeledCheckbox';
 import {
@@ -112,7 +111,7 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
           const storageTypeItems = [curSwarm, curIpfs, curSia];
 
           return (
-            <Form>
+            <form>
               <TextField onChange={formik.handleChange} name="search" label="Search" className='w-100' />
               <MarketFilterItem name="Price">
                 <Accordion
@@ -178,7 +177,7 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
                   />
                 </Accordion>
               </MarketFilterItem>
-            </Form>
+            </form>
           );
         }}
       </Formik>
