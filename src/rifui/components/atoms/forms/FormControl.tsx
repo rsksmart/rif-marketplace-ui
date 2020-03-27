@@ -3,10 +3,10 @@ import { FormControl as MUIFormControl, FormControlProps as MUIFormControlProps 
 
 export interface IFormControlProps extends MUIFormControlProps { }
 
-const FormControl: FC<IFormControlProps> = ({ ...rest }) => {
+const FormControl: FC<IFormControlProps> = ({ children, ...rest }) => {
   return (
     <MUIFormControl {...rest}>
-      ...children
+      {children}
     </MUIFormControl>
   );
 }
