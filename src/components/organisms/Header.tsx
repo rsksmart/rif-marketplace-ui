@@ -1,9 +1,9 @@
-import Navbar from 'components/molecules/Navbar';
 import React from 'react';
-import { NavItemProps } from 'components/atoms/navigation/NavItem';
 import { ROUTES } from 'routes';
-import Account from 'rifui/components/Account';
 import Web3Provider from 'rifui/providers/Web3Provider';
+import { Account } from 'rifui';
+import { NavItemProps } from 'rifui/components/molecules/Navbar';
+import Navbar from 'components/molecules/Navbar';
 
 const Login = () => (
   <Web3Provider.Consumer>
@@ -28,15 +28,15 @@ const Header = () => {
   const navItems: NavItemProps[] = [
     {
       text: 'Domains',
-      to: ROUTES.DOMAINS,
+      href: ROUTES.DOMAINS,
     },
     {
       text: 'Storage',
-      to: ROUTES.STORAGE,
+      href: ROUTES.STORAGE,
     },
   ];
 
-  return <Navbar items={navItems} login={Login} />;
+  return <Navbar hreflogo={ROUTES.LANDING} items={navItems} login={Login} />;
 };
 
 export default Header;
