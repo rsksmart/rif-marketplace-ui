@@ -22,9 +22,9 @@ describe('api/cacheController', () => {
             currency: 'TEST_COIN',
             domain: 'test_domain',
             price: 9999999,
-            price_usd: 99999,
+            price_fiat: 99999,
             tld: 'test_tld',
-            user: 'test_user'
+            seller: 'test_user'
         };
         await addItem(newItem, MarketListingType.domainListing);
 

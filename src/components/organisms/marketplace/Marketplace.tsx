@@ -3,11 +3,15 @@ import { Table } from 'react-bootstrap';
 
 import './Marketplace.css';
 import { MarketItemType } from 'models/Market';
+import { TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
 
+export interface TableHeaders {
+  [itemName: string]: string | React.ElementType
+}
 export interface MarketplaceProps {
   className?: string;
   items: MarketItemType[];
-  headers: string[];
+  headers: TableHeaders;
 }
 
 const Marketplace: FC<MarketplaceProps> = ({
@@ -19,27 +23,28 @@ const Marketplace: FC<MarketplaceProps> = ({
     <div className={'marketplace ' + className}>
       <div className="content">
         <Table striped borderless hover responsive="sm">
-          <thead>
-            <tr>
-              {headers.map((header, i) => (
-                <th key={i}>{header}</th>
+          <TableHead>
+            <TableRow>
+              {Object.keys(headers).map((itemName: string) => (
+                <TableCell key={`th-${itemName}`} align='center'>{headers[itemName]}</TableCell>
               ))}
-            </tr>
-          </thead>
-          <tbody>
-            {items.map(item => {
-              const cells = Object.keys(item);
-              return (
-                <tr key={item._id}>
-                  {cells
-                    .filter(cell => cell !== '_id')
-                    .map(cell => (
-                      <th key={cell + item._id}>{item[cell]}</th>
-                    ))}
-                </tr>
-              );
-            })}
-          </tbody>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {
+              items.map(item => (
+                <TableRow key={item._id}>
+                  {
+                    Object.keys(headers).map((itemName: string) => (
+                      <TableCell key={item._id + itemName} align='center'>
+                        {item[itemName]}
+                      </TableCell>
+                    ))
+                  }
+                </TableRow>
+              ))
+            }
+          </TableBody>
         </Table>
       </div>
     </div>

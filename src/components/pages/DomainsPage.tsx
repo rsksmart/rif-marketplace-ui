@@ -1,10 +1,11 @@
-import React, { useContext, useEffect } from 'react';
+import PriceItem from 'components/atoms/PriceItem';
 import MarketPageTemplate from 'components/templates/MarketPageTemplate';
-import MarketStore from 'store/Market/MarketStore';
-import { DomainItemType } from 'models/marketItems/DomainItem';
-import { useMarketUtils } from 'store/Market/marketStoreUtils';
 import { MarketListingType } from 'models/Market';
+import React, { useContext, useEffect } from 'react';
+import { Button } from 'rifui';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
+import MarketStore from 'store/Market/MarketStore';
+import { useMarketUtils } from 'store/Market/marketStoreUtils';
 
 const DomainsPage = () => {
   const {
@@ -40,22 +41,41 @@ const DomainsPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastUpdated, isLoading]);
 
-  const nullItem: Omit<DomainItemType, '_id'> = {
-    // TODO: remove from here
-    currency: '',
-    domain: '',
-    price: -1,
-    price_usd: -1,
-    tld: '',
-    user: '',
-  };
-  const headers = Object.keys(nullItem);
+  // TODO: extract (possibly into action)
+  const headers = {
+    domain: 'Name',
+    seller: 'Seller',
+    expirationDate: 'Renewal Date',
+    price: 'Price',
+    actionCol_1: ''
+  }
+  const collection = domainListing.map(domainItem => {
+    const { seller, price, price_fiat, currency } = domainItem;
+
+    const PriceCell = (
+      <>
+        <PriceItem type='crypto' {...{ price, currency }} />
+        {' = '}
+        <PriceItem type='fiat' price={price_fiat} currency='USD' />
+      </>
+    )
+
+    domainItem.price = PriceCell
+
+    const actionCol_1 = (seller === '38EA6CED3289A2AA554986C7662F58F0')
+      ? React.createElement('div', {}, 'TODO')
+      : React.createElement(Button, { variant: "contained", color: "primary" }, 'Select');
+    domainItem.actionCol_1 = actionCol_1;
+
+    return domainItem;
+  })
+  // End of extract block
 
   return (
     <MarketPageTemplate
       className="Domains"
       filters={[]}
-      itemCollection={domainListing}
+      itemCollection={collection}
       headers={headers}
     />
   );

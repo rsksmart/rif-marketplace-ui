@@ -3,14 +3,14 @@ import React, { FC } from 'react';
 // TODO: use MaterialUI classes
 import './MarketPageTemplate.css';
 import MarketFilter from 'components/organisms/marketplace/MarketFilter';
-import Marketplace from 'components/organisms/marketplace/Marketplace';
+import Marketplace, { TableHeaders } from 'components/organisms/marketplace/Marketplace';
 import { MarketItemType } from 'models/Market';
 
 export interface MarketPageTemplateProps {
   className: string;
   filters: {}[];
   itemCollection: MarketItemType[];
-  headers: string[];
+  headers: TableHeaders;
 }
 
 const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
