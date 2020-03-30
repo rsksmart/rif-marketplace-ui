@@ -26,3 +26,4 @@ yarn-error.log*
 /data
 /logs
 scripts/bin
+.env
