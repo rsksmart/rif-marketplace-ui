@@ -1,11 +1,13 @@
 import PriceItem from 'components/atoms/PriceItem';
+import SelectRowButton from 'components/molecules/table/SelectRowButton';
 import MarketPageTemplate from 'components/templates/MarketPageTemplate';
 import { MarketListingType } from 'models/Market';
 import React, { useContext, useEffect } from 'react';
-import { Button } from 'rifui';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore from 'store/Market/MarketStore';
 import { useMarketUtils } from 'store/Market/marketStoreUtils';
+import { ROUTES } from 'routes';
+import { useHistory } from 'react-router';
 
 const DomainsPage = () => {
   const {
@@ -21,6 +23,7 @@ const DomainsPage = () => {
     dispatch,
   } = useContext(MarketStore);
   const { fetchListingItems } = useMarketUtils(dispatch);
+  const history = useHistory()
 
   useEffect(() => {
     if (lastUpdated < 0 && !isLoading) {
@@ -49,12 +52,13 @@ const DomainsPage = () => {
     price: 'Price',
     actionCol_1: ''
   }
+
   const collection = domainListing.map(domainItem => {
-    const { seller, price, price_fiat, currency } = domainItem;
+    const { _id, seller, price, price_fiat, currency, domain } = domainItem;
 
     const PriceCell = (
       <>
-        <PriceItem type='crypto' {...{ price, currency }} />
+        <PriceItem key='hola' type='crypto' price={price} currency={currency} />
         {' = '}
         <PriceItem type='fiat' price={price_fiat} currency='USD' />
       </>
@@ -64,7 +68,19 @@ const DomainsPage = () => {
 
     const actionCol_1 = (seller === '38EA6CED3289A2AA554986C7662F58F0')
       ? React.createElement('div', {}, 'TODO')
-      : React.createElement(Button, { variant: "contained", color: "primary" }, 'Select');
+      : <SelectRowButton
+        id={_id}
+        handleSelect={() => {
+          dispatch({
+            type: MARKET_ACTIONS.SET_BUY_ITEM,
+            payload: {
+              listingType: MarketListingType.domainListing,
+              item: domainItem
+            }
+          })
+          history.push(ROUTES.CHECKOUT.DOMAINS)
+        }}
+      />
     domainItem.actionCol_1 = actionCol_1;
 
     return domainItem;

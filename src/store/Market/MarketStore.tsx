@@ -3,7 +3,7 @@ import React, { Dispatch, useContext } from 'react';
 import Middleware from 'store/storeUtils/middleware';
 import { MarketAction } from './marketActions';
 import marketReducer from './marketReducer';
-import { MarketItemType } from 'models/Market';
+import { MarketItemType, MarketListingType, MarketItem } from 'models/Market';
 
 export interface IMarketState {
   listings: {
@@ -18,6 +18,10 @@ export interface IMarketState {
       lastUpdated: number;
     };
   };
+  currentOrder?: {
+    listingType: MarketListingType,
+    item: MarketItem
+  }
 }
 
 interface IMarketStoreProps {

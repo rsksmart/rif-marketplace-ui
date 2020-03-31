@@ -1,5 +1,8 @@
 export const ROUTES = {
   LANDING: '/',
   STORAGE: '/storage',
-  DOMAINS: '/domains'
+  DOMAINS: '/domains',
+  CHECKOUT: {
+    DOMAINS: '/domains/checkout'
+  }
 };

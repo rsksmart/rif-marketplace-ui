@@ -5,6 +5,8 @@ export enum MARKET_ACTIONS {
   NOOP = 'NOOP',
   SET_ITEMS = "SET_ITEMS"
   // GET_ITEM = 'GET_ITEM',
+  ,
+  SET_BUY_ITEM = "SET_BUY_ITEM"
 }
 
 export interface ItemPayload {

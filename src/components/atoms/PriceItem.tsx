@@ -12,6 +12,7 @@ export interface PriceItemProps extends StylesProps {
 }
 
 const PriceItem: FC<PriceItemProps> = ({ type, price, currency, classes }) => {
+
     return <span className={`price_item ${classes[type]}`}>{`${price} ${currency}`}</span>
 }
 

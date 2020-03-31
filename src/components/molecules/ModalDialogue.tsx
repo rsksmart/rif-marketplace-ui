@@ -4,9 +4,9 @@ import {
   ModalFooter,
   ModalHeader,
   ModalTitle,
-} from 'components/atoms/modal';
-import { ModalProps } from 'components/atoms/modal/Modal';
+} from 'rifui/components/atoms/modal';
 import React, { FC } from 'react';
+import { ModalProps } from 'rifui/components/atoms/modal/Modal';
 
 export interface ModalDialogueProps extends ModalProps {
   title: string;
@@ -21,11 +21,13 @@ const ModalDialogue: FC<ModalDialogueProps> = ({
 }) => {
   return (
     <Modal {...props}>
-      <ModalHeader closeButton={true}>
-        <ModalTitle>{title}</ModalTitle>
-      </ModalHeader>
-      <ModalBody>{children}</ModalBody>
-      <ModalFooter>{footer}</ModalFooter>
+      <>
+        <ModalHeader>
+          <ModalTitle>{title}</ModalTitle>
+        </ModalHeader>
+        <ModalBody>{children}</ModalBody>
+        <ModalFooter>{footer}</ModalFooter>
+      </>
     </Modal>
   );
 };
