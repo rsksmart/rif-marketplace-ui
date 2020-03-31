@@ -4,6 +4,7 @@ import {
   MarketAction,
   MarketPayload,
   ListingPayload,
+  ItemPayload,
 } from './marketActions'
 import { initialState, IMarketState } from './MarketStore'
 
@@ -25,7 +26,8 @@ type IMarketActions = {
 
 const {
   NOOP,
-  SET_ITEMS
+  SET_ITEMS,
+  SET_BUY_ITEM
 } = MARKET_ACTIONS
 
 const marketActions: IMarketActions = {
@@ -38,6 +40,9 @@ const marketActions: IMarketActions = {
     newState.metadata.domain.lastUpdated = Date.now();
 
     return newState;
-  }
+  },
+  [SET_BUY_ITEM]: (state: IMarketState, payload: ItemPayload) => ({
+    ...state, currentOrder: { ...payload }
+  })
 }
 

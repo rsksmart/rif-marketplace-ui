@@ -7,6 +7,7 @@ import { ROUTES } from 'routes';
 import Logger from 'utils/Logger';
 import { LandingPage } from './pages/LandingPage';
 import DomainsPage from './pages/DomainsPage';
+import DomainsCheckoutPage from './pages/DomainsCheckoutPage';
 
 const logger = Logger.getInstance();
 
@@ -27,6 +28,7 @@ const Routes = () => {
     <Switch>
       <Route exact={true} path={ROUTES.LANDING} component={LandingPage} />
       <Route exact={true} path={ROUTES.DOMAINS} component={DomainsPage} />
+      <Route exact={true} path={ROUTES.CHECKOUT.DOMAINS} component={DomainsCheckoutPage} />
       <Route component={NotFound} />
     </Switch>
   );
