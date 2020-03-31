@@ -47,7 +47,6 @@ const theme = createMuiTheme({
     },
     MuiExpansionPanelDetails: {
       style: {
-        // marginBottom: '5px solid black'
       }
     },
     MuiExpansionPanelSummary: {
@@ -55,9 +54,14 @@ const theme = createMuiTheme({
         borderBottom: `1px solid ${globalProperties.colors.gray}`
       }
     },
+    MuiSwitch: {
+      color: "primary",
+      // style: {
+      //   color: globalProperties.colors.primary,
+      // }
+    },
     MuiTypography: {
       style: {
-        // lineHeight: 17
       }
     }
   }
