@@ -7,7 +7,7 @@ import {
 
 export interface TypographyProps extends MUITypographyProps { };
 
-const Typography: FC<TypographyProps> = ({ children }, { rest }) => {
+const Typography: FC<TypographyProps> = ({ children, ...rest }) => {
   return (
     <MUITypography {...rest}>
       {children}

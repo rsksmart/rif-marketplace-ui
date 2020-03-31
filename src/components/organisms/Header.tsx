@@ -1,9 +1,8 @@
 import React from 'react';
 import { ROUTES } from 'routes';
 import Web3Provider from 'rifui/providers/Web3Provider';
-import { Account } from 'rifui';
+import { Account, Navbar } from 'rifui';
 import { NavItemProps } from 'rifui/components/molecules/Navbar';
-import Navbar from 'components/molecules/Navbar';
 
 const Login = () => (
   <Web3Provider.Consumer>
@@ -34,6 +33,18 @@ const Header = () => {
       text: 'Storage',
       href: ROUTES.STORAGE,
     },
+    {
+      text: 'Payments',
+      href: '/'
+    },
+    {
+      text: 'Data Services',
+      href: '/'
+    },
+    {
+      text: 'Communications',
+      href: '/'
+    }
   ];
 
   return <Navbar hreflogo={ROUTES.LANDING} items={navItems} login={Login} />;
