@@ -8,6 +8,7 @@ import MarketStore from 'store/Market/MarketStore';
 import { useMarketUtils } from 'store/Market/marketStoreUtils';
 import { ROUTES } from 'routes';
 import { useHistory } from 'react-router';
+import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 
 const DomainsPage = () => {
   const {
@@ -48,23 +49,16 @@ const DomainsPage = () => {
   const headers = {
     domain: 'Name',
     seller: 'Seller',
-    expirationDate: 'Renewal Date',
-    price: 'Price',
+    expirationDatetime: 'Renewal Date',
+    combinedPrice: 'Price',
     actionCol_1: ''
   }
 
   const collection = domainListing.map(domainItem => {
-    const { _id, seller, price, price_fiat, currency, domain } = domainItem;
+    const { _id, seller, price, price_fiat, currency, domain, expirationDate } = domainItem;
 
-    const PriceCell = (
-      <>
-        <PriceItem key='hola' type='crypto' price={price} currency={currency} />
-        {' = '}
-        <PriceItem type='fiat' price={price_fiat} currency='USD' />
-      </>
-    )
-
-    domainItem.price = PriceCell
+    const priceCellProps = { price, price_fiat, currency, currency_fiat: 'USD', divider: ' = ' };
+    domainItem.combinedPrice = <CombinedPriceCell {...priceCellProps} />
 
     const actionCol_1 = (seller === '38EA6CED3289A2AA554986C7662F58F0')
       ? React.createElement('div', {}, 'TODO')
@@ -75,13 +69,17 @@ const DomainsPage = () => {
             type: MARKET_ACTIONS.SET_BUY_ITEM,
             payload: {
               listingType: MarketListingType.domainListing,
-              item: domainItem
+              item: domainItem,
+              txType: 'buy'
             }
           })
           history.push(ROUTES.CHECKOUT.DOMAINS)
         }}
       />
     domainItem.actionCol_1 = actionCol_1;
+
+
+    domainItem.expirationDatetime = (new Date(expirationDate)).toDateString()
 
     return domainItem;
   })

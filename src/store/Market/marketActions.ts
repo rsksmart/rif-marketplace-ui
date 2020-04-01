@@ -12,6 +12,8 @@ export enum MARKET_ACTIONS {
 export interface ItemPayload {
   listingType: MarketListingType,
   item: MarketItem
+  txType: 'buy' | 'list'
+  isProcessing: boolean
 }
 
 export interface ListingPayload {
