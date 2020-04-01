@@ -1,33 +1,45 @@
-import React, { FC } from 'react';
-import { Card } from 'rifui';
+import React, { FC, useContext } from 'react';
 import ReturnButton, { ReturnButtonProps } from 'components/molecules/ReturnButton';
-import classes from '*.module.css';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
+import MarketStore from 'store/Market/MarketStore';
+import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
 
 export interface CheckoutPageTemplateProps {
     className?: string
     backButtonProps: ReturnButtonProps
+    progressMessage: string
 }
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        content: {
+        body: {
             display: 'flex',
-            flexDirection: 'row',
+            flexDirection: 'column',
             alignContent: 'center',
+            alignItems: 'center',
             justifyContent: 'center',
+            justifyItems: 'center',
         }
     }),
 );
 
-const CheckoutPageTemplate: FC<CheckoutPageTemplateProps> = ({ className = '', backButtonProps, children }) => {
+const CheckoutPageTemplate: FC<CheckoutPageTemplateProps> = ({ className = '', backButtonProps, progressMessage, children }) => {
     const classes = useStyles();
+
+    const {
+        state: {
+            MarketState: {
+                currentOrder
+            }
+        }
+    } = useContext(MarketStore)
 
     return (
         <div className={className}>
             <ReturnButton {...backButtonProps} />
-            <div className={classes.content}>
+            <div className={classes.body}>
                 {children}
+                {!!currentOrder && currentOrder.isProcessing && <TransactionInProgressPanel text={progressMessage} />}
             </div>
         </div>
     )

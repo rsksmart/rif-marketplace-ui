@@ -1,7 +1,7 @@
 import React, { Dispatch, useContext } from 'react';
 
 import Middleware from 'store/storeUtils/middleware';
-import { MarketAction } from './marketActions';
+import { MarketAction, ItemPayload } from './marketActions';
 import marketReducer from './marketReducer';
 import { MarketItemType, MarketListingType, MarketItem } from 'models/Market';
 
@@ -18,10 +18,7 @@ export interface IMarketState {
       lastUpdated: number;
     };
   };
-  currentOrder?: {
-    listingType: MarketListingType,
-    item: MarketItem
-  }
+  currentOrder?: ItemPayload
 }
 
 interface IMarketStoreProps {

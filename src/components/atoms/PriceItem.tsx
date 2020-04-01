@@ -18,7 +18,9 @@ const PriceItem: FC<PriceItemProps> = ({ type, price, currency, classes }) => {
 
 const styles = {
     crypto: {
-        color: 'blue'
+        color: 'blue',
+        fontSize: '1.3em'
+
     },
     fiat: {
         color: 'grey'

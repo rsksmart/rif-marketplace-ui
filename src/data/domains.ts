@@ -8,7 +8,8 @@ export const domainListing: DomainItemType[] = [
     currency: "RIF",
     price_fiat: 1.1,
     _id: '0x38EA6CED3289A2AA554986C7662F58F0',
-    seller: '38EA6CED3289A2AA554986C7662F58F0'
+    seller: '0x38EA6CED3289A2AA554986C7662F58F0',
+    expirationDate: Date.now(),
   },
   {
     tld: ".rsk",
@@ -17,7 +18,8 @@ export const domainListing: DomainItemType[] = [
     currency: "DOC",
     price_fiat: 1,
     _id: '38EA6CED3289A2AA554986C7662F58F1',
-    seller: '38EA6CED3289A2AA554986C7662F58F1'
+    seller: '0x38EA6CED3289A2AA554986C7662F58F1',
+    expirationDate: Date.now() + 2000,
   },
   {
     tld: ".rsk",
@@ -26,7 +28,8 @@ export const domainListing: DomainItemType[] = [
     currency: "RIF",
     price_fiat: 1.375,
     _id: '38EA6CED3289A2AA554986C7662F58F2',
-    seller: '38EA6CED3289A2AA554986C7662F58F2'
+    seller: '0x38EA6CED3289A2AA554986C7662F58F2',
+    expirationDate: Date.now() + 2000,
   },
   {
     tld: ".rsk",
@@ -35,7 +38,8 @@ export const domainListing: DomainItemType[] = [
     currency: "RBTC",
     price_fiat: 3,
     _id: '38EA6CED3289A2AA554986C7662F58F3',
-    seller: '38EA6CED3289A2AA554986C7662F58F3'
+    seller: '0x38EA6CED3289A2AA554986C7662F58F3',
+    expirationDate: Date.now() + 2000,
   },
   {
     tld: ".rsk",
@@ -44,7 +48,8 @@ export const domainListing: DomainItemType[] = [
     currency: "RBTC",
     price_fiat: 3,
     _id: '38EA6CED3289A2AA554986C7662F58F4',
-    seller: '38EA6CED3289A2AA554986C7662F58F4'
+    seller: '0x38EA6CED3289A2AA554986C7662F58F4',
+    expirationDate: Date.now() + 2000,
   },
   {
     tld: ".rsk",
@@ -53,7 +58,8 @@ export const domainListing: DomainItemType[] = [
     currency: "RIF",
     price_fiat: 0.825,
     _id: '38EA6CED3289A2AA554986C7662F58F5',
-    seller: '38EA6CED3289A2AA554986C7662F58F5'
+    seller: '0x38EA6CED3289A2AA554986C7662F58F5',
+    expirationDate: Date.now() + 2000,
   },
   {
     tld: ".rsk",
@@ -62,7 +68,8 @@ export const domainListing: DomainItemType[] = [
     currency: "RBTC",
     price_fiat: 3,
     _id: '38EA6CED3289A2AA554986C7662F58F6',
-    seller: '38EA6CED3289A2AA554986C7662F58F6'
+    seller: '0x38EA6CED3289A2AA554986C7662F58F6',
+    expirationDate: Date.now() + 2000,
   },
   {
     tld: ".rsk",
@@ -71,7 +78,8 @@ export const domainListing: DomainItemType[] = [
     currency: "RBTC",
     price_fiat: 3,
     _id: '38EA6CED3289A2AA554986C7662F58F7',
-    seller: '38EA6CED3289A2AA554986C7662F58F7'
+    seller: '0x38EA6CED3289A2AA554986C7662F58F7',
+    expirationDate: Date.now() + 2000,
   },
   {
     tld: ".iov",
@@ -80,7 +88,8 @@ export const domainListing: DomainItemType[] = [
     currency: "DOC",
     price_fiat: 5,
     _id: '38EA6CED3289A2AA554986C7662F58F8',
-    seller: '38EA6CED3289A2AA554986C7662F58F8'
+    seller: '0x38EA6CED3289A2AA554986C7662F58F8',
+    expirationDate: Date.now() + 2000,
   },
   {
     tld: ".iov",
@@ -89,7 +98,8 @@ export const domainListing: DomainItemType[] = [
     currency: "DOC",
     price_fiat: 2,
     _id: '38EA6CED3289A2AA554986C7662F58F9',
-    seller: '38EA6CED3289A2AA554986C7662F58F9'
+    seller: '0x38EA6CED3289A2AA554986C7662F58F9',
+    expirationDate: Date.now() + 2000,
   },
   {
     tld: ".iov",
@@ -98,6 +108,7 @@ export const domainListing: DomainItemType[] = [
     currency: "RIF",
     price_fiat: 0.55,
     _id: '38EA6CED3289A2AA554986C7662F58FA',
-    seller: '38EA6CED3289A2AA554986C7662F58FA'
+    seller: '0x38EA6CED3289A2AA554986C7662F58FA',
+    expirationDate: Date.now() + 2000,
   }
 ]
