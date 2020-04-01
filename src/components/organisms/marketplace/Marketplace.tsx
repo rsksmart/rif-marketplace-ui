@@ -3,7 +3,7 @@ import { Table } from 'react-bootstrap';
 
 import './Marketplace.css';
 import { MarketItemType } from 'models/Market';
-import { TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
+import { TableHead, TableRow, TableCell, TableBody } from 'rifui';
 
 export interface TableHeaders {
   [itemName: string]: string | React.ElementType
@@ -26,24 +26,22 @@ const Marketplace: FC<MarketplaceProps> = ({
           <TableHead>
             <TableRow>
               {Object.keys(headers).map((itemName: string) => (
-                <TableCell key={`th-${itemName}`} align='center'>{headers[itemName]}</TableCell>
+                <TableCell className={`th-${itemName}`} key={`th-${itemName}`}>{headers[itemName]}</TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {
-              items.map(item => (
-                <TableRow key={item._id}>
-                  {
-                    Object.keys(headers).map((itemName: string) => (
-                      <TableCell key={item._id + itemName} align='center'>
-                        {item[itemName]}
-                      </TableCell>
-                    ))
-                  }
-                </TableRow>
-              ))
-            }
+            {items.map(item => (
+              <TableRow key={item._id}>
+                {
+                  Object.keys(headers).map((itemName: string) => (
+                    <TableCell className={`tc-${itemName}`} key={item._id + itemName}>
+                      {item[itemName]}
+                    </TableCell>
+                  ))
+                }
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>
