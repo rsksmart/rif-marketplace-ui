@@ -2,7 +2,8 @@ import React from 'react';
 import { ROUTES } from 'routes';
 import Web3Provider from 'rifui/providers/Web3Provider';
 import { Account, Navbar } from 'rifui';
-import { NavItemProps } from 'rifui/components/molecules/Navbar';
+// import { NavItemProps } from 'rifui/components/molecules/Navbar';
+import { NavLinkProps } from 'react-router-dom';
 
 const Login = () => (
   <Web3Provider.Consumer>
@@ -24,26 +25,26 @@ const Header = () => {
   //   },
   // } = useContext(UserStore);
 
-  const navItems: NavItemProps[] = [
+  const navItems: NavLinkProps[] = [
     {
-      text: 'Domains',
-      href: ROUTES.DOMAINS,
+      title: 'Domains',
+      to: ROUTES.DOMAINS,
     },
     {
-      text: 'Storage',
-      href: ROUTES.STORAGE,
+      title: 'Storage',
+      to: ROUTES.STORAGE,
     },
     {
-      text: 'Payments',
-      href: '/'
+      title: 'Payments',
+      to: ROUTES.PAYMENTS
     },
     {
-      text: 'Data Services',
-      href: '/'
+      title: 'Data Services',
+      to: ROUTES.DATA_SERVICE
     },
     {
-      text: 'Communications',
-      href: '/'
+      title: 'Communications',
+      to: ROUTES.COMMUNICATIONS
     }
   ];
 

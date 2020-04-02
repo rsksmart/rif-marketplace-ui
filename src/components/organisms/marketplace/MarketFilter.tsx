@@ -10,18 +10,30 @@ import {
   FilterCheckboxCard,
   Grid,
   RangeSliderWithInputs,
-  Switch,
-  TextField
+  SwitchTabs,
+  Typography,
 } from 'rifui';
-import SearchFilter from '../../molecules/SearchFilter';
-import { Search } from 'rifui/icons'
+import SearchFilter from 'components/molecules/SearchFilter';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 
 export interface MarketFilterProps {
   className?: string;
   filters: {}[];
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+  },
+  form: {
+    padding: theme.spacing(3)
+  },
+  formHeading: {
+    paddingBottom: theme.spacing(2)
+  }
+}));
 const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
+  const classes = useStyles();
+
   /* Temporary constants to be replaced by store */
   const priceUnit = 'USD';
   const priceMin = 0;
@@ -37,41 +49,43 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
   const curRif: LabeledCheckboxProps = {
     checked: true,
     id: 'check-rif',
-    label: 'RIF',
+    labelText: 'RIF',
     labelClassName: '',
   };
   const curRbtc: LabeledCheckboxProps = {
     checked: true,
     id: 'check-rbtc',
-    label: 'R-BTC',
+    labelText: 'R-BTC',
     labelClassName: '',
   };
   const curDoc: LabeledCheckboxProps = {
     checked: true,
     id: 'check-doc',
-    label: 'DOC (Dollar on Chain)',
+    labelText: 'DOC (Dollar on Chain)',
     labelClassName: '',
   };
 
   const curSwarm: LabeledCheckboxProps = {
     checked: true,
     id: 'check-rif',
-    label: 'RIF',
+    labelText: 'RIF',
     labelClassName: '',
   };
   const curIpfs: LabeledCheckboxProps = {
     checked: true,
     id: 'check-rbtc',
-    label: 'R-BTC',
+    labelText: 'R-BTC',
     labelClassName: '',
   };
   const curSia: LabeledCheckboxProps = {
     checked: true,
     id: 'check-doc',
-    label: 'DOC (Dollar on Chain)',
+    labelText: 'DOC (Dollar on Chain)',
     labelClassName: '',
   };
   /* End of temp constants */
+
+  const handleSwitchChange = (newSwitchValue: number) => console.log(`New switch value: ${newSwitchValue}`);
 
   return (
     <div className={`filter ${className}`}>
@@ -115,11 +129,18 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
           const storageTypeItems = [curSwarm, curIpfs, curSia];
 
           return (
-            <form>
-              <Switch checkedText={'buy'} uncheckedText={'sell'} />
-              <br />
+            <form className={classes.form} >
+              <Grid className={classes.formHeading} container>
+                <Grid item md={6}>
+                  <Typography weight='bold' variant='h5'>
+                    Domains
+                  </Typography>
+                </Grid>
+                <Grid item md={6}>
+                  <SwitchTabs label1='Buy' label2='Sell' onChange={handleSwitchChange} />
+                </Grid>
+              </Grid>
               <SearchFilter onChange={formik.handleChange}></SearchFilter>
-
               <MarketFilterItem name="Price">
                 <Accordion
                   id="price"

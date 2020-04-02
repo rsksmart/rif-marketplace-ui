@@ -1,12 +1,30 @@
 import React, { FC, useState } from 'react';
-import { Checkbox as MUICheckbox, CheckboxProps as MUICheckboxProps } from '@material-ui/core';
-import { StopRounded, BorderAll } from '@material-ui/icons';
-import CheckBoxOutlineBlankOutlinedIcon from '@material-ui/icons/CheckBoxOutlineBlankOutlined';
-import { colors } from '../../../theme';
+import {
+	Checkbox as MUICheckbox,
+	CheckboxProps as MUICheckboxProps,
+	makeStyles,
+	createStyles,
+	Theme
+} from '@material-ui/core';
+import { CheckBoxOutlineBlankSharp, CheckBoxSharp } from '@material-ui/icons';
+import { colors } from 'rifui/theme';
 
-export interface CheckboxProps extends MUICheckboxProps { }
+export interface CheckboxProps extends MUICheckboxProps { };
+
+const useStyles = makeStyles((theme: Theme) =>
+	createStyles({
+		unCheckedIcon: {
+			color: colors.gray4
+		},
+		checkedIcon: {
+			color: colors.primary,
+		}
+	})
+);
 
 const Checkbox: FC<CheckboxProps> = props => {
+
+	const classes = useStyles();
 	const [checked, setChecked] = useState(!!props.checked);
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -15,11 +33,11 @@ const Checkbox: FC<CheckboxProps> = props => {
 
 	return (
 		<MUICheckbox
-			icon={
-				<CheckBoxOutlineBlankOutlinedIcon style={{ color: colors.gray }} />
-			}
 			checkedIcon={
-				<StopRounded stroke={colors.gray} stroke-width={1} style={{ color: colors.primary, border: `2px ${colors.gray}` }} />
+				<CheckBoxSharp className={classes.checkedIcon} />
+			}
+			icon={
+				<CheckBoxOutlineBlankSharp className={classes.unCheckedIcon} />
 			}
 			{...props}
 			checked={checked}

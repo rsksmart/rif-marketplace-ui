@@ -1,10 +1,11 @@
 import React, { FC, useState } from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import ExpansionPanel, { ExpansionPanelProps } from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import Typography from '@material-ui/core/Typography';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Typography } from 'rifui';
+import { colors } from 'rifui/theme';
 
 interface AccordionProps extends ExpansionPanelProps {
   id: string;
@@ -14,11 +15,18 @@ interface AccordionProps extends ExpansionPanelProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      boxShadow: 'none',
+      color: colors.gray4,
       width: '100%',
     },
     heading: {
+      color: colors.gray4,
       fontSize: theme.typography.pxToRem(15),
+      fontWeight: theme.typography.fontWeightBold,
       width: '100%'
+    },
+    expansionPanelSummary: {
+      borderBottom: `1px solid ${colors.gray2}`
     }
   })
 );
@@ -30,20 +38,18 @@ const Accordion: FC<AccordionProps> = ({ children, expanded, id, title, ...rest 
   const onChange = () => setIsExpanded(!isExpanded);
 
   return (
-    <div className={classes.root}>
-      <ExpansionPanel expanded={isExpanded} onChange={onChange}>
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls={`panel-${id}-content`}
-          id={id}
-        >
-          <Typography className={classes.heading}>{title}</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          {children}
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-    </div>
+    <ExpansionPanel className={classes.root} expanded={isExpanded} onChange={onChange}>
+      <ExpansionPanelSummary className={classes.expansionPanelSummary}
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls={`panel-${id}-content`}
+        id={id}
+      >
+        <Typography className={classes.heading}>{title}</Typography>
+      </ExpansionPanelSummary>
+      <ExpansionPanelDetails>
+        {children}
+      </ExpansionPanelDetails>
+    </ExpansionPanel>
   );
 }
 

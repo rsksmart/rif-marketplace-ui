@@ -1,33 +1,42 @@
 import React, { FC } from 'react';
+import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import {
-	FormControl,
-	InputAdornment,
-	TextField
+  InputAdornment,
+  TextField
 } from 'rifui';
 import { Search } from 'rifui/icons'
 import { colors } from 'rifui/theme';
 
 export interface SearchFilterProps {
-	onChange: any;
+  onChange: (event: React.FormEvent<Element>) => void;
 };
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      width: '100%',
+    },
+  })
+);
+
 const SearchFilter: FC<SearchFilterProps> = ({ onChange, ...rest }) => {
-	return (
-		<FormControl style={{ width: '100%' }}>
-			<TextField onChange={onChange} {...rest} InputProps=
-				{{
-					startAdornment: (
-						<InputAdornment position="start">
-							<Search style={{ color: colors.gray }} />
-						</InputAdornment>)
-				}}
-				name="search"
-				variant="outlined"
-				placeholder="Search your domain"
-				style={{ width: '100%' }}
-				className='w-100' />
-		</FormControl>
-	);
+  const classes = useStyles();
+  return (
+    <TextField
+      className={classes.root}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <Search style={{ color: colors.gray3 }} />
+          </InputAdornment>)
+      }}
+      name="search"
+      onChange={onChange}
+      {...rest}
+      placeholder="Search your domain"
+      variant="outlined"
+    />
+  );
 };
 
 export default SearchFilter;
