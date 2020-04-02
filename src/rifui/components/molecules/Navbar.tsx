@@ -1,43 +1,44 @@
 import React, { FC } from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import AppBar, { AppBarProps } from '@material-ui/core/AppBar';
-import Divider from '@material-ui/core/Divider';
 import Toolbar from '@material-ui/core/Toolbar';
-import { LogoNavbar, Link, Typography } from '../atoms/index';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    itemsContainer: {
-      alignSelf: 'center',
-      display: 'flex',
-      marginLeft: 'auto'
-    },
-    link: {
-      color: '#FFF',
-      fontWeight: 300,
-      // .ito - TODO: - when active, set to 500
-      paddingRight: theme.spacing(5),
-      paddingLeft: theme.spacing(5),
-      '&:hover': {
-        color: "#000",
-      },
-    },
-    loginContainer: {
-      marginLeft: 'auto',
-    }
-  }),
-);
-
-export interface NavItemProps {
-  text: string;
-  href: string;
-};
+import { makeStyles, Theme } from '@material-ui/core/styles';
+import { NavLink, NavLinkProps } from 'react-router-dom';
+import { LogoNavbar, Link, Typography } from 'rifui/components/atoms/index';
+import { colors, fonts } from 'rifui/theme';
 
 export interface NavbarProps extends AppBarProps {
   hreflogo: string;
-  items: NavItemProps[];
+  items: NavLinkProps[];
   login: React.ElementType;
 };
+
+const useStyles = makeStyles((theme: Theme) => ({
+  itemsContainer: {
+    display: 'flex',
+  },
+  navLinkContainer: {
+    minWidth: '50',
+    maxWidth: 200,
+  },
+  navLink: {
+    color: colors.white,
+    minWidth: '100%',
+    minHeight: '100%',
+    paddingLeft: theme.spacing(5),
+    paddingRight: theme.spacing(5),
+    '&:hover': {
+      color: colors.gray5,
+      textDecoration: 'none',
+    },
+  },
+  activeNavlink: {
+    color: colors.white,
+    fontWeight: fonts.weight.bold
+  },
+  loginContainer: {
+    marginLeft: 'auto',
+  }
+}));
 
 const Navbar: FC<NavbarProps> = ({ children, items, login, ...rest }) => {
 
@@ -53,11 +54,11 @@ const Navbar: FC<NavbarProps> = ({ children, items, login, ...rest }) => {
         <div className={classes.itemsContainer}>
           {
             !!items.length &&
-            items.map((navItem: NavItemProps, i) => (
-              <Typography key={`${navItem.text}-${i}`}>
-                <Link className={classes.link} href={navItem.href}>
-                  {navItem.text}
-                </Link>
+            items.map((navItem: NavLinkProps, i) => (
+              <Typography className={classes.navLinkContainer} key={`${navItem.title}-${i}`}>
+                <NavLink className={classes.navLink} activeClassName={classes.activeNavlink} to={navItem.to}>
+                  {navItem.title}
+                </NavLink>
               </Typography>
             ))
           }

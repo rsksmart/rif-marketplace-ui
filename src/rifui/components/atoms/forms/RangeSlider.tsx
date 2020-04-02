@@ -1,16 +1,33 @@
-import React, { FC, FormEvent} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { FC, FormEvent } from 'react';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Slider, { SliderProps as MUISliderProps } from '@material-ui/core/Slider';
+import { colors } from 'rifui/theme';
 
 interface RangeSliderProps extends MUISliderProps {
   handleChange: (event: FormEvent<Element>, newValue: number | number[]) => void;
 }
 
-const useStyles = makeStyles({
-  root: {
-    width: "100%",
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      width: "100%",
+      color: colors.primary,
+      height: 4
+    },
+    rail: {
+      color: colors.gray3,
+      height: 4
+    },
+    track: {
+      height: 4
+    },
+    thumb: {
+      marginLeft: -4,
+      height: 14,
+      width: 14
+    }
+  })
+);
 
 const RangeSlider: FC<RangeSliderProps> = ({ handleChange, ...rest }) => {
 
@@ -20,14 +37,11 @@ const RangeSlider: FC<RangeSliderProps> = ({ handleChange, ...rest }) => {
   };
 
   return (
-    <div className={classes.root}>
-      <Slider
-        aria-labelledby="discrete-slider"
-        valueLabelDisplay="auto"
-        onChange={onChange}
-        {...rest}
-      />
-    </div>
+    <Slider
+      classes={classes}
+      onChange={onChange}
+      {...rest}
+    />
   );
 };
 

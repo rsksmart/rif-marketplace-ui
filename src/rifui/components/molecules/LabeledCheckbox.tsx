@@ -1,17 +1,27 @@
 import React, { FC } from 'react';
+import { makeStyles, Theme } from '@material-ui/core';
 import Checkbox, { CheckboxProps } from '../atoms/forms/Checkbox';
 import FormControlLabel from '../atoms/forms/FormControlLabel';
+import { colors } from 'rifui/theme';
 
 export interface LabeledCheckboxProps extends CheckboxProps {
-  label: string;
+  labelText: string;
   labelClassName?: string;
 }
 
-const LabeledCheckbox: FC<LabeledCheckboxProps> = ({ label, labelClassName, ...rest }) => {
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    color: colors.gray4,
+    width: "100%",
+  },
+}));
+
+const LabeledCheckbox: FC<LabeledCheckboxProps> = ({ labelText, labelClassName = '', ...rest }) => {
+  const classes = useStyles();
   return (
     <FormControlLabel
-      className={labelClassName}
-      label={label}
+      className={`${classes.root} ${labelClassName.trim()}`}
+      label={labelText}
       control={
         <Checkbox {...rest} />
       } />

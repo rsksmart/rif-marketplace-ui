@@ -1,13 +1,12 @@
+import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { MarketStoreProvider } from 'store/Market/MarketStore';
+import Web3Provider from 'rifui/providers/Web3Provider';
+import { ThemeProvider, Theme, makeStyles } from '@material-ui/core/styles';
+import { theme } from 'rifui/theme';
 import Footer from 'components/organisms/Footer';
 import Header from 'components/organisms/Header';
 import Routes from 'components/Routes';
-import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import Web3Provider from 'rifui/providers/Web3Provider';
-import { MarketStoreProvider } from 'store/Market/MarketStore';
-
-import { theme } from 'rifui/theme';
-import { ThemeProvider } from '@material-ui/core/styles';
 
 // TODO: Remove this once connected to cache
 import { MarketListingType } from 'models/Market';
@@ -18,27 +17,25 @@ const persistence = LocalStorage.getInstance();
 
 persistence.setItem(MarketListingType.domainListing, domainListing);
 
+const useStyles = makeStyles((theme: Theme) => ({
+  router: {
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+  }
+}));
+
 const App = () => {
+  const classes = useStyles();
+
   return (
     <ThemeProvider theme={theme}>
       <MarketStoreProvider>
         <Web3Provider.Provider>
           <Router>
-            <div
-              data-testid="wrapper"
-              style={{
-                minHeight: '100vh',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
+            <div className={classes.router}>
               <Header />
-
-              {/* Content of the dapp*/}
-              {/* <div style={{ paddingTop: '1em' }}> */}
               <Routes />
-              {/* </div> */}
-              {/* <div style={{ flexGrow: 1 }} /> */}
               <Footer />
             </div>
           </Router>

@@ -1,9 +1,7 @@
 import React, { FC, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import { SliderProps as MUISliderProps } from '@material-ui/core/Slider';
-import Input from '@material-ui/core/Input';
-
-import { RangeSlider } from '../atoms/index';
+import { RangeSlider, Typography, UnitsInput } from 'rifui';
 
 export interface RangeSliderWithInputsProps extends MUISliderProps {
   values: {
@@ -13,14 +11,21 @@ export interface RangeSliderWithInputsProps extends MUISliderProps {
   units?: string;
 };
 
-const useStyles = makeStyles({
-  root: {
-    width: "100%",
-  },
-  input: {
-    width: 42,
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  ({
+    root: {
+      width: "100%",
+    },
+    inputsContainer: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      width: '100%'
+    },
+  })
+);
+
+// .ito TODO: use masks to display units better - ask Diego if it will be editable
+// https://material-ui.com/components/text-fields/#integration-with-3rd-party-input-libraries
 
 const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ values, units, ...rest }) => {
   const classes = useStyles();
@@ -71,41 +76,36 @@ const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ values, units, 
     }
   };
 
+  const getCommonInputValues = () => {
+    return {
+      maxValue: maxValue,
+      minValue: minValue,
+      step: step,
+      units: units,
+    }
+  }
+
   return (
     <div className={classes.root}>
       <RangeSlider value={sliderRangeValues} {...rest} handleChange={handleSliderChange} />
-
-      <Input
-        className={classes.input}
-        value={startValue}
-        margin="dense"
-        onChange={handleStartInputChange}
-        onBlur={handleStartValueBlur}
-        inputProps={{
-          step: step,
-          min: minValue,
-          max: maxValue,
-          type: 'number',
-          'aria-labelledby': 'input-slider',
-        }}
-      />
-      {units ? units : ''}
-      <b> to </b>
-      <Input
-        className={classes.input}
-        value={endValue}
-        margin="dense"
-        onChange={handleEndInputChange}
-        onBlur={handleEndValueBlur}
-        inputProps={{
-          step: step,
-          min: minValue,
-          max: maxValue,
-          type: 'number',
-          'aria-labelledby': 'input-slider',
-        }}
-      />
-      {units ? units : ''}
+      <div className={classes.inputsContainer}>
+        <UnitsInput
+          handleOnBlur={handleStartValueBlur}
+          handleOnChange={handleStartInputChange}
+          {...getCommonInputValues()}
+          value={startValue}
+        />
+        <Typography weight='bold'>
+          to
+        </Typography>
+        <UnitsInput
+          handleOnBlur={handleEndValueBlur}
+          handleOnChange={handleEndInputChange}
+          {...getCommonInputValues()}
+          value={endValue}
+        >
+        </UnitsInput>
+      </div>
     </div>
   );
 }

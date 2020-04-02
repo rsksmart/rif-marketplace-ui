@@ -3,17 +3,31 @@ import {
 } from '@material-ui/core/styles';
 
 export const colors = {
+	black: '#000000',
 	primary: '#008FF7',
-	gray: '#919191',
-	lightGray: '#C4C4C4',
-	superLightGray: '#E5E5E5'
+	darkBlue: '#197DC6',
+	gray1: '#F8F7F7',
+	gray2: '#E5E5E5',
+	gray3: '#C4C4C4',
+	gray4: '#919191',
+	gray5: '#4D4C4C',
+	transparent: '#FFFFFF00',
+	white: '#FFFFFF'
 };
 
 export const fonts = {
-	fontFamily: 'Rubik',
-	fontSizeSmall: 10,
-	fontSizeNormal: 14,
-	fontSizeMedium: 16,
+	family: 'Rubik',
+	size: {
+		small: 10,
+		normal: 14,
+		medium: 16
+	},
+	weight: {
+		normal: 300,
+		lightBold: 500,
+		bold: 700,
+		superBold: 900
+	}
 }
 
 const theme = createMuiTheme({
@@ -21,67 +35,14 @@ const theme = createMuiTheme({
 		primary: {
 			main: colors.primary,
 		},
-		secondary: {
-			main: colors.gray
-		}
 	},
 	typography: {
-		// TODO: install the font
-		// fontFamily: fonts.fontFamily,
-		fontSize: fonts.fontSizeNormal,
+		// TODO: install Rubik font
 	},
 	props: {
-		// MuiSvgIcon: {
-		// 	style: {
-		// 		color: colors.gray
-		// 	}
-		// },
-		MuiCheckbox: {
-			style: {
-				color: colors.primary
-			}
-		},
-		MuiExpansionPanel: {
-			style: {
-				// color: colors.gray,
-				fontSize: fonts.fontSizeNormal,
-				fontWeight: 500,
-			}
-		},
-		MuiExpansionPanelDetails: {
-			style: {
-			}
-		},
-		MuiExpansionPanelSummary: {
-			style: {
-				borderBottom: `1px solid ${colors.superLightGray}`
-			}
-		},
-		MuiLink: {
-			style: {
-			}
-		},
-		MuiSwitch: {
-			color: "primary",
-			// style: {
-			//   color: colors.primary,
-			// }
-		},
-		MuiTypography: {
-			style: {
-			}
-		}
 	},
-	// overrides: {
-	// 	MuiCheckbox: {
-	// 		colorSecondary: {
-	// 			color: colors.primary,
-	// 			'&$checked': {
-	// 				color: colors.primary,
-	// 			},
-	// 		},
-	// 	}
-	// }
+	overrides: {
+	}
 });
 
 export default theme;
