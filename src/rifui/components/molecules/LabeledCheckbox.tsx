@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-import Checkbox, { ICheckboxProps } from '../atoms/forms/Checkbox';
+import Checkbox, { CheckboxProps } from '../atoms/forms/Checkbox';
 import FormControlLabel from '../atoms/forms/FormControlLabel';
 
-export interface LabeledCheckboxProps extends ICheckboxProps {
+export interface LabeledCheckboxProps extends CheckboxProps {
   label: string;
   labelClassName?: string;
 }

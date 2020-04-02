@@ -6,7 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import Web3Provider from 'rifui/providers/Web3Provider';
 import { MarketStoreProvider } from 'store/Market/MarketStore';
 
-import { theme } from 'rifui';
+import { theme } from 'rifui/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 
 // TODO: Remove this once connected to cache

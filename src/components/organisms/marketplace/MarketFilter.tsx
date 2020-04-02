@@ -13,7 +13,7 @@ import {
   Switch,
   TextField
 } from 'rifui';
-
+import SearchFilter from '../../molecules/SearchFilter';
 import { Search } from 'rifui/icons'
 
 export interface MarketFilterProps {
@@ -117,17 +117,8 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
           return (
             <form>
               <Switch checkedText={'buy'} uncheckedText={'sell'} />
-
-              {/* .ito - TODO: move this to a new molecule */}
-              {/* .ito - add adornments to rifui and follow this example: https://material-ui.com/components/text-fields/#icons */}
-              <Grid container spacing={1} alignItems="flex-end">
-                <Grid item>
-                  <Search />
-                </Grid>
-                <Grid item>
-                  <TextField onChange={formik.handleChange} name="search" variant="outlined" label="Search your domain" className='w-100' />
-                </Grid>
-              </Grid>
+              <br />
+              <SearchFilter onChange={formik.handleChange}></SearchFilter>
 
               <MarketFilterItem name="Price">
                 <Accordion
