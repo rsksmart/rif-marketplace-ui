@@ -7,11 +7,6 @@ import { LogoNavbar, Link, Typography } from '../atoms/index';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    // root: {
-    //   '& > * + *': {
-    //     marginLeft: theme.spacing(2),
-    //   },
-    // },
     itemsContainer: {
       alignSelf: 'center',
       display: 'flex',
@@ -20,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
     link: {
       color: '#FFF',
       fontWeight: 300,
-      // .ito - when active, set to 500
+      // .ito - TODO: - when active, set to 500
       paddingRight: theme.spacing(5),
       paddingLeft: theme.spacing(5),
       '&:hover': {

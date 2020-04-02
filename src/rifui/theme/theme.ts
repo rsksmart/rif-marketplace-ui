@@ -1,70 +1,87 @@
 import {
-  createMuiTheme
+	createMuiTheme
 } from '@material-ui/core/styles';
 
-const globalProperties = {
-  colors: {
-    primary: '#008FF7',
-    gray: '#919191'
-  },
-  fonts: {
-    fontFamily: 'Rubik',
-    fontSizeNormal: 14,
-    fontSizeMedium: 16,
-  }
+export const colors = {
+	primary: '#008FF7',
+	gray: '#919191',
+	lightGray: '#C4C4C4',
+	superLightGray: '#E5E5E5'
+};
+
+export const fonts = {
+	fontFamily: 'Rubik',
+	fontSizeSmall: 10,
+	fontSizeNormal: 14,
+	fontSizeMedium: 16,
 }
 
 const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: globalProperties.colors.primary,
-    },
-    // secondary: {
-    //   main: globalProperties.colors.gray
-    // }
-  },
-  typography: {
-    fontFamily: globalProperties.fonts.fontFamily,
-    fontSize: globalProperties.fonts.fontSizeNormal,
-  },
-  props: {
-    MuiCheckbox: {
-      style: {
-        color: globalProperties.colors.primary
-      }
-    },
-    MuiLink: {
-      style: {
-
-      }
-    },
-    MuiExpansionPanel: {
-      style: {
-        color: globalProperties.colors.gray,
-        fontSize: globalProperties.fonts.fontSizeNormal,
-        fontWeight: 500,
-      }
-    },
-    MuiExpansionPanelDetails: {
-      style: {
-      }
-    },
-    MuiExpansionPanelSummary: {
-      style: {
-        borderBottom: `1px solid ${globalProperties.colors.gray}`
-      }
-    },
-    MuiSwitch: {
-      color: "primary",
-      // style: {
-      //   color: globalProperties.colors.primary,
-      // }
-    },
-    MuiTypography: {
-      style: {
-      }
-    }
-  }
+	palette: {
+		primary: {
+			main: colors.primary,
+		},
+		secondary: {
+			main: colors.gray
+		}
+	},
+	typography: {
+		// TODO: install the font
+		// fontFamily: fonts.fontFamily,
+		fontSize: fonts.fontSizeNormal,
+	},
+	props: {
+		// MuiSvgIcon: {
+		// 	style: {
+		// 		color: colors.gray
+		// 	}
+		// },
+		MuiCheckbox: {
+			style: {
+				color: colors.primary
+			}
+		},
+		MuiExpansionPanel: {
+			style: {
+				// color: colors.gray,
+				fontSize: fonts.fontSizeNormal,
+				fontWeight: 500,
+			}
+		},
+		MuiExpansionPanelDetails: {
+			style: {
+			}
+		},
+		MuiExpansionPanelSummary: {
+			style: {
+				borderBottom: `1px solid ${colors.superLightGray}`
+			}
+		},
+		MuiLink: {
+			style: {
+			}
+		},
+		MuiSwitch: {
+			color: "primary",
+			// style: {
+			//   color: colors.primary,
+			// }
+		},
+		MuiTypography: {
+			style: {
+			}
+		}
+	},
+	// overrides: {
+	// 	MuiCheckbox: {
+	// 		colorSecondary: {
+	// 			color: colors.primary,
+	// 			'&$checked': {
+	// 				color: colors.primary,
+	// 			},
+	// 		},
+	// 	}
+	// }
 });
 
 export default theme;
