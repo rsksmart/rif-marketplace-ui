@@ -31,7 +31,7 @@ const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ values, units, 
 
   const [startValue, setStartValue] = useState<number>(values.start);
   const [endValue, setEndValue] = useState<number>(values.end);
-  const [sliderRangeValues, setSliderRangeValues] = useState<number | number[]>([startValue, endValue]);
+  const [sliderRangeValues, setSliderRangeValues] = useState<number[]>([startValue, endValue]);
 
   const handleStartInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newStartValue = event.target.value === '' ? values.start : Number(event.target.value);
@@ -52,7 +52,7 @@ const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ values, units, 
   const handleSliderChange = (event: any, newSliderValue: number | number[]) => {
     setEndValue(newSliderValue[1]);
     setStartValue(newSliderValue[0]);
-    setSliderRangeValues(newSliderValue);
+    setSliderRangeValues(newSliderValue as number[]);
   }
 
   const handleStartValueBlur = () => {

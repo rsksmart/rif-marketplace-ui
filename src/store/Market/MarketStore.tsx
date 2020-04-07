@@ -1,20 +1,27 @@
+import { MarketFilterIface } from 'models/Market';
 import React, { Dispatch, useContext } from 'react';
-
 import Middleware from 'store/storeUtils/middleware';
-import { MarketAction, ItemPayload } from './marketActions';
+import { ItemPayload, MarketAction } from './marketActions';
 import marketReducer from './marketReducer';
-import { MarketItemType, MarketListingType, MarketItem } from 'models/Market';
+import { DomainItemIface } from 'models/marketItems/DomainItem';
+import { StorageItemIface } from 'models/marketItems/StorageItem';
+import { DomainsFilterIface } from 'api/models/RnsFilter';
+
 
 export interface IMarketState {
   listings: {
-    domainListing: MarketItemType[];
-    storageListing: MarketItemType[];
+    domainListing: DomainItemIface[];
+    storageListing: StorageItemIface[];
   };
+  filters: {
+    domainListing: DomainsFilterIface,
+    storageListing?: MarketFilterIface,
+  }
   metadata: {
-    domain: {
+    domainListing: {
       lastUpdated: number;
     };
-    storage: {
+    storageListing: {
       lastUpdated: number;
     };
   };
@@ -31,11 +38,22 @@ export const initialState: IMarketState = {
     domainListing: [],
     storageListing: [],
   },
+  filters: {
+    domainListing: {
+      price: {
+        $lte: 9999,
+        $gte: 0
+      },
+      sellerDomain: {
+        $like: ''
+      }
+    },
+  },
   metadata: {
-    domain: {
+    domainListing: {
       lastUpdated: -1,
     },
-    storage: {
+    storageListing: {
       lastUpdated: -1,
     },
   },

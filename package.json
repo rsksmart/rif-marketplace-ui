@@ -4,7 +4,7 @@
   "description": "RIF Marketplace provides a digital catalogue with a wide range of decentralised services.",
   "keywords": [
     "RIF",
-    "communication",
+    "marketplace",
     "decentralized",
     "RSK"
   ],
@@ -24,6 +24,8 @@
     "url": "https://github.com/rsksmart/rif-marketplace-ui.git"
   },
   "dependencies": {
+    "@feathersjs/feathers": "^4.5.2",
+    "@feathersjs/socketio-client": "^4.5.2",
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@fortawesome/react-fontawesome": "^0.1.9",
@@ -38,6 +40,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.3.0",
     "reactrangeslider": "^3.0.6",
+    "socket.io-client": "^2.3.0",
     "typescript": "^3.7.4",
     "web3": "^1.2.6"
   },

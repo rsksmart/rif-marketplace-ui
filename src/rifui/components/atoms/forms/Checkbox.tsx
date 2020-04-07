@@ -4,13 +4,16 @@ import { Checkbox as MUICheckbox, CheckboxProps as MUICheckboxProps } from '@mat
 export interface ICheckboxProps extends MUICheckboxProps { }
 
 const Checkbox: FC<ICheckboxProps> = props => {
-  const [checked, setChecked] = useState(!!props.checked);
+  const [isChecked, setIsChecked] = useState(!!props.checked);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean): void => {
+    setIsChecked(checked);
+
+    const { onChange } = props;
+    !!onChange && onChange(event, checked);
   }
 
-  return <MUICheckbox {...props} checked={checked} onChange={handleChange} />
+  return <MUICheckbox {...props} checked={isChecked} onChange={handleChange} />
 }
 
 export default Checkbox;

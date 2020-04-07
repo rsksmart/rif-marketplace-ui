@@ -62,7 +62,7 @@ const DomainsCheckoutPage = () => {
         if (!currentOrder) {
             history.replace(ROUTES.DOMAINS);
         }
-    }, [currentOrder])
+    }, [currentOrder, history])
 
     if (!currentOrder) return null;
 

@@ -6,15 +6,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import Web3Provider from 'rifui/providers/Web3Provider';
 import { MarketStoreProvider } from 'store/Market/MarketStore';
 
-// TODO: Remove this once connected to cache
-import { MarketListingType } from 'models/Market';
-import LocalStorage from 'utils/LocalStorage';
-import { domainListing } from 'data/domains';
-const persistence = LocalStorage.getInstance();
-// End of the block to be removed
-
-persistence.setItem(MarketListingType.domainListing, domainListing);
-
 const App = () => {
   return (
     <MarketStoreProvider>
