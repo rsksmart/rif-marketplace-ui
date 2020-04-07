@@ -8,15 +8,6 @@ import Footer from 'components/organisms/Footer';
 import Header from 'components/organisms/Header';
 import Routes from 'components/Routes';
 
-// TODO: Remove this once connected to cache
-import { MarketListingType } from 'models/Market';
-import LocalStorage from 'utils/LocalStorage';
-import { domainListing } from 'data/domains';
-const persistence = LocalStorage.getInstance();
-// End of the block to be removed
-
-persistence.setItem(MarketListingType.domainListing, domainListing);
-
 const useStyles = makeStyles((theme: Theme) => ({
   router: {
     minHeight: '100vh',

@@ -1,7 +1,7 @@
-import { StorageItemType } from 'models/marketItems/StorageItem';
+import { StorageItemIface } from 'models/marketItems/StorageItem';
 
 
-export const storageListing: StorageItemType[] = [
+export const storageListing: StorageItemIface[] = [
   {
     provider: "0xA68c5b2b16e9b6a1FE4f14276dc9B7D0eeA9F808",
     size: 1000000000,

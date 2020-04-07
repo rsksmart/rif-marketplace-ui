@@ -1,13 +1,23 @@
-import { DomainItemType } from "./marketItems/DomainItem"
-import { StorageItemType } from "./marketItems/StorageItem"
+import { DomainItemIface } from "./marketItems/DomainItem"
+import { StorageItemIface } from "./marketItems/StorageItem"
+import { DomainsFilterIface } from "api/models/RnsFilter"
 
-export interface MarketItem {
+export interface MarketItemIface {
     _id: string;
 }
 
-export enum MarketListingType {
+export enum MarketListingTypes {
     domainListing = 'domainListing',
-    storageListing= 'storageListing',
+    storageListing = 'storageListing',
 }
 
-export type MarketItemType = DomainItemType & StorageItemType
+export type MarketItemType = DomainItemIface & StorageItemIface
+
+
+export interface MarketFilterIface {
+    [filterFieldName: string]: {
+        [filterType: string]: any
+    }
+}
+
+export type MarketFilterType = DomainsFilterIface

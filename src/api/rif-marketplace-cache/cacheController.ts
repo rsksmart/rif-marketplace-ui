@@ -1,27 +1,26 @@
-import { MarketItem, MarketListingType, MarketItemType } from 'models/Market';
-import LocalStorage from 'utils/LocalStorage';
-const persistence = LocalStorage.getInstance()
+import { maplistingToType } from 'api/utils';
+import { MarketItemType, MarketListingTypes, MarketFilterIface } from 'models/Market';
+import feathers from '@feathersjs/feathers';
+import socketio from '@feathersjs/socketio-client';
+import io from 'socket.io-client';
 
-export const addItem = async (item: MarketItem, type: MarketListingType) => {
-    const itemCollection: MarketItem[] = persistence.getItem(type) || [];
-    itemCollection.push(item);
-    persistence.setItem(type, itemCollection);
+// TODO: extract
+const CACHE_BASE_ADDR = process.env.REACT_APP_CACHE_ADDR || 'http://localhost:3030';
+
+const socket = io(CACHE_BASE_ADDR);
+const client = feathers();
+client.configure(socketio(socket));
+// <- extract
+
+const services = {
+    offers: client.service(`rns/v0/offers`)
 }
 
-export const updateItem = async (item_id: string, updated_item: MarketItem, type: MarketListingType) => {
-    const itemCollection: MarketItem[] = persistence.getItem(type) || [];
-    const newCollection: MarketItem[] = itemCollection.map(item => {
-        if (item._id === item_id) return updated_item;
-        return item;
-    });
-    persistence.setItem(type, newCollection);
-}
 
-export const getItem = async (item_id: string, type: MarketListingType) => {
-    const itemCollection: MarketItem[] = persistence.getItem(type) || []
-    return itemCollection.find(item => item._id === item_id)
-}
-
-export const fetchMarketDataFor = async (listingType: MarketListingType): Promise<MarketItemType[]> => {
-    return persistence.getItem(listingType) || [];
+export const fetchMarketDataFor = async (listingType: MarketListingTypes, filters?: MarketFilterIface):
+    Promise<MarketItemType[]> => {
+    const data = await services.offers.find({
+        query: filters
+    })
+    return maplistingToType(data.data, listingType);
 }

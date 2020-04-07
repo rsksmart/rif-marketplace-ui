@@ -21,14 +21,15 @@ const useStyles = makeStyles((theme: Theme) =>
 		}
 	})
 );
-
 const Checkbox: FC<CheckboxProps> = props => {
-
 	const classes = useStyles();
-	const [checked, setChecked] = useState(!!props.checked);
+	const [isChecked, setIsChecked] = useState(!!props.checked);
 
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setChecked(event.target.checked);
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean): void => {
+		setIsChecked(checked);
+
+		const { onChange } = props;
+		!!onChange && onChange(event, checked);
 	}
 
 	return (
@@ -40,7 +41,7 @@ const Checkbox: FC<CheckboxProps> = props => {
 				<CheckBoxOutlineBlankSharp className={classes.unCheckedIcon} />
 			}
 			{...props}
-			checked={checked}
+			checked={isChecked}
 			onChange={handleChange} />
 	);
 }
