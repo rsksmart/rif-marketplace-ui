@@ -7,10 +7,10 @@ import { Formik } from 'formik';
 import React, { useContext, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import { Card, CardContent, CardHeader } from 'rifui';
 import { ROUTES } from 'routes';
 import MarketStore from 'store/Market/MarketStore';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
+import { Card, CardHeader, CardContent } from 'rifui/components/atoms/card';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -62,7 +62,7 @@ const DomainsCheckoutPage = () => {
         if (!currentOrder) {
             history.replace(ROUTES.DOMAINS);
         }
-    }, [currentOrder])
+    }, [currentOrder, history])
 
     if (!currentOrder) return null;
 
@@ -70,7 +70,7 @@ const DomainsCheckoutPage = () => {
     const {
         item: {
             domain,
-            seller,
+            sellerAddress,
             expirationDate,
             price,
             price_fiat,
@@ -79,7 +79,7 @@ const DomainsCheckoutPage = () => {
         isProcessing
     } = currentOrder;
 
-    const shortSeller = `${seller.slice(0, 6)}..${seller.slice(-5)}`.toLocaleLowerCase()
+    const shortSeller = `${sellerAddress.slice(0, 6)}..${sellerAddress.slice(-5)}`.toLocaleLowerCase()
 
     const priceCellProps = { price, price_fiat, currency, currency_fiat: 'USD', divider: ' ' };
     const PriceCell = <CombinedPriceCell {...priceCellProps} />

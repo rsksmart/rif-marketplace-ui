@@ -1,6 +1,5 @@
-import React, { FC } from 'react'
-import classes from '*.module.css';
-import { makeStyles, Theme, createStyles } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import React, { FC } from 'react';
 
 export interface ItemDetailRowProps {
     name: string

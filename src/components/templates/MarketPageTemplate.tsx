@@ -1,27 +1,30 @@
+import MarketFilter from 'components/templates/marketplace/MarketFilter';
+import Marketplace, { TableHeaders } from 'components/templates/marketplace/Marketplace';
+import { MarketItemType, MarketListingTypes } from 'models/Market';
 import React, { FC } from 'react';
 
 // TODO: use MaterialUI classes
 import './MarketPageTemplate.css';
-import MarketFilter from 'components/organisms/marketplace/MarketFilter';
-import Marketplace, { TableHeaders } from 'components/organisms/marketplace/Marketplace';
-import { MarketItemType } from 'models/Market';
+
 
 export interface MarketPageTemplateProps {
   className: string;
-  filters: {}[];
+  listingType: MarketListingTypes;
+  filterItems: React.ReactNode;
   itemCollection: MarketItemType[];
   headers: TableHeaders;
 }
 
 const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   className,
-  filters,
+  listingType,
+  filterItems,
   itemCollection,
   headers,
 }) => {
   return (
     <div className={`market-page ${className}`}>
-      <MarketFilter filters={filters} />
+      <MarketFilter listingType={listingType}>{filterItems}</MarketFilter>
       <Marketplace items={itemCollection} headers={headers} />
     </div>
   );
