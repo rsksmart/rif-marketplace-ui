@@ -2,7 +2,6 @@ import React from 'react';
 import { ROUTES } from 'routes';
 import Web3Provider from 'rifui/providers/Web3Provider';
 import { Account, Navbar } from 'rifui';
-// import { NavItemProps } from 'rifui/components/molecules/Navbar';
 import { NavLinkProps } from 'react-router-dom';
 
 const Login = () => (
@@ -19,12 +18,6 @@ const Login = () => (
 );
 
 const Header = () => {
-  // const {
-  //   state: {
-  //     UserState: { user, isSigningIn = true },
-  //   },
-  // } = useContext(UserStore);
-
   const navItems: NavLinkProps[] = [
     {
       title: 'Domains',

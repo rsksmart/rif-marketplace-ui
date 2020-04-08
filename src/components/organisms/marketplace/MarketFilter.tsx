@@ -132,11 +132,11 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
             <form className={classes.form} >
               <Grid className={classes.formHeading} container>
                 <Grid item md={6}>
-                  <Typography weight='bold' variant='h5'>
+                  <Typography weight='bold' variant='h6' color='primary'>
                     Domains
                   </Typography>
                 </Grid>
-                <Grid item md={6}>
+                <Grid style={{ display: 'flex', alignSelf: 'center' }} item md={6}>
                   <SwitchTabs label1='Buy' label2='Sell' onChange={handleSwitchChange} />
                 </Grid>
               </Grid>
@@ -201,7 +201,6 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '' }) => {
                     max={maxSizeVal}
                     min={minSizeVal}
                     units={sizeUnit}
-                    className="w-100"
                   />
                 </Accordion>
               </MarketFilterItem>

@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   activeNavlink: {
-    color: colors.white,
+    color: `${colors.white} !important`,
     fontWeight: fonts.weight.bold
   },
   loginContainer: {

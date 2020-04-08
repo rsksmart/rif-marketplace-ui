@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const FormControlLabel: FC<FormControlLabelProps> = ({ className = '', ...rest }) => {
   const classes = useStyles();
 
-  return <MUIFormControlLabel className={`${className.trim()} ${classes.root}`} {...rest} />;
+  return <MUIFormControlLabel className={`${classes.root} ${className} `.trim()} {...rest} />;
 };
 
 export default FormControlLabel;

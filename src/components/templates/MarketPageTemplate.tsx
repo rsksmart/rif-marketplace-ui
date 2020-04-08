@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 
+// TODO: use MaterialUI classes
 import './MarketPageTemplate.css';
 import MarketFilter from 'components/organisms/marketplace/MarketFilter';
 import Marketplace from 'components/organisms/marketplace/Marketplace';

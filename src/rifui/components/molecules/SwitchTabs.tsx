@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Tab as MUITab, Tabs as MUITabs } from '@material-ui/core';
 
-import { colors } from 'rifui/theme';
+import { colors, fonts } from 'rifui/theme';
 
 export interface SwitchTabsProps {
   label1: string;
@@ -32,27 +32,32 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tab: {
     "&:hover": {
-      backgroundColor: colors.gray4,
-      color: colors.white
+      color: colors.primary
     },
     borderRadius: 50,
     color: colors.gray3,
     maxWidth: '50%',
     minHeight: '100%',
     minWidth: '50%',
+    outlineStyle: 'none',
     padding: 0,
     textTransform: 'capitalize',
-    zIndex: 1
+    zIndex: 1,
+    '&:focus': {
+      outlineStyle: 'none'
+    }
   },
+  // shows the transition between tabs
   tabIndicator: {
     backgroundColor: colors.primary,
     borderRadius: 50,
-    height: '100%'
+    height: '100%',
   },
   tabSelected: {
     // the '!important' here is to override the on hover functionality when it's active
     backgroundColor: `${colors.primary} !important`,
-    color: `${colors.white}`
+    color: `${colors.white} !important`,
+    fontWeight: fonts.weight.lightBold,
   }
 }));
 
