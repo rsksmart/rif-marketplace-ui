@@ -3,7 +3,6 @@ import { Modal as MUIModal, ModalProps as MUIModalProps } from '@material-ui/cor
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { colors } from 'rifui/theme';
 
-// .ito - TODO: add Title, Body, Close and Open button
 export interface ModalProps extends MUIModalProps { };
 
 function getModalStyle() {
