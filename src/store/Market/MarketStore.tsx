@@ -41,7 +41,7 @@ export const initialState: IMarketState = {
   filters: {
     domainListing: {
       price: {
-        $lte: 9999,
+        $lte: 100,
         $gte: 0
       },
       sellerDomain: {

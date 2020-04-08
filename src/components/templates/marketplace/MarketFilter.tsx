@@ -15,27 +15,7 @@ const MarketFilter: FC<MarketFilterProps> = ({ className = '', children }) => {
 
   return (
     <div className={`filter ${className}`}>
-
-      {/* <Form
-        onChange={(ev) => {
-          // const { name, value } = ev.target;
-          // const newValue = {};
-          // newValue[`${name}`] = value;
-          // const newValues = Object.assign(formik.values, newValue);
-          // formik.values = newValues;
-          // formik.handleSubmit(ev)
-
-          // dispatch({
-          //   type: MARKET_ACTIONS.SET_FILTER,
-          //   payload: {
-          //     listingType,
-          //     // filterItems: MarketFilterIface[]
-          //   }
-          // })
-        }}
-      > */}
       {children}
-      {/* </Form> */}
     </div>
   );
 };

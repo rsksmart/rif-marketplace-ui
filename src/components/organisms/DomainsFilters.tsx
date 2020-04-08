@@ -1,52 +1,30 @@
-import React, { FC, useContext, useEffect } from 'react'
-import MarketStore from 'store/Market/MarketStore';
-import { useMarketUtils } from 'store/Market/marketStoreUtils';
 import { MarketListingTypes } from 'models/Market';
+import React, { useContext } from 'react';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
-import SearchFilter from './filters/SearchFilter';
+import MarketStore from 'store/Market/MarketStore';
 import RangeFilter from './filters/RangeFilter';
+import SearchFilter from './filters/SearchFilter';
 
-export interface DomainsFiltersProps {
-    className?: string
-    searchValue: string
-    setSearchValue: any
-}
 
-const DomainsFilters: FC<DomainsFiltersProps> = ({ className = '', searchValue, setSearchValue }) => {
+const DomainsFilters = () => {
     const {
         state: {
-            AppState: {
-                isLoading
-            },
             MarketState: {
                 filters: {
-                    domainsFilter
+                    domainListing: {
+                        sellerDomain: {
+                            $like: searchValue,
+                        },
+                        price: {
+                            $gte: minPrice,
+                            $lte: maxPrice,
+                        }
+                    }
                 }
             }
         },
         dispatch
     } = useContext(MarketStore);
-    const { fetchListingItems } = useMarketUtils(dispatch);
-
-    // useEffect(() => {
-    //     if (!isLoading) {
-    //         (async () => {
-    //             const items = await fetchListingItems(
-    //                 MarketListingTypes.domainListing,
-    //                 domainsFilter
-    //             );
-
-    //             dispatch({
-    //                 type: MARKET_ACTIONS.SET_ITEMS,
-    //                 payload: {
-    //                     listingType: MarketListingTypes.domainListing,
-    //                     items,
-    //                 },
-    //             });
-    //         })();
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [searchValue, domainsFilter])
 
     return (
         <>
@@ -54,21 +32,44 @@ const DomainsFilters: FC<DomainsFiltersProps> = ({ className = '', searchValue, 
                 value={searchValue}
                 onChange={(evt) => {
                     const { currentTarget: { value } } = evt;
-                    console.log('value:', value);
-                    setSearchValue(value);
+                    dispatch({
+                        type: MARKET_ACTIONS.SET_FILTER,
+                        payload: {
+                            listingType: MarketListingTypes.domainListing,
+                            filterItems: {
+                                sellerDomain: {
+                                    $like: value
+                                }
+                            }
+                        }
+                    })
                 }}
             />
             <RangeFilter
                 title='Price'
-                currentValues={{
-                    min: domainsFilter.price['$gte'],
-                    max: domainsFilter.price['$lte'],
+                values={{
+                    start: minPrice,
+                    end: maxPrice,
                 }}
-                maxValues={{
-                    min: domainsFilter.price['$gte'],
-                    max: domainsFilter.price['$lte'],
+                hedgeValues={{
+                    min: 0,  // TODO: to be defined (get min value from the cache server?)
+                    max: 100, // TODO: to be defined (get max value from the cache server?)
                 }}
                 unit='RIF'
+                handleChange={({ min, max }) => {
+                    dispatch({
+                        type: MARKET_ACTIONS.SET_FILTER,
+                        payload: {
+                            listingType: MarketListingTypes.domainListing,
+                            filterItems: {
+                                price: {
+                                    $gte: min,
+                                    $lte: max,
+                                }
+                            }
+                        }
+                    })
+                }}
             />
         </>
     )
