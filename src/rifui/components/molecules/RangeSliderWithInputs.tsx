@@ -17,17 +17,21 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "100%",
     },
     inputsContainer: {
+      alignSelf: 'center',
       display: 'flex',
       justifyContent: 'space-between',
       width: '100%'
     },
+    toContainer: {
+      alignSelf: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+      width: '100%'
+    }
   })
 );
 
-// .ito TODO: use masks to display units better - ask Diego if it will be editable
-// https://material-ui.com/components/text-fields/#integration-with-3rd-party-input-libraries
-
-const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ values, units, ...rest }) => {
+const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ className = '', values, units, ...rest }) => {
   const classes = useStyles();
 
   const maxValue = rest.max || values.end;
@@ -86,7 +90,7 @@ const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ values, units, 
   }
 
   return (
-    <div className={classes.root}>
+    <div className={`${classes.root} ${className}`.trim()}>
       <RangeSlider value={sliderRangeValues} {...rest} handleChange={handleSliderChange} />
       <div className={classes.inputsContainer}>
         <UnitsInput
@@ -95,7 +99,7 @@ const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ values, units, 
           {...getCommonInputValues()}
           value={startValue}
         />
-        <Typography weight='bold'>
+        <Typography className={classes.toContainer} weight='bold'>
           to
         </Typography>
         <UnitsInput
@@ -103,8 +107,7 @@ const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ values, units, 
           handleOnChange={handleEndInputChange}
           {...getCommonInputValues()}
           value={endValue}
-        >
-        </UnitsInput>
+        />
       </div>
     </div>
   );

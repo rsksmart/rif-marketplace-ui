@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const TextField: FC<TextFieldProps> = ({ className = '', ...rest }) => {
   const classes = useStyles();
-  return <MUITextField className={`${classes.root} ${className.trim()}`} {...rest} />;
+  return <MUITextField className={`${classes.root} ${className}`.trim()} {...rest} />;
 }
 
 export default TextField;

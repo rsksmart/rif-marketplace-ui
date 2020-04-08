@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { InputProps } from '../atoms/forms/Input';
-import { Input, InputAdornment, Typography } from 'rifui';
+import { Grid, Input, Typography } from 'rifui';
 import { colors, fonts } from 'rifui/theme';
 
 export interface UnitsInputProps extends InputProps {
@@ -15,20 +15,31 @@ export interface UnitsInputProps extends InputProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: colors.gray2,
     color: colors.gray4,
     display: 'flex',
   },
   input: {
     color: colors.gray4,
+    paddingLeft: theme.spacing(0.1),
     textAlign: 'center',
     '&::before': {
       borderBottom: `1px solid ${colors.gray4}`
     },
   },
-  adornmentTypography: {
+  inputContainer: {
+    paddingRight: '0 !important'
+  },
+  units: {
     color: colors.gray4,
-    fontSize: fonts.size.normal
+    display: 'flex',
+    fontSize: fonts.size.small
+  },
+  unitsContainer: {
+    alignSelf: 'center',
+    color: colors.gray4,
+    display: 'flex',
+    fontSize: fonts.size.normal,
+    paddingLeft: '0 !important'
   }
 }));
 
@@ -45,31 +56,30 @@ const UnitsInput: FC<UnitsInputProps> = props => {
 
   const classes = useStyles();
   return (
-    <div className={classes.root}>
-      <Input
-        className={classes.input}
-        classes={{ input: classes.input }}
-        value={value}
-        margin="dense"
-        onChange={handleOnChange}
-        onBlur={handleOnBlur}
-        inputProps={{
-          step: step,
-          min: minValue,
-          max: maxValue,
-          type: 'number',
-          'aria-labelledby': 'input-slider',
-        }}
-        endAdornment={
-          <InputAdornment position="end">
-            <Typography
-              className={classes.adornmentTypography}>
-              {units ? units : ''}
-            </Typography>
-          </InputAdornment>
-        }
-      />
-    </div>
+    <>
+      <Grid className={classes.root} container spacing={1}>
+        <Grid className={classes.inputContainer} item xs={8}>
+          <Input
+            className={classes.input}
+            classes={{ input: classes.input }}
+            value={value}
+            onChange={handleOnChange}
+            onBlur={handleOnBlur}
+            inputProps={{
+              step: step,
+              min: minValue,
+              max: maxValue,
+              'aria-labelledby': 'input-slider',
+            }}
+          />
+        </Grid>
+        <Grid item xs={4} className={classes.unitsContainer}>
+          <Typography className={classes.units}>
+            {units}
+          </Typography>
+        </Grid>
+      </Grid>
+    </>
   );
 };
 

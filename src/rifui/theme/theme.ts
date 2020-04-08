@@ -1,6 +1,4 @@
-import {
-	createMuiTheme
-} from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
 
 export const colors = {
 	black: '#000000',
@@ -35,6 +33,9 @@ const theme = createMuiTheme({
 		primary: {
 			main: colors.primary,
 		},
+		secondary: {
+			main: colors.gray5
+		}
 	},
 	typography: {
 		// TODO: install Rubik font

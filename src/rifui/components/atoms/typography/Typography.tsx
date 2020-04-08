@@ -29,7 +29,7 @@ const Typography: FC<TypographyProps> = ({ weight = 'normal', className = '', ch
   const classes = useStyles();
 
   return (
-    <MUITypography className={`${className} ${classes[weight]}`} {...rest}>
+    <MUITypography className={`${classes[weight]} ${className}`.trim()} {...rest}>
       {children}
     </MUITypography>
   );

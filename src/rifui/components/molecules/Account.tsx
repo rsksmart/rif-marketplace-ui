@@ -80,7 +80,7 @@ const Account: FC<AccountProps> = ({
             )}
           </ModalBody>
           <ModalFooter>
-            <Button variant='outlined' onClick={handleClose}>Close</Button>
+            <Button variant='outlined' color='secondary' block onClick={handleClose}>Close</Button>
           </ModalFooter>
         </>
       </Modal>

@@ -1,5 +1,5 @@
 import React, { FC, FormEvent } from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Slider, { SliderProps as MUISliderProps } from '@material-ui/core/Slider';
 import { colors } from 'rifui/theme';
 
@@ -16,7 +16,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     rail: {
       color: colors.gray3,
-      height: 4
+      height: 4,
+      opacity: 1
     },
     track: {
       height: 4

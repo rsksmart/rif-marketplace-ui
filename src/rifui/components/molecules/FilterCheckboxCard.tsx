@@ -11,7 +11,7 @@ const FilterCheckboxCard: FC<FilterCheckboxCardProps> = ({ className = '', items
     <div className={className}>
       {items.map((item: LabeledCheckboxProps, i) => (
         <LabeledCheckbox
-          key={`lc-${item.id}` || `lc-${i}-${className.trim()}`}
+          key={`labeledCheckbox-${item.id}` || `labeledCheckbox-${i}-${className}`.trim()}
           labelClassName={item.labelClassName}
           {...item}
         />
