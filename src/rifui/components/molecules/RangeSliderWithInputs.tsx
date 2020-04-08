@@ -10,7 +10,8 @@ export interface RangeSliderWithInputsProps extends MUISliderProps {
     start: number,
     end: number
   };
-  units?: string;
+  unit?: string;
+  handleChange: ({ min, max }) => void;
 };
 
 const useStyles = makeStyles({
@@ -22,7 +23,7 @@ const useStyles = makeStyles({
   },
 });
 
-const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ values, units, ...rest }) => {
+const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ values, unit, handleChange, ...rest }) => {
   const classes = useStyles();
 
   const maxValue = rest.max || values.end;
@@ -39,6 +40,7 @@ const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ values, units, 
       setStartValue(newStartValue);
       setSliderRangeValues([newStartValue, sliderRangeValues[1]]);
     }
+    handleChange({ min: startValue, max: endValue })
   };
 
   const handleEndInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,12 +49,14 @@ const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ values, units, 
       setSliderRangeValues([sliderRangeValues[0], newEndValue]);
       setEndValue(newEndValue);
     }
+    handleChange({ min: startValue, max: endValue })
   };
 
   const handleSliderChange = (event: any, newSliderValue: number | number[]) => {
     setEndValue(newSliderValue[1]);
     setStartValue(newSliderValue[0]);
     setSliderRangeValues(newSliderValue as number[]);
+    handleChange({ min: startValue, max: endValue })
   }
 
   const handleStartValueBlur = () => {
@@ -89,7 +93,7 @@ const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ values, units, 
           'aria-labelledby': 'input-slider',
         }}
       />
-      {units ? units : ''}
+      {unit ? unit : ''}
       <b> to </b>
       <Input
         className={classes.input}
@@ -105,7 +109,7 @@ const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ values, units, 
           'aria-labelledby': 'input-slider',
         }}
       />
-      {units ? units : ''}
+      {unit ? unit : ''}
     </div>
   );
 }

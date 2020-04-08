@@ -1,22 +1,18 @@
 import React, { FC } from 'react'
 import MarketFilterItem from 'components/molecules/MarketFilterItem';
 import { Accordion, RangeSliderWithInputs } from 'rifui';
+import { RangeSliderWithInputsProps } from 'rifui/components/molecules/RangeSliderWithInputs';
 
-export interface RangeFilterProps {
+export interface RangeFilterProps extends RangeSliderWithInputsProps {
     className?: string
     title: string
-    currentValues: {
+    hedgeValues: {
         min: number,
         max: number
     },
-    maxValues: {
-        min: number,
-        max: number
-    },
-    unit: string
 }
 
-const RangeFilter: FC<RangeFilterProps> = ({ className = '', title, currentValues, maxValues, unit }) => {
+const RangeFilter: FC<RangeFilterProps> = ({ className = '', title, hedgeValues, ...rest }) => {
 
     return <MarketFilterItem name={title}>
         <Accordion
@@ -30,14 +26,10 @@ const RangeFilter: FC<RangeFilterProps> = ({ className = '', title, currentValue
             title={title}
         >
             <RangeSliderWithInputs
-                values={{
-                    start: currentValues.min,
-                    end: currentValues.max,
-                }}
-                min={maxValues.min}
-                max={maxValues.max}
-                units={unit}
+                min={hedgeValues.min}
+                max={hedgeValues.max}
                 className={`w-100 ${className}`}
+                {...rest}
             />
         </Accordion>
     </MarketFilterItem>
