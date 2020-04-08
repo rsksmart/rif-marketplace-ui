@@ -8,7 +8,9 @@ export interface RangeSliderWithInputsProps extends MUISliderProps {
     start: number,
     end: number
   };
-  units?: string;
+  unit?: string;
+  handleChange: ({ min, max }) => void;
+  className?: string;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -31,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ className = '', values, units, ...rest }) => {
+const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ values, unit, handleChange, className, ...rest }) => {
   const classes = useStyles();
 
   const maxValue = rest.max || values.end;
@@ -48,6 +50,7 @@ const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ className = '',
       setStartValue(newStartValue);
       setSliderRangeValues([newStartValue, sliderRangeValues[1]]);
     }
+    handleChange({ min: startValue, max: endValue })
   };
 
   const handleEndInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,12 +59,14 @@ const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ className = '',
       setSliderRangeValues([sliderRangeValues[0], newEndValue]);
       setEndValue(newEndValue);
     }
+    handleChange({ min: startValue, max: endValue })
   };
 
   const handleSliderChange = (event: any, newSliderValue: number | number[]) => {
     setEndValue(newSliderValue[1]);
     setStartValue(newSliderValue[0]);
     setSliderRangeValues(newSliderValue as number[]);
+    handleChange({ min: startValue, max: endValue })
   }
 
   const handleStartValueBlur = () => {
@@ -85,7 +90,7 @@ const RangeSliderWithInputs: FC<RangeSliderWithInputsProps> = ({ className = '',
       maxValue: maxValue,
       minValue: minValue,
       step: step,
-      units: units,
+      units: unit,
     }
   }
 
