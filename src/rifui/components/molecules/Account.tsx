@@ -2,8 +2,8 @@ import React, { FC, useState } from 'react';
 import { EProvider } from 'rifui/services/Web3Service';
 import { shortenAddress } from 'rifui/utils'
 import Web3 from 'web3';
-import { Button, LoginOption, Modal, Typography } from '../atoms';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import { Button, LoginOption, Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../atoms';
 import { colors, fonts } from 'rifui/theme';
 
 export interface AccountProps {
@@ -14,7 +14,6 @@ export interface AccountProps {
   providers?: EProvider[];
 };
 
-// TODO: extract Modal title, body, open and close buttons when the new Modal Component is ready
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     alignItems: 'center',
@@ -28,24 +27,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
     justifyContent: 'space-between',
     padding: theme.spacing(1),
-    width: '100%',
-  },
-  modalContent: {
-    width: '100%'
-  },
-  modalHeader: {
-    borderBottom: `1px solid ${colors.gray2}`,
-    width: '100%'
-  },
-  modalBody: {
-    padding: theme.spacing(3),
-    width: '100%',
-  },
-  modalFooter: {
-    borderTop: `1px solid ${colors.gray2}`,
-    display: 'flex',
-    justifyContent: 'center',
-    paddingTop: theme.spacing(1),
     width: '100%',
   }
 }))
@@ -78,13 +59,13 @@ const Account: FC<AccountProps> = ({
         open={open} onClose={handleClose}
         aria-labelledby="account-modal-title"
         aria-describedby="account-modal-description">
-        <div className={classes.modalContent}>
-          <div className={classes.modalHeader}>
-            <Typography variant='h5'>
+        <>
+          <ModalHeader>
+            <ModalTitle>
               Connect a wallet to get started
-            </Typography>
-          </div>
-          <div className={classes.modalBody}>
+            </ModalTitle>
+          </ModalHeader>
+          <ModalBody>
             {(providers || [EProvider.METAMASK, EProvider.LOCAL]).map(
               provider => (
                 <LoginOption
@@ -97,11 +78,11 @@ const Account: FC<AccountProps> = ({
                 />
               ),
             )}
-          </div>
-          <div className={classes.modalFooter}>
+          </ModalBody>
+          <ModalFooter>
             <Button variant='outlined' onClick={handleClose}>Close</Button>
-          </div>
-        </div>
+          </ModalFooter>
+        </>
       </Modal>
     </>
   );

@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { InputProps } from '../atoms/forms/Input';
 import { Input, InputAdornment, Typography } from 'rifui';
-import { colors } from 'rifui/theme';
+import { colors, fonts } from 'rifui/theme';
 
 export interface UnitsInputProps extends InputProps {
   handleOnChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -27,7 +27,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   adornmentTypography: {
-    color: colors.gray4
+    color: colors.gray4,
+    fontSize: fonts.size.normal
   }
 }));
 
