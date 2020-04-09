@@ -3,22 +3,19 @@ import Heading from 'components/atoms/Heading';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import ItemDetailRow from 'components/molecules/ItemDetailRow';
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate';
-import { Formik } from 'formik';
 import React, { useContext, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { ROUTES } from 'routes';
-import MarketStore from 'store/Market/MarketStore';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import { Card, CardHeader, CardContent } from 'rifui/components/atoms/card';
+import MarketStore from 'store/Market/MarketStore';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         card: {
             width: 491,
             height: "fit-content",
-            left: 484,
-            top: 159,
             padding: 80,
             paddingTop: 44,
             paddingBottom: 69,
@@ -30,7 +27,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center'
+            alignItems: 'center',
+            justifySelf: 'center',
+            alignSelf: 'center'
         },
         footer: {
             display: 'flex',
@@ -69,33 +68,42 @@ const DomainsCheckoutPage = () => {
 
     const {
         item: {
-            domain,
+            sellerDomain,
             sellerAddress,
             expirationDate,
             price,
             price_fiat,
-            currency
+            paymentToken
         },
         isProcessing
     } = currentOrder;
 
     const shortSeller = `${sellerAddress.slice(0, 6)}..${sellerAddress.slice(-5)}`.toLocaleLowerCase()
 
-    const priceCellProps = { price, price_fiat, currency, currency_fiat: 'USD', divider: ' ' };
+    const priceCellProps = { price, price_fiat, currency: paymentToken, currency_fiat: 'USD', divider: ' ' };
     const PriceCell = <CombinedPriceCell {...priceCellProps} />
 
     const details = {
-        'NAME': domain,
+        'NAME': sellerDomain,
         'SELLER': shortSeller,
         'RENEWAL DATE': (new Date(expirationDate)).toDateString(),
         'PRICE': PriceCell
     }
 
-    const formikConfig = {
-        initialValues: {},
-        onSubmit: () => {
-            dispatch({ type: MARKET_ACTIONS.SET_BUY_ITEM, payload: { ...currentOrder, isProcessing: true } })
-        }
+    const handleSubmit = () => {
+        // TODO: Make transactions
+
+
+
+        dispatch({
+            type: MARKET_ACTIONS.SET_BUY_ITEM,
+            payload: {
+                ...currentOrder,
+                isProcessing: true
+            }
+        })
+        const { txType } = currentOrder;
+        history.replace(ROUTES.DONE.replace(':service', 'domains'), { txType })
     }
 
     return (
@@ -104,43 +112,34 @@ const DomainsCheckoutPage = () => {
             backButtonProps={{
                 backTo: 'domains',
                 handleBackTo: () => {
-                    history.goBack()
+                    history.replace(ROUTES.DOMAINS);
                 }
             }}
             progressMessage='Completing the purchase!'
         >
-            <Formik {...formikConfig}>
-                {
-                    ({
-                        handleSubmit,
-                    }) => <form>
-                            <Card
-                                className={classes.card}
-                            >
-                                <CardHeader
-                                    title={`Buying ${domain}`}
-                                />
-                                <CardContent>
-                                    <Heading hLevel={3}>Domain details</Heading>
-                                    <div className={classes.details}>
-                                        {
-                                            Object.keys(details).map((name, i) => {
-                                                return <ItemDetailRow name={name} value={details[name]} key={'idr-' + name + i} />
-                                            })
-                                        }
-                                    </div>
-                                </CardContent>
-                                {!isProcessing &&
-                                    <CardActions className={classes.footer}>
-                                        <p >Your wallet will open and you will be asked to confirm the transaction for buying the domain.</p>
-                                        <Button onClick={() => handleSubmit()}>Buy domain</Button>
-                                    </CardActions>
-                                }
-                            </Card>
-
-                        </form>
+            <Card
+                className={classes.card}
+            >
+                <CardHeader
+                    title={`Buying ${sellerDomain}`}
+                />
+                <CardContent>
+                    <Heading hLevel={3}>Domain details</Heading>
+                    <div className={classes.details}>
+                        {
+                            Object.keys(details).map((name, i) => {
+                                return <ItemDetailRow name={name} value={details[name]} key={'idr-' + name + i} />
+                            })
+                        }
+                    </div>
+                </CardContent>
+                {!isProcessing &&
+                    <CardActions className={classes.footer}>
+                        <p >Your wallet will open and you will be asked to confirm the transaction for buying the domain.</p>
+                        <Button onClick={handleSubmit}>Buy domain</Button>
+                    </CardActions>
                 }
-            </Formik>
+            </Card>
         </CheckoutPageTemplate >
     );
 };
