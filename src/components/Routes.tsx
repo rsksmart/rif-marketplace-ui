@@ -8,6 +8,7 @@ import Logger from 'utils/Logger';
 import { LandingPage } from './pages/LandingPage';
 import DomainsPage from './pages/DomainsPage';
 import DomainsCheckoutPage from './pages/DomainsCheckoutPage';
+import TransactionCompletePage from './pages/TransactionCompletePage';
 
 const logger = Logger.getInstance();
 
@@ -29,6 +30,7 @@ const Routes = () => {
       <Route exact={true} path={ROUTES.LANDING} component={LandingPage} />
       <Route exact={true} path={ROUTES.DOMAINS} component={DomainsPage} />
       <Route exact={true} path={ROUTES.CHECKOUT.DOMAINS} component={DomainsCheckoutPage} />
+      <Route exact={true} path={ROUTES.DONE} component={TransactionCompletePage} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -5,6 +5,7 @@ export const ROUTES = {
   PAYMENTS: '/payments',
   DOMAINS: '/domains',
   STORAGE: '/storage',
+  DONE: '/:service/done',
   CHECKOUT: {
     DOMAINS: '/domains/checkout'
   }
