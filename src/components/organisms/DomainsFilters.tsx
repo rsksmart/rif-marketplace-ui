@@ -9,16 +9,14 @@ import SearchFilter from './filters/SearchFilter';
 const DomainsFilters = () => {
     const {
         state: {
-            MarketState: {
-                filters: {
-                    domainListing: {
-                        sellerDomain: {
-                            $like: searchValue,
-                        },
-                        price: {
-                            $gte: minPrice,
-                            $lte: maxPrice,
-                        }
+            filters: {
+                domainListing: {
+                    sellerDomain: {
+                        $like: searchValue,
+                    },
+                    price: {
+                        $gte: minPrice,
+                        $lte: maxPrice,
                     }
                 }
             }

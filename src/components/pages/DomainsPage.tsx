@@ -6,6 +6,7 @@ import { MarketListingTypes } from 'models/Market';
 import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { ROUTES } from 'routes';
+import AppStore from 'store/App/AppStore';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore from 'store/Market/MarketStore';
 import { useMarketUtils } from 'store/Market/marketStoreUtils';
@@ -13,17 +14,15 @@ import { useMarketUtils } from 'store/Market/marketStoreUtils';
 const DomainsPage = () => {
   const {
     state: {
-      MarketState: {
-        listings: { domainListing },
-        filters,
-        metadata: {
-          domainListing: { lastUpdated },
-        },
+      listings: { domainListing },
+      filters,
+      metadata: {
+        domainListing: { lastUpdated },
       },
-      AppState: { isLoading },
     },
     dispatch,
   } = useContext(MarketStore);
+  const { state: { isLoading } } = useContext(AppStore)
   const { fetchListingItems } = useMarketUtils(dispatch);
   const history = useHistory()
   const currentFilters = filters.domainListing;

@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useReducer, useRef } from 'react'
-import appReducer from 'store/App/appReducer'
 import Logger from 'utils/Logger'
 
 const logger = Logger.getInstance()
@@ -16,42 +15,9 @@ export default class Middleware {
 
   private constructor() { }
 
-  // From: https://github.com/the-road-to-learn-react/use-combined-reducers/blob/master/src/index.js
-  public useCombinedReducers = combinedReducers => {
-    // Global State
-    const state = Object.keys(combinedReducers).reduce(
-      (acc, key) => ({
-        ...acc,
-        [key]: combinedReducers[key][0],
-      }),
-      {},
-    )
-
-    // Global Dispatch Function
-    const dispatch = action =>
-      Object.keys(combinedReducers)
-        .map(key => {
-          return combinedReducers[key][1]
-        })
-        .forEach(fn => {
-          fn(action)
-        })
-
-    return [state, dispatch]
-  };
-
-  public useMiddleware = (stateName: string, reducer, initialState) => {
+  public useMiddleware = (reducer, initialState) => {
     const prevState = useRef(initialState)
     const [state, dispatch] = useReducer(reducer, initialState)
-
-    const [appState, appDispatch] = useReducer(appReducer, {
-      message: {},
-    })
-
-    const [combinedState, combinedDispatch] = this.useCombinedReducers({
-      [stateName]: [state, dispatch],
-      AppState: [appState, action => appDispatch(action)],
-    })
 
     const dispatchWithMiddleware = useMemo(() => {
       const withMiddleware = dispatch => {
@@ -62,19 +28,19 @@ export default class Middleware {
         }
       }
 
-      return withMiddleware(combinedDispatch)
-    }, [combinedDispatch])
+      return withMiddleware(dispatch)
+    }, [dispatch])
 
     useEffect(() => {
-      if (combinedState !== initialState) {
+      if (state !== initialState) {
         logger.debug('Prev state:', prevState.current)
-        logger.debug('Next state:', combinedState)
+        logger.debug('Next state:', state)
       } else {
-        logger.debug('No change:', combinedState)
+        logger.debug('No change:', state)
       }
-      prevState.current = combinedState
-    }, [initialState, combinedState])
+      prevState.current = state
+    }, [initialState, state])
 
-    return [combinedState, dispatchWithMiddleware]
+    return [state, dispatchWithMiddleware]
   };
 }

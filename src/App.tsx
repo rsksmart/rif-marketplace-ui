@@ -7,6 +7,7 @@ import { theme } from 'rifui/theme';
 import Footer from 'components/organisms/Footer';
 import Header from 'components/organisms/Header';
 import Routes from 'components/Routes';
+import { AppStoreProvider } from 'store/App/AppStore';
 
 const useStyles = makeStyles((theme: Theme) => ({
   router: {
@@ -21,17 +22,19 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <MarketStoreProvider>
-        <Web3Provider.Provider>
-          <Router>
-            <div className={classes.router}>
-              <Header />
-              <Routes />
-              <Footer />
-            </div>
-          </Router>
-        </Web3Provider.Provider>
-      </MarketStoreProvider>
+      <AppStoreProvider>
+        <MarketStoreProvider>
+          <Web3Provider.Provider>
+            <Router>
+              <div className={classes.router}>
+                <Header />
+                <Routes />
+                <Footer />
+              </div>
+            </Router>
+          </Web3Provider.Provider>
+        </MarketStoreProvider>
+      </AppStoreProvider>
     </ThemeProvider>
   );
 };
