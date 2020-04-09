@@ -59,18 +59,12 @@ export const initialState: IMarketState = {
   },
 };
 
-export const useMarketContext = () => useContext(MarketStore);
-
 const MarketStore = React.createContext({} as IMarketStoreProps | any);
 
 export const MarketStoreProvider = ({ children }) => {
   const { useMiddleware } = Middleware.getInstance();
 
-  const [state, dispatch] = useMiddleware(
-    'MarketState',
-    marketReducer,
-    initialState,
-  );
+  const [state, dispatch] = useMiddleware(marketReducer, initialState);
 
   const value = { state, dispatch };
   return <MarketStore.Provider value={value}>{children}</MarketStore.Provider>;

@@ -1,4 +1,3 @@
-import { DomainsFilterIface } from 'api/models/RnsFilter';
 import { MarketListingTypes } from 'models/Market';
 import React, { useContext } from 'react';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
@@ -10,16 +9,14 @@ import SearchFilter from './filters/SearchFilter';
 const DomainsFilters = () => {
     const {
         state: {
-            MarketState: {
-                filters: {
-                    domainListing: {
-                        sellerDomain: {
-                            $like: searchValue,
-                        },
-                        price: {
-                            $gte: minPrice,
-                            $lte: maxPrice,
-                        }
+            filters: {
+                domainListing: {
+                    sellerDomain: {
+                        $like: searchValue,
+                    },
+                    price: {
+                        $gte: minPrice,
+                        $lte: maxPrice,
                     }
                 }
             }

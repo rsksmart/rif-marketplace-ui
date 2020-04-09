@@ -1,6 +1,7 @@
-import React, { Dispatch, useReducer } from 'react'
+import React, { Dispatch } from 'react'
+import marketReducer from 'store/Market/marketReducer'
+import Middleware from 'store/storeUtils/middleware'
 import { AppAction } from './appActions'
-import appReducer from './appReducer'
 
 export interface IAppMessage {
   isError?: boolean
@@ -27,7 +28,9 @@ export const initialState: IAppState = {
 const AppStore = React.createContext({} as IAppStoreProps | any)
 
 export const AppStoreProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(appReducer, initialState)
+  const { useMiddleware } = Middleware.getInstance();
+
+  const [state, dispatch] = useMiddleware(marketReducer, initialState);
 
   const value = { state, dispatch }
   return <AppStore.Provider value={value}>{children}</AppStore.Provider>

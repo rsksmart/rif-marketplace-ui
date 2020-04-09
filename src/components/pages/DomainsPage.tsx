@@ -1,31 +1,28 @@
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import SelectRowButton from 'components/molecules/table/SelectRowButton';
+import DomainsFilters from 'components/organisms/DomainsFilters';
 import MarketPageTemplate from 'components/templates/MarketPageTemplate';
 import { MarketListingTypes } from 'models/Market';
-import React, { useContext, useEffect, FC, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { ROUTES } from 'routes';
+import AppStore from 'store/App/AppStore';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore from 'store/Market/MarketStore';
 import { useMarketUtils } from 'store/Market/marketStoreUtils';
-import SearchFilter from 'components/organisms/filters/SearchFilter';
-import RangeFilter from 'components/organisms/filters/RangeFilter';
-import DomainsFilters from 'components/organisms/DomainsFilters';
 
 const DomainsPage = () => {
   const {
     state: {
-      MarketState: {
-        listings: { domainListing },
-        filters,
-        metadata: {
-          domainListing: { lastUpdated },
-        },
+      listings: { domainListing },
+      filters,
+      metadata: {
+        domainListing: { lastUpdated },
       },
-      AppState: { isLoading },
     },
     dispatch,
   } = useContext(MarketStore);
+  const { state: { isLoading } } = useContext(AppStore)
   const { fetchListingItems } = useMarketUtils(dispatch);
   const history = useHistory()
   const currentFilters = filters.domainListing;
