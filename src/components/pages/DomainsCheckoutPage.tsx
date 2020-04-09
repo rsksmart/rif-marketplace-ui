@@ -10,6 +10,7 @@ import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import { Card, CardHeader, CardContent } from 'rifui/components/atoms/card';
 import MarketStore from 'store/Market/MarketStore';
+import { Web3Store } from 'rifui/providers/Web3Provider';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -48,13 +49,14 @@ const useStyles = makeStyles((theme: Theme) =>
 const DomainsCheckoutPage = () => {
     const history = useHistory();
     const {
-        state: {
-            MarketState: {
-                currentOrder
-            }
-        },
+        state: { currentOrder },
         dispatch
     } = useContext(MarketStore)
+    const {
+        state: {
+            account,
+        }
+    } = useContext(Web3Store);
     const classes = useStyles();
 
     useEffect(() => {
@@ -106,6 +108,7 @@ const DomainsCheckoutPage = () => {
         history.replace(ROUTES.DONE.replace(':service', 'domains'), { txType })
     }
 
+    console.log('account:', account)
     return (
         <CheckoutPageTemplate
             className='domains-checkout-page'

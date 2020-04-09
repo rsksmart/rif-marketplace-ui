@@ -23,14 +23,14 @@ const defaultState = {
   networkName: null,
 };
 
-const { Provider, Consumer } = createContext<IWeb3Provider>({
+export const Web3Store = createContext<IWeb3Provider>({
   state: defaultState,
   actions: {
-    setProvider: () => {},
+    setProvider: () => { },
   },
 });
 
-interface IWeb3ProviderProps {}
+interface IWeb3ProviderProps { }
 interface IWeb3ProviderState {
   provider: EProvider | null;
   web3: Web3 | null;
@@ -99,7 +99,7 @@ class Web3Provider extends Component<IWeb3ProviderProps, IWeb3ProviderState> {
     const { setProvider } = this;
 
     return (
-      <Provider
+      <Web3Store.Provider
         value={{
           actions: {
             setProvider,
@@ -113,9 +113,9 @@ class Web3Provider extends Component<IWeb3ProviderProps, IWeb3ProviderState> {
         }}
       >
         {this.props.children}
-      </Provider>
+      </Web3Store.Provider>
     );
   }
 }
 
-export default { Consumer, Provider: Web3Provider };
+export default { Consumer: Web3Store.Consumer, Provider: Web3Provider };
