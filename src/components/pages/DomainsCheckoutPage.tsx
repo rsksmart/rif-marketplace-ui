@@ -9,6 +9,8 @@ import { useHistory } from 'react-router-dom';
 import { Card, CardContent, CardHeader } from 'rifui';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
+import MarketStore from 'store/Market/MarketStore';
+import { Web3Store } from 'rifui/providers/Web3Provider';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -47,13 +49,17 @@ const useStyles = makeStyles((theme: Theme) =>
 const DomainsCheckoutPage = () => {
     const history = useHistory();
     const {
-        state: {
-            MarketState: {
-                currentOrder
-            }
-        },
+        state: { currentOrder },
         dispatch
     } = useContext(MarketStore)
+    const {
+        state: {
+            account,
+            web3,
+            networkName,
+            provider
+        }
+    } = useContext(Web3Store);
     const classes = useStyles();
 
     useEffect(() => {
@@ -99,12 +105,13 @@ const DomainsCheckoutPage = () => {
             payload: {
                 ...currentOrder,
                 isProcessing: true
-        }
+            }
         })
         const { txType } = currentOrder;
         history.replace(ROUTES.DONE.replace(':service', 'domains'), { txType })
     }
 
+    console.log('account:', account)
     return (
         <CheckoutPageTemplate
             className='domains-checkout-page'
@@ -113,29 +120,29 @@ const DomainsCheckoutPage = () => {
             }}
             progressMessage='Completing the purchase!'
         >
-                            <Card
-                                className={classes.card}
-                            >
-                                <CardHeader
+            <Card
+                className={classes.card}
+            >
+                <CardHeader
                     title={`Buying ${sellerDomain}`}
-                                />
-                                <CardContent>
-                                    <Heading hLevel={3}>Domain details</Heading>
-                                    <div className={classes.details}>
-                                        {
-                                            Object.keys(details).map((name, i) => {
-                                                return <ItemDetailRow name={name} value={details[name]} key={'idr-' + name + i} />
-                                            })
-                                        }
-                                    </div>
-                                </CardContent>
-                                {!isProcessing &&
-                                    <CardActions className={classes.footer}>
-                                        <p >Your wallet will open and you will be asked to confirm the transaction for buying the domain.</p>
+                />
+                <CardContent>
+                    <Heading hLevel={3}>Domain details</Heading>
+                    <div className={classes.details}>
+                        {
+                            Object.keys(details).map((name, i) => {
+                                return <ItemDetailRow name={name} value={details[name]} key={'idr-' + name + i} />
+                            })
+                        }
+                    </div>
+                </CardContent>
+                {!isProcessing &&
+                    <CardActions className={classes.footer}>
+                        <p >Your wallet will open and you will be asked to confirm the transaction for buying the domain.</p>
                         <Button onClick={handleSubmit}>Buy domain</Button>
-                                    </CardActions>
-                                }
-                            </Card>
+                    </CardActions>
+                }
+            </Card>
         </CheckoutPageTemplate >
     );
 };
