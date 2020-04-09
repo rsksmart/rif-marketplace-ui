@@ -114,9 +114,7 @@ const DomainsCheckoutPage = () => {
             className='domains-checkout-page'
             backButtonProps={{
                 backTo: 'domains',
-                handleBackTo: () => {
-                    history.replace(ROUTES.DOMAINS);
-                }
+                onClick: () => { }
             }}
             progressMessage='Completing the purchase!'
         >
