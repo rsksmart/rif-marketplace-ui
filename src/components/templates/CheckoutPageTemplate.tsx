@@ -31,7 +31,7 @@ const CheckoutPageTemplate: FC<CheckoutPageTemplateProps> = ({ className = '', b
 
     return (
         <div className={className}>
-            <ReturnButton {...backButtonProps} />
+            {!currentOrder.isProcessing && <ReturnButton {...backButtonProps} />}
             <div className={classes.body}>
                 {children}
                 {!!currentOrder && currentOrder.isProcessing && <TransactionInProgressPanel text={progressMessage} />}
