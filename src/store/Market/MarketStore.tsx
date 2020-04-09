@@ -1,11 +1,11 @@
+import { DomainsFilterIface } from 'api/models/RnsFilter';
 import { MarketFilterIface } from 'models/Market';
-import React, { Dispatch, useContext } from 'react';
+import { DomainItemIface } from 'models/marketItems/DomainItem';
+import { StorageItemIface } from 'models/marketItems/StorageItem';
+import React, { Dispatch } from 'react';
 import Middleware from 'store/storeUtils/middleware';
 import { ItemPayload, MarketAction } from './marketActions';
 import marketReducer from './marketReducer';
-import { DomainItemIface } from 'models/marketItems/DomainItem';
-import { StorageItemIface } from 'models/marketItems/StorageItem';
-import { DomainsFilterIface } from 'api/models/RnsFilter';
 
 
 export interface IMarketState {

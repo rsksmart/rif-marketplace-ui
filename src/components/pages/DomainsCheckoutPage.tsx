@@ -55,9 +55,6 @@ const DomainsCheckoutPage = () => {
     const {
         state: {
             account,
-            web3,
-            networkName,
-            provider
         }
     } = useContext(Web3Store);
     const classes = useStyles();

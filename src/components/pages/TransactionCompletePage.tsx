@@ -49,7 +49,7 @@ const TransactionCompletePage: FC<TransactionCompletePageProps> = (props) => {
                 <img src={tickWide} alt='done' />
                 <p>Your domain has been {txType === 'buy' ? 'bought' : 'listed'}.</p>
             </div>
-            <a href=''>Check it in the explorer</a>
+            {/* <a href=''>Check it in the explorer</a> */}
             <div className={classes.actions}>
                 <Button>View my domains</Button>
                 {txType === 'buy' && <Button>Buy another domain</Button>}
