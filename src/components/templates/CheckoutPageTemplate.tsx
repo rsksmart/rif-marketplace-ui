@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
             alignItems: 'center',
             justifyContent: 'center',
             justifyItems: 'center',
+            paddingTop: 50,
         }
     }),
 );
@@ -26,13 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const CheckoutPageTemplate: FC<CheckoutPageTemplateProps> = ({ className = '', backButtonProps, progressMessage, children }) => {
     const classes = useStyles();
 
-    const {
-        state: {
-            MarketState: {
-                currentOrder
-            }
-        }
-    } = useContext(MarketStore)
+    const { state: { currentOrder } } = useContext(MarketStore)
 
     return (
         <div className={className}>

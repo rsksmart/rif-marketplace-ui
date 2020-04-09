@@ -26,9 +26,7 @@ const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({ class
 
     const {
         state: {
-            MarketState: {
-                currentOrder
-            }
+            currentOrder
         }
     } = useContext(MarketStore)
 
