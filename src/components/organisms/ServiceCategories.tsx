@@ -20,19 +20,19 @@ function ServiceCategories() {
     },
     {
       className: 'payments',
-      to: ROUTES.LANDING,
+      to: ROUTES.PAYMENTS,
       text: 'Payments',
       iconProps: { name: Icons.PAYMENTS },
     },
     {
       className: 'dataService',
-      to: ROUTES.LANDING,
+      to: ROUTES.DATA_SERVICE,
       text: 'Data Services',
       iconProps: { name: Icons.GATEWAY },
     },
     {
       className: 'communications',
-      to: ROUTES.LANDING,
+      to: ROUTES.COMMUNICATIONS,
       text: 'Communications',
       iconProps: { name: Icons.COMMUNICATIONS },
     },

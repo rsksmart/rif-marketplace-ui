@@ -10,7 +10,7 @@ export interface SelectRowButtonProps {
 const SelectRowButton: FC<SelectRowButtonProps> = ({ className = '', id, handleSelect, children }) => {
 
   return (
-    <Button
+    <Button rounded noShadow
       className={'srb-' + id}
       variant="contained"
       color="primary"

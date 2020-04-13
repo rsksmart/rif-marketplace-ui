@@ -39,6 +39,9 @@ const theme = createMuiTheme({
     },
     typography: {
         // TODO: install Rubik font
+        button: {
+            textTransform: 'none',
+        }
     },
     props: {
     },
