@@ -6,8 +6,10 @@ import RangeFilter from './filters/RangeFilter';
 import SearchFilter from './filters/SearchFilter';
 import { Grid, Typography, SwitchTabs } from 'rifui';
 import { makeStyles, Theme } from '@material-ui/core';
-// import SelectFilter from './filters/SelectFilter';
+import SelectFilter from './filters/SelectFilter';
+import Logger from 'utils/Logger';
 
+const logger = Logger.getInstance()
 
 const useStyles = makeStyles((theme: Theme) => ({
     formHeading: {
@@ -92,7 +94,34 @@ const DomainsFilters = () => {
                     })
                 }}
             />
-            {/* <SelectFilter title='Currency' items={currencyItems}/> */}
+            <SelectFilter
+                title='Currency'
+                onClick={(evt) => {
+                    logger.error('Currency filter is not attached to the cache.')
+                    // dispatch({
+                    //     type: MARKET_ACTIONS.SET_FILTER,
+                    //     payload: {
+                    //         listingType: MarketListingTypes.domainListing,
+                    //     }
+                    // })
+                }}
+                items={[
+                    {
+                        checked: false,
+                        id: 'check-rif',
+                        labelText: 'RIF',
+                    },
+                    {
+                        checked: false,
+                        id: 'check-rbtc',
+                        labelText: 'RBTC',
+                    },
+                    {
+                        checked: false,
+                        id: 'check-doc',
+                        labelText: 'DOC',
+                    },
+                ]} />
         </>
     )
 }
