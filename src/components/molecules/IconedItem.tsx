@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import Icon, { IconProps } from 'components/atoms/Icon';
 import { Button } from 'rifui';
-import { LinkContainer } from 'react-router-bootstrap';
+import { NavLink } from 'react-router-dom'
 
 export interface IconedItemProps {
   className: string;
@@ -17,9 +17,8 @@ const IconedItem: FC<IconedItemProps> = ({
   iconProps,
 }) => {
   return (
-    <LinkContainer to={to} className={`iconedItem ${className}`}>
+    <NavLink to={to} className={`iconedItem ${className}`}>
       <Button
-        // variant="link"
         style={{
           color: '#008cff',
           display: 'flex',
@@ -29,7 +28,7 @@ const IconedItem: FC<IconedItemProps> = ({
         <Icon {...iconProps} />
         {text}
       </Button>
-    </LinkContainer>
+    </NavLink>
   );
 };
 
