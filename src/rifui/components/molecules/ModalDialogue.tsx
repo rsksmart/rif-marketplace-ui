@@ -1,12 +1,12 @@
+import React, { FC } from 'react';
 import {
   Modal,
   ModalBody,
   ModalFooter,
   ModalHeader,
   ModalTitle,
-} from 'rifui/components/atoms/modal';
-import React, { FC } from 'react';
-import { ModalProps } from 'rifui/components/atoms/modal/Modal';
+} from '../atoms';
+import { ModalProps } from '../atoms/modal/Modal';
 
 export interface ModalDialogueProps extends ModalProps {
   title: string;

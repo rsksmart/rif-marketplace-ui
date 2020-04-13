@@ -10,10 +10,10 @@ export * from './forms';
 export * from './modal';
 export * from './typography';
 export {
-  Grid,
-  Link,
-  LoginOption,
-  Logo,
-  LogoFooter,
-  LogoNavbar,
+    Grid,
+    Link,
+    LoginOption,
+    Logo,
+    LogoFooter,
+    LogoNavbar,
 };

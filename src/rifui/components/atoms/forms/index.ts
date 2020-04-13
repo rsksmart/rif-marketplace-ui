@@ -9,13 +9,13 @@ import Switch from './Switch';
 import TextField from './TextField';
 
 export {
-	Checkbox,
-	FormControl,
-	FormGroup,
-	Input,
-	InputAdornment,
-	InputLabel,
-	RangeSlider,
-	Switch,
-	TextField
+    Checkbox,
+    FormControl,
+    FormGroup,
+    Input,
+    InputAdornment,
+    InputLabel,
+    RangeSlider,
+    Switch,
+    TextField
 };
