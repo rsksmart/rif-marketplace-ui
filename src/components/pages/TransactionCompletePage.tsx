@@ -2,10 +2,12 @@ import React, { FC } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import tickWide from 'rifui/assets/tickWide.svg';
 import { Button } from 'rifui';
+import { ROUTES } from 'routes';
 
 
 export interface TransactionCompletePageProps {
-    location: any
+    location: any,
+    history: any,
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -40,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const TransactionCompletePage: FC<TransactionCompletePageProps> = (props) => {
     const classes = useStyles();
-    const { location: { state: { txType } } } = props;
+    const { location: { state: { txType } }, history } = props;
 
     return (
         <div className={classes.body}>
@@ -51,9 +53,9 @@ const TransactionCompletePage: FC<TransactionCompletePageProps> = (props) => {
             </div>
             {/* <a href=''>Check it in the explorer</a> */}
             <div className={classes.actions}>
-                <Button>View my domains</Button>
-                {txType === 'buy' && <Button>Buy another domain</Button>}
-                {txType === 'list' && <Button>View domain listing</Button>}
+                <Button onClick={() => { history.push(ROUTES.DOMAINS) }}>View my domains</Button>
+                {txType === 'buy' && <Button onClick={() => { history.push(ROUTES.DOMAINS) }}>Buy another domain</Button>}
+                {txType === 'list' && <Button onClick={() => { history.push(ROUTES.DOMAINS) }}>View domain listing</Button>}
             </div>
         </div>
     );
