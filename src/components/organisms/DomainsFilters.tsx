@@ -4,9 +4,19 @@ import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore from 'store/Market/MarketStore';
 import RangeFilter from './filters/RangeFilter';
 import SearchFilter from './filters/SearchFilter';
+import { Grid, Typography, SwitchTabs } from 'rifui';
+import { makeStyles, Theme } from '@material-ui/core';
+// import SelectFilter from './filters/SelectFilter';
 
+
+const useStyles = makeStyles((theme: Theme) => ({
+    formHeading: {
+        paddingBottom: theme.spacing(2)
+    }
+}));
 
 const DomainsFilters = () => {
+    const classes = useStyles();
     const {
         state: {
             filters: {
@@ -24,8 +34,21 @@ const DomainsFilters = () => {
         dispatch
     } = useContext(MarketStore);
 
+    const handleSwitchChange = (newSwitchValue: number) => console.log(`New switch value: ${newSwitchValue}`);
+
     return (
         <>
+            <Grid className={classes.formHeading} container>
+                <Grid item md={6}>
+                    <Typography weight='bold' variant='h6' color='primary'>
+                        Domains
+                  </Typography>
+                </Grid>
+                <Grid style={{ display: 'flex', alignSelf: 'center' }} item md={6}>
+                    <SwitchTabs label1='Buy' label2='Sell' onChange={handleSwitchChange} />
+                </Grid>
+            </Grid>
+
             <SearchFilter
                 value={searchValue}
                 onChange={(evt) => {
@@ -69,6 +92,7 @@ const DomainsFilters = () => {
                     })
                 }}
             />
+            {/* <SelectFilter title='Currency' items={currencyItems}/> */}
         </>
     )
 }

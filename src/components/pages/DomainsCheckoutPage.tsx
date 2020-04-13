@@ -11,6 +11,7 @@ import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import { Card, CardHeader, CardContent } from 'rifui/components/atoms/card';
 import MarketStore from 'store/Market/MarketStore';
 import { Web3Store } from 'rifui/providers/Web3Provider';
+import { shortenAddress } from 'rifui/utils';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -80,7 +81,7 @@ const DomainsCheckoutPage = () => {
         isProcessing
     } = currentOrder;
 
-    const shortSeller = `${sellerAddress.slice(0, 6)}..${sellerAddress.slice(-5)}`.toLocaleLowerCase()
+    const shortSeller = shortenAddress(sellerAddress);
 
     const priceCellProps = { price, price_fiat, currency: paymentToken, currency_fiat: 'USD', divider: ' ' };
     const PriceCell = <CombinedPriceCell {...priceCellProps} />
@@ -94,9 +95,6 @@ const DomainsCheckoutPage = () => {
 
     const handleSubmit = () => {
         // TODO: Make transactions
-
-
-
         dispatch({
             type: MARKET_ACTIONS.SET_BUY_ITEM,
             payload: {
