@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import Icon, { IconProps } from 'components/atoms/Icon';
-import { Button } from 'react-bootstrap';
+import { Button } from 'rifui';
 import { LinkContainer } from 'react-router-bootstrap';
 
 export interface IconedItemProps {
@@ -19,7 +19,7 @@ const IconedItem: FC<IconedItemProps> = ({
   return (
     <LinkContainer to={to} className={`iconedItem ${className}`}>
       <Button
-        variant="link"
+        // variant="link"
         style={{
           color: '#008cff',
           display: 'flex',

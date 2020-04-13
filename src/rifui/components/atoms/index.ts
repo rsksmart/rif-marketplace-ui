@@ -6,8 +6,10 @@ import LogoFooter from './LogoFooter';
 import LogoNavbar from './LogoNavbar';
 
 export * from './buttons';
+export * from './card';
 export * from './forms';
 export * from './modal';
+export * from './table';
 export * from './typography';
 export {
     Grid,

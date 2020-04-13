@@ -2,29 +2,28 @@ import React, { FC } from 'react'
 import { withStyles } from '@material-ui/core';
 
 interface StylesProps {
-    classes: Record<"crypto" | "fiat", string>;
+  classes: Record<"crypto" | "fiat", string>;
 }
 
 export interface PriceItemProps extends StylesProps {
-    type: 'crypto' | 'fiat',
-    price: string,
-    currency: string,
+  type: 'crypto' | 'fiat',
+  price: string,
+  currency: string,
 }
 
 const PriceItem: FC<PriceItemProps> = ({ type, price, currency, classes }) => {
 
-    return <span className={`price_item ${classes[type]}`}>{`${price} ${currency}`}</span>
+  return <span className={`price_item ${classes[type]}`}>{`${price} ${currency}`}</span>
 }
 
 const styles = {
-    crypto: {
-        color: 'blue',
-        fontSize: '1.3em'
-
-    },
-    fiat: {
-        color: 'grey'
-    }
+  crypto: {
+    color: 'blue',
+    fontSize: '1.3em'
+  },
+  fiat: {
+    color: 'grey'
+  }
 }
 
 export default withStyles(styles)(PriceItem);

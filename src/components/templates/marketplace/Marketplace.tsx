@@ -1,9 +1,8 @@
 import React, { FC } from 'react';
-import { Table } from 'react-bootstrap';
 
 import './Marketplace.css';
 import { MarketItemType } from 'models/Market';
-import { TableHead, TableRow, TableCell, TableBody } from 'rifui/components/atoms/table';
+import { Table, TableHead, TableRow, TableCell, TableBody } from 'rifui';
 import { makeStyles } from '@material-ui/core';
 
 export interface TableHeaders {
@@ -36,7 +35,9 @@ const Marketplace: FC<MarketplaceProps> = ({
   return (
     <div className={'marketplace ' + className}>
       <div className="content">
-        <Table striped borderless hover responsive="sm">
+        <Table>
+          {/* TODO: add those properties to easily style tables in rifui library
+           - <Table striped borderless hover responsive="sm"> */}
           <TableHead>
             <TableRow>
               {Object.keys(headers).map((itemName: string) => (
