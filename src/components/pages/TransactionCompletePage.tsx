@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
-import tickWide from 'rifui/assets/tickWide.svg';
+import tickWide from 'rifui/assets/images/tickWide.svg';
+import doneImg from 'assets/images/done_img.svg'
 import { Button } from 'rifui';
 import { ROUTES } from 'routes';
 
@@ -46,12 +47,11 @@ const TransactionCompletePage: FC<TransactionCompletePageProps> = (props) => {
 
   return (
     <div className={classes.body}>
-      <img src={window.location.origin + '/assets/img/done_img.svg'} alt='Job done!' />
+      <img src={doneImg} alt='Job done!' />
       <div className={classes.msgRect}>
         <img src={tickWide} alt='done' />
         <p>Your domain has been {txType === 'buy' ? 'bought' : 'listed'}.</p>
       </div>
-      {/* <a href=''>Check it in the explorer</a> */}
       <div className={classes.actions}>
         <Button onClick={() => { history.push(ROUTES.DOMAINS) }}>View my domains</Button>
         {txType === 'buy' && <Button onClick={() => { history.push(ROUTES.DOMAINS) }}>Buy another domain</Button>}

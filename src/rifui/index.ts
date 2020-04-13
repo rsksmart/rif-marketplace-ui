@@ -1,5 +1,5 @@
 // CSS files
-import './css/style.css';
+import './assets/css/style.css';
 
 // Components
 export * from './components/index';

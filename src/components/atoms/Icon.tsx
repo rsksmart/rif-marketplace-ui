@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
-import rifDir from 'rifui/assets/rifDir.png';
-import rifCom from 'rifui/assets/rifCom.png';
-import rifGat from 'rifui/assets/rifGat.png';
-import rifMar from 'rifui/assets/rifMar.png';
-import rifPay from 'rifui/assets/rifPay.png';
-import rifSto from 'rifui/assets/rifSto.png';
+import rifDir from 'rifui/assets/images/rifDir.png';
+import rifCom from 'rifui/assets/images/rifCom.png';
+import rifGat from 'rifui/assets/images/rifGat.png';
+import rifMar from 'rifui/assets/images/rifMar.png';
+import rifPay from 'rifui/assets/images/rifPay.png';
+import rifSto from 'rifui/assets/images/rifSto.png';
 
 export const Icons = {
   DOMAINS: rifDir,
