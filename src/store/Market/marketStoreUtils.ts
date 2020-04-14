@@ -1,13 +1,11 @@
 import { fetchMarketDataFor } from 'api/rif-marketplace-cache/cacheController';
 import { MarketItemType, MarketListingTypes, MarketFilterIface } from 'models/Market';
-import { APP_ACTIONS } from 'store/App/appActions';
+import { APP_ACTIONS, AppAction } from 'store/App/appActions';
 import { TxType } from './MarketStore';
 import { Dispatch } from 'react';
-import { IAction } from 'store/storeUtils/interfaces';
-import { MarketPayload } from './marketActions';
 
 
-const fetchListingItems = (dispatch) => async (
+const fetchListingItems = (dispatch: Dispatch<AppAction>) => async (
   listingType: MarketListingTypes,
   txType: TxType,
   filters?: MarketFilterIface,
@@ -38,6 +36,6 @@ const fetchListingItems = (dispatch) => async (
   return marketItems;
 }
 
-export const useMarketUtils = (dispatch: Dispatch<IAction<MarketPayload>>) => ({
+export const useMarketUtils = (dispatch: Dispatch<AppAction>) => ({
   fetchListingItems: fetchListingItems(dispatch),
 })

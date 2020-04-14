@@ -14,8 +14,15 @@ const logger = Logger.getInstance()
 const marketReducer = (state = initialState, action: MarketAction) => {
   const { type, payload } = action
   const marketAction = marketActions[type]
-  if (!!marketAction) logger.debug('marketReducer -> action', action)
+  if (!!marketAction) logger.debug('Market action:', action)
   const newState = (!!marketAction && marketAction(state, payload)) || state
+
+  if (state !== newState) {
+    logger.debug('Prev state:', state)
+    logger.debug('Next state:', newState)
+  } else {
+    logger.debug('No change:', newState)
+  }
 
   return newState
 }

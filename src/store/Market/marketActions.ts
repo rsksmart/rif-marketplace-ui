@@ -4,9 +4,7 @@ import { TxType } from './MarketStore';
 
 export enum MARKET_ACTIONS {
   NOOP = 'NOOP',
-  SET_ITEMS = "SET_ITEMS"
-  // GET_ITEM = 'GET_ITEM',
-  ,
+  SET_ITEMS = "SET_ITEMS",
   SET_BUY_ITEM = "SET_BUY_ITEM",
   SET_FILTER = "SET_FILTER",
   TOGGLE_TX_TYPE = "TOGGLE_TX_TYPE"

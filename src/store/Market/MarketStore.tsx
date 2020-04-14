@@ -2,8 +2,7 @@ import { DomainsFilterIface } from 'api/models/RnsFilter';
 import { MarketFilterIface, MarketItemIface, MarketListingTypes } from 'models/Market';
 import { DomainItemIface } from 'models/marketItems/DomainItem';
 import { StorageItemIface } from 'models/marketItems/StorageItem';
-import React, { Dispatch } from 'react';
-import Middleware from 'store/storeUtils/middleware';
+import React, { Dispatch, useReducer } from 'react';
 import { MarketAction } from './marketActions';
 import marketReducer from './marketReducer';
 
@@ -75,9 +74,7 @@ export const initialState: IMarketState = {
 const MarketStore = React.createContext({} as IMarketStoreProps | any);
 
 export const MarketStoreProvider = ({ children }) => {
-  const { useMiddleware } = Middleware.getInstance();
-
-  const [state, dispatch] = useMiddleware(marketReducer, initialState);
+  const [state, dispatch] = useReducer(marketReducer, initialState);
 
   const value = { state, dispatch };
   return <MarketStore.Provider value={value}>{children}</MarketStore.Provider>;
