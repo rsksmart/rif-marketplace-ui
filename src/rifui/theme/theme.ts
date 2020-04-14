@@ -1,4 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles';
+import '../assets/css/fonts/rubik.css';
 
 export const colors = {
     black: '#000000',
@@ -38,7 +39,7 @@ const theme = createMuiTheme({
         }
     },
     typography: {
-        // TODO: install Rubik font
+        fontFamily: fonts.family,
         button: {
             textTransform: 'none',
         }
