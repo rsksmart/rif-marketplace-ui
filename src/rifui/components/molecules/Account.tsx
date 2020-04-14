@@ -3,7 +3,7 @@ import { EProvider } from 'rifui/services/Web3Service';
 import { shortenAddress } from 'rifui/utils'
 import Web3 from 'web3';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Button, LoginOption, Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../atoms';
+import { Button, LoginOption, Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle, Typography } from 'rifui';
 import { colors, fonts } from 'rifui/theme';
 
 export interface AccountProps {
@@ -25,11 +25,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexWrap: 'nowrap',
     fontSize: fonts.size.small,
     height: '100%',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     padding: theme.spacing(1),
     width: '100%',
-  }
-}))
+  },
+  accountText: {
+    fontSize: fonts.size.small,
+  },
+}));
 
 const Account: FC<AccountProps> = ({
   web3,
@@ -50,9 +53,11 @@ const Account: FC<AccountProps> = ({
         onClick={handleOpen}
         className={classes.root}
       >
-        {!web3 && <div>Connect wallet</div>}
-        {web3 && <div>{networkName}</div>}
-        {web3 && account && <div>{shortenAddress(account)}</div>}
+        <Typography className={classes.accountText}>
+          {!web3 && 'Connect wallet'}
+          {web3 && networkName}
+          {web3 && account && shortenAddress(account)}
+        </Typography>
       </div>
 
       <Modal

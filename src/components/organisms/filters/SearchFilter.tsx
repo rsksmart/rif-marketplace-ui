@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme: Theme) =>
     // suppressed the border at textField level
     notchedOutline: {
       border: `0px solid ${colors.transparent} !important`,
+    },
+    searchIcon: {
+      color: colors.gray3
     }
   })
 );
@@ -79,7 +82,7 @@ const SearchFilter: FC<SearchFilterProps> = ({ onChange, ...rest }) => {
         className: classes.input,
         startAdornment: (
           <InputAdornment hidden={adornmentHidden} position="start">
-            <Search style={{ color: colors.gray3 }} />
+            <Search className={classes.searchIcon} />
           </InputAdornment>)
       }}
       name="search"

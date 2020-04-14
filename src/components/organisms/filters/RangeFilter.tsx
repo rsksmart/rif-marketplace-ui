@@ -14,19 +14,14 @@ export interface RangeFilterProps extends RangeSliderWithInputsProps {
 const RangeFilter: FC<RangeFilterProps> = ({ className = '', title, hedgeValues, ...rest }) => {
 
   return <Accordion
-    id={title.toLocaleLowerCase()}
-    className={`${title} ${className}`}
+    id={`accordion-${title.toLocaleLowerCase()}`}
+    className={className}
     expanded={true}
-    style={{
-      display: 'flex',
-      flexDirection: 'row',
-    }}
     title={title}
   >
     <RangeSliderWithInputs
       min={hedgeValues.min}
       max={hedgeValues.max}
-      className={`w-100 ${className}`}
       {...rest}
     />
   </Accordion>

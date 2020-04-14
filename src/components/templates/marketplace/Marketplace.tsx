@@ -1,9 +1,8 @@
 import React, { FC } from 'react';
 
-import './Marketplace.css';
 import { MarketItemType } from 'models/Market';
 import { Table, TableHead, TableRow, TableCell, TableBody } from 'rifui';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Theme } from '@material-ui/core';
 
 export interface TableHeaders {
   [itemName: string]: string | React.ElementType
@@ -14,15 +13,22 @@ export interface MarketplaceProps {
   headers: TableHeaders;
 }
 
-
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
+  content: {
+    flex: 1,
+    padding: theme.spacing(2),
+  },
+  root: {
+    display: 'flex',
+    flex: '1 1 auto'
+  },
   th: {
     align: 'center'
   },
   'tc-domain': {
     align: 'left'
   }
-});
+}));
 
 const Marketplace: FC<MarketplaceProps> = ({
   className = '',
@@ -30,14 +36,10 @@ const Marketplace: FC<MarketplaceProps> = ({
   headers,
 }) => {
   const classes = useStyles();
-
-
   return (
-    <div className={'marketplace ' + className}>
-      <div className="content">
+    <div className={`${classes.root} ${className}`}>
+      <div className={classes.content}>
         <Table>
-          {/* TODO: add those properties to easily style tables in rifui library
-           - <Table striped borderless hover responsive="sm"> */}
           <TableHead>
             <TableRow>
               {Object.keys(headers).map((itemName: string) => (

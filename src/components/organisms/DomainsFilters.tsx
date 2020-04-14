@@ -14,6 +14,10 @@ const logger = Logger.getInstance()
 const useStyles = makeStyles((theme: Theme) => ({
   formHeading: {
     paddingBottom: theme.spacing(2)
+  },
+  switchContainer: {
+    alignSelf: 'center',
+    display: 'flex',
   }
 }));
 
@@ -46,7 +50,9 @@ const DomainsFilters = () => {
             Domains
                   </Typography>
         </Grid>
-        <Grid style={{ display: 'flex', alignSelf: 'center' }} item md={6}>
+        <Grid
+          className={classes.switchContainer}
+          item md={6}>
           <SwitchTabs label1='Buy' label2='Sell' onChange={handleSwitchChange} />
         </Grid>
       </Grid>
