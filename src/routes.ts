@@ -3,7 +3,10 @@ export const ROUTES = {
   COMMUNICATIONS: '/communications',
   DATA_SERVICE: 'data_service',
   PAYMENTS: '/payments',
-  DOMAINS: '/domains',
+  DOMAINS: {
+    BUY: '/buy_domains',
+    SELL: '/sell_domains',
+  },
   STORAGE: '/storage',
   DONE: '/:service/done',
   CHECKOUT: {

@@ -7,7 +7,7 @@ import {
   ItemPayload,
   FilterPayload,
 } from './marketActions'
-import { initialState, IMarketState } from './MarketStore'
+import { initialState, IMarketState, TxType } from './MarketStore'
 
 const logger = Logger.getInstance()
 
@@ -30,6 +30,7 @@ const {
   SET_ITEMS,
   SET_BUY_ITEM,
   SET_FILTER,
+  TOGGLE_TX_TYPE,
 } = MARKET_ACTIONS
 
 const marketActions: IMarketActions = {
@@ -64,5 +65,13 @@ const marketActions: IMarketActions = {
       }
     };
   },
+  [TOGGLE_TX_TYPE]: (state: IMarketState, _: MarketPayload) => {
+    return {
+      ...state,
+      currentOrder: {
+        txType: state.currentOrder.txType === TxType.BUY ? TxType.LIST : TxType.BUY,
+      }
+    }
+  }
 }
 

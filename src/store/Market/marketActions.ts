@@ -1,5 +1,6 @@
 import { IAction } from 'store/storeUtils/interfaces';
 import { MarketItemIface, MarketListingTypes, MarketItemType, MarketFilterIface } from 'models/Market';
+import { TxType } from './MarketStore';
 
 export enum MARKET_ACTIONS {
   NOOP = 'NOOP',
@@ -7,24 +8,25 @@ export enum MARKET_ACTIONS {
   // GET_ITEM = 'GET_ITEM',
   ,
   SET_BUY_ITEM = "SET_BUY_ITEM",
-  SET_FILTER = "SET_FILTER"
+  SET_FILTER = "SET_FILTER",
+  TOGGLE_TX_TYPE = "TOGGLE_TX_TYPE"
 }
 
 export interface ItemPayload {
-  listingType: MarketListingTypes,
-  item: MarketItemIface
-  txType: 'buy' | 'list'
-  isProcessing: boolean
+  listingType: MarketListingTypes;
+  item: MarketItemIface;
+  txType: TxType;
+  isProcessing: boolean;
 }
 
 export interface ListingPayload {
-  listingType: MarketListingTypes,
+  listingType: MarketListingTypes;
   items: MarketItemType[];
 }
 
 export interface FilterPayload {
-  listingType: MarketListingTypes,
-  filterItems: MarketFilterIface
+  listingType: MarketListingTypes;
+  filterItems: MarketFilterIface;
 }
 
 export type MarketPayload = ItemPayload & ListingPayload & FilterPayload

@@ -40,7 +40,12 @@ const DomainsFilters = () => {
     dispatch
   } = useContext(MarketStore);
 
-  const handleSwitchChange = (newSwitchValue: number) => console.log(`New switch value: ${newSwitchValue}`);
+  const handleSwitchChange = (newSwitchValue: number) => {
+    dispatch({
+      type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
+    })
+    console.log(`New switch value: ${newSwitchValue}`);
+  }
 
   return (
     <>

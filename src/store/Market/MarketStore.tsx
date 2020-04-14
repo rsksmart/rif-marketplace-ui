@@ -1,12 +1,22 @@
 import { DomainsFilterIface } from 'api/models/RnsFilter';
-import { MarketFilterIface } from 'models/Market';
+import { MarketFilterIface, MarketItemIface, MarketListingTypes } from 'models/Market';
 import { DomainItemIface } from 'models/marketItems/DomainItem';
 import { StorageItemIface } from 'models/marketItems/StorageItem';
 import React, { Dispatch } from 'react';
 import Middleware from 'store/storeUtils/middleware';
-import { ItemPayload, MarketAction } from './marketActions';
+import { MarketAction } from './marketActions';
 import marketReducer from './marketReducer';
 
+export enum TxType {
+  BUY = 0,
+  LIST = 1
+}
+export interface ICurrentOrder {
+  listingType?: MarketListingTypes;
+  item?: MarketItemIface;
+  txType: TxType;
+  isProcessing?: boolean;
+}
 
 export interface IMarketState {
   listings: {
@@ -16,7 +26,7 @@ export interface IMarketState {
   filters: {
     domainListing: DomainsFilterIface,
     storageListing?: MarketFilterIface,
-  }
+  };
   metadata: {
     domainListing: {
       lastUpdated: number;
@@ -25,7 +35,7 @@ export interface IMarketState {
       lastUpdated: number;
     };
   };
-  currentOrder?: ItemPayload
+  currentOrder: ICurrentOrder;
 }
 
 interface IMarketStoreProps {
@@ -57,6 +67,9 @@ export const initialState: IMarketState = {
       lastUpdated: -1,
     },
   },
+  currentOrder: {
+    txType: TxType.BUY,
+  }
 };
 
 const MarketStore = React.createContext({} as IMarketStoreProps | any);
