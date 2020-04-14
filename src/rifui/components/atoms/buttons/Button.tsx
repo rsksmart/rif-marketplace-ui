@@ -4,7 +4,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 
 interface IButtonProps extends MUIButtonProps {
   block?: boolean;
-  noShadow?: boolean;
+  shadow?: boolean;
   rounded?: boolean;
 };
 
@@ -20,12 +20,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Button: FC<IButtonProps> = ({ className = '', block, noShadow, rounded, children, ...rest }) => {
+const Button: FC<IButtonProps> = ({ className = '', block, shadow, rounded, children, ...rest }) => {
   const classes = useStyles();
 
   return (
     // TODO: consider using classnames library to conditionally render classes (https://github.com/JedWatson/classnames)
-    <MUIButton className={`${rounded ? classes.rounded : ''} ${block ? classes.block : ''} ${noShadow ? classes.noShadow : ''} ${className}`}
+    <MUIButton className={`${rounded ? classes.rounded : ''} ${block ? classes.block : ''} ${shadow ? '' : classes.noShadow} ${className}`}
       {...rest}>
       {children}
     </MUIButton >
