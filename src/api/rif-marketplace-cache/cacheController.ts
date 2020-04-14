@@ -13,7 +13,7 @@ client.configure(socketio(socket));
 // <- extract
 
 const services = {
-    [MarketListingTypes.domainListing]: {
+    [MarketListingTypes.domains]: {
         [TxType.BUY]: client.service(`rns/v0/offers`),
         [TxType.LIST]: client.service(`rns/v0/:ownerAddress/domains`)
     }

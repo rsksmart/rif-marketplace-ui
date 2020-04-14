@@ -26,7 +26,7 @@ const DomainsFilters = () => {
   const {
     state: {
       filters: {
-        domainListing: {
+        domains: {
           sellerDomain: {
             $like: searchValue,
           },
@@ -69,7 +69,7 @@ const DomainsFilters = () => {
           dispatch({
             type: MARKET_ACTIONS.SET_FILTER,
             payload: {
-              listingType: MarketListingTypes.domainListing,
+              listingType: MarketListingTypes.domains,
               filterItems: {
                 sellerDomain: {
                   $like: value
@@ -94,7 +94,7 @@ const DomainsFilters = () => {
           dispatch({
             type: MARKET_ACTIONS.SET_FILTER,
             payload: {
-              listingType: MarketListingTypes.domainListing,
+              listingType: MarketListingTypes.domains,
               filterItems: {
                 price: {
                   $gte: min,
@@ -105,34 +105,7 @@ const DomainsFilters = () => {
           })
         }}
       />
-      <SelectFilter
-        title='Currency'
-        onClick={(evt) => {
-          logger.error('Currency filter is not attached to the cache.')
-          // dispatch({
-          //     type: MARKET_ACTIONS.SET_FILTER,
-          //     payload: {
-          //         listingType: MarketListingTypes.domainListing,
-          //     }
-          // })
-        }}
-        items={[
-          {
-            checked: false,
-            id: 'check-rif',
-            labelText: 'RIF',
-          },
-          {
-            checked: false,
-            id: 'check-rbtc',
-            labelText: 'RBTC',
-          },
-          {
-            checked: false,
-            id: 'check-doc',
-            labelText: 'DOC',
-          },
-        ]} />
+      {/* <SelectFilter title='Currency' items={currencyItems}/> */}
     </>
   )
 }

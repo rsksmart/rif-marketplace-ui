@@ -20,7 +20,7 @@ export interface DomainTransferItem extends TransferItem {
 }
 
 const mappings = {
-    domainListing: (item: DomainTransferItem): DomainItemIface => {
+    domains: (item: DomainTransferItem): DomainItemIface => {
         const {
             offerId,
             sellerAddress,

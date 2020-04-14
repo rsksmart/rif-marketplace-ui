@@ -1,4 +1,4 @@
 import { testTransferDomains } from './domains';
-import { storageListing } from './storage';
+import { storage } from './storage';
 
-export { testTransferDomains as domainListing, storageListing };
+export { testTransferDomains as domains, storage };

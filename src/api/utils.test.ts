@@ -13,7 +13,7 @@ describe('api/utils', () => {
         it('should return array of MarketItemType', () => {
             const transferDomains = [...testTransferDomains];
 
-            expect(maplistingToType(transferDomains, MarketListingTypes.domainListing))
+            expect(maplistingToType(transferDomains, MarketListingTypes.domains))
                 .toStrictEqual(testDomainItems)
         })
     })

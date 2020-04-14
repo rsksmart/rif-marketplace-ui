@@ -20,18 +20,18 @@ export interface ICurrentOrder {
 
 export interface IMarketState {
   listings: {
-    domainListing: DomainItemIface[];
-    storageListing: StorageItemIface[];
+    domains: DomainItemIface[];
+    storage: StorageItemIface[];
   };
   filters: {
-    domainListing: DomainsFilterIface,
-    storageListing?: MarketFilterIface,
+    domains: DomainsFilterIface,
+    storage?: MarketFilterIface,
   };
   metadata: {
-    domainListing: {
+    domains: {
       lastUpdated: number;
     };
-    storageListing: {
+    storage: {
       lastUpdated: number;
     };
   };
@@ -45,11 +45,11 @@ interface IMarketStoreProps {
 
 export const initialState: IMarketState = {
   listings: {
-    domainListing: [],
-    storageListing: [],
+    domains: [],
+    storage: [],
   },
   filters: {
-    domainListing: {
+    domains: {
       price: {
         $lte: 100,
         $gte: 0
@@ -60,10 +60,10 @@ export const initialState: IMarketState = {
     },
   },
   metadata: {
-    domainListing: {
+    domains: {
       lastUpdated: -1,
     },
-    storageListing: {
+    storage: {
       lastUpdated: -1,
     },
   },

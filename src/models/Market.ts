@@ -7,8 +7,8 @@ export interface MarketItemIface {
 }
 
 export enum MarketListingTypes {
-    domainListing = 'domainListing',
-    storageListing = 'storageListing',
+    domains = 'domains',
+    storage = 'storage',
 }
 
 export type MarketItemType = DomainItemIface & StorageItemIface

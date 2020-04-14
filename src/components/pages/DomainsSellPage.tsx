@@ -13,9 +13,9 @@ import { useMarketUtils } from 'store/Market/marketStoreUtils';
 const DomainsSellPage = () => {
   const {
     state: {
-      listings: { domainListing },
+      listings: { domains },
       filters: {
-        domainListing: currentFilters,
+        domains: currentFilters,
       },
     },
     dispatch: marketDispatch,
@@ -25,13 +25,13 @@ const DomainsSellPage = () => {
 
   useEffect(() => {
     fetchListingItems(
-      MarketListingTypes.domainListing,
+      MarketListingTypes.domains,
       TxType.LIST,
       currentFilters
     ).then(items => marketDispatch({
       type: MARKET_ACTIONS.SET_ITEMS,
       payload: {
-        listingType: MarketListingTypes.domainListing,
+        listingType: MarketListingTypes.domains,
         items,
       },
     }));
@@ -47,7 +47,7 @@ const DomainsSellPage = () => {
     actionCol_1: ''
   }
 
-  const collection = domainListing
+  const collection = domains
     .map(domainItem => {
       const { _id, price, price_fiat, paymentToken, expirationDate } = domainItem;
 
@@ -64,7 +64,7 @@ const DomainsSellPage = () => {
           marketDispatch({
             type: MARKET_ACTIONS.SET_BUY_ITEM,
             payload: {
-              listingType: MarketListingTypes.domainListing,
+              listingType: MarketListingTypes.domains,
               item: domainItem,
               txType: TxType.LIST
             }
@@ -81,7 +81,7 @@ const DomainsSellPage = () => {
   return (
     <MarketPageTemplate
       className="Domains"
-      listingType={MarketListingTypes.domainListing}
+      listingType={MarketListingTypes.domains}
       filterItems={<DomainsFilters />}
       itemCollection={collection}
       headers={headers}
