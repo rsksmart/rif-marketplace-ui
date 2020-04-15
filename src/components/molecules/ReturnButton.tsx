@@ -4,8 +4,8 @@ import { useHistory } from 'react-router';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
 
 export interface ReturnButtonProps {
-  className?: string
   backTo: string
+  className?: string
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 };
 
@@ -29,7 +29,7 @@ const ReturnButton: FC<ReturnButtonProps> = ({ className = '', backTo, onClick }
     !!onClick && onClick(event);
   }
   return (
-    <Button className={classes.returnBtn} onClick={handleOnClick}>
+    <Button className={classes.returnBtn} color='secondary' onClick={handleOnClick}>
       {'<'} Back to {backTo}
     </Button>
   );

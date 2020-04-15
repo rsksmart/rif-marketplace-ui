@@ -17,7 +17,8 @@ export const colors = {
 export const fonts = {
     family: 'Rubik',
     size: {
-        small: 10,
+        tiny: 10,
+        small: 12,
         normal: 14,
         medium: 16
     },
@@ -35,8 +36,8 @@ const theme = createMuiTheme({
             main: colors.primary,
         },
         secondary: {
-            main: colors.gray5
-        }
+            main: colors.gray4
+        },
     },
     typography: {
         fontFamily: fonts.family,

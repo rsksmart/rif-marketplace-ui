@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   units: {
     color: colors.gray4,
     display: 'flex',
-    fontSize: fonts.size.small
+    fontSize: fonts.size.tiny
   },
   unitsContainer: {
     alignSelf: 'center',

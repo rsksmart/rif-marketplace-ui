@@ -1,14 +1,14 @@
-import { CardActions, createStyles, makeStyles, Theme } from '@material-ui/core';
-import Heading from 'components/atoms/Heading';
+import React, { useContext, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import ItemDetailRow from 'components/molecules/ItemDetailRow';
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate';
-import React, { useContext, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
-import { Button, Card, CardHeader, CardContent } from 'rifui';
 import MarketStore from 'store/Market/MarketStore';
+import { Button, Card, CardActions, CardContent, CardHeader, Typography } from 'rifui';
+import { colors } from 'rifui/theme';
 import { Web3Store } from 'rifui/providers/Web3Provider';
 import { shortenAddress } from 'rifui/utils';
 
@@ -21,28 +21,35 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingTop: 44,
       paddingBottom: 69,
 
-      background: '#FFFFFF',
-      border: '1px solid #F8F7F7',
+      background: colors.white,
+      border: `1px solid ${colors.gray1}`,
       boxSizing: 'border-box',
       boxShadow: '0px 6px 10px rgba(0, 0, 0, 0.2)',
 
+      alignItems: 'center',
+      alignSelf: 'center',
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center',
       justifySelf: 'center',
-      alignSelf: 'center'
+    },
+    contentDetails: {
+      display: 'flex',
+      flexDirection: 'column',
+      width: 300,
+    },
+    contentTitle: {
+      marginBottom: theme.spacing(1),
+      textAlign: 'center',
     },
     footer: {
-      display: 'flex',
-      flexDirection: 'column',
       alignContent: 'center',
-      textAlign: 'center'
-    },
-    details: {
-      width: 300,
       display: 'flex',
       flexDirection: 'column',
-    }
+      textAlign: 'center',
+    },
+    footerCaptions: {
+      marginBottom: theme.spacing(1)
+    },
   }),
 );
 
@@ -84,11 +91,12 @@ const DomainsCheckoutPage = () => {
 
   const priceCellProps = { price, price_fiat, currency: paymentToken, currency_fiat: 'USD', divider: ' ' };
   const PriceCell = <CombinedPriceCell {...priceCellProps} />
+  const TextCell = text => <Typography color='primary'>{text}</Typography>
 
   const details = {
-    'NAME': sellerDomain,
-    'SELLER': shortSeller,
-    'RENEWAL DATE': (new Date(expirationDate)).toDateString(),
+    'NAME': TextCell(sellerDomain),
+    'SELLER': TextCell(shortSeller),
+    'RENEWAL DATE': TextCell((new Date(expirationDate)).toDateString()),
     'PRICE': PriceCell
   }
 
@@ -118,12 +126,10 @@ const DomainsCheckoutPage = () => {
       <Card
         className={classes.card}
       >
-        <CardHeader
-          title={`Buying ${sellerDomain}`}
-        />
+        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Buying ${sellerDomain}`} />
         <CardContent>
-          <Heading hLevel={3}>Domain details</Heading>
-          <div className={classes.details}>
+          <Typography className={classes.contentTitle} variant='h6' color='secondary'>Domain details</Typography>
+          <div className={classes.contentDetails}>
             {
               Object.keys(details).map((name, i) => {
                 return <ItemDetailRow name={name} value={details[name]} key={'idr-' + name + i} />
@@ -133,8 +139,13 @@ const DomainsCheckoutPage = () => {
         </CardContent>
         {!isProcessing &&
           <CardActions className={classes.footer}>
-            <p >Your wallet will open and you will be asked to confirm the transaction for buying the domain.</p>
-            <Button onClick={handleSubmit}>Buy domain</Button>
+            <Typography className={classes.footerCaptions} variant='caption' color='secondary'>
+              Your wallet will open and you will be asked to confirm the transaction for buying the domain.
+            </Typography>
+            <Button color='primary' variant='contained'
+              rounded shadow onClick={handleSubmit}>
+              Buy domain
+              </Button>
           </CardActions>
         }
       </Card>

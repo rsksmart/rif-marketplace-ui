@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
 import { withStyles } from '@material-ui/core';
+import { colors, fonts } from 'rifui/theme';
 
 interface StylesProps {
   classes: Record<"crypto" | "fiat", string>;
@@ -16,13 +17,15 @@ const PriceItem: FC<PriceItemProps> = ({ type, price, currency, classes }) => {
   return <span className={`price_item ${classes[type]}`}>{`${price} ${currency}`}</span>
 }
 
+// TODO: move to Material UI classes
 const styles = {
   crypto: {
-    color: 'blue',
-    fontSize: '1.3em'
+    color: colors.primary,
+    fontSize: fonts.size.medium
   },
   fiat: {
-    color: 'grey'
+    color: colors.gray3,
+    fontSize: fonts.size.normal
   }
 }
 
