@@ -5,27 +5,25 @@ import { Grid, SwitchTabs, Typography } from 'rifui';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';
-
-
+import { colors } from 'rifui/theme';
 
 export interface MarketFilterProps {
 }
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     filter: {
-      background: '#ffffff',
+      background: colors.white,
       boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
       maxWidth: '20%',
       flex: '1 1 auto',
-      padding: theme.spacing(3)
+      height: '100%',
+      padding: theme.spacing(3, 3, 0, 3)
     },
     formHeading: {
-      paddingBottom: theme.spacing(2)
+      paddingBottom: theme.spacing(2),
     }
   })
 )
-
-
 
 const MarketFilter: FC<MarketFilterProps> = ({ children }) => {
   const classes = useStyles();

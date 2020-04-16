@@ -1,7 +1,8 @@
 import React, { FC, useContext } from 'react';
 import MarketFilter from 'components/templates/marketplace/MarketFilter';
 import Marketplace, { TableHeaders } from 'components/templates/marketplace/Marketplace';
-import { MarketItemType } from 'models/Market';
+import { MarketItemType, MarketListingTypes } from 'models/Market';
+import { Grid } from 'rifui';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Web3Store } from 'rifui/providers/Web3Provider';
 
@@ -34,15 +35,19 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   const classes = useStyles();
 
   return (
-    <div className={`${classes.root} ${className}`}>
+    <Grid container direction='row' className={`${classes.root} ${className}`}>
       {!account && <p>Please sign in to your wallet</p>}
       {account &&
         <>
-          <MarketFilter>{filterItems}</MarketFilter>
-          <Marketplace items={itemCollection} headers={headers} />
+          <Grid item sm={12} md={3}>
+            <MarketFilter>{filterItems}</MarketFilter>
+          </Grid>
+          <Grid item sm={12} md={9}>
+            <Marketplace items={itemCollection} headers={headers} />
+          </Grid>
         </>
       }
-    </div>
+    </Grid>
   );
 };
 

@@ -1,6 +1,7 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import React, { FC } from 'react';
 import CircularProgress from 'rifui/components/atoms/CircularProgress';
+import { Typography } from 'rifui';
 
 export interface TransactionInProgressPanelProps {
   text: string
@@ -10,8 +11,8 @@ export interface TransactionInProgressPanelProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     content: {
-      width: 300,
-      marginTop: 100,
+      width: '100%',
+      marginTop: theme.spacing(3),
       display: 'flex',
       flexDirection: 'column',
       alignContent: 'center',
@@ -24,9 +25,9 @@ const useStyles = makeStyles((theme: Theme) =>
 const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({ progMsg, text }) => {
   const classes = useStyles();
   return <div className={classes.content}>
-    <p>{text}</p>
+    <Typography>{text}</Typography>
     <CircularProgress />
-    <p>{progMsg}</p>
+    <Typography>{progMsg}</Typography>
   </div>
 }
 
