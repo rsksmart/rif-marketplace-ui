@@ -1,8 +1,8 @@
 import React, { FC, useContext } from 'react';
-import ReturnButton, { ReturnButtonProps } from 'components/molecules/ReturnButton';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
+import ReturnButton, { ReturnButtonProps } from 'components/molecules/ReturnButton';
 import MarketStore from 'store/Market/MarketStore';
-// import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
+import { Grid } from 'rifui';
 
 export interface CheckoutPageTemplateProps {
   className?: string
@@ -12,13 +12,17 @@ export interface CheckoutPageTemplateProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     body: {
+      paddingTop: theme.spacing(2),
+    },
+    mainContent: {
       display: 'flex',
-      flexDirection: 'column',
-      alignContent: 'center',
-      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    returnBtnContainer: {
+      alignSelf: 'flex-start',
+      display: 'flex',
       justifyContent: 'center',
-      justifyItems: 'center',
-      paddingTop: 50,
+      marginLeft: theme.spacing(2),
     }
   }),
 );
@@ -26,15 +30,18 @@ const useStyles = makeStyles((theme: Theme) =>
 const CheckoutPageTemplate: FC<CheckoutPageTemplateProps> = ({ className = '', backButtonProps, children }) => {
   const classes = useStyles();
 
-  const { state: { currentOrder } } = useContext(MarketStore)
+  const { state: { currentOrder } } = useContext(MarketStore);
 
   return (
-    <div className={className}>
-      {!currentOrder.isProcessing && <ReturnButton {...backButtonProps} />}
-      <div className={classes.body}>
+    <Grid container direction='row' className={`${classes.body} ${className}`}>
+      <Grid item xs={12} md={3} className={classes.returnBtnContainer}>
+        {!currentOrder.isProcessing && <ReturnButton {...backButtonProps} />}
+      </Grid>
+      <Grid className={classes.mainContent} item xs={12} md={6}>
         {children}
-      </div>
-    </div>
+      </Grid>
+      <Grid item md={3} />
+    </Grid>
   )
 }
 

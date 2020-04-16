@@ -1,9 +1,9 @@
 import React, { FC, HTMLAttributes } from 'react';
-import IconedItem, { IconedItemProps } from 'components/molecules/IconedItem';
-import { Icons } from 'components/atoms/Icon';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import { ROUTES } from 'routes';
 import { Typography } from 'rifui';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import IconedItem, { IconedItemProps } from 'components/molecules/IconedItem';
+import { Icons } from 'components/atoms/Icon';
 
 export interface ServiceCategoriesProps extends HTMLAttributes<HTMLElement> { };
 
