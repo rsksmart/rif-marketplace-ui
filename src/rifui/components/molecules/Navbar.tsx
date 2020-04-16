@@ -13,12 +13,15 @@ export interface NavbarProps extends AppBarProps {
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
+  activeNavlink: {
+    color: `${colors.white} !important`,
+    fontWeight: fonts.weight.bold
+  },
   itemsContainer: {
     display: 'flex',
   },
-  navLinkContainer: {
-    minWidth: '50',
-    maxWidth: 200,
+  loginContainer: {
+    marginLeft: 'auto',
   },
   navLink: {
     color: colors.white,
@@ -26,18 +29,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     minHeight: '100%',
     paddingLeft: theme.spacing(5),
     paddingRight: theme.spacing(5),
+    textDecoration: 'none',
     '&:hover': {
       color: colors.gray5,
       textDecoration: 'none',
     },
   },
-  activeNavlink: {
-    color: `${colors.white} !important`,
-    fontWeight: fonts.weight.bold
+  navLinkContainer: {
+    minWidth: 50,
+    maxWidth: 200,
   },
-  loginContainer: {
-    marginLeft: 'auto',
-  }
 }));
 
 const Navbar: FC<NavbarProps> = ({ children, items, login, ...rest }) => {

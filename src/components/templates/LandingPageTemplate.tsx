@@ -1,18 +1,32 @@
-import Heading from 'components/atoms/Heading';
 import React, { FC } from 'react';
-import PageTemplate from './PageTemplate';
 import ServiceCategories from 'components/organisms/ServiceCategories';
+import PageTemplate from './PageTemplate';
+import { Typography } from 'rifui';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 
-export interface LandingPageTemplateProps {}
+export interface LandingPageTemplateProps { }
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    textAlign: 'center'
+  },
+  heading: {
+    marginTop: theme.spacing(2)
+  }
+})
+);
 
 export const LandingPageTemplate: FC<LandingPageTemplateProps> = () => {
+  const classes = useStyles();
   return (
-    <PageTemplate className="Landing" style={{ textAlign: 'center' }}>
-      <Heading className="title" hLevel={1} style={{ marginTop: '2em' }}>
+    <PageTemplate className={classes.root}>
+      <Typography className={classes.heading} color='primary' variant='h1'>
         RIF Marketplace
-      </Heading>
-      RIF Marketplace provides a digital catalogue with a wide range of
-      decentralised services.
+      </Typography>
+      <Typography variant='body1'>
+        RIF Marketplace provides a digital catalogue with a wide range of
+        decentralised services.
+      </Typography>
       <ServiceCategories />
     </PageTemplate>
   );

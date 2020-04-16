@@ -1,11 +1,8 @@
+import React, { FC } from 'react';
 import MarketFilter from 'components/templates/marketplace/MarketFilter';
 import Marketplace, { TableHeaders } from 'components/templates/marketplace/Marketplace';
 import { MarketItemType, MarketListingTypes } from 'models/Market';
-import React, { FC } from 'react';
-
-// TODO: use MaterialUI classes
-import './MarketPageTemplate.css';
-
+import { makeStyles, Theme } from '@material-ui/core/styles';
 
 export interface MarketPageTemplateProps {
   className: string;
@@ -15,6 +12,14 @@ export interface MarketPageTemplateProps {
   headers: TableHeaders;
 }
 
+const useStyles = makeStyles((them: Theme) => ({
+  root: {
+    display: 'flex',
+    flexDirection: 'row',
+    flex: 1
+  }
+}));
+
 const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   className,
   listingType,
@@ -22,8 +27,9 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   itemCollection,
   headers,
 }) => {
+  const classes = useStyles();
   return (
-    <div className={`market-page ${className}`}>
+    <div className={`${classes.root} ${className}`}>
       <MarketFilter listingType={listingType}>{filterItems}</MarketFilter>
       <Marketplace items={itemCollection} headers={headers} />
     </div>

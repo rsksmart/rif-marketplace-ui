@@ -6,9 +6,7 @@ export interface SwitchProps extends MUISwitchProps {
 
 const Switch: FC<SwitchProps> = ({ ...rest }) => {
   return (
-    <>
-      <MUISwitch {...rest} />
-    </>
+    <MUISwitch {...rest} />
   );
 };
 

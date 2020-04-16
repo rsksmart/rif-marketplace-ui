@@ -4,11 +4,11 @@ import { CardHeader as MUICardHeader, CardHeaderProps as MUICardHeaderProps } fr
 export interface CardProps extends MUICardHeaderProps { };
 
 const CardHeader: FC<CardProps> = ({ children, ...rest }) => {
-    return (
-        <MUICardHeader {...rest}>
-            {children}
-        </MUICardHeader>
-    );
+  return (
+    <MUICardHeader {...rest}>
+      {children}
+    </MUICardHeader>
+  );
 }
 
 export default CardHeader;

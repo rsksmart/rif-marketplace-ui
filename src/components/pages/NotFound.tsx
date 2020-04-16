@@ -1,3 +1,7 @@
 import React from 'react';
+import { Typography } from 'rifui';
 
-export default () => <p>The page you requested could not be found</p>;
+export default () =>
+  <Typography>
+    The page you requested could not be found
+  </Typography>;

@@ -4,11 +4,11 @@ import { CardContent as MUICardContent, CardContentProps as MUICardContentProps 
 export interface CardProps extends MUICardContentProps { };
 
 const CardContent: FC<CardProps> = ({ children, ...rest }) => {
-    return (
-        <MUICardContent {...rest}>
-            {children}
-        </MUICardContent>
-    );
+  return (
+    <MUICardContent {...rest}>
+      {children}
+    </MUICardContent>
+  );
 }
 
 export default CardContent;
