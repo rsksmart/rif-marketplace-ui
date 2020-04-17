@@ -43,19 +43,19 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const TransactionCompletePage: FC<TransactionCompletePageProps> = (props) => {
   const classes = useStyles();
-  const { location: { state: { txType } }, history } = props;
+  const { history } = props;
 
   return (
     <div className={classes.body}>
       <img src={doneImg} alt='Job done!' />
       <div className={classes.msgRect}>
         <img src={tickWide} alt='done' />
-        <p>Your domain has been {txType === 'buy' ? 'bought' : 'listed'}.</p>
+        <p>Your domain has been bought.</p>
       </div>
+      {/* <a href=''>Check it in the explorer</a> */}
       <div className={classes.actions}>
-        <Button onClick={() => { history.push(ROUTES.DOMAINS) }}>View my domains</Button>
-        {txType === 'buy' && <Button onClick={() => { history.push(ROUTES.DOMAINS) }}>Buy another domain</Button>}
-        {txType === 'list' && <Button onClick={() => { history.push(ROUTES.DOMAINS) }}>View domain listing</Button>}
+        <Button onClick={() => { alert('This should take you to the RNS admin page.') }}>Admin my domain</Button>
+        <Button onClick={() => { history.push(ROUTES.DOMAINS.BUY) }}>Buy another domain</Button>
       </div>
     </div>
   );

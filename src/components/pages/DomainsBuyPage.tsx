@@ -1,3 +1,4 @@
+import { createOffersService, fetchDomainOffers } from 'api/rif-marketplace-cache/domainsController';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import SelectRowButton from 'components/molecules/table/SelectRowButton';
 import DomainsFilters from 'components/organisms/DomainsFilters';
@@ -8,46 +9,57 @@ import { useHistory } from 'react-router';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';
-import { useMarketUtils } from 'store/Market/marketStoreUtils';
 
 const DomainsBuyPage = () => {
   const {
     state: {
-      listings: { domains },
+      currentListing: {
+        servicePath,
+        items: offers,
+      },
       filters: {
-        domains: currentFilters,
+        domainOffers: offerFilters,
       },
     },
-    dispatch: marketDispatch,
+    dispatch,
   } = useContext(MarketStore);
-  const { fetchListingItems } = useMarketUtils(marketDispatch);
   const history = useHistory()
 
+  /* Initialise */
   useEffect(() => {
-    fetchListingItems(
-      MarketListingTypes.domains,
-      TxType.BUY,
-      currentFilters
-    ).then(items => marketDispatch({
-      type: MARKET_ACTIONS.SET_ITEMS,
-      payload: {
-        listingType: MarketListingTypes.domains,
-        items,
-      },
-    }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentFilters]);
+    if (!servicePath) {
+      const serviceAddr = createOffersService();
+      dispatch({
+        type: MARKET_ACTIONS.CONNECT_SERVICE,
+        payload: {
+          servicePath: serviceAddr,
+          listingType: MarketListingTypes.DOMAIN_OFFERS,
+        }
+      })
+    }
+  }, [servicePath])
 
-  // TODO: extract (possibly into action)
+  useEffect(() => {
+    if (servicePath)
+      fetchDomainOffers(offerFilters)
+        .then(items => dispatch({
+          type: MARKET_ACTIONS.SET_ITEMS,
+          payload: {
+            listingType: MarketListingTypes.DOMAINS,
+            items,
+          },
+        }));
+  }, [offerFilters, servicePath]);
+
   const headers = {
-    sellerDomain: 'Name',
+    domainName: 'Name',
     sellerAddress: 'Seller',
     expirationDatetime: 'Renewal Date',
     combinedPrice: 'Price',
     actionCol_1: ''
   }
 
-  const collection = domains
+  const collection = offers
     .map(domainItem => {
       const { _id, price, price_fiat, paymentToken, expirationDate } = domainItem;
 
@@ -61,10 +73,10 @@ const DomainsBuyPage = () => {
       domainItem.actionCol_1 = <SelectRowButton
         id={_id}
         handleSelect={() => {
-          marketDispatch({
-            type: MARKET_ACTIONS.SET_BUY_ITEM,
+          dispatch({
+            type: MARKET_ACTIONS.SELECT_ITEM,
             payload: {
-              listingType: MarketListingTypes.domains,
+              listingType: MarketListingTypes.DOMAINS,
               item: domainItem,
               txType: TxType.BUY
             }
@@ -76,13 +88,12 @@ const DomainsBuyPage = () => {
 
       return domainItem;
     })
-  // End of extract block
 
   return (
     <MarketPageTemplate
       className="Domains"
-      listingType={MarketListingTypes.domains}
-      filterItems={<DomainsFilters />}
+      listingType={MarketListingTypes.DOMAINS}
+      filterItems={<DomainsFilters txType={TxType.BUY} />}
       itemCollection={collection}
       headers={headers}
     />

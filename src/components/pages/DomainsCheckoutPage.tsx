@@ -77,7 +77,7 @@ const DomainsCheckoutPage = () => {
 
   const {
     item: {
-      sellerDomain,
+      name,
       sellerAddress,
       expirationDate,
       price,
@@ -94,7 +94,7 @@ const DomainsCheckoutPage = () => {
   const TextCell = text => <Typography color='primary'>{text}</Typography>
 
   const details = {
-    'NAME': TextCell(sellerDomain),
+    'NAME': TextCell(name),
     'SELLER': TextCell(shortSeller),
     'RENEWAL DATE': TextCell((new Date(expirationDate)).toDateString()),
     'PRICE': PriceCell
@@ -103,7 +103,7 @@ const DomainsCheckoutPage = () => {
   const handleSubmit = () => {
     // TODO: Make transactions
     dispatch({
-      type: MARKET_ACTIONS.SET_BUY_ITEM,
+      type: MARKET_ACTIONS.SELECT_ITEM,
       payload: {
         ...currentOrder,
         isProcessing: true
@@ -112,8 +112,6 @@ const DomainsCheckoutPage = () => {
     const { txType } = currentOrder;
     history.replace(ROUTES.DONE.replace(':service', 'domains'), { txType })
   }
-
-  console.log('account:', account)
   return (
     <CheckoutPageTemplate
       className='domains-checkout-page'
@@ -126,7 +124,7 @@ const DomainsCheckoutPage = () => {
       <Card
         className={classes.card}
       >
-        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Buying ${sellerDomain}`} />
+        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Buying ${name}`} />
         <CardContent>
           <Typography className={classes.contentTitle} variant='h6' color='secondary'>Domain details</Typography>
           <div className={classes.contentDetails}>

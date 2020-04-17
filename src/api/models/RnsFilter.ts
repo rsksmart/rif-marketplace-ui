@@ -1,24 +1,14 @@
-import { MarketFilterIface } from 'models/Market';
+import { MarketFilter } from 'models/Market';
 
 
-export interface DomainsFilterIface extends MarketFilterIface {
-    price: {
+export interface DomainOffersFilter extends MarketFilter {
+    price?: {
         $lte: number,
         $gte: number
     },
-    sellerDomain: {
+    name?: {
         $like: string
     }
 }
-
-export class DomainsFilter implements DomainsFilterIface {
-    [filterFieldName: string]: { [filterType: string]: any; };
-    price!: {
-        $lte: number;
-        $gte: number;
-    };
-    sellerDomain!: {
-        $like: string;
-    };
-
+export interface DomainFilter extends MarketFilter {
 }

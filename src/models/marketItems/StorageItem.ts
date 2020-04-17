@@ -1,4 +1,4 @@
-import { MarketItemIface, MarketFilterIface } from 'models/Market';
+import { MarketItemIface, MarketFilter } from 'models/Market';
 
 export interface StorageItemIface extends MarketItemIface {
     provider: string, // TODO: iface User/Provider?

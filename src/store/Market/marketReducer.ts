@@ -1,16 +1,10 @@
 import Logger from 'utils/Logger';
-import {
-  MARKET_ACTIONS,
-  MarketAction,
-  MarketPayload,
-  ListingPayload,
-  ItemPayload,
-  FilterPayload,
-} from './marketActions'
-import { initialState, IMarketState, TxType } from './MarketStore'
+import { ConnectionPayload, FilterPayload, ItemPayload, ListingPayload, MarketAction, MarketPayload, MARKET_ACTIONS } from './marketActions';
+import { IMarketState, initialState, TxType } from './MarketStore';
 
 const logger = Logger.getInstance()
 
+// TODO: Extract reusable
 const marketReducer = (state = initialState, action: MarketAction) => {
   const { type, payload } = action
   const marketAction = marketActions[type]
@@ -35,26 +29,35 @@ type IMarketActions = {
 const {
   NOOP,
   SET_ITEMS,
-  SET_BUY_ITEM,
+  SELECT_ITEM,
   SET_FILTER,
   TOGGLE_TX_TYPE,
+  CONNECT_SERVICE,
 } = MARKET_ACTIONS
 
 const marketActions: IMarketActions = {
   [NOOP]: (state: IMarketState, _: MarketPayload) => state,
   [SET_ITEMS]: (state: IMarketState, payload: ListingPayload) => {
     const { listingType, items } = payload;
-
-    const newState = { ...state }
-    newState.listings[listingType] = items
-    newState.metadata[listingType] = {
-      ...newState.metadata[listingType],
-      lastUpdated: Date.now()
+    if (listingType !== state.currentListing?.listingType)
+      logger.error('There is a mismatch of types in the current items (market store)!');
+    const newState = {
+      ...state,
+      currentListing: {
+        ...state.currentListing,
+        items,
+      },
+      metadata: {
+        ...state.metadata,
+        [listingType]: {
+          ...state.metadata[listingType],
+          lastUpdated: Date.now()
+        },
+      }
     }
-
     return newState;
   },
-  [SET_BUY_ITEM]: (state: IMarketState, payload: ItemPayload) => ({
+  [SELECT_ITEM]: (state: IMarketState, payload: ItemPayload) => ({
     ...state, currentOrder: { ...payload }
   }),
   [SET_FILTER]: (state: IMarketState, payload: FilterPayload) => {
@@ -73,10 +76,24 @@ const marketActions: IMarketActions = {
     };
   },
   [TOGGLE_TX_TYPE]: (state: IMarketState, _: MarketPayload) => {
+    const { currentListing: { txType: currentTxType } } = state;
+    const txType = currentTxType === TxType.BUY ? TxType.SELL : TxType.BUY;
     return {
       ...state,
-      currentOrder: {
-        txType: state.currentOrder.txType === TxType.BUY ? TxType.LIST : TxType.BUY,
+      currentListing: {
+        txType,
+        items: [],
+      },
+    }
+  },
+  [CONNECT_SERVICE]: (state: IMarketState, payload: ConnectionPayload) => {
+    const { servicePath, listingType } = payload;
+    return {
+      ...state,
+      currentListing: {
+        listingType,
+        servicePath,
+        items: []
       }
     }
   }

@@ -1,109 +1,166 @@
 {
-  'settings': {
-    'import/resolver': {
-      'node': {
-        'extensions': ['.js', '.jsx', '.ts', '.tsx'],
-        'paths': ['src']
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ],
+        "paths": [
+          "src"
+        ]
       }
     }
   },
-  'extends': ['standard', 'plugin:@typescript-eslint/recommended', 'airbnb'],
-  'env': {
-    'browser': true,
-    'commonjs': true,
-    'es6': true,
-    'jest': true,
-    'node': true
+  "extends": [
+    "standard",
+    "plugin:@typescript-eslint/recommended",
+    "airbnb"
+  ],
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "jest": true,
+    "node": true
   },
-  'parserOptions': {
-    'sourceType': 'module',
-    'ecmaVersion': 2018
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2018
   },
-  'plugins': ['no-only-tests'],
-  'rules': {
-    'jsx-a11y/href-no-hash': ['off'],
-    'react/jsx-filename-extension': [
-      'warn',
+  "plugins": [
+    "no-only-tests"
+  ],
+  "rules": {
+    "jsx-a11y/href-no-hash": [
+      "off"
+    ],
+    "react/jsx-filename-extension": [
+      "warn",
       {
-        'extensions': ['.js', '.jsx']
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
       }
     ],
-    'max-len': [
-      'warn',
+    "max-len": [
+      "warn",
       {
-        'code': 80,
-        'tabWidth': 2,
-        'comments': 80,
-        'ignoreComments': false,
-        'ignoreTrailingComments': true,
-        'ignoreUrls': true,
-        'ignoreStrings': true,
-        'ignoreTemplateLiterals': true,
-        'ignoreRegExpLiterals': true
+        "code": 80,
+        "tabWidth": 2,
+        "comments": 80,
+        "ignoreComments": false,
+        "ignoreTrailingComments": true,
+        "ignoreUrls": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreRegExpLiterals": true
       }
     ],
-    'array-bracket-newline': ['error', { 'multiline': true }],
-    'strict': ['error', 'safe'],
-    'curly': 'error',
-    'block-scoped-var': 'error',
-    'complexity': 'warn',
-    'default-case': 'error',
-    'dot-notation': 'warn',
-    'guard-for-in': 'warn',
-    'linebreak-style': ['warn', 'unix'],
-    'no-alert': 'error',
-    'no-case-declarations': 'error',
-    'no-console': 'error',
-    'no-constant-condition': 'error',
-    'no-continue': 'warn',
-    'no-div-regex': 'error',
-    'no-empty': 'warn',
-    'no-empty-pattern': 'error',
-    'no-extra-semi': 'error',
-    'no-implicit-coercion': 'error',
-    'no-labels': 'error',
-    'no-loop-func': 'error',
-    'no-nested-ternary': 'warn',
-    'no-only-tests/no-only-tests': 'error',
-    'no-script-url': 'error',
-    'no-shadow': 'error',
-    'no-warning-comments': 'warn',
-    'quote-props': ['error', 'as-needed'],
-    'require-yield': 'error',
-    'max-nested-callbacks': ['error', 4],
-    'max-depth': ['error', 4],
-    'require-await': 'error',
-    'padding-line-between-statements': [
-      'error',
-      { 'blankLine': 'always', 'prev': '*', 'next': 'if' },
-      { 'blankLine': 'always', 'prev': '*', 'next': 'function' }
-    ],
-    'no-useless-constructor': 'off',
-    'no-dupe-class-members': 'off',
-    '@typescript-eslint/ban-ts-ignore': 'warn',
-    '@typescript-eslint/no-useless-constructor': 'error',
-    '@typescript-eslint/member-delimiter-style': [
-      'error',
+    "array-bracket-newline": [
+      "error",
       {
-        'multiline': {
-          'delimiter': 'none',
-          'requireLast': true
+        "multiline": true
+      }
+    ],
+    "strict": [
+      "error",
+      "safe"
+    ],
+    "curly": "error",
+    "block-scoped-var": "error",
+    "complexity": "warn",
+    "default-case": "error",
+    "dot-notation": "warn",
+    "guard-for-in": "warn",
+    "linebreak-style": [
+      "warn",
+      "unix"
+    ],
+    "no-alert": "error",
+    "no-case-declarations": "error",
+    "no-console": "error",
+    "no-constant-condition": "error",
+    "no-continue": "warn",
+    "no-div-regex": "error",
+    "no-empty": "warn",
+    "no-empty-pattern": "error",
+    "no-extra-semi": "error",
+    "no-implicit-coercion": "error",
+    "no-labels": "error",
+    "no-loop-func": "error",
+    "no-nested-ternary": "warn",
+    "no-only-tests/no-only-tests": "error",
+    "no-script-url": "error",
+    "no-shadow": "error",
+    "no-warning-comments": "warn",
+    "quote-props": [
+      "error",
+      "as-needed"
+    ],
+    "require-yield": "error",
+    "max-nested-callbacks": [
+      "error",
+      4
+    ],
+    "max-depth": [
+      "error",
+      4
+    ],
+    "require-await": "error",
+    "padding-line-between-statements": [
+      "error",
+      {
+        "blankLine": "always",
+        "prev": "*",
+        "next": "if"
+      },
+      {
+        "blankLine": "always",
+        "prev": "*",
+        "next": "function"
+      }
+    ],
+    "no-useless-constructor": "off",
+    "no-dupe-class-members": "off",
+    "@typescript-eslint/ban-ts-ignore": "warn",
+    "@typescript-eslint/no-useless-constructor": "error",
+    "@typescript-eslint/member-delimiter-style": [
+      "error",
+      {
+        "multiline": {
+          "delimiter": "none",
+          "requireLast": true
         },
-        'singleline': {
-          'delimiter': 'comma',
-          'requireLast': false
+        "singleline": {
+          "delimiter": "comma",
+          "requireLast": false
         }
       }
     ],
-    'import/extensions': ['error', 'never'],
-    'semi': ['error', 'never']
+    "import/extensions": [
+      "error",
+      "never"
+    ],
+    "semi": [
+      "error",
+      "never"
+    ]
   },
-  'overrides': [
+  "overrides": [
     {
-      'files': ['*.spec.ts'],
-      'rules': {
-        '@typescript-eslint/ban-ts-ignore': 'off',
-        'max-nested-callbacks': ['error', 10] // allow describe/it nesting
+      "files": [
+        "*.spec.ts"
+      ],
+      "rules": {
+        "@typescript-eslint/ban-ts-ignore": "off",
+        "max-nested-callbacks": [
+          "error",
+          10
+        ] // allow describe/it nesting
       }
     }
   ]

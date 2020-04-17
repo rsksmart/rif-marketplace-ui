@@ -1,20 +1,16 @@
 import { MarketItemIface } from 'models/Market';
 
-export interface DomainItemIface extends MarketItemIface {
+export interface DomainOffer extends MarketItemIface {
     paymentToken: string
-    sellerDomain: string
+    domainName: string
     expirationDate: number
     price_fiat: number
     price: number
     sellerAddress: string
 }
 
-export class DomainItem implements DomainItemIface {
-    _id!: string
-    paymentToken!: string
-    sellerDomain!: string
-    expirationDate!: number
-    price_fiat!: number
-    price!: number
-    sellerAddress!: string
+export interface Domain extends MarketItemIface {
+    expirationDate: number,
+    ownerAddress: string,
+    name: string,
 }

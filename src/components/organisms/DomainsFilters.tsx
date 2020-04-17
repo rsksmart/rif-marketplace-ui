@@ -1,16 +1,13 @@
+import { makeStyles, Theme } from '@material-ui/core';
 import { MarketListingTypes } from 'models/Market';
 import React, { useContext } from 'react';
+import { useHistory } from 'react-router';
+import { Grid, SwitchTabs, Typography } from 'rifui';
+import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
-import MarketStore from 'store/Market/MarketStore';
+import MarketStore, { TxType } from 'store/Market/MarketStore';
 import RangeFilter from './filters/RangeFilter';
 import SearchFilter from './filters/SearchFilter';
-import { Grid, Typography, SwitchTabs } from 'rifui';
-import { makeStyles, Theme } from '@material-ui/core';
-import SelectFilter from './filters/SelectFilter';
-import Logger from 'utils/Logger';
-
-const logger = Logger.getInstance()
-
 const useStyles = makeStyles((theme: Theme) => ({
   formHeading: {
     paddingBottom: theme.spacing(2)
@@ -21,30 +18,30 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const DomainsFilters = () => {
+const DomainsFilters = ({ txType }) => {
   const classes = useStyles();
   const {
     state: {
       filters: {
         domains: {
-          sellerDomain: {
-            $like: searchValue,
-          },
-          price: {
-            $gte: minPrice,
-            $lte: maxPrice,
-          }
+          name: nameFilter,
+          price: priceFilter
         }
       }
     },
     dispatch
   } = useContext(MarketStore);
+  const history = useHistory();
 
-  const handleSwitchChange = (newSwitchValue: number) => {
+  const searchValue = nameFilter && nameFilter.$like;
+  const minPrice = priceFilter && priceFilter.$gte;
+  const maxPrice = priceFilter && priceFilter.$lte;
+
+  const handleSwitchChange = (): void => {
     dispatch({
       type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
     })
-    console.log(`New switch value: ${newSwitchValue}`);
+    history.replace(txType === TxType.BUY ? ROUTES.DOMAINS.SELL : ROUTES.DOMAINS.BUY)
   }
 
   return (
@@ -55,10 +52,8 @@ const DomainsFilters = () => {
             Domains
                   </Typography>
         </Grid>
-        <Grid
-          className={classes.switchContainer}
-          item md={6}>
-          <SwitchTabs label1='Buy' label2='Sell' onChange={handleSwitchChange} />
+        <Grid style={{ display: 'flex', alignSelf: 'center' }} item md={6}>
+          <SwitchTabs label1='Buy' label2='Sell' value={txType} onChange={handleSwitchChange} />
         </Grid>
       </Grid>
 
@@ -69,9 +64,9 @@ const DomainsFilters = () => {
           dispatch({
             type: MARKET_ACTIONS.SET_FILTER,
             payload: {
-              listingType: MarketListingTypes.domains,
+              listingType: MarketListingTypes.DOMAINS,
               filterItems: {
-                sellerDomain: {
+                name: {
                   $like: value
                 }
               }
@@ -94,7 +89,7 @@ const DomainsFilters = () => {
           dispatch({
             type: MARKET_ACTIONS.SET_FILTER,
             payload: {
-              listingType: MarketListingTypes.domains,
+              listingType: MarketListingTypes.DOMAINS,
               filterItems: {
                 price: {
                   $gte: min,

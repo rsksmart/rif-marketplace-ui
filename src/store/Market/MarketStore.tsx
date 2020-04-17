@@ -1,30 +1,30 @@
-import { DomainsFilterIface } from 'api/models/RnsFilter';
-import { MarketFilterIface, MarketItemIface, MarketListingTypes } from 'models/Market';
-import { DomainItemIface } from 'models/marketItems/DomainItem';
-import { StorageItemIface } from 'models/marketItems/StorageItem';
+import { DomainFilter, DomainOffersFilter } from 'api/models/RnsFilter';
+import { MarketItemIface, MarketItemType, MarketListingTypes } from 'models/Market';
 import React, { Dispatch, useReducer } from 'react';
 import { MarketAction } from './marketActions';
 import marketReducer from './marketReducer';
 
 export enum TxType {
+  SELL = 1,
   BUY = 0,
-  LIST = 1
 }
 export interface ICurrentOrder {
-  listingType?: MarketListingTypes;
-  item?: MarketItemIface;
+  listingType: MarketListingTypes;
+  item: MarketItemIface;
   txType: TxType;
-  isProcessing?: boolean;
+  isProcessing: boolean;
 }
 
 export interface IMarketState {
-  listings: {
-    domains: DomainItemIface[];
-    storage: StorageItemIface[];
-  };
+  currentListing: {
+    servicePath?: string,
+    listingType?: MarketListingTypes;
+    txType?: TxType;
+    items: MarketItemType[],
+  }
   filters: {
-    domains: DomainsFilterIface,
-    storage?: MarketFilterIface,
+    domains: DomainFilter,
+    domainOffers: DomainOffersFilter,
   };
   metadata: {
     domains: {
@@ -34,7 +34,7 @@ export interface IMarketState {
       lastUpdated: number;
     };
   };
-  currentOrder: ICurrentOrder;
+  currentOrder?: ICurrentOrder;
 }
 
 interface IMarketStoreProps {
@@ -43,20 +43,12 @@ interface IMarketStoreProps {
 }
 
 export const initialState: IMarketState = {
-  listings: {
-    domains: [],
-    storage: [],
+  currentListing: {
+    items: [],
   },
   filters: {
-    domains: {
-      price: {
-        $lte: 100,
-        $gte: 0
-      },
-      sellerDomain: {
-        $like: ''
-      }
-    },
+    domains: {},
+    domainOffers: {},
   },
   metadata: {
     domains: {
@@ -65,9 +57,6 @@ export const initialState: IMarketState = {
     storage: {
       lastUpdated: -1,
     },
-  },
-  currentOrder: {
-    txType: TxType.BUY,
   }
 };
 

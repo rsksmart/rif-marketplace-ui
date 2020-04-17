@@ -7,7 +7,8 @@ import { colors, fonts } from 'rifui/theme';
 export interface SwitchTabsProps {
   label1: string;
   label2: string;
-  onChange: (newValue: number) => void;
+  value?: 0 | 1;
+  onChange: (event: React.ChangeEvent<{}>, value: any) => void;
 };
 
 const a11yProps = (index: any) => {
@@ -61,19 +62,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const SwitchTabs: FC<SwitchTabsProps> = ({ label1, label2, onChange }) => {
+const SwitchTabs: FC<SwitchTabsProps> = ({ label1, label2, value: controlledValue, onChange }) => {
   const classes = useStyles();
-  const [value, setValue] = useState(0);
+  // const [value, setValue] = useState(controlledValue);
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setValue(newValue);
-    onChange(value);
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number): void => {
+    // setValue(newValue);
+    onChange(event, newValue);
   };
 
   const toggleSwitch = () => {
-    if (value) setValue(0);
-    else setValue(1);
+    // if (!controlledValue) setValue(value ? 0 : 1);
   }
+  console.error('controlledValue:', controlledValue)
+  // console.error('value:', value)
 
   return (
     <div className={classes.root}>
@@ -84,7 +86,7 @@ const SwitchTabs: FC<SwitchTabsProps> = ({ label1, label2, onChange }) => {
         TabIndicatorProps={{
           className: classes.tabIndicator
         }}
-        value={value}
+        value={controlledValue}
         variant="fullWidth"
       >
         <MUITab

@@ -5,6 +5,7 @@ import { IAppState, initialState } from './AppStore'
 
 const logger = Logger.getInstance()
 
+// TODO: Extract reusable
 const appReducer = (state = initialState, action: AppAction) => {
   const { type, payload } = action
   const userAction = appActions[type]

@@ -4,8 +4,8 @@ export const ROUTES = {
   DATA_SERVICE: 'data_service',
   PAYMENTS: '/payments',
   DOMAINS: {
-    BUY: '/buy_domains',
-    SELL: '/sell_domains',
+    BUY: '/buy_domain',
+    SELL: '/sell_domain',
   },
   STORAGE: '/storage',
   DONE: '/:service/done',

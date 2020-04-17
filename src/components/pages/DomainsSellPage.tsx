@@ -1,72 +1,79 @@
-import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import SelectRowButton from 'components/molecules/table/SelectRowButton';
 import DomainsFilters from 'components/organisms/DomainsFilters';
 import MarketPageTemplate from 'components/templates/MarketPageTemplate';
 import { MarketListingTypes } from 'models/Market';
 import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router';
+import { Web3Store } from 'rifui/providers/Web3Provider';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';
-import { useMarketUtils } from 'store/Market/marketStoreUtils';
+import { createService } from 'api/rif-marketplace-cache/cacheController';
+import { createDomainService, fetchDomains } from 'api/rif-marketplace-cache/domainsController';
 
 const DomainsSellPage = () => {
   const {
     state: {
-      listings: { domains },
+      currentListing: {
+        servicePath,
+        items: domains,
+      },
       filters: {
-        domains: currentFilters,
+        domains: domainFilters,
       },
     },
-    dispatch: marketDispatch,
+    dispatch,
   } = useContext(MarketStore);
-  const { fetchListingItems } = useMarketUtils(marketDispatch);
+  const {
+    state: { account },
+  } = useContext(Web3Store);
   const history = useHistory()
 
+  /* Initialise */
   useEffect(() => {
-    fetchListingItems(
-      MarketListingTypes.domains,
-      TxType.LIST,
-      currentFilters
-    ).then(items => marketDispatch({
-      type: MARKET_ACTIONS.SET_ITEMS,
-      payload: {
-        listingType: MarketListingTypes.domains,
-        items,
-      },
-    }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentFilters]);
+    if (!servicePath && account) {
+      const serviceAddr = createDomainService(account);
+      dispatch({
+        type: MARKET_ACTIONS.CONNECT_SERVICE,
+        payload: {
+          servicePath: serviceAddr,
+          listingType: MarketListingTypes.DOMAINS,
+        }
+      })
+    }
+  }, [servicePath, account])
 
-  // TODO: extract (possibly into action)
+  useEffect(() => {
+    if (servicePath)
+      fetchDomains(domainFilters)
+        .then(items => dispatch({
+          type: MARKET_ACTIONS.SET_ITEMS,
+          payload: {
+            listingType: MarketListingTypes.DOMAINS,
+            items,
+          },
+        }));
+  }, [domainFilters, servicePath]);
+
   const headers = {
-    sellerDomain: 'Name',
-    sellerAddress: 'Seller',
+    name: 'Name',
     expirationDatetime: 'Renewal Date',
-    combinedPrice: 'Price',
     actionCol_1: ''
   }
 
   const collection = domains
     .map(domainItem => {
-      const { _id, price, price_fiat, paymentToken, expirationDate } = domainItem;
+      const { _id, expirationDate } = domainItem;
 
-      domainItem.combinedPrice = <CombinedPriceCell
-        price={price}
-        price_fiat={price_fiat}
-        currency={paymentToken}
-        currency_fiat='USD'
-        divider=' = '
-      />
       domainItem.actionCol_1 = <SelectRowButton
         id={_id}
         handleSelect={() => {
-          marketDispatch({
-            type: MARKET_ACTIONS.SET_BUY_ITEM,
+          dispatch({
+            type: MARKET_ACTIONS.SELECT_ITEM,
             payload: {
-              listingType: MarketListingTypes.domains,
+              listingType: MarketListingTypes.DOMAINS,
               item: domainItem,
-              txType: TxType.LIST
+              txType: TxType.SELL
             }
           })
           history.push(ROUTES.CHECKOUT.DOMAINS)
@@ -76,13 +83,12 @@ const DomainsSellPage = () => {
 
       return domainItem;
     })
-  // End of extract block
 
   return (
     <MarketPageTemplate
       className="Domains"
-      listingType={MarketListingTypes.domains}
-      filterItems={<DomainsFilters />}
+      listingType={MarketListingTypes.DOMAINS}
+      filterItems={<DomainsFilters txType={TxType.SELL} />}
       itemCollection={collection}
       headers={headers}
     />
