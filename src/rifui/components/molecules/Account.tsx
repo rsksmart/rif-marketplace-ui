@@ -15,6 +15,9 @@ export interface AccountProps {
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
+  accountText: {
+    fontSize: fonts.size.tiny,
+  },
   root: {
     alignItems: 'center',
     color: colors.gray1,
@@ -28,9 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     padding: theme.spacing(1),
     width: '100%',
-  },
-  accountText: {
-    fontSize: fonts.size.small,
   },
 }));
 

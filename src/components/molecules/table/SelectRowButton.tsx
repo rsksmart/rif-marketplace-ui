@@ -7,14 +7,14 @@ export interface SelectRowButtonProps {
   handleSelect: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-const SelectRowButton: FC<SelectRowButtonProps> = ({ className = '', id, handleSelect, children }) => {
+const SelectRowButton: FC<SelectRowButtonProps> = ({ id, handleSelect, children, ...rest }) => {
 
   return (
     <Button rounded
-      className={'srb-' + id}
       variant="contained"
       color="primary"
       onClick={handleSelect}
+      {...rest}
     >
       {!!children ? children : 'Select'}
     </Button>

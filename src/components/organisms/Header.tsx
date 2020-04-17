@@ -1,8 +1,9 @@
 import React from 'react';
 import { ROUTES } from 'routes';
 import Web3Provider from 'rifui/providers/Web3Provider';
-import { Account, Navbar } from 'rifui';
+import { Account } from 'rifui';
 import { NavLinkProps } from 'react-router-dom';
+import { Header as RUIHeader } from 'rifui';
 
 const Login = () => (
   <Web3Provider.Consumer>
@@ -44,7 +45,7 @@ const Header = () => {
     }
   ];
 
-  return <Navbar hreflogo={ROUTES.LANDING} items={navItems} login={Login} />;
+  return (<RUIHeader hreflogo={ROUTES.LANDING} items={navItems} login={Login} />)
 };
 
 export default Header;

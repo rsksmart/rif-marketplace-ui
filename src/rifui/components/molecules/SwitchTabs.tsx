@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     borderRadius: 50,
     color: colors.gray3,
+    fontWeight: fonts.weight.normal,
     maxWidth: '50%',
     minHeight: '100%',
     minWidth: '50%',
@@ -58,7 +59,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     // the '!important' here is to override the on hover functionality when it's active
     backgroundColor: `${colors.primary} !important`,
     color: `${colors.white} !important`,
-    fontWeight: fonts.weight.lightBold,
   }
 }));
 

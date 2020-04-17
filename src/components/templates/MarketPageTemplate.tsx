@@ -11,8 +11,9 @@ import { Web3Store } from 'rifui/providers/Web3Provider';
 export interface MarketPageTemplateProps {
   className: string;
   filterItems: React.ReactNode;
-  itemCollection: MarketItemType[];
   headers: TableHeaders;
+  itemCollection: MarketItemType[];
+  listingType: MarketListingTypes;
 }
 
 const useStyles = makeStyles((them: Theme) => ({

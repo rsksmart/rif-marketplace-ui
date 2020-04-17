@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
-import AppBar, { AppBarProps } from '@material-ui/core/AppBar';
+import { AppBar as MUIAppBar, AppBarProps as MUIAppBarProps } from '@material-ui/core';
 import Toolbar from '@material-ui/core/Toolbar';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { NavLink, NavLinkProps } from 'react-router-dom';
 import { LogoNavbar, Link, Typography } from 'rifui/components/atoms/index';
 import { colors, fonts } from 'rifui/theme';
 
-export interface NavbarProps extends AppBarProps {
+export interface AppBarProps extends MUIAppBarProps {
   hreflogo: string;
   items: NavLinkProps[];
   login: React.ElementType;
@@ -21,14 +21,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
   },
   loginContainer: {
+    display: 'flex',
     marginLeft: 'auto',
   },
   navLink: {
+    alignItems: 'center',
     color: colors.white,
-    minWidth: '100%',
-    minHeight: '100%',
+    display: 'flex',
     paddingLeft: theme.spacing(5),
     paddingRight: theme.spacing(5),
+    textAlign: 'center',
     textDecoration: 'none',
     '&:hover': {
       color: colors.gray5,
@@ -36,18 +38,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   navLinkContainer: {
-    minWidth: 50,
-    maxWidth: 200,
+    display: 'flex'
   },
 }));
 
-const Navbar: FC<NavbarProps> = ({ children, items, login, ...rest }) => {
+const AppBar: FC<AppBarProps> = ({ children, items, login, ...rest }) => {
 
   const classes = useStyles();
   const Login = login;
 
   return (
-    <AppBar position='static' {...rest} >
+    <MUIAppBar position='static' {...rest} >
       <Toolbar>
         <Link href={rest.hreflogo}>
           <LogoNavbar />
@@ -68,8 +69,8 @@ const Navbar: FC<NavbarProps> = ({ children, items, login, ...rest }) => {
           <Login />
         </div>
       </Toolbar>
-    </AppBar >
+    </MUIAppBar >
   );
 }
 
-export default Navbar;
+export default AppBar;
