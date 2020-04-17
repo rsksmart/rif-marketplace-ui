@@ -6,7 +6,7 @@ export interface DomainOffersFilter extends MarketFilter {
         $lte: number,
         $gte: number
     },
-    name?: {
+    sellerDomain?: {
         $like: string
     }
 }

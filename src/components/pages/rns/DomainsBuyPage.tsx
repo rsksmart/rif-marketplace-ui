@@ -1,7 +1,7 @@
 import { createOffersService, fetchDomainOffers } from 'api/rif-marketplace-cache/domainsController';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import SelectRowButton from 'components/molecules/table/SelectRowButton';
-import DomainsFilters from 'components/organisms/DomainsFilters';
+import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters';
 import MarketPageTemplate from 'components/templates/MarketPageTemplate';
 import { MarketListingTypes } from 'models/Market';
 import React, { useContext, useEffect } from 'react';
@@ -96,9 +96,8 @@ const DomainsBuyPage = () => {
 
   return (
     <MarketPageTemplate
-      className="Domains"
-      listingType={LISTING_TYPE}
-      filterItems={<DomainsFilters txType={TX_TYPE} />}
+      className="Domain Offers"
+      filterItems={<DomainOfferFilters />}
       itemCollection={collection}
       headers={headers}
     />

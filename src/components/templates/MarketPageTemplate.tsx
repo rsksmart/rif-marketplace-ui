@@ -6,7 +6,6 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 
 export interface MarketPageTemplateProps {
   className: string;
-  listingType: MarketListingTypes;
   filterItems: React.ReactNode;
   itemCollection: MarketItemType[];
   headers: TableHeaders;
@@ -22,7 +21,6 @@ const useStyles = makeStyles((them: Theme) => ({
 
 const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   className,
-  listingType,
   filterItems,
   itemCollection,
   headers,
@@ -30,7 +28,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   const classes = useStyles();
   return (
     <div className={`${classes.root} ${className}`}>
-      <MarketFilter listingType={listingType}>{filterItems}</MarketFilter>
+      <MarketFilter>{filterItems}</MarketFilter>
       <Marketplace items={itemCollection} headers={headers} />
     </div>
   );

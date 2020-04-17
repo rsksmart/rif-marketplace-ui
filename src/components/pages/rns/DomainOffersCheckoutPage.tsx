@@ -71,7 +71,7 @@ const DomainOffersCheckoutPage = () => {
 
     const {
         item: {
-            name,
+            domainName,
             sellerAddress,
             expirationDate,
             price,
@@ -87,7 +87,7 @@ const DomainOffersCheckoutPage = () => {
     const PriceCell = <CombinedPriceCell {...priceCellProps} />
 
     const details = {
-        'NAME': name,
+        'NAME': domainName,
         'SELLER': shortSeller,
         'RENEWAL DATE': (new Date(expirationDate)).toDateString(),
         'PRICE': PriceCell
@@ -118,7 +118,7 @@ const DomainOffersCheckoutPage = () => {
                 className={classes.card}
             >
                 <CardHeader
-                    title={`Buying ${name}`}
+                    title={`Buying ${domainName}`}
                 />
                 <CardContent>
                     <Heading hLevel={3}>Domain details</Heading>

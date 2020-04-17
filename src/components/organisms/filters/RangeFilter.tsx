@@ -5,13 +5,13 @@ import { RangeSliderWithInputsProps } from 'rifui/components/molecules/RangeSlid
 export interface RangeFilterProps extends RangeSliderWithInputsProps {
   className?: string
   title: string
-  hedgeValues: {
+  edgeValues: {
     min: number,
     max: number
   },
 }
 
-const RangeFilter: FC<RangeFilterProps> = ({ className = '', title, hedgeValues, ...rest }) => {
+const RangeFilter: FC<RangeFilterProps> = ({ className = '', title, edgeValues, ...rest }) => {
 
   return <Accordion
     id={`accordion-${title.toLocaleLowerCase()}`}
@@ -20,8 +20,8 @@ const RangeFilter: FC<RangeFilterProps> = ({ className = '', title, hedgeValues,
     title={title}
   >
     <RangeSliderWithInputs
-      min={hedgeValues.min}
-      max={hedgeValues.max}
+      min={edgeValues.min}
+      max={edgeValues.max}
       {...rest}
     />
   </Accordion>
