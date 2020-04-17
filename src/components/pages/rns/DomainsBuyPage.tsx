@@ -1,82 +1,92 @@
+import { createOffersService, fetchDomainOffers } from 'api/rif-marketplace-cache/domainsController';
+import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import SelectRowButton from 'components/molecules/table/SelectRowButton';
 import DomainsFilters from 'components/organisms/DomainsFilters';
 import MarketPageTemplate from 'components/templates/MarketPageTemplate';
 import { MarketListingTypes } from 'models/Market';
 import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router';
-import { Web3Store } from 'rifui/providers/Web3Provider';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';
-import { createService } from 'api/rif-marketplace-cache/cacheController';
-import { createDomainService, fetchDomains } from 'api/rif-marketplace-cache/domainsController';
 
-const DomainsSellPage = () => {
+const LISTING_TYPE = MarketListingTypes.DOMAIN_OFFERS;
+const TX_TYPE = TxType.BUY;
+
+const DomainsBuyPage = () => {
   const {
     state: {
-      currentListing: {
-        servicePath,
-        items: domains,
-      },
+      currentListing,
       filters: {
-        domains: domainFilters,
+        domainOffers: offerFilters,
       },
     },
     dispatch,
   } = useContext(MarketStore);
-  const {
-    state: { account },
-  } = useContext(Web3Store);
   const history = useHistory()
+
+  const servicePath = currentListing?.servicePath;
 
   /* Initialise */
   useEffect(() => {
-    if (!servicePath && account) {
-      const serviceAddr = createDomainService(account);
+    if (!servicePath) {
+      const serviceAddr = createOffersService();
       dispatch({
         type: MARKET_ACTIONS.CONNECT_SERVICE,
         payload: {
           servicePath: serviceAddr,
-          listingType: MarketListingTypes.DOMAINS,
+          listingType: LISTING_TYPE,
+          txType: TX_TYPE,
         }
       })
     }
-  }, [servicePath, account])
+  }, [servicePath])
 
   useEffect(() => {
     if (servicePath)
-      fetchDomains(domainFilters)
+      fetchDomainOffers(offerFilters)
         .then(items => dispatch({
           type: MARKET_ACTIONS.SET_ITEMS,
           payload: {
-            listingType: MarketListingTypes.DOMAINS,
+            listingType: LISTING_TYPE,
             items,
           },
         }));
-  }, [domainFilters, servicePath]);
+  }, [offerFilters, servicePath]);
+
+  if (!currentListing) return null;
 
   const headers = {
-    name: 'Name',
+    domainName: 'Name',
+    sellerAddress: 'Seller',
     expirationDatetime: 'Renewal Date',
+    combinedPrice: 'Price',
     actionCol_1: ''
   }
 
-  const collection = domains
+  const collection = currentListing?.items
     .map(domainItem => {
-      const { _id, expirationDate } = domainItem;
+      const { _id, price, price_fiat, paymentToken, expirationDate } = domainItem;
 
+      domainItem.combinedPrice = <CombinedPriceCell
+        price={price}
+        price_fiat={price_fiat}
+        currency={paymentToken}
+        currency_fiat='USD'
+        divider=' = '
+      />
       domainItem.actionCol_1 = <SelectRowButton
         id={_id}
         handleSelect={() => {
           dispatch({
             type: MARKET_ACTIONS.SELECT_ITEM,
             payload: {
-              listingType: MarketListingTypes.DOMAINS,
+              listingType: LISTING_TYPE,
               item: domainItem,
-              txType: TxType.SELL
+              txType: TX_TYPE
             }
           })
-          history.push(ROUTES.CHECKOUT.DOMAINS)
+          history.push(ROUTES.CHECKOUT.DOMAIN_OFFERS)
         }}
       />;
       domainItem.expirationDatetime = (new Date(expirationDate)).toDateString()
@@ -87,12 +97,12 @@ const DomainsSellPage = () => {
   return (
     <MarketPageTemplate
       className="Domains"
-      listingType={MarketListingTypes.DOMAINS}
-      filterItems={<DomainsFilters txType={TxType.SELL} />}
+      listingType={LISTING_TYPE}
+      filterItems={<DomainsFilters txType={TX_TYPE} />}
       itemCollection={collection}
       headers={headers}
     />
   );
 };
 
-export default DomainsSellPage;
+export default DomainsBuyPage;

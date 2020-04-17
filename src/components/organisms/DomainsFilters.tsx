@@ -64,7 +64,6 @@ const DomainsFilters = ({ txType }) => {
           dispatch({
             type: MARKET_ACTIONS.SET_FILTER,
             payload: {
-              listingType: MarketListingTypes.DOMAINS,
               filterItems: {
                 name: {
                   $like: value
@@ -89,7 +88,6 @@ const DomainsFilters = ({ txType }) => {
           dispatch({
             type: MARKET_ACTIONS.SET_FILTER,
             payload: {
-              listingType: MarketListingTypes.DOMAINS,
               filterItems: {
                 price: {
                   $gte: min,

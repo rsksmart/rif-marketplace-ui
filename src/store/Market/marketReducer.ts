@@ -39,12 +39,16 @@ const marketActions: IMarketActions = {
   [NOOP]: (state: IMarketState, _: MarketPayload) => state,
   [SET_ITEMS]: (state: IMarketState, payload: ListingPayload) => {
     const { listingType, items } = payload;
-    if (listingType !== state.currentListing?.listingType)
+    const { currentListing } = state;
+    if (!currentListing) return state;
+    if (listingType !== currentListing.listingType)
       logger.error('There is a mismatch of types in the current items (market store)!');
     const newState = {
       ...state,
       currentListing: {
-        ...state.currentListing,
+        txType: currentListing.txType,
+        listingType: listingType,
+        servicePath: currentListing.servicePath,
         items,
       },
       metadata: {
@@ -61,8 +65,10 @@ const marketActions: IMarketActions = {
     ...state, currentOrder: { ...payload }
   }),
   [SET_FILTER]: (state: IMarketState, payload: FilterPayload) => {
-    const { filters } = state;
-    const { listingType, filterItems } = payload;
+    const { filters, currentListing } = state;
+    if (!currentListing) return state;
+    const { listingType } = currentListing;
+    const { filterItems } = payload;
 
     return {
       ...state,
@@ -76,24 +82,29 @@ const marketActions: IMarketActions = {
     };
   },
   [TOGGLE_TX_TYPE]: (state: IMarketState, _: MarketPayload) => {
-    const { currentListing: { txType: currentTxType } } = state;
+    const { currentListing } = state;
+    if (!currentListing) return state;
+    const { txType: currentTxType } = currentListing;
     const txType = currentTxType === TxType.BUY ? TxType.SELL : TxType.BUY;
     return {
       ...state,
       currentListing: {
         txType,
         items: [],
+        servicePath: '',
+        listingType: currentListing.listingType,
       },
     }
   },
   [CONNECT_SERVICE]: (state: IMarketState, payload: ConnectionPayload) => {
-    const { servicePath, listingType } = payload;
+    const { servicePath, listingType, txType } = payload;
     return {
       ...state,
       currentListing: {
         listingType,
         servicePath,
-        items: []
+        items: [],
+        txType,
       }
     }
   }

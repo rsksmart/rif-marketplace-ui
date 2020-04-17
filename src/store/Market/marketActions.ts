@@ -24,13 +24,13 @@ export interface ListingPayload {
 }
 
 export interface FilterPayload {
-  listingType: MarketListingTypes;
   filterItems: MarketFilter;
 }
 
 export interface ConnectionPayload {
   servicePath: string,
   listingType: MarketListingTypes,
+  txType: TxType,
 }
 
 export type MarketPayload = ItemPayload & ListingPayload & FilterPayload & ConnectionPayload

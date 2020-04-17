@@ -6,10 +6,10 @@ import NotFound from 'components/pages/NotFound';
 import { ROUTES } from 'routes';
 import Logger from 'utils/Logger';
 import { LandingPage } from './pages/LandingPage';
-import DomainsBuyPage from './pages/DomainsBuyPage';
-import DomainsCheckoutPage from './pages/DomainsCheckoutPage';
+import DomainsBuyPage from './pages/rns/DomainsBuyPage';
+import DomainOffersCheckoutPage from './pages/rns/DomainOffersCheckoutPage';
 import TransactionCompletePage from './pages/TransactionCompletePage';
-import DomainsSellPage from './pages/DomainsSellPage';
+import { DomainsSellPage, DomainsCheckoutPage } from './pages/rns';
 
 const logger = Logger.getInstance();
 
@@ -31,6 +31,7 @@ const Routes = () => {
       <Route exact={true} path={ROUTES.LANDING} component={LandingPage} />
       <Route exact={true} path={ROUTES.DOMAINS.BUY} component={DomainsBuyPage} />
       <Route exact={true} path={ROUTES.DOMAINS.SELL} component={DomainsSellPage} />
+      <Route exact={true} path={ROUTES.CHECKOUT.DOMAIN_OFFERS} component={DomainOffersCheckoutPage} />
       <Route exact={true} path={ROUTES.CHECKOUT.DOMAINS} component={DomainsCheckoutPage} />
       <Route exact={true} path={ROUTES.DONE} component={TransactionCompletePage} />
       <Route component={NotFound} />

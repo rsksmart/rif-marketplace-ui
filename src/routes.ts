@@ -10,6 +10,7 @@ export const ROUTES = {
   STORAGE: '/storage',
   DONE: '/:service/done',
   CHECKOUT: {
-    DOMAINS: '/domains/checkout'
+    DOMAIN_OFFERS: '/buy_domian/checkout',
+    DOMAINS: '/sell_domian/checkout',
   }
 };

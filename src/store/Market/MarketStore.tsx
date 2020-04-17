@@ -16,10 +16,10 @@ export interface ICurrentOrder {
 }
 
 export interface IMarketState {
-  currentListing: {
-    servicePath?: string,
-    listingType?: MarketListingTypes;
-    txType?: TxType;
+  currentListing?: {
+    servicePath: string,
+    listingType: MarketListingTypes;
+    txType: TxType;
     items: MarketItemType[],
   }
   filters: {
@@ -30,6 +30,9 @@ export interface IMarketState {
     domains: {
       lastUpdated: number;
     };
+    domainOffers: {
+      lastUpdated: number;
+    }
     storage: {
       lastUpdated: number;
     };
@@ -43,15 +46,22 @@ interface IMarketStoreProps {
 }
 
 export const initialState: IMarketState = {
-  currentListing: {
-    items: [],
-  },
   filters: {
-    domains: {},
-    domainOffers: {},
+    domains: {
+
+    },
+    domainOffers: {
+      price: {
+        $lte: 100,
+        $gte: 0
+      },
+    },
   },
   metadata: {
     domains: {
+      lastUpdated: -1,
+    },
+    domainOffers: {
       lastUpdated: -1,
     },
     storage: {
