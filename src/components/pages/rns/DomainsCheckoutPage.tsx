@@ -67,37 +67,40 @@ const DomainsCheckoutPage = () => {
   const classes = useStyles();
 
   useEffect(() => {
-    if (!currentOrder.item) {
+    if (!currentOrder) {
       history.replace(ROUTES.LANDING);
     }
   }, [currentOrder, history])
 
-  if (!currentOrder.item) return null;
+  if (!currentOrder) return null;
 
 
   const {
     item: {
       name,
-      sellerAddress,
       expirationDate,
-      price,
-      price_fiat,
-      paymentToken
+      // price,
+      // price_fiat,
+      // paymentToken
     },
     isProcessing
   } = currentOrder;
 
-  const shortSeller = shortenAddress(sellerAddress);
-
-  const priceCellProps = { price, price_fiat, currency: paymentToken, currency_fiat: 'USD', divider: ' ' };
-  const PriceCell = <CombinedPriceCell {...priceCellProps} />
-  const TextCell = text => <Typography color='primary'>{text}</Typography>
+  const priceCellProps = {
+    // price,
+    // price_fiat,
+    // currency: paymentToken,
+    currency_fiat: 'USD',
+    divider: ' '
+  };
+  // const PriceCell = <CombinedPriceCell {...priceCellProps} />
 
   const details = {
-    'NAME': TextCell(name),
-    'SELLER': TextCell(shortSeller),
-    'RENEWAL DATE': TextCell((new Date(expirationDate)).toDateString()),
-    'PRICE': PriceCell
+    'NAME': name,
+    'RENEWAL DATE': (new Date(expirationDate)).toDateString(),
+    // 'CURRENCY': 
+    // 'PRICE':
+    // 'PRICE_FIAT:
   }
 
   const handleSubmit = () => {
@@ -119,12 +122,12 @@ const DomainsCheckoutPage = () => {
         backTo: 'domains',
         onClick: () => { }
       }}
-      progressMessage='Completing the purchase!'
+      progressMessage='Listing the domain!'
     >
       <Card
         className={classes.card}
       >
-        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Buying ${name}`} />
+        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Listing ${name}`} />
         <CardContent>
           <Typography className={classes.contentTitle} variant='h6' color='secondary'>Domain details</Typography>
           <div className={classes.contentDetails}>
@@ -133,6 +136,7 @@ const DomainsCheckoutPage = () => {
                 return <ItemDetailRow name={name} value={details[name]} key={'idr-' + name + i} />
               })
             }
+
           </div>
         </CardContent>
         {!isProcessing &&

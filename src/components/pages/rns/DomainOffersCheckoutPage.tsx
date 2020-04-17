@@ -61,12 +61,12 @@ const DomainOffersCheckoutPage = () => {
     const classes = useStyles();
 
     useEffect(() => {
-        if (!currentOrder.item) {
+        if (!currentOrder) {
             history.replace(ROUTES.LANDING);
         }
     }, [currentOrder, history])
 
-    if (!currentOrder.item) return null;
+    if (!currentOrder) return null;
 
 
     const {

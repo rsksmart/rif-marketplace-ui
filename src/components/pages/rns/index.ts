@@ -1,12 +1,12 @@
 import DomainsBuyPage from './DomainsBuyPage';
 import DomainsSellPage from './DomainsSellPage';
-import DomainsCheckoutPage from './DomainsCheckoutPage';
 import DomainOffersCheckoutPage from './DomainOffersCheckoutPage';
+import DomainsCheckoutPage from './DomainsCheckoutPage';
 
 
 export {
     DomainsBuyPage,
     DomainsSellPage,
-    DomainsCheckoutPage,
     DomainOffersCheckoutPage,
+    DomainsCheckoutPage,
 }
