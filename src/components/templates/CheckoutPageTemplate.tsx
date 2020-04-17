@@ -7,7 +7,6 @@ import TransactionInProgressPanel from 'components/organisms/TransactionInProgre
 export interface CheckoutPageTemplateProps {
   className?: string
   backButtonProps: ReturnButtonProps
-  progressMessage: string
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -24,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const CheckoutPageTemplate: FC<CheckoutPageTemplateProps> = ({ className = '', backButtonProps, progressMessage, children }) => {
+const CheckoutPageTemplate: FC<CheckoutPageTemplateProps> = ({ className = '', backButtonProps, children }) => {
   const classes = useStyles();
 
   const { state: { currentOrder } } = useContext(MarketStore)
@@ -34,7 +33,6 @@ const CheckoutPageTemplate: FC<CheckoutPageTemplateProps> = ({ className = '', b
       {!currentOrder.isProcessing && <ReturnButton {...backButtonProps} />}
       <div className={classes.body}>
         {children}
-        {!!currentOrder && currentOrder.isProcessing && <TransactionInProgressPanel text={progressMessage} />}
       </div>
     </div>
   )

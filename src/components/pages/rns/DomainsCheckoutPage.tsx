@@ -9,6 +9,7 @@ import { Web3Store } from 'rifui/providers/Web3Provider';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore from 'store/Market/MarketStore';
+import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -111,7 +112,9 @@ const DomainsCheckoutPage = () => {
       }
     })
     const { txType } = currentOrder;
-    history.replace(ROUTES.DONE.replace(':service', 'domains'), { txType })
+    setTimeout(() => {
+      history.replace(ROUTES.DONE.DOMAINS)
+    }, 5000)
   }
   return (
     <CheckoutPageTemplate
@@ -134,17 +137,18 @@ const DomainsCheckoutPage = () => {
                 return <ItemDetailRow name={name} value={details[name]} key={'idr-' + name + i} />
               })
             }
+
           </div>
         </CardContent>
         {!isProcessing &&
-          <CardActions className={classes.footer}> <Typography className={classes.footerCaptions} variant='caption' color='secondary'>
-            Your wallet will open and you will be asked to confirm the transaction for listing the domain.
-                        </Typography>
+          <CardActions className={classes.footer}>
+            <p >Your wallet will open and you will be asked to confirm the transaction for listing the domain.</p>
             <Button color='primary' variant='contained'
               rounded shadow onClick={handleSubmit}>List domain</Button>
           </CardActions>
         }
       </Card>
+      {!!currentOrder && currentOrder.isProcessing && <TransactionInProgressPanel text='Listing the domain!' progMsg='The waiting period is required to securely list your domain. Please do not close this tab until the process has finished' />}
     </CheckoutPageTemplate >
   );
 };

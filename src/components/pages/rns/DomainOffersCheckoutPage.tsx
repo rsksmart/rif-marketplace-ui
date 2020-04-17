@@ -12,6 +12,7 @@ import { Card, CardHeader, CardContent } from 'rifui/components/atoms/card';
 import MarketStore from 'store/Market/MarketStore';
 import { Web3Store } from 'rifui/providers/Web3Provider';
 import { shortenAddress } from 'rifui/utils';
+import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -102,8 +103,9 @@ const DomainOffersCheckoutPage = () => {
                 isProcessing: true
             }
         })
-        const { txType } = currentOrder;
-        history.replace(ROUTES.DONE.DOMAIN_OFFERS)
+        setTimeout(() => {
+            history.replace(ROUTES.DONE.DOMAIN_OFFERS)
+        }, 5000)
     }
     return (
         <CheckoutPageTemplate
@@ -112,7 +114,6 @@ const DomainOffersCheckoutPage = () => {
                 backTo: 'domains',
                 onClick: () => { }
             }}
-            progressMessage='Completing the purchase!'
         >
             <Card
                 className={classes.card}
@@ -137,6 +138,7 @@ const DomainOffersCheckoutPage = () => {
                     </CardActions>
                 }
             </Card>
+            {!!currentOrder && currentOrder.isProcessing && <TransactionInProgressPanel text='Listing the domain!' progMsg='The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished.' />}
         </CheckoutPageTemplate >
     );
 };

@@ -4,8 +4,8 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import CircularProgress from 'rifui/components/atoms/CircularProgress';
 
 export interface TransactionInProgressPanelProps {
-  className?: string
   text: string
+  progMsg: string
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -17,11 +17,12 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       alignContent: 'center',
       alignItems: 'center',
+      textAlign: 'center',
     }
   }),
 );
 
-const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({ className = '', text }) => {
+const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({ progMsg, text }) => {
   const classes = useStyles();
 
   const {
@@ -34,7 +35,7 @@ const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({ class
   return <div className={classes.content}>
     <p>{text}</p>
     <CircularProgress />
-    <p>The waiting period is required to securely {!!currentOrder && currentOrder.txType} your domain. Please do not close this tab until the process has finished.</p>
+    <p>{progMsg}</p>
   </div>
 }
 
