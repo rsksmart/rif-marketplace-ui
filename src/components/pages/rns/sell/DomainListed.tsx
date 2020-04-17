@@ -12,6 +12,8 @@ const useStyles = makeStyles((theme: Theme) =>
             display: 'flex',
             justifyContent: 'space-between',
             flexDirection: 'row',
+            padding: '3em',
+            width: 355,
         }
     }),
 );
@@ -25,8 +27,18 @@ const DomainListed: FC<{}> = () => {
             <JobDoneBox text='Your domain has been listed.' />
             {/* <a href=''>Check it in the explorer</a> */}
             <div className={classes.actions}>
-                <Button onClick={() => { history.push(ROUTES.DOMAINS.SELL) }}>View my domains</Button>
-                <Button onClick={() => { history.push(ROUTES.DOMAINS.BUY) }}>View domain listing</Button>
+                <Button
+                    color='primary'
+                    variant='contained'
+                    rounded
+                    shadow
+                    onClick={() => { history.push(ROUTES.DOMAINS.SELL) }}>View my domains</Button>
+                <Button
+                    color='primary'
+                    variant='contained'
+                    rounded
+                    shadow
+                    onClick={() => { history.push(ROUTES.DOMAINS.BUY) }}>View domain listing</Button>
             </div>
         </TxCompletePageTemplate>
     );

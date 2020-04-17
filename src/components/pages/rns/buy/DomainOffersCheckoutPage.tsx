@@ -1,10 +1,8 @@
 import { CardActions, createStyles, makeStyles, Theme } from '@material-ui/core';
-import Heading from 'components/atoms/Heading';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import ItemDetailRow from 'components/molecules/ItemDetailRow';
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate';
 import React, { useContext, useEffect } from 'react';
-import { Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
@@ -13,6 +11,7 @@ import MarketStore from 'store/Market/MarketStore';
 // import { Web3Store } from 'rifui/providers/Web3Provider';
 import { shortenAddress } from 'rifui/utils';
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
+import { Typography, Button } from 'rifui';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -32,7 +31,11 @@ const useStyles = makeStyles((theme: Theme) =>
             flexDirection: 'column',
             alignItems: 'center',
             justifySelf: 'center',
-            alignSelf: 'center'
+            alignSelf: 'center',
+        },
+        contentTitle: {
+            marginBottom: theme.spacing(1),
+            textAlign: 'center',
         },
         footer: {
             display: 'flex',
@@ -40,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
             alignContent: 'center',
             textAlign: 'center'
         },
-        details: {
+        contentDetails: {
             width: 300,
             display: 'flex',
             flexDirection: 'column',
@@ -118,12 +121,11 @@ const DomainOffersCheckoutPage = () => {
             <Card
                 className={classes.card}
             >
-                <CardHeader
-                    title={`Buying ${domainName}`}
-                />
+                <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Buying ${domainName}`} />
+                {!!currentOrder && currentOrder.isProcessing && <CardHeader titleTypographyProps={{ variant: 'h1', color: 'error' }} title={`TIMEOUT 5s ONLY`} />}
                 <CardContent>
-                    <Heading hLevel={3}>Domain details</Heading>
-                    <div className={classes.details}>
+                    <Typography className={classes.contentTitle} variant='h6' color='secondary'>Domain details</Typography>
+                    <div className={classes.contentDetails}>
                         {
                             Object.keys(details).map((name, i) => {
                                 return <ItemDetailRow name={name} value={details[name]} key={'idr-' + name + i} />
@@ -134,7 +136,8 @@ const DomainOffersCheckoutPage = () => {
                 {!isProcessing &&
                     <CardActions className={classes.footer}>
                         <p >Your wallet will open and you will be asked to confirm the transaction for buying the domain.</p>
-                        <Button onClick={handleSubmit}>Buy domain</Button>
+                        <Button color='primary' variant='contained'
+                            rounded shadow onClick={handleSubmit}>Buy domain</Button>
                     </CardActions>
                 }
             </Card>

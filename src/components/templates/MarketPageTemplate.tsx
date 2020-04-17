@@ -4,8 +4,6 @@ import Marketplace, { TableHeaders } from 'components/templates/marketplace/Mark
 import { MarketItemType } from 'models/Market';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Web3Store } from 'rifui/providers/Web3Provider';
-// TODO: use MaterialUI classes
-import './MarketPageTemplate.css';
 
 
 

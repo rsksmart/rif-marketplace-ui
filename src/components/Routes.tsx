@@ -6,10 +6,10 @@ import { ROUTES } from 'routes';
 import Logger from 'utils/Logger';
 import { LandingPage } from './pages/LandingPage';
 import { DomainsCheckoutPage, DomainsSellPage } from './pages/rns';
-import DomainListed from './pages/rns/DomainListed';
-import DomainOffersCheckoutPage from './pages/rns/DomainOffersCheckoutPage';
-import DomainPurchased from './pages/rns/DomainPurchased';
-import DomainsBuyPage from './pages/rns/DomainsBuyPage';
+import DomainListed from './pages/rns/sell/DomainListed';
+import DomainOffersCheckoutPage from './pages/rns/buy/DomainOffersCheckoutPage';
+import DomainPurchased from './pages/rns/buy/DomainPurchased';
+import DomainOffersPage from './pages/rns/buy/DomainOffersPage';
 
 
 const logger = Logger.getInstance();
@@ -30,7 +30,7 @@ const Routes = () => {
   return (
     <Switch>
       <Route exact={true} path={ROUTES.LANDING} component={LandingPage} />
-      <Route exact={true} path={ROUTES.DOMAINS.BUY} component={DomainsBuyPage} />
+      <Route exact={true} path={ROUTES.DOMAINS.BUY} component={DomainOffersPage} />
       <Route exact={true} path={ROUTES.DOMAINS.SELL} component={DomainsSellPage} />
       <Route exact={true} path={ROUTES.CHECKOUT.DOMAIN_OFFERS} component={DomainOffersCheckoutPage} />
       <Route exact={true} path={ROUTES.CHECKOUT.DOMAINS} component={DomainsCheckoutPage} />

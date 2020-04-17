@@ -1,11 +1,12 @@
-import { CardActions, createStyles, makeStyles, Theme } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import ItemDetailRow from 'components/molecules/ItemDetailRow';
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate';
 import React, { useContext, useEffect } from 'react';
-import { Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import { Card, CardContent, CardHeader } from 'rifui/components/atoms/card';
+import { Button } from 'rifui';
+import { Card, CardActions, CardContent, CardHeader } from 'rifui/components/atoms/card';
+import { colors } from 'rifui/theme';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore from 'store/Market/MarketStore';
@@ -105,7 +106,6 @@ const DomainsCheckoutPage = () => {
         isProcessing: true
       }
     })
-    const { txType } = currentOrder;
     setTimeout(() => {
       history.replace(ROUTES.DONE.DOMAINS)
     }, 5000)
@@ -117,14 +117,13 @@ const DomainsCheckoutPage = () => {
         backTo: 'domains',
         onClick: () => { }
       }}
-      progressMessage='Listing the domain!'
     >
       <Card
         className={classes.card}
       >
         <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Listing ${name}`} />
+        {!!currentOrder && currentOrder.isProcessing && <CardHeader titleTypographyProps={{ variant: 'h1', color: 'error' }} title={`TIMEOUT 5s ONLY`} />}
         <CardContent>
-          <Typography className={classes.contentTitle} variant='h6' color='secondary'>Domain details</Typography>
           <div className={classes.contentDetails}>
             {
               Object.keys(details).map((name, i) => {
@@ -136,7 +135,7 @@ const DomainsCheckoutPage = () => {
         </CardContent>
         {!isProcessing &&
           <CardActions className={classes.footer}>
-            <p >Your wallet will open and you will be asked to confirm the transaction for listing the domain.</p>
+            <p>Your wallet will open and you will be asked to confirm the transaction for listing the domain.</p>
             <Button color='primary' variant='contained'
               rounded shadow onClick={handleSubmit}>List domain</Button>
           </CardActions>

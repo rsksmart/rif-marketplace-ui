@@ -13,7 +13,7 @@ import MarketStore, { TxType } from 'store/Market/MarketStore';
 const LISTING_TYPE = MarketListingTypes.DOMAIN_OFFERS;
 const TX_TYPE = TxType.BUY;
 
-const DomainsBuyPage = () => {
+const DomainOffersPage = () => {
   const {
     state: {
       currentListing,
@@ -115,4 +115,4 @@ const DomainsBuyPage = () => {
   );
 };
 
-export default DomainsBuyPage;
+export default DomainOffersPage;

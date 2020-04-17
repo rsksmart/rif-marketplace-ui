@@ -1,5 +1,5 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
-import doneImg from 'rifui/assets/done_img.svg';
+import doneImg from 'rifui/assets/images/done_img.svg';
 import React, { FC } from 'react';
 
 const useStyles = makeStyles((theme: Theme) =>

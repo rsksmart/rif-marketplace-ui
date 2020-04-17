@@ -12,6 +12,8 @@ const useStyles = makeStyles((theme: Theme) =>
             display: 'flex',
             justifyContent: 'space-between',
             flexDirection: 'row',
+            padding: '3em',
+            width: 355,
         }
     }),
 );
@@ -25,8 +27,19 @@ const DomainPurchased: FC<{}> = () => {
             <JobDoneBox text='Your domain has been bought.' />
             {/* <a href=''>Check it in the explorer</a> */}
             <div className={classes.actions}>
-                <Button onClick={() => { alert('This should take you to the RNS admin page.') }}>Admin my domain</Button>
-                <Button onClick={() => { history.push(ROUTES.DOMAINS.BUY) }}>Buy another domain</Button>
+                <Button
+                    color='primary'
+                    variant='contained'
+                    rounded
+                    shadow
+                    onClick={() => { alert('This should take you to the RNS admin page.') }}>Admin my domain</Button>
+                <Button
+                    color='primary'
+                    variant='contained'
+                    rounded
+                    shadow
+                    onClick={() => { history.push(ROUTES.DOMAINS.BUY) }}
+                >Buy another domain</Button>
             </div>
         </TxCompletePageTemplate>
     );

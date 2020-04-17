@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
-import tickWide from 'rifui/assets/tickWide.svg';
+import tickWide from 'rifui/assets/images/tickWide.svg';
+import { colors } from 'rifui/theme';
 
 export interface JobDoneBoxProps {
     text: string,
@@ -10,14 +11,16 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         body: {
             border: '1px solid #008FF7',
-            boxSizing: 'border-box',
             borderRadius: 12,
+            boxSizing: 'border-box',
+            color: colors.primary,
             display: 'flex',
             flexDirection: 'column',
-            alignContent: 'center',
-            alignItems: 'center',
+            height: 120,
             justifyContent: 'center',
-            justifyItems: 'center',
+            margin: '1em',
+            textAlign: 'center',
+            width: 222,
         }
     }),
 );
