@@ -23,6 +23,12 @@
     "type": "git",
     "url": "https://github.com/rsksmart/rif-marketplace-ui.git"
   },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "lint": "npx tasegir lint && eslint 'src/**/*.ts*'"
+  },
   "dependencies": {
     "@feathersjs/feathers": "^4.5.2",
     "@feathersjs/socketio-client": "^4.5.2",
@@ -40,16 +46,27 @@
     "typescript": "^3.7.4",
     "web3": "^1.2.6"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "lint": "tslint 'src/**/*.ts*'",
-    "prettify": "prettier --single-quote --write 'src/**/*.ts*'"
+  "devDependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/jest": "25.1.2",
+    "@types/node": "^13.7.0",
+    "@types/react": "16.9.19",
+    "@types/react-dom": "^16.9.1",
+    "@types/react-router-dom": "^5.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.17.0",
+    "tasegir": "^1.7.1"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
   },
+  "types": "types/index.d.ts",
   "browserslist": {
     "production": [
       ">0.2%",
@@ -61,30 +78,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "@types/jest": "25.1.2",
-    "@types/node": "^13.7.0",
-    "@types/react": "16.9.19",
-    "@types/react-dom": "^16.9.1",
-    "@types/react-router-dom": "^5.1.0",
-    "babel-eslint": "^10.0.3",
-    "eslint": "^6.7.2",
-    "eslint-config-airbnb": "^18.0.1",
-    "eslint-config-prettier": "^6.7.0",
-    "eslint-plugin-import": "^2.20.0",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-prettier": "^3.1.1",
-    "eslint-plugin-react": "^7.17.0",
-    "prettier": "^1.19.1",
-    "tasegir": "^1.6.0",
-    "tslint": "^5.20.0",
-    "tslint-config-airbnb": "^5.11.2",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-plugin-prettier": "^2.0.1",
-    "tslint-react": "^4.1.0"
   }
 }
