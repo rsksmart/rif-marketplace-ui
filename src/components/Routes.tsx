@@ -8,8 +8,10 @@ import Logger from 'utils/Logger';
 import { LandingPage } from './pages/LandingPage';
 import DomainsBuyPage from './pages/rns/DomainsBuyPage';
 import DomainOffersCheckoutPage from './pages/rns/DomainOffersCheckoutPage';
-import TransactionCompletePage from './pages/TransactionCompletePage';
+import TxCompletePageTemplate from './templates/TxCompletePageTemplate';
 import { DomainsSellPage, DomainsCheckoutPage } from './pages/rns';
+import DomainPurchased from './pages/rns/DomainPurchased';
+import DomainListed from './pages/rns/DomainListed';
 
 const logger = Logger.getInstance();
 
@@ -33,7 +35,8 @@ const Routes = () => {
       <Route exact={true} path={ROUTES.DOMAINS.SELL} component={DomainsSellPage} />
       <Route exact={true} path={ROUTES.CHECKOUT.DOMAIN_OFFERS} component={DomainOffersCheckoutPage} />
       <Route exact={true} path={ROUTES.CHECKOUT.DOMAINS} component={DomainsCheckoutPage} />
-      <Route exact={true} path={ROUTES.DONE} component={TransactionCompletePage} />
+      <Route exact={true} path={ROUTES.DONE.DOMAINS} component={DomainListed} />
+      <Route exact={true} path={ROUTES.DONE.DOMAIN_OFFERS} component={DomainPurchased} />
       <Route component={NotFound} />
     </Switch>
   );

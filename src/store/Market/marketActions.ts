@@ -33,7 +33,11 @@ export interface ConnectionPayload {
   txType: TxType,
 }
 
-export type MarketPayload = ItemPayload & ListingPayload & FilterPayload & ConnectionPayload
+export interface TxTypeChangePayload {
+  txType: TxType,
+}
+
+export type MarketPayload = ItemPayload & ListingPayload & FilterPayload & ConnectionPayload & TxTypeChangePayload
 
 export interface MarketAction extends IAction<MarketPayload> {
   type: MARKET_ACTIONS

@@ -42,6 +42,9 @@ const MarketFilter: FC<MarketFilterProps> = ({ children }) => {
   const handleSwitchChange = (): void => {
     dispatch({
       type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
+      payload: {
+        txType: txType === TxType.BUY ? TxType.SELL : TxType.BUY
+      }
     })
     history.replace(txType === TxType.BUY ? ROUTES.DOMAINS.SELL : ROUTES.DOMAINS.BUY)
   }

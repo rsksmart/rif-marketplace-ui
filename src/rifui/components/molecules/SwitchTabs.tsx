@@ -71,12 +71,6 @@ const SwitchTabs: FC<SwitchTabsProps> = ({ label1, label2, value: controlledValu
     onChange(event, newValue);
   };
 
-  const toggleSwitch = () => {
-    // if (!controlledValue) setValue(value ? 0 : 1);
-  }
-  console.error('controlledValue:', controlledValue)
-  // console.error('value:', value)
-
   return (
     <div className={classes.root}>
       <MUITabs
@@ -94,13 +88,13 @@ const SwitchTabs: FC<SwitchTabsProps> = ({ label1, label2, value: controlledValu
           classes={{ selected: classes.tabSelected }}
           className={classes.tab}
           label={label1}
-          onClick={toggleSwitch} />
+        />
         <MUITab
           {...a11yProps(1)}
           classes={{ selected: classes.tabSelected }}
           className={classes.tab}
           label={label2}
-          onClick={toggleSwitch} />
+        />
       </MUITabs>
     </div>
   );

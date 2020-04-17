@@ -1,4 +1,4 @@
-import { createOffersService, fetchDomainOffers } from 'api/rif-marketplace-cache/domainsController';
+import { createOffersService, fetchDomainOffers, DOMAINS_SERVICE_PATHS } from 'api/rif-marketplace-cache/domainsController';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import SelectRowButton from 'components/molecules/table/SelectRowButton';
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters';
@@ -29,6 +29,16 @@ const DomainsBuyPage = () => {
 
   /* Initialise */
   useEffect(() => {
+    if (servicePath && servicePath !== DOMAINS_SERVICE_PATHS.BUY()) {
+      dispatch({
+        type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
+        payload: {
+          txType: TxType.BUY
+        }
+      })
+    }
+  })
+  useEffect(() => {
     if (!servicePath) {
       const serviceAddr = createOffersService();
       dispatch({
@@ -43,7 +53,7 @@ const DomainsBuyPage = () => {
   }, [servicePath])
 
   useEffect(() => {
-    if (servicePath)
+    if (servicePath && servicePath === DOMAINS_SERVICE_PATHS.BUY())
       fetchDomainOffers(offerFilters)
         .then(items => dispatch({
           type: MARKET_ACTIONS.SET_ITEMS,

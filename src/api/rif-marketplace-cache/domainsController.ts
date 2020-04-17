@@ -4,8 +4,8 @@ import { createService, fetchMarketData } from "./cacheController";
 import { DomainOffersFilter } from "api/models/RnsFilter";
 
 export const DOMAINS_SERVICE_PATHS = {
-    BUY: 'rns/v0/offers',
-    SELL: (ownerAddress: string) => `rns/v0/${ownerAddress}/domains`,
+    'BUY': () => 'rns/v0/offers',
+    'SELL': (ownerAddress: string) => `rns/v0/${ownerAddress}/domains`,
 }
 
 export interface OfferTransferItem {
@@ -47,7 +47,7 @@ export const createDomainService = (ownerAddress: string) => {
 }
 
 export const createOffersService = () => {
-    return createService(DOMAINS_SERVICE_PATHS.BUY);
+    return createService(DOMAINS_SERVICE_PATHS.BUY());
 }
 
 export const fetchDomainOffers = async (filters: DomainOffersFilter) => {

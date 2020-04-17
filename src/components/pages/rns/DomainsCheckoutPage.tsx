@@ -1,16 +1,14 @@
-import React, { useContext, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import { createStyles, makeStyles, Theme } from '@material-ui/core';
-import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
+import { CardActions, createStyles, makeStyles, Theme } from '@material-ui/core';
 import ItemDetailRow from 'components/molecules/ItemDetailRow';
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate';
+import React, { useContext, useEffect } from 'react';
+import { Button } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
+import { Card, CardContent, CardHeader } from 'rifui/components/atoms/card';
+import { Web3Store } from 'rifui/providers/Web3Provider';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore from 'store/Market/MarketStore';
-import { Button, Card, CardActions, CardContent, CardHeader, Typography } from 'rifui';
-import { colors } from 'rifui/theme';
-import { Web3Store } from 'rifui/providers/Web3Provider';
-import { shortenAddress } from 'rifui/utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -136,18 +134,14 @@ const DomainsCheckoutPage = () => {
                 return <ItemDetailRow name={name} value={details[name]} key={'idr-' + name + i} />
               })
             }
-
           </div>
         </CardContent>
         {!isProcessing &&
-          <CardActions className={classes.footer}>
-            <Typography className={classes.footerCaptions} variant='caption' color='secondary'>
-              Your wallet will open and you will be asked to confirm the transaction for buying the domain.
-            </Typography>
+          <CardActions className={classes.footer}> <Typography className={classes.footerCaptions} variant='caption' color='secondary'>
+            Your wallet will open and you will be asked to confirm the transaction for listing the domain.
+                        </Typography>
             <Button color='primary' variant='contained'
-              rounded shadow onClick={handleSubmit}>
-              Buy domain
-              </Button>
+              rounded shadow onClick={handleSubmit}>List domain</Button>
           </CardActions>
         }
       </Card>

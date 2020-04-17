@@ -1,4 +1,4 @@
-import { createDomainService, fetchDomains } from 'api/rif-marketplace-cache/domainsController';
+import { createDomainService, fetchDomains, DOMAINS_SERVICE_PATHS } from 'api/rif-marketplace-cache/domainsController';
 import SelectRowButton from 'components/molecules/table/SelectRowButton';
 import RangeFilter from 'components/organisms/filters/RangeFilter';
 import SearchFilter from 'components/organisms/filters/SearchFilter';
@@ -35,6 +35,16 @@ const DomainsSellPage = () => {
 
   /* Initialise */
   useEffect(() => {
+    if (servicePath && account && servicePath !== DOMAINS_SERVICE_PATHS.SELL(account)) {
+      dispatch({
+        type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
+        payload: {
+          txType: TxType.SELL
+        }
+      })
+    }
+  })
+  useEffect(() => {
     if (!servicePath && account) {
       const serviceAddr = createDomainService(account);
       dispatch({
@@ -49,7 +59,7 @@ const DomainsSellPage = () => {
   }, [servicePath, account])
 
   useEffect(() => {
-    if (servicePath)
+    if (servicePath && account && servicePath === DOMAINS_SERVICE_PATHS.SELL(account))
       fetchDomains(domainFilters)
         .then(items => dispatch({
           type: MARKET_ACTIONS.SET_ITEMS,

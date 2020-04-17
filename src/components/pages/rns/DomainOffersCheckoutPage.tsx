@@ -103,7 +103,7 @@ const DomainOffersCheckoutPage = () => {
             }
         })
         const { txType } = currentOrder;
-        history.replace(ROUTES.DONE.replace(':service', 'domains'), { txType })
+        history.replace(ROUTES.DONE.DOMAIN_OFFERS)
     }
     return (
         <CheckoutPageTemplate

@@ -1,5 +1,5 @@
 import Logger from 'utils/Logger';
-import { ConnectionPayload, FilterPayload, ItemPayload, ListingPayload, MarketAction, MarketPayload, MARKET_ACTIONS } from './marketActions';
+import { ConnectionPayload, FilterPayload, ItemPayload, ListingPayload, MarketAction, MarketPayload, MARKET_ACTIONS, TxTypeChangePayload } from './marketActions';
 import { IMarketState, initialState, TxType } from './MarketStore';
 
 const logger = Logger.getInstance()
@@ -81,18 +81,17 @@ const marketActions: IMarketActions = {
       }
     };
   },
-  [TOGGLE_TX_TYPE]: (state: IMarketState, _: MarketPayload) => {
+  [TOGGLE_TX_TYPE]: (state: IMarketState, payload: TxTypeChangePayload) => {
     const { currentListing } = state;
+    const { txType } = payload;
     if (!currentListing) return state;
-    const { txType: currentTxType } = currentListing;
-    const txType = currentTxType === TxType.BUY ? TxType.SELL : TxType.BUY;
     return {
       ...state,
       currentListing: {
         txType,
         items: [],
         servicePath: '',
-        listingType: currentListing.listingType,
+        listingType: currentListing.listingType, // TODO: It would be better blank but that creates problems. This may be an issue also, though.
       },
     }
   },
