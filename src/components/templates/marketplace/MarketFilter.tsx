@@ -1,11 +1,10 @@
-import { MarketListingTypes } from 'models/Market';
+import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import React, { FC, useContext } from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core';
-import { Grid, Typography, SwitchTabs } from 'rifui';
-import MarketStore, { TxType } from 'store/Market/MarketStore';
 import { useHistory } from 'react-router';
-import { MARKET_ACTIONS } from 'store/Market/marketActions';
+import { Grid, SwitchTabs, Typography } from 'rifui';
 import { ROUTES } from 'routes';
+import { MARKET_ACTIONS } from 'store/Market/marketActions';
+import MarketStore, { TxType } from 'store/Market/MarketStore';
 
 
 

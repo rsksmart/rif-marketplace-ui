@@ -2,7 +2,7 @@ import React, { FC, useContext } from 'react';
 import ReturnButton, { ReturnButtonProps } from 'components/molecules/ReturnButton';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import MarketStore from 'store/Market/MarketStore';
-import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
+// import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
 
 export interface CheckoutPageTemplateProps {
   className?: string

@@ -1,17 +1,16 @@
-import React, { useEffect } from 'react';
-import { Route, Switch, useHistory } from 'react-router-dom';
-
 // views
 import NotFound from 'components/pages/NotFound';
+import React, { useEffect } from 'react';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import { ROUTES } from 'routes';
 import Logger from 'utils/Logger';
 import { LandingPage } from './pages/LandingPage';
-import DomainsBuyPage from './pages/rns/DomainsBuyPage';
-import DomainOffersCheckoutPage from './pages/rns/DomainOffersCheckoutPage';
-import TxCompletePageTemplate from './templates/TxCompletePageTemplate';
-import { DomainsSellPage, DomainsCheckoutPage } from './pages/rns';
-import DomainPurchased from './pages/rns/DomainPurchased';
+import { DomainsCheckoutPage, DomainsSellPage } from './pages/rns';
 import DomainListed from './pages/rns/DomainListed';
+import DomainOffersCheckoutPage from './pages/rns/DomainOffersCheckoutPage';
+import DomainPurchased from './pages/rns/DomainPurchased';
+import DomainsBuyPage from './pages/rns/DomainsBuyPage';
+
 
 const logger = Logger.getInstance();
 

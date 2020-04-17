@@ -10,7 +10,7 @@ import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import { Card, CardHeader, CardContent } from 'rifui/components/atoms/card';
 import MarketStore from 'store/Market/MarketStore';
-import { Web3Store } from 'rifui/providers/Web3Provider';
+// import { Web3Store } from 'rifui/providers/Web3Provider';
 import { shortenAddress } from 'rifui/utils';
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
 
@@ -54,11 +54,11 @@ const DomainOffersCheckoutPage = () => {
         state: { currentOrder },
         dispatch
     } = useContext(MarketStore)
-    const {
-        state: {
-            account,
-        }
-    } = useContext(Web3Store);
+    // const {
+    //     state: {
+    //         account,
+    //     }
+    // } = useContext(Web3Store);
     const classes = useStyles();
 
     useEffect(() => {

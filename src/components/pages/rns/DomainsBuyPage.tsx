@@ -1,4 +1,4 @@
-import { createOffersService, fetchDomainOffers, DOMAINS_SERVICE_PATHS } from 'api/rif-marketplace-cache/domainsController';
+import { createOffersService, DOMAINS_SERVICE_PATHS, fetchDomainOffers } from 'api/rif-marketplace-cache/domainsController';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import SelectRowButton from 'components/molecules/table/SelectRowButton';
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters';
@@ -9,7 +9,6 @@ import { useHistory } from 'react-router';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';
-import { Web3Store } from 'rifui/providers/Web3Provider';
 
 const LISTING_TYPE = MarketListingTypes.DOMAIN_OFFERS;
 const TX_TYPE = TxType.BUY;
@@ -38,7 +37,7 @@ const DomainsBuyPage = () => {
         }
       })
     }
-  })
+  }, [servicePath, dispatch])
 
   useEffect(() => {
     if (!servicePath) {
@@ -52,7 +51,7 @@ const DomainsBuyPage = () => {
         }
       })
     }
-  }, [servicePath])
+  }, [servicePath, dispatch])
 
   useEffect(() => {
     if (servicePath && servicePath === DOMAINS_SERVICE_PATHS.BUY())
@@ -64,7 +63,7 @@ const DomainsBuyPage = () => {
             items,
           },
         }));
-  }, [offerFilters, servicePath]);
+  }, [offerFilters, servicePath, dispatch]);
 
   if (!currentListing) return null;
 

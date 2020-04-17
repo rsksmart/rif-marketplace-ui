@@ -1,6 +1,5 @@
-import React, { FC, useContext } from 'react'
-import MarketStore from 'store/Market/MarketStore';
-import { makeStyles, Theme, createStyles } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import React, { FC } from 'react';
 import CircularProgress from 'rifui/components/atoms/CircularProgress';
 
 export interface TransactionInProgressPanelProps {
@@ -24,14 +23,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({ progMsg, text }) => {
   const classes = useStyles();
-
-  const {
-    state: {
-      currentOrder
-    }
-  } = useContext(MarketStore)
-
-
   return <div className={classes.content}>
     <p>{text}</p>
     <CircularProgress />

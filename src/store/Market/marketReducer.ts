@@ -1,6 +1,6 @@
 import Logger from 'utils/Logger';
 import { ConnectionPayload, FilterPayload, ItemPayload, ListingPayload, MarketAction, MarketPayload, MARKET_ACTIONS, TxTypeChangePayload } from './marketActions';
-import { IMarketState, initialState, TxType } from './MarketStore';
+import { IMarketState, initialState } from './MarketStore';
 
 const logger = Logger.getInstance()
 

@@ -1,15 +1,14 @@
 import { CardActions, createStyles, makeStyles, Theme } from '@material-ui/core';
 import ItemDetailRow from 'components/molecules/ItemDetailRow';
+import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate';
 import React, { useContext, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { Card, CardContent, CardHeader } from 'rifui/components/atoms/card';
-import { Web3Store } from 'rifui/providers/Web3Provider';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore from 'store/Market/MarketStore';
-import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -58,11 +57,6 @@ const DomainsCheckoutPage = () => {
     state: { currentOrder },
     dispatch
   } = useContext(MarketStore)
-  const {
-    state: {
-      account,
-    }
-  } = useContext(Web3Store);
   const classes = useStyles();
 
   useEffect(() => {
@@ -85,13 +79,13 @@ const DomainsCheckoutPage = () => {
     isProcessing
   } = currentOrder;
 
-  const priceCellProps = {
-    // price,
-    // price_fiat,
-    // currency: paymentToken,
-    currency_fiat: 'USD',
-    divider: ' '
-  };
+  // const priceCellProps = {
+  //     // price,
+  //     // price_fiat,
+  //     // currency: paymentToken,
+  //     currency_fiat: 'USD',
+  //     divider: ' '
+  // };
   // const PriceCell = <CombinedPriceCell {...priceCellProps} />
 
   const details = {

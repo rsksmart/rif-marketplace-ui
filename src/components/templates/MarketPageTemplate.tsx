@@ -3,10 +3,10 @@ import MarketFilter from 'components/templates/marketplace/MarketFilter';
 import Marketplace, { TableHeaders } from 'components/templates/marketplace/Marketplace';
 import { MarketItemType } from 'models/Market';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-
+import { Web3Store } from 'rifui/providers/Web3Provider';
 // TODO: use MaterialUI classes
 import './MarketPageTemplate.css';
-import { Web3Store } from 'rifui/providers/Web3Provider';
+
 
 
 export interface MarketPageTemplateProps {

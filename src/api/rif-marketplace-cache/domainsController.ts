@@ -1,7 +1,6 @@
-import { Domain, DomainOffer } from "models/marketItems/DomainItem";
-import { TxType } from "store/Market/MarketStore";
-import { createService, fetchMarketData } from "./cacheController";
 import { DomainOffersFilter } from "api/models/RnsFilter";
+import { Domain, DomainOffer } from "models/marketItems/DomainItem";
+import { createService, fetchMarketData } from "./cacheController";
 
 export const DOMAINS_SERVICE_PATHS = {
     'BUY': () => 'rns/v0/offers',
