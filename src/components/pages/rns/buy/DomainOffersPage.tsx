@@ -77,13 +77,13 @@ const DomainOffersPage = () => {
 
   const collection = currentListing?.items
     .map(domainItem => {
-      const { _id, price, price_fiat, paymentToken, expirationDate } = domainItem;
+      const { _id, price, priceFiat, paymentToken, expirationDate } = domainItem;
 
       domainItem.combinedPrice = <CombinedPriceCell
         price={price}
-        price_fiat={price_fiat}
+        priceFiat={priceFiat}
         currency={paymentToken}
-        currency_fiat='USD'
+        currencyFiat='USD'
         divider=' = '
       />
       domainItem.actionCol_1 = <SelectRowButton

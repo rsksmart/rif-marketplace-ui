@@ -30,7 +30,7 @@ export interface DomainTransferItem {
 
 const mappings = {
     offers: (item: OfferTransferItem): DomainOffer => ({
-        price_fiat: 0.5,
+        priceFiat: 0.5,
         _id: item.offerId,
         domainName: item.sellerDomain,
         ...item

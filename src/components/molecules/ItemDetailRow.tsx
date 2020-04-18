@@ -14,7 +14,8 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingTop: theme.spacing(0.5)
+      paddingTop: theme.spacing(0.5),
+      alignItems: 'center',
     },
     nameTypography: {
       fontSize: fonts.size.small

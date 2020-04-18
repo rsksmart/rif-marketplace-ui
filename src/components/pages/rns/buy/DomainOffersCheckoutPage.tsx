@@ -79,7 +79,7 @@ const DomainOffersCheckoutPage = () => {
             sellerAddress,
             expirationDate,
             price,
-            price_fiat,
+            priceFiat,
             paymentToken
         },
         isProcessing
@@ -87,7 +87,7 @@ const DomainOffersCheckoutPage = () => {
 
     const shortSeller = shortenAddress(sellerAddress);
 
-    const priceCellProps = { price, price_fiat, currency: paymentToken, currency_fiat: 'USD', divider: ' ' };
+    const priceCellProps = { price, priceFiat, currency: paymentToken, currencyFiat: 'USD', divider: ' ' };
     const PriceCell = <CombinedPriceCell {...priceCellProps} />
 
     const details = {

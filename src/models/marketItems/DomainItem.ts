@@ -4,7 +4,7 @@ export interface DomainOffer extends MarketItemIface {
     paymentToken: string
     domainName: string
     expirationDate: number
-    price_fiat: number
+    priceFiat: number
     price: number
     sellerAddress: string
 }

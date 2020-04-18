@@ -2,14 +2,16 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import ItemDetailRow from 'components/molecules/ItemDetailRow';
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button } from 'rifui';
+import { Button, Select, MenuItem, FormControl, Input, Table, TableHead, TableRow, TableCell, TableBody, InputLabel } from 'rifui';
 import { Card, CardActions, CardContent, CardHeader } from 'rifui/components/atoms/card';
 import { colors } from 'rifui/theme';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore from 'store/Market/MarketStore';
+import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
+import PriceItem from 'components/atoms/PriceItem';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,6 +51,16 @@ const useStyles = makeStyles((theme: Theme) =>
     footerCaptions: {
       marginBottom: theme.spacing(1)
     },
+    setPrice: {
+      border: 'solid 0.1px black',
+      maxWidth: '5em',
+    },
+    detailKey: {
+      border: 'none',
+    },
+    detailValue: {
+      border: 'none',
+    }
   }),
 );
 
@@ -59,6 +71,14 @@ const DomainsCheckoutPage = () => {
     dispatch
   } = useContext(MarketStore)
   const classes = useStyles();
+
+
+  const currenyOptions = ['RIF', 'DOC', 'RBTC'];
+
+  const [price, setPrice] = useState(-1);
+  const [priceFiat, setPriceFiat] = useState(-1);
+  const [currency, setCurrency] = useState('0');
+  const [currencyFiat, setCurrencyFiat] = useState('USD');
 
   useEffect(() => {
     if (!currentOrder) {
@@ -73,29 +93,9 @@ const DomainsCheckoutPage = () => {
     item: {
       name,
       expirationDate,
-      // price,
-      // price_fiat,
-      // paymentToken
     },
     isProcessing
   } = currentOrder;
-
-  // const priceCellProps = {
-  //     // price,
-  //     // price_fiat,
-  //     // currency: paymentToken,
-  //     currency_fiat: 'USD',
-  //     divider: ' '
-  // };
-  // const PriceCell = <CombinedPriceCell {...priceCellProps} />
-
-  const details = {
-    'NAME': name,
-    'RENEWAL DATE': (new Date(expirationDate)).toDateString(),
-    // 'CURRENCY': 
-    // 'PRICE':
-    // 'PRICE_FIAT:
-  }
 
   const handleSubmit = () => {
     // TODO: Make transactions
@@ -125,11 +125,65 @@ const DomainsCheckoutPage = () => {
         {!!currentOrder && currentOrder.isProcessing && <CardHeader titleTypographyProps={{ variant: 'h1', color: 'error' }} title={`TIMEOUT 5s ONLY`} />}
         <CardContent>
           <div className={classes.contentDetails}>
-            {
-              Object.keys(details).map((name, i) => {
-                return <ItemDetailRow name={name} value={details[name]} key={'idr-' + name + i} />
-              })
-            }
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell className={classes.detailKey}>NAME</TableCell>
+                  <TableCell className={classes.detailValue}>{name}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className={classes.detailKey}>RENEWAL DATE</TableCell>
+                  <TableCell className={classes.detailValue}>
+                    {(new Date(expirationDate)).toDateString()}
+                  </TableCell>
+                </TableRow>
+                {isProcessing &&
+                  <TableRow>
+                    <TableCell className={classes.detailKey}>PRICE</TableCell>
+                    <TableCell className={classes.detailValue}>
+                      <CombinedPriceCell {...{
+                        price: `${price}`,
+                        priceFiat: `${priceFiat}`,
+                        currency,
+                        currencyFiat: 'USD',
+                        divider: ' '
+                      }} />
+                    </TableCell>
+                  </TableRow>
+                }
+                {!isProcessing && <>
+                  <TableRow>
+                    <TableCell className={classes.detailKey}>CURRENCY</TableCell>
+                    <TableCell className={`${classes.detailValue} ${classes.setPrice}`}>
+                      <Select
+                        labelId="currency-select"
+                        id="currency-select"
+                        value={currency}
+                        onChange={({ target: { value } }) => {
+                          console.log('set currency event:', value);
+                          setCurrency(value as string);
+                        }
+                        }
+                      >
+                        {currenyOptions.map((currency, i) => <MenuItem key={currency} value={i}>{currency}</MenuItem>)}
+                      </Select>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className={classes.detailKey}>SET PRICE</TableCell>
+                    <TableCell className={`${classes.detailValue} ${classes.setPrice}`}>
+                      <Input value={price} />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className={classes.detailKey}>USD PRICE</TableCell>
+                    <TableCell className={classes.detailValue}>
+                      <PriceItem type='fiat' price={`${priceFiat}`} currency={currencyFiat} />
+                    </TableCell>
+                  </TableRow>
+                </>}
+              </TableBody>
+            </Table>
 
           </div>
         </CardContent>
@@ -141,7 +195,7 @@ const DomainsCheckoutPage = () => {
           </CardActions>
         }
       </Card>
-      {!!currentOrder && currentOrder.isProcessing && <TransactionInProgressPanel text='Listing the domain!' progMsg='The waiting period is required to securely list your domain. Please do not close this tab until the process has finished' />}
+      {isProcessing && <TransactionInProgressPanel text='Listing the domain!' progMsg='The waiting period is required to securely list your domain. Please do not close this tab until the process has finished' />}
     </CheckoutPageTemplate >
   );
 };

@@ -6,15 +6,15 @@ export interface CombinedPriceCellProps {
   divider?: string | React.ElementType
   price: string
   currency: string
-  price_fiat: string
-  currency_fiat: string
+  priceFiat: string
+  currencyFiat: string
 }
 
-const CombinedPriceCell: FC<CombinedPriceCellProps> = ({ className = '', divider, price, currency, price_fiat, currency_fiat }) => {
+const CombinedPriceCell: FC<CombinedPriceCellProps> = ({ className = '', divider, price, currency, priceFiat, currencyFiat }) => {
   return <div className={('priceCell ' + className).trim()}>
     <PriceItem key='hola' type='crypto' price={price} currency={currency} />
     {!!divider && divider}
-    <PriceItem type='fiat' price={price_fiat} currency={currency_fiat} />
+    <PriceItem type='fiat' price={priceFiat} currency={currencyFiat} />
   </div>
 }
 
