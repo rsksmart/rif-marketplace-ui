@@ -1,17 +1,16 @@
 import { CardActions, createStyles, makeStyles, Theme } from '@material-ui/core';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
-import ItemDetailRow from 'components/molecules/ItemDetailRow';
+import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate';
 import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ROUTES } from 'routes';
-import { MARKET_ACTIONS } from 'store/Market/marketActions';
-import { Card, CardHeader, CardContent } from 'rifui/components/atoms/card';
-import MarketStore from 'store/Market/MarketStore';
+import { Button, Table, TableBody, TableCell, TableRow, Typography } from 'rifui';
+import { Card, CardContent, CardHeader } from 'rifui/components/atoms/card';
 // import { Web3Store } from 'rifui/providers/Web3Provider';
 import { shortenAddress } from 'rifui/utils';
-import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
-import { Typography, Button } from 'rifui';
+import { ROUTES } from 'routes';
+import { MARKET_ACTIONS } from 'store/Market/marketActions';
+import MarketStore from 'store/Market/MarketStore';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -47,6 +46,12 @@ const useStyles = makeStyles((theme: Theme) =>
             width: 300,
             display: 'flex',
             flexDirection: 'column',
+        },
+        detailKey: {
+            border: 'none',
+        },
+        detailValue: {
+            border: 'none',
         }
     }),
 );
@@ -125,13 +130,16 @@ const DomainOffersCheckoutPage = () => {
                 {!!currentOrder && currentOrder.isProcessing && <CardHeader titleTypographyProps={{ variant: 'h1', color: 'error' }} title={`TIMEOUT 5s ONLY`} />}
                 <CardContent>
                     <Typography className={classes.contentTitle} variant='h6' color='secondary'>Domain details</Typography>
-                    <div className={classes.contentDetails}>
-                        {
-                            Object.keys(details).map((name, i) => {
-                                return <ItemDetailRow name={name} value={details[name]} key={'idr-' + name + i} />
-                            })
-                        }
-                    </div>
+                    <Table className={classes.contentDetails}>
+                        <TableBody>
+                            {Object.keys(details).map((key) => {
+                                return <TableRow key={key}>
+                                    <TableCell className={classes.detailKey}>{key}</TableCell>
+                                    <TableCell className={classes.detailValue}>{details[key]}</TableCell>
+                                </TableRow>
+                            })}
+                        </TableBody>
+                    </Table>
                 </CardContent>
                 {!isProcessing &&
                     <CardActions className={classes.footer}>

@@ -1,17 +1,16 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
-import ItemDetailRow from 'components/molecules/ItemDetailRow';
+import PriceItem from 'components/atoms/PriceItem';
+import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Select, MenuItem, FormControl, Input, Table, TableHead, TableRow, TableCell, TableBody, InputLabel } from 'rifui';
+import { Button, MenuItem, Select, Table, TableBody, TableCell, TableRow, UnitsInput } from 'rifui';
 import { Card, CardActions, CardContent, CardHeader } from 'rifui/components/atoms/card';
 import { colors } from 'rifui/theme';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore from 'store/Market/MarketStore';
-import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
-import PriceItem from 'components/atoms/PriceItem';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -75,10 +74,10 @@ const DomainsCheckoutPage = () => {
 
   const currenyOptions = ['RIF', 'DOC', 'RBTC'];
 
-  const [price, setPrice] = useState(-1);
-  const [priceFiat, setPriceFiat] = useState(-1);
+  const [price, setPrice] = useState('');
+  const [priceFiat, setPriceFiat] = useState('');
   const [currency, setCurrency] = useState('0');
-  const [currencyFiat, setCurrencyFiat] = useState('USD');
+  const currencyFiat = 'USD';
 
   useEffect(() => {
     if (!currentOrder) {
@@ -110,6 +109,18 @@ const DomainsCheckoutPage = () => {
       history.replace(ROUTES.DONE.DOMAINS)
     }, 5000)
   }
+
+  const handlePriceChange = (event) => {
+    const { target: { value: newValue } } = event;
+    const newValueInt = parseInt(newValue);
+    if (newValueInt || newValue === '') {
+      setPrice(newValue);
+      const newValueInFiat = newValueInt;
+      setPriceFiat(newValueInFiat.toString())
+    }
+  }
+
+
   return (
     <CheckoutPageTemplate
       className='domains-checkout-page'
@@ -172,7 +183,12 @@ const DomainsCheckoutPage = () => {
                   <TableRow>
                     <TableCell className={classes.detailKey}>SET PRICE</TableCell>
                     <TableCell className={`${classes.detailValue} ${classes.setPrice}`}>
-                      <Input value={price} />
+                      <UnitsInput
+                        handleOnChange={handlePriceChange}
+                        handleOnBlur={() => { }}
+                        units={currenyOptions[parseInt(currency)]}
+                        value={price}
+                      />
                     </TableCell>
                   </TableRow>
                   <TableRow>
