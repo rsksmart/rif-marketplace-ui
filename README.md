@@ -26,8 +26,8 @@
 ## Install
 
 ```sh
-git clone git@github.com:rsksmart/rif-communications-chat.git
-cd rif-communications-chat
+git clone git@github.com:rsksmart/rif-marketplace-ui.git
+cd rif-marketplace-ui
 npm install
 ```
 
