@@ -16,11 +16,16 @@ export interface MarketPageTemplateProps {
   listingType: MarketListingTypes;
 }
 
-const useStyles = makeStyles((them: Theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'row',
     flex: 1
+  },
+  resultsContainer: {
+    [theme.breakpoints.down('md')]: {
+      marginTop: theme.spacing(3)
+    }
   }
 }));
 
@@ -43,7 +48,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
           <Grid item sm={12} md={3}>
             <MarketFilter>{filterItems}</MarketFilter>
           </Grid>
-          <Grid item sm={12} md={9}>
+          <Grid className={classes.resultsContainer} item sm={12} md={9}>
             <Marketplace items={itemCollection} headers={headers} />
           </Grid>
         </>

@@ -86,6 +86,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: colors.gray4,
       display: 'flex',
       textDecoration: 'none',
+      width: '100%',
       '&:hover': {
         color: colors.gray5,
         textDecoration: 'none',
@@ -192,7 +193,7 @@ const Header = ({ hreflogo, items, login }) => {
             <List>
               {
                 !!items.length &&
-                items.map((navItem: NavLinkProps, i) => (
+                items.map((navItem: NavLinkProps, i: number) => (
                   <ListItem button key={`${navItem.title}-${i}`}>
                     <NavLink to={navItem.to} className={classes.mobileNavLink} activeClassName={classes.mobileNavLinkActive}>
                       {/* TODO: if the UX validates displaying icons here, add the prop to items and read it here */}
