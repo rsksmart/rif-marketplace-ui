@@ -19,7 +19,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   content: {
     flex: 1,
-    padding: theme.spacing(2),
+    overflow: 'auto',
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing(2),
+    }
   },
   root: {
     display: 'flex',
@@ -54,7 +57,6 @@ const Marketplace: FC<MarketplaceProps> = ({
             <TableRow>
               {Object.keys(headers).map((itemName: string) => (
                 <TableCell className={classes.th} key={`th-${itemName}`}>{headers[itemName]}</TableCell>
-                // <TableCell className={classes[`th ${itemName}`]} key={`th-${itemName}`}>{headers[itemName]}</TableCell>
               ))}
             </TableRow>
           </TableHead>

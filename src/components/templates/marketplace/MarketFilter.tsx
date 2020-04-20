@@ -16,8 +16,13 @@ const useStyles = makeStyles((theme: Theme) =>
       boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
       maxWidth: '20%',
       flex: '1 1 auto',
-      height: '100%',
-      padding: theme.spacing(3, 3, 0, 3)
+      padding: theme.spacing(3, 3, 0, 3),
+      [theme.breakpoints.down('sm')]: {
+        maxHeight: '100%'
+      },
+      [theme.breakpoints.up('md')]: {
+        height: '100%',
+      },
     },
     formHeading: {
       paddingBottom: theme.spacing(2),
