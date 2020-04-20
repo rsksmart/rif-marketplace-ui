@@ -7,7 +7,7 @@ export interface ModalBodyProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(3, 0),
     width: '100%',
   }
 }));
