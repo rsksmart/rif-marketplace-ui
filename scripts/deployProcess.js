@@ -17,13 +17,7 @@ async function deployProcess() {
   console.log('Using accounts:\n', accounts, '\n');
 
   // Deploy all the contracts
-  const {
-    erc20,
-    erc677,
-    erc721,
-    erc777,
-    erc721SimplePlacements,
-  } = await deployContracts(web3);
+  const { erc20, rif, rns, marketplace } = await deployContracts(web3);
 
   if (child) {
     console.log(`Stopping the child node process`);
@@ -31,11 +25,10 @@ async function deployProcess() {
   }
 
   const configuration = {
-    REACT_APP_DOC: erc20,
-    REACT_APP_RIF: erc677,
-    REACT_APP_DAI: erc777,
-    REACT_APP_RNS: erc721,
-    REACT_APP_MARKETPLACE_TCR: erc721SimplePlacements,
+    REACT_APP_ERC20: erc20address,
+    REACT_APP_RIF: rif,
+    REACT_APP_RNS: rns,
+    REACT_APP_MARKETPLACE_TCR: marketplace,
   };
 
   const queryWriteConfiguration = await new Confirm(

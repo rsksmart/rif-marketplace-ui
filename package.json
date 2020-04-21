@@ -30,6 +30,8 @@
     "@material-ui/core": "^4.9.7",
     "@material-ui/icons": "^4.9.1",
     "@rsksmart/rif-marketplace-nfts": "github:vojtechsimetka/rif-marketplace-nfts",
+    "@rsksmart/rns-suite": "^1.0.3",
+    "@truffle/contract": "^4.2.1",
     "formik": "^2.1.4",
     "react": "^16.13.0",
     "react-bootstrap": "^1.0.0-beta.12",
