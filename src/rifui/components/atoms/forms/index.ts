@@ -7,6 +7,8 @@ import InputLabel from './InputLabel';
 import RangeSlider from './RangeSlider';
 import Switch from './Switch';
 import TextField from './TextField';
+import MenuItem from './MenuItem';
+import Select from './Select';
 
 export {
     Checkbox,
@@ -17,5 +19,7 @@ export {
     InputLabel,
     RangeSlider,
     Switch,
-    TextField
+    TextField,
+    MenuItem,
+    Select,
 };

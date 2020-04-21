@@ -1,21 +1,19 @@
-import { fetchMarketDataFor } from 'api/rif-marketplace-cache/cacheController';
-import { MarketItemType, MarketListingTypes, MarketFilterIface } from 'models/Market';
-import { APP_ACTIONS } from 'store/App/appActions';
+import { MarketFilter, MarketItemType, MarketListingTypes } from 'models/Market';
+import { Dispatch } from 'react';
+import { AppAction, APP_ACTIONS } from 'store/App/appActions';
 
-
-const fetchListingItems = (dispatch) => async (
-  listingType: MarketListingTypes,
-  filters?: MarketFilterIface,
+const dispatchFetchData = (dispatch: Dispatch<AppAction>) => async (
+  fetchFunction: () => {}
 ): Promise<MarketItemType[]> => {
   let marketItems: MarketItemType[] = [];
 
   dispatch({
     type: APP_ACTIONS.SET_IS_LOADING,
-    payload: { isLoading: true, message: `Fetching ${listingType} from the cache server.` },
+    payload: { isLoading: true, message: `Fetching data from the cache server.` },
   })
 
   try {
-    marketItems = await fetchMarketDataFor(listingType, filters);
+    // marketItems = fetchFunction()
   } catch (err) {
     const { message } = err
     dispatch({
@@ -33,6 +31,6 @@ const fetchListingItems = (dispatch) => async (
   return marketItems;
 }
 
-export const useMarketUtils = (dispatch) => ({
-  fetchListingItems: fetchListingItems(dispatch),
+export const useMarketUtils = (dispatch: Dispatch<AppAction>) => ({
+  fetchListingItems: dispatchFetchData(dispatch),
 })

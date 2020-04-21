@@ -7,13 +7,13 @@ export enum APP_ACTIONS {
 }
 
 export interface ILoadingPayload {
-  readonly isLoading: boolean
+  readonly isLoading?: boolean
   readonly message?: string
 }
 
 export interface IMessagePayload {
   readonly isError?: boolean,
-  readonly message: string
+  readonly message?: string
 }
 
 export type AppPayload = ILoadingPayload & IMessagePayload

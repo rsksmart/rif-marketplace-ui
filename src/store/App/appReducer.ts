@@ -1,15 +1,23 @@
 import { AppAction, AppPayload, ILoadingPayload, IMessagePayload } from 'store/App/appActions'
 import Logger from 'utils/Logger'
 import { APP_ACTIONS } from './appActions'
-import { IAppMessage, IAppState, initialState } from './AppStore'
+import { IAppState, initialState } from './AppStore'
 
 const logger = Logger.getInstance()
 
+// TODO: Extract reusable
 const appReducer = (state = initialState, action: AppAction) => {
   const { type, payload } = action
   const userAction = appActions[type]
-  if (!!userAction) logger.debug('appReducer -> action', action)
-  const newState = (!!userAction && userAction(state, payload)) || state
+  if (!!userAction) logger.debug('App action:', action)
+  const newState = (!!userAction && userAction(state, payload)) || state;
+
+  if (state !== newState) {
+    logger.debug('Prev state:', state)
+    logger.debug('Next state:', newState)
+  } else {
+    logger.debug('No change:', newState)
+  }
 
   return newState
 }
@@ -27,20 +35,15 @@ const {
 
 const appActions: IAppActions = {
   [SET_IS_LOADING]: (state, payload: ILoadingPayload) => {
-    const { isLoading, message } = payload
     return {
       ...state,
-      message: {
-        isLoading,
-        message,
-      },
+      ...payload,
     }
   },
   [SET_MESSAGE]: (state, payload: IMessagePayload) => {
-    const appMessage: IAppMessage = payload
     return {
       ...state,
-      message: appMessage,
+      ...payload,
     }
   },
   [UNSET]: (state, _payload) => state,

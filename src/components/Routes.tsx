@@ -1,14 +1,19 @@
-import React, { useEffect } from 'react';
-import { Route, Switch, useHistory } from 'react-router-dom';
-
 // views
 import NotFound from 'components/pages/NotFound';
+import React, { useEffect } from 'react';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import { ROUTES } from 'routes';
 import Logger from 'utils/Logger';
 import { LandingPage } from './pages/LandingPage';
-import DomainsPage from './pages/DomainsPage';
-import DomainsCheckoutPage from './pages/DomainsCheckoutPage';
-import TransactionCompletePage from './pages/TransactionCompletePage';
+import {
+  DomainsCheckoutPage,
+  MyDomainsPage,
+  DomainOffersPage,
+  DomainPurchased,
+  DomainOffersCheckoutPage,
+  DomainListed
+} from './pages/rns';
+
 
 const logger = Logger.getInstance();
 
@@ -28,9 +33,12 @@ const Routes = () => {
   return (
     <Switch>
       <Route exact={true} path={ROUTES.LANDING} component={LandingPage} />
-      <Route exact={true} path={ROUTES.DOMAINS} component={DomainsPage} />
-      <Route exact={true} path={ROUTES.CHECKOUT.DOMAINS} component={DomainsCheckoutPage} />
-      <Route exact={true} path={ROUTES.DONE} component={TransactionCompletePage} />
+      <Route exact={true} path={ROUTES.DOMAINS.BUY} component={DomainOffersPage} />
+      <Route exact={true} path={ROUTES.DOMAINS.SELL} component={MyDomainsPage} />
+      <Route exact={true} path={ROUTES.DOMAINS.CHECKOUT.BUY} component={DomainOffersCheckoutPage} />
+      <Route exact={true} path={ROUTES.DOMAINS.CHECKOUT.SELL} component={DomainsCheckoutPage} />
+      <Route exact={true} path={ROUTES.DOMAINS.DONE.SELL} component={DomainListed} />
+      <Route exact={true} path={ROUTES.DOMAINS.DONE.BUY} component={DomainPurchased} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -1,31 +1,43 @@
-import { DomainsFilterIface } from 'api/models/RnsFilter';
-import { MarketFilterIface } from 'models/Market';
-import { DomainItemIface } from 'models/marketItems/DomainItem';
-import { StorageItemIface } from 'models/marketItems/StorageItem';
-import React, { Dispatch } from 'react';
-import Middleware from 'store/storeUtils/middleware';
-import { ItemPayload, MarketAction } from './marketActions';
+import { DomainFilter, DomainOffersFilter } from 'api/models/RnsFilter';
+import { MarketItemIface, MarketItemType, MarketListingTypes } from 'models/Market';
+import React, { Dispatch, useReducer } from 'react';
+import { MarketAction } from './marketActions';
 import marketReducer from './marketReducer';
 
+export enum TxType {
+  SELL = 1,
+  BUY = 0,
+}
+export interface ICurrentOrder {
+  listingType: MarketListingTypes;
+  item: MarketItemIface;
+  txType: TxType;
+  isProcessing: boolean;
+}
 
 export interface IMarketState {
-  listings: {
-    domainListing: DomainItemIface[];
-    storageListing: StorageItemIface[];
-  };
-  filters: {
-    domainListing: DomainsFilterIface,
-    storageListing?: MarketFilterIface,
+  currentListing?: {
+    servicePath: string,
+    listingType: MarketListingTypes;
+    txType: TxType;
+    items: MarketItemType[],
   }
+  filters: {
+    domains: DomainFilter,
+    domainOffers: DomainOffersFilter,
+  };
   metadata: {
-    domainListing: {
+    domains: {
       lastUpdated: number;
     };
-    storageListing: {
+    domainOffers: {
+      lastUpdated: number;
+    }
+    storage: {
       lastUpdated: number;
     };
   };
-  currentOrder?: ItemPayload
+  currentOrder?: ICurrentOrder;
 }
 
 interface IMarketStoreProps {
@@ -34,37 +46,34 @@ interface IMarketStoreProps {
 }
 
 export const initialState: IMarketState = {
-  listings: {
-    domainListing: [],
-    storageListing: [],
-  },
   filters: {
-    domainListing: {
+    domains: {
+
+    },
+    domainOffers: {
       price: {
         $lte: 100,
         $gte: 0
       },
-      sellerDomain: {
-        $like: ''
-      }
     },
   },
   metadata: {
-    domainListing: {
+    domains: {
       lastUpdated: -1,
     },
-    storageListing: {
+    domainOffers: {
       lastUpdated: -1,
     },
-  },
+    storage: {
+      lastUpdated: -1,
+    },
+  }
 };
 
 const MarketStore = React.createContext({} as IMarketStoreProps | any);
 
 export const MarketStoreProvider = ({ children }) => {
-  const { useMiddleware } = Middleware.getInstance();
-
-  const [state, dispatch] = useMiddleware(marketReducer, initialState);
+  const [state, dispatch] = useReducer(marketReducer, initialState);
 
   const value = { state, dispatch };
   return <MarketStore.Provider value={value}>{children}</MarketStore.Provider>;

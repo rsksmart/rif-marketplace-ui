@@ -21,7 +21,10 @@ const Header = () => {
   const navItems: NavLinkProps[] = [
     {
       title: 'Domains',
-      to: ROUTES.DOMAINS,
+      to: ROUTES.DOMAINS.BUY,
+      isActive: (_, { pathname }) => {
+        return pathname.includes(ROUTES.DOMAINS.BASE)
+      }
     },
     {
       title: 'Storage',

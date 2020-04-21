@@ -26,7 +26,10 @@ const App = () => {
         <MarketStoreProvider>
           <Web3Provider.Provider>
             <Router>
-              <div className={classes.router}>
+              <div
+                data-testid="wrapper"
+                className={classes.router}
+              >
                 <Header />
                 <Routes />
                 <Footer />

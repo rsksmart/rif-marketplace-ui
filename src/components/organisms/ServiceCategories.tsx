@@ -28,7 +28,7 @@ const ServiceCategories: FC<ServiceCategoriesProps> = () => {
   const availableServices: IconedItemProps[] = [
     {
       className: 'nameService',
-      to: ROUTES.DOMAINS,
+      to: ROUTES.DOMAINS.BUY,
       text: 'Name Service',
       iconProps: { name: Icons.DOMAINS },
     },

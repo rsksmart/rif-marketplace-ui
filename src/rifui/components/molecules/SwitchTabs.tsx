@@ -1,13 +1,14 @@
-import React, { FC, useState } from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Tab as MUITab, Tabs as MUITabs } from '@material-ui/core';
-
+import { makeStyles, Theme } from '@material-ui/core/styles';
+import React, { FC } from 'react';
 import { colors, fonts } from 'rifui/theme';
+
 
 export interface SwitchTabsProps {
   label1: string;
   label2: string;
-  onChange: (newValue: number) => void;
+  value?: 0 | 1;
+  onChange: (event: React.ChangeEvent<{}>, value: any) => void;
 };
 
 const a11yProps = (index: any) => {
@@ -61,19 +62,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const SwitchTabs: FC<SwitchTabsProps> = ({ label1, label2, onChange }) => {
+const SwitchTabs: FC<SwitchTabsProps> = ({ label1, label2, value: controlledValue, onChange }) => {
   const classes = useStyles();
-  const [value, setValue] = useState(0);
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setValue(newValue);
-    onChange(value);
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number): void => {
+    // setValue(newValue);
+    onChange(event, newValue);
   };
-
-  const toggleSwitch = () => {
-    if (value) setValue(0);
-    else setValue(1);
-  }
 
   return (
     <div className={classes.root}>
@@ -84,7 +79,7 @@ const SwitchTabs: FC<SwitchTabsProps> = ({ label1, label2, onChange }) => {
         TabIndicatorProps={{
           className: classes.tabIndicator
         }}
-        value={value}
+        value={controlledValue}
         variant="fullWidth"
       >
         <MUITab
@@ -92,13 +87,13 @@ const SwitchTabs: FC<SwitchTabsProps> = ({ label1, label2, onChange }) => {
           classes={{ selected: classes.tabSelected }}
           className={classes.tab}
           label={label1}
-          onClick={toggleSwitch} />
+        />
         <MUITab
           {...a11yProps(1)}
           classes={{ selected: classes.tabSelected }}
           className={classes.tab}
           label={label2}
-          onClick={toggleSwitch} />
+        />
       </MUITabs>
     </div>
   );

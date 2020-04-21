@@ -1,21 +1,22 @@
 import Logger from 'utils/Logger';
-import {
-  MARKET_ACTIONS,
-  MarketAction,
-  MarketPayload,
-  ListingPayload,
-  ItemPayload,
-  FilterPayload,
-} from './marketActions'
-import { initialState, IMarketState } from './MarketStore'
+import { ConnectionPayload, FilterPayload, ItemPayload, ListingPayload, MarketAction, MarketPayload, MARKET_ACTIONS, TxTypeChangePayload } from './marketActions';
+import { IMarketState, initialState } from './MarketStore';
 
 const logger = Logger.getInstance()
 
+// TODO: Extract reusable
 const marketReducer = (state = initialState, action: MarketAction) => {
   const { type, payload } = action
   const marketAction = marketActions[type]
-  if (!!marketAction) logger.debug('marketReducer -> action', action)
+  if (!!marketAction) logger.debug('Market action:', action)
   const newState = (!!marketAction && marketAction(state, payload)) || state
+
+  if (state !== newState) {
+    logger.debug('Prev state:', state)
+    logger.debug('Next state:', newState)
+  } else {
+    logger.debug('No change:', newState)
+  }
 
   return newState
 }
@@ -28,30 +29,46 @@ type IMarketActions = {
 const {
   NOOP,
   SET_ITEMS,
-  SET_BUY_ITEM,
+  SELECT_ITEM,
   SET_FILTER,
+  TOGGLE_TX_TYPE,
+  CONNECT_SERVICE,
 } = MARKET_ACTIONS
 
 const marketActions: IMarketActions = {
   [NOOP]: (state: IMarketState, _: MarketPayload) => state,
   [SET_ITEMS]: (state: IMarketState, payload: ListingPayload) => {
     const { listingType, items } = payload;
-
-    const newState = { ...state }
-    newState.listings[listingType] = items
-    newState.metadata[listingType] = {
-      ...newState.metadata[listingType],
-      lastUpdated: Date.now()
+    const { currentListing } = state;
+    if (!currentListing) return state;
+    if (listingType !== currentListing.listingType)
+      logger.error('There is a mismatch of types in the current items (market store)!');
+    const newState = {
+      ...state,
+      currentListing: {
+        txType: currentListing.txType,
+        listingType: listingType,
+        servicePath: currentListing.servicePath,
+        items,
+      },
+      metadata: {
+        ...state.metadata,
+        [listingType]: {
+          ...state.metadata[listingType],
+          lastUpdated: Date.now()
+        },
+      }
     }
-
     return newState;
   },
-  [SET_BUY_ITEM]: (state: IMarketState, payload: ItemPayload) => ({
+  [SELECT_ITEM]: (state: IMarketState, payload: ItemPayload) => ({
     ...state, currentOrder: { ...payload }
   }),
   [SET_FILTER]: (state: IMarketState, payload: FilterPayload) => {
-    const { filters } = state;
-    const { listingType, filterItems } = payload;
+    const { filters, currentListing } = state;
+    if (!currentListing) return state;
+    const { listingType } = currentListing;
+    const { filterItems } = payload;
 
     return {
       ...state,
@@ -64,5 +81,31 @@ const marketActions: IMarketActions = {
       }
     };
   },
+  [TOGGLE_TX_TYPE]: (state: IMarketState, payload: TxTypeChangePayload) => {
+    const { currentListing } = state;
+    const { txType } = payload;
+    if (!currentListing) return state;
+    return {
+      ...state,
+      currentListing: {
+        txType,
+        items: [],
+        servicePath: '',
+        listingType: currentListing.listingType, // TODO: It would be better blank but that creates problems. This may be an issue also, though.
+      },
+    }
+  },
+  [CONNECT_SERVICE]: (state: IMarketState, payload: ConnectionPayload) => {
+    const { servicePath, listingType, txType } = payload;
+    return {
+      ...state,
+      currentListing: {
+        listingType,
+        servicePath,
+        items: [],
+        txType,
+      }
+    }
+  }
 }
 
