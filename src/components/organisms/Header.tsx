@@ -1,9 +1,13 @@
 import React from 'react';
 import { ROUTES } from 'routes';
 import Web3Provider from 'rifui/providers/Web3Provider';
-import { Account } from 'rifui';
-import { NavLinkProps } from 'react-router-dom';
-import { Header as RUIHeader } from 'rifui';
+import { Account, Header as RUIHeader } from 'rifui';
+import { HeaderItem } from 'rifui/components/organisms/Header';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import DataUsageIcon from '@material-ui/icons/DataUsage';
+import ForumIcon from '@material-ui/icons/Forum';
+import PeopleIcon from '@material-ui/icons/People';
+import StorageIcon from '@material-ui/icons/Storage';
 
 const Login = () => (
   <Web3Provider.Consumer>
@@ -19,33 +23,38 @@ const Login = () => (
 );
 
 const Header = () => {
-  const navItems: NavLinkProps[] = [
+  const headerItems: HeaderItem[] = [
     {
       title: 'Domains',
       to: ROUTES.DOMAINS.BUY,
       isActive: (_, { pathname }) => {
         return pathname.includes(ROUTES.DOMAINS.BASE)
-      }
+      },
+      icon: <PeopleIcon />
     },
     {
       title: 'Storage',
       to: ROUTES.STORAGE,
+      icon: <StorageIcon />
     },
     {
       title: 'Payments',
-      to: ROUTES.PAYMENTS
+      to: ROUTES.PAYMENTS,
+      icon: <AccountBalanceWalletIcon />
     },
     {
       title: 'Data Services',
-      to: ROUTES.DATA_SERVICE
+      to: ROUTES.DATA_SERVICE,
+      icon: <DataUsageIcon />
     },
     {
       title: 'Communications',
-      to: ROUTES.COMMUNICATIONS
+      to: ROUTES.COMMUNICATIONS,
+      icon: <ForumIcon />
     }
   ];
 
-  return (<RUIHeader hreflogo={ROUTES.LANDING} items={navItems} login={Login} />)
+  return (<RUIHeader hreflogo={ROUTES.LANDING} items={headerItems} login={Login} />)
 };
 
 export default Header;

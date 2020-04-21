@@ -3,25 +3,27 @@ import { NavLink, NavLinkProps } from 'react-router-dom';
 import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import Drawer from '@material-ui/core/Drawer';
-import Toolbar from '@material-ui/core/Toolbar';
 import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-import Hidden from '@material-ui/core/Hidden';
+import Toolbar from '@material-ui/core/Toolbar';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import MenuIcon from '@material-ui/icons/Menu';
 import { LogoNavbar, Link, List, Typography } from 'rifui';
 import { colors, fonts } from 'rifui/theme';
 
 export interface HeaderProps {
   hreflogo: string;
-  items: NavLinkProps[];
+  items: HeaderItem[];
   login: React.ElementType;
+}
+
+export interface HeaderItem extends NavLinkProps {
+  icon?: any;
 }
 
 const drawerWidth = 240;
@@ -193,12 +195,13 @@ const Header = ({ hreflogo, items, login }) => {
             <List>
               {
                 !!items.length &&
-                items.map((navItem: NavLinkProps, i: number) => (
-                  <ListItem button key={`${navItem.title}-${i}`}>
-                    <NavLink to={navItem.to} className={classes.mobileNavLink} activeClassName={classes.mobileNavLinkActive}>
-                      {/* TODO: if the UX validates displaying icons here, add the prop to items and read it here */}
-                      <ListItemIcon>{i % 2 ? <MailIcon /> : <InboxIcon />}</ListItemIcon>
-                      <ListItemText primary={navItem.title} />
+                items.map((headerItem: HeaderItem, i: number) => (
+                  <ListItem button key={`${headerItem.title}-${i}`}>
+                    <NavLink to={headerItem.to} className={classes.mobileNavLink} activeClassName={classes.mobileNavLinkActive}>
+                      <ListItemIcon>
+                        {headerItem.icon}
+                      </ListItemIcon>
+                      <ListItemText primary={headerItem.title} />
                     </NavLink>
                   </ListItem>
                 ))}
