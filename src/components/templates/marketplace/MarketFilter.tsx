@@ -7,14 +7,13 @@ import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';
 import { colors } from 'rifui/theme';
 
-export interface MarketFilterProps {
-}
+export interface MarketFilterProps { }
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     filter: {
       background: colors.white,
       boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-      maxWidth: '20%',
       flex: '1 1 auto',
       padding: theme.spacing(3, 3, 0, 3),
       [theme.breakpoints.down('sm')]: {
@@ -26,7 +25,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     formHeading: {
       paddingBottom: theme.spacing(2),
-    }
+    },
+    switchContainer: {
+      alignSelf: 'center',
+      display: 'flex',
+      width: '100%'
+    },
   })
 )
 
@@ -54,12 +58,10 @@ const MarketFilter: FC<MarketFilterProps> = ({ children }) => {
   return (
     <div className={classes.filter}>
       <Grid className={classes.formHeading} container>
-        <Grid item md={6}>
-          <Typography weight='bold' variant='h6' color='primary'>
-            Domains
-                  </Typography>
+        <Grid item xs={6}>
+          <Typography weight='lightBold' variant='h6' color='primary'>Domains</Typography>
         </Grid>
-        <Grid style={{ display: 'flex', alignSelf: 'center' }} item md={6}>
+        <Grid className={classes.switchContainer} item xs={6}>
           <SwitchTabs label1='Buy' label2='Sell' value={txType} onChange={handleSwitchChange} />
         </Grid>
       </Grid>
