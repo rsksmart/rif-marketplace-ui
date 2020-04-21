@@ -128,7 +128,6 @@ const DomainOffersCheckoutPage = () => {
                 className={classes.card}
             >
                 <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Buying ${domainName}`} />
-                {!!currentOrder && currentOrder.isProcessing && <CardHeader titleTypographyProps={{ variant: 'h1', color: 'error' }} title={`TIMEOUT 5s ONLY`} />}
                 <CardContent>
                     <Typography className={classes.contentTitle} variant='h6' color='secondary'>Domain details</Typography>
                     <Table className={classes.contentDetails}>

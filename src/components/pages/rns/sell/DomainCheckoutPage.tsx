@@ -133,7 +133,6 @@ const DomainsCheckoutPage = () => {
         className={classes.card}
       >
         <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Listing ${name}`} />
-        {!!currentOrder && currentOrder.isProcessing && <CardHeader titleTypographyProps={{ variant: 'h1', color: 'error' }} title={`TIMEOUT 5s ONLY`} />}
         <CardContent>
           <div className={classes.contentDetails}>
             <Table>
