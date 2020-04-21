@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: 1
   },
   resultsContainer: {
+    overflow: 'auto',
     [theme.breakpoints.down('md')]: {
       marginTop: theme.spacing(3)
     }

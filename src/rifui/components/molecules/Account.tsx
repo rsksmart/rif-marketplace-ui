@@ -17,12 +17,13 @@ export interface AccountProps {
 const useStyles = makeStyles((theme: Theme) => ({
   accountText: {
     fontSize: fonts.size.tiny,
+    textAlign: 'center',
   },
   root: {
     alignItems: 'center',
-    color: colors.gray1,
     border: '1px solid white',
     borderRadius: 50,
+    color: colors.gray1,
     cursor: 'pointer',
     display: 'flex',
     flexWrap: 'nowrap',
