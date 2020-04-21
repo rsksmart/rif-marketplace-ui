@@ -13,9 +13,11 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     body: {
       paddingTop: theme.spacing(2),
+      width: '100%',
     },
     mainContent: {
       display: 'flex',
+      flexDirection: 'column',
       justifyContent: 'center'
     },
     returnBtnContainer: {

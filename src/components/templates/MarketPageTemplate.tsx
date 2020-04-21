@@ -1,19 +1,16 @@
 import React, { FC, useContext } from 'react';
 import MarketFilter from 'components/templates/marketplace/MarketFilter';
 import Marketplace, { TableHeaders } from 'components/templates/marketplace/Marketplace';
-import { MarketItemType, MarketListingTypes } from 'models/Market';
+import { MarketItemType } from 'models/Market';
 import { Grid } from 'rifui';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Web3Store } from 'rifui/providers/Web3Provider';
-
-
 
 export interface MarketPageTemplateProps {
   className: string;
   filterItems: React.ReactNode;
   headers: TableHeaders;
   itemCollection: MarketItemType[];
-  listingType: MarketListingTypes;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
