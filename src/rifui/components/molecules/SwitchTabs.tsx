@@ -64,7 +64,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const SwitchTabs: FC<SwitchTabsProps> = ({ label1, label2, value: controlledValue, onChange }) => {
   const classes = useStyles();
-  // const [value, setValue] = useState(controlledValue);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number): void => {
     // setValue(newValue);

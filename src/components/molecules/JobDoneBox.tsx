@@ -10,7 +10,7 @@ export interface JobDoneBoxProps {
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         body: {
-            border: '1px solid #008FF7',
+            border: `1px solid ${colors.primary}`,
             borderRadius: 12,
             boxSizing: 'border-box',
             color: colors.primary,
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
             flexDirection: 'column',
             height: 120,
             justifyContent: 'center',
-            margin: '1em',
+            margin: theme.spacing(1),
             textAlign: 'center',
             width: 222,
         }

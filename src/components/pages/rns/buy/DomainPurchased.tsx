@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
             display: 'flex',
             justifyContent: 'space-between',
             flexDirection: 'row',
-            padding: '3em',
+            padding: theme.spacing(3),
             width: 355,
         }
     }),

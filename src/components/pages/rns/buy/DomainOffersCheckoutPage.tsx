@@ -11,6 +11,7 @@ import { shortenAddress } from 'rifui/utils';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore from 'store/Market/MarketStore';
+import { colors } from 'rifui/theme';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -21,8 +22,8 @@ const useStyles = makeStyles((theme: Theme) =>
             paddingTop: 44,
             paddingBottom: 69,
 
-            background: '#FFFFFF',
-            border: '1px solid #F8F7F7',
+            background: colors.white,
+            border: `1px solid ${colors.gray1}`,
             boxSizing: 'border-box',
             boxShadow: '0px 6px 10px rgba(0, 0, 0, 0.2)',
 
