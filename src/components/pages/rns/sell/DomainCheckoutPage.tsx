@@ -106,7 +106,7 @@ const DomainsCheckoutPage = () => {
       }
     })
     setTimeout(() => {
-      history.replace(ROUTES.DONE.DOMAINS)
+      history.replace(ROUTES.DOMAINS.DONE.SELL)
     }, 5000)
   }
 

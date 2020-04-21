@@ -22,6 +22,9 @@ const Header = () => {
     {
       title: 'Domains',
       to: ROUTES.DOMAINS.BUY,
+      isActive: (_, { pathname }) => {
+        return pathname.includes(ROUTES.DOMAINS.BASE)
+      }
     },
     {
       title: 'Storage',

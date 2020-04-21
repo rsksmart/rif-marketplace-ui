@@ -1,19 +1,33 @@
+const LANDING = '/'
+const COMMUNICATIONS = '/communications'
+const DATA_SERVICE = 'data_service'
+const PAYMENTS = '/payments'
+const DOMAINS = '/domains'
+const DOMAINS_BUY = `${DOMAINS}/buy`
+const DOMAINS_SELL = `${DOMAINS}/sell`
+const DOMAIN_OFFERS_CHECKOUT = `${DOMAINS_BUY}/checkout`
+const DOMAINS_CHECKOUT = `${DOMAINS_SELL}/checkout`
+const DOMAIN_OFFERS_DONE = `${DOMAINS_BUY}/done`
+const DOMAINS_DONE = `${DOMAINS_SELL}/done`
+const STORAGE = '/storage'
+
 export const ROUTES = {
-  LANDING: '/',
-  COMMUNICATIONS: '/communications',
-  DATA_SERVICE: 'data_service',
-  PAYMENTS: '/payments',
+  LANDING,
+  COMMUNICATIONS,
+  DATA_SERVICE,
+  PAYMENTS,
+  STORAGE,
   DOMAINS: {
-    BUY: '/buy_domain',
-    SELL: '/sell_domain',
-  },
-  STORAGE: '/storage',
-  DONE: {
-    DOMAIN_OFFERS: '/buy_domian/done',
-    DOMAINS: '/sell_domian/done',
-  },
-  CHECKOUT: {
-    DOMAIN_OFFERS: '/buy_domian/checkout',
-    DOMAINS: '/sell_domian/checkout',
+    BASE: DOMAINS,
+    BUY: DOMAINS_BUY,
+    SELL: DOMAINS_SELL,
+    CHECKOUT: {
+      BUY: DOMAIN_OFFERS_CHECKOUT,
+      SELL: DOMAINS_CHECKOUT
+    },
+    DONE: {
+      BUY: DOMAIN_OFFERS_DONE,
+      SELL: DOMAINS_DONE
+    }
   }
-};
+}

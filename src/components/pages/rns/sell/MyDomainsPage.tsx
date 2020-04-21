@@ -90,7 +90,7 @@ const MyDomainsPage = () => {
               txType: TX_TYPE
             }
           })
-          history.push(ROUTES.CHECKOUT.DOMAINS)
+          history.push(ROUTES.DOMAINS.CHECKOUT.SELL)
         }}
       />;
       domainItem.expirationDatetime = (new Date(expirationDate)).toDateString()

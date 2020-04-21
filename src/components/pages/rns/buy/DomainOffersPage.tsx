@@ -97,7 +97,7 @@ const DomainOffersPage = () => {
               txType: TX_TYPE
             }
           })
-          history.push(ROUTES.CHECKOUT.DOMAIN_OFFERS)
+          history.push(ROUTES.DOMAINS.CHECKOUT.BUY)
         }}
       />;
       domainItem.expirationDatetime = (new Date(expirationDate)).toDateString()

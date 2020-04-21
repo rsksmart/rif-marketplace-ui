@@ -113,7 +113,7 @@ const DomainOffersCheckoutPage = () => {
             }
         })
         setTimeout(() => {
-            history.replace(ROUTES.DONE.DOMAIN_OFFERS)
+            history.replace(ROUTES.DOMAINS.DONE.BUY)
         }, 5000)
     }
     return (

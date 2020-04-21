@@ -57,7 +57,7 @@ const Navbar: FC<NavbarProps> = ({ children, items, login, ...rest }) => {
             !!items.length &&
             items.map((navItem: NavLinkProps, i) => (
               <Typography className={classes.navLinkContainer} key={`${navItem.title}-${i}`}>
-                <NavLink className={classes.navLink} activeClassName={classes.activeNavlink} to={navItem.to}>
+                <NavLink className={classes.navLink} activeClassName={classes.activeNavlink} {...navItem}>
                   {navItem.title}
                 </NavLink>
               </Typography>
