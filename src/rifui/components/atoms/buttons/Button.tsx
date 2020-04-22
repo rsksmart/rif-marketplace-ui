@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import { Button as MUIButton, ButtonProps as MUIButtonProps } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import clsx from 'clsx';
 
 interface IButtonProps extends MUIButtonProps {
   block?: boolean;
@@ -27,12 +26,10 @@ const Button: FC<IButtonProps> = ({ className = '', block, shadow, rounded, chil
   return (
     <MUIButton
       className={
-        clsx({
-          [classes.rounded]: rounded,
-          [classes.noShadow]: !shadow,
-          [classes.block]: block
-        },
-          className)}
+        `${{ [classes.rounded]: rounded }}
+        ${{ [classes.noShadow]: shadow }}
+        ${{ [classes.block]: block }} ${className}`
+      }
       {...rest}>
       {children}
     </MUIButton >

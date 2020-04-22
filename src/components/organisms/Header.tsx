@@ -2,7 +2,7 @@ import React from 'react';
 import { ROUTES } from 'routes';
 import Web3Provider from 'rifui/providers/Web3Provider';
 import { Account, Header as RUIHeader } from 'rifui';
-import { HeaderItem } from 'rifui/components/organisms/Header';
+import { HeaderItemProps } from 'rifui/components/organisms/Header';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import DataUsageIcon from '@material-ui/icons/DataUsage';
 import ForumIcon from '@material-ui/icons/Forum';
@@ -23,7 +23,7 @@ const Login = () => (
 );
 
 const Header = () => {
-  const headerItems: HeaderItem[] = [
+  const headerItems: HeaderItemProps[] = [
     {
       title: 'Domains',
       to: ROUTES.DOMAINS.BUY,
