@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const AppBar: FC<AppBarProps> = ({ children, items, login, ...rest }) => {
+const AppBar: FC<AppBarProps> = ({ items, login, ...rest }) => {
 
   const classes = useStyles();
   const Login = login;

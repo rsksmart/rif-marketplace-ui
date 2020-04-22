@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { NavLink, NavLinkProps } from 'react-router-dom';
-import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Divider from '@material-ui/core/Divider';
@@ -13,16 +12,16 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Toolbar from '@material-ui/core/Toolbar';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import MenuIcon from '@material-ui/icons/Menu';
-import { LogoNavbar, Link, List, Typography } from 'rifui';
+import { Link, List, LogoNavbar, AppBar as RUIAppBar, Typography } from 'rifui';
 import { colors, fonts } from 'rifui/theme';
 
 export interface HeaderProps {
   hreflogo: string;
-  items: HeaderItem[];
+  items: HeaderItemProps[];
   login: React.ElementType;
 }
 
-export interface HeaderItem extends NavLinkProps {
+export interface HeaderItemProps extends NavLinkProps {
   icon?: any;
 }
 
@@ -122,30 +121,7 @@ const Header = ({ hreflogo, items, login }) => {
   return (
     <>
       <Hidden smDown>
-        <AppBar
-          position="static">
-          <Toolbar>
-            <Link href={hreflogo}>
-              <LogoNavbar />
-            </Link>
-            <div className={classes.itemsContainer}>
-              {
-                !!items.length &&
-                items.map((navItem: NavLinkProps, i) => (
-                  <Typography className={classes.navLinkContainer} key={`${navItem.title}-${i}`}>
-                    <NavLink className={classes.navLink} activeClassName={classes.activeNavlink} to={navItem.to}>
-                      {navItem.title}
-                    </NavLink>
-                  </Typography>
-                ))
-              }
-            </div>
-            <div className={classes.loginContainer}>
-              <Login />
-            </div>
-          </Toolbar>
-
-        </AppBar>
+        <RUIAppBar hreflogo={hreflogo} items={items} login={login} />
       </Hidden>
       <Hidden mdUp>
         <div
@@ -154,9 +130,7 @@ const Header = ({ hreflogo, items, login }) => {
           <AppBar
             position="static"
             className={
-              clsx(classes.mobileAppBar, {
-                [classes.mobileAppBarShift]: open,
-              })
+              `${classes.mobileAppBar} ${{ [classes.mobileAppBarShift]: open }}`
             }
           >
             <Toolbar>
@@ -195,7 +169,7 @@ const Header = ({ hreflogo, items, login }) => {
             <List>
               {
                 !!items.length &&
-                items.map((headerItem: HeaderItem, i: number) => (
+                items.map((headerItem: HeaderItemProps, i: number) => (
                   <ListItem button key={`${headerItem.title}-${i}`}>
                     <NavLink to={headerItem.to} className={classes.mobileNavLink} activeClassName={classes.mobileNavLinkActive}>
                       <ListItemIcon>
@@ -207,7 +181,6 @@ const Header = ({ hreflogo, items, login }) => {
                 ))}
             </List>
           </Drawer>
-
         </div>
       </Hidden>
     </>
