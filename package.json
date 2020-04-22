@@ -30,7 +30,7 @@
     "lint": "npx tasegir lint && eslint 'src/**/*.ts*'"
   },
   "dependencies": {
-    "@feathersjs/feathers": "^4.5.2",
+    "@feathersjs/feathers": "^4.5.3",
     "@feathersjs/socketio-client": "^4.5.2",
     "@material-ui/core": "^4.9.7",
     "@material-ui/icons": "^4.9.1",
