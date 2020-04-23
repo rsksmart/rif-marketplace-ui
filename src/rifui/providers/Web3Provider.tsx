@@ -15,7 +15,6 @@ export interface IWeb3Provider {
     setProvider: (provider: EProvider) => void;
   };
 }
-
 const defaultState = {
   provider: null,
   web3: null,

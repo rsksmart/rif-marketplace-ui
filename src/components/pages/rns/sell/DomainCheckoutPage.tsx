@@ -1,4 +1,6 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import ERC721 from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC721.json';
+import ERC721SimplePlacements from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC721SimplePlacements.json';
 import PriceItem from 'components/atoms/PriceItem';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
@@ -7,10 +9,13 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, MenuItem, Select, Table, TableBody, TableCell, TableRow, UnitsInput } from 'rifui';
 import { Card, CardActions, CardContent, CardHeader } from 'rifui/components/atoms/card';
+import { Web3Store } from 'rifui/providers/Web3Provider';
 import { colors } from 'rifui/theme';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore from 'store/Market/MarketStore';
+import { ContractWrapper } from 'utils/blockchain.utils';
+import Web3 from 'web3';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,13 +75,20 @@ const DomainsCheckoutPage = () => {
     dispatch
   } = useContext(MarketStore)
   const classes = useStyles();
+  const {
+    state: {
+      account,
+      web3
+    }
+  } = useContext(Web3Store);
+  const Contract = (contract) => ContractWrapper(contract, (web3 as Web3), (account as string));
 
 
   const currenyOptions = ['RIF', 'DOC', 'RBTC'];
 
   const [price, setPrice] = useState('');
   const [priceFiat, setPriceFiat] = useState('');
-  const [currency, setCurrency] = useState('0');
+  const [currency, setCurrency] = useState('');
   const currencyFiat = 'USD';
 
   useEffect(() => {
@@ -87,7 +99,6 @@ const DomainsCheckoutPage = () => {
 
   if (!currentOrder) return null;
 
-
   const {
     item: {
       name,
@@ -96,18 +107,46 @@ const DomainsCheckoutPage = () => {
     isProcessing
   } = currentOrder;
 
-  const handleSubmit = () => {
-    // TODO: Make transactions
-    dispatch({
-      type: MARKET_ACTIONS.SELECT_ITEM,
-      payload: {
-        ...currentOrder,
-        isProcessing: true
-      }
-    })
-    setTimeout(() => {
+  const handleSubmit = async () => {
+    if (web3 && account) {
+      const tokenId = web3.utils.sha3(name.replace('.rsk', ''))
+      const rifTokenAddress = process.env.REACT_APP_RIF_TOKEN_ADDR;
+      const rnsAddress = process.env.REACT_APP_RSKOWNER_ADDR;
+      const marketPlaceAddress = process.env.REACT_APP_SIMPLEPLACEMENTS_ADDR;
+
+      dispatch({
+        type: MARKET_ACTIONS.SELECT_ITEM,
+        payload: {
+          ...currentOrder,
+          isProcessing: true,
+        }
+      })
+
+      const marketPlaceContract = await Contract(ERC721SimplePlacements).at(marketPlaceAddress)
+
+      const rnsContract = await Contract(ERC721).at(rnsAddress)
+
+      const owner = await rnsContract.ownerOf(tokenId)
+      console.log(`ownerOf${name}:${owner}`)
+
+      const myBalance = await rnsContract.balanceOf(account)
+      console.log('my balance:', myBalance)
+
+      const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId)
+      console.log('approveReciept:', approveReceipt);
+
+      const receipt = await marketPlaceContract.place(tokenId, rifTokenAddress, web3.utils.toWei(price))
+      console.log('place receipt:', receipt);
+
+      dispatch({
+        type: MARKET_ACTIONS.SELECT_ITEM,
+        payload: {
+          ...currentOrder,
+          isProcessing: false,
+        }
+      })
       history.replace(ROUTES.DOMAINS.DONE.SELL)
-    }, 5000)
+    }
   }
 
   const handlePriceChange = (event) => {
@@ -154,7 +193,7 @@ const DomainsCheckoutPage = () => {
                       <CombinedPriceCell {...{
                         price: `${price}`,
                         priceFiat: `${priceFiat}`,
-                        currency,
+                        currency: currenyOptions[parseInt(currency)],
                         currencyFiat: 'USD',
                         divider: ' '
                       }} />
