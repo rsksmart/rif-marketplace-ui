@@ -1,10 +1,10 @@
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import React, { FC, useState } from 'react';
-import { Button, LoginOption, Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle, Typography } from 'rifui';
-import { EProvider } from 'rifui/services/Web3Service';
-import { colors, fonts } from 'rifui/theme';
-import { shortenAddress } from 'rifui/utils';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import Web3 from 'web3';
+import { EProvider } from '../../services/Web3Service';
+import { shortenAddress } from '../../utils'
+import { Button, LoginOption, Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle, Typography } from '../../components/atoms';
+import { colors, fonts } from '../../theme';
 
 export interface AccountProps {
   web3: Web3 | null;
@@ -42,7 +42,7 @@ const Account: FC<AccountProps> = ({
   const handleOpen = () => setOpen(true);
 
   return (
-    <>
+    <React.Fragment>
       <Button
         onClick={handleOpen}
         className={classes.root}
@@ -60,7 +60,7 @@ const Account: FC<AccountProps> = ({
         aria-labelledby="account-modal-title"
         aria-describedby="account-modal-description"
       >
-        <>
+        <React.Fragment>
           <ModalHeader>
             <ModalTitle>
               Connect a wallet to get started
@@ -83,9 +83,9 @@ const Account: FC<AccountProps> = ({
           <ModalFooter>
             <Button variant='outlined' color='secondary' block onClick={handleClose}>Close</Button>
           </ModalFooter>
-        </>
+        </React.Fragment>
       </Modal>
-    </>
+    </React.Fragment>
   );
 };
 

@@ -29,7 +29,7 @@ export const fonts = {
         bold: 700,
         superBold: 900
     }
-}
+};
 
 const theme = createMuiTheme({
     palette: {
@@ -44,11 +44,17 @@ const theme = createMuiTheme({
         fontFamily: fonts.family,
         button: {
             textTransform: 'none',
-        }
+        },
+        fontWeightRegular: fonts.weight.normal,
     },
     props: {
     },
     overrides: {
+        MuiButton: {
+            root: {
+                fontWeight: fonts.weight.normal,
+            }
+        }
     }
 });
 

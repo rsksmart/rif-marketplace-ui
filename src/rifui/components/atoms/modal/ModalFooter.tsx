@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { colors } from 'rifui/theme';
+import { colors } from '../../../theme';
 
 export interface ModalFooterProps {
   className?: string;

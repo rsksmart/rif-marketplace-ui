@@ -21,13 +21,13 @@ const ModalDialogue: FC<ModalDialogueProps> = ({
 }) => {
   return (
     <Modal {...props}>
-      <>
+      <React.Fragment>
         <ModalHeader>
           <ModalTitle>{title}</ModalTitle>
         </ModalHeader>
         <ModalBody>{children}</ModalBody>
         <ModalFooter>{footer}</ModalFooter>
-      </>
+      </React.Fragment>
     </Modal>
   );
 };

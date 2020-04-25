@@ -1,7 +1,8 @@
 import React, { FC, useState } from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { SliderProps as MUISliderProps } from '@material-ui/core/Slider';
-import { RangeSlider, Typography, UnitsInput } from 'rifui';
+import { RangeSlider, Typography  } from '../atoms';
+import UnitsInput from './UnitsInput';
 
 export interface RangeSliderWithInputsProps extends MUISliderProps {
   values: {
@@ -13,7 +14,7 @@ export interface RangeSliderWithInputsProps extends MUISliderProps {
   className?: string;
 };
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   ({
     root: {
       width: "100%",

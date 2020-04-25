@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { InputProps } from '../atoms/forms/Input';
-import { Grid, Input, Typography } from 'rifui';
-import { colors, fonts } from 'rifui/theme';
+import { Grid, Input, Typography } from '../atoms';
+import { colors, fonts } from '../../theme';
 
 export interface UnitsInputProps extends InputProps {
   handleOnChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -56,7 +56,7 @@ const UnitsInput: FC<UnitsInputProps> = props => {
 
   const classes = useStyles();
   return (
-    <>
+    <React.Fragment>
       <Grid className={classes.root} container spacing={1}>
         <Grid className={classes.inputContainer} item xs={8}>
           <Input
@@ -79,7 +79,7 @@ const UnitsInput: FC<UnitsInputProps> = props => {
           </Typography>
         </Grid>
       </Grid>
-    </>
+    </React.Fragment>
   );
 };
 

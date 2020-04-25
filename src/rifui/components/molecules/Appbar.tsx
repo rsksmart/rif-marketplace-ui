@@ -3,8 +3,8 @@ import { AppBar as MUIAppBar, AppBarProps as MUIAppBarProps } from '@material-ui
 import Toolbar from '@material-ui/core/Toolbar';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { NavLink, NavLinkProps } from 'react-router-dom';
-import { LogoNavbar, Link, Typography } from 'rifui/components/atoms/index';
-import { colors, fonts } from 'rifui/theme';
+import { LogoNavbar, Link, Typography } from '../atoms';
+import { colors, fonts } from '../../theme';
 
 export interface AppBarProps extends MUIAppBarProps {
   hreflogo: string;
@@ -15,7 +15,7 @@ export interface AppBarProps extends MUIAppBarProps {
 const useStyles = makeStyles((theme: Theme) => ({
   activeNavlink: {
     color: `${colors.white} !important`,
-    fontWeight: fonts.weight.bold
+    fontWeight: fonts.weight.lightBold
   },
   itemsContainer: {
     display: 'flex',
@@ -48,7 +48,7 @@ const AppBar: FC<AppBarProps> = ({ items, login, ...rest }) => {
   const Login = login;
 
   return (
-    <MUIAppBar position='static' {...rest} >
+    <MUIAppBar position='static' {...rest}>
       <Toolbar>
         <Link href={rest.hreflogo}>
           <LogoNavbar />

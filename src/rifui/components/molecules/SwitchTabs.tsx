@@ -1,7 +1,7 @@
 import { Tab as MUITab, Tabs as MUITabs } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import React, { FC } from 'react';
-import { colors, fonts } from 'rifui/theme';
+import { colors, fonts } from '../../theme';
 
 
 export interface SwitchTabsProps {
