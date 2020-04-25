@@ -8,7 +8,6 @@ import ModalDialogue from './ModalDialogue';
 import RangeSliderWithInputs from './RangeSliderWithInputs';
 import SwitchTabs from './SwitchTabs';
 import UnitsInput from './UnitsInput';
-import NamedSelect from './NamedSelect';
 
 export {
   Accordion,
@@ -21,5 +20,4 @@ export {
   RangeSliderWithInputs,
   SwitchTabs,
   UnitsInput,
-  NamedSelect,
 };

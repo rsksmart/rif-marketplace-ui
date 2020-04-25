@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
-import { TextField as MUITextField, TextFieldProps as MUITextFieldProps, makeStyles, Theme } from '@material-ui/core'
-import { colors } from 'rifui/theme';
+import { TextField as MUITextField, TextFieldProps as MUITextFieldProps, makeStyles } from '@material-ui/core'
+import { colors } from '../../../theme';
 
 export type TextFieldProps = MUITextFieldProps;
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     color: colors.gray3,
     '&:hover': {

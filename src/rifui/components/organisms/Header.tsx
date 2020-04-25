@@ -1,3 +1,6 @@
+import React, { FC, useState } from 'react';
+import { BrowserRouter, NavLink, NavLinkProps } from 'react-router-dom';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
@@ -6,14 +9,12 @@ import IconButton from '@material-ui/core/IconButton';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import MenuIcon from '@material-ui/icons/Menu';
-import React, { useState } from 'react';
-import { NavLink, NavLinkProps } from 'react-router-dom';
-import { AppBar as RUIAppBar, Link, List, LogoNavbar } from 'rifui';
-import { colors, fonts } from 'rifui/theme';
+import { Link, LogoNavbar } from '../../components/atoms';
+import { List, AppBar as RUIAppBar } from '../../components/molecules';
+import { colors, fonts } from '../../theme';
 
 export interface HeaderProps {
   hreflogo: string;
@@ -99,7 +100,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Header = ({ hreflogo, items, login }) => {
+const Header: FC<HeaderProps> = ({ hreflogo, items, login }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -119,7 +120,7 @@ const Header = ({ hreflogo, items, login }) => {
   };
 
   return (
-    <>
+    <BrowserRouter>
       <Hidden smDown>
         <RUIAppBar hreflogo={hreflogo} items={items} login={login} />
       </Hidden>
@@ -130,11 +131,11 @@ const Header = ({ hreflogo, items, login }) => {
           <AppBar
             position="static"
             className={
-              `${classes.mobileAppBar} ${{ [classes.mobileAppBarShift]: open }}`
+              `${classes.mobileAppBar} ${open ? classes.mobileAppBarShift : ''}`
             }
           >
             <Toolbar>
-              {!open && <>
+              {!open && <React.Fragment>
                 <IconButton
                   color="inherit"
                   aria-label="open drawer"
@@ -148,7 +149,7 @@ const Header = ({ hreflogo, items, login }) => {
                 <div className={classes.loginContainer}>
                   <Login />
                 </div>
-              </>}
+              </React.Fragment>}
             </Toolbar>
           </AppBar>
           <Drawer
@@ -183,7 +184,7 @@ const Header = ({ hreflogo, items, login }) => {
           </Drawer>
         </div>
       </Hidden>
-    </>
+    </BrowserRouter>
   );
 }
 

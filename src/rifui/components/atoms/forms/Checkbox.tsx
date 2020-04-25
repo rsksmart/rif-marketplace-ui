@@ -3,15 +3,14 @@ import {
 	Checkbox as MUICheckbox,
 	CheckboxProps as MUICheckboxProps,
 	makeStyles,
-	createStyles,
-	Theme
+	createStyles
 } from '@material-ui/core';
 import { CheckBoxOutlineBlankSharp, CheckBoxSharp } from '@material-ui/icons';
-import { colors } from 'rifui/theme';
+import { colors } from '../../../theme';
 
 export interface CheckboxProps extends MUICheckboxProps { };
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
 	createStyles({
 		unCheckedIcon: {
 			color: colors.gray4

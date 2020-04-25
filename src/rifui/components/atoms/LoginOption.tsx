@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { makeStyles, Theme } from '@material-ui/core';
-import { Button } from 'rifui';
+import { makeStyles } from '@material-ui/core';
+import Button from './buttons/Button';
 
 export interface LoginOptionProps {
   className?: string;
@@ -8,7 +8,7 @@ export interface LoginOptionProps {
   text: string;
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     padding: 5,
     margin: 5,
@@ -22,7 +22,7 @@ const LoginOption: FC<LoginOptionProps> = ({ className = '', onClick, text, ...r
     <Button
       className={`${classes.root} ${className}`}
       block rounded variant='outlined' color='primary'
-      onClick={onClick}>{text}</Button>
+      onClick={onClick} {...rest}>{text}</Button>
   );
 };
 

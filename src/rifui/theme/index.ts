@@ -1,3 +1,9 @@
 import theme, { colors, fonts } from './theme';
+import { ThemeProvider } from '@material-ui/core/styles';
 
-export { theme, colors, fonts };
+export {
+  colors,
+  fonts,
+  theme,
+  ThemeProvider
+};

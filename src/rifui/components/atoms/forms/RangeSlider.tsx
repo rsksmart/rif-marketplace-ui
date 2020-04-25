@@ -1,13 +1,13 @@
 import React, { FC, FormEvent } from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 import Slider, { SliderProps as MUISliderProps } from '@material-ui/core/Slider';
-import { colors } from 'rifui/theme';
+import { colors } from '../../../theme';
 
 interface RangeSliderProps extends MUISliderProps {
   handleChange: (event: FormEvent<Element>, newValue: number | number[]) => void;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
       width: "100%",

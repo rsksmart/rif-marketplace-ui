@@ -3,13 +3,12 @@ import {
   FormControlLabel as MUIFormControlLabel,
   FormControlLabelProps as MUIFormControlLabelProps,
   makeStyles, createStyles,
-  Theme
 } from '@material-ui/core';
-import { colors } from 'rifui/theme';
+import { colors } from '../../../theme';
 
 export interface FormControlLabelProps extends MUIFormControlLabelProps { };
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
       color: colors.gray3

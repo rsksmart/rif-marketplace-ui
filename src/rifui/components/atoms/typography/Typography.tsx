@@ -4,7 +4,7 @@ import {
   TypographyProps as MUITypographyProps
 } from '@material-ui/core';
 import { Theme, makeStyles } from '@material-ui/core/styles';
-import { fonts } from 'rifui/theme';
+import { fonts } from '../../../theme';
 
 export interface TypographyProps extends MUITypographyProps {
   weight?: 'normal' | 'lightBold' | 'bold' | 'superBold'

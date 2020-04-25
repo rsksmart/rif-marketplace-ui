@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Modal as MUIModal, ModalProps as MUIModalProps } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { colors } from 'rifui/theme';
+import { colors } from '../../../theme';
 
 // TODO: add props to customize the position of the modal (eg: centered | top ...)
 export interface ModalProps extends MUIModalProps { };
