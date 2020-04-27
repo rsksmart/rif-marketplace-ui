@@ -1,4 +1,7 @@
 import { CardActions, createStyles, makeStyles, Theme } from '@material-ui/core';
+import ERC677 from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC677.json';
+import ERC721 from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC721.json';
+import ERC721SimplePlacements from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC721SimplePlacements.json';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate';
@@ -6,19 +9,23 @@ import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Table, TableBody, TableCell, TableRow, Typography } from 'rifui';
 import { Card, CardContent, CardHeader } from 'rifui/components/atoms/card';
-// import { Web3Store } from 'rifui/providers/Web3Provider';
+import { Web3Store } from 'rifui/providers/Web3Provider';
+import { colors } from 'rifui/theme';
 import { shortenAddress } from 'rifui/utils';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
-import MarketStore, { TxType } from 'store/Market/MarketStore';
-import { MarketListingTypes } from 'models/Market';
-import { Web3Store } from 'rifui/providers/Web3Provider';
+import MarketStore from 'store/Market/MarketStore';
 
-import ERC721SimplePlacements from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC721SimplePlacements.json';
-import ERC677 from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC677.json';
-import ERC721 from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC721.json';
-import { colors } from 'rifui/theme';
-import { ContractWrapper } from 'utils/blockchain.utils';
+const contract = require("@truffle/contract");
+
+function ContractWrapper(artifact, web3, from) {
+    const c = contract(artifact);
+    c.setProvider(web3.currentProvider);
+    c.defaults({ from });
+    c.setNetwork(web3.eth.net.getId());
+    return c;
+}
+
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -78,27 +85,13 @@ const DomainOffersCheckoutPage = () => {
     } = useContext(Web3Store);
     const classes = useStyles();
 
-    const corder = {
-        listingType: MarketListingTypes.DOMAIN_OFFERS,
-        item: {
-            paymentToken: 'TOKEN',
-            domainName: 'NAME',
-            expirationDate: 1233423324544,
-            priceFiat: '9999',
-            price: '3',
-            sellerAddress: 'THEUNIVERSE'
-        },
-        txType: TxType.BUY,
-        isProcessing: false,
-    };
+    useEffect(() => {
+        if (!currentOrder) {
+            history.replace(ROUTES.LANDING);
+        }
+    }, [currentOrder, history])
 
-    // useEffect(() => {
-    //     if (!currentOrder) {
-    //         history.replace(ROUTES.LANDING);
-    //     }
-    // }, [currentOrder, history])
-
-    // if (!currentOrder) return null;
+    if (!currentOrder) return null;
 
 
     const {
@@ -111,7 +104,7 @@ const DomainOffersCheckoutPage = () => {
             paymentToken
         },
         isProcessing
-    } = corder;
+    } = currentOrder;
 
     const shortSeller = shortenAddress(sellerAddress);
 
@@ -126,25 +119,30 @@ const DomainOffersCheckoutPage = () => {
     }
 
     const handleBuyDomain = async () => {
-        // const web3 = new Web3('http://localhost:8545')
         if (web3 && account) {
-            // TODO: Approve tx
-            // const cost = web3.utils.toWei('1.5');
-            const tokenId = web3.utils.sha3('bob')
-            const rifTokenAddress = '0x9049aA058DE0291C65AFCDC3Aa23aa8C4Ff19C7C';
-            const rnsAddress = '0xC33d5CceaCC9AAfcB1e65A94c164DB4F65Db46EE';
-            const marketPlaceAddress = '0x1cb54CACf012D5708093DEFf3E9dDAe5e97CC9FA';
+            const tokenId = web3.utils.sha3(domainName.replace('.rsk', ''));
+            const rifTokenAddress = process.env.REACT_APP_RIF_TOKEN_ADDR;
+            const rnsAddress = process.env.REACT_APP_RSKOWNER_ADDR;
+            const marketPlaceAddress = process.env.REACT_APP_SIMPLEPLACEMENTS_ADDR;
             const Contract = c => ContractWrapper(c, web3, account);
+
+            dispatch({
+                type: MARKET_ACTIONS.SELECT_ITEM,
+                payload: {
+                    ...currentOrder,
+                    isProcessing: true,
+                }
+            })
 
             const marketPlaceContract = await Contract(ERC721SimplePlacements).at(marketPlaceAddress)
             const rifContract = await Contract(ERC677).at(rifTokenAddress)
             const rnsContract = await Contract(ERC721).at(rnsAddress)
 
-            const ownerOfBob = await rnsContract.ownerOf(tokenId)
-            console.log('ownerOfBob:', ownerOfBob)
+            const owner = await rnsContract.ownerOf(tokenId)
+            console.log(`ownerOf${domainName}:${owner}`)
 
-            const balanceOfAccount = await rnsContract.balanceOf(account)
-            console.log('balanceOfAccount:', balanceOfAccount)
+            const myBalance = await rnsContract.balanceOf(account)
+            console.log('my balance:', myBalance)
 
             const tokenPlacement = await marketPlaceContract.placement(tokenId);
             const tokenAddress = tokenPlacement[0]
@@ -157,18 +155,14 @@ const DomainOffersCheckoutPage = () => {
             const transferReceipt = await rifContract.transferAndCall(marketPlaceAddress, price, tokenId)
             console.log('transferReceipt:', transferReceipt)
         };
-
-        // const c = await (erc20 as any).methods.approve((simplePlacements as any)._address, cost);
         dispatch({
             type: MARKET_ACTIONS.SELECT_ITEM,
             payload: {
-                ...corder,
-                isProcessing: true
+                ...currentOrder,
+                isProcessing: false
             }
         })
-        // setTimeout(() => {
-        //     history.replace(ROUTES.DONE.DOMAIN_OFFERS)
-        // }, 5000)
+        history.replace(ROUTES.DOMAINS.DONE.BUY)
     }
 
 
@@ -205,7 +199,7 @@ const DomainOffersCheckoutPage = () => {
                     </CardActions>
                 }
             </Card>
-            {!!corder && corder.isProcessing && <TransactionInProgressPanel text='Listing the domain!' progMsg='The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished.' />}
+            {!!isProcessing && <TransactionInProgressPanel text='Listing the domain!' progMsg='The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished.' />}
         </CheckoutPageTemplate >
     );
 };
