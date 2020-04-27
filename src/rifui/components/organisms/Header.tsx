@@ -1,6 +1,3 @@
-import React, { useState } from 'react';
-import { NavLink, NavLinkProps } from 'react-router-dom';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
@@ -9,10 +6,13 @@ import IconButton from '@material-ui/core/IconButton';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import MenuIcon from '@material-ui/icons/Menu';
-import { Link, List, LogoNavbar, AppBar as RUIAppBar, Typography } from 'rifui';
+import React, { useState } from 'react';
+import { NavLink, NavLinkProps } from 'react-router-dom';
+import { AppBar as RUIAppBar, Link, List, LogoNavbar } from 'rifui';
 import { colors, fonts } from 'rifui/theme';
 
 export interface HeaderProps {
