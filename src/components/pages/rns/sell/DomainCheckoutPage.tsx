@@ -132,20 +132,28 @@ const DomainsCheckoutPage = () => {
       const myBalance = await rnsContract.balanceOf(account)
       console.log('my balance:', myBalance)
 
-      const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId)
-      console.log('approveReciept:', approveReceipt);
+      try {
+        const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId)
+        console.log('approveReciept:', approveReceipt);
 
-      const receipt = await marketPlaceContract.place(tokenId, rifTokenAddress, web3.utils.toWei(price))
-      console.log('place receipt:', receipt);
+        const receipt = await marketPlaceContract.place(tokenId, rifTokenAddress, web3.utils.toWei(price))
+        console.log('place receipt:', receipt);
 
-      dispatch({
-        type: MARKET_ACTIONS.SELECT_ITEM,
-        payload: {
-          ...currentOrder,
-          isProcessing: false,
-        }
-      })
-      history.replace(ROUTES.DOMAINS.DONE.SELL)
+        dispatch({
+          type: MARKET_ACTIONS.SELECT_ITEM,
+          payload: {
+            ...currentOrder,
+            isProcessing: false,
+          }
+        })
+        history.replace(ROUTES.DOMAINS.DONE.SELL)
+      } catch (e) {
+        history.replace(ROUTES.DOMAINS.SELL)
+        dispatch({
+          type: MARKET_ACTIONS.SELECT_ITEM,
+          payload: undefined,
+        })
+      }
     }
   }
 
