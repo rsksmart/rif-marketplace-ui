@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { BrowserRouter, NavLink, NavLinkProps } from 'react-router-dom';
+import { NavLink, NavLinkProps } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Divider from '@material-ui/core/Divider';
@@ -120,7 +120,7 @@ const Header: FC<HeaderProps> = ({ hreflogo, items, login }) => {
   };
 
   return (
-    <BrowserRouter>
+    <React.Fragment>
       <Hidden smDown>
         <RUIAppBar hreflogo={hreflogo} items={items} login={login} />
       </Hidden>
@@ -184,7 +184,7 @@ const Header: FC<HeaderProps> = ({ hreflogo, items, login }) => {
           </Drawer>
         </div>
       </Hidden>
-    </BrowserRouter>
+    </React.Fragment>
   );
 }
 

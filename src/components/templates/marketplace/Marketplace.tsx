@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { makeStyles, Theme } from '@material-ui/core';
 import { MarketItemType } from 'models/Market';
-import { Table, TableHead, TableRow, TableCell, TableBody } from 'rifui';
-import { colors, fonts } from 'rifui/theme';
+import { Table, TableHead, TableRow, TableCell, TableBody } from '@rsksmart/rif-ui';
+import { colors, fonts } from '@rsksmart/rif-ui';
 
 export interface TableHeaders {
   [itemName: string]: string | React.ElementType

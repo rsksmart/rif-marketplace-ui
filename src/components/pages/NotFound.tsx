@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography } from 'rifui';
+import { Typography } from '@rsksmart/rif-ui';
 
 export default () =>
   <Typography>

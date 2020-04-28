@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Button } from 'rifui';
+import { Button } from '@rsksmart/rif-ui';
 import { useHistory } from 'react-router';
 
 export interface ReturnButtonProps {

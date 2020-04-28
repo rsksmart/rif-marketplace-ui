@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { withStyles } from '@material-ui/core';
-import { colors, fonts } from 'rifui/theme';
+import { colors, fonts } from '@rsksmart/rif-ui';
 
 interface StylesProps {
   classes: Record<"crypto" | "fiat", string>;

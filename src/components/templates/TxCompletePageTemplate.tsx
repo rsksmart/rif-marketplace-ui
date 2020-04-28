@@ -1,8 +1,8 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core';
-import doneImg from 'rifui/assets/images/done_img.svg';
 import React, { FC } from 'react';
+import { createStyles, makeStyles } from '@material-ui/core';
+import { doneImg } from '@rsksmart/rif-ui'
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
         body: {
             display: 'flex',

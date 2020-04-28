@@ -1,6 +1,6 @@
 import React from 'react';
-import { Accordion, FilterCheckboxCard } from 'rifui';
-import { LabeledCheckboxProps } from 'rifui/components/molecules/LabeledCheckbox';
+import { Accordion, FilterCheckboxCard } from '@rsksmart/rif-ui';
+import { LabeledCheckboxProps } from '@rsksmart/rif-ui/dist/components/molecules/LabeledCheckbox';
 
 export interface SelectFilterProps {
   className?: string;

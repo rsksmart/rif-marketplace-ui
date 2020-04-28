@@ -1,19 +1,16 @@
 import React, { FC } from 'react';
-import rifDir from 'rifui/assets/images/rifDir.png';
-import rifCom from 'rifui/assets/images/rifCom.png';
-import rifGat from 'rifui/assets/images/rifGat.png';
-import rifMar from 'rifui/assets/images/rifMar.png';
-import rifPay from 'rifui/assets/images/rifPay.png';
-import rifSto from 'rifui/assets/images/rifSto.png';
+import {
+  rifDirImg, rifComImg, rifGatImg, rifMarImg, rifPayImg, rifStoImg
+} from '@rsksmart/rif-ui'
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
 export const Icons = {
-  DOMAINS: rifDir,
-  COMMUNICATIONS: rifCom,
-  GATEWAY: rifGat,
-  MARKETPLACE: rifMar,
-  PAYMENTS: rifPay,
-  STORAGE: rifSto,
+  DOMAINS: rifDirImg,
+  COMMUNICATIONS: rifComImg,
+  GATEWAY: rifGatImg,
+  MARKETPLACE: rifMarImg,
+  PAYMENTS: rifPayImg,
+  STORAGE: rifStoImg,
 };
 
 export interface IconProps {

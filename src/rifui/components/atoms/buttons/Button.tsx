@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Button as MUIButton, ButtonProps as MUIButtonProps } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
-export interface IButtonProps extends MUIButtonProps {
+export interface ButtonProps extends MUIButtonProps {
   block?: boolean;
   shadow?: boolean;
   rounded?: boolean;
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Button: FC<IButtonProps> = ({ className = '', block, shadow, rounded, children, ...rest }) => {
+const Button: FC<ButtonProps> = ({ className = '', block, shadow, rounded, children, ...rest }) => {
   const classes = useStyles();
 
   return (

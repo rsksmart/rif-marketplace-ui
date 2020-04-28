@@ -1,7 +1,7 @@
 import React, { FC, HTMLAttributes } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { ROUTES } from 'routes';
-import { Typography } from 'rifui';
+import { Typography } from '@rsksmart/rif-ui';
 import IconedItem, { IconedItemProps } from 'components/molecules/IconedItem';
 import { Icons } from 'components/atoms/Icon';
 

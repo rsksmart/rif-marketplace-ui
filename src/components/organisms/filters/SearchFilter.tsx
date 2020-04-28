@@ -3,9 +3,9 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import {
   InputAdornment,
   TextField
-} from 'rifui';
-import { Search } from 'rifui/icons'
-import { colors } from 'rifui/theme';
+} from '@rsksmart/rif-ui';
+import Search from '@material-ui/icons/Search';
+import { colors } from '@rsksmart/rif-ui';
 
 export interface SearchFilterProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void

@@ -1,11 +1,11 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import React, { FC, useContext } from 'react';
 import { useHistory } from 'react-router';
-import { Grid, SwitchTabs, Typography } from 'rifui';
+import { Grid, SwitchTabs, Typography } from '@rsksmart/rif-ui';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';
-import { colors } from 'rifui/theme';
+import { colors } from '@rsksmart/rif-ui';
 
 export interface MarketFilterProps { }
 

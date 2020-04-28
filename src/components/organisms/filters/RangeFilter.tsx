@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
-import { Accordion, RangeSliderWithInputs } from 'rifui';
-import { RangeSliderWithInputsProps } from 'rifui/components/molecules/RangeSliderWithInputs';
+import { Accordion, RangeSliderWithInputs } from '@rsksmart/rif-ui';
+import { RangeSliderWithInputsProps } from '@rsksmart/rif-ui/dist/components/molecules/RangeSliderWithInputs';
 
 export interface RangeFilterProps extends RangeSliderWithInputsProps {
   className?: string
