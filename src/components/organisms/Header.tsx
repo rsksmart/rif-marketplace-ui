@@ -1,26 +1,13 @@
-import React from 'react';
-import { ROUTES } from 'routes';
-import Web3Provider from 'rifui/providers/Web3Provider';
-import { Account, Header as RUIHeader } from 'rifui';
-import { HeaderItemProps } from 'rifui/components/organisms/Header';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import DataUsageIcon from '@material-ui/icons/DataUsage';
 import ForumIcon from '@material-ui/icons/Forum';
 import PeopleIcon from '@material-ui/icons/People';
 import StorageIcon from '@material-ui/icons/Storage';
-
-const Login = () => (
-  <Web3Provider.Consumer>
-    {({ state: { web3, networkName, account }, actions: { setProvider } }) => (
-      <Account
-        web3={web3}
-        networkName={networkName}
-        account={account}
-        setProvider={setProvider}
-      />
-    )}
-  </Web3Provider.Consumer>
-);
+import Login from 'components/atoms/Login';
+import React from 'react';
+import { Header as RUIHeader } from 'rifui';
+import { HeaderItemProps } from 'rifui/components/organisms/Header';
+import { ROUTES } from 'routes';
 
 const Header = () => {
   const headerItems: HeaderItemProps[] = [

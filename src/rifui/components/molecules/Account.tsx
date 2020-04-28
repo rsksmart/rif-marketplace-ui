@@ -1,10 +1,10 @@
-import React, { FC, useState } from 'react';
-import { EProvider } from 'rifui/services/Web3Service';
-import { shortenAddress } from 'rifui/utils'
-import Web3 from 'web3';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import React, { FC, useState } from 'react';
 import { Button, LoginOption, Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle, Typography } from 'rifui';
+import { EProvider } from 'rifui/services/Web3Service';
 import { colors, fonts } from 'rifui/theme';
+import { shortenAddress } from 'rifui/utils';
+import Web3 from 'web3';
 
 export interface AccountProps {
   web3: Web3 | null;
@@ -20,18 +20,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
   },
   root: {
-    alignItems: 'center',
     border: '1px solid white',
     borderRadius: 50,
     color: colors.gray1,
-    cursor: 'pointer',
-    display: 'flex',
-    flexWrap: 'nowrap',
-    fontSize: fonts.size.small,
-    height: '100%',
-    justifyContent: 'center',
     padding: theme.spacing(1),
-    width: '100%',
   },
 }));
 
@@ -41,6 +33,7 @@ const Account: FC<AccountProps> = ({
   account,
   setProvider,
   providers,
+  ...props
 }) => {
   const classes = useStyles();
 
@@ -50,21 +43,23 @@ const Account: FC<AccountProps> = ({
 
   return (
     <>
-      <div
+      <Button
         onClick={handleOpen}
         className={classes.root}
+        {...props}
       >
         <Typography className={classes.accountText}>
           {!web3 && 'Connect wallet'}
           {web3 && networkName}
           {web3 && account && shortenAddress(account)}
         </Typography>
-      </div>
+      </Button>
 
       <Modal
         open={open} onClose={handleClose}
         aria-labelledby="account-modal-title"
-        aria-describedby="account-modal-description">
+        aria-describedby="account-modal-description"
+      >
         <>
           <ModalHeader>
             <ModalTitle>

@@ -2,6 +2,7 @@ import { CardActions, createStyles, makeStyles, Theme } from '@material-ui/core'
 import ERC677 from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC677.json';
 import ERC721 from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC721.json';
 import ERC721SimplePlacements from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC721SimplePlacements.json';
+import Login from 'components/atoms/Login';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate';
@@ -73,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         detailValue: {
             border: 'none',
-        }
+        },
     }),
 );
 
@@ -194,13 +195,14 @@ const DomainOffersCheckoutPage = () => {
                         </TableBody>
                     </Table>
                 </CardContent>
-                {!isProcessing &&
+                {!isProcessing && account &&
                     <CardActions className={classes.footer}>
                         <p >Your wallet will open and you will be asked to confirm the transaction for buying the domain.</p>
                         <Button color='primary' variant='contained'
                             rounded shadow onClick={handleBuyDomain}>Buy domain</Button>
                     </CardActions>
                 }
+                {!account && <Login color='primary' variant='contained' rounded shadow />}
             </Card>
             {!!isProcessing && <TransactionInProgressPanel text='Listing the domain!' progMsg='The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished.' />}
         </CheckoutPageTemplate >
