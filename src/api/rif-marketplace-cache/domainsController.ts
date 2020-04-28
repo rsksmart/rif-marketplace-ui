@@ -55,6 +55,7 @@ export const createOffersService = () => {
 
 export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
     const filtersCopy = {
+        ...filters,
         price: {
             ...filters.price
         },

@@ -8,7 +8,10 @@ export interface DomainOffersFilter extends MarketFilter {
     },
     sellerDomain?: { //FIXME: change to domain: { name }
         $like: string
-    }
+    },
+    sellerAddress?: {
+        $ne: string
+    },
 }
 export interface DomainFilter extends MarketFilter {
 }
