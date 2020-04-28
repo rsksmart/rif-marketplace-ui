@@ -1,6 +1,7 @@
 import { DomainOffersFilter } from "api/models/RnsFilter";
 import { Domain, DomainOffer } from "models/marketItems/DomainItem";
 import { createService, fetchMarketData } from "./cacheController";
+import Web3 from "web3";
 
 export const DOMAINS_SERVICE_PATHS = {
     'BUY': () => 'rns/v0/offers',
@@ -8,36 +9,39 @@ export const DOMAINS_SERVICE_PATHS = {
 }
 
 export interface OfferTransferItem {
-    creationDate?: number,
-    expirationDate: number,
-    newOwnerAddress?: string,
+    creationDate?: string,
     offerId: string,
     paymentToken: string,
-    price: number,
+    price: string,
     sellerAddress: string,
     sellerDomain: string,
-    soldDate?: number,
     tokenId: string,
-
+    status: string,
+    domain: DomainTransferItem,
 }
 
 export interface DomainTransferItem {
-    expirationDate: number,
+    expirationDate: string,
     ownerAddress: string,
     name: string,
     tokenId: string,
 }
 
+// TODO: prasarna refactor DomainOffer, Domain dates
 const mappings = {
     offers: (item: OfferTransferItem): DomainOffer => ({
+        ...item,
+        price: parseInt(item.price) / 10 ** 18,
         priceFiat: 0.5,
+        expirationDate: parseInt(item.domain.expirationDate),
         _id: item.offerId,
-        domainName: item.sellerDomain,
-        ...item
+        domainName: item.domain.name,
+        paymentToken: 'RIF'
     }),
     domains: (item: DomainTransferItem): Domain => ({
+        ...item,
         _id: item.tokenId,
-        ...item
+        expirationDate: parseInt(item.expirationDate)
     })
 }
 
@@ -50,13 +54,24 @@ export const createOffersService = () => {
 }
 
 export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
-    const filtersCopy = { ...filters }
-    if (filters.sellerDomain && filters.sellerDomain.$like) {
-        const sellerDomain = {
-            $like: `%${filters.sellerDomain.$like}%`
-        }
-        filtersCopy.sellerDomain = sellerDomain;
+    const filtersCopy = {
+        price: {
+            ...filters.price
+        },
+        // domain: {
+        //     name: {
+        //     }
+        // }
     }
+    // TODO: make price non-optional?
+    if (filters.price?.$gte)
+        filtersCopy.price['$gte'] *= 10 ** 18;
+    if (filters.price?.$lte) {
+        filtersCopy.price["$lte"] *= 10 ** 18;
+    }
+    // if (filters.sellerDomain?.$like) {
+    //     filtersCopy.domain.name.$like = `%${filters.sellerDomain.$like}%`;
+    // }
     const results = await fetchMarketData(filtersCopy);
     return results.map(mappings.offers);
 };

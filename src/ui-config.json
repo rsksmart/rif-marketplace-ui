@@ -1,0 +1,8 @@
+{
+    "ganache": {
+        "rif": "0x67B5656d60a809915323Bf2C40A8bEF15A152e3e",
+        "rnsDotRskOwner": "0x4bf749ec68270027C5910220CEAB30Cc284c7BA2",
+        "rnsReverseRegistrar": "0xe982E462b094850F12AF94d21D470e21bE9D0E9C",
+        "marketplace": "0x22d5C8BdD4346b390014a07109a8F830094d4abf"
+    }
+}

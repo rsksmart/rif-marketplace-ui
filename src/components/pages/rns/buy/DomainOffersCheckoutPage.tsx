@@ -15,6 +15,7 @@ import { shortenAddress } from 'rifui/utils';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore from 'store/Market/MarketStore';
+import contractAdds from 'ui-config.json';
 
 const contract = require("@truffle/contract");
 
@@ -25,6 +26,11 @@ function ContractWrapper(artifact, web3, from) {
     c.setNetwork(web3.eth.net.getId());
     return c;
 }
+
+
+const rifTokenAddress = contractAdds.ganache.rif;
+const rnsAddress = contractAdds.ganache.rnsDotRskOwner;
+const marketPlaceAddress = contractAdds.ganache.marketplace;
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -121,9 +127,6 @@ const DomainOffersCheckoutPage = () => {
     const handleBuyDomain = async () => {
         if (web3 && account) {
             const tokenId = web3.utils.sha3(domainName.replace('.rsk', ''));
-            const rifTokenAddress = process.env.REACT_APP_RIF_TOKEN_ADDR;
-            const rnsAddress = process.env.REACT_APP_RSKOWNER_ADDR;
-            const marketPlaceAddress = process.env.REACT_APP_SIMPLEPLACEMENTS_ADDR;
             const Contract = c => ContractWrapper(c, web3, account);
 
             dispatch({
