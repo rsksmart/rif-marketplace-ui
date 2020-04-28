@@ -2,7 +2,7 @@ import React, { FC, useContext } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import ReturnButton, { ReturnButtonProps } from 'components/molecules/ReturnButton';
 import MarketStore from 'store/Market/MarketStore';
-import { Grid } from 'rifui';
+import { Grid } from '@rsksmart/rif-ui';
 
 export interface CheckoutPageTemplateProps {
   className?: string

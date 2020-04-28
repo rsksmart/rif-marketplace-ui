@@ -1,6 +1,6 @@
 import React, { FC, useContext, useEffect } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
-import { Button } from 'rifui';
+import { Button } from '@rsksmart/rif-ui';
 import JobDoneBox from 'components/molecules/JobDoneBox';
 import TxCompletePageTemplate from 'components/templates/TxCompletePageTemplate';
 import { useHistory } from 'react-router';

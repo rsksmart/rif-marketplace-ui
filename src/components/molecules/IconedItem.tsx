@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import Icon, { IconProps } from 'components/atoms/Icon';
-import { Button } from 'rifui';
+import { Button } from '@rsksmart/rif-ui';
 import { NavLink } from 'react-router-dom';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 

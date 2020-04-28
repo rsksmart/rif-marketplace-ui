@@ -1,13 +1,14 @@
+import React from 'react';
+import { ROUTES } from 'routes';
+import { Account, Header as RUIHeader } from '@rsksmart/rif-ui';
+// TODO: remove the dist path once it's ready in the library
+import { HeaderItemProps } from '@rsksmart/rif-ui/dist/components/organisms/Header';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import DataUsageIcon from '@material-ui/icons/DataUsage';
 import ForumIcon from '@material-ui/icons/Forum';
 import PeopleIcon from '@material-ui/icons/People';
 import StorageIcon from '@material-ui/icons/Storage';
 import Login from 'components/atoms/Login';
-import React from 'react';
-import { Header as RUIHeader } from 'rifui';
-import { HeaderItemProps } from 'rifui/components/organisms/Header';
-import { ROUTES } from 'routes';
 
 const Header = () => {
   const headerItems: HeaderItemProps[] = [

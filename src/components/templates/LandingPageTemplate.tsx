@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import ServiceCategories from 'components/organisms/ServiceCategories';
 import PageTemplate from './PageTemplate';
-import { Typography } from 'rifui';
+import { Typography } from '@rsksmart/rif-ui';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
 export interface LandingPageTemplateProps { }

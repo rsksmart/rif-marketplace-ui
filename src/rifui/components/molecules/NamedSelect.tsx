@@ -1,6 +1,6 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import React, { FC } from 'react';
-import { FormControl, InputLabel, Select } from 'rifui';
+import { FormControl, InputLabel, Select } from '@rsksmart/rif-ui';
 
 export interface NamedSelectProps {
     label: string;

@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Button } from 'rifui';
+import { Button } from '@rsksmart/rif-ui';
 
 export interface SelectRowButtonProps {
   className?: string

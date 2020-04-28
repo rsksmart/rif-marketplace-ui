@@ -2,9 +2,9 @@ import React, { FC, useContext } from 'react';
 import MarketFilter from 'components/templates/marketplace/MarketFilter';
 import Marketplace, { TableHeaders } from 'components/templates/marketplace/Marketplace';
 import { MarketItemType } from 'models/Market';
-import { Grid } from 'rifui';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Web3Store } from 'rifui/providers/Web3Provider';
+import { Grid } from '@rsksmart/rif-ui';
+import { Web3Store } from '@rsksmart/rif-ui';
 
 export interface MarketPageTemplateProps {
   className: string;

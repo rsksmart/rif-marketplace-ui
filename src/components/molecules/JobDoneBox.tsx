@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
-import tickWide from 'rifui/assets/images/tickWide.svg';
-import { colors } from 'rifui/theme';
+import { colors, tickWideImg } from '@rsksmart/rif-ui';
 
 export interface JobDoneBoxProps {
     text: string,
@@ -30,7 +29,7 @@ const JobDoneBox: FC<JobDoneBoxProps> = ({ text }) => {
 
     return (
         <div className={classes.body}>
-            <img src={tickWide} alt='done' />
+            <img src={tickWideImg} alt='done' />
             <p>{text}</p>
         </div>
     );

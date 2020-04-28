@@ -5,7 +5,7 @@ import MarketPageTemplate from 'components/templates/MarketPageTemplate';
 import { MarketListingTypes } from 'models/Market';
 import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router';
-import { Web3Store } from 'rifui/providers/Web3Provider';
+import { Web3Store } from '@rsksmart/rif-ui';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';
