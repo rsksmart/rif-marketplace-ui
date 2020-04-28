@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Button as MUIButton, ButtonProps as MUIButtonProps } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
-interface IButtonProps extends MUIButtonProps {
+export interface IButtonProps extends MUIButtonProps {
   block?: boolean;
   shadow?: boolean;
   rounded?: boolean;
@@ -26,9 +26,9 @@ const Button: FC<IButtonProps> = ({ className = '', block, shadow, rounded, chil
   return (
     <MUIButton
       className={
-        `${{ [classes.rounded]: rounded }}
-        ${{ [classes.noShadow]: shadow }}
-        ${{ [classes.block]: block }} ${className}`
+        `${rounded ? classes.rounded : ''}
+        ${shadow ? '' : classes.noShadow}
+        ${block ? classes.block : ''} ${className}`.trim()
       }
       {...rest}>
       {children}
