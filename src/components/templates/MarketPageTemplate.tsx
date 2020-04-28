@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('md')]: {
       marginTop: theme.spacing(3)
     }
+  },
+  filtersContainer: {
+    width: '100%',
   }
 }));
 
@@ -45,7 +48,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
       {accountRequired && !account && <p>Please sign in to your wallet</p>}
       {(!accountRequired || account) &&
         <>
-          <Grid item sm={12} md={3}>
+          <Grid className={classes.filtersContainer} item sm={12} md={3}>
             <MarketFilter>{filterItems}</MarketFilter>
           </Grid>
           <Grid className={classes.resultsContainer} item sm={12} md={9}>
