@@ -9,6 +9,7 @@ import { useHistory } from 'react-router';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';
+import { Web3Store } from 'rifui/providers/Web3Provider';
 
 const LISTING_TYPE = MarketListingTypes.DOMAIN_OFFERS;
 const TX_TYPE = TxType.BUY;
@@ -24,6 +25,11 @@ const DomainOffersPage = () => {
     dispatch,
   } = useContext(MarketStore);
   const history = useHistory()
+  const {
+    state: {
+      account
+    }
+  } = useContext(Web3Store);
 
   const servicePath = currentListing?.servicePath;
 
@@ -52,6 +58,22 @@ const DomainOffersPage = () => {
       })
     }
   }, [servicePath, dispatch])
+
+  // Add account to filters
+  useEffect(() => {
+    if (account) {
+      dispatch({
+        type: MARKET_ACTIONS.SET_FILTER,
+        payload: {
+          filterItems: {
+            sellerAddress: {
+              $ne: account.toLocaleLowerCase()
+            },
+          }
+        }
+      })
+    }
+  }, [account])
 
   useEffect(() => {
     if (servicePath && servicePath === DOMAINS_SERVICE_PATHS.BUY())
