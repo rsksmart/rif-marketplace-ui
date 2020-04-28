@@ -11,6 +11,7 @@ export interface MarketPageTemplateProps {
   filterItems: React.ReactNode;
   headers: TableHeaders;
   itemCollection: MarketItemType[];
+  accountRequired?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -32,6 +33,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   filterItems,
   itemCollection,
   headers,
+  accountRequired,
 }) => {
   const {
     state: { account },
@@ -40,8 +42,8 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
 
   return (
     <Grid container direction='row' className={`${classes.root} ${className}`}>
-      {!account && <p>Please sign in to your wallet</p>}
-      {account &&
+      {accountRequired && !account && <p>Please sign in to your wallet</p>}
+      {(!accountRequired || account) &&
         <>
           <Grid item sm={12} md={3}>
             <MarketFilter>{filterItems}</MarketFilter>
@@ -51,7 +53,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
           </Grid>
         </>
       }
-    </Grid>
+    </Grid >
   );
 };
 

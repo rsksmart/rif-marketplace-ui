@@ -104,6 +104,7 @@ const MyDomainsPage = () => {
       filterItems={<DomainFilters />}
       itemCollection={collection}
       headers={headers}
+      accountRequired
     />
   );
 };
