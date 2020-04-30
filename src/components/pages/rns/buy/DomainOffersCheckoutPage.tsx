@@ -7,10 +7,7 @@ import TransactionInProgressPanel from 'components/organisms/TransactionInProgre
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate';
 import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Web3Store } from '@rsksmart/rif-ui';
-import { Button, Card, CardContent, CardHeader, Table, TableBody, TableCell, TableRow, Typography } from '@rsksmart/rif-ui';
-import { shortenAddress } from '@rsksmart/rif-ui';
-import { colors } from '@rsksmart/rif-ui';
+import { Button, Card, CardContent, CardHeader, colors, shortenAddress, Table, TableBody, TableCell, TableRow, Typography, Web3Store } from '@rsksmart/rif-ui';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore from 'store/Market/MarketStore';

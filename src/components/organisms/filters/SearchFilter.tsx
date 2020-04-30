@@ -1,11 +1,11 @@
 import React, { FC, useState } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import {
+  colors,
   InputAdornment,
   TextField
 } from '@rsksmart/rif-ui';
 import Search from '@material-ui/icons/Search';
-import { colors } from '@rsksmart/rif-ui';
 
 export interface SearchFilterProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
