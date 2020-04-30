@@ -2,12 +2,14 @@ import { MarketFilter } from 'models/Market';
 
 
 export interface DomainOffersFilter extends MarketFilter {
-    price?: {
+    price: {
         $lte: number,
         $gte: number
     },
-    sellerDomain?: { //FIXME: change to domain: { name }
-        $like: string
+    domain?: {
+        name: {
+            $like: string
+        }
     },
     sellerAddress?: {
         $ne: string

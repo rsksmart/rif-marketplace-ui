@@ -54,26 +54,22 @@ export const createOffersService = () => {
 }
 
 export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
-    const filtersCopy = {
+    const { price, domain } = filters;
+    const cacheFilters = {
         ...filters,
         price: {
-            ...filters.price
+            $gte: price.$gte * (10 ** 18),
+            $lte: price.$lte * (10 ** 18),
         },
-        // domain: {
+        // Commented out as the Cache project does not currently support associated querying
+        // domain: domain && {
+        //     ...filters.domain,
         //     name: {
+        //         $like: `%${domain.name.$like}%`
         //     }
         // }
     }
-    // TODO: make price non-optional?
-    if (filters.price?.$gte)
-        filtersCopy.price['$gte'] *= 10 ** 18;
-    if (filters.price?.$lte) {
-        filtersCopy.price["$lte"] *= 10 ** 18;
-    }
-    // if (filters.sellerDomain?.$like) {
-    //     filtersCopy.domain.name.$like = `%${filters.sellerDomain.$like}%`;
-    // }
-    const results = await fetchMarketData(filtersCopy);
+    const results = await fetchMarketData(cacheFilters);
     return results.map(mappings.offers);
 };
 export const fetchDomains = async (filters?) => {
