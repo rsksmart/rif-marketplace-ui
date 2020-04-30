@@ -18,16 +18,7 @@ import ERC721SimplePlacements from '@rsksmart/rif-marketplace-nfts/build/contrac
 import ERC677 from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC677.json';
 import ERC721 from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC721.json';
 import { colors } from 'rifui/theme';
-const contract = require("@truffle/contract");
-
-function ContractWrapper(artifact, web3, from) {
-    const c = contract(artifact);
-    c.setProvider(web3.currentProvider);
-    c.defaults({ from });
-    c.setNetwork(web3.eth.net.getId());
-    return c;
-}
-
+import { ContractWrapper } from 'utils/blockchain.utils';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
