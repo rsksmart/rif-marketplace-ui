@@ -17,10 +17,13 @@ import MarketStore from 'store/Market/MarketStore';
 import { ContractWrapper } from 'utils/blockchain.utils';
 import Web3 from 'web3';
 import contractAdds from 'ui-config.json';
+import Logger from 'utils/Logger';
+const logger = Logger.getInstance();
 
-const rifTokenAddress = contractAdds.ganache.rif;
-const rnsAddress = contractAdds.ganache.rnsDotRskOwner;
-const marketPlaceAddress = contractAdds.ganache.marketplace;
+const NETWORK: string = process.env.REACT_APP_NETWORK || 'ganache';
+const rifTokenAddress = contractAdds[NETWORK].rif;
+const rnsAddress = contractAdds[NETWORK].rnsDotRskOwner;
+const marketPlaceAddress = contractAdds[NETWORK].marketplace;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -124,9 +127,13 @@ const DomainsCheckoutPage = () => {
       })
       const marketPlaceContract = await Contract(ERC721SimplePlacements).at(marketPlaceAddress)
       const rnsContract = await Contract(ERC721).at(rnsAddress)
+
       try {
         const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId)
+        logger.info('approveReciept:', approveReceipt);
+
         const receipt = await marketPlaceContract.place(tokenId, rifTokenAddress, web3.utils.toWei(price))
+        logger.info('place receipt:', receipt);
 
         dispatch({
           type: MARKET_ACTIONS.SELECT_ITEM,

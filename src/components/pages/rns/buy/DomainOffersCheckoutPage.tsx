@@ -1,6 +1,5 @@
 import { CardActions, createStyles, makeStyles, Theme } from '@material-ui/core';
 import ERC677 from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC677.json';
-import ERC721 from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC721.json';
 import ERC721SimplePlacements from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC721SimplePlacements.json';
 import Login from 'components/atoms/Login';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
@@ -17,21 +16,13 @@ import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore from 'store/Market/MarketStore';
 import contractAdds from 'ui-config.json';
+import { ContractWrapper } from 'utils/blockchain.utils';
+import Logger from 'utils/Logger';
+const logger = Logger.getInstance();
 
-const contract = require("@truffle/contract");
-
-function ContractWrapper(artifact, web3, from) {
-    const c = contract(artifact);
-    c.setProvider(web3.currentProvider);
-    c.defaults({ from });
-    c.setNetwork(web3.eth.net.getId());
-    return c;
-}
-
-
-const rifTokenAddress = contractAdds.ganache.rif;
-const rnsAddress = contractAdds.ganache.rnsDotRskOwner;
-const marketPlaceAddress = contractAdds.ganache.marketplace;
+const NETWORK: string = process.env.REACT_APP_NETWORK || 'ganache';
+const rifTokenAddress = contractAdds[NETWORK].rif;
+const marketPlaceAddress = contractAdds[NETWORK].marketplace;
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -140,24 +131,12 @@ const DomainOffersCheckoutPage = () => {
 
             const marketPlaceContract = await Contract(ERC721SimplePlacements).at(marketPlaceAddress)
             const rifContract = await Contract(ERC677).at(rifTokenAddress)
-            const rnsContract = await Contract(ERC721).at(rnsAddress)
-
-            const owner = await rnsContract.ownerOf(tokenId)
-            console.log(`ownerOf${domainName}:${owner}`)
-
-            const myBalance = await rnsContract.balanceOf(account)
-            console.log('my balance:', myBalance)
 
             const tokenPlacement = await marketPlaceContract.placement(tokenId);
-            const tokenAddress = tokenPlacement[0]
             const price = tokenPlacement[1]
-            console.log('token price:', price);
-            // console.log(`I ${balanceOfAccount >= price ? 'do' : "don't"}have enough $$`)
-
-            console.log('Token is RIF:', tokenAddress === rifTokenAddress)
 
             const transferReceipt = await rifContract.transferAndCall(marketPlaceAddress, price, tokenId)
-            console.log('transferReceipt:', transferReceipt)
+            logger.info('transferReceipt:', transferReceipt)
         };
         dispatch({
             type: MARKET_ACTIONS.SELECT_ITEM,
