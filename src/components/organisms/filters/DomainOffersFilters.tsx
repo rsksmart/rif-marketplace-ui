@@ -9,14 +9,14 @@ const DomainOfferFilters = () => {
         state: {
             filters: {
                 domainOffers: {
-                    sellerDomain: nameFilter,
+                    domain,
                     price: priceFilter
                 },
             },
         },
         dispatch,
     } = useContext(MarketStore);
-
+    const nameFilter = domain?.name;
     const searchValue = (nameFilter && nameFilter.$like) || '';
     const minPrice = priceFilter && priceFilter.$gte;
     const maxPrice = priceFilter && priceFilter.$lte;
@@ -27,12 +27,14 @@ const DomainOfferFilters = () => {
             onChange={(evt) => {
                 const { currentTarget } = evt;
                 const value = currentTarget.value.trim();
-                const sellerDomain = value ? { $like: value } : undefined;
+                const domainName = value ? { $like: value } : undefined;
                 dispatch({
                     type: MARKET_ACTIONS.SET_FILTER,
                     payload: {
                         filterItems: {
-                            sellerDomain,
+                            domain: {
+                                name: domainName
+                            },
                         }
                     }
                 })
