@@ -73,7 +73,7 @@ const DomainOffersPage = () => {
         }
       })
     }
-  }, [account])
+  }, [account, dispatch])
 
   useEffect(() => {
     if (servicePath && servicePath === DOMAINS_SERVICE_PATHS.BUY())

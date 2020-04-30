@@ -1,7 +1,6 @@
 import { DomainOffersFilter } from "api/models/RnsFilter";
 import { Domain, DomainOffer } from "models/marketItems/DomainItem";
 import { createService, fetchMarketData } from "./cacheController";
-import Web3 from "web3";
 
 export const DOMAINS_SERVICE_PATHS = {
     'BUY': () => 'rns/v0/offers',
@@ -54,7 +53,7 @@ export const createOffersService = () => {
 }
 
 export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
-    const { price, domain } = filters;
+    const { price } = filters;
     const cacheFilters = {
         ...filters,
         price: {
