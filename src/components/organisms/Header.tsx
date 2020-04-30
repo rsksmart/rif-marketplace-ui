@@ -1,6 +1,6 @@
 import React from 'react';
 import { ROUTES } from 'routes';
-import { Account, Header as RUIHeader } from '@rsksmart/rif-ui';
+import { Header as RUIHeader } from '@rsksmart/rif-ui';
 // TODO: remove the dist path once it's ready in the library
 import { HeaderItemProps } from '@rsksmart/rif-ui/dist/components/organisms/Header';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';

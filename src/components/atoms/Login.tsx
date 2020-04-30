@@ -1,9 +1,9 @@
 import React from 'react';
-import { Account } from 'rifui';
-import { IButtonProps } from 'rifui/components/atoms/buttons/Button';
+import { Account } from '@rsksmart/rif-ui';
+import { ButtonProps } from '@rsksmart/rif-ui/dist/components/atoms/buttons/Button';
 import Web3Provider from 'rifui/providers/Web3Provider';
 
-const Login = (props: IButtonProps) => (
+const Login = (props: ButtonProps) => (
     <Web3Provider.Consumer>
         {({ state: { web3, networkName, account }, actions: { setProvider } }) => (
             <Account
