@@ -113,7 +113,7 @@ const DomainsCheckoutPage = () => {
       const rifTokenAddress = process.env.REACT_APP_RIF_TOKEN_ADDR;
       const rnsAddress = process.env.REACT_APP_RSKOWNER_ADDR;
       const marketPlaceAddress = process.env.REACT_APP_SIMPLEPLACEMENTS_ADDR;
-
+      
       dispatch({
         type: MARKET_ACTIONS.SELECT_ITEM,
         payload: {
@@ -121,23 +121,11 @@ const DomainsCheckoutPage = () => {
           isProcessing: true,
         }
       })
-
       const marketPlaceContract = await Contract(ERC721SimplePlacements).at(marketPlaceAddress)
-
       const rnsContract = await Contract(ERC721).at(rnsAddress)
-
-      const owner = await rnsContract.ownerOf(tokenId)
-      console.log(`ownerOf${name}:${owner}`)
-
-      const myBalance = await rnsContract.balanceOf(account)
-      console.log('my balance:', myBalance)
-
       try {
         const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId)
-        console.log('approveReciept:', approveReceipt);
-
         const receipt = await marketPlaceContract.place(tokenId, rifTokenAddress, web3.utils.toWei(price))
-        console.log('place receipt:', receipt);
 
         dispatch({
           type: MARKET_ACTIONS.SELECT_ITEM,
@@ -217,10 +205,8 @@ const DomainsCheckoutPage = () => {
                         id="currency-select"
                         value={currency}
                         onChange={({ target: { value } }) => {
-                          console.log('set currency event:', value);
                           setCurrency(value as string);
-                        }
-                        }
+                        }}
                       >
                         {currenyOptions.map((currency, i) => <MenuItem key={currency} value={i}>{currency}</MenuItem>)}
                       </Select>
