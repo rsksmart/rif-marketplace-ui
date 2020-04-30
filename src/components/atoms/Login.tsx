@@ -1,7 +1,6 @@
 import React from 'react';
-import { Account } from '@rsksmart/rif-ui';
+import { Account, Web3Provider } from '@rsksmart/rif-ui';
 import { ButtonProps } from '@rsksmart/rif-ui/dist/components/atoms/buttons/Button';
-import Web3Provider from 'rifui/providers/Web3Provider';
 
 const Login = (props: ButtonProps) => (
     <Web3Provider.Consumer>

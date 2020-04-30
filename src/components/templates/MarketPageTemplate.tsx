@@ -3,8 +3,7 @@ import MarketFilter from 'components/templates/marketplace/MarketFilter';
 import Marketplace, { TableHeaders } from 'components/templates/marketplace/Marketplace';
 import { MarketItemType } from 'models/Market';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Grid } from '@rsksmart/rif-ui';
-import { Web3Store } from '@rsksmart/rif-ui';
+import { Grid, Web3Store } from '@rsksmart/rif-ui';
 
 export interface MarketPageTemplateProps {
   className: string;

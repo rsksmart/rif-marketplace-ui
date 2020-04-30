@@ -1,8 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
-import { theme } from '@rsksmart/rif-ui';
-import { Web3Provider } from '@rsksmart/rif-ui';
+import { theme, Web3Provider } from '@rsksmart/rif-ui';
 import { AppStoreProvider } from 'store/App/AppStore';
 import { MarketStoreProvider } from 'store/Market/MarketStore';
 import Footer from 'components/organisms/Footer';
