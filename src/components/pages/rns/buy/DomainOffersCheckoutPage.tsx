@@ -108,7 +108,7 @@ const DomainOffersCheckoutPage = () => {
     const details = {
         'NAME': domainName,
         'SELLER': shortSeller,
-        'RENEWAL DATE': (new Date(expirationDate)).toDateString(),
+        'RENEWAL DATE': expirationDate.toLocaleDateString(),
         'PRICE': PriceCell
     }
 

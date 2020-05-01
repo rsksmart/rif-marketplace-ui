@@ -184,7 +184,7 @@ const DomainsCheckoutPage = () => {
                 <TableRow>
                   <TableCell className={classes.detailKey}>RENEWAL DATE</TableCell>
                   <TableCell className={classes.detailValue}>
-                    {(new Date(expirationDate)).toDateString()}
+                    {expirationDate && expirationDate.toLocaleDateString()}
                   </TableCell>
                 </TableRow>
                 {isProcessing &&

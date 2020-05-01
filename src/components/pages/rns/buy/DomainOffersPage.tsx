@@ -92,39 +92,51 @@ const DomainOffersPage = () => {
   const headers = {
     domainName: 'Name',
     sellerAddress: 'Seller',
-    expirationDatetime: 'Renewal Date',
+    expirationDate: 'Renewal Date',
     combinedPrice: 'Price',
     actionCol_1: ''
   }
 
   const collection = currentListing?.items
     .map(domainItem => {
-      const { _id, price, priceFiat, paymentToken, expirationDate } = domainItem;
+      const {
+        _id,
+        price,
+        priceFiat,
+        domainName,
+        paymentToken,
+        sellerAddress,
+        expirationDate
+      } = domainItem;
+      const displayItem = {
+        _id,
+        domainName,
+        sellerAddress,
+        expirationDate: expirationDate.toLocaleDateString(),
+        combinedPrice: <CombinedPriceCell
+          price={price}
+          priceFiat={priceFiat}
+          currency={paymentToken}
+          currencyFiat='USD'
+          divider=' = '
+        />,
+        actionCol_1: <SelectRowButton
+          id={_id}
+          handleSelect={() => {
+            dispatch({
+              type: MARKET_ACTIONS.SELECT_ITEM,
+              payload: {
+                listingType: LISTING_TYPE,
+                item: domainItem,
+                txType: TX_TYPE
+              }
+            })
+            history.push(ROUTES.DOMAINS.CHECKOUT.BUY)
+          }}
+        />
+      }
 
-      domainItem.combinedPrice = <CombinedPriceCell
-        price={price}
-        priceFiat={priceFiat}
-        currency={paymentToken}
-        currencyFiat='USD'
-        divider=' = '
-      />
-      domainItem.actionCol_1 = <SelectRowButton
-        id={_id}
-        handleSelect={() => {
-          dispatch({
-            type: MARKET_ACTIONS.SELECT_ITEM,
-            payload: {
-              listingType: LISTING_TYPE,
-              item: domainItem,
-              txType: TX_TYPE
-            }
-          })
-          history.push(ROUTES.DOMAINS.CHECKOUT.BUY)
-        }}
-      />;
-      domainItem.expirationDatetime = (new Date(expirationDate)).toDateString()
-
-      return domainItem;
+      return displayItem;
     })
 
   return (

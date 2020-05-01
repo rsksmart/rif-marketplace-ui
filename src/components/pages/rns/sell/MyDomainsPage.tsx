@@ -71,31 +71,38 @@ const MyDomainsPage = () => {
 
   const headers = {
     name: 'Name',
-    expirationDatetime: 'Renewal Date',
+    expirationDate: 'Renewal Date',
     actionCol_1: ''
   }
 
   const collection = currentListing?.items
     .map(domainItem => {
-      const { _id, expirationDate } = domainItem;
+      const {
+        _id,
+        name,
+        expirationDate
+      } = domainItem;
+      const displayItem = {
+        _id,
+        name,
+        expirationDate: expirationDate.toLocaleDateString(),
+        actionCol_1: <SelectRowButton
+          id={_id}
+          handleSelect={() => {
+            dispatch({
+              type: MARKET_ACTIONS.SELECT_ITEM,
+              payload: {
+                listingType: LISTING_TYPE,
+                item: domainItem,
+                txType: TX_TYPE
+              }
+            })
+            history.push(ROUTES.DOMAINS.CHECKOUT.SELL)
+          }}
+        />
+      }
 
-      domainItem.actionCol_1 = <SelectRowButton
-        id={_id}
-        handleSelect={() => {
-          dispatch({
-            type: MARKET_ACTIONS.SELECT_ITEM,
-            payload: {
-              listingType: LISTING_TYPE,
-              item: domainItem,
-              txType: TX_TYPE
-            }
-          })
-          history.push(ROUTES.DOMAINS.CHECKOUT.SELL)
-        }}
-      />;
-      domainItem.expirationDatetime = (new Date(expirationDate)).toDateString()
-
-      return domainItem;
+      return displayItem;
     })
 
   return (
