@@ -26,13 +26,13 @@ export interface DomainTransferItem {
     tokenId: string,
 }
 
-// TODO: prasarna refactor DomainOffer, Domain dates
+// TODO: refactor DomainOffer, Domain dates
 const mappings = {
     offers: (item: OfferTransferItem): DomainOffer => ({
         ...item,
         price: parseInt(item.price) / 10 ** 18,
         priceFiat: 0.5,
-        expirationDate: parseInt(item.domain.expirationDate),
+        expirationDate: new Date(item.domain.expirationDate),
         _id: item.offerId,
         domainName: item.domain.name,
         paymentToken: 'RIF'
@@ -40,7 +40,7 @@ const mappings = {
     domains: (item: DomainTransferItem): Domain => ({
         ...item,
         _id: item.tokenId,
-        expirationDate: parseInt(item.expirationDate)
+        expirationDate: new Date(item.expirationDate)
     })
 }
 
@@ -80,5 +80,6 @@ export const fetchDomains = async (filters?) => {
         filtersCopy.name = name;
     }
     const results = await fetchMarketData(filtersCopy);
+
     return results.map(mappings.domains);
 }
