@@ -5,6 +5,7 @@
 \*\*Warning: This project is in alpha state.
 
 ## Install
+For environment setup please see [Rif Marketplace Dev](https://github.com/rsksmart/rif-marketplace-dev#local-development-environment-for-rif-marketplace-services) project.
 
 ## Configuration
 
