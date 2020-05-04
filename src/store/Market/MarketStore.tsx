@@ -17,14 +17,14 @@ export interface ICurrentOrder {
 
 export interface IMarketState {
   currentListing?: {
-    servicePath: string,
+    servicePath: string;
     listingType: MarketListingTypes;
     txType: TxType;
-    items: MarketItemType[],
-  }
+    items: MarketItemType[];
+  };
   filters: {
-    domains: DomainFilter,
-    domainOffers: DomainOffersFilter,
+    domains: DomainFilter;
+    domainOffers: DomainOffersFilter;
   };
   metadata: {
     domains: {
@@ -32,12 +32,24 @@ export interface IMarketState {
     };
     domainOffers: {
       lastUpdated: number;
-    }
+    };
     storage: {
       lastUpdated: number;
     };
   };
   currentOrder?: ICurrentOrder;
+  exchangeRates: {
+    currentFiat: {
+      symbol: string,
+      displayName: string,
+    };
+    crypto: {
+      rif: {
+        displayName: string;
+        rate?: number;
+      };
+    };
+  };
 }
 
 interface IMarketStoreProps {
@@ -67,6 +79,17 @@ export const initialState: IMarketState = {
     storage: {
       lastUpdated: -1,
     },
+  },
+  exchangeRates: {
+    currentFiat: {
+      symbol: 'usd',
+      displayName: 'USD',
+    },
+    crypto: {
+      rif: {
+        displayName: 'RIF',
+      }
+    }
   }
 };
 

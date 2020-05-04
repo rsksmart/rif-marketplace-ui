@@ -1,11 +1,19 @@
 import { DomainOffersFilter } from "api/models/RnsFilter";
 import { Domain, DomainOffer } from "models/marketItems/DomainItem";
 import { createService, fetchMarketData } from "./cacheController";
+import { ganache } from 'ui-config.json';
+
 
 export const DOMAINS_SERVICE_PATHS = {
     'BUY': () => 'rns/v0/offers',
     'SELL': (ownerAddress: string) => `rns/v0/${ownerAddress}/domains`,
 }
+
+const tokens = Object.keys(ganache).reduce((acc, key) => {
+    const value = ganache[key];
+    acc[value] = key;
+    return acc;
+}, {});
 
 export interface OfferTransferItem {
     creationDate?: string,
@@ -31,11 +39,10 @@ const mappings = {
     offers: (item: OfferTransferItem): DomainOffer => ({
         ...item,
         price: parseInt(item.price) / 10 ** 18,
-        priceFiat: 0.5,
         expirationDate: new Date(item.domain.expirationDate),
         _id: item.offerId,
         domainName: item.domain.name,
-        paymentToken: 'RIF'
+        paymentToken: tokens[item.paymentToken],
     }),
     domains: (item: DomainTransferItem): Domain => ({
         ...item,

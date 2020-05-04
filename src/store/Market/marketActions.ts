@@ -8,7 +8,8 @@ export enum MARKET_ACTIONS {
   SELECT_ITEM = "SELECT_ITEM",
   SET_FILTER = "SET_FILTER",
   TOGGLE_TX_TYPE = "TOGGLE_TX_TYPE",
-  CONNECT_SERVICE = "CONNECT_SERVICE"
+  CONNECT_SERVICE = "CONNECT_SERVICE",
+  SET_EXCHANGE_RATE = "SET_EXCHANGE_RATE"
 }
 
 export interface ItemPayload {
@@ -33,11 +34,18 @@ export interface ConnectionPayload {
   txType: TxType,
 }
 
+export interface ExchangeRatePayload {
+  [symbol: string]: {
+    displayName: string,
+    rate: number,
+  }
+}
+
 export interface TxTypeChangePayload {
   txType: TxType,
 }
 
-export type MarketPayload = ItemPayload & ListingPayload & FilterPayload & ConnectionPayload & TxTypeChangePayload
+export type MarketPayload = ItemPayload & ListingPayload & FilterPayload & ConnectionPayload & TxTypeChangePayload & ExchangeRatePayload
 
 export interface MarketAction extends IAction<MarketPayload> {
   type: MARKET_ACTIONS

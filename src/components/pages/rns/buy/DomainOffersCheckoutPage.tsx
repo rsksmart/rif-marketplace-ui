@@ -68,7 +68,13 @@ const useStyles = makeStyles((theme: Theme) =>
 const DomainOffersCheckoutPage = () => {
     const history = useHistory();
     const {
-        state: { currentOrder },
+        state: {
+            currentOrder,
+            exchangeRates: {
+                currentFiat,
+                crypto,
+            }
+        },
         dispatch
     } = useContext(MarketStore)
     const {
@@ -94,15 +100,21 @@ const DomainOffersCheckoutPage = () => {
             sellerAddress,
             expirationDate,
             price,
-            priceFiat,
             paymentToken
         },
         isProcessing
     } = currentOrder;
 
     const shortSeller = shortenAddress(sellerAddress);
+    const currency = crypto[paymentToken];
 
-    const priceCellProps = { price, priceFiat, currency: paymentToken, currencyFiat: 'USD', divider: ' ' };
+    const priceCellProps = {
+        price,
+        priceFiat: (currency.rate * price).toString(),
+        currency: currency.displayName,
+        currencyFiat: currentFiat.displayName,
+        divider: ' '
+    };
     const PriceCell = <CombinedPriceCell {...priceCellProps} />
 
     const details = {

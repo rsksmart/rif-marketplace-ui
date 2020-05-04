@@ -76,7 +76,13 @@ const useStyles = makeStyles((theme: Theme) =>
 const DomainsCheckoutPage = () => {
   const history = useHistory();
   const {
-    state: { currentOrder },
+    state: {
+      currentOrder,
+      exchangeRates: {
+        currentFiat,
+        crypto,
+      }
+    },
     dispatch
   } = useContext(MarketStore)
   const classes = useStyles();
@@ -88,13 +94,12 @@ const DomainsCheckoutPage = () => {
   } = useContext(Web3Store);
   const Contract = (contract) => ContractWrapper(contract, (web3 as Web3), (account as string));
 
-
-  const currenyOptions = ['RIF', 'DOC', 'RBTC'];
+  const currencySymbols = Object.keys(crypto);
+  const currenyOptions = currencySymbols.map(symbol => crypto[symbol].displayName);
 
   const [price, setPrice] = useState('');
   const [priceFiat, setPriceFiat] = useState('');
-  const [currency, setCurrency] = useState('');
-  const currencyFiat = 'USD';
+  const [currency, setCurrency] = useState('0');
 
   useEffect(() => {
     if (!currentOrder) {
@@ -155,11 +160,19 @@ const DomainsCheckoutPage = () => {
     const newValueInt = parseInt(newValue);
     if (newValueInt || newValue === '') {
       setPrice(newValue);
-      const newValueInFiat = newValueInt;
-      setPriceFiat(newValueInFiat.toString())
+      if (newValue) {
+        const currencySymbol = currencySymbols[parseInt(currency)];
+        const newValueInFiat = newValueInt * crypto[currencySymbol].rate;
+        setPriceFiat(newValueInFiat.toString())
+      } else {
+        setPriceFiat('')
+      }
     }
   }
 
+  const handleSetCurrency = ({ target: { value } }) => {
+    setCurrency(value as string);
+  }
 
   return (
     <CheckoutPageTemplate
@@ -195,7 +208,7 @@ const DomainsCheckoutPage = () => {
                         price: `${price}`,
                         priceFiat: `${priceFiat}`,
                         currency: currenyOptions[parseInt(currency)],
-                        currencyFiat: 'USD',
+                        currencyFiat: currentFiat.displayName,
                         divider: ' '
                       }} />
                     </TableCell>
@@ -209,9 +222,7 @@ const DomainsCheckoutPage = () => {
                         labelId="currency-select"
                         id="currency-select"
                         value={currency}
-                        onChange={({ target: { value } }) => {
-                          setCurrency(value as string);
-                        }}
+                        onChange={handleSetCurrency}
                       >
                         {currenyOptions.map((currency, i) => <MenuItem key={currency} value={i}>{currency}</MenuItem>)}
                       </Select>
@@ -231,7 +242,7 @@ const DomainsCheckoutPage = () => {
                   <TableRow>
                     <TableCell className={classes.detailKey}>USD PRICE</TableCell>
                     <TableCell className={classes.detailValue}>
-                      <PriceItem type='fiat' price={`${priceFiat}`} currency={currencyFiat} />
+                      <PriceItem type='fiat' price={`${priceFiat}`} currency={currentFiat.displayName} />
                     </TableCell>
                   </TableRow>
                 </>}
