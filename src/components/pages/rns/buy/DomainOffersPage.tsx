@@ -1,3 +1,4 @@
+import { Web3Store } from '@rsksmart/rif-ui';
 import { createOffersService, DOMAINS_SERVICE_PATHS, fetchDomainOffers } from 'api/rif-marketplace-cache/domainsController';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import SelectRowButton from 'components/molecules/table/SelectRowButton';
@@ -9,7 +10,6 @@ import { useHistory } from 'react-router';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';
-import { Web3Store } from '@rsksmart/rif-ui';
 
 const LISTING_TYPE = MarketListingTypes.DOMAIN_OFFERS;
 const TX_TYPE = TxType.BUY;
