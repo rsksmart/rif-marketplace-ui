@@ -26,7 +26,6 @@ export interface DomainTransferItem {
     tokenId: string,
 }
 
-// TODO: refactor DomainOffer, Domain dates
 const mappings = {
     offers: (item: OfferTransferItem): DomainOffer => ({
         ...item,
@@ -41,7 +40,11 @@ const mappings = {
         ...item,
         _id: item.tokenId,
         expirationDate: new Date(item.expirationDate)
-    })
+    }),
+    minMaxPrice: (_, item: { price: string }): number => {
+        return parseInt(item.price) / 10 ** 18
+    },
+
 }
 
 export const createDomainService = (ownerAddress: string) => {
@@ -71,6 +74,7 @@ export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
     const results = await fetchMarketData(cacheFilters);
     return results.map(mappings.offers);
 };
+
 export const fetchDomains = async (filters?) => {
     const filtersCopy = { ...filters }
     if (filters.name && filters.name.$like) {
@@ -82,4 +86,36 @@ export const fetchDomains = async (filters?) => {
     const results = await fetchMarketData(filtersCopy);
 
     return results.map(mappings.domains);
+}
+
+const fetchMinPrice = async () => {
+    const query = {
+        $limit: 1,
+        $sort: {
+            price: 1
+        },
+        $select: ['price']
+    };
+    const results = await fetchMarketData(query);
+
+    return results.reduce(mappings.minMaxPrice, 0);
+}
+
+const fetchMaxPrice = async () => {
+    const query = {
+        $limit: 1,
+        $sort: {
+            price: -1
+        },
+        $select: ['price']
+    };
+    const results = await fetchMarketData(query);
+
+    return results.reduce(mappings.minMaxPrice, 0);
+}
+
+export const fetchMinMaxPrice = async () => {
+    const minPrice = await fetchMinPrice();
+    const maxPrice = await fetchMaxPrice();
+    return { minPrice, maxPrice };
 }

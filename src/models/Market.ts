@@ -18,7 +18,7 @@ export type MarketItemType = Domain & DomainOffer & StorageItemIface
 export interface MarketFilter {
     [filterFieldName: string]: {
         [filterType: string]: any
-    } | undefined
+    } | any | undefined
 }
 
 export type MarketFilterType = DomainFilter & DomainOffersFilter
