@@ -21,6 +21,10 @@ const DomainOffersPage = () => {
       filters: {
         domainOffers: offerFilters,
       },
+      exchangeRates: {
+        currentFiat,
+        crypto,
+      }
     },
     dispatch,
   } = useContext(MarketStore);
@@ -102,12 +106,14 @@ const DomainOffersPage = () => {
       const {
         _id,
         price,
-        priceFiat,
         domainName,
         paymentToken,
         sellerAddress,
         expirationDate
       } = domainItem;
+
+      const currency = crypto[paymentToken];
+
       const displayItem = {
         _id,
         domainName,
@@ -115,9 +121,9 @@ const DomainOffersPage = () => {
         expirationDate: expirationDate.toLocaleDateString(),
         combinedPrice: <CombinedPriceCell
           price={price}
-          priceFiat={priceFiat}
-          currency={paymentToken}
-          currencyFiat='USD'
+          priceFiat={(currency.rate * price).toString()}
+          currency={currency.displayName}
+          currencyFiat={currentFiat.displayName}
           divider=' = '
         />,
         actionCol_1: <SelectRowButton

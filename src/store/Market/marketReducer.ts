@@ -1,5 +1,15 @@
 import Logger from 'utils/Logger';
-import { ConnectionPayload, FilterPayload, ItemPayload, ListingPayload, MarketAction, MarketPayload, MARKET_ACTIONS, TxTypeChangePayload } from './marketActions';
+import {
+  ConnectionPayload,
+  FilterPayload,
+  ItemPayload,
+  ListingPayload,
+  MarketAction,
+  MarketPayload,
+  MARKET_ACTIONS,
+  TxTypeChangePayload,
+  ExchangeRatePayload
+} from './marketActions';
 import { IMarketState, initialState } from './MarketStore';
 
 const logger = Logger.getInstance()
@@ -33,6 +43,7 @@ const {
   SET_FILTER,
   TOGGLE_TX_TYPE,
   CONNECT_SERVICE,
+  SET_EXCHANGE_RATE,
 } = MARKET_ACTIONS
 
 const marketActions: IMarketActions = {
@@ -104,6 +115,18 @@ const marketActions: IMarketActions = {
         servicePath,
         items: [],
         txType,
+      }
+    }
+  },
+  [SET_EXCHANGE_RATE]: (state: IMarketState, payload: ExchangeRatePayload) => {
+    return {
+      ...state,
+      exchangeRates: {
+        ...state.exchangeRates,
+        crypto: {
+          ...state.exchangeRates.crypto,
+          ...payload,
+        }
       }
     }
   }
