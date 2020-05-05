@@ -64,20 +64,20 @@ const DomainOffersPage = () => {
   }, [servicePath, dispatch])
 
   // Add account to filters
-  useEffect(() => {
-    if (account) {
-      dispatch({
-        type: MARKET_ACTIONS.SET_FILTER,
-        payload: {
-          filterItems: {
-            sellerAddress: {
-              $ne: account.toLocaleLowerCase()
-            },
-          }
-        }
-      })
-    }
-  }, [account, dispatch])
+  // useEffect(() => {
+  //   if (account) {
+  //     dispatch({
+  //       type: MARKET_ACTIONS.SET_FILTER,
+  //       payload: {
+  //         filterItems: {
+  //           sellerAddress: {
+  //             $ne: account.toLocaleLowerCase()
+  //           },
+  //         }
+  //       }
+  //     })
+  //   }
+  // }, [account, dispatch])
 
   useEffect(() => {
     if (servicePath && servicePath === DOMAINS_SERVICE_PATHS.BUY())
