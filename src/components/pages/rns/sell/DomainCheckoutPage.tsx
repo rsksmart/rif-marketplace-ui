@@ -171,7 +171,9 @@ const DomainsCheckoutPage = () => {
   }
 
   const handleSetCurrency = ({ target: { value } }) => {
-    setCurrency(value as string);
+    setCurrency(value);
+    const newCurrencySymbol = currencySymbols[parseInt(value)];
+    setPriceFiat((parseInt(price) * crypto[newCurrencySymbol].rate).toString())
   }
 
   return (
@@ -223,6 +225,7 @@ const DomainsCheckoutPage = () => {
                         id="currency-select"
                         value={currency}
                         onChange={handleSetCurrency}
+                        disabled={currenyOptions.length <= 1}
                       >
                         {currenyOptions.map((currency, i) => <MenuItem key={currency} value={i}>{currency}</MenuItem>)}
                       </Select>
