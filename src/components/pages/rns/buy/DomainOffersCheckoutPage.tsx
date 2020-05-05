@@ -86,9 +86,10 @@ const DomainOffersCheckoutPage = () => {
     const classes = useStyles();
     const [hasFunds, setHasFunds] = useState(false);
 
+    const domainName = currentOrder?.item?.domainName;
     // check funds
     useEffect(() => {
-        if (web3 && account) {
+        if (web3 && account && domainName) {
             const tokenId = web3.utils.sha3(domainName.replace('.rsk', ''));
             const Contract = c => ContractWrapper(c, web3, account);
             (async () => {
@@ -102,7 +103,7 @@ const DomainOffersCheckoutPage = () => {
                 setHasFunds(myBalance.gte(price));
             })()
         }
-    }, [web3, account])
+    }, [web3, account, domainName])
 
     // redirect direct link
     useEffect(() => {
@@ -116,7 +117,6 @@ const DomainOffersCheckoutPage = () => {
 
     const {
         item: {
-            domainName,
             sellerAddress,
             expirationDate,
             price,
@@ -124,6 +124,7 @@ const DomainOffersCheckoutPage = () => {
         },
         isProcessing
     } = currentOrder;
+    const isOwnDomain = account?.toLowerCase() === sellerAddress.toLowerCase();
 
     const shortSeller = shortenAddress(sellerAddress);
     const currency = crypto[paymentToken];
@@ -205,8 +206,9 @@ const DomainOffersCheckoutPage = () => {
                 {account && !hasFunds && <Typography color='error'>You do not have enough RIF.</Typography>}
                 {!isProcessing && account &&
                     <CardActions className={classes.footer}>
-                        <p >Your wallet will open and you will be asked to confirm the transaction for buying the domain.</p>
-                        <Button disabled={!hasFunds} color='primary' variant='contained'
+                        {isOwnDomain && <p>You cannot purchase your own offer.</p>}
+                        {!isOwnDomain && hasFunds && <p >Your wallet will open and you will be asked to confirm the transaction for buying the domain.</p>}
+                        <Button disabled={!hasFunds || isOwnDomain} color='primary' variant='contained'
                             rounded shadow onClick={handleBuyDomain}>Buy domain</Button>
                     </CardActions>
                 }
