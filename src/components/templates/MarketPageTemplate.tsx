@@ -5,7 +5,7 @@ import { MarketItemType } from 'models/Market';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Grid, Web3Store } from '@rsksmart/rif-ui';
 import MarketStore from 'store/Market/MarketStore';
-import { fetchExchangeRatesFor } from 'api/rif-marketplace-cache/exchangeRateController';
+import { fetchExchangeRatesFor, tokenDisplayNames } from 'api/rif-marketplace-cache/exchangeRateController';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 
 export interface MarketPageTemplateProps {
@@ -59,16 +59,20 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   const { rate: rifXr, displayName } = rif;
   useEffect(() => {
     if (!rifXr) {
-      fetchExchangeRatesFor('rif', fiatSymbol)
-        .then((xr: { [fiatSymbol: string]: number }) => {
+      fetchExchangeRatesFor(fiatSymbol)
+        .then((rates: { [fiatSymbol: string]: number }[]) => {
+          const payload = Object.keys(rates).reduce((acc, i) => {
+            const symbol = rates[i].token;
+            if (symbol === 'rif')    //FIXME: This is here only temporary as atm we don't want to support more than RIF.
+              acc[symbol] = {
+                rate: rates[i][fiatSymbol],
+                displayName: tokenDisplayNames[symbol],
+              };
+            return acc;
+          }, {})
           dispatch({
             type: MARKET_ACTIONS.SET_EXCHANGE_RATE,
-            payload: {
-              rif: {
-                rate: xr[fiatSymbol],
-                displayName,
-              }
-            }
+            payload,
           })
         })
     }
