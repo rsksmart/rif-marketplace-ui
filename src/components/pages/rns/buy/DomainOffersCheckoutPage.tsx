@@ -191,7 +191,7 @@ const DomainOffersCheckoutPage = () => {
                 }
                 {!account && <Login color='primary' variant='contained' rounded shadow />}
             </Card>
-            {!!isProcessing && <TransactionInProgressPanel text='Listing the domain!' progMsg='The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished.' />}
+            {!!isProcessing && <TransactionInProgressPanel text='Buying the domain!' progMsg='The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished.' />}
         </CheckoutPageTemplate >
     );
 };
