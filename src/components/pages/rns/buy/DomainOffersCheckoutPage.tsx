@@ -5,7 +5,7 @@ import Login from 'components/atoms/Login';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Card, CardContent, CardHeader, colors, shortenAddress, Table, TableBody, TableCell, TableRow, Typography, Web3Store } from '@rsksmart/rif-ui';
 import { ROUTES } from 'routes';
@@ -84,7 +84,27 @@ const DomainOffersCheckoutPage = () => {
         }
     } = useContext(Web3Store);
     const classes = useStyles();
+    const [hasFunds, setHasFunds] = useState(false);
 
+    // check funds
+    useEffect(() => {
+        if (web3 && account) {
+            const tokenId = web3.utils.sha3(domainName.replace('.rsk', ''));
+            const Contract = c => ContractWrapper(c, web3, account);
+            (async () => {
+                const rifContract = await Contract(ERC677).at(rifTokenAddress)
+                const marketPlaceContract = await Contract(ERC721SimplePlacements).at(marketPlaceAddress)
+
+                const myBalance = await rifContract.balanceOf(account)
+                const tokenPlacement = await marketPlaceContract.placement(tokenId);
+                const price = tokenPlacement[1];
+
+                setHasFunds(myBalance.gte(price));
+            })()
+        }
+    }, [web3, account])
+
+    // redirect direct link
     useEffect(() => {
         if (!currentOrder) {
             history.replace(ROUTES.LANDING);
@@ -182,10 +202,11 @@ const DomainOffersCheckoutPage = () => {
                         </TableBody>
                     </Table>
                 </CardContent>
+                {account && !hasFunds && <Typography color='error'>You do not have enough RIF.</Typography>}
                 {!isProcessing && account &&
                     <CardActions className={classes.footer}>
                         <p >Your wallet will open and you will be asked to confirm the transaction for buying the domain.</p>
-                        <Button color='primary' variant='contained'
+                        <Button disabled={!hasFunds} color='primary' variant='contained'
                             rounded shadow onClick={handleBuyDomain}>Buy domain</Button>
                     </CardActions>
                 }
