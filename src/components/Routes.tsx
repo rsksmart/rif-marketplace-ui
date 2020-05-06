@@ -1,4 +1,3 @@
-// views
 import NotFound from 'components/pages/NotFound';
 import React, { useEffect } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
@@ -32,13 +31,13 @@ const Routes = () => {
 
   return (
     <Switch>
-      <Route exact={true} path={ROUTES.LANDING} component={LandingPage} />
-      <Route exact={true} path={ROUTES.DOMAINS.BUY} component={DomainOffersPage} />
-      <Route exact={true} path={ROUTES.DOMAINS.SELL} component={MyDomainsPage} />
-      <Route exact={true} path={ROUTES.DOMAINS.CHECKOUT.BUY} component={DomainOffersCheckoutPage} />
-      <Route exact={true} path={ROUTES.DOMAINS.CHECKOUT.SELL} component={DomainsCheckoutPage} />
-      <Route exact={true} path={ROUTES.DOMAINS.DONE.SELL} component={DomainListed} />
-      <Route exact={true} path={ROUTES.DOMAINS.DONE.BUY} component={DomainPurchased} />
+      <Route exact path={ROUTES.LANDING} component={LandingPage} />
+      <Route exact path={ROUTES.DOMAINS.BUY} component={DomainOffersPage} />
+      <Route exact path={ROUTES.DOMAINS.SELL} component={MyDomainsPage} />
+      <Route exact path={ROUTES.DOMAINS.CHECKOUT.BUY} component={DomainOffersCheckoutPage} />
+      <Route exact path={ROUTES.DOMAINS.CHECKOUT.SELL} component={DomainsCheckoutPage} />
+      <Route exact path={ROUTES.DOMAINS.DONE.SELL} component={DomainListed} />
+      <Route exact path={ROUTES.DOMAINS.DONE.BUY} component={DomainPurchased} />
       <Route component={NotFound} />
     </Switch>
   );
