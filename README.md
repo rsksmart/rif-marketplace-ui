@@ -28,13 +28,13 @@ Setup `.env` file with the following configuration:
 Example:
 
 ```
-REACT_APP_CACHE_ADDR=http://CACHE_SERVER_URL:3030   
+REACT_APP_CACHE_ADDR=http://localhost:3030   
 REACT_APP_LOG_LEVEL=error
 REACT_APP_NETWORK=rskTestnet
 ```
 
 
- Config file `ui-config.json` contains the Smart contract addresses for each available network. 
+ Configuration file `ui-config.json` contains the Smart contract addresses for each available network. 
    -  `rif`: address of the deployed RIF token contract
     - `rnsDotRskOwner` : address of the deployed RNS Owner contract 
     - `rnsNameResolver`: address of the deployed RNS Name resolver contract
