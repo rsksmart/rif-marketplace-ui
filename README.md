@@ -23,20 +23,19 @@ Setup `.env` file with the following configuration:
 
  - `REACT_APP_CACHE_ADDR` : Cache connection URI
  - `REACT_APP_LOG_LEVEL`: React logging level
- - `REACT_APP_NETWORK`: Network Identified (should be defined in `ui-config.json`) 
+ - `REACT_APP_NETWORK`: Select the Network to connect (should be defined in `ui-config.json`) 
  
 Example:
 
 ```
-REACT_APP_CACHE_ADDR=http://cacheserver:3030   
+REACT_APP_CACHE_ADDR=http://CACHE_SERVER_URL:3030   
 REACT_APP_LOG_LEVEL=error
 REACT_APP_NETWORK=rskTestnet
 ```
 
-Setup config file `ui-config.json` which contains the required Contract addresses for all networks. 
 
-- RNS related:
-    -  `rif`: address of the deployed RIF token contract
+ Config file `ui-config.json` contains the Smart contract addresses for each available network. 
+   -  `rif`: address of the deployed RIF token contract
     - `rnsDotRskOwner` : address of the deployed RNS Owner contract 
     - `rnsNameResolver`: address of the deployed RNS Name resolver contract
     - `marketplace`: address of the deployed NFTS Marketplace contract
@@ -44,11 +43,11 @@ Setup config file `ui-config.json` which contains the required Contract addresse
 Example:
 
 ```
-"rskTestnet": {
-    "rif": "0x19f64674D8a5b4e652319F5e239EFd3bc969a1FE",
-    "rnsDotRskOwner": "0xca0a477e19bac7e0e172ccfd2e3c28a7200bdb71",
-    "rnsNameResolver": "0x9561C133DD8580860B6b7E504bC5Aa500f0f06a7",
-    "marketplace": "0x8587385ad60038bB181aFfDF687c4D1B80C4787e"
+customAddress": {
+    "rif": "0x...",
+    "rnsDotRskOwner": "0x...",
+    "rnsNameResolver": "0x...",
+    "marketplace": "0x..."
   }
 ```
 
