@@ -84,7 +84,7 @@ export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
 
 export const fetchDomains = async (filters?) => {
     const filtersCopy = { ...filters }
-    if (filters.name && filters.name.$like) {
+    if (filters?.name?.$like) {
         const name = {
             $like: `%${filters.name.$like}%`
         }
