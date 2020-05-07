@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { createStyles, makeStyles } from '@material-ui/core';
-import { doneImg } from '@rsksmart/rif-ui'
+import { doneThumbsUpImg } from '@rsksmart/rif-ui'
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -21,7 +21,7 @@ const TxCompletePageTemplate: FC<{}> = ({ children }) => {
 
     return (
         <div className={classes.body}>
-            <img src={doneImg} alt='Job done!' />
+            <img src={doneThumbsUpImg} alt='Job done!' />
             {children}
         </div>
     );

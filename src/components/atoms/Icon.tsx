@@ -1,38 +1,30 @@
 import React, { FC } from 'react';
 import {
-  rifDirImg, rifComImg, rifGatImg, rifMarImg, rifPayImg, rifStoImg
+  nameServiceImg, storageImg,
 } from '@rsksmart/rif-ui'
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
 export const Icons = {
-  DOMAINS: rifDirImg,
-  COMMUNICATIONS: rifComImg,
-  GATEWAY: rifGatImg,
-  MARKETPLACE: rifMarImg,
-  PAYMENTS: rifPayImg,
-  STORAGE: rifStoImg,
+  DOMAINS: nameServiceImg,
+  STORAGE: storageImg
 };
 
 export interface IconProps {
-  name: string;
   alt?: string;
+  className?: string;
+  src: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  img: {
-    height: 75,
-    width: 100,
-  }
+  iconImage: {
+    height: theme.spacing(40),
+  },
 }));
 
-const Icon: FC<IconProps> = ({ name, alt }) => {
+const Icon: FC<IconProps> = ({ className = '', src, alt }) => {
   const classes = useStyles();
   return (
-    <img
-      className={classes.img}
-      src={name}
-      alt={alt || name}
-    />
+    <img className={`${classes.iconImage} ${className}`.trim()} src={src} alt={alt || src} />
   );
 };
 
