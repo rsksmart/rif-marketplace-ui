@@ -1,8 +1,17 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { Footer as RUIFooter } from '@rsksmart/rif-ui';
 import { FooterProps } from '@rsksmart/rif-ui/dist/components/organisms/Footer';
 
+const useStyles = makeStyles(() => ({
+  root: {
+    marginTop: 'auto',
+  }
+}));
+
 const Footer = () => {
+
+  const classes = useStyles();
 
   const footerProps: FooterProps = {
     copyrightText: 'Copyright © 2020 IOV Labs. All rights reserved. v0.1.0',
@@ -71,7 +80,9 @@ const Footer = () => {
   }
 
   return (
-    <RUIFooter {...footerProps} />
+    <div className={classes.root}>
+      <RUIFooter {...footerProps} />
+    </div>
   )
 };
 
