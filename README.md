@@ -44,11 +44,11 @@ Setup config file `ui-config.json` which contains the required Contract addresse
 Example:
 
 ```
-"regtest": {
-    "rif": "0x67B5656d60a809915323Bf2C40A8bEF15A152e3e",
-    "rnsDotRskOwner": "0x4bf749ec68270027C5910220CEAB30Cc284c7BA2",
+"rskTestnet": {
+    "rif": "0x19f64674D8a5b4e652319F5e239EFd3bc969a1FE",
+    "rnsDotRskOwner": "0xca0a477e19bac7e0e172ccfd2e3c28a7200bdb71",
     "rnsNameResolver": "0x9561C133DD8580860B6b7E504bC5Aa500f0f06a7",
-    "marketplace": "0x22d5C8BdD4346b390014a07109a8F830094d4abf"
+    "marketplace": "0x8587385ad60038bB181aFfDF687c4D1B80C4787e"
   }
 ```
 
