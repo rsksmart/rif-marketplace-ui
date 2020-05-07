@@ -9,6 +9,7 @@ import Header from 'components/organisms/Header';
 import Routes from 'components/Routes';
 // TODO: remove the dist path once it's fixed in the library
 import '@rsksmart/rif-ui/dist/index.css';
+import PageTemplate from 'components/templates/PageTemplate';
 
 const useStyles = makeStyles(() => ({
   router: {
@@ -32,7 +33,9 @@ const App = () => {
                 className={classes.router}
               >
                 <Header />
-                <Routes />
+                <PageTemplate>
+                  <Routes />
+                </PageTemplate>
                 <Footer />
               </div>
             </Router>

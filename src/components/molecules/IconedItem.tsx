@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
-import Icon, { IconProps } from 'components/atoms/Icon';
-import { Button } from '@rsksmart/rif-ui';
 import { NavLink } from 'react-router-dom';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import { fonts, Typography } from '@rsksmart/rif-ui';
+import Icon, { IconProps } from 'components/atoms/Icon';
 
 export interface IconedItemProps {
-  className: string;
+  className?: string;
   iconProps: IconProps;
   text: string;
   to: string;
@@ -13,24 +13,31 @@ export interface IconedItemProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    textDecoration: 'none'
-  }
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  iconTitle: {
+    display: 'flex',
+    justifyContent: 'center',
+    '&:hover': {
+      fontWeight: fonts.weight.lightBold
+    }
+  },
+  link: {
+    textDecoration: 'none',
+  },
 }));
 
-const IconedItem: FC<IconedItemProps> = ({
-  className = '',
-  to,
-  text,
-  iconProps,
-}) => {
+const IconedItem: FC<IconedItemProps> = ({ className = '', to, text, iconProps }) => {
   const classes = useStyles();
   return (
-    <NavLink to={to} className={`${classes.root} ${className}`}>
-      <Button color='primary'>
+    <div className={`${classes.root} ${className}`}>
+      <NavLink className={classes.link} to={to}>
         <Icon {...iconProps} />
-        {text}
-      </Button>
-    </NavLink>
+        <Typography className={classes.iconTitle} variant='h6' color='primary'>{text}</Typography>
+      </NavLink>
+    </div>
   );
 };
 

@@ -1,25 +1,27 @@
 import React, { FC, HTMLAttributes } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { ROUTES } from 'routes';
-import { Typography } from '@rsksmart/rif-ui';
+import {
+  Grid
+} from '@rsksmart/rif-ui';
 import IconedItem, { IconedItemProps } from 'components/molecules/IconedItem';
 import { Icons } from 'components/atoms/Icon';
 
 export interface ServiceCategoriesProps extends HTMLAttributes<HTMLElement> { };
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
+  servicesContainer: {
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      maxWidth: '80%'
+    }
+  },
+  serviceContent: {
     display: 'flex',
     flexDirection: 'column',
-    padding: theme.spacing(4),
-    textAlign: 'left'
+    justifyContent: 'center',
+    marginBottom: theme.spacing(2),
   },
-  iconedItemsContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    margin: theme.spacing(1),
-  }
 }))
 
 const ServiceCategories: FC<ServiceCategoriesProps> = () => {
@@ -27,47 +29,26 @@ const ServiceCategories: FC<ServiceCategoriesProps> = () => {
 
   const availableServices: IconedItemProps[] = [
     {
-      className: 'nameService',
       to: ROUTES.DOMAINS.BUY,
-      text: 'Name Service',
-      iconProps: { name: Icons.DOMAINS },
+      text: 'Name Services',
+      iconProps: { src: Icons.DOMAINS, alt: 'Name Services icon' },
     },
     {
-      className: 'storage',
       to: ROUTES.STORAGE,
       text: 'Storage',
-      iconProps: { name: Icons.STORAGE },
-    },
-    {
-      className: 'payments',
-      to: ROUTES.PAYMENTS,
-      text: 'Payments',
-      iconProps: { name: Icons.PAYMENTS },
-    },
-    {
-      className: 'dataService',
-      to: ROUTES.DATA_SERVICE,
-      text: 'Data Services',
-      iconProps: { name: Icons.GATEWAY },
-    },
-    {
-      className: 'communications',
-      to: ROUTES.COMMUNICATIONS,
-      text: 'Communications',
-      iconProps: { name: Icons.COMMUNICATIONS },
-    },
+      iconProps: { src: Icons.STORAGE, alt: 'Storage icon' },
+    }
   ];
 
   return (
-    <div className={classes.root}>
-      <Typography variant='h2' color='primary'>Service Categories</Typography>
-      <div className={classes.iconedItemsContainer}>
-        {!!availableServices.length &&
-          availableServices.map((service, i) => (
-            <IconedItem {...service} key={service.className + i} />
-          ))}
-      </div>
-    </div>
+    <Grid container className={classes.servicesContainer}>
+      {!!availableServices.length &&
+        availableServices.map((service, i) => (
+          <Grid className={classes.serviceContent} item xs={12} lg={6}>
+            <IconedItem {...service} key={i} />
+          </Grid>
+        ))}
+    </Grid>
   );
 }
 
