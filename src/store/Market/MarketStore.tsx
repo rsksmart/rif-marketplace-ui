@@ -60,7 +60,7 @@ interface IMarketStoreProps {
 export const initialState: IMarketState = {
   filters: {
     domains: {
-
+      status: 'owned'
     },
     domainOffers: {
       price: {

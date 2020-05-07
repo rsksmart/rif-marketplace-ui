@@ -16,17 +16,14 @@ const DomainFilters = () => {
         },
         dispatch,
     } = useContext(MarketStore);
-
-    const [status, setStatus] = useState(statusFilter || 'owned')
     const searchValue = (nameFilter && nameFilter.$like) || '';
-
 
     const domainStatusFilters = [{
         value: 'owned',
         label: 'Your domains',
     },
     {
-        value: 'onsale',
+        value: 'placed',
         label: 'Your offers',
     },
     {
@@ -53,9 +50,8 @@ const DomainFilters = () => {
         <RadioFilter
             title='Domain Status'
             items={domainStatusFilters}
-            value={status}
+            value={statusFilter}
             onChange={({ target: { value } }) => {
-                setStatus(value);
                 dispatch({
                     type: MARKET_ACTIONS.SET_FILTER,
                     payload: {
