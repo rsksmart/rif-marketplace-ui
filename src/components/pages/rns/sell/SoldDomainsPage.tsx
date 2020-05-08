@@ -1,25 +1,33 @@
-import { createDomainService, DOMAINS_SERVICE_PATHS, fetchDomains } from 'api/rif-marketplace-cache/domainsController';
-import SelectRowButton from 'components/molecules/table/SelectRowButton';
+import { Web3Store } from '@rsksmart/rif-ui';
+import { createSoldService, DOMAINS_SERVICE_PATHS, fetchSoldDomains } from 'api/rif-marketplace-cache/domainsController';
+import { CombinedPriceCell } from 'components/molecules';
+import AddressItem from 'components/molecules/AddressItem';
 import DomainFilters from 'components/organisms/filters/DomainFilters';
 import MarketPageTemplate from 'components/templates/MarketPageTemplate';
 import { MarketListingTypes } from 'models/Market';
+import { SoldDomain } from 'models/marketItems/DomainItem';
 import React, { useContext, useEffect } from 'react';
-import { useHistory } from 'react-router';
-import { Web3Store } from '@rsksmart/rif-ui';
-import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';
+import { useHistory } from 'react-router';
+import { ROUTES } from 'routes';
 
 const LISTING_TYPE = MarketListingTypes.DOMAINS;
-const TX_TYPE = TxType.SELL;
+const TX_TYPE = TxType.SOLD;
 
-const MyDomainsPage = () => {
+const SoldDomainsPage = () => {
   const {
     state: {
       currentListing,
-      filters: {
-        domains: domainFilters,
+      exchangeRates: {
+        currentFiat,
+        crypto,
       },
+      filters: {
+        domains: {
+          status: statusFilter
+        }
+      }
     },
     dispatch,
   } = useContext(MarketStore);
@@ -29,33 +37,33 @@ const MyDomainsPage = () => {
   const history = useHistory()
 
   const servicePath = currentListing?.servicePath;
-  const statusFilter = domainFilters.status;
 
   /* Initialise */
   useEffect(() => {
-    if (statusFilter === 'sold') {
+    if (statusFilter !== 'sold') {
       dispatch({
         type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
         payload: {
-          txType: TxType.SOLD,
+          txType: TxType.SELL,
         }
       })
-      history.replace(ROUTES.DOMAINS.SOLD)
+      history.replace(ROUTES.DOMAINS.SELL)
     }
   }, [statusFilter])
+
   useEffect(() => {
-    if (servicePath && account && servicePath !== DOMAINS_SERVICE_PATHS.SELL(account)) {
+    if (servicePath && account && servicePath !== DOMAINS_SERVICE_PATHS.SOLD(account)) {
       dispatch({
         type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
         payload: {
-          txType: TxType.SELL
+          txType: TxType.SOLD
         }
       })
     }
   }, [servicePath, account, dispatch])
   useEffect(() => {
     if (!servicePath && account) {
-      const serviceAddr = createDomainService(account);
+      const serviceAddr = createSoldService(account);
       dispatch({
         type: MARKET_ACTIONS.CONNECT_SERVICE,
         payload: {
@@ -68,8 +76,8 @@ const MyDomainsPage = () => {
   }, [servicePath, account, dispatch])
 
   useEffect(() => {
-    if (servicePath && account && servicePath === DOMAINS_SERVICE_PATHS.SELL(account) && statusFilter !== 'sold') // TODO: refactor
-      fetchDomains(domainFilters)
+    if (servicePath && account && servicePath === DOMAINS_SERVICE_PATHS.SOLD(account) && statusFilter === 'sold') // TODO: refactor
+      fetchSoldDomains()
         .then(items => dispatch({
           type: MARKET_ACTIONS.SET_ITEMS,
           payload: {
@@ -77,41 +85,43 @@ const MyDomainsPage = () => {
             items,
           },
         }));
-  }, [domainFilters, account, servicePath, dispatch]);
+  }, [account, servicePath, dispatch]);
 
   if (!currentListing) return null;
 
   const headers = {
-    name: 'Name',
-    expirationDate: 'Renewal Date',
-    actionCol_1: ''
+    domainName: 'Name',
+    buyer: 'Buyer',
+    currency: 'Currency',
+    sellingPrice: 'Selling price',
+    soldDate: 'Selling date',
   }
 
   const collection = currentListing?.items
-    .map(domainItem => {
+    .map((domainItem: SoldDomain) => {
       const {
         _id,
-        name,
-        expirationDate
+        domainName,
+        buyer,
+        paymentToken,
+        price,
+        soldDate,
       } = domainItem;
+      const currency = crypto[paymentToken];
+
       const displayItem = {
         _id,
-        name,
-        expirationDate: expirationDate.toLocaleDateString(),
-        actionCol_1: <SelectRowButton
-          id={_id}
-          handleSelect={() => {
-            dispatch({
-              type: MARKET_ACTIONS.SELECT_ITEM,
-              payload: {
-                listingType: LISTING_TYPE,
-                item: domainItem,
-                txType: TX_TYPE
-              }
-            })
-            history.push(ROUTES.DOMAINS.CHECKOUT.SELL)
-          }}
-        />
+        domainName: domainName,
+        buyer: <AddressItem value={buyer} />,
+        currency: currency.displayName,
+        sellingPrice: <CombinedPriceCell
+          price={price.toString()}
+          priceFiat={(currency.rate * price).toString()}
+          currency={currency.displayName}
+          currencyFiat={currentFiat.displayName}
+          divider=' = '
+        />,
+        soldDate: soldDate.toLocaleDateString(),
       }
 
       return displayItem;
@@ -128,4 +138,4 @@ const MyDomainsPage = () => {
   );
 };
 
-export default MyDomainsPage;
+export default SoldDomainsPage;

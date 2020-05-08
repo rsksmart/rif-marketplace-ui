@@ -1,5 +1,5 @@
 import { DomainOffersFilter } from "api/models/RnsFilter";
-import { Domain, DomainOffer } from "models/marketItems/DomainItem";
+import { Domain, DomainOffer, SoldDomain } from "models/marketItems/DomainItem";
 import { createService, fetchMarketData } from "./cacheController";
 import { ganache } from 'ui-config.json';
 
@@ -7,6 +7,7 @@ import { ganache } from 'ui-config.json';
 export const DOMAINS_SERVICE_PATHS = {
     'BUY': () => 'rns/v0/offers',
     'SELL': (ownerAddress: string) => `rns/v0/${ownerAddress}/domains`,
+    'SOLD': (ownerAddress: string) => `rns/v0/${ownerAddress}/sold`,
 }
 
 const tokens = Object.keys(ganache).reduce((acc, key) => {
@@ -34,6 +35,17 @@ export interface DomainTransferItem {
     tokenId: string,
 }
 
+export interface SoldDomainTransferItem {
+    id: string,
+    tokenId: string,
+    sellerAddress: string,
+    newOwnerAddress: string,
+    paymentToken: string,
+    price: string,
+    soldDate: string,
+    domain: DomainTransferItem,
+}
+
 const mappings = {
     offers: (item: OfferTransferItem): DomainOffer => ({
         ...item,
@@ -51,6 +63,14 @@ const mappings = {
     minMaxPrice: (_, item: { price: string }): number => {
         return parseInt(item.price) / 10 ** 18
     },
+    sold: (item: SoldDomainTransferItem): SoldDomain => ({
+        _id: item.id,
+        paymentToken: tokens[item.paymentToken],
+        price: parseInt(item.price) / 10 ** 18,
+        soldDate: new Date(item.soldDate),
+        domainName: item.domain.name,
+        buyer: item.newOwnerAddress,
+    })
 
 }
 
@@ -60,6 +80,10 @@ export const createDomainService = (ownerAddress: string) => {
 
 export const createOffersService = () => {
     return createService(DOMAINS_SERVICE_PATHS.BUY());
+}
+
+export const createSoldService = (ownerAddress: string) => {
+    return createService(DOMAINS_SERVICE_PATHS.SOLD(ownerAddress));
 }
 
 export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
@@ -93,6 +117,11 @@ export const fetchDomains = async (filters?) => {
     const results = await fetchMarketData(filtersCopy);
 
     return results.map(mappings.domains);
+}
+
+export const fetchSoldDomains = async (filters?) => {
+    const results = await fetchMarketData(filters);
+    return results.map(mappings.sold);
 }
 
 const fetchMinPrice = async () => {

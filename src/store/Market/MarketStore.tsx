@@ -7,6 +7,7 @@ import marketReducer from './marketReducer';
 export enum TxType {
   SELL = 1,
   BUY = 0,
+  SOLD = 2,
 }
 export interface ICurrentOrder {
   listingType: MarketListingTypes;

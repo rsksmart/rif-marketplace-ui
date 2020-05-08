@@ -13,3 +13,11 @@ export interface Domain extends MarketItemIface {
     ownerAddress: string,
     name: string,
 }
+
+export interface SoldDomain extends MarketItemIface {
+    paymentToken: string,
+    price: number,
+    soldDate: Date,
+    domainName: string,
+    buyer: string,
+}

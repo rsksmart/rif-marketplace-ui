@@ -12,6 +12,7 @@ import {
   DomainOffersCheckoutPage,
   DomainListed
 } from './pages/rns';
+import SoldDomainsPage from './pages/rns/sell/SoldDomainsPage';
 
 
 const logger = Logger.getInstance();
@@ -34,6 +35,7 @@ const Routes = () => {
       <Route exact path={ROUTES.LANDING} component={LandingPage} />
       <Route exact path={ROUTES.DOMAINS.BUY} component={DomainOffersPage} />
       <Route exact path={ROUTES.DOMAINS.SELL} component={MyDomainsPage} />
+      <Route exact path={ROUTES.DOMAINS.SOLD} component={SoldDomainsPage} />
       <Route exact path={ROUTES.DOMAINS.CHECKOUT.BUY} component={DomainOffersCheckoutPage} />
       <Route exact path={ROUTES.DOMAINS.CHECKOUT.SELL} component={DomainsCheckoutPage} />
       <Route exact path={ROUTES.DOMAINS.DONE.SELL} component={DomainListed} />
