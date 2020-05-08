@@ -23,12 +23,12 @@ Setup `.env` file with the following configuration:
 
  - `REACT_APP_CACHE_ADDR` : Cache connection URI
  - `REACT_APP_LOG_LEVEL`: React logging level
- - `REACT_APP_NETWORK`: Select the Network to connect (must be defined in `ui-config.json`) 
- 
+ - `REACT_APP_NETWORK`: Select the Network to connect (must be defined in `ui-config.json`)
+
 Example:
 
 ```
-REACT_APP_CACHE_ADDR=http://localhost:3030   
+REACT_APP_CACHE_ADDR=http://localhost:3030
 REACT_APP_LOG_LEVEL=error
 REACT_APP_NETWORK=rskTestnet
 ```
@@ -41,7 +41,6 @@ Example:
 customAddress": {
     "rif": "0x...",
     "rnsDotRskOwner": "0x...",
-    "rnsNameResolver": "0x...",
     "marketplace": "0x..."
   }
 ```

@@ -1,6 +1,6 @@
 import { CardActions, createStyles, makeStyles, Theme } from '@material-ui/core';
-import ERC677 from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC677.json';
-import ERC721SimplePlacements from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC721SimplePlacements.json';
+import ERC677 from '@rsksmart/erc677/ERC677Data.json';
+import ERC721SimplePlacements from '@rsksmart/rif-marketplace-nfts/ERC721SimplePlacementsABI.json';
 import Login from 'components/atoms/Login';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
@@ -94,7 +94,7 @@ const DomainOffersCheckoutPage = () => {
             const Contract = c => ContractWrapper(c, web3, account);
             (async () => {
                 const rifContract = await Contract(ERC677).at(rifTokenAddress)
-                const marketPlaceContract = await Contract(ERC721SimplePlacements).at(marketPlaceAddress)
+                const marketPlaceContract = await Contract({abi: ERC721SimplePlacements}).at(marketPlaceAddress)
 
                 const myBalance = await rifContract.balanceOf(account)
                 const tokenPlacement = await marketPlaceContract.placement(tokenId);
@@ -158,7 +158,7 @@ const DomainOffersCheckoutPage = () => {
                 }
             })
 
-            const marketPlaceContract = await Contract(ERC721SimplePlacements).at(marketPlaceAddress)
+            const marketPlaceContract = await Contract({abi: ERC721SimplePlacements}).at(marketPlaceAddress)
             const rifContract = await Contract(ERC677).at(rifTokenAddress)
 
             const tokenPlacement = await marketPlaceContract.placement(tokenId);

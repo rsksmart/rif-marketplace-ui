@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
-import ERC721 from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC721.json';
-import ERC721SimplePlacements from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC721SimplePlacements.json';
+import ERC721 from '@rsksmart/erc721/ERC721Data.json';
+import ERC721SimplePlacements from '@rsksmart/rif-marketplace-nfts/ERC721SimplePlacementsABI.json';
 import PriceItem from 'components/atoms/PriceItem';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
@@ -127,8 +127,8 @@ const DomainsCheckoutPage = () => {
           isProcessing: true,
         }
       })
-      const marketPlaceContract = await Contract(ERC721SimplePlacements).at(marketPlaceAddress)
       const rnsContract = await Contract(ERC721).at(rnsAddress)
+      const marketPlaceContract = await Contract({abi: ERC721SimplePlacements}).at(marketPlaceAddress)
 
       try {
         const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId)
