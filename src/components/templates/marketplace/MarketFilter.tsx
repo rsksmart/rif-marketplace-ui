@@ -42,7 +42,7 @@ const MarketFilter: FC<MarketFilterProps> = ({ children }) => {
     dispatch
   } = useContext(MarketStore);
   const history = useHistory();
-  const txType = currentListing?.txType;
+  const txType = currentListing?.txType >= 1 ? 1 : 0;
 
   const handleSwitchChange = (): void => {
     dispatch({
