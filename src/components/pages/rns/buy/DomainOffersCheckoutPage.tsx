@@ -212,7 +212,7 @@ const DomainOffersCheckoutPage = () => {
                             rounded shadow onClick={handleBuyDomain}>Buy domain</Button>
                     </CardActions>
                 }
-                {!account && <Login color='primary' variant='contained' rounded shadow />}
+                {!account && <Login />}
             </Card>
             {!!isProcessing && <TransactionInProgressPanel text='Buying the domain!' progMsg='The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished.' />}
         </CheckoutPageTemplate >

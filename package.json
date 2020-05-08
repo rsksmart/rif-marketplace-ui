@@ -8,7 +8,7 @@
     "decentralized",
     "RSK"
   ],
-  "homepage": "https://github.com/rsksmart/rif-marketplace-ui",
+  "homepage": ".",
   "bugs": {
     "url": "https://github.com/rsksmart/rif-marketplace-ui/issues/"
   },
@@ -37,7 +37,7 @@
     "@rsksmart/erc677": "^1.0.2",
     "@rsksmart/erc721": "^1.0.0",
     "@rsksmart/rif-marketplace-nfts": "0.0.2",
-    "@rsksmart/rif-ui": "github:rsksmart/rif-ui",
+    "@rsksmart/rif-ui": "github:rsksmart/rif-ui#hotfix/accountStyling",
     "@truffle/contract": "^4.2.1",
     "@truffle/debug-utils": "^4.1.1",
     "formik": "^2.1.4",

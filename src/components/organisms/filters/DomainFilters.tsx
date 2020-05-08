@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { MARKET_ACTIONS } from "store/Market/marketActions";
 import MarketStore from "store/Market/MarketStore";
 import RadioFilter from "./RadioFilter";

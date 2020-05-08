@@ -41,6 +41,7 @@ const MyDomainsPage = () => {
       })
     }
   }, [servicePath, account, dispatch])
+
   useEffect(() => {
     if (!servicePath && account) {
       const serviceAddr = createDomainService(account);
