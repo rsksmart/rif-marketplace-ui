@@ -127,8 +127,8 @@ const DomainsCheckoutPage = () => {
           isProcessing: true,
         }
       })
-      const marketPlaceContract = await Contract(ERC721SimplePlacements).at(marketPlaceAddress)
       const rnsContract = await Contract(ERC721).at(rnsAddress)
+      const marketPlaceContract = await Contract({abi: ERC721SimplePlacements}).at(marketPlaceAddress)
 
       try {
         const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId)

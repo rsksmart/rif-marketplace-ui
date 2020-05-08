@@ -94,7 +94,7 @@ const DomainOffersCheckoutPage = () => {
             const Contract = c => ContractWrapper(c, web3, account);
             (async () => {
                 const rifContract = await Contract(ERC677).at(rifTokenAddress)
-                const marketPlaceContract = await Contract(ERC721SimplePlacements).at(marketPlaceAddress)
+                const marketPlaceContract = await Contract({abi: ERC721SimplePlacements}).at(marketPlaceAddress)
 
                 const myBalance = await rifContract.balanceOf(account)
                 const tokenPlacement = await marketPlaceContract.placement(tokenId);
@@ -158,7 +158,7 @@ const DomainOffersCheckoutPage = () => {
                 }
             })
 
-            const marketPlaceContract = await Contract(ERC721SimplePlacements).at(marketPlaceAddress)
+            const marketPlaceContract = await Contract({abi: ERC721SimplePlacements}).at(marketPlaceAddress)
             const rifContract = await Contract(ERC677).at(rifTokenAddress)
 
             const tokenPlacement = await marketPlaceContract.placement(tokenId);
