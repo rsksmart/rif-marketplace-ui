@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
-import ERC721 from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC721.json';
-import ERC721SimplePlacements from '@rsksmart/rif-marketplace-nfts/build/contracts/ERC721SimplePlacements.json';
+import ERC721 from '@rsksmart/erc721/ERC721Data.json';
+import ERC721SimplePlacements from '@rsksmart/rif-marketplace-nfts/ERC721SimplePlacementsABI.json';
 import PriceItem from 'components/atoms/PriceItem';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';

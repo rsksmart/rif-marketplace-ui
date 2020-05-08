@@ -2,13 +2,11 @@
     "ganache": {
         "rif": "0x67B5656d60a809915323Bf2C40A8bEF15A152e3e",
         "rnsDotRskOwner": "0x4bf749ec68270027C5910220CEAB30Cc284c7BA2",
-        "rnsReverseRegistrar": "0xe982E462b094850F12AF94d21D470e21bE9D0E9C",
         "marketplace": "0x22d5C8BdD4346b390014a07109a8F830094d4abf"
     },
     "rsktestnet": {
         "rif": "0x19f64674D8a5b4e652319F5e239EFd3bc969a1FE",
         "rnsDotRskOwner": "0xca0a477e19bac7e0e172ccfd2e3c28a7200bdb71",
-        "rnsReverseRegistrar": "0x8587385ad60038bB181aFfDF687c4D1B80C4787e",
         "marketplace": "0x712025c9fe1ca55296ce439c4ac04019c266a5b1"
   }
 }
