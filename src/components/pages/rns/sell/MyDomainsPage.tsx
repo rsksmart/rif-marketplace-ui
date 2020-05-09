@@ -42,7 +42,7 @@ const MyDomainsPage = () => {
       })
       history.replace(ROUTES.DOMAINS.SOLD)
     }
-  }, [statusFilter])
+  }, [statusFilter, dispatch, history])
   useEffect(() => {
     if (servicePath && account && servicePath !== DOMAINS_SERVICE_PATHS.SELL(account)) {
       dispatch({
@@ -68,7 +68,7 @@ const MyDomainsPage = () => {
   }, [servicePath, account, dispatch])
 
   useEffect(() => {
-    if (servicePath && account && servicePath === DOMAINS_SERVICE_PATHS.SELL(account) && statusFilter !== 'sold') // TODO: refactor
+    if (servicePath && account && servicePath === DOMAINS_SERVICE_PATHS.SELL(account) && domainFilters.status !== 'sold') // TODO: refactor
       fetchDomains(domainFilters)
         .then(items => dispatch({
           type: MARKET_ACTIONS.SET_ITEMS,

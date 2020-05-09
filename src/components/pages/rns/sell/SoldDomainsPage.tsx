@@ -49,7 +49,7 @@ const SoldDomainsPage = () => {
       })
       history.replace(ROUTES.DOMAINS.SELL)
     }
-  }, [statusFilter])
+  }, [statusFilter, dispatch, history])
 
   useEffect(() => {
     if (servicePath && account && servicePath !== DOMAINS_SERVICE_PATHS.SOLD(account)) {
@@ -85,7 +85,7 @@ const SoldDomainsPage = () => {
             items,
           },
         }));
-  }, [account, servicePath, dispatch]);
+  }, [account, servicePath, dispatch, statusFilter]);
 
   if (!currentListing) return null;
 
