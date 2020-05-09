@@ -44,6 +44,7 @@ const {
   TOGGLE_TX_TYPE,
   CONNECT_SERVICE,
   SET_EXCHANGE_RATE,
+  CLEAN_UP,
 } = MARKET_ACTIONS
 
 const marketActions: IMarketActions = {
@@ -128,6 +129,13 @@ const marketActions: IMarketActions = {
           ...payload,
         }
       }
+    }
+  },
+  [CLEAN_UP]: (state: IMarketState, _: MarketPayload) => {
+    return {
+      ...state,
+      currentListing: undefined,
+      currentOrder: undefined,
     }
   }
 }

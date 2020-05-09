@@ -1,17 +1,12 @@
-import React, { useContext, ChangeEvent, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { MARKET_ACTIONS } from "store/Market/marketActions";
-import MarketStore, { TxType } from "store/Market/MarketStore";
+import MarketStore from "store/Market/MarketStore";
 import RadioFilter from "./RadioFilter";
 import SearchFilter from "./SearchFilter";
-import { ROUTES } from "routes";
-import { useHistory } from "react-router";
 
 const DomainFilters = () => {
     const {
         state: {
-            currentListing: {
-                txType
-            },
             filters: {
                 domains: {
                     name: nameFilter,
@@ -21,13 +16,7 @@ const DomainFilters = () => {
         },
         dispatch,
     } = useContext(MarketStore);
-    const history = useHistory();
     const searchValue = (nameFilter && nameFilter.$like) || '';
-    const [isSold, setIsSold] = useState(txType === TxType.SOLD)
-
-    useEffect(() => {
-        setIsSold(txType === TxType.SOLD)
-    }, [txType])
 
     const domainStatusFilters = [{
         value: 'owned',
