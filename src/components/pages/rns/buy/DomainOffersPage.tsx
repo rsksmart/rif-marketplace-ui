@@ -10,6 +10,8 @@ import { useHistory } from 'react-router';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';
+import { DomainOffer } from 'models/marketItems/DomainItem';
+import AddressItem from 'components/molecules/AddressItem';
 
 const LISTING_TYPE = MarketListingTypes.DOMAIN_OFFERS;
 const TX_TYPE = TxType.BUY;
@@ -86,7 +88,7 @@ const DomainOffersPage = () => {
   }
 
   const collection = currentListing?.items
-    .map(domainItem => {
+    .map((domainItem: DomainOffer) => {
       const {
         _id,
         price,
@@ -97,14 +99,13 @@ const DomainOffersPage = () => {
       } = domainItem;
 
       const currency = crypto[paymentToken];
-
       const displayItem = {
         _id,
         domainName,
-        sellerAddress,
+        sellerAddress: <AddressItem value={sellerAddress} />,
         expirationDate: expirationDate.toLocaleDateString(),
         combinedPrice: <CombinedPriceCell
-          price={price}
+          price={price.toString()}
           priceFiat={(currency.rate * price).toString()}
           currency={currency.displayName}
           currencyFiat={currentFiat.displayName}
