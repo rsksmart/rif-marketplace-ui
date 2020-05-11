@@ -1,8 +1,13 @@
-import React, { useState } from "react";
-import { Tooltip, Typography } from "@material-ui/core";
+import { Tooltip } from "@material-ui/core";
 import { shortenAddress } from "@rsksmart/rif-ui";
+import React, { FC, useState } from "react";
 
-const AddressItem = ({ value }) => {
+export interface AddressItemProps {
+    pretext?: string;
+    value: string;
+}
+
+const AddressItem: FC<AddressItemProps> = ({ pretext, value }) => {
     const [isCopied, setIsCopied] = useState(false);
     return <Tooltip
         interactive
@@ -16,7 +21,10 @@ const AddressItem = ({ value }) => {
             setIsCopied(false);
         }}
     >
-        <Typography>{shortenAddress(value)}</Typography>
+        <p>
+            {pretext && `${pretext} (${shortenAddress(value)})`}
+            {!pretext && shortenAddress(value)}
+        </p>
     </Tooltip>
 }
 

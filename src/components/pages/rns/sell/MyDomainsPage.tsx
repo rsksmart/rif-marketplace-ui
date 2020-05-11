@@ -9,6 +9,8 @@ import { Web3Store } from '@rsksmart/rif-ui';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';
+import { Domain } from 'models/marketItems/DomainItem';
+import AddressItem from 'components/molecules/AddressItem';
 
 const LISTING_TYPE = MarketListingTypes.DOMAINS;
 const TX_TYPE = TxType.SELL;
@@ -88,15 +90,16 @@ const MyDomainsPage = () => {
   }
 
   const collection = currentListing?.items
-    .map(domainItem => {
+    .map((domainItem: Domain) => {
       const {
         _id,
         name,
-        expirationDate
+        expirationDate,
+        tokenId,
       } = domainItem;
       const displayItem = {
         _id,
-        name,
+        name: name || <AddressItem pretext='Unknown RNS:' value={tokenId} />,
         expirationDate: expirationDate.toLocaleDateString(),
         actionCol_1: <SelectRowButton
           id={_id}

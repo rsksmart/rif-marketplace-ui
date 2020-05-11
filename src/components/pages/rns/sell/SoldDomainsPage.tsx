@@ -106,12 +106,13 @@ const SoldDomainsPage = () => {
         paymentToken,
         price,
         soldDate,
+        tokenId,
       } = domainItem;
       const currency = crypto[paymentToken];
 
       const displayItem = {
         _id,
-        domainName: domainName,
+        domainName: domainName || <AddressItem pretext='Unknown RNS:' value={tokenId} />,
         buyer: <AddressItem value={buyer} />,
         currency: currency.displayName,
         sellingPrice: <CombinedPriceCell
