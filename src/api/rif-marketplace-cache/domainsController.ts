@@ -48,17 +48,20 @@ export interface SoldDomainTransferItem {
 
 const mappings = {
     offers: (item: OfferTransferItem): DomainOffer => ({
-        ...item,
         price: parseInt(item.price) / 10 ** 18,
         expirationDate: new Date(item.domain.expirationDate),
         _id: item.offerId,
         domainName: item.domain.name,
         paymentToken: tokens[item.paymentToken],
+        tokenId: item.tokenId,
+        sellerAddress: item.sellerAddress,
     }),
     domains: (item: DomainTransferItem): Domain => ({
-        ...item,
         _id: item.tokenId,
-        expirationDate: new Date(item.expirationDate)
+        expirationDate: new Date(item.expirationDate),
+        ownerAddress: item.ownerAddress,
+        name: item.name,
+        tokenId: item.tokenId,
     }),
     minMaxPrice: (_, item: { price: string }): number => {
         return parseInt(item.price) / 10 ** 18
@@ -70,6 +73,7 @@ const mappings = {
         soldDate: new Date(item.soldDate),
         domainName: item.domain.name,
         buyer: item.newOwnerAddress,
+        tokenId: item.tokenId,
     })
 
 }

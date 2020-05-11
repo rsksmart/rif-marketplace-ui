@@ -95,13 +95,14 @@ const DomainOffersPage = () => {
         domainName,
         paymentToken,
         sellerAddress,
-        expirationDate
+        expirationDate,
+        tokenId
       } = domainItem;
 
       const currency = crypto[paymentToken];
       const displayItem = {
         _id,
-        domainName,
+        domainName: domainName || <AddressItem pretext='Unknown RNS:' value={tokenId} />,
         sellerAddress: <AddressItem value={sellerAddress} />,
         expirationDate: expirationDate.toLocaleDateString(),
         combinedPrice: <CombinedPriceCell
