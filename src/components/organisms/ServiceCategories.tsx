@@ -44,8 +44,8 @@ const ServiceCategories: FC<ServiceCategoriesProps> = () => {
     <Grid container className={classes.servicesContainer}>
       {!!availableServices.length &&
         availableServices.map((service, i) => (
-          <Grid className={classes.serviceContent} item xs={12} lg={6}>
-            <IconedItem {...service} key={i} />
+          <Grid className={classes.serviceContent} item xs={12} lg={6} key={`g${i}`}>
+            <IconedItem {...service} key={`i${i}`} />
           </Grid>
         ))}
     </Grid>

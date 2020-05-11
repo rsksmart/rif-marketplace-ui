@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   th: {
     color: colors.gray6,
     fontWeight: fonts.weight.normal,
-    textAlign: 'center',
+    textAlign: 'left',
     textTransform: 'uppercase',
   },
   'tc-domain': {

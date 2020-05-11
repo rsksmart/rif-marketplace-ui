@@ -20,60 +20,83 @@ const Footer = () => {
         title: 'RIF',
         links: [{
           title: 'Services',
-          to: 'https://developers.rsk.co/rif/'
+          to: 'https://developers.rsk.co/rif/',
+          isExternal: true
         },
         {
           title: 'Whitepaper',
-          to: 'https://developers.rsk.co/rif/'
+          to: 'https://developers.rsk.co/rif/',
+          target: '_blank',
+          isExternal: true
         },
         {
           title: 'RIF token',
-          to: 'https://developers.rsk.co/rif/'
+          to: 'https://developers.rsk.co/rif/',
+          target: '_blank',
+          isExternal: true
         }]
       },
       {
         title: 'RIF Marketplace',
         links: [{
           title: 'Services',
-          to: 'https://developers.rsk.co/rif/'
+          to: 'https://developers.rsk.co/rif/',
+          target: '_blank',
+          isExternal: true
         },
         {
           title: 'Whitepaper',
-          to: 'https://developers.rsk.co/rif/'
+          to: 'https://developers.rsk.co/rif/',
+          target: '_blank',
+          isExternal: true
         },
         {
           title: 'RIF token',
-          to: 'https://developers.rsk.co/rif/'
+          to: 'https://developers.rsk.co/rif/',
+          target: '_blank',
+          isExternal: true
         }]
       },
       {
         title: 'Developers',
         links: [{
           title: 'Services',
-          to: 'https://developers.rsk.co/rif/'
+          to: 'https://developers.rsk.co/rif/',
+          target: '_blank',
+          isExternal: true
         },
         {
           title: 'Whitepaper',
-          to: 'https://developers.rsk.co/rif/'
+          to: 'https://developers.rsk.co/rif/',
+          target: '_blank',
+          isExternal: true
         },
         {
           title: 'RIF token',
-          to: 'https://developers.rsk.co/rif/'
+          to: 'https://developers.rsk.co/rif/',
+          target: '_blank',
+          isExternal: true
         }]
       },
       {
         title: 'Privacy',
         links: [{
           title: 'Services',
-          to: 'https://developers.rsk.co/rif/'
+          to: 'https://developers.rsk.co/rif/',
+          target: '_blank',
+          isExternal: true
         },
         {
           title: 'Whitepaper',
-          to: 'https://developers.rsk.co/rif/'
+          to: 'https://developers.rsk.co/rif/',
+          target: '_blank',
+          isExternal: true
         },
         {
           title: 'RIF token',
-          to: 'https://developers.rsk.co/rif/'
+          to: 'https://developers.rsk.co/rif/',
+          target: '_blank',
+          isExternal: true
         }]
       }
     ]
