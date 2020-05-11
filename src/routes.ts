@@ -11,6 +11,7 @@ const DOMAINS_CHECKOUT = `${DOMAINS_SELL}/checkout`
 const DOMAIN_OFFERS_DONE = `${DOMAINS_BUY}/done`
 const DOMAINS_DONE = `${DOMAINS_SELL}/done`
 const STORAGE = '/storage'
+const FAQ = '/faq'
 
 export const ROUTES = {
   LANDING,
@@ -31,5 +32,6 @@ export const ROUTES = {
       BUY: DOMAIN_OFFERS_DONE,
       SELL: DOMAINS_DONE
     }
-  }
+  },
+  FAQ
 }
