@@ -65,7 +65,7 @@ export const initialState: IMarketState = {
     },
     domainOffers: {
       price: {
-        $lte: 100,
+        $lte: 0,
         $gte: 0
       },
     },
