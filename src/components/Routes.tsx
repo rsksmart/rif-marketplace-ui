@@ -4,6 +4,7 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import { ROUTES } from 'routes';
 import Logger from 'utils/Logger';
 import { LandingPage } from './pages/LandingPage';
+import { StoragePage } from './pages/storage';
 import {
   DomainsCheckoutPage,
   MyDomainsPage,
@@ -32,6 +33,7 @@ const Routes = () => {
   return (
     <Switch>
       <Route exact path={ROUTES.LANDING} component={LandingPage} />
+      <Route exact path={ROUTES.STORAGE} component={StoragePage} />
       <Route exact path={ROUTES.DOMAINS.BUY} component={DomainOffersPage} />
       <Route exact path={ROUTES.DOMAINS.SELL} component={MyDomainsPage} />
       <Route exact path={ROUTES.DOMAINS.CHECKOUT.BUY} component={DomainOffersCheckoutPage} />
