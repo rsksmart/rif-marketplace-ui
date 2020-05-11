@@ -54,13 +54,12 @@ const DomainOfferFilters = () => {
             onChange={(evt) => {
                 const { currentTarget } = evt;
                 const value = currentTarget.value.trim();
-                const domainName = value ? { $like: value } : undefined;
                 dispatch({
                     type: MARKET_ACTIONS.SET_FILTER,
                     payload: {
                         filterItems: {
-                            domain: {
-                                name: domainName
+                            domain: value && {
+                                name: { $like: value }
                             },
                         }
                     }

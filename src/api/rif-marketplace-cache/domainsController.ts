@@ -91,7 +91,7 @@ export const createSoldService = (ownerAddress: string) => {
 }
 
 export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
-    const { price } = filters;
+    const { price, domain } = filters;
     const cacheFilters = {
         ...filters,
         price: {
@@ -99,12 +99,12 @@ export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
             $lte: price.$lte * (10 ** 18),
         },
         // Commented out as the Cache project does not currently support associated querying
-        // domain: domain && {
-        //     ...filters.domain,
-        //     name: {
-        //         $like: `%${domain.name.$like}%`
-        //     }
-        // }
+        domain: domain && {
+            ...filters.domain,
+            name: {
+                $like: `%${domain.name.$like}%`
+            }
+        }
     }
     const results = await fetchMarketData(cacheFilters);
     return results.map(mappings.offers);
