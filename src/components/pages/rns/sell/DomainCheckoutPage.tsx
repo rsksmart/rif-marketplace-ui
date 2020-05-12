@@ -18,9 +18,9 @@ import Logger from 'utils/Logger';
 const logger = Logger.getInstance();
 
 const NETWORK: string = process.env.REACT_APP_NETWORK || 'ganache';
-const rifTokenAddress = contractAdds[NETWORK].rif;
-const rnsAddress = contractAdds[NETWORK].rnsDotRskOwner;
-const marketPlaceAddress = contractAdds[NETWORK].marketplace;
+const rifTokenAddress = contractAdds[NETWORK].rif.toLowerCase();
+const rnsAddress = contractAdds[NETWORK].rnsDotRskOwner.toLowerCase();
+const marketPlaceAddress = contractAdds[NETWORK].marketplace.toLowerCase();
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

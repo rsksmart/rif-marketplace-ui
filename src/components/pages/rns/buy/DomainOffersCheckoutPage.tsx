@@ -17,8 +17,8 @@ import Logger from 'utils/Logger';
 const logger = Logger.getInstance();
 
 const network: string = process.env.REACT_APP_NETWORK || 'ganache';
-const rifTokenAddress = contractAdds[network].rif;
-const marketPlaceAddress = contractAdds[network].marketplace;
+const rifTokenAddress = contractAdds[network].rif.toLowerCase();
+const marketPlaceAddress = contractAdds[network].marketplace.toLowerCase();
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -94,7 +94,7 @@ const DomainOffersCheckoutPage = () => {
             const Contract = c => ContractWrapper(c, web3, account);
             (async () => {
                 const rifContract = await Contract(ERC677).at(rifTokenAddress)
-                const marketPlaceContract = await Contract({abi: ERC721SimplePlacements}).at(marketPlaceAddress)
+                const marketPlaceContract = await Contract({ abi: ERC721SimplePlacements }).at(marketPlaceAddress)
 
                 const myBalance = await rifContract.balanceOf(account)
                 const tokenPlacement = await marketPlaceContract.placement(tokenId);
@@ -158,7 +158,7 @@ const DomainOffersCheckoutPage = () => {
                 }
             })
 
-            const marketPlaceContract = await Contract({abi: ERC721SimplePlacements}).at(marketPlaceAddress)
+            const marketPlaceContract = await Contract({ abi: ERC721SimplePlacements }).at(marketPlaceAddress)
             const rifContract = await Contract(ERC677).at(rifTokenAddress)
 
             const tokenPlacement = await marketPlaceContract.placement(tokenId);
