@@ -128,7 +128,7 @@ const DomainsCheckoutPage = () => {
         }
       })
       const rnsContract = await Contract(ERC721).at(rnsAddress)
-      const marketPlaceContract = await Contract({abi: ERC721SimplePlacements}).at(marketPlaceAddress)
+      const marketPlaceContract = await Contract({ abi: ERC721SimplePlacements }).at(marketPlaceAddress)
 
       try {
         const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId)
@@ -146,6 +146,7 @@ const DomainsCheckoutPage = () => {
         })
         history.replace(ROUTES.DOMAINS.DONE.SELL)
       } catch (e) {
+        logger.error('Could not complete transaction:', e)
         history.replace(ROUTES.DOMAINS.SELL)
         dispatch({
           type: MARKET_ACTIONS.SELECT_ITEM,
