@@ -93,18 +93,12 @@ export const createSoldService = (ownerAddress: string) => {
 }
 
 export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
-    const { price, domain } = filters;
+    const { price } = filters;
     const cacheFilters = {
         ...filters,
         price: {
             $gte: price.$gte * (10 ** 18),
             $lte: price.$lte * (10 ** 18),
-        },
-        domain: domain && {
-            ...filters.domain,
-            name: {
-                $like: `%${domain.name.$like}%`
-            }
         }
     }
     const results = await fetchMarketData(cacheFilters);
