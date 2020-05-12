@@ -13,7 +13,7 @@ export const DOMAINS_SERVICE_PATHS = {
 const networkName = process.env.REACT_APP_NETWORK || 'ganache';
 const network = networkConfig[networkName];
 const tokens = Object.keys(network).reduce((acc, tokenSymbol) => {
-    const value = network[tokenSymbol];
+    const value = network[tokenSymbol].toLowerCase();
     acc[value] = tokenSymbol;
     return acc;
 }, {});
@@ -54,7 +54,7 @@ const mappings = {
         expirationDate: new Date(item.domain.expirationDate),
         _id: item.offerId,
         domainName: item.domain.name,
-        paymentToken: tokens[item.paymentToken],
+        paymentToken: tokens[item.paymentToken.toLowerCase()],
         tokenId: item.tokenId,
         sellerAddress: item.sellerAddress,
     }),
@@ -70,7 +70,7 @@ const mappings = {
     },
     sold: (item: SoldDomainTransferItem): SoldDomain => ({
         _id: item.id,
-        paymentToken: tokens[item.paymentToken],
+        paymentToken: tokens[item.paymentToken.toLowerCase()],
         price: parseInt(item.price) / 10 ** 18,
         soldDate: new Date(item.soldDate),
         domainName: item.domain.name,
