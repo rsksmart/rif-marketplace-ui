@@ -1,6 +1,7 @@
 import { DomainOffersFilter } from "api/models/RnsFilter";
 import { Domain, DomainOffer, SoldDomain } from "models/marketItems/DomainItem";
 import { createService, fetchMarketData } from "./cacheController";
+import networkConfig from 'ui-config.json';
 
 
 export const DOMAINS_SERVICE_PATHS = {
@@ -9,7 +10,8 @@ export const DOMAINS_SERVICE_PATHS = {
     'SOLD': (ownerAddress: string) => `rns/v0/${ownerAddress}/sold`,
 }
 
-const network = process.env.REACT_APP_NETWORK || 'ganache';
+const networkName = process.env.REACT_APP_NETWORK || 'ganache';
+const network = networkConfig[networkName];
 const tokens = Object.keys(network).reduce((acc, tokenSymbol) => {
     const value = network[tokenSymbol];
     acc[value] = tokenSymbol;
