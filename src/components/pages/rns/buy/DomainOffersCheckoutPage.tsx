@@ -17,9 +17,9 @@ import Logger from 'utils/Logger';
 import AddressItem from 'components/molecules/AddressItem';
 const logger = Logger.getInstance();
 
-const NETWORK: string = process.env.REACT_APP_NETWORK || 'ganache';
-const rifTokenAddress = contractAdds[NETWORK].rif;
-const marketPlaceAddress = contractAdds[NETWORK].marketplace;
+const network: string = process.env.REACT_APP_NETWORK || 'ganache';
+const rifTokenAddress = contractAdds[network].rif;
+const marketPlaceAddress = contractAdds[network].marketplace;
 
 
 const useStyles = makeStyles((theme: Theme) =>
