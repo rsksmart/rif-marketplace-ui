@@ -50,17 +50,20 @@ export interface SoldDomainTransferItem {
 
 const mappings = {
     offers: (item: OfferTransferItem): DomainOffer => ({
-        ...item,
         price: parseInt(item.price) / 10 ** 18,
         expirationDate: new Date(item.domain.expirationDate),
         _id: item.offerId,
         domainName: item.domain.name,
         paymentToken: tokens[item.paymentToken],
+        tokenId: item.tokenId,
+        sellerAddress: item.sellerAddress,
     }),
     domains: (item: DomainTransferItem): Domain => ({
-        ...item,
         _id: item.tokenId,
-        expirationDate: new Date(item.expirationDate)
+        expirationDate: new Date(item.expirationDate),
+        ownerAddress: item.ownerAddress,
+        name: item.name,
+        tokenId: item.tokenId,
     }),
     minMaxPrice: (_, item: { price: string }): number => {
         return parseInt(item.price) / 10 ** 18
@@ -72,6 +75,7 @@ const mappings = {
         soldDate: new Date(item.soldDate),
         domainName: item.domain.name,
         buyer: item.newOwnerAddress,
+        tokenId: item.tokenId,
     })
 
 }
@@ -89,20 +93,19 @@ export const createSoldService = (ownerAddress: string) => {
 }
 
 export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
-    const { price } = filters;
+    const { price, domain } = filters;
     const cacheFilters = {
         ...filters,
         price: {
             $gte: price.$gte * (10 ** 18),
             $lte: price.$lte * (10 ** 18),
         },
-        // Commented out as the Cache project does not currently support associated querying
-        // domain: domain && {
-        //     ...filters.domain,
-        //     name: {
-        //         $like: `%${domain.name.$like}%`
-        //     }
-        // }
+        domain: domain && {
+            ...filters.domain,
+            name: {
+                $like: `%${domain.name.$like}%`
+            }
+        }
     }
     const results = await fetchMarketData(cacheFilters);
     return results.map(mappings.offers);
