@@ -1,6 +1,7 @@
 import { DomainOffersFilter } from "api/models/RnsFilter";
 import { Domain, DomainOffer, SoldDomain } from "models/marketItems/DomainItem";
 import { createService, fetchMarketData } from "./cacheController";
+import networkConfig from 'ui-config.json';
 
 
 export const DOMAINS_SERVICE_PATHS = {
@@ -9,7 +10,8 @@ export const DOMAINS_SERVICE_PATHS = {
     'SOLD': (ownerAddress: string) => `rns/v0/${ownerAddress}/sold`,
 }
 
-const network = process.env.REACT_APP_NETWORK || 'ganache';
+const networkName = process.env.REACT_APP_NETWORK || 'ganache';
+const network = networkConfig[networkName];
 const tokens = Object.keys(network).reduce((acc, tokenSymbol) => {
     const value = network[tokenSymbol];
     acc[value] = tokenSymbol;
@@ -48,20 +50,17 @@ export interface SoldDomainTransferItem {
 
 const mappings = {
     offers: (item: OfferTransferItem): DomainOffer => ({
+        ...item,
         price: parseInt(item.price) / 10 ** 18,
         expirationDate: new Date(item.domain.expirationDate),
         _id: item.offerId,
         domainName: item.domain.name,
         paymentToken: tokens[item.paymentToken],
-        tokenId: item.tokenId,
-        sellerAddress: item.sellerAddress,
     }),
     domains: (item: DomainTransferItem): Domain => ({
+        ...item,
         _id: item.tokenId,
-        expirationDate: new Date(item.expirationDate),
-        ownerAddress: item.ownerAddress,
-        name: item.name,
-        tokenId: item.tokenId,
+        expirationDate: new Date(item.expirationDate)
     }),
     minMaxPrice: (_, item: { price: string }): number => {
         return parseInt(item.price) / 10 ** 18
@@ -73,7 +72,6 @@ const mappings = {
         soldDate: new Date(item.soldDate),
         domainName: item.domain.name,
         buyer: item.newOwnerAddress,
-        tokenId: item.tokenId,
     })
 
 }
@@ -91,7 +89,7 @@ export const createSoldService = (ownerAddress: string) => {
 }
 
 export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
-    const { price, domain } = filters;
+    const { price } = filters;
     const cacheFilters = {
         ...filters,
         price: {
@@ -99,12 +97,12 @@ export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
             $lte: price.$lte * (10 ** 18),
         },
         // Commented out as the Cache project does not currently support associated querying
-        domain: domain && {
-            ...filters.domain,
-            name: {
-                $like: `%${domain.name.$like}%`
-            }
-        }
+        // domain: domain && {
+        //     ...filters.domain,
+        //     name: {
+        //         $like: `%${domain.name.$like}%`
+        //     }
+        // }
     }
     const results = await fetchMarketData(cacheFilters);
     return results.map(mappings.offers);
