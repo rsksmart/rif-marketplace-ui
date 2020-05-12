@@ -14,6 +14,7 @@ import MarketStore from 'store/Market/MarketStore';
 import contractAdds from 'ui-config.json';
 import { ContractWrapper } from 'utils/blockchain.utils';
 import Logger from 'utils/Logger';
+import AddressItem from 'components/molecules/AddressItem';
 const logger = Logger.getInstance();
 
 const NETWORK: string = process.env.REACT_APP_NETWORK || 'ganache';
@@ -86,15 +87,14 @@ const DomainOffersCheckoutPage = () => {
     const classes = useStyles();
     const [hasFunds, setHasFunds] = useState(false);
 
-    const domainName = currentOrder?.item?.domainName;
     // check funds
     useEffect(() => {
-        if (web3 && account && domainName) {
-            const tokenId = web3.utils.sha3(domainName.replace('.rsk', ''));
+        if (web3 && account && currentOrder?.item?.tokenId) {
+            const { item: { tokenId } } = currentOrder;
             const Contract = c => ContractWrapper(c, web3, account);
             (async () => {
                 const rifContract = await Contract(ERC677).at(rifTokenAddress)
-                const marketPlaceContract = await Contract({abi: ERC721SimplePlacements}).at(marketPlaceAddress)
+                const marketPlaceContract = await Contract({ abi: ERC721SimplePlacements }).at(marketPlaceAddress)
 
                 const myBalance = await rifContract.balanceOf(account)
                 const tokenPlacement = await marketPlaceContract.placement(tokenId);
@@ -103,7 +103,7 @@ const DomainOffersCheckoutPage = () => {
                 setHasFunds(myBalance.gte(price));
             })()
         }
-    }, [web3, account, domainName])
+    }, [web3, account, currentOrder])
 
     // redirect direct link
     useEffect(() => {
@@ -114,6 +114,7 @@ const DomainOffersCheckoutPage = () => {
 
     if (!currentOrder) return null;
 
+    const { item: { domainName, tokenId } } = currentOrder;
 
     const {
         item: {
@@ -126,7 +127,6 @@ const DomainOffersCheckoutPage = () => {
     } = currentOrder;
     const isOwnDomain = account?.toLowerCase() === sellerAddress.toLowerCase();
 
-    const shortSeller = shortenAddress(sellerAddress);
     const currency = crypto[paymentToken];
 
     const priceCellProps = {
@@ -139,15 +139,14 @@ const DomainOffersCheckoutPage = () => {
     const PriceCell = <CombinedPriceCell {...priceCellProps} />
 
     const details = {
-        'NAME': domainName,
-        'SELLER': shortSeller,
+        'NAME': domainName || <AddressItem pretext='Unknown RNS:' value={tokenId} />,
+        'SELLER': <AddressItem value={sellerAddress} />,
         'RENEWAL DATE': expirationDate.toLocaleDateString(),
         'PRICE': PriceCell
     }
 
     const handleBuyDomain = async () => {
         if (web3 && account) {
-            const tokenId = web3.utils.sha3(domainName.replace('.rsk', ''));
             const Contract = c => ContractWrapper(c, web3, account);
 
             dispatch({
@@ -158,7 +157,7 @@ const DomainOffersCheckoutPage = () => {
                 }
             })
 
-            const marketPlaceContract = await Contract({abi: ERC721SimplePlacements}).at(marketPlaceAddress)
+            const marketPlaceContract = await Contract({ abi: ERC721SimplePlacements }).at(marketPlaceAddress)
             const rifContract = await Contract(ERC677).at(rifTokenAddress)
 
             const tokenPlacement = await marketPlaceContract.placement(tokenId);
@@ -189,7 +188,7 @@ const DomainOffersCheckoutPage = () => {
             <Card
                 className={classes.card}
             >
-                <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Buying ${domainName}`} />
+                <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Buying ${domainName || shortenAddress(tokenId)}`} />
                 <CardContent>
                     <Typography className={classes.contentTitle} variant='h6' color='secondary'>Domain details</Typography>
                     <Table className={classes.contentDetails}>

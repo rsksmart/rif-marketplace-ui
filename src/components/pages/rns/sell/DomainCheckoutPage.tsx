@@ -15,6 +15,8 @@ import { ContractWrapper } from 'utils/blockchain.utils';
 import Web3 from 'web3';
 import contractAdds from 'ui-config.json';
 import Logger from 'utils/Logger';
+import AddressItem from 'components/molecules/AddressItem';
+import { shortenAddress } from "@rsksmart/rif-ui";
 const logger = Logger.getInstance();
 
 const NETWORK: string = process.env.REACT_APP_NETWORK || 'ganache';
@@ -113,13 +115,13 @@ const DomainsCheckoutPage = () => {
     item: {
       name,
       expirationDate,
+      tokenId
     },
     isProcessing
   } = currentOrder;
 
   const handleSubmit = async () => {
     if (web3 && account) {
-      const tokenId = web3.utils.sha3(name.replace('.rsk', ''))
       dispatch({
         type: MARKET_ACTIONS.SELECT_ITEM,
         payload: {
@@ -128,7 +130,7 @@ const DomainsCheckoutPage = () => {
         }
       })
       const rnsContract = await Contract(ERC721).at(rnsAddress)
-      const marketPlaceContract = await Contract({abi: ERC721SimplePlacements}).at(marketPlaceAddress)
+      const marketPlaceContract = await Contract({ abi: ERC721SimplePlacements }).at(marketPlaceAddress)
 
       try {
         const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId)
@@ -187,14 +189,14 @@ const DomainsCheckoutPage = () => {
       <Card
         className={classes.card}
       >
-        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Listing ${name}`} />
+        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Listing ${name || shortenAddress(tokenId)}`} />
         <CardContent>
           <div className={classes.contentDetails}>
             <Table>
               <TableBody>
                 <TableRow>
                   <TableCell className={classes.detailKey}>NAME</TableCell>
-                  <TableCell className={classes.detailValue}>{name}</TableCell>
+                  <TableCell className={classes.detailValue}>{name || <AddressItem pretext='Unknown RNS:' value={tokenId} />}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className={classes.detailKey}>RENEWAL DATE</TableCell>
