@@ -61,8 +61,7 @@ const faqProps: FAQPageProps = {
 
 const useStyles = makeStyles((theme: Theme) => ({
   mainTitle: {
-    fontSize: fonts.size.subtitleBig,
-    fontWeight: fonts.weight.lightBold,
+    fontSize: theme.typography.pxToRem(50),
     margin: theme.spacing(2, 0),
   },
   questionsSection: {
