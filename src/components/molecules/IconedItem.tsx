@@ -9,6 +9,7 @@ export interface IconedItemProps {
   iconProps: IconProps;
   text: string;
   to: string;
+  description: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -24,18 +25,26 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontWeight: fonts.weight.lightBold
     }
   },
+  iconDescription: {
+    display: 'flex',
+    wordWrap: 'normal',
+    justifyContent: 'center',
+  },
   link: {
     textDecoration: 'none',
+    display: 'flex',
+    flexDirection: 'column'
   },
 }));
 
-const IconedItem: FC<IconedItemProps> = ({ className = '', to, text, iconProps }) => {
+const IconedItem: FC<IconedItemProps> = ({ className = '', to, text, iconProps, description }) => {
   const classes = useStyles();
   return (
     <div className={`${classes.root} ${className}`}>
       <NavLink className={classes.link} to={to}>
         <Icon {...iconProps} />
         <Typography className={classes.iconTitle} variant='h6' color='primary'>{text}</Typography>
+        <Typography className={classes.iconDescription} color='secondary'>{description}</Typography>
       </NavLink>
     </div>
   );
