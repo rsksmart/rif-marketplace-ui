@@ -37,7 +37,7 @@ export const LandingPageTemplate: FC<LandingPageTemplateProps> = () => {
       <HeaderTongue {...headerTongueProps} />
       <div className={classes.root}>
         <div className={classes.titleContainer}>
-          <Typography color='primary' variant='h4'>RIF Marketplace services</Typography>
+          <Typography color='primary' variant='h4'>RIF Marketplace Service Categories</Typography>
         </div>
         <ServiceCategories />
       </div>
