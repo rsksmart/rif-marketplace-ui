@@ -6,6 +6,7 @@ import Logger from 'utils/Logger';
 import { LandingPage } from './pages/LandingPage';
 import { FAQPage } from './pages/faq';
 import { StoragePage } from './pages/storage';
+import AboutPage from './pages/AboutPage';
 import {
   DomainsCheckoutPage,
   MyDomainsPage,
@@ -44,6 +45,7 @@ const Routes = () => {
       <Route exact path={ROUTES.DOMAINS.CHECKOUT.SELL} component={DomainsCheckoutPage} />
       <Route exact path={ROUTES.DOMAINS.DONE.SELL} component={DomainListed} />
       <Route exact path={ROUTES.DOMAINS.DONE.BUY} component={DomainPurchased} />
+      <Route exact path={ROUTES.ABOUT} component={AboutPage} />
       <Route component={NotFound} />
     </Switch>
   );
