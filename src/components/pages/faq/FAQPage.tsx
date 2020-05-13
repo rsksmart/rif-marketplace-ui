@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Typography, fonts, colors } from '@rsksmart/rif-ui';
+import { Typography, colors } from '@rsksmart/rif-ui';
 import FAQPageTemplate from '../../templates/FAQPageTemplate';
 import FAQSection, { FAQSectionProps } from 'components/molecules/FAQSection';
 
