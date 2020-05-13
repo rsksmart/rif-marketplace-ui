@@ -32,11 +32,13 @@ const ServiceCategories: FC<ServiceCategoriesProps> = () => {
       to: ROUTES.DOMAINS.BUY,
       text: 'Name Services',
       iconProps: { src: Icons.DOMAINS, alt: 'Name Services icon' },
+      description: 'Buy/Sell RNS Domains through the RIF Marketplace!'
     },
     {
       to: ROUTES.STORAGE,
       text: 'Storage',
       iconProps: { src: Icons.STORAGE, alt: 'Storage icon' },
+      description: 'Offer/Rent Decentralized Storage through the RIF Marketplace!'
     }
   ];
 
