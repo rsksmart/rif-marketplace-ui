@@ -14,6 +14,7 @@ export interface Domain extends MarketItemIface {
     ownerAddress: string,
     name: string,
     tokenId: string,
+    offer?: Pick<DomainOffer, 'price' | 'paymentToken'>
 }
 
 export interface SoldDomain extends MarketItemIface {

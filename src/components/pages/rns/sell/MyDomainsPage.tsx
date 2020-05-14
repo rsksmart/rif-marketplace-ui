@@ -11,6 +11,7 @@ import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';
 import { Domain } from 'models/marketItems/DomainItem';
 import AddressItem from 'components/molecules/AddressItem';
+import { CombinedPriceCell } from 'components/molecules';
 
 const LISTING_TYPE = MarketListingTypes.DOMAINS;
 const TX_TYPE = TxType.SELL;
@@ -22,6 +23,10 @@ const MyDomainsPage = () => {
       filters: {
         domains: domainFilters,
       },
+      exchangeRates: {
+        currentFiat,
+        crypto,
+      }
     },
     dispatch,
   } = useContext(MarketStore);
@@ -85,9 +90,19 @@ const MyDomainsPage = () => {
   if (!currentListing) return null;
 
   const headers = {
-    name: 'Name',
-    expirationDate: 'Renewal Date',
-    actionCol_1: ''
+    owned:
+    {
+      name: 'Name',
+      expirationDate: 'Renewal Date',
+      actionCol_1: ''
+    },
+    placed: {
+      name: 'Name',
+      expirationDate: 'Renewal Date',
+      price: 'Listed Price',
+      actionCol_1: ''
+    },
+    sold: {}
   }
 
   const collection = currentListing?.items
@@ -95,12 +110,14 @@ const MyDomainsPage = () => {
       const {
         _id,
         name,
+        offer,
         expirationDate,
         tokenId,
       } = domainItem;
+      const pseudoResolvedName = domainFilters?.name?.$like && domainFilters?.name?.$like + '.rsk';
       const displayItem = {
         _id,
-        name: name || <AddressItem pretext='Unknown RNS:' value={tokenId} />,
+        name: name || pseudoResolvedName || <AddressItem pretext='Unknown RNS:' value={tokenId} />,
         expirationDate: expirationDate.toLocaleDateString(),
         actionCol_1: <SelectRowButton
           id={_id}
@@ -118,6 +135,18 @@ const MyDomainsPage = () => {
         />
       }
 
+      if (statusFilter === 'placed' && offer) {
+        const { price, paymentToken } = offer;
+        const currency = crypto[paymentToken];
+        displayItem['price'] = <CombinedPriceCell
+          price={price.toString()}
+          priceFiat={(currency.rate * price).toString()}
+          currency={currency.displayName}
+          currencyFiat={currentFiat.displayName}
+          divider=' = '
+        />
+      }
+
       return displayItem;
     })
 
@@ -126,7 +155,7 @@ const MyDomainsPage = () => {
       className="Domains"
       filterItems={<DomainFilters />}
       itemCollection={collection}
-      headers={headers}
+      headers={headers[statusFilter]}
       accountRequired
     />
   );

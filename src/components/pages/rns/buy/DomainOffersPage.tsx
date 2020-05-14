@@ -99,10 +99,11 @@ const DomainOffersPage = () => {
         tokenId
       } = domainItem;
 
+      const pseudoResolvedName = offerFilters?.domain?.name?.$like && offerFilters?.domain?.name?.$like + '.rsk';
       const currency = crypto[paymentToken];
       const displayItem = {
         _id,
-        domainName: domainName || <AddressItem pretext='Unknown RNS:' value={tokenId} />,
+        domainName: domainName || pseudoResolvedName || <AddressItem pretext='Unknown RNS:' value={tokenId} />,
         sellerAddress: <AddressItem value={sellerAddress} />,
         expirationDate: expirationDate.toLocaleDateString(),
         combinedPrice: <CombinedPriceCell
