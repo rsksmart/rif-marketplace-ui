@@ -107,19 +107,19 @@ export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
 
 export const fetchDomains = async (filters?) => {
     const filtersCopy = { ...filters }
-    if (filters?.name?.$like) {
-        const name = {
-            $like: `%${filters.name.$like}%`
-        }
-        filtersCopy.name = name;
-    }
     const results = await fetchMarketData(filtersCopy);
 
     return results.map(mappings.domains);
 }
 
 export const fetchSoldDomains = async (filters?) => {
-    const results = await fetchMarketData(filters);
+    const { name } = filters;
+    const cacheFilters = {
+        domain: !!filters.name && {
+            name,
+        },
+    }
+    const results = await fetchMarketData(cacheFilters);
     return results.map(mappings.sold);
 }
 
