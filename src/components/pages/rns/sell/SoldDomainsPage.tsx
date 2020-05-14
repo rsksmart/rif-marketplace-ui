@@ -24,9 +24,7 @@ const SoldDomainsPage = () => {
         crypto,
       },
       filters: {
-        domains: {
-          status: statusFilter
-        }
+        domains: domainFilters,
       }
     },
     dispatch,
@@ -37,7 +35,9 @@ const SoldDomainsPage = () => {
   const history = useHistory()
 
   const servicePath = currentListing?.servicePath;
-
+  const {
+    status: statusFilter
+  } = domainFilters;
   /* Initialise */
   useEffect(() => {
     if (statusFilter !== 'sold') {
@@ -76,8 +76,8 @@ const SoldDomainsPage = () => {
   }, [servicePath, account, dispatch])
 
   useEffect(() => {
-    if (servicePath && account && servicePath === DOMAINS_SERVICE_PATHS.SOLD(account) && statusFilter === 'sold') // TODO: refactor
-      fetchSoldDomains()
+    if (servicePath && account && servicePath === DOMAINS_SERVICE_PATHS.SOLD(account) && domainFilters.status === 'sold') // TODO: refactor
+      fetchSoldDomains(domainFilters)
         .then(items => dispatch({
           type: MARKET_ACTIONS.SET_ITEMS,
           payload: {
@@ -85,7 +85,7 @@ const SoldDomainsPage = () => {
             items,
           },
         }));
-  }, [account, servicePath, dispatch, statusFilter]);
+  }, [account, servicePath, dispatch, domainFilters]);
 
   if (!currentListing) return null;
 
