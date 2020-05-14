@@ -110,9 +110,10 @@ const SoldDomainsPage = () => {
       } = domainItem;
       const currency = crypto[paymentToken];
 
+      const pseudoResolvedName = domainFilters?.name?.$like && domainFilters?.name?.$like + '.rsk';
       const displayItem = {
         _id,
-        domainName: domainName || <AddressItem pretext='Unknown RNS:' value={tokenId} />,
+        domainName: domainName || pseudoResolvedName || <AddressItem pretext='Unknown RNS:' value={tokenId} />,
         buyer: <AddressItem value={buyer} />,
         currency: currency.displayName,
         sellingPrice: <CombinedPriceCell
