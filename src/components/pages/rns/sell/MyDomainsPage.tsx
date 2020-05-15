@@ -3,7 +3,7 @@ import SelectRowButton from 'components/molecules/table/SelectRowButton';
 import DomainFilters from 'components/organisms/filters/DomainFilters';
 import MarketPageTemplate from 'components/templates/MarketPageTemplate';
 import { MarketListingTypes } from 'models/Market';
-import React, { useContext, useEffect } from 'react';
+import React, { FC, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { Web3Store } from '@rsksmart/rif-ui';
 import { ROUTES } from 'routes';
@@ -16,7 +16,7 @@ import { CombinedPriceCell } from 'components/molecules';
 const LISTING_TYPE = MarketListingTypes.DOMAINS;
 const TX_TYPE = TxType.SELL;
 
-const MyDomainsPage = () => {
+const MyDomainsPage: FC<{}> = () => {
   const {
     state: {
       currentListing,

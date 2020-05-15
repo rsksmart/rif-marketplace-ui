@@ -6,7 +6,7 @@ import DomainFilters from 'components/organisms/filters/DomainFilters';
 import MarketPageTemplate from 'components/templates/MarketPageTemplate';
 import { MarketListingTypes } from 'models/Market';
 import { SoldDomain } from 'models/marketItems/DomainItem';
-import React, { useContext, useEffect } from 'react';
+import React, { FC, useContext, useEffect } from 'react';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';
 import { useHistory } from 'react-router';
@@ -15,7 +15,7 @@ import { ROUTES } from 'routes';
 const LISTING_TYPE = MarketListingTypes.DOMAINS;
 const TX_TYPE = TxType.SOLD;
 
-const SoldDomainsPage = () => {
+const SoldDomainsPage: FC<{}> = () => {
   const {
     state: {
       currentListing,

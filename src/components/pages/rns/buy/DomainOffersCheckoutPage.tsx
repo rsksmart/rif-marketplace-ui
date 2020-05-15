@@ -5,7 +5,7 @@ import Login from 'components/atoms/Login';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Card, CardContent, CardHeader, colors, shortenAddress, Table, TableBody, TableCell, TableRow, Typography, Web3Store } from '@rsksmart/rif-ui';
 import { ROUTES } from 'routes';
@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const DomainOffersCheckoutPage = () => {
+const DomainOffersCheckoutPage: FC<{}> = () => {
     const history = useHistory();
     const {
         state: {
