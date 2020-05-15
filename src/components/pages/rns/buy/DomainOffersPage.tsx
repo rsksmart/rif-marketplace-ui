@@ -5,7 +5,7 @@ import SelectRowButton from 'components/molecules/table/SelectRowButton';
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters';
 import MarketPageTemplate from 'components/templates/MarketPageTemplate';
 import { MarketListingTypes } from 'models/Market';
-import React, { useContext, useEffect } from 'react';
+import React, { FC, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
@@ -16,7 +16,9 @@ import AddressItem from 'components/molecules/AddressItem';
 const LISTING_TYPE = MarketListingTypes.DOMAIN_OFFERS;
 const TX_TYPE = TxType.BUY;
 
-const DomainOffersPage = () => {
+export interface DomainOffersPageProps { }
+
+const DomainOffersPage: FC<DomainOffersPageProps> = () => {
   const {
     state: {
       currentListing,

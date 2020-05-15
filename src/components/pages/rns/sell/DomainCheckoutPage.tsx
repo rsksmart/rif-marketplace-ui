@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import ERC721 from '@rsksmart/erc721/ERC721Data.json';
 import ERC721SimplePlacements from '@rsksmart/rif-marketplace-nfts/ERC721SimplePlacementsABI.json';
@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const DomainsCheckoutPage = () => {
+const DomainsCheckoutPage: FC<{}> = () => {
   const history = useHistory();
   const {
     state: {

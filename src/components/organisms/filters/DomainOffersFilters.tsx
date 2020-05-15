@@ -1,11 +1,11 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { FC, useContext, useState, useEffect } from "react";
 import MarketStore from "store/Market/MarketStore";
 import SearchFilter from "./SearchFilter";
 import { MARKET_ACTIONS } from "store/Market/marketActions";
 import RangeFilter from "./RangeFilter";
 import { fetchMinMaxPrice } from "api/rif-marketplace-cache/domainsController";
 
-const DomainOfferFilters = () => {
+const DomainOfferFilters: FC<{}> = () => {
     const {
         state: {
             currentListing,
