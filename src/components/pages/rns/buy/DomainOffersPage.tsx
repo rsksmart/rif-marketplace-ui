@@ -5,8 +5,13 @@ import SelectRowButton from 'components/molecules/table/SelectRowButton';
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters';
 import MarketPageTemplate from 'components/templates/MarketPageTemplate';
 import { MarketListingTypes } from 'models/Market';
+<<<<<<< HEAD
 import React, { FC, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router';
+=======
+import React, { useContext, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+>>>>>>> refactor: solves #123 - removed react-router dependency
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';

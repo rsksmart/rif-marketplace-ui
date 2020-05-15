@@ -9,7 +9,7 @@ import { SoldDomain } from 'models/marketItems/DomainItem';
 import React, { FC, useContext, useEffect } from 'react';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { ROUTES } from 'routes';
 
 const LISTING_TYPE = MarketListingTypes.DOMAINS;
