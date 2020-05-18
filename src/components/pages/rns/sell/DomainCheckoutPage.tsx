@@ -160,13 +160,13 @@ const DomainsCheckoutPage = () => {
 
   const handlePriceChange = (event) => {
     const { target: { value: newValue } } = event;
-    const newValueInt = parseInt(newValue);
+    const newValueInt = parseFloat(newValue);
     if (newValueInt || newValue === '') {
       setPrice(newValue);
       if (newValue) {
         const currencySymbol = currencySymbols[parseInt(currency)];
         const newValueInFiat = newValueInt * crypto[currencySymbol].rate;
-        setPriceFiat(newValueInFiat.toString())
+        setPriceFiat(newValueInFiat.toFixed(4).toString())
       } else {
         setPriceFiat('')
       }

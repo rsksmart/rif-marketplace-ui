@@ -11,10 +11,12 @@ export interface CombinedPriceCellProps {
 }
 
 const CombinedPriceCell: FC<CombinedPriceCellProps> = ({ className = '', divider, price, currency, priceFiat, currencyFiat }) => {
+  const cappedDecimalsFiat = parseFloat(priceFiat).toFixed(4).toString();
+
   return <div className={('priceCell ' + className).trim()}>
     <PriceItem key='hola' type='crypto' price={price} currency={currency} />
     {!!divider && divider}
-    <PriceItem type='fiat' price={priceFiat} currency={currencyFiat} />
+    <PriceItem type='fiat' price={cappedDecimalsFiat} currency={currencyFiat} />
   </div>
 }
 
