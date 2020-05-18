@@ -39,7 +39,7 @@
     "@rsksmart/rif-marketplace-nfts": "0.0.2",
     "@rsksmart/rif-ui": "github:rsksmart/rif-ui",
     "@truffle/contract": "^4.2.1",
-    "@truffle/debug-utils": "^4.1.1",
+    "@truffle/debug-utils": "^4.1.3",
     "formik": "^2.1.4",
     "react": "^16.13.0",
     "react-dom": "^16.10.2",
