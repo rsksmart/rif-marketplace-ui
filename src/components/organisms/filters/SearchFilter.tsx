@@ -12,7 +12,6 @@ export interface SearchFilterProps {
   value: string;
 };
 
-// TODO: remove gray border when focused but not hovered
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -21,19 +20,11 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: 50,
       textAlign: 'center',
       width: '100%',
-      '& .MuiOutlinedInput-root': {
-        '&:hover': {
-          border: `1px solid ${colors.primary} !important`
-        },
-      },
-      '& .Mui-focused': {
+      '&:hover': {
         border: `1px solid ${colors.primary} !important`
       },
-      '&:hover': {
-        border: `0px !important`
-      },
-      '&:focus': {
-        border: `0px !important`
+      '&:focused': {
+        border: `1px solid ${colors.primary} !important`
       },
     },
     input: {

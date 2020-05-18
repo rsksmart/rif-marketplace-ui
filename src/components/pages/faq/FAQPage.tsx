@@ -5,7 +5,6 @@ import FAQPageTemplate from '../../templates/FAQPageTemplate';
 import FAQSection, { FAQSectionProps } from 'components/molecules/FAQSection';
 
 // TODO:
-// - update rif-ui accordion component
 // - create FAQSection in rif-ui
 export interface FAQPageProps {
   className?: string;

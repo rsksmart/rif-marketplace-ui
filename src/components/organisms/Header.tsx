@@ -1,7 +1,6 @@
 import React from 'react';
 import { ROUTES } from 'routes';
 import { Header as RUIHeader } from '@rsksmart/rif-ui';
-// TODO: remove the dist path once it's ready in the library
 import { HeaderItemProps } from '@rsksmart/rif-ui/dist/components/organisms/Header/Header';
 import InfoIcon from '@material-ui/icons/Info';
 import LiveHelpIcon from '@material-ui/icons/LiveHelp';
