@@ -5,13 +5,14 @@ import MarketPageTemplate from 'components/templates/MarketPageTemplate';
 import { MarketListingTypes } from 'models/Market';
 import React, { FC, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router';
-import { Web3Store } from '@rsksmart/rif-ui';
+import { Web3Store, IconButton } from '@rsksmart/rif-ui';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore, { TxType } from 'store/Market/MarketStore';
 import { Domain } from 'models/marketItems/DomainItem';
 import AddressItem from 'components/molecules/AddressItem';
 import { CombinedPriceCell } from 'components/molecules';
+import ClearIcon from '@material-ui/icons/Clear';
 
 const LISTING_TYPE = MarketListingTypes.DOMAINS;
 const TX_TYPE = TxType.SELL;
@@ -100,7 +101,8 @@ const MyDomainsPage: FC<{}> = () => {
       name: 'Name',
       expirationDate: 'Renewal Date',
       price: 'Listed Price',
-      actionCol_1: ''
+      actionCol_1: '',
+      actionCol_2: ''
     },
     sold: {}
   }
@@ -145,6 +147,23 @@ const MyDomainsPage: FC<{}> = () => {
           currencyFiat={currentFiat.displayName}
           divider=' = '
         />
+        displayItem['actionCol_2']= <IconButton color='primary' 
+          id={_id}
+          onClick={() => {
+            dispatch({
+              type: MARKET_ACTIONS.SELECT_ITEM,
+              payload: {
+                listingType: LISTING_TYPE,
+                item: domainItem,
+                txType: TX_TYPE  
+              }
+            })
+            history.push(ROUTES.DOMAINS.CHECKOUT.CANCEL)
+          }}
+        ><ClearIcon /></IconButton>;
+        
+
+
       }
 
       return displayItem;

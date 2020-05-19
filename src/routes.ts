@@ -10,6 +10,8 @@ const DOMAIN_OFFERS_CHECKOUT = `${DOMAINS_BUY}/checkout`
 const DOMAINS_CHECKOUT = `${DOMAINS_SELL}/checkout`
 const DOMAIN_OFFERS_DONE = `${DOMAINS_BUY}/done`
 const DOMAINS_DONE = `${DOMAINS_SELL}/done`
+const DOMAIN_CANCEL_CHECKOUT = `${DOMAINS}/cancel/checkout`
+const DOMAIN_CANCEL_DONE = `${DOMAINS}/cancel/done`
 const STORAGE = '/storage'
 const FAQ = '/faq'
 const ABOUT = '/about'
@@ -28,10 +30,12 @@ export const ROUTES = {
     CHECKOUT: {
       BUY: DOMAIN_OFFERS_CHECKOUT,
       SELL: DOMAINS_CHECKOUT,
+      CANCEL: DOMAIN_CANCEL_CHECKOUT
     },
     DONE: {
       BUY: DOMAIN_OFFERS_DONE,
-      SELL: DOMAINS_DONE
+      SELL: DOMAINS_DONE,
+      CANCEL: DOMAIN_CANCEL_DONE
     }
   },
   FAQ,
