@@ -7,7 +7,6 @@ import { MarketStoreProvider } from 'store/Market/MarketStore';
 import Footer from 'components/organisms/Footer';
 import Header from 'components/organisms/Header';
 import Routes from 'components/Routes';
-// TODO: remove the dist path once it's fixed in the library
 import '@rsksmart/rif-ui/dist/index.css';
 import PageTemplate from 'components/templates/PageTemplate';
 

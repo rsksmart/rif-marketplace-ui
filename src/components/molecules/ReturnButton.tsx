@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Button } from '@rsksmart/rif-ui';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
 export interface ReturnButtonProps {
   backTo: string
