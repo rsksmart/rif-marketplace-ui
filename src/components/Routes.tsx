@@ -15,9 +15,9 @@ import {
   DomainOffersCheckoutPage,
   DomainListed,
   CancelDomainCheckoutPage,
-  DomainCanceled
+  DomainCanceled,
+  SoldDomainsPage
 } from './pages/rns';
-import SoldDomainsPage from './pages/rns/sell/SoldDomainsPage';
 
 
 const logger = Logger.getInstance();

@@ -6,7 +6,7 @@ import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate';
 import { useHistory } from 'react-router-dom';
-import { Button, Card, CardActions, CardContent, CardHeader, colors, Table, TableBody, TableCell, TableRow, Typography, Web3Store } from '@rsksmart/rif-ui';
+import { Button, Card, CardActions, CardContent, CardHeader, colors, shortenAddress, Table, TableBody, TableCell, TableRow, Typography, Web3Store } from '@rsksmart/rif-ui';
 import { ROUTES } from 'routes';
 import { MARKET_ACTIONS } from 'store/Market/marketActions';
 import MarketStore from 'store/Market/MarketStore';
@@ -15,7 +15,6 @@ import Web3 from 'web3';
 import contractAdds from 'ui-config.json';
 import Logger from 'utils/Logger';
 import AddressItem from 'components/molecules/AddressItem';
-import { shortenAddress } from "@rsksmart/rif-ui";
 const logger = Logger.getInstance();
 
 const NETWORK: string = process.env.REACT_APP_NETWORK || 'ganache';
@@ -23,47 +22,47 @@ const rnsAddress = contractAdds[NETWORK].rnsDotRskOwner.toLowerCase();
 const marketPlaceAddress = contractAdds[NETWORK].marketplace.toLowerCase();
 
 const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        card: {
-            width: 491,
-            height: "fit-content",
-            padding: 80,
-            paddingTop: 44,
-            paddingBottom: 69,
+  createStyles({
+    card: {
+      width: 491,
+      height: "fit-content",
+      padding: theme.spacing(10),
+      paddingTop: theme.spacing(5.5),
+      paddingBottom: theme.spacing(8.5),
 
-            background: colors.white,
-            border: `1px solid ${colors.gray1}`,
-            boxSizing: 'border-box',
-            boxShadow: '0px 6px 10px rgba(0, 0, 0, 0.2)',
+      background: colors.white,
+      border: `1px solid ${colors.gray1}`,
+      boxSizing: 'border-box',
+      boxShadow: '0px 6px 10px rgba(0, 0, 0, 0.2)',
 
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifySelf: 'center',
-            alignSelf: 'center',
-        },
-        contentTitle: {
-            marginBottom: theme.spacing(1),
-            textAlign: 'center',
-        },
-        footer: {
-            display: 'flex',
-            flexDirection: 'column',
-            alignContent: 'center',
-            textAlign: 'center'
-        },
-        contentDetails: {
-            width: 300,
-            display: 'flex',
-            flexDirection: 'column',
-        },
-        detailKey: {
-            border: 'none',
-        },
-        detailValue: {
-            border: 'none',
-        },
-    }),
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifySelf: 'center',
+      alignSelf: 'center',
+    },
+    contentTitle: {
+      marginBottom: theme.spacing(1),
+      textAlign: 'center',
+    },
+    footer: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignContent: 'center',
+      textAlign: 'center'
+    },
+    contentDetails: {
+      width: 300,
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    detailKey: {
+      border: 'none',
+    },
+    detailValue: {
+      border: 'none',
+    },
+  }),
 );
 
 const CancelDomainCheckoutPage = () => {
@@ -109,11 +108,11 @@ const CancelDomainCheckoutPage = () => {
   const currency = crypto[offer.paymentToken];
 
   const priceCellProps = {
-      price: offer.price,
-      priceFiat: (currency.rate * offer.price).toString(),
-      currency: currency.displayName,
-      currencyFiat: currentFiat.displayName,
-      divider: ' '
+    price: offer.price,
+    priceFiat: (currency.rate * offer.price).toString(),
+    currency: currency.displayName,
+    currencyFiat: currentFiat.displayName,
+    divider: ' '
   };
   const PriceCell = <CombinedPriceCell {...priceCellProps} />
 
@@ -121,8 +120,7 @@ const CancelDomainCheckoutPage = () => {
     'NAME': name || <AddressItem pretext='Unknown RNS:' value={tokenId} />,
     'RENEWAL DATE': expirationDate.toLocaleDateString(),
     'PRICE': PriceCell
-}
-
+  }
 
   const handleSubmit = async () => {
     if (web3 && account) {
@@ -137,11 +135,10 @@ const CancelDomainCheckoutPage = () => {
       const marketPlaceContract = await Contract({ abi: ERC721SimplePlacements }).at(marketPlaceAddress)
 
       try {
-      
+
         //Unapprove token
         const unapproveReceipt = await rnsContract.approve("0x0000000000000000000000000000000000000000", tokenId)
         logger.info('unapproveReciept:', unapproveReceipt);
-
 
         const receipt = await marketPlaceContract.unplace(tokenId)
         logger.info('unplace receipt:', receipt);
@@ -174,22 +171,22 @@ const CancelDomainCheckoutPage = () => {
       }}
     >
       <Card
-          className={classes.card}
+        className={classes.card}
       >
-          <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Canceling ${name || shortenAddress(tokenId)}`} />
-          <CardContent>
-              <Typography className={classes.contentTitle} variant='h6' color='secondary'>Domain details</Typography>
-              <Table className={classes.contentDetails}>
-                  <TableBody>
-                      {Object.keys(details).map((key) => {
-                          return <TableRow key={key}>
-                              <TableCell className={classes.detailKey}>{key}</TableCell>
-                              <TableCell className={classes.detailValue}>{details[key]}</TableCell>
-                          </TableRow>
-                      })}
-              </TableBody>
-            </Table>
-          </CardContent>
+        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Canceling ${name || shortenAddress(tokenId)}`} />
+        <CardContent>
+          <Typography className={classes.contentTitle} variant='h6' color='secondary'>Domain details</Typography>
+          <Table className={classes.contentDetails}>
+            <TableBody>
+              {Object.keys(details).map((key) => {
+                return <TableRow key={key}>
+                  <TableCell className={classes.detailKey}>{key}</TableCell>
+                  <TableCell className={classes.detailValue}>{details[key]}</TableCell>
+                </TableRow>
+              })}
+            </TableBody>
+          </Table>
+        </CardContent>
         {!isProcessing &&
           <CardActions className={classes.footer}>
             <p>Your wallet will open and you will be asked to confirm the transaction for canceling the domain.</p>
