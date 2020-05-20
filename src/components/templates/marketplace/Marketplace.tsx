@@ -66,7 +66,7 @@ const Marketplace: FC<MarketplaceProps> = ({
               <TableRow className={index % 2 ? classes.coloredRow : ''} key={item.id}>
                 {
                   Object.keys(headers).map((itemName: string) => (
-                    <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={item.id + itemName}>
+                    <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={itemName}>
                       {item[itemName]}
                     </TableCell>
                   ))

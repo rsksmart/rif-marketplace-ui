@@ -134,8 +134,8 @@ const MyDomainsPage: FC<{}> = () => {
             history.push(ROUTES.DOMAINS.CHECKOUT.SELL)
           }}
         />,
-        price: {},
-        action2: {},
+        price: <></>,
+        action2: <></>,
       }
 
       if (statusFilter === 'placed' && offer) {

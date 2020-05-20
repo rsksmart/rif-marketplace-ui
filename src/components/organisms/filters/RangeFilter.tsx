@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { Accordion, RangeSliderWithInputs } from '@rsksmart/rif-ui'
-/* eslint-disable import/no-unresolved */
+/* eslint-disable-next-line import/no-unresolved */
 import { RangeSliderWithInputsProps } from '@rsksmart/rif-ui/dist/components/molecules/RangeSliderWithInputs'
 
 export interface RangeFilterProps extends RangeSliderWithInputsProps {
