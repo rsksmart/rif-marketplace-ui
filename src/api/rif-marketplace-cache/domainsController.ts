@@ -38,15 +38,20 @@ export interface DomainTransferItem {
   offer: Omit<OfferTransferItem, 'domain'>
 }
 
+export interface TransferItem {
+    newOwnerAddress: string,
+}
+
 export interface SoldDomainTransferItem {
-  id: string
-  tokenId: string
-  sellerAddress: string
-  newOwnerAddress: string
-  paymentToken: string
-  price: string
-  soldDate: string
-  domain: DomainTransferItem
+    id: string,
+    tokenId: string,
+    sellerAddress: string,
+    newOwnerAddress: string,
+    paymentToken: string,
+    price: string,
+    soldDate: string,
+    domain: DomainTransferItem,
+    transfer: TransferItem
 }
 
 
