@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import ERC721 from '@rsksmart/erc721/ERC721Data.json';
 import ERC721SimplePlacements from '@rsksmart/rif-marketplace-nfts/ERC721SimplePlacementsABI.json';
@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const DomainsCheckoutPage = () => {
+const DomainsCheckoutPage: FC<{}> = () => {
   const history = useHistory();
   const {
     state: {
@@ -160,13 +160,13 @@ const DomainsCheckoutPage = () => {
 
   const handlePriceChange = (event) => {
     const { target: { value: newValue } } = event;
-    const newValueInt = parseInt(newValue);
+    const newValueInt = parseFloat(newValue);
     if (newValueInt || newValue === '') {
       setPrice(newValue);
       if (newValue) {
         const currencySymbol = currencySymbols[parseInt(currency)];
         const newValueInFiat = newValueInt * crypto[currencySymbol].rate;
-        setPriceFiat(newValueInFiat.toString())
+        setPriceFiat(newValueInFiat.toFixed(4).toString())
       } else {
         setPriceFiat('')
       }

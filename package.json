@@ -38,24 +38,21 @@
     "@rsksmart/erc721": "^1.0.0",
     "@rsksmart/rif-marketplace-nfts": "0.0.2",
     "@rsksmart/rif-ui": "github:rsksmart/rif-ui",
-    "@truffle/contract": "^4.2.1",
+    "@truffle/contract": "^4.2.5",
     "@truffle/debug-utils": "^4.1.1",
-    "formik": "^2.1.4",
     "react": "^16.13.0",
     "react-dom": "^16.10.2",
-    "react-router": "^5.1.2",
-    "react-router-bootstrap": "^0.25.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.3.0",
+    "react-scripts": "3.4.1",
     "socket.io-client": "^2.3.0",
     "typescript": "^3.7.4",
-    "web3": "^1.2.6"
+    "web3": "^1.2.7"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "@types/jest": "25.2.2",
+    "@testing-library/user-event": "^10.3.1",
+    "@types/jest": "25.1.2",
     "@types/node": "^13.7.0",
     "@types/react": "16.9.19",
     "@types/react-dom": "^16.9.1",
@@ -83,5 +80,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.ts"
+    }
   }
 }

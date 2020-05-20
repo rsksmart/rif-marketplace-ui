@@ -5,7 +5,7 @@ import Login from 'components/atoms/Login';
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell';
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel';
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Card, CardContent, CardHeader, colors, shortenAddress, Table, TableBody, TableCell, TableRow, Typography, Web3Store } from '@rsksmart/rif-ui';
 import { ROUTES } from 'routes';
@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const DomainOffersCheckoutPage = () => {
+const DomainOffersCheckoutPage: FC<{}> = () => {
     const history = useHistory();
     const {
         state: {
@@ -86,10 +86,12 @@ const DomainOffersCheckoutPage = () => {
     } = useContext(Web3Store);
     const classes = useStyles();
     const [hasFunds, setHasFunds] = useState(false);
+    const [isFundsConfirmed, setIsFundsConfirmed] = useState(false);
 
     // check funds
     useEffect(() => {
         if (web3 && account && currentOrder?.item?.tokenId) {
+            setIsFundsConfirmed(false);
             const { item: { tokenId } } = currentOrder;
             const Contract = c => ContractWrapper(c, web3, account);
             (async () => {
@@ -101,6 +103,7 @@ const DomainOffersCheckoutPage = () => {
                 const price = tokenPlacement[1];
 
                 setHasFunds(myBalance.gte(price));
+                setIsFundsConfirmed(true);
             })()
         }
     }, [web3, account, currentOrder])
@@ -202,7 +205,7 @@ const DomainOffersCheckoutPage = () => {
                         </TableBody>
                     </Table>
                 </CardContent>
-                {account && !hasFunds && <Typography color='error'>You do not have enough RIF.</Typography>}
+                {account && isFundsConfirmed && !hasFunds && <Typography color='error'>You do not have enough RIF.</Typography>}
                 {!isProcessing && account &&
                     <CardActions className={classes.footer}>
                         {isOwnDomain && <p>You cannot purchase your own offer.</p>}

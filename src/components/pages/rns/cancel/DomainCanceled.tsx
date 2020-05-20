@@ -3,7 +3,7 @@ import { Button } from '@rsksmart/rif-ui';
 import JobDoneBox from 'components/molecules/JobDoneBox';
 import TxCompletePageTemplate from 'components/templates/TxCompletePageTemplate';
 import React, { FC } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router';
 import { ROUTES } from 'routes';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -12,19 +12,19 @@ const useStyles = makeStyles((theme: Theme) =>
             display: 'flex',
             justifyContent: 'space-between',
             flexDirection: 'row',
-            padding: theme.spacing(3),
+            padding: '3em',
             width: 355,
         }
     }),
 );
 
-const DomainPurchased: FC<{}> = () => {
+const DomainCanceled: FC<{}> = () => {
     const classes = useStyles();
     const history = useHistory();
 
     return (
         <TxCompletePageTemplate>
-            <JobDoneBox text='Your domain has been bought.' />
+            <JobDoneBox text='Your domain has been canceled.' />
             {/* <a href=''>Check it in the explorer</a> */}
             <div className={classes.actions}>
                 <Button
@@ -32,17 +32,16 @@ const DomainPurchased: FC<{}> = () => {
                     variant='contained'
                     rounded
                     shadow
-                    onClick={() => { alert('This should take you to the RNS admin page.') }}>Admin my domain</Button>
+                    onClick={() => { history.push(ROUTES.DOMAINS.SELL) }}>View my domains</Button>
                 <Button
                     color='primary'
                     variant='contained'
                     rounded
                     shadow
-                    onClick={() => { history.push(ROUTES.DOMAINS.BUY) }}
-                >Buy another domain</Button>
+                    onClick={() => { history.push(ROUTES.DOMAINS.BUY) }}>View domain listing</Button>
             </div>
         </TxCompletePageTemplate>
     );
 }
 
-export default DomainPurchased;
+export default DomainCanceled;

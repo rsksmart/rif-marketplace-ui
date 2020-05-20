@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Typography, colors } from '@rsksmart/rif-ui';
 import FAQPageTemplate from '../../templates/FAQPageTemplate';
 import FAQSection, { FAQSectionProps } from 'components/molecules/FAQSection';
 
 // TODO:
-// - update rif-ui accordion component
 // - create FAQSection in rif-ui
 export interface FAQPageProps {
   className?: string;
@@ -48,7 +47,6 @@ const faqProps: FAQPageProps = {
     answer: `The RIF Marketplace is the heart of the RIF economy and will be the entry/access point to most of the RIF services such as Storage, Communications, Data Services, etc. Providers of the different RIF services will be able to list their offerings in the RIF Marketplace and engage with users/consumers in a secure and efficient way. 
     At the same time the DeFi ecosystem will surely require services from the RIF Marketplace and allowing a seamless and efficient integration will be extremely important for any company, partner, or developer that wants to build a solution on top of the RSK/RIF suite of technologies.`
   },
-
   {
     id: 'q6',
     question: 'What is the Roadmap for the RIF Marketplace in the short term?',
@@ -58,9 +56,9 @@ const faqProps: FAQPageProps = {
     RNS Domains (Buying and selling of RNS domains among users)
     Storage Pinning Services (Renting decentralized storage)
     
-    The next step is to add additional services (Oracles coming soon!) and also to incorporate the staking, slashing, SLA, reputation and dispute resolution mechanisms to ensure all parties have a positive and reliable experience.` 
-    
-    },
+    The next step is to add additional services (Oracles coming soon!) and also to incorporate the staking, slashing, SLA, reputation and dispute resolution mechanisms to ensure all parties have a positive and reliable experience.`
+
+  },
   {
     id: 'q7',
     question: 'What are the long terms plans for the RIF Marketplace?',
@@ -85,15 +83,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const FAQPage = ({ className = '' }) => {
+const FAQPage: FC<{}> = () => {
   const classes = useStyles();
   return (
-    <FAQPageTemplate className={className}>
+    <FAQPageTemplate>
       <Typography className={classes.mainTitle} variant='h1' color='primary'>{faqProps.mainTitle}</Typography>
       <div className={classes.questionsSection}>
         {
           faqProps.questionsAndAnswers.map((qAndA: FAQSectionProps, i) => (
-            <FAQSection className={`${i % 2 === 0 ? classes.grayBackground : ''}`} key={`faq-${i}`} id={`faq-${i}`} {...qAndA} />
+            <FAQSection className={`${i % 2 === 0 ? classes.grayBackground : ''}`} key={`faq-${i}`} {...qAndA} />
           ))
         }
       </div>

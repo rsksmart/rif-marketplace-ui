@@ -7,7 +7,6 @@ import { MarketStoreProvider } from 'store/Market/MarketStore';
 import Footer from 'components/organisms/Footer';
 import Header from 'components/organisms/Header';
 import Routes from 'components/Routes';
-// TODO: remove the dist path once it's fixed in the library
 import '@rsksmart/rif-ui/dist/index.css';
 import PageTemplate from 'components/templates/PageTemplate';
 
@@ -20,24 +19,17 @@ const useStyles = makeStyles(() => ({
 }));
 
 const App = () => {
-  const classes = useStyles();
-
   return (
     <ThemeProvider theme={theme}>
       <AppStoreProvider>
         <MarketStoreProvider>
           <Web3Provider.Provider>
             <Router>
-              <div
-                data-testid="wrapper"
-                className={classes.router}
-              >
-                <Header />
-                <PageTemplate>
-                  <Routes />
-                </PageTemplate>
-                <Footer />
-              </div>
+              <Header />
+              <PageTemplate>
+                <Routes />
+              </PageTemplate>
+              <Footer />
             </Router>
           </Web3Provider.Provider>
         </MarketStoreProvider>
