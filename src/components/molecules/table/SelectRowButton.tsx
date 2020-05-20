@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Button } from '@rsksmart/rif-ui';
+import { Button } from '@rsksmart/rif-ui'
 
 export interface SelectRowButtonProps {
   className?: string
@@ -7,18 +7,18 @@ export interface SelectRowButtonProps {
   handleSelect: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-const SelectRowButton: FC<SelectRowButtonProps> = ({ id, handleSelect, children, ...rest }) => {
+const SelectRowButton: FC<SelectRowButtonProps> = ({
+  id, handleSelect, children, ...rest
+}) => (
+  <Button
+    rounded
+    variant="contained"
+    color="primary"
+    onClick={handleSelect}
+    {...rest}
+  >
+    {children || 'Select'}
+  </Button>
+)
 
-  return (
-    <Button rounded
-      variant="contained"
-      color="primary"
-      onClick={handleSelect}
-      {...rest}
-    >
-      {!!children ? children : 'Select'}
-    </Button>
-  )
-}
-
-export default SelectRowButton;
+export default SelectRowButton

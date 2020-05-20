@@ -1,9 +1,9 @@
-import { DomainOffer, Domain } from "./marketItems/DomainItem"
-import { StorageItemIface } from "./marketItems/StorageItem"
-import { DomainOffersFilter, DomainFilter } from "api/models/RnsFilter"
+import { DomainOffersFilter, DomainFilter } from 'api/models/RnsFilter'
+import { DomainOffer, Domain } from './marketItems/DomainItem'
+import { StorageItemIface } from './marketItems/StorageItem'
 
 export interface MarketItemIface {
-    _id: string;
+    _id: string
 }
 
 export enum MarketListingTypes {

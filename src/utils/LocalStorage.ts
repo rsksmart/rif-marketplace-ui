@@ -3,7 +3,6 @@ import Logger from './Logger'
 const logger = Logger.getInstance()
 
 export default class LocalStorage {
-
   public static getInstance(): LocalStorage {
     if (!LocalStorage.instance) {
       LocalStorage.instance = new LocalStorage()
@@ -11,9 +10,11 @@ export default class LocalStorage {
 
     return LocalStorage.instance
   }
+
   private static instance: LocalStorage
 
   private constructor() { }
+
   public setItem(key: string, item: string | object): void {
     try {
       const value = typeof item === 'object' ? JSON.stringify(item) : item

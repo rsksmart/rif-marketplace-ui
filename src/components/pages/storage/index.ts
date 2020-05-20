@@ -1,3 +1,3 @@
-import StoragePage from './StoragePage';
+import StoragePage from './StoragePage'
 
-export { StoragePage };
+export { StoragePage }

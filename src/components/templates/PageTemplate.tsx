@@ -1,18 +1,15 @@
-import React, { FC, HTMLAttributes } from 'react';
-import { PageTemplate as RUIPageTemplate } from '@rsksmart/rif-ui';
+import React, { FC, HTMLAttributes } from 'react'
+import { PageTemplate as RUIPageTemplate } from '@rsksmart/rif-ui'
 
-export interface PageTemplateProps extends HTMLAttributes<HTMLElement> { }
+export type PageTemplateProps = HTMLAttributes<HTMLElement>
 
 const PageTemplate: FC<PageTemplateProps> = ({
   children,
   ...props
-}) => {
+}) => (
+  <RUIPageTemplate {...props}>
+    {children}
+  </RUIPageTemplate>
+)
 
-  return (
-    <RUIPageTemplate {...props}>
-      {children}
-    </RUIPageTemplate>
-  );
-};
-
-export default PageTemplate;
+export default PageTemplate

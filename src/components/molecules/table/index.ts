@@ -1,3 +1,3 @@
-import SelectRowButton from './SelectRowButton';
+import SelectRowButton from './SelectRowButton'
 
-export { SelectRowButton };
+export { SelectRowButton }

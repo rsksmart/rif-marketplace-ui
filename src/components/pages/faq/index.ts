@@ -1,3 +1,3 @@
-import FAQPage from './FAQPage';
+import FAQPage from './FAQPage'
 
-export { FAQPage };
+export { FAQPage }

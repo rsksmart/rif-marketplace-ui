@@ -1,22 +1,23 @@
 import React, { FC } from 'react'
-import { Accordion, RangeSliderWithInputs } from '@rsksmart/rif-ui';
-import { RangeSliderWithInputsProps } from '@rsksmart/rif-ui/dist/components/molecules/RangeSliderWithInputs';
+import { Accordion, RangeSliderWithInputs } from '@rsksmart/rif-ui'
+import { RangeSliderWithInputsProps } from '@rsksmart/rif-ui/dist/components/molecules/RangeSliderWithInputs'
 
 export interface RangeFilterProps extends RangeSliderWithInputsProps {
   className?: string
   title: string
   edgeValues: {
-    min: number,
+    min: number
     max: number
-  },
+  }
 }
 
-const RangeFilter: FC<RangeFilterProps> = ({ className = '', title, edgeValues, ...rest }) => {
-
-  return <Accordion
+const RangeFilter: FC<RangeFilterProps> = ({
+  className = '', title, edgeValues, ...rest
+}) => (
+  <Accordion
     id={`accordion-${title.toLocaleLowerCase()}`}
     className={className}
-    expanded={true}
+    expanded
     title={title}
   >
     <RangeSliderWithInputs
@@ -25,6 +26,6 @@ const RangeFilter: FC<RangeFilterProps> = ({ className = '', title, edgeValues, 
       {...rest}
     />
   </Accordion>
-}
+)
 
-export default RangeFilter;
+export default RangeFilter

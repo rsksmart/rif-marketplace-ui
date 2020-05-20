@@ -1,9 +1,7 @@
-import React, { FC } from 'react';
+import React, { FC } from 'react'
 
-import { LandingPageTemplate } from 'components/templates/LandingPageTemplate';
+import { LandingPageTemplate } from 'components/templates/LandingPageTemplate'
 
-const LandingPage: FC<{}> = () => {
-  return <LandingPageTemplate />;
-};
+const LandingPage: FC<{}> = () => <LandingPageTemplate />
 
-export default LandingPage;
+export default LandingPage

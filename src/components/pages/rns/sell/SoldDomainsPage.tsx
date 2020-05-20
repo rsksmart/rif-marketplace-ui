@@ -1,19 +1,19 @@
-import { Web3Store } from '@rsksmart/rif-ui';
-import { createSoldService, DOMAINS_SERVICE_PATHS, fetchSoldDomains } from 'api/rif-marketplace-cache/domainsController';
-import { CombinedPriceCell } from 'components/molecules';
-import AddressItem from 'components/molecules/AddressItem';
-import DomainFilters from 'components/organisms/filters/DomainFilters';
-import MarketPageTemplate from 'components/templates/MarketPageTemplate';
-import { MarketListingTypes } from 'models/Market';
-import { SoldDomain } from 'models/marketItems/DomainItem';
-import React, { FC, useContext, useEffect } from 'react';
-import { MARKET_ACTIONS } from 'store/Market/marketActions';
-import MarketStore, { TxType } from 'store/Market/MarketStore';
-import { useHistory } from 'react-router-dom';
-import { ROUTES } from 'routes';
+import { Web3Store } from '@rsksmart/rif-ui'
+import { createSoldService, DOMAINS_SERVICE_PATHS, fetchSoldDomains } from 'api/rif-marketplace-cache/domainsController'
+import { CombinedPriceCell } from 'components/molecules'
+import AddressItem from 'components/molecules/AddressItem'
+import DomainFilters from 'components/organisms/filters/DomainFilters'
+import MarketPageTemplate from 'components/templates/MarketPageTemplate'
+import { MarketListingTypes } from 'models/Market'
+import { SoldDomain } from 'models/marketItems/DomainItem'
+import React, { FC, useContext, useEffect } from 'react'
+import { MARKET_ACTIONS } from 'store/Market/marketActions'
+import MarketStore, { TxType } from 'store/Market/MarketStore'
+import { useHistory } from 'react-router-dom'
+import { ROUTES } from 'routes'
 
-const LISTING_TYPE = MarketListingTypes.DOMAINS;
-const TX_TYPE = TxType.SOLD;
+const LISTING_TYPE = MarketListingTypes.DOMAINS
+const TX_TYPE = TxType.SOLD
 
 const SoldDomainsPage: FC<{}> = () => {
   const {
@@ -25,19 +25,19 @@ const SoldDomainsPage: FC<{}> = () => {
       },
       filters: {
         domains: domainFilters,
-      }
+      },
     },
     dispatch,
-  } = useContext(MarketStore);
+  } = useContext(MarketStore)
   const {
     state: { account },
-  } = useContext(Web3Store);
+  } = useContext(Web3Store)
   const history = useHistory()
 
-  const servicePath = currentListing?.servicePath;
+  const servicePath = currentListing?.servicePath
   const {
-    status: statusFilter
-  } = domainFilters;
+    status: statusFilter,
+  } = domainFilters
   /* Initialise */
   useEffect(() => {
     if (statusFilter !== 'sold') {
@@ -45,7 +45,7 @@ const SoldDomainsPage: FC<{}> = () => {
         type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
         payload: {
           txType: TxType.SELL,
-        }
+        },
       })
       history.replace(ROUTES.DOMAINS.SELL)
     }
@@ -56,38 +56,40 @@ const SoldDomainsPage: FC<{}> = () => {
       dispatch({
         type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
         payload: {
-          txType: TxType.SOLD
-        }
+          txType: TxType.SOLD,
+        },
       })
     }
   }, [servicePath, account, dispatch])
   useEffect(() => {
     if (!servicePath && account) {
-      const serviceAddr = createSoldService(account);
+      const serviceAddr = createSoldService(account)
       dispatch({
         type: MARKET_ACTIONS.CONNECT_SERVICE,
         payload: {
           servicePath: serviceAddr,
           listingType: LISTING_TYPE,
           txType: TX_TYPE,
-        }
+        },
       })
     }
   }, [servicePath, account, dispatch])
 
   useEffect(() => {
     if (servicePath && account && servicePath === DOMAINS_SERVICE_PATHS.SOLD(account) && domainFilters.status === 'sold') // TODO: refactor
+    {
       fetchSoldDomains(domainFilters)
-        .then(items => dispatch({
+        .then((items) => dispatch({
           type: MARKET_ACTIONS.SET_ITEMS,
           payload: {
             listingType: LISTING_TYPE,
             items,
           },
-        }));
-  }, [account, servicePath, dispatch, domainFilters]);
+        }))
+    }
+  }, [account, servicePath, dispatch, domainFilters])
 
-  if (!currentListing) return null;
+  if (!currentListing) return null
 
   const headers = {
     domainName: 'Name',
@@ -107,13 +109,13 @@ const SoldDomainsPage: FC<{}> = () => {
         price,
         soldDate,
         tokenId,
-      } = domainItem;
-      const currency = crypto[paymentToken];
+      } = domainItem
+      const currency = crypto[paymentToken]
 
-      const pseudoResolvedName = domainFilters?.name?.$like && domainFilters?.name?.$like + '.rsk';
+      const pseudoResolvedName = domainFilters?.name?.$like && `${domainFilters?.name?.$like}.rsk`
       const displayItem = {
         _id,
-        domainName: domainName || pseudoResolvedName || <AddressItem pretext='Unknown RNS:' value={tokenId} />,
+        domainName: domainName || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
         buyer: <AddressItem value={buyer} />,
         currency: currency.displayName,
         sellingPrice: <CombinedPriceCell
@@ -121,12 +123,12 @@ const SoldDomainsPage: FC<{}> = () => {
           priceFiat={(currency.rate * price).toString()}
           currency={currency.displayName}
           currencyFiat={currentFiat.displayName}
-          divider=' = '
+          divider=" = "
         />,
         soldDate: soldDate.toLocaleDateString(),
       }
 
-      return displayItem;
+      return displayItem
     })
 
   return (
@@ -137,7 +139,7 @@ const SoldDomainsPage: FC<{}> = () => {
       headers={headers}
       accountRequired
     />
-  );
-};
+  )
+}
 
-export default SoldDomainsPage;
+export default SoldDomainsPage

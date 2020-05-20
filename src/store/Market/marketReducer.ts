@@ -1,4 +1,4 @@
-import Logger from 'utils/Logger';
+import Logger from 'utils/Logger'
 import {
   ConnectionPayload,
   FilterPayload,
@@ -8,9 +8,9 @@ import {
   MarketPayload,
   MARKET_ACTIONS,
   TxTypeChangePayload,
-  ExchangeRatePayload
-} from './marketActions';
-import { IMarketState, initialState } from './MarketStore';
+  ExchangeRatePayload,
+} from './marketActions'
+import { IMarketState, initialState } from './MarketStore'
 
 const logger = Logger.getInstance()
 
@@ -18,7 +18,8 @@ const logger = Logger.getInstance()
 const marketReducer = (state = initialState, action: MarketAction) => {
   const { type, payload } = action
   const marketAction = marketActions[type]
-  if (!!marketAction) logger.debug('Market action:', action)
+
+  if (marketAction) logger.debug('Market action:', action)
   const newState = (!!marketAction && marketAction(state, payload)) || state
 
   if (state !== newState) {
@@ -50,16 +51,17 @@ const {
 const marketActions: IMarketActions = {
   [NOOP]: (state: IMarketState, _: MarketPayload) => state,
   [SET_ITEMS]: (state: IMarketState, payload: ListingPayload) => {
-    const { listingType, items } = payload;
-    const { currentListing } = state;
-    if (!currentListing) return state;
-    if (listingType !== currentListing.listingType)
-      logger.error('There is a mismatch of types in the current items (market store)!');
+    const { listingType, items } = payload
+    const { currentListing } = state
+
+    if (!currentListing) return state
+
+    if (listingType !== currentListing.listingType) logger.error('There is a mismatch of types in the current items (market store)!')
     const newState = {
       ...state,
       currentListing: {
         txType: currentListing.txType,
-        listingType: listingType,
+        listingType,
         servicePath: currentListing.servicePath,
         items,
       },
@@ -67,20 +69,21 @@ const marketActions: IMarketActions = {
         ...state.metadata,
         [listingType]: {
           ...state.metadata[listingType],
-          lastUpdated: Date.now()
+          lastUpdated: Date.now(),
         },
-      }
+      },
     }
-    return newState;
+    return newState
   },
   [SELECT_ITEM]: (state: IMarketState, payload: ItemPayload) => ({
-    ...state, currentOrder: { ...payload }
+    ...state, currentOrder: { ...payload },
   }),
   [SET_FILTER]: (state: IMarketState, payload: FilterPayload) => {
-    const { filters, currentListing } = state;
-    if (!currentListing) return state;
-    const { listingType } = currentListing;
-    const { filterItems } = payload;
+    const { filters, currentListing } = state
+
+    if (!currentListing) return state
+    const { listingType } = currentListing
+    const { filterItems } = payload
 
     return {
       ...state,
@@ -88,15 +91,16 @@ const marketActions: IMarketActions = {
         ...filters,
         [listingType]: {
           ...filters[listingType],
-          ...filterItems
-        }
-      }
-    };
+          ...filterItems,
+        },
+      },
+    }
   },
   [TOGGLE_TX_TYPE]: (state: IMarketState, payload: TxTypeChangePayload) => {
-    const { currentListing } = state;
-    const { txType } = payload;
-    if (!currentListing) return state;
+    const { currentListing } = state
+    const { txType } = payload
+
+    if (!currentListing) return state
     return {
       ...state,
       currentListing: {
@@ -108,7 +112,7 @@ const marketActions: IMarketActions = {
     }
   },
   [CONNECT_SERVICE]: (state: IMarketState, payload: ConnectionPayload) => {
-    const { servicePath, listingType, txType } = payload;
+    const { servicePath, listingType, txType } = payload
     return {
       ...state,
       currentListing: {
@@ -116,27 +120,22 @@ const marketActions: IMarketActions = {
         servicePath,
         items: [],
         txType,
-      }
+      },
     }
   },
-  [SET_EXCHANGE_RATE]: (state: IMarketState, payload: ExchangeRatePayload) => {
-    return {
-      ...state,
-      exchangeRates: {
-        ...state.exchangeRates,
-        crypto: {
-          ...state.exchangeRates.crypto,
-          ...payload,
-        }
-      }
-    }
-  },
-  [CLEAN_UP]: (state: IMarketState, _: MarketPayload) => {
-    return {
-      ...state,
-      currentListing: undefined,
-      currentOrder: undefined,
-    }
-  }
+  [SET_EXCHANGE_RATE]: (state: IMarketState, payload: ExchangeRatePayload) => ({
+    ...state,
+    exchangeRates: {
+      ...state.exchangeRates,
+      crypto: {
+        ...state.exchangeRates.crypto,
+        ...payload,
+      },
+    },
+  }),
+  [CLEAN_UP]: (state: IMarketState, _: MarketPayload) => ({
+    ...state,
+    currentListing: undefined,
+    currentOrder: undefined,
+  }),
 }
-

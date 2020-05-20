@@ -22,7 +22,7 @@ export const initialState: IAppState = {
 const AppStore = React.createContext({} as IAppStoreProps | any)
 
 export const AppStoreProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(appReducer, initialState);
+  const [state, dispatch] = useReducer(appReducer, initialState)
 
   const value = { state, dispatch }
   return <AppStore.Provider value={value}>{children}</AppStore.Provider>

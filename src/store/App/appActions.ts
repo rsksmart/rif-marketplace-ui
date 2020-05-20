@@ -12,7 +12,7 @@ export interface ILoadingPayload {
 }
 
 export interface IMessagePayload {
-  readonly isError?: boolean,
+  readonly isError?: boolean
   readonly message?: string
 }
 
@@ -21,4 +21,3 @@ export type AppPayload = ILoadingPayload & IMessagePayload
 export interface AppAction extends IAction<AppPayload> {
   type: APP_ACTIONS
 }
-

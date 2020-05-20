@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
-import { AccountModal, Web3Provider } from '@rsksmart/rif-ui';
+import React, { FC } from 'react'
+import { AccountModal, Web3Provider } from '@rsksmart/rif-ui'
 
 export interface LoginModalProps {
-  open: boolean;
-  handleClose: () => void;
+  open: boolean
+  handleClose: () => void
 }
 
 const LoginModal: FC<LoginModalProps> = ({ open, handleClose }) => (
@@ -18,6 +18,6 @@ const LoginModal: FC<LoginModalProps> = ({ open, handleClose }) => (
       />
     )}
   </Web3Provider.Consumer>
-);
+)
 
-export default LoginModal;
+export default LoginModal
