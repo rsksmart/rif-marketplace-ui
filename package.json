@@ -38,7 +38,7 @@
     "@rsksmart/erc721": "^1.0.0",
     "@rsksmart/rif-marketplace-nfts": "0.0.2",
     "@rsksmart/rif-ui": "github:rsksmart/rif-ui",
-    "@truffle/contract": "^4.2.0",
+    "@truffle/contract": "^4.2.5",
     "@truffle/debug-utils": "^4.1.1",
     "react": "^16.13.0",
     "react-dom": "^16.10.2",
