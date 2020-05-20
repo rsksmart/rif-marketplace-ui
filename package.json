@@ -40,7 +40,6 @@
     "@rsksmart/rif-ui": "github:rsksmart/rif-ui",
     "@truffle/contract": "^4.2.0",
     "@truffle/debug-utils": "^4.1.1",
-    "formik": "^2.1.4",
     "react": "^16.13.0",
     "react-dom": "^16.10.2",
     "react-router-dom": "^5.1.2",
