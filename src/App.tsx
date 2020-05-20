@@ -20,24 +20,17 @@ const useStyles = makeStyles(() => ({
 }));
 
 const App = () => {
-  const classes = useStyles();
-
   return (
     <ThemeProvider theme={theme}>
       <AppStoreProvider>
         <MarketStoreProvider>
           <Web3Provider.Provider>
             <Router>
-              <div
-                data-testid="wrapper"
-                className={classes.router}
-              >
-                <Header />
-                <PageTemplate>
-                  <Routes />
-                </PageTemplate>
-                <Footer />
-              </div>
+              <Header />
+              <PageTemplate>
+                <Routes />
+              </PageTemplate>
+              <Footer />
             </Router>
           </Web3Provider.Provider>
         </MarketStoreProvider>
