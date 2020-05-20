@@ -1,11 +1,11 @@
 import NotFound from 'components/pages/NotFound'
 import React, { useEffect } from 'react'
 import { Route, Switch, useHistory } from 'react-router-dom'
-import { ROUTES } from 'routes'
+import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import LandingPage from './pages/LandingPage'
-import { FAQPage } from './pages/faq'
-import { StoragePage } from './pages/storage'
+import FAQPage from './pages/faq/FAQPage'
+import StoragePage from './pages/storage/StoragePage'
 import AboutPage from './pages/AboutPage'
 import {
   DomainsCheckoutPage,

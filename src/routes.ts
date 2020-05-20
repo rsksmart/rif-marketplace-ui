@@ -16,7 +16,7 @@ const STORAGE = '/storage'
 const FAQ = '/faq'
 const ABOUT = '/about'
 
-export const ROUTES = {
+const ROUTES = {
   LANDING,
   COMMUNICATIONS,
   DATA_SERVICE,
@@ -41,3 +41,5 @@ export const ROUTES = {
   FAQ,
   ABOUT,
 }
+
+export default ROUTES

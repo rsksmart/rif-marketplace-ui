@@ -13,20 +13,24 @@ export default class LocalStorage {
 
   private static instance: LocalStorage
 
-  private constructor() { }
+  private storage: Storage;
+
+  private constructor() {
+    this.storage = localStorage
+  }
 
   public setItem(key: string, item: string | object): void {
     try {
       const value = typeof item === 'object' ? JSON.stringify(item) : item
-      localStorage.setItem(key, value)
+      this.storage.setItem(key, value)
     } catch (e) {
       logger.error(`Persistence Error: ${e.message}`)
     }
   }
 
-  public getItem(key) {
-    const value = localStorage.getItem(key) || ''
-    let item
+  public getItem(key: string): unknown | string {
+    const value = this.storage.getItem(key) || ''
+    let item: unknown
     try {
       item = JSON.parse(value)
     } catch { }
@@ -34,6 +38,6 @@ export default class LocalStorage {
   }
 
   public clear(): void {
-    localStorage.clear()
+    this.storage.clear()
   }
 }

@@ -18,9 +18,9 @@ export const createService = (path: string) => {
   return path
 }
 
-export const fetchMarketData = async (filters?: MarketFilter) => {
+export const fetchMarketData = (filters?: MarketFilter) => {
   if (!service.current) throw Error('Not connected to a service')
-  return await (service.current as any).find({
+  return (service.current as any).find({
     query: filters,
   })
 }

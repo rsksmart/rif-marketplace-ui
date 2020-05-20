@@ -14,11 +14,11 @@ import { useHistory } from 'react-router-dom'
 import {
   Button, Card, CardContent, CardHeader, colors, shortenAddress, Table, TableBody, TableCell, TableRow, Typography, Web3Store,
 } from '@rsksmart/rif-ui'
-import { ROUTES } from 'routes'
+import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
 import contractAdds from 'ui-config.json'
-import { ContractWrapper } from 'utils/blockchain.utils'
+import ContractWrapper from 'utils/blockchain.utils'
 import Logger from 'utils/Logger'
 import AddressItem from 'components/molecules/AddressItem'
 
@@ -169,9 +169,9 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
       const rifContract = await Contract(ERC677).at(rifTokenAddress)
 
       const tokenPlacement = await marketPlaceContract.placement(tokenId)
-      const price = tokenPlacement[1]
+      const tokenPrice = tokenPlacement[1]
 
-      const transferReceipt = await rifContract.transferAndCall(marketPlaceAddress, price, tokenId)
+      const transferReceipt = await rifContract.transferAndCall(marketPlaceAddress, tokenPrice, tokenId)
       logger.info('transferReceipt:', transferReceipt)
     }
     dispatch({
@@ -190,7 +190,6 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
       className="domains-checkout-page"
       backButtonProps={{
         backTo: 'domains',
-        onClick: () => { },
       }}
     >
       <Card
@@ -212,22 +211,22 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
         </CardContent>
         {account && isFundsConfirmed && !hasFunds && <Typography color="error">You do not have enough RIF.</Typography>}
         {!isProcessing && account
-                    && (
-                    <CardActions className={classes.footer}>
-                      {isOwnDomain && <p>You cannot purchase your own offer.</p>}
-                      {!isOwnDomain && hasFunds && <p>Your wallet will open and you will be asked to confirm the transaction for buying the domain.</p>}
-                      <Button
-                        disabled={!hasFunds || isOwnDomain}
-                        color="primary"
-                        variant="contained"
-                        rounded
-                        shadow
-                        onClick={handleBuyDomain}
-                      >
-                        Buy domain
-                      </Button>
-                    </CardActions>
-                    )}
+          && (
+            <CardActions className={classes.footer}>
+              {isOwnDomain && <p>You cannot purchase your own offer.</p>}
+              {!isOwnDomain && hasFunds && <p>Your wallet will open and you will be asked to confirm the transaction for buying the domain.</p>}
+              <Button
+                disabled={!hasFunds || isOwnDomain}
+                color="primary"
+                variant="contained"
+                rounded
+                shadow
+                onClick={handleBuyDomain}
+              >
+                Buy domain
+              </Button>
+            </CardActions>
+          )}
         {!account && <Login />}
       </Card>
       {!!isProcessing && <TransactionInProgressPanel text="Buying the domain!" progMsg="The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished." />}

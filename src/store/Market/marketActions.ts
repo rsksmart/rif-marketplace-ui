@@ -1,4 +1,4 @@
-import { IAction } from 'store/storeUtils/interfaces'
+import { ActionType } from 'store/storeUtils/interfaces'
 import {
   MarketItemIface, MarketListingTypes, MarketItemType, MarketFilter,
 } from 'models/Market'
@@ -48,8 +48,8 @@ export interface TxTypeChangePayload {
   txType: TxType
 }
 
-export type MarketPayload = ItemPayload & ListingPayload & FilterPayload & ConnectionPayload & TxTypeChangePayload & ExchangeRatePayload
+export type MarketPayloadType = ItemPayload & FilterPayload & ConnectionPayload & TxTypeChangePayload & ExchangeRatePayload & ListingPayload
 
-export interface MarketAction extends IAction<MarketPayload> {
+export interface MarketAction extends ActionType<MarketPayloadType> {
   type: MARKET_ACTIONS
 }

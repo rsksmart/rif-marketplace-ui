@@ -14,7 +14,7 @@ const ReturnButton: FC<ReturnButtonProps> = ({ className = '', backTo, onClick }
   const handleOnClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     history.goBack()
 
-    !!onClick && onClick(event)
+    if (onClick) onClick(event)
   }
   return (
     <Button

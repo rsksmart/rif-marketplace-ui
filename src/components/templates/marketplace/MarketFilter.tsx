@@ -6,12 +6,10 @@ import { useHistory } from 'react-router-dom'
 import {
   colors, Grid, SwitchTabs, Typography, Web3Store,
 } from '@rsksmart/rif-ui'
-import { ROUTES } from 'routes'
+import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
 import LoginModal from '../../atoms/LoginModal'
-
-export interface MarketFilterProps { }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   filter: {
@@ -37,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }))
 
-const MarketFilter: FC<MarketFilterProps> = ({ children }) => {
+const MarketFilter: FC = ({ children }) => {
   const classes = useStyles()
   const {
     state: {
@@ -62,15 +60,6 @@ const MarketFilter: FC<MarketFilterProps> = ({ children }) => {
     setIsSwitching(false)
   }
 
-  const handleSwitchChange = (): void => {
-    if (txType === TxType.BUY && !account) {
-      setIsSwitching(true)
-      setModalOpened(true)
-    } else {
-      switchTxType()
-    }
-  }
-
   const switchTxType = () => {
     setIsSwitching(false)
     dispatch({
@@ -80,6 +69,15 @@ const MarketFilter: FC<MarketFilterProps> = ({ children }) => {
       },
     })
     history.replace(txType === TxType.BUY ? ROUTES.DOMAINS.SELL : ROUTES.DOMAINS.BUY)
+  }
+
+  const handleSwitchChange = (): void => {
+    if (txType === TxType.BUY && !account) {
+      setIsSwitching(true)
+      setModalOpened(true)
+    } else {
+      switchTxType()
+    }
   }
 
   // TODO: to be removed when finding a better solution

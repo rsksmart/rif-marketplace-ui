@@ -3,8 +3,8 @@ import { shortenAddress } from '@rsksmart/rif-ui'
 import React, { FC, useState } from 'react'
 
 export interface AddressItemProps {
-    pretext?: string
-    value: string
+  pretext?: string
+  value: string
 }
 
 const AddressItem: FC<AddressItemProps> = ({ pretext, value }) => {
@@ -13,9 +13,9 @@ const AddressItem: FC<AddressItemProps> = ({ pretext, value }) => {
     <Tooltip
       interactive
       title={isCopied ? 'Copied!' : value}
-      onClick={async ({ target }) => {
-        const { value } = target as any
-        navigator.clipboard.writeText(value)
+      onClick={({ target }) => {
+        const { value: ttValue } = target as any
+        navigator.clipboard.writeText(ttValue)
           .then(() => { setIsCopied(true) })
       }}
       onClose={() => {

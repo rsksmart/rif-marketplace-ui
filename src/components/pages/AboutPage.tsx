@@ -2,8 +2,6 @@ import React, { FC } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Typography, colors } from '@rsksmart/rif-ui'
 
-export interface AboutPageProps { }
-
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     alignItems: 'center',
@@ -29,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const AboutPage: FC<AboutPageProps> = () => {
+const AboutPage: FC = () => {
   const classes = useStyles()
   return (
     <div className={classes.root}>
@@ -57,7 +55,7 @@ const AboutPage: FC<AboutPageProps> = () => {
           <Typography variant="body1">
             <br />
             <br />
-            <b><i>"Making blockchain technology easier, faster and scalable to foster mass adoption"</i></b>
+            <b><i>&ldquo;Making blockchain technology easier, faster and scalable to foster mass adoption&rdquo;</i></b>
           </Typography>
 
         </div>

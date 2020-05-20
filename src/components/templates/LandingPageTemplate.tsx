@@ -3,10 +3,9 @@ import ServiceCategories from 'components/organisms/ServiceCategories'
 import {
   HeaderTongue, Typography,
 } from '@rsksmart/rif-ui'
+/* eslint-disable-next-line import/no-unresolved */
 import { HeaderTongueProps } from '@rsksmart/rif-ui/dist/components/organisms/Header/HeaderTongue'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-
-export interface LandingPageTemplateProps { }
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -30,7 +29,7 @@ const headerTongueProps: HeaderTongueProps = {
       listings, allowing providers to publish their services and engage with users in a secure and efficient way.`,
 }
 
-export const LandingPageTemplate: FC<LandingPageTemplateProps> = () => {
+const LandingPageTemplate: FC = () => {
   const classes = useStyles()
   return (
     <>
@@ -44,3 +43,5 @@ export const LandingPageTemplate: FC<LandingPageTemplateProps> = () => {
     </>
   )
 }
+
+export default LandingPageTemplate

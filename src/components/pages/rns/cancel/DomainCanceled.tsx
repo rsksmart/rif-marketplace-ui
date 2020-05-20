@@ -3,10 +3,10 @@ import { Button } from '@rsksmart/rif-ui'
 import JobDoneBox from 'components/molecules/JobDoneBox'
 import TxCompletePageTemplate from 'components/templates/TxCompletePageTemplate'
 import React, { FC } from 'react'
-import { useHistory } from 'react-router'
-import { ROUTES } from 'routes'
+import { useHistory } from 'react-router-dom'
+import ROUTES from 'routes'
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
+const useStyles = makeStyles((_: Theme) => createStyles({
   actions: {
     display: 'flex',
     justifyContent: 'space-between',

@@ -3,7 +3,7 @@ import { DomainOffer, Domain } from './marketItems/DomainItem'
 import { StorageItemIface } from './marketItems/StorageItem'
 
 export interface MarketItemIface {
-    _id: string
+    id: string
 }
 
 export enum MarketListingTypes {

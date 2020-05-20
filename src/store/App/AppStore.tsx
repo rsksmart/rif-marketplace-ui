@@ -2,24 +2,24 @@ import React, { Dispatch, useReducer } from 'react'
 import { AppAction } from './appActions'
 import appReducer from './appReducer'
 
-export interface IAppState {
+export interface AppStateType {
   isError?: boolean
   isLoading?: boolean
   message?: string
   formError?: any
 }
 
-interface IAppStoreProps {
+interface AppStorePropsType {
   state: {
-    message: IAppState
+    message: AppStateType
   }
   dispatch: Dispatch<AppAction>
 }
 
-export const initialState: IAppState = {
+export const initialState: AppStateType = {
 }
 
-const AppStore = React.createContext({} as IAppStoreProps | any)
+const AppStore = React.createContext({} as AppStorePropsType | any)
 
 export const AppStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState)

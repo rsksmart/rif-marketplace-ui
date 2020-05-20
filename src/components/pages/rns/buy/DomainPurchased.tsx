@@ -4,7 +4,7 @@ import JobDoneBox from 'components/molecules/JobDoneBox'
 import TxCompletePageTemplate from 'components/templates/TxCompletePageTemplate'
 import React, { FC } from 'react'
 import { useHistory } from 'react-router-dom'
-import { ROUTES } from 'routes'
+import ROUTES from 'routes'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   actions: {
@@ -30,7 +30,8 @@ const DomainPurchased: FC<{}> = () => {
           variant="contained"
           rounded
           shadow
-          onClick={() => { alert('This should take you to the RNS admin page.') }}
+          onClick={() => { alert('This should take you to the RNS admin page.') }} // eslint-disable-line no-alert
+        // FIXME: do the correct navigation here
         >
           Admin my domain
         </Button>

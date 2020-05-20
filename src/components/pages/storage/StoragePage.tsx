@@ -3,9 +3,7 @@ import { Typography } from '@rsksmart/rif-ui'
 import Icon, { Icons } from 'components/atoms/Icon'
 import SideImageTemplate from '../../templates/SideImageTemplate'
 
-export interface StoragePageProps { }
-
-const StoragePage: FC<StoragePageProps> = () => {
+const StoragePage: FC = () => {
   const storageIcon = (<Icon src={Icons.STORAGE} />)
   const sideText = (
     <>

@@ -92,7 +92,7 @@ const FAQPage: FC<{}> = () => {
       <div className={classes.questionsSection}>
         {
           faqProps.questionsAndAnswers.map((qAndA: FAQSectionProps, i) => (
-            <FAQSection className={`${i % 2 === 0 ? classes.grayBackground : ''}`} key={`faq-${i}`} {...qAndA} />
+            <FAQSection className={`${i % 2 === 0 ? classes.grayBackground : ''}`} key={`faq-${qAndA.id}`} {...qAndA} />
           ))
         }
       </div>

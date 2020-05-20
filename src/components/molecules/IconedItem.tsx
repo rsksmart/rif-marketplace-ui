@@ -12,7 +12,7 @@ export interface IconedItemProps {
   description: string
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((_: Theme) => ({
   root: {
     alignItems: 'center',
     display: 'flex',

@@ -56,6 +56,8 @@ const SearchFilter: FC<SearchFilterProps> = ({ onChange, ...rest }) => {
     if (!event.target.value.length) setAdornmentHidden(false)
   }
 
+  // These props come from MUI thus disabled eslint rule
+  /* eslint-disable react/jsx-no-duplicate-props */
   return (
     <TextField
       className={classes.root}

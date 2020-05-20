@@ -1,12 +1,12 @@
-import { MarketItemIface, MarketFilter } from 'models/Market'
+import { MarketItemIface } from 'models/Market'
 
 export interface StorageItemIface extends MarketItemIface {
     provider: string // TODO: iface User/Provider?
     size: number
-    contract_length_months: number
-    price_per_month: number
+    contractLengthMonths: number
+    pricePerMonth: number
     currency: string
-    price_usd: number
+    priceUsd: number
 }
 
 // export interface StorageFilterIface extends MarketFilterIface {
@@ -18,13 +18,13 @@ export class StorageItem implements StorageItemIface {
 
     size!: number;
 
-    contract_length_months!: number;
+    contractLengthMonths!: number;
 
-    price_per_month!: number;
+    pricePerMonth!: number;
 
     currency!: string;
 
-    price_usd!: number;
+    priceUsd!: number;
 
-    _id!: string;
+    id!: string;
 }

@@ -9,10 +9,10 @@ import { useHistory } from 'react-router-dom'
 import {
   Button, Card, CardActions, CardContent, CardHeader, colors, shortenAddress, Table, TableBody, TableCell, TableRow, Typography, Web3Store,
 } from '@rsksmart/rif-ui'
-import { ROUTES } from 'routes'
+import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
-import { ContractWrapper } from 'utils/blockchain.utils'
+import ContractWrapper from 'utils/blockchain.utils'
 import Web3 from 'web3'
 import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
@@ -167,7 +167,6 @@ const CancelDomainCheckoutPage = () => {
       className="domains-checkout-page"
       backButtonProps={{
         backTo: 'domains',
-        onClick: () => { },
       }}
     >
       <Card
@@ -189,18 +188,18 @@ const CancelDomainCheckoutPage = () => {
         </CardContent>
         {!isProcessing
           && (
-          <CardActions className={classes.footer}>
-            <p>Your wallet will open and you will be asked to confirm the transaction for canceling the domain.</p>
-            <Button
-              color="primary"
-              variant="contained"
-              rounded
-              shadow
-              onClick={handleSubmit}
-            >
-              Cancel domain
-            </Button>
-          </CardActions>
+            <CardActions className={classes.footer}>
+              <p>Your wallet will open and you will be asked to confirm the transaction for canceling the domain.</p>
+              <Button
+                color="primary"
+                variant="contained"
+                rounded
+                shadow
+                onClick={handleSubmit}
+              >
+                Cancel domain
+              </Button>
+            </CardActions>
           )}
       </Card>
       {isProcessing && <TransactionInProgressPanel text="Canceling the domain!" progMsg="The waiting period is required to securely cancel your domain listing. Please do not close this tab until the process has finished" />}

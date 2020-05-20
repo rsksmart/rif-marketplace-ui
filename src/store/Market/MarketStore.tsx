@@ -9,14 +9,14 @@ export enum TxType {
   BUY = 0,
   SOLD = 2,
 }
-export interface ICurrentOrder {
+export interface CurrentOrderType {
   listingType: MarketListingTypes
   item: MarketItemIface
   txType: TxType
   isProcessing: boolean
 }
 
-export interface IMarketState {
+export interface MarketStateType {
   currentListing?: {
     servicePath: string
     listingType: MarketListingTypes
@@ -38,7 +38,7 @@ export interface IMarketState {
       lastUpdated: number
     }
   }
-  currentOrder?: ICurrentOrder
+  currentOrder?: CurrentOrderType
   exchangeRates: {
     currentFiat: {
       symbol: string
@@ -53,12 +53,12 @@ export interface IMarketState {
   }
 }
 
-interface IMarketStoreProps {
-  state: IMarketState
+interface MarketStorePropsType {
+  state: MarketStateType
   dispatch: Dispatch<MarketAction>
 }
 
-export const initialState: IMarketState = {
+export const initialState: MarketStateType = {
   filters: {
     domains: {
       status: 'owned',
@@ -94,7 +94,7 @@ export const initialState: IMarketState = {
   },
 }
 
-const MarketStore = React.createContext({} as IMarketStoreProps | any)
+const MarketStore = React.createContext({} as MarketStorePropsType | any)
 
 export const MarketStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(marketReducer, initialState)

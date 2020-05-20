@@ -9,10 +9,11 @@ const persistence = LocalStorage.getInstance()
 //   removeItem: jest.fn(),
 //   clear: jest.fn(),
 // };
-
+/* eslint-disable no-proto */
 jest.spyOn(window.localStorage.__proto__, 'getItem')
 jest.spyOn(window.localStorage.__proto__, 'setItem')
 jest.spyOn(window.localStorage.__proto__, 'clear')
+/* eslint-enable no-proto */
 
 // globalAny.localStorage = localStorageMock;
 

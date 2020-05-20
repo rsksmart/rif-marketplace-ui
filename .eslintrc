@@ -34,6 +34,13 @@
     "no-only-tests"
   ],
   "rules": {
+    "react/prop-types": "off",
+    "no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ],
     "jsx-a11y/href-no-hash": [
       "off"
     ],
@@ -41,8 +48,8 @@
       "warn",
       {
         "extensions": [
-          ".js",
-          ".jsx"
+          ".jsx",
+          ".tsx"
         ]
       }
     ],
@@ -148,6 +155,16 @@
     "semi": [
       "error",
       "never"
+    ],
+    "react/jsx-props-no-spreading": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "**/*.test.js",
+          "**/*.spec.js"
+        ]
+      }
     ]
   },
   "overrides": [

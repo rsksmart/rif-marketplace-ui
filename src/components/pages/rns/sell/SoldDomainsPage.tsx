@@ -1,7 +1,6 @@
 import { Web3Store } from '@rsksmart/rif-ui'
 import { createSoldService, DOMAINS_SERVICE_PATHS, fetchSoldDomains } from 'api/rif-marketplace-cache/domainsController'
-import { CombinedPriceCell } from 'components/molecules'
-import AddressItem from 'components/molecules/AddressItem'
+import { AddressItem, CombinedPriceCell } from 'components/molecules'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { MarketListingTypes } from 'models/Market'
@@ -10,7 +9,7 @@ import React, { FC, useContext, useEffect } from 'react'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
 import { useHistory } from 'react-router-dom'
-import { ROUTES } from 'routes'
+import ROUTES from 'routes'
 
 const LISTING_TYPE = MarketListingTypes.DOMAINS
 const TX_TYPE = TxType.SOLD
@@ -76,8 +75,7 @@ const SoldDomainsPage: FC<{}> = () => {
   }, [servicePath, account, dispatch])
 
   useEffect(() => {
-    if (servicePath && account && servicePath === DOMAINS_SERVICE_PATHS.SOLD(account) && domainFilters.status === 'sold') // TODO: refactor
-    {
+    if (servicePath && account && servicePath === DOMAINS_SERVICE_PATHS.SOLD(account) && domainFilters.status === 'sold') { // TODO: refactor
       fetchSoldDomains(domainFilters)
         .then((items) => dispatch({
           type: MARKET_ACTIONS.SET_ITEMS,
@@ -102,7 +100,7 @@ const SoldDomainsPage: FC<{}> = () => {
   const collection = currentListing?.items
     .map((domainItem: SoldDomain) => {
       const {
-        _id,
+        id,
         domainName,
         buyer,
         paymentToken,
@@ -114,7 +112,7 @@ const SoldDomainsPage: FC<{}> = () => {
 
       const pseudoResolvedName = domainFilters?.name?.$like && `${domainFilters?.name?.$like}.rsk`
       const displayItem = {
-        _id,
+        id,
         domainName: domainName || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
         buyer: <AddressItem value={buyer} />,
         currency: currency.displayName,

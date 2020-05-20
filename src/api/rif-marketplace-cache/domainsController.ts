@@ -19,41 +19,41 @@ const tokens = Object.keys(network).reduce((acc, tokenSymbol) => {
 }, {})
 
 export interface OfferTransferItem {
-    creationDate?: string
-    offerId: string
-    paymentToken: string
-    price: string
-    sellerAddress: string
-    sellerDomain: string
-    tokenId: string
-    status: string
-    domain: DomainTransferItem
+  creationDate?: string
+  offerId: string
+  paymentToken: string
+  price: string
+  sellerAddress: string
+  sellerDomain: string
+  tokenId: string
+  status: string
+  domain: DomainTransferItem
 }
 
 export interface DomainTransferItem {
-    expirationDate: string
-    ownerAddress: string
-    name: string
-    tokenId: string
-    offer: Omit<OfferTransferItem, 'domain'>
+  expirationDate: string
+  ownerAddress: string
+  name: string
+  tokenId: string
+  offer: Omit<OfferTransferItem, 'domain'>
 }
 
 export interface SoldDomainTransferItem {
-    id: string
-    tokenId: string
-    sellerAddress: string
-    newOwnerAddress: string
-    paymentToken: string
-    price: string
-    soldDate: string
-    domain: DomainTransferItem
+  id: string
+  tokenId: string
+  sellerAddress: string
+  newOwnerAddress: string
+  paymentToken: string
+  price: string
+  soldDate: string
+  domain: DomainTransferItem
 }
 
 
 const offersTransportMapper = (item: OfferTransferItem): DomainOffer => ({
-  price: parseInt(item.price) / 10 ** 18,
+  price: parseInt(item.price, 10) / 10 ** 18,
   expirationDate: new Date(item.domain.expirationDate),
-  _id: item.offerId,
+  id: item.offerId,
   domainName: item.domain.name,
   paymentToken: tokens[item.paymentToken.toLowerCase()],
   tokenId: item.tokenId,
@@ -61,7 +61,7 @@ const offersTransportMapper = (item: OfferTransferItem): DomainOffer => ({
 })
 
 const domainsTransportMapper = (item: DomainTransferItem): Domain => ({
-  _id: item.tokenId,
+  id: item.tokenId,
   expirationDate: new Date(item.expirationDate),
   ownerAddress: item.ownerAddress,
   name: item.name,
@@ -69,21 +69,21 @@ const domainsTransportMapper = (item: DomainTransferItem): Domain => ({
   offer: item.offer && {
     ...item.offer,
     paymentToken: tokens[item.offer.paymentToken.toLowerCase()],
-    price: parseInt(item.offer.price) / 10 ** 18,
+    price: parseInt(item.offer.price, 10) / 10 ** 18,
   },
 })
 
 const soldTransportMapper = (item: SoldDomainTransferItem): SoldDomain => ({
-  _id: item.id,
+  id: item.id,
   paymentToken: tokens[item.paymentToken.toLowerCase()],
-  price: parseInt(item.price) / 10 ** 18,
+  price: parseInt(item.price, 10) / 10 ** 18,
   soldDate: new Date(item.soldDate),
   domainName: item.domain.name,
   buyer: item.newOwnerAddress,
   tokenId: item.tokenId,
 })
 
-const minMaxPriceTransportMapper = (_, item: { price: string }): number => parseInt(item.price) / 10 ** 18
+const minMaxPriceTransportMapper = (_, item: { price: string }): number => parseInt(item.price, 10) / 10 ** 18
 
 const mappings = {
   offers: offersTransportMapper,

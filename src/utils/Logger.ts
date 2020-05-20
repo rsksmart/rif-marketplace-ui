@@ -1,4 +1,4 @@
-export interface ILogger {
+export interface LoggerType {
   debug(message: string, ...rest: any): void
   error(message: string, ...rest: any): void
   info(message: string, ...rest: any): void
@@ -24,7 +24,7 @@ const DEFAULT_LOG_LEVEL = LOG_LEVELS.ERROR
 const envLogLevel: string | undefined = process.env.REACT_APP_LOG_LEVEL
   && process.env.REACT_APP_LOG_LEVEL.toUpperCase()
 
-class Logger implements ILogger {
+class Logger implements LoggerType {
   public static getInstance(): Logger {
     if (!Logger.instance) {
       Logger.instance = new Logger()
@@ -72,6 +72,7 @@ class Logger implements ILogger {
   private getReadableNow = (): string => this.getReadableTime(this.now());
 
   private log = (msgType: LOG_LEVELS, msg: string, ...rest: any): void => {
+    /* eslint-disable-next-line no-console */
     const logger = console[msgType]
     const time = this.getReadableNow()
     const message = `${time} ${msg}`

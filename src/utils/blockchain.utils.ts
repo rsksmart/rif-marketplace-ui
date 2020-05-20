@@ -1,8 +1,9 @@
 import Web3 from 'web3'
 
+/* eslint-disable-next-line @typescript-eslint/no-var-requires */
 const contract = require('@truffle/contract')
 
-const ContractWrapper = (artifact, web3: Web3, from: string) => {
+const ContractWrapper = (artifact: any, web3: Web3, from: string) => {
   const c = contract(artifact)
   c.setProvider(web3.currentProvider)
   c.defaults({ from })
@@ -10,4 +11,4 @@ const ContractWrapper = (artifact, web3: Web3, from: string) => {
   return c
 }
 
-export { ContractWrapper }
+export default ContractWrapper

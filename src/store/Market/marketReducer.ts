@@ -5,37 +5,15 @@ import {
   ItemPayload,
   ListingPayload,
   MarketAction,
-  MarketPayload,
+  MarketPayloadType,
   MARKET_ACTIONS,
   TxTypeChangePayload,
   ExchangeRatePayload,
 } from './marketActions'
-import { IMarketState, initialState } from './MarketStore'
+import { MarketStateType, initialState } from './MarketStore'
 
 const logger = Logger.getInstance()
 
-// TODO: Extract reusable
-const marketReducer = (state = initialState, action: MarketAction) => {
-  const { type, payload } = action
-  const marketAction = marketActions[type]
-
-  if (marketAction) logger.debug('Market action:', action)
-  const newState = (!!marketAction && marketAction(state, payload)) || state
-
-  if (state !== newState) {
-    logger.debug('Prev state:', state)
-    logger.debug('Next state:', newState)
-  } else {
-    logger.debug('No change:', newState)
-  }
-
-  return newState
-}
-export default marketReducer
-
-type IMarketActions = {
-  [key in MARKET_ACTIONS]: (state: IMarketState, payload: MarketPayload) => IMarketState
-}
 
 const {
   NOOP,
@@ -48,9 +26,9 @@ const {
   CLEAN_UP,
 } = MARKET_ACTIONS
 
-const marketActions: IMarketActions = {
-  [NOOP]: (state: IMarketState, _: MarketPayload) => state,
-  [SET_ITEMS]: (state: IMarketState, payload: ListingPayload) => {
+const marketActions: MarketActionsType = {
+  [NOOP]: (state: MarketStateType, _: MarketPayloadType) => state,
+  [SET_ITEMS]: (state: MarketStateType, payload: ListingPayload) => {
     const { listingType, items } = payload
     const { currentListing } = state
 
@@ -75,10 +53,10 @@ const marketActions: IMarketActions = {
     }
     return newState
   },
-  [SELECT_ITEM]: (state: IMarketState, payload: ItemPayload) => ({
+  [SELECT_ITEM]: (state: MarketStateType, payload: ItemPayload) => ({
     ...state, currentOrder: { ...payload },
   }),
-  [SET_FILTER]: (state: IMarketState, payload: FilterPayload) => {
+  [SET_FILTER]: (state: MarketStateType, payload: FilterPayload) => {
     const { filters, currentListing } = state
 
     if (!currentListing) return state
@@ -96,7 +74,7 @@ const marketActions: IMarketActions = {
       },
     }
   },
-  [TOGGLE_TX_TYPE]: (state: IMarketState, payload: TxTypeChangePayload) => {
+  [TOGGLE_TX_TYPE]: (state: MarketStateType, payload: TxTypeChangePayload) => {
     const { currentListing } = state
     const { txType } = payload
 
@@ -111,7 +89,7 @@ const marketActions: IMarketActions = {
       },
     }
   },
-  [CONNECT_SERVICE]: (state: IMarketState, payload: ConnectionPayload) => {
+  [CONNECT_SERVICE]: (state: MarketStateType, payload: ConnectionPayload) => {
     const { servicePath, listingType, txType } = payload
     return {
       ...state,
@@ -123,7 +101,7 @@ const marketActions: IMarketActions = {
       },
     }
   },
-  [SET_EXCHANGE_RATE]: (state: IMarketState, payload: ExchangeRatePayload) => ({
+  [SET_EXCHANGE_RATE]: (state: MarketStateType, payload: ExchangeRatePayload) => ({
     ...state,
     exchangeRates: {
       ...state.exchangeRates,
@@ -133,9 +111,34 @@ const marketActions: IMarketActions = {
       },
     },
   }),
-  [CLEAN_UP]: (state: IMarketState, _: MarketPayload) => ({
+  [CLEAN_UP]: (state: MarketStateType, _: MarketPayloadType) => ({
     ...state,
     currentListing: undefined,
     currentOrder: undefined,
   }),
+}
+
+
+// TODO: Extract reusable
+const marketReducer = (state = initialState, action: MarketAction) => {
+  const { type, payload } = action
+  const marketAction = marketActions[type]
+
+  // if (marketAction)
+  logger.debug('Market action:', action)
+  const newState = (!!marketAction && marketAction(state, payload)) || state
+
+  if (state !== newState) {
+    logger.debug('Prev state:', state)
+    logger.debug('Next state:', newState)
+  } else {
+    logger.debug('No change:', newState)
+  }
+
+  return newState
+}
+export default marketReducer
+
+type MarketActionsType = {
+  [key in MARKET_ACTIONS]: (state: MarketStateType, payload: MarketPayloadType) => MarketStateType
 }

@@ -64,8 +64,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
           const payload = Object.keys(rates).reduce((acc, i) => {
             const symbol = rates[i].token
 
-            if (symbol === 'rif') // FIXME: This is here only temporary as atm we don't want to support more than RIF.
-            {
+            if (symbol === 'rif') { // FIXME: This is here only temporary as atm we don't want to support more than RIF.
               acc[symbol] = {
                 rate: rates[i][fiatSymbol],
                 displayName: tokenDisplayNames[symbol],
@@ -86,14 +85,14 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
       {accountRequired && !account && <p>Please sign in to your wallet</p>}
       {(!accountRequired || account)
         && (
-        <>
-          <Grid className={classes.filtersContainer} item sm={12} md={3}>
-            <MarketFilter>{filterItems}</MarketFilter>
-          </Grid>
-          <Grid className={classes.resultsContainer} item sm={12} md={9}>
-            <Marketplace items={itemCollection} headers={headers} />
-          </Grid>
-        </>
+          <>
+            <Grid className={classes.filtersContainer} item sm={12} md={3}>
+              <MarketFilter>{filterItems}</MarketFilter>
+            </Grid>
+            <Grid className={classes.resultsContainer} item sm={12} md={9}>
+              <Marketplace items={itemCollection} headers={headers} />
+            </Grid>
+          </>
         )}
     </Grid>
   )

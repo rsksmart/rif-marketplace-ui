@@ -1,24 +1,20 @@
 import { Web3Store } from '@rsksmart/rif-ui'
 import { createOffersService, DOMAINS_SERVICE_PATHS, fetchDomainOffers } from 'api/rif-marketplace-cache/domainsController'
-import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
-import SelectRowButton from 'components/molecules/table/SelectRowButton'
+import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { MarketListingTypes } from 'models/Market'
 import React, { FC, useContext, useEffect } from 'react'
-import { useHistory } from 'react-router'
-import { ROUTES } from 'routes'
+import { useHistory } from 'react-router-dom'
+import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
 import { DomainOffer } from 'models/marketItems/DomainItem'
-import AddressItem from 'components/molecules/AddressItem'
 
 const LISTING_TYPE = MarketListingTypes.DOMAIN_OFFERS
 const TX_TYPE = TxType.BUY
 
-export interface DomainOffersPageProps { }
-
-const DomainOffersPage: FC<DomainOffersPageProps> = () => {
+const DomainOffersPage: FC = () => {
   const {
     state: {
       currentListing,
@@ -87,13 +83,13 @@ const DomainOffersPage: FC<DomainOffersPageProps> = () => {
     sellerAddress: 'Seller',
     expirationDate: 'Renewal Date',
     combinedPrice: 'Price',
-    actionCol_1: '',
+    action1: '',
   }
 
   const collection = currentListing?.items
     .map((domainItem: DomainOffer) => {
       const {
-        _id,
+        id,
         price,
         domainName,
         paymentToken,
@@ -105,7 +101,7 @@ const DomainOffersPage: FC<DomainOffersPageProps> = () => {
       const pseudoResolvedName = offerFilters?.domain?.name?.$like && `${offerFilters?.domain?.name?.$like}.rsk`
       const currency = crypto[paymentToken]
       const displayItem = {
-        _id,
+        id,
         domainName: domainName || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
         sellerAddress: <AddressItem value={sellerAddress} />,
         expirationDate: expirationDate.toLocaleDateString(),
@@ -116,9 +112,9 @@ const DomainOffersPage: FC<DomainOffersPageProps> = () => {
           currencyFiat={currentFiat.displayName}
           divider=" = "
         />,
-        actionCol_1: (account?.toLowerCase() === sellerAddress.toLowerCase()) ? 'your offer' : (
+        action1: (account?.toLowerCase() === sellerAddress.toLowerCase()) ? 'your offer' : (
           <SelectRowButton
-            id={_id}
+            id={id}
             handleSelect={() => {
               dispatch({
                 type: MARKET_ACTIONS.SELECT_ITEM,

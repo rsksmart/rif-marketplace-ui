@@ -1,6 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Footer as RUIFooter } from '@rsksmart/rif-ui'
+/* eslint-disable-next-line import/no-unresolved */
 import { FooterProps } from '@rsksmart/rif-ui/dist/components/organisms/Footer'
 
 const useStyles = makeStyles(() => ({

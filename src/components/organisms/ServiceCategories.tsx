@@ -1,6 +1,6 @@
 import React, { FC, HTMLAttributes } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { ROUTES } from 'routes'
+import ROUTES from 'routes'
 import {
   Grid,
 } from '@rsksmart/rif-ui'
@@ -45,9 +45,9 @@ const ServiceCategories: FC<ServiceCategoriesProps> = () => {
   return (
     <Grid container className={classes.servicesContainer}>
       {!!availableServices.length
-        && availableServices.map((service, i) => (
-          <Grid className={classes.serviceContent} item xs={12} lg={6} key={`g${i}`}>
-            <IconedItem {...service} key={`i${i}`} />
+        && availableServices.map((service) => (
+          <Grid className={classes.serviceContent} item xs={12} lg={6} key={`g${service.text + service.description}`}>
+            <IconedItem {...service} key={`i${service.text + service.description}`} />
           </Grid>
         ))}
     </Grid>

@@ -12,6 +12,7 @@ const SelectRowButton: FC<SelectRowButtonProps> = ({
 }) => (
   <Button
     rounded
+    id={id}
     variant="contained"
     color="primary"
     onClick={handleSelect}
