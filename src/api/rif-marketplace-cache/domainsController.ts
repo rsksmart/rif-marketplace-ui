@@ -38,6 +38,10 @@ export interface DomainTransferItem {
     offer: Omit<OfferTransferItem, 'domain'>,
 }
 
+export interface TransferItem {
+    newOwnerAddress: string,
+}
+
 export interface SoldDomainTransferItem {
     id: string,
     tokenId: string,
@@ -47,6 +51,7 @@ export interface SoldDomainTransferItem {
     price: string,
     soldDate: string,
     domain: DomainTransferItem,
+    transfer: TransferItem
 }
 
 
@@ -79,7 +84,7 @@ const soldTransportMapper = (item: SoldDomainTransferItem): SoldDomain => ({
     price: parseInt(item.price) / 10 ** 18,
     soldDate: new Date(item.soldDate),
     domainName: item.domain.name,
-    buyer: item.newOwnerAddress,
+    buyer: item.transfer.newOwnerAddress,
     tokenId: item.tokenId,
 });
 
