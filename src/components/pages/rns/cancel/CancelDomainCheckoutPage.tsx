@@ -12,8 +12,6 @@ import {
 import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
-import ContractWrapper from 'utils/blockchain.utils'
-import Web3 from 'web3'
 import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
 import AddressItem from 'components/molecules/AddressItem'
@@ -85,7 +83,7 @@ const CancelDomainCheckoutPage = () => {
       web3,
     },
   } = useContext(Web3Store)
-  const Contract = (contract) => ContractWrapper(contract, (web3 as Web3), (account as string))
+  // const Contract = (contract) => ContractWrapper(contract, (web3 as Web3), (account as string))
 
   // Redirect direct link
   useEffect(() => {
@@ -132,15 +130,15 @@ const CancelDomainCheckoutPage = () => {
           isProcessing: true,
         },
       })
-      const rnsContract = await Contract(ERC721).at(rnsAddress)
-      const marketPlaceContract = await Contract({ abi: ERC721SimplePlacements }).at(marketPlaceAddress)
 
       try {
-        // Unapprove token
-        const unapproveReceipt = await rnsContract.approve('0x0000000000000000000000000000000000000000', tokenId)
+        const rnsContract = new web3.eth.Contract(ERC721.abi, rnsAddress)
+        const marketPlaceContract = new web3.eth.Contract(ERC721SimplePlacements, marketPlaceAddress)
+
+        const unapproveReceipt = await rnsContract.methods.approve('0x0000000000000000000000000000000000000000', tokenId).send({ from: account })
         logger.info('unapproveReciept:', unapproveReceipt)
 
-        const receipt = await marketPlaceContract.unplace(tokenId)
+        const receipt = await marketPlaceContract.methods.unplace(tokenId).send({ from: account })
         logger.info('unplace receipt:', receipt)
 
         dispatch({

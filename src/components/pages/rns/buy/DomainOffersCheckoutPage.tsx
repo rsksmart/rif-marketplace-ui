@@ -18,7 +18,6 @@ import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
 import contractAdds from 'ui-config.json'
-import ContractWrapper from 'utils/blockchain.utils'
 import Logger from 'utils/Logger'
 import AddressItem from 'components/molecules/AddressItem'
 
@@ -98,18 +97,22 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
     if (web3 && account && currentOrder?.item?.tokenId) {
       setIsFundsConfirmed(false)
       const { item: { tokenId } } = currentOrder
-      const Contract = (c) => ContractWrapper(c, web3, account);
-      (async () => {
-        const rifContract = await Contract(ERC677).at(rifTokenAddress)
-        const marketPlaceContract = await Contract({ abi: ERC721SimplePlacements }).at(marketPlaceAddress)
+      const checkFunds = async () => {
+        const rifContract = new web3.eth.Contract(ERC677.abi, rifTokenAddress)
+        const marketPlaceContract = new web3.eth.Contract(ERC721SimplePlacements, marketPlaceAddress)
 
-        const myBalance = await rifContract.balanceOf(account)
-        const tokenPlacement = await marketPlaceContract.placement(tokenId)
-        const price = tokenPlacement[1]
+        try {
+          const myBalance = await rifContract.methods.balanceOf(account).call({ from: account })
+          const tokenPlacement = await marketPlaceContract.methods.placement(tokenId).call({ from: account })
+          const price = tokenPlacement[1]
 
-        setHasFunds(myBalance.gte(price))
-        setIsFundsConfirmed(true)
-      })()
+          setHasFunds(myBalance > price)
+          setIsFundsConfirmed(true)
+        } catch (e) {
+          logger.error('Could not complete transaction:', e)
+        }
+      }
+      checkFunds()
     }
   }, [web3, account, currentOrder])
 
@@ -155,8 +158,6 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
 
   const handleBuyDomain = async () => {
     if (web3 && account) {
-      const Contract = (c) => ContractWrapper(c, web3, account)
-
       dispatch({
         type: MARKET_ACTIONS.SELECT_ITEM,
         payload: {
@@ -165,23 +166,34 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
         },
       })
 
-      const marketPlaceContract = await Contract({ abi: ERC721SimplePlacements }).at(marketPlaceAddress)
-      const rifContract = await Contract(ERC677).at(rifTokenAddress)
+      try {
+        const marketPlaceContract = new web3.eth.Contract(ERC721SimplePlacements, marketPlaceAddress)
+        const rifContract = new web3.eth.Contract(ERC677.abi, rifTokenAddress)
 
-      const tokenPlacement = await marketPlaceContract.placement(tokenId)
-      const tokenPrice = tokenPlacement[1]
+        const tokenPlacement = await marketPlaceContract.methods.placement(tokenId).call({ from: account })
+        const tokenPrice = tokenPlacement[1]
 
-      const transferReceipt = await rifContract.transferAndCall(marketPlaceAddress, tokenPrice, tokenId)
-      logger.info('transferReceipt:', transferReceipt)
+        const transferReceipt = await rifContract.methods.transferAndCall(marketPlaceAddress, tokenPrice, tokenId).send({ from: account })
+        logger.info('transferReceipt:', transferReceipt)
+
+        dispatch({
+          type: MARKET_ACTIONS.SELECT_ITEM,
+          payload: {
+            ...currentOrder,
+            isProcessing: false,
+          },
+        })
+        history.replace(ROUTES.DOMAINS.DONE.BUY)
+      } catch (e) {
+        logger.error('Could not complete transaction:', e)
+
+        history.replace(ROUTES.DOMAINS.SELL)
+        dispatch({
+          type: MARKET_ACTIONS.SELECT_ITEM,
+          payload: undefined,
+        })
+      }
     }
-    dispatch({
-      type: MARKET_ACTIONS.SELECT_ITEM,
-      payload: {
-        ...currentOrder,
-        isProcessing: false,
-      },
-    })
-    history.replace(ROUTES.DOMAINS.DONE.BUY)
   }
 
 
