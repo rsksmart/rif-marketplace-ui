@@ -15,8 +15,6 @@ import {
 import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
-import ContractWrapper from 'utils/blockchain.utils'
-import Web3 from 'web3'
 import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
 import AddressItem from 'components/molecules/AddressItem'
@@ -97,7 +95,6 @@ const DomainsCheckoutPage: FC<{}> = () => {
       web3,
     },
   } = useContext(Web3Store)
-  const Contract = (contract) => ContractWrapper(contract, (web3 as Web3), (account as string))
 
   const currencySymbols = Object.keys(crypto)
   const currenyOptions = currencySymbols.map((symbol) => crypto[symbol].displayName)
@@ -132,14 +129,14 @@ const DomainsCheckoutPage: FC<{}> = () => {
           isProcessing: true,
         },
       })
-      const rnsContract = await Contract(ERC721).at(rnsAddress)
-      const marketPlaceContract = await Contract({ abi: ERC721SimplePlacements }).at(marketPlaceAddress)
 
       try {
-        const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId)
+        const rnsContract = new web3.eth.Contract(ERC721.abi, rnsAddress)
+        const marketPlaceContract = new web3.eth.Contract(ERC721SimplePlacements, marketPlaceAddress)
+        const approveReceipt = await rnsContract.methods.approve(marketPlaceAddress, tokenId).send({ from: account })
         logger.info('approveReciept:', approveReceipt)
 
-        const receipt = await marketPlaceContract.place(tokenId, rifTokenAddress, web3.utils.toWei(price))
+        const receipt = await marketPlaceContract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).send({ from: account })
         logger.info('place receipt:', receipt)
 
         dispatch({
