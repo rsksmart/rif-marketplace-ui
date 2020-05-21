@@ -1,8 +1,8 @@
 import React, { FC } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { Typography, colors } from '@rsksmart/rif-ui'
+import { Typography, colors, FAQPageTemplate } from '@rsksmart/rif-ui'
 import FAQSection, { FAQSectionProps } from 'components/molecules/FAQSection'
-import { FAQPageTemplate } from '@rsksmart/rif-ui';
+
 
 // TODO:
 // - create FAQSection in rif-ui

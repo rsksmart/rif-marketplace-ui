@@ -4,7 +4,9 @@ import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import StoragePage from './pages/storage/StoragePage'
 
-import { AboutPage, FAQPage, LandingPage, NotFound } from './pages';
+import {
+  AboutPage, FAQPage, LandingPage, NotFound,
+} from './pages'
 import {
   DomainsCheckoutPage,
   MyDomainsPage,
