@@ -39,19 +39,19 @@ export interface DomainTransferItem {
 }
 
 export interface TransferItem {
-    newOwnerAddress: string
+  newOwnerAddress: string
 }
 
 export interface SoldDomainTransferItem {
-    id: string
-    tokenId: string
-    sellerAddress: string
-    newOwnerAddress: string
-    paymentToken: string
-    price: string
-    soldDate: string
-    domain: DomainTransferItem
-    transfer: TransferItem
+  id: string
+  tokenId: string
+  sellerAddress: string
+  newOwnerAddress: string
+  paymentToken: string
+  price: string
+  soldDate: string
+  domain: DomainTransferItem
+  transfer: TransferItem
 }
 
 
@@ -84,7 +84,7 @@ const soldTransportMapper = (item: SoldDomainTransferItem): SoldDomain => ({
   price: parseInt(item.price, 10) / 10 ** 18,
   soldDate: new Date(item.soldDate),
   domainName: item.domain.name,
-  buyer: item.newOwnerAddress,
+  buyer: item.transfer.newOwnerAddress,
   tokenId: item.tokenId,
 })
 
