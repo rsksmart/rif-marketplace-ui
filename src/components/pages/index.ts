@@ -1,1 +1,1 @@
-export * from './rns'
+export * from './rns';

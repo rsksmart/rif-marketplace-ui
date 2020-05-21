@@ -1,7 +1,7 @@
-import CancelDomainCheckoutPage from './CancelDomainCheckoutPage'
-import DomainCanceled from './DomainCanceled'
+import CancelDomainCheckoutPage from "./CancelDomainCheckoutPage";
+import DomainCanceled from "./DomainCanceled";
 
 export {
-  CancelDomainCheckoutPage,
-  DomainCanceled,
-}
+    CancelDomainCheckoutPage,
+    DomainCanceled
+};

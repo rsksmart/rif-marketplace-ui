@@ -1,4 +1,4 @@
-import { ActionType } from 'store/storeUtils/interfaces'
+import { IAction } from 'store/storeUtils/interfaces'
 
 export enum APP_ACTIONS {
   SET_IS_LOADING = 'SET_IS_LOADING',
@@ -6,18 +6,19 @@ export enum APP_ACTIONS {
   UNSET = 'UNSET',
 }
 
-export interface LoadingPayloadType {
+export interface ILoadingPayload {
   readonly isLoading?: boolean
   readonly message?: string
 }
 
-export interface MessagePayloadType {
-  readonly isError?: boolean
+export interface IMessagePayload {
+  readonly isError?: boolean,
   readonly message?: string
 }
 
-export type AppPayload = LoadingPayloadType & MessagePayloadType
+export type AppPayload = ILoadingPayload & IMessagePayload
 
-export interface AppAction extends ActionType<AppPayload> {
+export interface AppAction extends IAction<AppPayload> {
   type: APP_ACTIONS
 }
+

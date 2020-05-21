@@ -1,7 +1,7 @@
-import { MarketItemIface } from 'models/Market'
+import { MarketItemIface } from 'models/Market';
 
 export interface DomainOffer extends MarketItemIface {
-    tokenId: string
+    tokenId: string,
     paymentToken: string
     domainName: string
     expirationDate: Date
@@ -10,18 +10,18 @@ export interface DomainOffer extends MarketItemIface {
 }
 
 export interface Domain extends MarketItemIface {
-    expirationDate: Date
-    ownerAddress: string
-    name: string
-    tokenId: string
+    expirationDate: Date,
+    ownerAddress: string,
+    name: string,
+    tokenId: string,
     offer?: Pick<DomainOffer, 'price' | 'paymentToken'>
 }
 
 export interface SoldDomain extends MarketItemIface {
-    tokenId: string
-    paymentToken: string
-    price: number
-    soldDate: Date
-    domainName: string
-    buyer: string
+    tokenId: string,
+    paymentToken: string,
+    price: number,
+    soldDate: Date,
+    domainName: string,
+    buyer: string,
 }

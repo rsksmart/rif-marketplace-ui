@@ -16,7 +16,7 @@ const STORAGE = '/storage'
 const FAQ = '/faq'
 const ABOUT = '/about'
 
-const ROUTES = {
+export const ROUTES = {
   LANDING,
   COMMUNICATIONS,
   DATA_SERVICE,
@@ -30,16 +30,14 @@ const ROUTES = {
     CHECKOUT: {
       BUY: DOMAIN_OFFERS_CHECKOUT,
       SELL: DOMAINS_CHECKOUT,
-      CANCEL: DOMAIN_CANCEL_CHECKOUT,
+      CANCEL: DOMAIN_CANCEL_CHECKOUT
     },
     DONE: {
       BUY: DOMAIN_OFFERS_DONE,
       SELL: DOMAINS_DONE,
-      CANCEL: DOMAIN_CANCEL_DONE,
-    },
+      CANCEL: DOMAIN_CANCEL_DONE
+    }
   },
   FAQ,
-  ABOUT,
+  ABOUT
 }
-
-export default ROUTES

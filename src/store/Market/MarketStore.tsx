@@ -1,72 +1,72 @@
-import { DomainFilter, DomainOffersFilter } from 'api/models/RnsFilter'
-import { MarketItemIface, MarketItemType, MarketListingTypes } from 'models/Market'
-import React, { Dispatch, useReducer } from 'react'
-import { MarketAction } from './marketActions'
-import marketReducer from './marketReducer'
+import { DomainFilter, DomainOffersFilter } from 'api/models/RnsFilter';
+import { MarketItemIface, MarketItemType, MarketListingTypes } from 'models/Market';
+import React, { Dispatch, useReducer } from 'react';
+import { MarketAction } from './marketActions';
+import marketReducer from './marketReducer';
 
 export enum TxType {
   SELL = 1,
   BUY = 0,
   SOLD = 2,
 }
-export interface CurrentOrderType {
-  listingType: MarketListingTypes
-  item: MarketItemIface
-  txType: TxType
-  isProcessing: boolean
+export interface ICurrentOrder {
+  listingType: MarketListingTypes;
+  item: MarketItemIface;
+  txType: TxType;
+  isProcessing: boolean;
 }
 
-export interface MarketStateType {
+export interface IMarketState {
   currentListing?: {
-    servicePath: string
-    listingType: MarketListingTypes
-    txType: TxType
-    items: MarketItemType[]
-  }
+    servicePath: string;
+    listingType: MarketListingTypes;
+    txType: TxType;
+    items: MarketItemType[];
+  };
   filters: {
-    domains: DomainFilter
-    domainOffers: DomainOffersFilter
-  }
+    domains: DomainFilter;
+    domainOffers: DomainOffersFilter;
+  };
   metadata: {
     domains: {
-      lastUpdated: number
-    }
+      lastUpdated: number;
+    };
     domainOffers: {
-      lastUpdated: number
-    }
+      lastUpdated: number;
+    };
     storage: {
-      lastUpdated: number
-    }
-  }
-  currentOrder?: CurrentOrderType
+      lastUpdated: number;
+    };
+  };
+  currentOrder?: ICurrentOrder;
   exchangeRates: {
     currentFiat: {
-      symbol: string
-      displayName: string
-    }
+      symbol: string,
+      displayName: string,
+    };
     crypto: {
       rif: {
-        displayName: string
-        rate?: number
-      }
-    }
-  }
+        displayName: string;
+        rate?: number;
+      };
+    };
+  };
 }
 
-interface MarketStorePropsType {
-  state: MarketStateType
-  dispatch: Dispatch<MarketAction>
+interface IMarketStoreProps {
+  state: IMarketState;
+  dispatch: Dispatch<MarketAction>;
 }
 
-export const initialState: MarketStateType = {
+export const initialState: IMarketState = {
   filters: {
     domains: {
-      status: 'owned',
+      status: 'owned'
     },
     domainOffers: {
       price: {
         $lte: 0,
-        $gte: 0,
+        $gte: 0
       },
     },
   },
@@ -89,18 +89,18 @@ export const initialState: MarketStateType = {
     crypto: {
       rif: {
         displayName: 'RIF',
-      },
-    },
-  },
-}
+      }
+    }
+  }
+};
 
-const MarketStore = React.createContext({} as MarketStorePropsType | any)
+const MarketStore = React.createContext({} as IMarketStoreProps | any);
 
 export const MarketStoreProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(marketReducer, initialState)
+  const [state, dispatch] = useReducer(marketReducer, initialState);
 
-  const value = { state, dispatch }
-  return <MarketStore.Provider value={value}>{children}</MarketStore.Provider>
-}
+  const value = { state, dispatch };
+  return <MarketStore.Provider value={value}>{children}</MarketStore.Provider>;
+};
 
-export default MarketStore
+export default MarketStore;
