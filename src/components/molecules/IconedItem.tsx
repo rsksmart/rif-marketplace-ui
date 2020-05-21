@@ -1,18 +1,18 @@
-import React, { FC } from 'react';
-import { NavLink } from 'react-router-dom';
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import { fonts, Typography } from '@rsksmart/rif-ui';
-import Icon, { IconProps } from 'components/atoms/Icon';
+import React, { FC } from 'react'
+import { NavLink } from 'react-router-dom'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import { fonts, Typography } from '@rsksmart/rif-ui'
+import Icon, { IconProps } from 'components/atoms/Icon'
 
 export interface IconedItemProps {
-  className?: string;
-  iconProps: IconProps;
-  text: string;
-  to: string;
-  description: string;
+  className?: string
+  iconProps: IconProps
+  text: string
+  to: string
+  description: string
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((_: Theme) => ({
   root: {
     alignItems: 'center',
     display: 'flex',
@@ -22,8 +22,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
     '&:hover': {
-      fontWeight: fonts.weight.lightBold
-    }
+      fontWeight: fonts.weight.lightBold,
+    },
   },
   iconDescription: {
     display: 'flex',
@@ -33,21 +33,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   link: {
     textDecoration: 'none',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
-}));
+}))
 
-const IconedItem: FC<IconedItemProps> = ({ className = '', to, text, iconProps, description }) => {
-  const classes = useStyles();
+const IconedItem: FC<IconedItemProps> = ({
+  className = '', to, text, iconProps, description,
+}) => {
+  const classes = useStyles()
   return (
     <div className={`${classes.root} ${className}`}>
       <NavLink className={classes.link} to={to}>
         <Icon {...iconProps} />
-        <Typography className={classes.iconTitle} variant='h6' color='primary'>{text}</Typography>
-        <Typography className={classes.iconDescription} color='secondary'>{description}</Typography>
+        <Typography className={classes.iconTitle} variant="h6" color="primary">{text}</Typography>
+        <Typography className={classes.iconDescription} color="secondary">{description}</Typography>
       </NavLink>
     </div>
-  );
-};
+  )
+}
 
-export default IconedItem;
+export default IconedItem

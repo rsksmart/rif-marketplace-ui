@@ -1,12 +1,12 @@
-import NotFound from 'components/pages/NotFound';
-import React, { useEffect } from 'react';
-import { Route, Switch, useHistory } from 'react-router-dom';
-import { ROUTES } from 'routes';
-import Logger from 'utils/Logger';
-import LandingPage from './pages/LandingPage';
-import { FAQPage } from './pages/faq';
-import { StoragePage } from './pages/storage';
-import AboutPage from './pages/AboutPage';
+import NotFound from 'components/pages/NotFound'
+import React, { useEffect } from 'react'
+import { Route, Switch, useHistory } from 'react-router-dom'
+import ROUTES from 'routes'
+import Logger from 'utils/Logger'
+import LandingPage from './pages/LandingPage'
+import FAQPage from './pages/faq/FAQPage'
+import StoragePage from './pages/storage/StoragePage'
+import AboutPage from './pages/AboutPage'
 import {
   DomainsCheckoutPage,
   MyDomainsPage,
@@ -16,24 +16,24 @@ import {
   DomainListed,
   CancelDomainCheckoutPage,
   DomainCanceled,
-  SoldDomainsPage
-} from './pages/rns';
+  SoldDomainsPage,
+} from './pages/rns'
 
 
-const logger = Logger.getInstance();
+const logger = Logger.getInstance()
 
 const Routes = () => {
-  const history = useHistory();
+  const history = useHistory()
 
   useEffect(() => {
     const unlisten = history.listen((location, action) => {
-      logger.debug('Routes -> location', location);
-      logger.debug('Routes -> action', action);
-    });
+      logger.debug('Routes -> location', location)
+      logger.debug('Routes -> action', action)
+    })
     return () => {
-      unlisten();
-    };
-  }, [history]);
+      unlisten()
+    }
+  }, [history])
 
   return (
     <Switch>
@@ -52,7 +52,7 @@ const Routes = () => {
       <Route exact path={ROUTES.ABOUT} component={AboutPage} />
       <Route component={NotFound} />
     </Switch>
-  );
-};
+  )
+}
 
-export default Routes;
+export default Routes

@@ -1,7 +1,8 @@
-import React from 'react';
-import { Typography } from '@rsksmart/rif-ui';
+import React from 'react'
+import { Typography } from '@rsksmart/rif-ui'
 
-export default () =>
+export default () => (
   <Typography>
     The page you requested could not be found
-  </Typography>;
+  </Typography>
+)

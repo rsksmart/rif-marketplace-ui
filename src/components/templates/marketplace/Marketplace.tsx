@@ -1,34 +1,36 @@
-import React, { FC } from 'react';
-import { makeStyles, Theme } from '@material-ui/core';
-import { MarketItemType } from 'models/Market';
-import { colors, fonts, Table, TableHead, TableRow, TableCell, TableBody } from '@rsksmart/rif-ui';
+import React, { FC } from 'react'
+import { makeStyles, Theme } from '@material-ui/core'
+import { MarketItemType } from 'models/Market'
+import {
+  colors, fonts, Table, TableHead, TableRow, TableCell, TableBody,
+} from '@rsksmart/rif-ui'
 
 export interface TableHeaders {
   [itemName: string]: string | React.ElementType
 }
 export interface MarketplaceProps {
-  className?: string;
-  items: MarketItemType[];
-  headers: TableHeaders;
+  className?: string
+  items: MarketItemType[]
+  headers: TableHeaders
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   coloredRow: {
-    background: colors.gray1
+    background: colors.gray1,
   },
   content: {
     flex: 1,
     overflow: 'auto',
     [theme.breakpoints.up('md')]: {
       padding: theme.spacing(2),
-    }
+    },
   },
   root: {
     display: 'flex',
-    flex: '1 1 auto'
+    flex: '1 1 auto',
   },
   tc: {
-    border: 0
+    border: 0,
   },
   th: {
     color: colors.gray6,
@@ -40,14 +42,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     align: 'left',
     color: colors.primary,
   },
-}));
+}))
 
 const Marketplace: FC<MarketplaceProps> = ({
   className = '',
   items,
   headers,
 }) => {
-  const classes = useStyles();
+  const classes = useStyles()
   return (
     <div className={`${classes.root} ${className}`}>
       <div className={classes.content}>
@@ -61,10 +63,10 @@ const Marketplace: FC<MarketplaceProps> = ({
           </TableHead>
           <TableBody>
             {items.map((item, index) => (
-              <TableRow className={index % 2 ? classes.coloredRow : ''} key={item._id}>
+              <TableRow className={index % 2 ? classes.coloredRow : ''} key={item.id}>
                 {
                   Object.keys(headers).map((itemName: string) => (
-                    <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={item._id + itemName}>
+                    <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={itemName}>
                       {item[itemName]}
                     </TableCell>
                   ))
@@ -74,8 +76,8 @@ const Marketplace: FC<MarketplaceProps> = ({
           </TableBody>
         </Table>
       </div>
-    </div >
-  );
-};
+    </div>
+  )
+}
 
-export default Marketplace;
+export default Marketplace
