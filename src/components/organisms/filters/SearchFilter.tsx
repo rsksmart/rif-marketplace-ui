@@ -1,9 +1,9 @@
 import React, { FC, useState } from 'react'
-import { makeStyles, Theme, createStyles } from '@material-ui/core'
+import {
+  InputAdornment, makeStyles, TextField, Theme, createStyles,
+} from '@material-ui/core'
 import {
   colors,
-  InputAdornment,
-  TextField,
 } from '@rsksmart/rif-ui'
 import Search from '@material-ui/icons/Search'
 

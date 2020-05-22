@@ -1,9 +1,7 @@
 import React, { FC, HTMLAttributes } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import ROUTES from 'routes'
-import {
-  Grid,
-} from '@rsksmart/rif-ui'
+import Grid from '@material-ui/core/Grid'
 import IconedItem, { IconedItemProps } from 'components/molecules/IconedItem'
 import { Icons } from 'components/atoms/Icon'
 

@@ -2,7 +2,7 @@ import React from 'react'
 import ROUTES from 'routes'
 import { Header as RUIHeader } from '@rsksmart/rif-ui'
 /* eslint-disable import/no-unresolved */
-import { HeaderItemProps } from '@rsksmart/rif-ui/dist/components/organisms/Header/Header'
+import { HeaderItemProps } from '@rsksmart/rif-ui/dist/components/organisms/Header/HeaderProps'
 import InfoIcon from '@material-ui/icons/Info'
 import LiveHelpIcon from '@material-ui/icons/LiveHelp'
 import PeopleIcon from '@material-ui/icons/People'

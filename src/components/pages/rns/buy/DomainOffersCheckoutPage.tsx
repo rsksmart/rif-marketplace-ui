@@ -1,5 +1,5 @@
 import {
-  CardActions, createStyles, makeStyles, Theme,
+  Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody, TableCell, TableRow, Theme,
 } from '@material-ui/core'
 import ERC677 from '@rsksmart/erc677/ERC677Data.json'
 import ERC721SimplePlacements from '@rsksmart/rif-marketplace-nfts/ERC721SimplePlacementsABI.json'
@@ -12,7 +12,7 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import {
-  Button, Card, CardContent, CardHeader, colors, shortenAddress, Table, TableBody, TableCell, TableRow, Typography, Web3Store,
+  Button, colors, shortenAddress, Typography, Web3Store,
 } from '@rsksmart/rif-ui'
 import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'

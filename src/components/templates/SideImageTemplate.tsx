@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
+import Grid from '@material-ui/core/Grid'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { Typography, Grid } from '@rsksmart/rif-ui'
+import { Typography } from '@rsksmart/rif-ui'
 
 export interface SideImageTemplateProps {
   mainTitle: string

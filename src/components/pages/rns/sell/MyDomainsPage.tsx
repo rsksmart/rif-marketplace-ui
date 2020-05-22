@@ -1,5 +1,6 @@
 import ClearIcon from '@material-ui/icons/Clear'
-import { IconButton, Web3Store } from '@rsksmart/rif-ui'
+import IconButton from '@material-ui/core/IconButton'
+import { Web3Store } from '@rsksmart/rif-ui'
 import { createDomainService, DOMAINS_SERVICE_PATHS, fetchDomains } from 'api/rif-marketplace-cache/domainsController'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
