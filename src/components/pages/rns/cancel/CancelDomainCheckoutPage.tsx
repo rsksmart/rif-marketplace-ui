@@ -83,7 +83,6 @@ const CancelDomainCheckoutPage = () => {
       web3,
     },
   } = useContext(Web3Store)
-  // const Contract = (contract) => ContractWrapper(contract, (web3 as Web3), (account as string))
 
   // Redirect direct link
   useEffect(() => {
