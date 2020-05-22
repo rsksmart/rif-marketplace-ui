@@ -1,6 +1,8 @@
 import React, { FC } from 'react'
-import { createStyles, makeStyles, Theme } from '@material-ui/core'
-import { CircularProgress, Typography } from '@rsksmart/rif-ui'
+import {
+  CircularProgress, createStyles, makeStyles, Theme,
+} from '@material-ui/core'
+import { Typography } from '@rsksmart/rif-ui'
 
 export interface TransactionInProgressPanelProps {
   text: string

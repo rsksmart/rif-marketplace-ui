@@ -1,8 +1,8 @@
 import React, { FC, useContext, useEffect } from 'react'
-import { makeStyles, Theme, createStyles } from '@material-ui/core'
+import Grid from '@material-ui/core/Grid'
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import ReturnButton, { ReturnButtonProps } from 'components/molecules/ReturnButton'
 import MarketStore from 'store/Market/MarketStore'
-import { Grid } from '@rsksmart/rif-ui'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 
 export interface CheckoutPageTemplateProps {

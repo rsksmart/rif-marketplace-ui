@@ -1,8 +1,10 @@
 import React, { FC } from 'react'
-import { makeStyles, Theme } from '@material-ui/core'
+import {
+  makeStyles, Table, TableHead, TableRow, TableCell, TableBody, Theme,
+} from '@material-ui/core'
 import { MarketItemType } from 'models/Market'
 import {
-  colors, fonts, Table, TableHead, TableRow, TableCell, TableBody,
+  colors, fonts,
 } from '@rsksmart/rif-ui'
 
 export interface TableHeaders {
