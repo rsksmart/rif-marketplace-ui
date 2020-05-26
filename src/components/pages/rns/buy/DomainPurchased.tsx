@@ -30,6 +30,7 @@ const DomainPurchased: FC<{}> = () => {
           variant="contained"
           rounded
           shadow
+          disabled
           onClick={() => { alert('This should take you to the RNS admin page.') }} // eslint-disable-line no-alert
         // FIXME: do the correct navigation here
         >
