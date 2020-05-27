@@ -51,7 +51,7 @@ const DomainOffersPage: FC = () => {
 
   useEffect(() => {
     if (!servicePath) {
-      const serviceAddr = createOffersService()
+      const serviceAddr = createOffersService(dispatch)
       dispatch({
         type: MARKET_ACTIONS.CONNECT_SERVICE,
         payload: {

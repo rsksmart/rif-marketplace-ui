@@ -1,13 +1,13 @@
-import React, { FC, useContext, useEffect } from 'react'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Grid, Web3Store } from '@rsksmart/rif-ui'
+import { fetchExchangeRatesFor, tokenDisplayNames } from 'api/rif-marketplace-cache/exchangeRateController'
+import InfoBar from 'components/molecules/InfoBar'
 import MarketFilter from 'components/templates/marketplace/MarketFilter'
 import Marketplace, { TableHeaders } from 'components/templates/marketplace/Marketplace'
 import { MarketItemType } from 'models/Market'
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import { Grid } from '@material-ui/core'
-import { Web3Store } from '@rsksmart/rif-ui'
-import MarketStore from 'store/Market/MarketStore'
-import { fetchExchangeRatesFor, tokenDisplayNames } from 'api/rif-marketplace-cache/exchangeRateController'
+import React, { FC, useContext, useEffect } from 'react'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
+import MarketStore from 'store/Market/MarketStore'
 
 export interface MarketPageTemplateProps {
   className: string
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   filtersContainer: {
     width: '100%',
-  },
+  }
 }))
 
 const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
@@ -53,9 +53,14 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
           rif,
         },
       },
+      currentListing,
+      metadata
     },
     dispatch,
   } = useContext(MarketStore)
+
+  const { listingType } = currentListing;
+  const { isUpToDate } = metadata[listingType];
 
   const { rate: rifXr, displayName } = rif
   useEffect(() => {
@@ -91,6 +96,19 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
               <MarketFilter>{filterItems}</MarketFilter>
             </Grid>
             <Grid className={classes.resultsContainer} item sm={12} md={9}>
+              <InfoBar isVisible={!isUpToDate}
+                text='This content had changed. Please,'
+                buttonText='refresh'
+                type='info'
+                button={{
+                  onClick: () => {
+                    dispatch({
+                      type: MARKET_ACTIONS.SET_FILTER,
+                      payload: {}
+                    })
+                  }
+                }}
+              />
               <Marketplace items={itemCollection} headers={headers} />
             </Grid>
           </>
