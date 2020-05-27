@@ -5,8 +5,8 @@ import { MarketAction } from './marketActions'
 import marketReducer from './marketReducer'
 
 export enum TxType {
-  SELL = 1,
   BUY = 0,
+  SELL = 1,
   SOLD = 2,
 }
 export interface CurrentOrderType {
@@ -29,13 +29,16 @@ export interface MarketStateType {
   }
   metadata: {
     domains: {
-      lastUpdated: number
+      lastUpdated: number,
+      isUpToDate?: Boolean
     }
     domainOffers: {
-      lastUpdated: number
+      lastUpdated: number,
+      isUpToDate?: Boolean
     }
     storage: {
-      lastUpdated: number
+      lastUpdated: number,
+      isUpToDate?: Boolean
     }
   }
   currentOrder?: CurrentOrderType

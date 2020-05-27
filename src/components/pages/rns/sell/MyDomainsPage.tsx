@@ -63,7 +63,7 @@ const MyDomainsPage: FC<{}> = () => {
 
   useEffect(() => {
     if (!servicePath && account) {
-      const serviceAddr = createDomainService(account)
+      const serviceAddr = createDomainService(account, dispatch)
       dispatch({
         type: MARKET_ACTIONS.CONNECT_SERVICE,
         payload: {

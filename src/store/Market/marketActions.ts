@@ -12,7 +12,8 @@ export enum MARKET_ACTIONS {
   TOGGLE_TX_TYPE = 'TOGGLE_TX_TYPE',
   CONNECT_SERVICE = 'CONNECT_SERVICE',
   SET_EXCHANGE_RATE = 'SET_EXCHANGE_RATE',
-  CLEAN_UP = 'CLEAN_UP'
+  CLEAN_UP = 'CLEAN_UP',
+  SET_META = "SET_META"
 }
 
 export interface ItemPayload {
@@ -44,11 +45,15 @@ export interface ExchangeRatePayload {
   }
 }
 
+export interface MetadataPayload {
+  isUpToDate?: Boolean
+}
+
 export interface TxTypeChangePayload {
   txType: TxType
 }
 
-export type MarketPayloadType = ItemPayload & FilterPayload & ConnectionPayload & TxTypeChangePayload & ExchangeRatePayload & ListingPayload
+export type MarketPayloadType = ItemPayload & FilterPayload & ConnectionPayload & TxTypeChangePayload & ExchangeRatePayload & ListingPayload & MetadataPayload
 
 export interface MarketAction extends ActionType<MarketPayloadType> {
   type: MARKET_ACTIONS

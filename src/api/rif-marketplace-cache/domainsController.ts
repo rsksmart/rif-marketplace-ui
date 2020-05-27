@@ -108,11 +108,11 @@ const mappings = {
   sold: soldTransportMapper,
 }
 
-export const createDomainService = (ownerAddress: string) => createService(DOMAINS_SERVICE_PATHS.SELL(ownerAddress))
+export const createDomainService = (ownerAddress: string, marketDispatch) => createService(DOMAINS_SERVICE_PATHS.SELL(ownerAddress), marketDispatch)
 
-export const createOffersService = () => createService(DOMAINS_SERVICE_PATHS.BUY())
+export const createOffersService = (marketDispatch) => createService(DOMAINS_SERVICE_PATHS.BUY(), marketDispatch)
 
-export const createSoldService = (ownerAddress: string) => createService(DOMAINS_SERVICE_PATHS.SOLD(ownerAddress))
+export const createSoldService = (ownerAddress: string, marketDispatch) => createService(DOMAINS_SERVICE_PATHS.SOLD(ownerAddress), marketDispatch)
 
 export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
   const { price } = filters

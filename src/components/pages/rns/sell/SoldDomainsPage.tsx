@@ -62,7 +62,7 @@ const SoldDomainsPage: FC<{}> = () => {
   }, [servicePath, account, dispatch])
   useEffect(() => {
     if (!servicePath && account) {
-      const serviceAddr = createSoldService(account)
+      const serviceAddr = createSoldService(account, dispatch)
       dispatch({
         type: MARKET_ACTIONS.CONNECT_SERVICE,
         payload: {

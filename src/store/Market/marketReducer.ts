@@ -9,6 +9,7 @@ import {
   MARKET_ACTIONS,
   TxTypeChangePayload,
   ExchangeRatePayload,
+  MetadataPayload,
 } from './marketActions'
 import { MarketStateType, initialState } from './MarketStore'
 
@@ -24,30 +25,34 @@ const {
   CONNECT_SERVICE,
   SET_EXCHANGE_RATE,
   CLEAN_UP,
+  SET_META,
 } = MARKET_ACTIONS
 
 const marketActions: MarketActionsType = {
   [NOOP]: (state: MarketStateType, _: MarketPayloadType) => state,
   [SET_ITEMS]: (state: MarketStateType, payload: ListingPayload) => {
-    const { listingType, items } = payload
-    const { currentListing } = state
+    const { listingType } = payload
+    const { currentListing, metadata } = state
 
     if (!currentListing) return state
 
-    if (listingType !== currentListing.listingType) logger.error('There is a mismatch of types in the current items (market store)!')
+    if (listingType !== currentListing.listingType) {
+      logger.error('There is a mismatch of listing types in the current items (market store)!')
+      logger.error(`Expected: ${currentListing.listingType}`)
+      logger.error(`Got: ${listingType}`)
+    }
     const newState = {
       ...state,
       currentListing: {
-        txType: currentListing.txType,
-        listingType,
-        servicePath: currentListing.servicePath,
-        items,
+        ...currentListing,
+        ...payload,
       },
       metadata: {
-        ...state.metadata,
+        ...metadata,
         [listingType]: {
-          ...state.metadata[listingType],
+          ...metadata[listingType],
           lastUpdated: Date.now(),
+          isUpToDate: true,
         },
       },
     }
@@ -116,6 +121,21 @@ const marketActions: MarketActionsType = {
     currentListing: undefined,
     currentOrder: undefined,
   }),
+  [SET_META]: (state: MarketStateType, payload: MetadataPayload) => {
+    const { currentListing, metadata } = state;
+    const listingType = currentListing?.listingType as string;
+
+    return {
+      ...state,
+      metadata: {
+        ...metadata,
+        [listingType]: {
+          ...metadata[listingType],
+          ...payload,
+        },
+      },
+    }
+  }
 }
 
 
