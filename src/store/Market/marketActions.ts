@@ -13,7 +13,7 @@ export enum MARKET_ACTIONS {
   CONNECT_SERVICE = 'CONNECT_SERVICE',
   SET_EXCHANGE_RATE = 'SET_EXCHANGE_RATE',
   CLEAN_UP = 'CLEAN_UP',
-  SET_META = "SET_META"
+  SET_META = 'SET_META'
 }
 
 export interface ItemPayload {
@@ -36,6 +36,7 @@ export interface ConnectionPayload {
   servicePath: string
   listingType: MarketListingTypes
   txType: TxType
+  items: MarketItemType[]
 }
 
 export interface ExchangeRatePayload {
@@ -46,7 +47,7 @@ export interface ExchangeRatePayload {
 }
 
 export interface MetadataPayload {
-  isUpToDate?: Boolean
+  updatedTokenId: string
 }
 
 export interface TxTypeChangePayload {

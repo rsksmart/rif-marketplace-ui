@@ -14,16 +14,14 @@ client.configure(socketio(socket))
 const service = {
   current: null,
 }
+
 export const createService = (path: string, dispatch) => {
+  const setTokensForRefresh = (updatedTokenId) => {
+    dispatch({ type: MARKET_ACTIONS.SET_META, payload: { updatedTokenId } })
+  }
   const svc = client.service(path)
-  svc.on(['created', 'patched', 'updated'], (data, ctx) => {
-    console.log('data updated:', data);
-    dispatch({
-      type: MARKET_ACTIONS.SET_META, payload: {
-        isUpToDate: false,
-      }
-    })
-  })
+  svc.on('updated', (data) => setTokensForRefresh(data.tokenId))
+  svc.on('created', (data) => setTokensForRefresh(data.tokenId))
   service.current = svc
   return path
 }

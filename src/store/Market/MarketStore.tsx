@@ -29,16 +29,16 @@ export interface MarketStateType {
   }
   metadata: {
     domains: {
-      lastUpdated: number,
-      isUpToDate?: Boolean
+      lastUpdated: number
+      updatedTokens: []
     }
     domainOffers: {
-      lastUpdated: number,
-      isUpToDate?: Boolean
+      lastUpdated: number
+      updatedTokens: []
     }
     storage: {
-      lastUpdated: number,
-      isUpToDate?: Boolean
+      lastUpdated: number
+      updatedTokens: []
     }
   }
   currentOrder?: CurrentOrderType
@@ -76,12 +76,15 @@ export const initialState: MarketStateType = {
   metadata: {
     domains: {
       lastUpdated: -1,
+      updatedTokens: [],
     },
     domainOffers: {
       lastUpdated: -1,
+      updatedTokens: [],
     },
     storage: {
       lastUpdated: -1,
+      updatedTokens: [],
     },
   },
   exchangeRates: {
