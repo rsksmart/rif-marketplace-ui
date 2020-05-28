@@ -52,7 +52,7 @@ const marketActions: MarketActionsType = {
         [listingType]: {
           ...metadata[listingType],
           lastUpdated: Date.now(),
-          isUpToDate: true,
+          updatedTokens: [],
         },
       },
     }
@@ -122,20 +122,20 @@ const marketActions: MarketActionsType = {
     currentOrder: undefined,
   }),
   [SET_META]: (state: MarketStateType, payload: MetadataPayload) => {
-    const { currentListing, metadata } = state;
-    const listingType = currentListing?.listingType as string;
+    const { currentListing, metadata } = state
+    const listingType = currentListing?.listingType as string
 
-    return {
+    return listingType ? {
       ...state,
       metadata: {
         ...metadata,
         [listingType]: {
           ...metadata[listingType],
-          ...payload,
+          updatedTokens: [...metadata[listingType].updatedTokens, ...[payload.updatedTokenId]],
         },
       },
-    }
-  }
+    } : state
+  },
 }
 
 
