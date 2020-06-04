@@ -26,20 +26,17 @@ export interface OfferTransferItem {
   sellerAddress: string
   sellerDomain: string
   tokenId: string
-  status: string
   domain: DomainTransferItem
 }
 
 export interface DomainTransferItem {
-  expirationDate: string
+  expiration: {
+    expirationDate: string
+  }
   ownerAddress: string
   name: string
   tokenId: string
-  offer: Omit<OfferTransferItem, 'domain'>
-}
-
-export interface TransferItem {
-  newOwnerAddress: string
+  offers: Omit<OfferTransferItem, 'domain'>[]
 }
 
 export interface SoldDomainTransferItem {
@@ -51,13 +48,15 @@ export interface SoldDomainTransferItem {
   price: string
   soldDate: string
   domain: DomainTransferItem
-  transfer: TransferItem
+  transfer: {
+    newOwnerAddress: string
+  }
 }
 
 
 const offersTransportMapper = (item: OfferTransferItem): DomainOffer => ({
   price: parseInt(item.price, 10) / 10 ** 18,
-  expirationDate: new Date(item.domain.expirationDate),
+  expirationDate: new Date(item.domain.expiration.expirationDate),
   id: item.offerId,
   domainName: item.domain.name,
   paymentToken: tokens[item.paymentToken.toLowerCase()],
@@ -65,18 +64,28 @@ const offersTransportMapper = (item: OfferTransferItem): DomainOffer => ({
   sellerAddress: item.sellerAddress,
 })
 
-const domainsTransportMapper = (item: DomainTransferItem): Domain => ({
-  id: item.tokenId,
-  expirationDate: new Date(item.expirationDate),
-  ownerAddress: item.ownerAddress,
-  name: item.name,
-  tokenId: item.tokenId,
-  offer: item.offer && {
-    ...item.offer,
-    paymentToken: tokens[item.offer.paymentToken.toLowerCase()],
-    price: parseInt(item.offer.price, 10) / 10 ** 18,
-  },
-})
+const domainsTransportMapper = (item: DomainTransferItem): Domain => {
+  const {
+    tokenId, expiration, ownerAddress, name, offers,
+  } = item
+  const domain: Domain = {
+    id: tokenId,
+    expirationDate: new Date(expiration.expirationDate),
+    ownerAddress,
+    name,
+    tokenId,
+  }
+
+  if (offers.length) {
+    const offer = offers[0]
+    domain.offer = {
+      ...offer,
+      paymentToken: tokens[offer.paymentToken.toLowerCase()],
+      price: parseInt(offer.price, 10) / 10 ** 18,
+    }
+  }
+  return domain
+}
 
 const soldTransportMapper = (item: SoldDomainTransferItem): SoldDomain => ({
   id: item.id,
@@ -117,7 +126,11 @@ export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
 }
 
 export const fetchDomains = async (filters?) => {
-  const filtersCopy = { ...filters }
+  const { status, ...restFilters } = filters
+  const filtersCopy = {
+    ...restFilters,
+    placed: status === 'placed',
+  }
   const results = await fetchMarketData(filtersCopy)
 
   return results.map(mappings.domains)
