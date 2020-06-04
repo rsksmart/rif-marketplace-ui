@@ -112,8 +112,8 @@ export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
   const cacheFilters = {
     ...filters,
     price: {
-      $gte: price.$gte * (10 ** 18),
-      $lte: price.$lte * (10 ** 18),
+      $gte: price.$gte * 10 ** 18,
+      $lte: price.$lte * 10 ** 18,
     },
   }
   const results = await fetchMarketData(cacheFilters)
@@ -127,7 +127,6 @@ export const fetchDomains = async (filters?) => {
     placed: status === 'placed',
   }
   const results = await fetchMarketData(filtersCopy)
-
   return results.map(mappings.domains)
 }
 

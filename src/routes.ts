@@ -5,7 +5,6 @@ const PAYMENTS = '/payments'
 const DOMAINS = '/domains'
 const DOMAINS_BUY = `${DOMAINS}/buy`
 const DOMAINS_SELL = `${DOMAINS}/sell`
-const DOMAINS_SOLD = `${DOMAINS}/sold`
 const DOMAIN_OFFERS_CHECKOUT = `${DOMAINS_BUY}/checkout`
 const DOMAINS_CHECKOUT = `${DOMAINS_SELL}/checkout`
 const DOMAIN_OFFERS_DONE = `${DOMAINS_BUY}/done`
@@ -26,7 +25,6 @@ const ROUTES = {
     BASE: DOMAINS,
     BUY: DOMAINS_BUY,
     SELL: DOMAINS_SELL,
-    SOLD: DOMAINS_SOLD,
     CHECKOUT: {
       BUY: DOMAIN_OFFERS_CHECKOUT,
       SELL: DOMAINS_CHECKOUT,

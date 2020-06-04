@@ -4,6 +4,7 @@ import { fetchDomainOffers, RnsServicePaths } from 'api/rif-marketplace-cache/do
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
+import Marketplace from 'components/templates/marketplace/Marketplace'
 import { MarketListingTypes } from 'models/Market'
 import { DomainOffer } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
@@ -13,7 +14,6 @@ import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
 
 const LISTING_TYPE = MarketListingTypes.DOMAIN_OFFERS
-const TX_TYPE = TxType.BUY
 
 const DomainOffersPage: FC = () => {
   const {
@@ -37,33 +37,29 @@ const DomainOffersPage: FC = () => {
   } = useContext(Web3Store)
 
   const servicePath = currentListing?.servicePath
+  let collection = []
 
-  /* Initialise */
-  useEffect(() => {
-    if (servicePath && servicePath !== RnsServicePaths.BUY) {
-      dispatch({
-        type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
-        payload: {
-          txType: TxType.BUY,
-        },
-      })
-    }
-  }, [servicePath, dispatch])
+  // component will unmount - clean up
+  useEffect(() => () => {
+    dispatch({ type: MARKET_ACTIONS.CLEAN_UP })
+  }, [dispatch])
 
+  // connect service
   useEffect(() => {
-    if (!servicePath) {
+    if (servicePath !== RnsServicePaths.BUY) {
       const serviceAddr = createService(RnsServicePaths.BUY, dispatch)
       dispatch({
         type: MARKET_ACTIONS.CONNECT_SERVICE,
         payload: {
           servicePath: serviceAddr,
           listingType: LISTING_TYPE,
-          txType: TX_TYPE,
+          txType: TxType.BUY,
         },
       })
     }
-  }, [servicePath, dispatch])
+  }, [dispatch, servicePath])
 
+  // fetchDomainOffers and dispatch set items
   useEffect(() => {
     if (servicePath && servicePath === RnsServicePaths.BUY) {
       fetchDomainOffers(offerFilters)
@@ -74,9 +70,10 @@ const DomainOffersPage: FC = () => {
           },
         }))
     }
-  }, [offerFilters, servicePath, dispatch])
+  }, [offerFilters, dispatch])
 
-  if (!currentListing) return null
+  // if wrong type, ignore this render
+  if (!currentListing || currentListing?.listingType !== LISTING_TYPE) return null
 
   const headers = {
     domainName: 'Name',
@@ -86,7 +83,7 @@ const DomainOffersPage: FC = () => {
     action1: '',
   }
 
-  const collection = currentListing?.items
+  collection = currentListing?.items
     .map((domainItem: DomainOffer) => {
       const {
         id,
@@ -98,7 +95,7 @@ const DomainOffersPage: FC = () => {
         tokenId,
       } = domainItem
 
-      const pseudoResolvedName = offerFilters?.domain?.name?.$like && `${offerFilters?.domain?.name?.$like}.rsk`
+      const pseudoResolvedName = offerFilters?.domain?.name?.$like && (`${offerFilters?.domain?.name?.$like}.rsk`)
       const currency = crypto[paymentToken]
       const displayItem = {
         id,
@@ -121,7 +118,7 @@ const DomainOffersPage: FC = () => {
                 payload: {
                   listingType: LISTING_TYPE,
                   item: domainItem,
-                  txType: TX_TYPE,
+                  txType: TxType.BUY,
                 },
               })
               history.push(ROUTES.DOMAINS.CHECKOUT.BUY)
@@ -137,8 +134,7 @@ const DomainOffersPage: FC = () => {
     <MarketPageTemplate
       className="Domain Offers"
       filterItems={<DomainOfferFilters />}
-      itemCollection={collection}
-      headers={headers}
+      resultsContent={<Marketplace items={collection} headers={headers} />}
     />
   )
 }

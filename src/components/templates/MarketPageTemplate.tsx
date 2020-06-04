@@ -1,20 +1,17 @@
+import { Grid } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Web3Store } from '@rsksmart/rif-ui'
 import { fetchExchangeRatesFor, tokenDisplayNames } from 'api/rif-marketplace-cache/exchangeRateController'
 import InfoBar from 'components/molecules/InfoBar'
 import MarketFilter from 'components/templates/marketplace/MarketFilter'
-import Marketplace, { TableHeaders } from 'components/templates/marketplace/Marketplace'
-import { MarketItemType } from 'models/Market'
 import React, { FC, useContext, useEffect } from 'react'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
-import { Grid } from '@material-ui/core'
 
 export interface MarketPageTemplateProps {
-  className: string
+  className?: string
   filterItems: React.ReactNode
-  headers: TableHeaders
-  itemCollection: MarketItemType[]
+  resultsContent?: React.ReactNode
   accountRequired?: boolean
 }
 
@@ -36,10 +33,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
-  className,
+  className = '',
   filterItems,
-  itemCollection,
-  headers,
+  resultsContent,
   accountRequired,
 }) => {
   const classes = useStyles()
@@ -59,10 +55,6 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
     },
     dispatch,
   } = useContext(MarketStore)
-
-  const { listingType, txType } = currentListing
-  const updatedTokensCount = metadata[listingType].updatedTokens.length
-  const needsRefresh = !!updatedTokensCount
 
   const { rate: rifXr, displayName } = rif
   useEffect(() => {
@@ -88,8 +80,13 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
     }
   }, [fiatSymbol, rifXr, displayName, dispatch])
 
+  if (!currentListing) return null
+  const { listingType, txType } = currentListing
+  const updatedTokensCount = metadata[listingType].updatedTokens.length
+  const needsRefresh = !!updatedTokensCount
+
   return (
-    <Grid container direction="row" className={`${classes.root} ${className}`}>
+    <Grid container direction="row" className={`${classes.root} ${className}`.trim()}>
       {accountRequired && !account && <p>Please sign in to your wallet</p>}
       {(!accountRequired || account)
         && (
@@ -114,7 +111,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
                   },
                 }}
               />
-              <Marketplace items={itemCollection} headers={headers} />
+              {resultsContent}
             </Grid>
           </>
         )}

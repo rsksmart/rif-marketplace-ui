@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
-import MarketStore from 'store/Market/MarketStore'
+import MarketStore, { TxType } from 'store/Market/MarketStore'
+import { SellDomainStatus } from 'models/marketItems/DomainItem'
 import RadioFilter from './RadioFilter'
 import SearchFilter from './SearchFilter'
 
@@ -16,22 +17,41 @@ const DomainFilters = () => {
     },
     dispatch,
   } = useContext(MarketStore)
+
   const searchValue = (nameFilter && nameFilter.$like) || ''
 
   const domainStatusFilters = [
     {
-      value: 'owned',
+      value: SellDomainStatus.OWNED,
       label: 'Your domains',
     },
     {
-      value: 'placed',
+      value: SellDomainStatus.PLACED,
       label: 'Your offers',
     },
     {
-      value: 'sold',
+      value: SellDomainStatus.SOLD,
       label: 'Sold domains',
     },
   ]
+
+  const handleOnRadioChange = (_: any, value: string) => {
+    dispatch({
+      type: MARKET_ACTIONS.SET_FILTER,
+      payload: {
+        filterItems: {
+          status: value,
+        },
+      },
+    })
+    dispatch({
+      type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
+      payload: {
+        txType: TxType.SELL,
+      },
+    })
+  }
+
   return (
     <>
       <SearchFilter
@@ -54,16 +74,7 @@ const DomainFilters = () => {
         title="Domain Status"
         items={domainStatusFilters}
         value={statusFilter}
-        onChange={(_, value: string) => {
-          dispatch({
-            type: MARKET_ACTIONS.SET_FILTER,
-            payload: {
-              filterItems: {
-                status: value,
-              },
-            },
-          })
-        }}
+        onChange={handleOnRadioChange}
       />
     </>
   )

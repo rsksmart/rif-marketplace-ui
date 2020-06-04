@@ -4,8 +4,7 @@ import { Web3Store } from '@rsksmart/rif-ui'
 import { createService } from 'api/rif-marketplace-cache/cacheController'
 import { fetchDomains, RnsServicePaths } from 'api/rif-marketplace-cache/domainsController'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
-import DomainFilters from 'components/organisms/filters/DomainFilters'
-import MarketPageTemplate from 'components/templates/MarketPageTemplate'
+import Marketplace from 'components/templates/marketplace/Marketplace'
 import { MarketListingTypes } from 'models/Market'
 import { Domain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
@@ -14,10 +13,13 @@ import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
 
-const LISTING_TYPE = MarketListingTypes.DOMAINS
-const TX_TYPE = TxType.SELL
+export interface MyOffersProps {
+  className?: string
+}
 
-const MyDomainsPage: FC<{}> = () => {
+const LISTING_TYPE = MarketListingTypes.DOMAINS
+
+const MyOffers: FC<MyOffersProps> = ({ className = '' }) => {
   const {
     state: {
       currentListing,
@@ -36,57 +38,33 @@ const MyDomainsPage: FC<{}> = () => {
   } = useContext(Web3Store)
   const history = useHistory()
 
-  const servicePath = currentListing?.servicePath
-  const { status: statusFilter, ownerAddress } = domainFilters
-
-  /* Initialise */
+  const { servicePath, listingType, items } = currentListing
+  const { ownerAddress } = domainFilters
+  // connect service
   useEffect(() => {
-    if (statusFilter === 'sold') {
-      dispatch({
-        type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
-        payload: {
-          txType: TxType.SOLD,
-        },
-      })
-      history.replace(ROUTES.DOMAINS.SOLD)
-    }
-  }, [statusFilter, dispatch, history])
-  useEffect(() => {
-    if (account && servicePath && servicePath !== RnsServicePaths.SELL) {
-      dispatch({
-        type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
-        payload: {
-          txType: TxType.SELL,
-        },
-      })
-    }
-  }, [servicePath, account, dispatch])
-
-  useEffect(() => {
-    if (!servicePath && account) {
+    if (account && servicePath !== RnsServicePaths.SELL) {
       const serviceAddr = createService(RnsServicePaths.SELL, dispatch)
       dispatch({
         type: MARKET_ACTIONS.CONNECT_SERVICE,
         payload: {
           servicePath: serviceAddr,
           listingType: LISTING_TYPE,
-          txType: TX_TYPE,
+          txType: TxType.SELL,
         },
       })
     }
-  }, [servicePath, account, dispatch])
+  }, [account, dispatch])
 
+  // fetch domains based on the statusFilter
   useEffect(() => {
-    if (servicePath === RnsServicePaths.SELL && statusFilter !== 'sold' && ownerAddress) { // TODO: refactor
+    if (ownerAddress && servicePath === RnsServicePaths.SELL) {
       fetchDomains(domainFilters)
         .then((items) => dispatch({
           type: MARKET_ACTIONS.SET_ITEMS,
-          payload: {
-            items,
-          },
+          payload: { items }
         }))
     }
-  }, [domainFilters, ownerAddress, servicePath, statusFilter, dispatch])
+  }, [domainFilters, ownerAddress, servicePath, dispatch])
 
   useEffect(() => {
     if (account) {
@@ -101,26 +79,17 @@ const MyDomainsPage: FC<{}> = () => {
     }
   }, [account, dispatch])
 
-  if (!currentListing) return null
-
   const headers = {
-    owned:
-    {
-      name: 'Name',
-      expirationDate: 'Renewal Date',
-      action1: '',
-    },
-    placed: {
-      name: 'Name',
-      expirationDate: 'Renewal Date',
-      price: 'Listed Price',
-      action1: '',
-      action2: '',
-    },
-    sold: {},
+    name: 'Name',
+    expirationDate: 'Renewal Date',
+    price: 'Listed Price',
+    action1: '',
+    action2: '',
   }
 
-  const collection = currentListing?.items
+  if (listingType !== LISTING_TYPE) return null
+
+  const collection = items
     .map((domainItem: Domain) => {
       const {
         id,
@@ -129,7 +98,7 @@ const MyDomainsPage: FC<{}> = () => {
         expirationDate,
         tokenId,
       } = domainItem
-      const pseudoResolvedName = domainFilters?.name?.$like && `${domainFilters?.name?.$like}.rsk`
+      const pseudoResolvedName = domainFilters?.name?.$like && (`${domainFilters?.name?.$like}.rsk`)
       const displayItem = {
         id,
         name: name || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
@@ -142,7 +111,7 @@ const MyDomainsPage: FC<{}> = () => {
               payload: {
                 listingType: LISTING_TYPE,
                 item: domainItem,
-                txType: TX_TYPE,
+                txType: TxType.SELL,
               },
             })
             history.push(ROUTES.DOMAINS.CHECKOUT.SELL)
@@ -152,7 +121,7 @@ const MyDomainsPage: FC<{}> = () => {
         action2: <></>,
       }
 
-      if (statusFilter === 'placed' && offer) {
+      if (offer) {
         const { price, paymentToken } = offer
         const currency = crypto[paymentToken]
         displayItem.price = (
@@ -174,7 +143,7 @@ const MyDomainsPage: FC<{}> = () => {
                 payload: {
                   listingType: LISTING_TYPE,
                   item: domainItem,
-                  txType: TX_TYPE,
+                  txType: TxType.SELL,
                 },
               })
               history.push(ROUTES.DOMAINS.CHECKOUT.CANCEL)
@@ -189,14 +158,8 @@ const MyDomainsPage: FC<{}> = () => {
     })
 
   return (
-    <MarketPageTemplate
-      className="Domains"
-      filterItems={<DomainFilters />}
-      itemCollection={collection}
-      headers={headers[statusFilter]}
-      accountRequired
-    />
+    <Marketplace className={className} headers={headers} items={collection} />
   )
 }
 
-export default MyDomainsPage
+export default MyOffers

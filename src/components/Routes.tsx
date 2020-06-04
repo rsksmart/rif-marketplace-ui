@@ -9,14 +9,13 @@ import {
 } from './pages'
 import {
   DomainsCheckoutPage,
-  MyDomainsPage,
   DomainOffersPage,
   DomainPurchased,
   DomainOffersCheckoutPage,
   DomainListed,
   CancelDomainCheckoutPage,
   DomainCanceled,
-  SoldDomainsPage,
+  SellDomainsListPage,
 } from './pages/rns'
 
 
@@ -41,9 +40,8 @@ const Routes = () => {
       <Route exact path={ROUTES.STORAGE} component={StoragePage} />
       <Route exact path={ROUTES.FAQ} component={FAQPage} />
       <Route exact path={ROUTES.DOMAINS.BUY} component={DomainOffersPage} />
-      <Route exact path={ROUTES.DOMAINS.SOLD} component={SoldDomainsPage} />
       <Route exact path={ROUTES.DOMAINS.CHECKOUT.BUY} component={DomainOffersCheckoutPage} />
-      <Route exact path={ROUTES.DOMAINS.SELL} component={MyDomainsPage} />
+      <Route exact path={ROUTES.DOMAINS.SELL} component={SellDomainsListPage} />
       <Route exact path={ROUTES.DOMAINS.CHECKOUT.SELL} component={DomainsCheckoutPage} />
       <Route exact path={ROUTES.DOMAINS.CHECKOUT.CANCEL} component={CancelDomainCheckoutPage} />
       <Route exact path={ROUTES.DOMAINS.DONE.SELL} component={DomainListed} />
