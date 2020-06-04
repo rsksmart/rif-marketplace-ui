@@ -106,7 +106,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
           const tokenPlacement = await marketPlaceContract.methods.placement(tokenId).call({ from: account })
           const price = tokenPlacement[1]
 
-          setHasFunds(myBalance > price)
+          setHasFunds(new web3.utils.BN(myBalance).gte(new web3.utils.BN(price)))
           setIsFundsConfirmed(true)
         } catch (e) {
           logger.error('Could not complete transaction:', e)
