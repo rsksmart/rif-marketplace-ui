@@ -1,6 +1,7 @@
 import { DomainFilter, DomainOffersFilter } from 'api/models/RnsFilter'
 import { MarketItemIface, MarketItemType, MarketListingTypes } from 'models/Market'
 import React, { Dispatch, useReducer } from 'react'
+import { SellDomainStatus } from 'models/marketItems/DomainItem'
 import { MarketAction } from './marketActions'
 import marketReducer from './marketReducer'
 
@@ -9,6 +10,7 @@ export enum TxType {
   SELL = 1,
   SOLD = 2,
 }
+
 export interface CurrentOrderType {
   listingType: MarketListingTypes
   item: MarketItemIface
@@ -65,7 +67,7 @@ export const initialState: MarketStateType = {
   filters: {
     domains: {
       ownerAddress: '',
-      status: 'owned',
+      status: SellDomainStatus.OWNED,
     },
     domainOffers: {
       price: {

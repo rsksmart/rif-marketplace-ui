@@ -27,3 +27,8 @@ export interface SoldDomain extends MarketItemIface {
 }
 
 export type RnsItemType = Domain & DomainOffer & SoldDomain
+export const SellDomainStatus = {
+    OWNED: 'owned',
+    PLACED: 'placed',
+    SOLD: 'sold',
+}

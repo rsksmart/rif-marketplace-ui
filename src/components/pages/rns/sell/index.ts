@@ -1,11 +1,9 @@
 import DomainListed from './DomainListed'
 import DomainsCheckoutPage from './DomainCheckoutPage'
-import MyDomainsPage from './MyDomainsPage'
-import SoldDomainsPage from './SoldDomainsPage'
+import SellDomainsListPage from './SellDomainsListPage'
 
 export {
   DomainListed,
   DomainsCheckoutPage,
-  MyDomainsPage,
-  SoldDomainsPage,
+  SellDomainsListPage,
 }

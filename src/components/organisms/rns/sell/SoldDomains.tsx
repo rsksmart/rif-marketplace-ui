@@ -2,20 +2,21 @@ import { Web3Store } from '@rsksmart/rif-ui'
 import { createService } from 'api/rif-marketplace-cache/cacheController'
 import { fetchSoldDomains, RnsServicePaths } from 'api/rif-marketplace-cache/domainsController'
 import { AddressItem, CombinedPriceCell } from 'components/molecules'
-import DomainFilters from 'components/organisms/filters/DomainFilters'
-import MarketPageTemplate from 'components/templates/MarketPageTemplate'
+import Marketplace from 'components/templates/marketplace/Marketplace'
 import { MarketListingTypes } from 'models/Market'
 import { SoldDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
-import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
 
-const LISTING_TYPE = MarketListingTypes.DOMAINS
-const TX_TYPE = TxType.SOLD
+export interface SoldDomainsProps {
+  className?: string
+}
 
-const SoldDomainsPage: FC<{}> = () => {
+const LISTING_TYPE = MarketListingTypes.DOMAINS
+const TX_TYPE = TxType.SELL
+
+const SoldDomains: FC<SoldDomainsProps> = ({ className = '' }) => {
   const {
     state: {
       currentListing,
@@ -32,37 +33,13 @@ const SoldDomainsPage: FC<{}> = () => {
   const {
     state: { account },
   } = useContext(Web3Store)
-  const history = useHistory()
 
-  const servicePath = currentListing?.servicePath
-  const {
-    status: statusFilter,
-  } = domainFilters
-  /* Initialise */
-  useEffect(() => {
-    if (statusFilter !== 'sold') {
-      dispatch({
-        type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
-        payload: {
-          txType: TxType.SELL,
-        },
-      })
-      history.replace(ROUTES.DOMAINS.SELL)
-    }
-  }, [statusFilter, dispatch, history])
+  const { servicePath, listingType, items } = currentListing
+  const { ownerAddress } = domainFilters
 
+  // connect service
   useEffect(() => {
-    if (account && servicePath && servicePath !== RnsServicePaths.SOLD) {
-      dispatch({
-        type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
-        payload: {
-          txType: TxType.SOLD,
-        },
-      })
-    }
-  }, [servicePath, account, dispatch])
-  useEffect(() => {
-    if (!servicePath && account) {
+    if (account && servicePath !== RnsServicePaths.SOLD) {
       const serviceAddr = createService(RnsServicePaths.SOLD, dispatch)
       dispatch({
         type: MARKET_ACTIONS.CONNECT_SERVICE,
@@ -73,10 +50,11 @@ const SoldDomainsPage: FC<{}> = () => {
         },
       })
     }
-  }, [servicePath, account, dispatch])
+  }, [account, dispatch])
 
+  // fetchSoldDomains and dispatch set items
   useEffect(() => {
-    if (account && servicePath === RnsServicePaths.SOLD && domainFilters.status === 'sold') { // TODO: refactor
+    if (ownerAddress && servicePath === RnsServicePaths.SOLD) { // TODO: refactor
       fetchSoldDomains(domainFilters)
         .then((items) => dispatch({
           type: MARKET_ACTIONS.SET_ITEMS,
@@ -85,19 +63,25 @@ const SoldDomainsPage: FC<{}> = () => {
           },
         }))
     }
-  }, [account, servicePath, dispatch, domainFilters])
+  }, [account, dispatch, domainFilters])
 
-  if (!currentListing) return null
+  useEffect(() => {
+    if (account) {
+      dispatch({
+        type: MARKET_ACTIONS.SET_FILTER,
+        payload: {
+          filterItems: {
+            ownerAddress: account,
+          },
+        },
+      })
+    }
+  }, [account, dispatch])
 
-  const headers = {
-    domainName: 'Name',
-    buyer: 'Buyer',
-    currency: 'Currency',
-    sellingPrice: 'Selling price',
-    soldDate: 'Selling date',
-  }
 
-  const collection = currentListing?.items
+  if (listingType !== LISTING_TYPE) return null
+
+  const collection = items
     .map((domainItem: SoldDomain) => {
       const {
         id,
@@ -129,15 +113,17 @@ const SoldDomainsPage: FC<{}> = () => {
       return displayItem
     })
 
+  const headers = {
+    domainName: 'Name',
+    buyer: 'Buyer',
+    currency: 'Currency',
+    sellingPrice: 'Selling price',
+    soldDate: 'Selling date',
+  }
+
   return (
-    <MarketPageTemplate
-      className="Domains"
-      filterItems={<DomainFilters />}
-      itemCollection={collection}
-      headers={headers}
-      accountRequired
-    />
+    <Marketplace className={className} headers={headers} items={collection} />
   )
 }
 
-export default SoldDomainsPage
+export default SoldDomains
