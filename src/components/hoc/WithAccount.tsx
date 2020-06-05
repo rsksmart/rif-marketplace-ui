@@ -21,6 +21,7 @@ const WithAccount = ({ WrappedComponent, onChange }) => {
     if (userAccount) {
       onChange()
     }
+    setModalOpened(false)
   }
 
   return (
