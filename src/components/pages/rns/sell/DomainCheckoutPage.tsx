@@ -4,8 +4,6 @@ import React, {
 import {
   Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, MenuItem, Select, Table, TableBody, TableCell, TableRow, Theme,
 } from '@material-ui/core'
-import ERC721 from '@rsksmart/erc721/ERC721Data.json'
-import ERC721SimplePlacements from '@rsksmart/rif-marketplace-nfts/ERC721SimplePlacementsABI.json'
 import PriceItem from 'components/atoms/PriceItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
@@ -20,13 +18,14 @@ import MarketStore from 'store/Market/MarketStore'
 import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
 import AddressItem from 'components/molecules/AddressItem'
+import getRnsContract from 'contracts/Rns'
+import getMarketplaceContract from 'contracts/Marketplace'
 
 
 const logger = Logger.getInstance()
 
 const NETWORK: string = process.env.REACT_APP_NETWORK || 'ganache'
 const rifTokenAddress = contractAdds[NETWORK].rif.toLowerCase()
-const rnsAddress = contractAdds[NETWORK].rnsDotRskOwner.toLowerCase()
 const marketPlaceAddress = contractAdds[NETWORK].marketplace.toLowerCase()
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -133,8 +132,8 @@ const DomainsCheckoutPage: FC<{}> = () => {
       })
 
       try {
-        const rnsContract = new web3.eth.Contract(ERC721.abi, rnsAddress)
-        const marketPlaceContract = new web3.eth.Contract(ERC721SimplePlacements, marketPlaceAddress)
+        const rnsContract = getRnsContract(web3)
+        const marketPlaceContract = getMarketplaceContract(web3)
         const approveReceipt = await rnsContract.methods.approve(marketPlaceAddress, tokenId).send({ from: account })
         logger.info('approveReciept:', approveReceipt)
 

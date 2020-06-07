@@ -1,8 +1,6 @@
 import {
   Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody, TableCell, TableRow, Theme,
 } from '@material-ui/core'
-import ERC677 from '@rsksmart/erc677/ERC677Data.json'
-import ERC721SimplePlacements from '@rsksmart/rif-marketplace-nfts/ERC721SimplePlacementsABI.json'
 import Login from 'components/atoms/Login'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
@@ -17,16 +15,16 @@ import {
 import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
-import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
 import AddressItem from 'components/molecules/AddressItem'
-
-const logger = Logger.getInstance()
+import contractAdds from 'ui-config.json'
+import getRifContract from 'contracts/Rif'
+import getMarketplaceContract from 'contracts/Marketplace'
 
 const network: string = process.env.REACT_APP_NETWORK || 'ganache'
-const rifTokenAddress = contractAdds[network].rif.toLowerCase()
 const marketPlaceAddress = contractAdds[network].marketplace.toLowerCase()
 
+const logger = Logger.getInstance()
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   card: {
@@ -98,8 +96,8 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
       setIsFundsConfirmed(false)
       const { item: { tokenId } } = currentOrder
       const checkFunds = async () => {
-        const rifContract = new web3.eth.Contract(ERC677.abi, rifTokenAddress)
-        const marketPlaceContract = new web3.eth.Contract(ERC721SimplePlacements, marketPlaceAddress)
+        const rifContract = getRifContract(web3)
+        const marketPlaceContract = getMarketplaceContract(web3)
 
         try {
           const myBalance = await rifContract.methods.balanceOf(account).call({ from: account })
@@ -167,8 +165,8 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
       })
 
       try {
-        const marketPlaceContract = new web3.eth.Contract(ERC721SimplePlacements, marketPlaceAddress)
-        const rifContract = new web3.eth.Contract(ERC677.abi, rifTokenAddress)
+        const rifContract = getRifContract(web3)
+        const marketPlaceContract = getMarketplaceContract(web3)
 
         const tokenPlacement = await marketPlaceContract.methods.placement(tokenId).call({ from: account })
         const tokenPrice = tokenPlacement[1]
