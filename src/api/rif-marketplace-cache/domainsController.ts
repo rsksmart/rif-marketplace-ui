@@ -139,13 +139,13 @@ export const fetchDomains = async (filters?) => {
 }
 
 export const fetchSoldDomains = async (filters?) => {
-  const { name } = filters
-  const cacheFilters = {
-    domain: !!filters.name && {
-      name,
-    },
+  const { name, status: _, ...rest } = filters
+  const filtersCopy = {
+    ...rest,
   }
-  const results = await fetchMarketData(cacheFilters)
+
+  if (name) { filtersCopy.domain = { name } }
+  const results = await fetchMarketData(filtersCopy)
   return results.map(mappings.sold)
 }
 
