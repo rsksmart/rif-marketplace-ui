@@ -31,12 +31,14 @@ export interface OfferTransferItem {
 
 export interface DomainTransferItem {
   expiration: {
-    expirationDate: string
+    date: string
   }
-  ownerAddress: string
+  owner: {
+    address: string
+  }
   name: string
   tokenId: string
-  offers: Omit<OfferTransferItem, 'domain'>[]
+  offers?: Omit<OfferTransferItem, 'domain'>[]
 }
 
 export interface SoldDomainTransferItem {
@@ -56,7 +58,7 @@ export interface SoldDomainTransferItem {
 
 const offersTransportMapper = (item: OfferTransferItem): DomainOffer => ({
   price: parseInt(item.price, 10) / 10 ** 18,
-  expirationDate: new Date(item.domain.expiration.expirationDate),
+  expirationDate: new Date(item.domain.expiration.date),
   id: item.offerId,
   domainName: item.domain.name,
   paymentToken: tokens[item.paymentToken.toLowerCase()],
@@ -66,17 +68,17 @@ const offersTransportMapper = (item: OfferTransferItem): DomainOffer => ({
 
 const domainsTransportMapper = (item: DomainTransferItem): Domain => {
   const {
-    tokenId, expiration, ownerAddress, name, offers,
+    tokenId, expiration, owner, name, offers,
   } = item
   const domain: Domain = {
     id: tokenId,
-    expirationDate: new Date(expiration.expirationDate),
-    ownerAddress,
+    expirationDate: new Date(expiration.date),
+    ownerAddress: owner.address,
     name,
     tokenId,
   }
 
-  if (offers.length) {
+  if (offers?.length) {
     const offer = offers[0]
     domain.offer = {
       ...offer,
