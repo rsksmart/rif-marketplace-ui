@@ -8,6 +8,8 @@ import { SoldDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
+import DomainFilters from 'components/organisms/filters/DomainFilters'
+import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 
 export interface SoldDomainsProps {
   className?: string
@@ -34,7 +36,9 @@ const SoldDomains: FC<SoldDomainsProps> = ({ className = '' }) => {
     state: { account },
   } = useContext(Web3Store)
 
-  const { servicePath, listingType, items } = currentListing
+  const servicePath = currentListing?.servicePath
+  const listingType = currentListing?.listingType
+  const items = currentListing?.items
   const { ownerAddress } = domainFilters
 
   // connect service
@@ -54,7 +58,7 @@ const SoldDomains: FC<SoldDomainsProps> = ({ className = '' }) => {
 
   // fetchSoldDomains and dispatch set items
   useEffect(() => {
-    if (ownerAddress && servicePath === RnsServicePaths.SOLD) { // TODO: refactor
+    if (ownerAddress && servicePath === RnsServicePaths.SOLD) {
       fetchSoldDomains(domainFilters)
         .then((items) => dispatch({
           type: MARKET_ACTIONS.SET_ITEMS,
@@ -79,7 +83,7 @@ const SoldDomains: FC<SoldDomainsProps> = ({ className = '' }) => {
   }, [account, dispatch])
 
 
-  if (listingType !== LISTING_TYPE) return null
+  if (!currentListing || listingType !== LISTING_TYPE) return null
 
   const collection = items
     .map((domainItem: SoldDomain) => {
@@ -121,8 +125,14 @@ const SoldDomains: FC<SoldDomainsProps> = ({ className = '' }) => {
     soldDate: 'Selling date',
   }
 
+
   return (
-    <Marketplace className={className} headers={headers} items={collection} />
+    <MarketPageTemplate
+      filterItems={<DomainFilters />}
+      itemCollection={collection}
+      headers={headers}
+      accountRequired
+    />
   )
 }
 

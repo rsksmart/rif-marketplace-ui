@@ -12,6 +12,8 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
+import DomainFilters from 'components/organisms/filters/DomainFilters'
+import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 
 export interface MyOffersProps {
   className?: string
@@ -38,7 +40,9 @@ const MyOffers: FC<MyOffersProps> = ({ className = '' }) => {
   } = useContext(Web3Store)
   const history = useHistory()
 
-  const { servicePath, listingType, items } = currentListing
+  const servicePath = currentListing?.servicePath
+  const listingType = currentListing?.listingType
+  const items = currentListing?.items
   const { ownerAddress } = domainFilters
   // connect service
   useEffect(() => {
@@ -87,7 +91,7 @@ const MyOffers: FC<MyOffersProps> = ({ className = '' }) => {
     action2: '',
   }
 
-  if (listingType !== LISTING_TYPE) return null
+  if (!currentListing || listingType !== LISTING_TYPE) return null
 
   const collection = items
     .map((domainItem: Domain) => {
@@ -158,7 +162,12 @@ const MyOffers: FC<MyOffersProps> = ({ className = '' }) => {
     })
 
   return (
-    <Marketplace className={className} headers={headers} items={collection} />
+    <MarketPageTemplate
+      filterItems={<DomainFilters />}
+      itemCollection={collection}
+      headers={headers}
+      accountRequired
+    />
   )
 }
 

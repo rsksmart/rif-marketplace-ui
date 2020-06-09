@@ -1,11 +1,9 @@
-import React, { FC, useContext } from 'react'
-import MarketPageTemplate from 'components/templates/MarketPageTemplate'
-import DomainFilters from 'components/organisms/filters/DomainFilters'
-import MarketStore from 'store/Market/MarketStore'
 import MyDomains from 'components/organisms/rns/sell/MyDomains'
-import SoldDomains from 'components/organisms/rns/sell/SoldDomains'
 import MyOffers from 'components/organisms/rns/sell/MyOffers'
+import SoldDomains from 'components/organisms/rns/sell/SoldDomains'
 import { SellDomainStatus } from 'models/marketItems/DomainItem'
+import React, { FC, useContext } from 'react'
+import MarketStore from 'store/Market/MarketStore'
 
 const SellDomainsListPage: FC<{}> = () => {
   const {
@@ -22,13 +20,7 @@ const SellDomainsListPage: FC<{}> = () => {
     [SellDomainStatus.SOLD]: <SoldDomains />
   }
 
-  return (
-    <MarketPageTemplate
-      filterItems={<DomainFilters />}
-      resultsContent={componentPerStatus[statusFilter]}
-      accountRequired
-    />
-  )
+  return <>{componentPerStatus[statusFilter]}</>
 }
 
 export default SellDomainsListPage
