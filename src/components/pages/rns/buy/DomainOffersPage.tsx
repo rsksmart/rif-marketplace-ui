@@ -134,7 +134,8 @@ const DomainOffersPage: FC = () => {
     <MarketPageTemplate
       className="Domain Offers"
       filterItems={<DomainOfferFilters />}
-      resultsContent={<Marketplace items={collection} headers={headers} />}
+      itemCollection={collection}
+      headers={headers}
     />
   )
 }

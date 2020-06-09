@@ -7,11 +7,14 @@ import MarketFilter from 'components/templates/marketplace/MarketFilter'
 import React, { FC, useContext, useEffect } from 'react'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
+import Marketplace, { TableHeaders } from './marketplace/Marketplace'
+import { MarketItemType } from 'models/Market'
 
 export interface MarketPageTemplateProps {
   className?: string
   filterItems: React.ReactNode
-  resultsContent?: React.ReactNode
+  headers: TableHeaders
+  itemCollection: MarketItemType[]
   accountRequired?: boolean
 }
 
@@ -35,7 +38,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   className = '',
   filterItems,
-  resultsContent,
+  itemCollection,
+  headers,
   accountRequired,
 }) => {
   const classes = useStyles()
@@ -80,7 +84,6 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
     }
   }, [fiatSymbol, rifXr, displayName, dispatch])
 
-  if (!currentListing) return null
   const { listingType, txType } = currentListing
   const updatedTokensCount = metadata[listingType].updatedTokens.length
   const needsRefresh = !!updatedTokensCount
@@ -111,7 +114,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
                   },
                 }}
               />
-              {resultsContent}
+              <Marketplace items={itemCollection} headers={headers} />
             </Grid>
           </>
         )}

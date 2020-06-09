@@ -10,6 +10,8 @@ import { SelectRowButton, AddressItem } from 'components/molecules'
 import ROUTES from 'routes'
 import { useHistory } from 'react-router-dom'
 import { createService } from 'api/rif-marketplace-cache/cacheController'
+import MarketPageTemplate from 'components/templates/MarketPageTemplate'
+import DomainFilters from 'components/organisms/filters/DomainFilters'
 
 export interface MyDomainsProps {
   className?: string
@@ -32,7 +34,9 @@ const MyDomains: FC<MyDomainsProps> = ({ className = '' }) => {
   } = useContext(Web3Store)
   const history = useHistory()
 
-  const { servicePath, listingType, items } = currentListing
+  const servicePath = currentListing?.servicePath
+  const listingType = currentListing?.listingType
+  const items = currentListing?.items
   const { ownerAddress } = domainFilters
 
   // connect service
@@ -83,7 +87,7 @@ const MyDomains: FC<MyDomainsProps> = ({ className = '' }) => {
     action1: '',
   }
 
-  if (listingType !== LISTING_TYPE) return null
+  if (!currentListing || listingType !== LISTING_TYPE) return null
 
   const collection = items
     .map((domainItem: Domain) => {
@@ -120,7 +124,12 @@ const MyDomains: FC<MyDomainsProps> = ({ className = '' }) => {
     })
 
   return (
-    <Marketplace className={className} items={collection} headers={headers} />
+    <MarketPageTemplate
+      filterItems={<DomainFilters />}
+      itemCollection={collection}
+      headers={headers}
+      accountRequired
+    />
   )
 }
 
