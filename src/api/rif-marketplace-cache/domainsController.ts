@@ -142,9 +142,8 @@ export const fetchSoldDomains = async (filters?) => {
   return results.map(mappings.sold)
 }
 
-const fetchMinPrice = async (filters?) => {
+const fetchMinPrice = async () => {
   const query = {
-    ...filters,
     $limit: 1,
     $sort: {
       price: 1,
@@ -156,9 +155,8 @@ const fetchMinPrice = async (filters?) => {
   return results.reduce(mappings.minMaxPrice, 0)
 }
 
-const fetchMaxPrice = async (filters?) => {
+const fetchMaxPrice = async () => {
   const query = {
-    ...filters,
     $limit: 1,
     $sort: {
       price: -1,
@@ -170,8 +168,8 @@ const fetchMaxPrice = async (filters?) => {
   return results.reduce(mappings.minMaxPrice, 0)
 }
 
-export const fetchMinMaxPrice = async (filters?) => {
-  const minPrice = await fetchMinPrice(filters)
-  const maxPrice = await fetchMaxPrice(filters)
+export const fetchMinMaxPrice = async () => {
+  const minPrice = await fetchMinPrice()
+  const maxPrice = await fetchMaxPrice()
   return { minPrice, maxPrice }
 }
