@@ -7,8 +7,8 @@ import MarketFilter from 'components/templates/marketplace/MarketFilter'
 import React, { FC, useContext, useEffect } from 'react'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
-import Marketplace, { TableHeaders } from './marketplace/Marketplace'
 import { MarketItemType } from 'models/Market'
+import Marketplace, { TableHeaders } from './marketplace/Marketplace'
 
 export interface MarketPageTemplateProps {
   className?: string
@@ -89,7 +89,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   const needsRefresh = !!updatedTokensCount
 
   return (
-    <Grid container direction="row" className={`${classes.root} ${className}`.trim()}>
+    <Grid container direction="row" className={`${classes.root} ${className}`}>
       {accountRequired && !account && <p>Please sign in to your wallet</p>}
       {(!accountRequired || account)
         && (

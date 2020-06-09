@@ -4,7 +4,6 @@ import { fetchDomainOffers, RnsServicePaths } from 'api/rif-marketplace-cache/do
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
-import Marketplace from 'components/templates/marketplace/Marketplace'
 import { MarketListingTypes } from 'models/Market'
 import { DomainOffer } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
@@ -41,7 +40,7 @@ const DomainOffersPage: FC = () => {
 
   // component will unmount - clean up
   useEffect(() => () => {
-    dispatch({ type: MARKET_ACTIONS.CLEAN_UP })
+    dispatch({ type: MARKET_ACTIONS.CLEAN_UP, payload: { currentListing: true } })
   }, [dispatch])
 
   // connect service

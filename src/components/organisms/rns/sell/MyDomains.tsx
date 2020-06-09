@@ -1,25 +1,21 @@
-import React, { FC, useEffect, useContext } from 'react'
 import { Web3Store } from '@rsksmart/rif-ui'
-import Marketplace from 'components/templates/marketplace/Marketplace'
-import { MarketListingTypes } from 'models/Market'
-import { fetchDomains, RnsServicePaths } from 'api/rif-marketplace-cache/domainsController'
-import MarketStore, { TxType } from 'store/Market/MarketStore'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
-import { Domain } from 'models/marketItems/DomainItem'
-import { SelectRowButton, AddressItem } from 'components/molecules'
-import ROUTES from 'routes'
-import { useHistory } from 'react-router-dom'
 import { createService } from 'api/rif-marketplace-cache/cacheController'
-import MarketPageTemplate from 'components/templates/MarketPageTemplate'
+import { fetchDomains, RnsServicePaths } from 'api/rif-marketplace-cache/domainsController'
+import { AddressItem, SelectRowButton } from 'components/molecules'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
+import MarketPageTemplate from 'components/templates/MarketPageTemplate'
+import { MarketListingTypes } from 'models/Market'
+import { Domain } from 'models/marketItems/DomainItem'
+import React, { FC, useContext, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
+import ROUTES from 'routes'
+import { MARKET_ACTIONS } from 'store/Market/marketActions'
+import MarketStore, { TxType } from 'store/Market/MarketStore'
 
-export interface MyDomainsProps {
-  className?: string
-}
 
 const LISTING_TYPE = MarketListingTypes.DOMAINS
 
-const MyDomains: FC<MyDomainsProps> = ({ className = '' }) => {
+const MyDomains: FC<{}> = () => {
   const {
     state: {
       currentListing,
@@ -58,11 +54,11 @@ const MyDomains: FC<MyDomainsProps> = ({ className = '' }) => {
   useEffect(() => {
     if (ownerAddress && servicePath === RnsServicePaths.SELL) {
       fetchDomains(domainFilters)
-        .then((items) => dispatch({
+        .then((receivedItems) => dispatch({
           type: MARKET_ACTIONS.SET_ITEMS,
           payload: {
             listingType: MarketListingTypes.DOMAINS,
-            items,
+            items: receivedItems,
           },
         }))
     }

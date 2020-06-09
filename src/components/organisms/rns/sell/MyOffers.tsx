@@ -4,7 +4,8 @@ import { Web3Store } from '@rsksmart/rif-ui'
 import { createService } from 'api/rif-marketplace-cache/cacheController'
 import { fetchDomains, RnsServicePaths } from 'api/rif-marketplace-cache/domainsController'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
-import Marketplace from 'components/templates/marketplace/Marketplace'
+import DomainFilters from 'components/organisms/filters/DomainFilters'
+import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { MarketListingTypes } from 'models/Market'
 import { Domain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
@@ -12,16 +13,11 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
-import DomainFilters from 'components/organisms/filters/DomainFilters'
-import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 
-export interface MyOffersProps {
-  className?: string
-}
 
 const LISTING_TYPE = MarketListingTypes.DOMAINS
 
-const MyOffers: FC<MyOffersProps> = ({ className = '' }) => {
+const MyOffers: FC<{}> = () => {
   const {
     state: {
       currentListing,
@@ -63,9 +59,9 @@ const MyOffers: FC<MyOffersProps> = ({ className = '' }) => {
   useEffect(() => {
     if (ownerAddress && servicePath === RnsServicePaths.SELL) {
       fetchDomains(domainFilters)
-        .then((items) => dispatch({
+        .then((receivedItems) => dispatch({
           type: MARKET_ACTIONS.SET_ITEMS,
-          payload: { items }
+          payload: { items: receivedItems },
         }))
     }
   }, [domainFilters, ownerAddress, servicePath, dispatch])
