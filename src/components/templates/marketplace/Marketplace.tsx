@@ -53,7 +53,7 @@ const Marketplace: FC<MarketplaceProps> = ({
 }) => {
   const classes = useStyles()
   return (
-    <div className={`${classes.root} ${className}`.trim()}>
+    <div className={`${classes.root} ${className}`}>
       <div className={classes.content}>
         <Table>
           <TableHead>

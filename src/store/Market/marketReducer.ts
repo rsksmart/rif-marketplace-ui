@@ -10,6 +10,7 @@ import {
   TxTypeChangePayload,
   ExchangeRatePayload,
   MetadataPayload,
+  CleanupPayload,
 } from './marketActions'
 import { MarketStateType, initialState } from './MarketStore'
 
@@ -113,10 +114,10 @@ const marketActions: MarketActionsType = {
       },
     },
   }),
-  [CLEAN_UP]: (state: MarketStateType, _: MarketPayloadType) => ({
+  [CLEAN_UP]: (state: MarketStateType, { currentListing, currentOrder }: CleanupPayload) => ({
     ...state,
-    currentListing: undefined,
-    currentOrder: undefined,
+    currentListing: currentListing ? undefined : state.currentListing,
+    currentOrder: currentOrder ? undefined : state.currentOrder,
   }),
   [SET_META]: (state: MarketStateType, payload: MetadataPayload) => {
     const { currentListing, metadata } = state

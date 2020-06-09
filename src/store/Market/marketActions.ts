@@ -49,11 +49,16 @@ export interface MetadataPayload {
   updatedTokenId: string
 }
 
+export interface CleanupPayload {
+  currentListing?: boolean
+  currentOrder?: boolean
+}
+
 export interface TxTypeChangePayload {
   txType: TxType
 }
 
-export type MarketPayloadType = ItemPayload & FilterPayload & ConnectionPayload & TxTypeChangePayload & ExchangeRatePayload & ListingPayload & MetadataPayload
+export type MarketPayloadType = ItemPayload & FilterPayload & ConnectionPayload & TxTypeChangePayload & ExchangeRatePayload & ListingPayload & MetadataPayload & CleanupPayload
 
 export interface MarketAction extends ActionType<MarketPayloadType> {
   type: MARKET_ACTIONS

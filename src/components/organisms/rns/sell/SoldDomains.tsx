@@ -2,23 +2,18 @@ import { Web3Store } from '@rsksmart/rif-ui'
 import { createService } from 'api/rif-marketplace-cache/cacheController'
 import { fetchSoldDomains, RnsServicePaths } from 'api/rif-marketplace-cache/domainsController'
 import { AddressItem, CombinedPriceCell } from 'components/molecules'
-import Marketplace from 'components/templates/marketplace/Marketplace'
+import DomainFilters from 'components/organisms/filters/DomainFilters'
+import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { MarketListingTypes } from 'models/Market'
 import { SoldDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
-import DomainFilters from 'components/organisms/filters/DomainFilters'
-import MarketPageTemplate from 'components/templates/MarketPageTemplate'
-
-export interface SoldDomainsProps {
-  className?: string
-}
 
 const LISTING_TYPE = MarketListingTypes.DOMAINS
 const TX_TYPE = TxType.SELL
 
-const SoldDomains: FC<SoldDomainsProps> = ({ className = '' }) => {
+const SoldDomains: FC<{}> = () => {
   const {
     state: {
       currentListing,
@@ -60,10 +55,10 @@ const SoldDomains: FC<SoldDomainsProps> = ({ className = '' }) => {
   useEffect(() => {
     if (ownerAddress && servicePath === RnsServicePaths.SOLD) {
       fetchSoldDomains(domainFilters)
-        .then((items) => dispatch({
+        .then((receivedItems) => dispatch({
           type: MARKET_ACTIONS.SET_ITEMS,
           payload: {
-            items,
+            items: receivedItems,
           },
         }))
     }
