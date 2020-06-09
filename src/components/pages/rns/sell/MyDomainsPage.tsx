@@ -1,7 +1,8 @@
-import ClearIcon from '@material-ui/icons/Clear'
 import IconButton from '@material-ui/core/IconButton'
+import ClearIcon from '@material-ui/icons/Clear'
 import { Web3Store } from '@rsksmart/rif-ui'
-import { createDomainService, DOMAINS_SERVICE_PATHS, fetchDomains } from 'api/rif-marketplace-cache/domainsController'
+import { createService } from 'api/rif-marketplace-cache/cacheController'
+import { fetchDomains, RnsServicePaths } from 'api/rif-marketplace-cache/domainsController'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
@@ -36,7 +37,7 @@ const MyDomainsPage: FC<{}> = () => {
   const history = useHistory()
 
   const servicePath = currentListing?.servicePath
-  const statusFilter = domainFilters.status
+  const { status: statusFilter, ownerAddress } = domainFilters
 
   /* Initialise */
   useEffect(() => {
@@ -51,7 +52,7 @@ const MyDomainsPage: FC<{}> = () => {
     }
   }, [statusFilter, dispatch, history])
   useEffect(() => {
-    if (servicePath && account && servicePath !== DOMAINS_SERVICE_PATHS.SELL(account)) {
+    if (account && servicePath && servicePath !== RnsServicePaths.SELL) {
       dispatch({
         type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
         payload: {
@@ -63,7 +64,7 @@ const MyDomainsPage: FC<{}> = () => {
 
   useEffect(() => {
     if (!servicePath && account) {
-      const serviceAddr = createDomainService(account, dispatch)
+      const serviceAddr = createService(RnsServicePaths.SELL, dispatch)
       dispatch({
         type: MARKET_ACTIONS.CONNECT_SERVICE,
         payload: {
@@ -76,17 +77,29 @@ const MyDomainsPage: FC<{}> = () => {
   }, [servicePath, account, dispatch])
 
   useEffect(() => {
-    if (servicePath && account && servicePath === DOMAINS_SERVICE_PATHS.SELL(account) && domainFilters.status !== 'sold') { // TODO: refactor
+    if (servicePath === RnsServicePaths.SELL && statusFilter !== 'sold' && ownerAddress) { // TODO: refactor
       fetchDomains(domainFilters)
         .then((items) => dispatch({
           type: MARKET_ACTIONS.SET_ITEMS,
           payload: {
-            listingType: LISTING_TYPE,
             items,
           },
         }))
     }
-  }, [domainFilters, account, servicePath, dispatch])
+  }, [domainFilters, ownerAddress, servicePath, statusFilter, dispatch])
+
+  useEffect(() => {
+    if (account) {
+      dispatch({
+        type: MARKET_ACTIONS.SET_FILTER,
+        payload: {
+          filterItems: {
+            ownerAddress: account,
+          },
+        },
+      })
+    }
+  }, [account, dispatch])
 
   if (!currentListing) return null
 

@@ -127,14 +127,14 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
 
   const {
     item: {
-      sellerAddress,
+      ownerAddress,
       expirationDate,
       price,
       paymentToken,
     },
     isProcessing,
   } = currentOrder
-  const isOwnDomain = account?.toLowerCase() === sellerAddress.toLowerCase()
+  const isOwnDomain = account?.toLowerCase() === ownerAddress.toLowerCase()
 
   const currency = crypto[paymentToken]
 
@@ -149,7 +149,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
 
   const details = {
     NAME: domainName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
-    SELLER: <AddressItem value={sellerAddress} />,
+    SELLER: <AddressItem value={ownerAddress} />,
     'RENEWAL DATE': expirationDate.toLocaleDateString(),
     PRICE: PriceCell,
   }

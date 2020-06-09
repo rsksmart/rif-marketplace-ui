@@ -31,16 +31,13 @@ const {
 const marketActions: MarketActionsType = {
   [NOOP]: (state: MarketStateType, _: MarketPayloadType) => state,
   [SET_ITEMS]: (state: MarketStateType, payload: ListingPayload) => {
-    const { listingType } = payload
     const { currentListing, metadata } = state
+    const listingType = currentListing?.listingType
 
     if (!currentListing) return state
 
-    if (listingType !== currentListing.listingType) {
-      logger.error('There is a mismatch of listing types in the current items (market store)!')
-      logger.error(`Expected: ${currentListing.listingType}`)
-      logger.error(`Got: ${listingType}`)
-    }
+    if (!listingType) return state
+
     const newState = {
       ...state,
       currentListing: {
@@ -125,13 +122,21 @@ const marketActions: MarketActionsType = {
     const { currentListing, metadata } = state
     const listingType = currentListing?.listingType as string
 
+    if (!(currentListing && listingType)) return state
+
+    const updateTokens = [
+      ...metadata[listingType].updatedTokens,
+      ...[payload.updatedTokenId],
+    ]
+    const tokensSet: Set<string> = new Set(updateTokens)
+
     return listingType ? {
       ...state,
       metadata: {
         ...metadata,
         [listingType]: {
           ...metadata[listingType],
-          updatedTokens: [...metadata[listingType].updatedTokens, ...[payload.updatedTokenId]],
+          updatedTokens: Array.from(tokensSet),
         },
       },
     } : state

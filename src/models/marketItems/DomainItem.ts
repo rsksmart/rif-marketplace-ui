@@ -6,7 +6,7 @@ export interface DomainOffer extends MarketItemIface {
     domainName: string
     expirationDate: Date
     price: number
-    sellerAddress: string
+    ownerAddress: string
 }
 
 export interface Domain extends MarketItemIface {
@@ -25,3 +25,5 @@ export interface SoldDomain extends MarketItemIface {
     domainName: string
     buyer: string
 }
+
+export type RnsItemType = Domain & DomainOffer & SoldDomain

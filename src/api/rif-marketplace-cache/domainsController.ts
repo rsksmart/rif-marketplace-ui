@@ -1,13 +1,13 @@
 import { DomainOffersFilter } from 'api/models/RnsFilter'
 import { Domain, DomainOffer, SoldDomain } from 'models/marketItems/DomainItem'
 import networkConfig from 'ui-config.json'
-import { createService, fetchMarketData } from './cacheController'
+import { fetchMarketData } from './cacheController'
 
 
-export const DOMAINS_SERVICE_PATHS = {
-  BUY: () => 'rns/v0/offers',
-  SELL: (ownerAddress: string) => `rns/v0/${ownerAddress}/domains`,
-  SOLD: (ownerAddress: string) => `rns/v0/${ownerAddress}/sold`,
+export enum RnsServicePaths {
+  BUY = 'rns/v0/offers',
+  SELL = 'rns/v0/domains',
+  SOLD = 'rns/v0/sold'
 }
 
 const networkName = process.env.REACT_APP_NETWORK || 'ganache'
@@ -18,18 +18,18 @@ const tokens = Object.keys(network).reduce((acc, tokenSymbol) => {
   return acc
 }, {})
 
-export interface OfferTransferItem {
+export interface OfferTransportItem {
   creationDate?: string
   offerId: string
   paymentToken: string
   price: string
-  sellerAddress: string
-  sellerDomain: string
+  ownerAddress: string
+  ownerDomain: string
   tokenId: string
-  domain: DomainTransferItem
+  domain: DomainTransportItem
 }
 
-export interface DomainTransferItem {
+export interface DomainTransportItem {
   expiration: {
     date: string
   }
@@ -38,35 +38,34 @@ export interface DomainTransferItem {
   }
   name: string
   tokenId: string
-  offers?: Omit<OfferTransferItem, 'domain'>[]
+  offers?: Omit<OfferTransportItem, 'domain'>[]
 }
 
-export interface SoldDomainTransferItem {
+export interface SoldDomainTransportItem {
   id: string
   tokenId: string
-  sellerAddress: string
-  newOwnerAddress: string
   paymentToken: string
   price: string
   soldDate: string
-  domain: DomainTransferItem
+  domain: DomainTransportItem
   transfer: {
-    newOwnerAddress: string
+    sellerAddress: string
+    buyerAddress: string
   }
 }
 
 
-const offersTransportMapper = (item: OfferTransferItem): DomainOffer => ({
+const offersTransportMapper = (item: OfferTransportItem): DomainOffer => ({
   price: parseInt(item.price, 10) / 10 ** 18,
   expirationDate: new Date(item.domain.expiration.date),
   id: item.offerId,
   domainName: item.domain.name,
   paymentToken: tokens[item.paymentToken.toLowerCase()],
   tokenId: item.tokenId,
-  sellerAddress: item.sellerAddress,
+  ownerAddress: item.ownerAddress,
 })
 
-const domainsTransportMapper = (item: DomainTransferItem): Domain => {
+const domainsTransportMapper = (item: DomainTransportItem): Domain => {
   const {
     tokenId, expiration, owner, name, offers,
   } = item
@@ -89,13 +88,13 @@ const domainsTransportMapper = (item: DomainTransferItem): Domain => {
   return domain
 }
 
-const soldTransportMapper = (item: SoldDomainTransferItem): SoldDomain => ({
+const soldTransportMapper = (item: SoldDomainTransportItem): SoldDomain => ({
   id: item.id,
   paymentToken: tokens[item.paymentToken.toLowerCase()],
   price: parseInt(item.price, 10) / 10 ** 18,
   soldDate: new Date(item.soldDate),
   domainName: item.domain.name,
-  buyer: item.transfer.newOwnerAddress,
+  buyer: item.transfer.buyerAddress,
   tokenId: item.tokenId,
 })
 
@@ -107,12 +106,6 @@ const mappings = {
   minMaxPrice: minMaxPriceTransportMapper,
   sold: soldTransportMapper,
 }
-
-export const createDomainService = (ownerAddress: string, marketDispatch) => createService(DOMAINS_SERVICE_PATHS.SELL(ownerAddress), marketDispatch)
-
-export const createOffersService = (marketDispatch) => createService(DOMAINS_SERVICE_PATHS.BUY(), marketDispatch)
-
-export const createSoldService = (ownerAddress: string, marketDispatch) => createService(DOMAINS_SERVICE_PATHS.SOLD(ownerAddress), marketDispatch)
 
 export const fetchDomainOffers = async (filters: DomainOffersFilter) => {
   const { price } = filters
@@ -149,8 +142,9 @@ export const fetchSoldDomains = async (filters?) => {
   return results.map(mappings.sold)
 }
 
-const fetchMinPrice = async () => {
+const fetchMinPrice = async (filters?) => {
   const query = {
+    ...filters,
     $limit: 1,
     $sort: {
       price: 1,
@@ -162,8 +156,9 @@ const fetchMinPrice = async () => {
   return results.reduce(mappings.minMaxPrice, 0)
 }
 
-const fetchMaxPrice = async () => {
+const fetchMaxPrice = async (filters?) => {
   const query = {
+    ...filters,
     $limit: 1,
     $sort: {
       price: -1,
@@ -175,8 +170,8 @@ const fetchMaxPrice = async () => {
   return results.reduce(mappings.minMaxPrice, 0)
 }
 
-export const fetchMinMaxPrice = async () => {
-  const minPrice = await fetchMinPrice()
-  const maxPrice = await fetchMaxPrice()
+export const fetchMinMaxPrice = async (filters?) => {
+  const minPrice = await fetchMinPrice(filters)
+  const maxPrice = await fetchMaxPrice(filters)
   return { minPrice, maxPrice }
 }

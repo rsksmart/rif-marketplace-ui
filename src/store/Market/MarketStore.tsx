@@ -64,6 +64,7 @@ interface MarketStorePropsType {
 export const initialState: MarketStateType = {
   filters: {
     domains: {
+      ownerAddress: '',
       status: 'owned',
     },
     domainOffers: {
