@@ -24,7 +24,6 @@ export interface ItemPayload {
 }
 
 export interface ListingPayload {
-  listingType: MarketListingTypes
   items: MarketItemType[]
 }
 

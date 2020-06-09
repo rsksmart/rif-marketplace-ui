@@ -11,8 +11,19 @@ export interface DomainOffersFilter extends MarketFilter {
             $like: string
         }
     }
-    sellerAddress?: {
+    ownerAddress?: {
         $ne: string
     }
 }
-export type DomainFilter = MarketFilter
+export interface DomainFilter extends MarketFilter {
+    ownerAddress: string
+    name?: {
+        $like: string
+    }
+    price?: {
+        $lte: number
+        $gte: number
+    }
+}
+
+export type RnsFilterType = DomainFilter & DomainOffersFilter

@@ -8,7 +8,6 @@ import { MarketItemType } from 'models/Market'
 import React, { FC, useContext, useEffect } from 'react'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
-import { fetchMinMaxPrice } from 'api/rif-marketplace-cache/domainsController'
 import { Grid } from '@material-ui/core'
 
 export interface MarketPageTemplateProps {
@@ -61,7 +60,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
     dispatch,
   } = useContext(MarketStore)
 
-  const { listingType } = currentListing
+  const { listingType, txType } = currentListing
   const updatedTokensCount = metadata[listingType].updatedTokens.length
   const needsRefresh = !!updatedTokensCount
 
@@ -106,20 +105,12 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
                 type="info"
                 button={{
                   onClick: () => {
-                    fetchMinMaxPrice()
-                      .then(({ minPrice, maxPrice }) => {
-                        dispatch({
-                          type: MARKET_ACTIONS.SET_FILTER,
-                          payload: {
-                            filterItems: {
-                              price: {
-                                $gte: minPrice,
-                                $lte: maxPrice,
-                              },
-                            },
-                          },
-                        })
-                      })
+                    dispatch({
+                      type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
+                      payload: {
+                        txType,
+                      },
+                    })
                   },
                 }}
               />

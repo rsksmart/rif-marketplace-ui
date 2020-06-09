@@ -1,15 +1,16 @@
 import { Web3Store } from '@rsksmart/rif-ui'
-import { createSoldService, DOMAINS_SERVICE_PATHS, fetchSoldDomains } from 'api/rif-marketplace-cache/domainsController'
+import { createService } from 'api/rif-marketplace-cache/cacheController'
+import { fetchSoldDomains, RnsServicePaths } from 'api/rif-marketplace-cache/domainsController'
 import { AddressItem, CombinedPriceCell } from 'components/molecules'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { MarketListingTypes } from 'models/Market'
 import { SoldDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
-import MarketStore, { TxType } from 'store/Market/MarketStore'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
+import { MARKET_ACTIONS } from 'store/Market/marketActions'
+import MarketStore, { TxType } from 'store/Market/MarketStore'
 
 const LISTING_TYPE = MarketListingTypes.DOMAINS
 const TX_TYPE = TxType.SOLD
@@ -51,7 +52,7 @@ const SoldDomainsPage: FC<{}> = () => {
   }, [statusFilter, dispatch, history])
 
   useEffect(() => {
-    if (servicePath && account && servicePath !== DOMAINS_SERVICE_PATHS.SOLD(account)) {
+    if (account && servicePath && servicePath !== RnsServicePaths.SOLD) {
       dispatch({
         type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
         payload: {
@@ -62,7 +63,7 @@ const SoldDomainsPage: FC<{}> = () => {
   }, [servicePath, account, dispatch])
   useEffect(() => {
     if (!servicePath && account) {
-      const serviceAddr = createSoldService(account, dispatch)
+      const serviceAddr = createService(RnsServicePaths.SOLD, dispatch)
       dispatch({
         type: MARKET_ACTIONS.CONNECT_SERVICE,
         payload: {
@@ -75,12 +76,11 @@ const SoldDomainsPage: FC<{}> = () => {
   }, [servicePath, account, dispatch])
 
   useEffect(() => {
-    if (servicePath && account && servicePath === DOMAINS_SERVICE_PATHS.SOLD(account) && domainFilters.status === 'sold') { // TODO: refactor
+    if (account && servicePath === RnsServicePaths.SOLD && domainFilters.status === 'sold') { // TODO: refactor
       fetchSoldDomains(domainFilters)
         .then((items) => dispatch({
           type: MARKET_ACTIONS.SET_ITEMS,
           payload: {
-            listingType: LISTING_TYPE,
             items,
           },
         }))

@@ -1,15 +1,16 @@
 import { Web3Store } from '@rsksmart/rif-ui'
-import { createOffersService, DOMAINS_SERVICE_PATHS, fetchDomainOffers } from 'api/rif-marketplace-cache/domainsController'
+import { createService } from 'api/rif-marketplace-cache/cacheController'
+import { fetchDomainOffers, RnsServicePaths } from 'api/rif-marketplace-cache/domainsController'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { MarketListingTypes } from 'models/Market'
+import { DomainOffer } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
-import { DomainOffer } from 'models/marketItems/DomainItem'
 
 const LISTING_TYPE = MarketListingTypes.DOMAIN_OFFERS
 const TX_TYPE = TxType.BUY
@@ -39,7 +40,7 @@ const DomainOffersPage: FC = () => {
 
   /* Initialise */
   useEffect(() => {
-    if (servicePath && servicePath !== DOMAINS_SERVICE_PATHS.BUY()) {
+    if (servicePath && servicePath !== RnsServicePaths.BUY) {
       dispatch({
         type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
         payload: {
@@ -51,7 +52,7 @@ const DomainOffersPage: FC = () => {
 
   useEffect(() => {
     if (!servicePath) {
-      const serviceAddr = createOffersService(dispatch)
+      const serviceAddr = createService(RnsServicePaths.BUY, dispatch)
       dispatch({
         type: MARKET_ACTIONS.CONNECT_SERVICE,
         payload: {
@@ -64,12 +65,11 @@ const DomainOffersPage: FC = () => {
   }, [servicePath, dispatch])
 
   useEffect(() => {
-    if (servicePath && servicePath === DOMAINS_SERVICE_PATHS.BUY()) {
+    if (servicePath && servicePath === RnsServicePaths.BUY) {
       fetchDomainOffers(offerFilters)
         .then((items) => dispatch({
           type: MARKET_ACTIONS.SET_ITEMS,
           payload: {
-            listingType: LISTING_TYPE,
             items,
           },
         }))
@@ -80,7 +80,7 @@ const DomainOffersPage: FC = () => {
 
   const headers = {
     domainName: 'Name',
-    sellerAddress: 'Seller',
+    ownerAddress: 'Owner',
     expirationDate: 'Renewal Date',
     combinedPrice: 'Price',
     action1: '',
@@ -93,7 +93,7 @@ const DomainOffersPage: FC = () => {
         price,
         domainName,
         paymentToken,
-        sellerAddress,
+        ownerAddress,
         expirationDate,
         tokenId,
       } = domainItem
@@ -103,7 +103,7 @@ const DomainOffersPage: FC = () => {
       const displayItem = {
         id,
         domainName: domainName || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
-        sellerAddress: <AddressItem value={sellerAddress} />,
+        ownerAddress: <AddressItem value={ownerAddress} />,
         expirationDate: expirationDate.toLocaleDateString(),
         combinedPrice: <CombinedPriceCell
           price={price.toString()}
@@ -112,7 +112,7 @@ const DomainOffersPage: FC = () => {
           currencyFiat={currentFiat.displayName}
           divider=" = "
         />,
-        action1: (account?.toLowerCase() === sellerAddress.toLowerCase()) ? 'your offer' : (
+        action1: (account?.toLowerCase() === ownerAddress.toLowerCase()) ? 'your offer' : (
           <SelectRowButton
             id={id}
             handleSelect={() => {
