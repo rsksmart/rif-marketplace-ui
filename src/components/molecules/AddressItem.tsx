@@ -13,9 +13,8 @@ const AddressItem: FC<AddressItemProps> = ({ pretext, value }) => {
     <Tooltip
       interactive
       title={isCopied ? 'Copied!' : value}
-      onClick={({ target }) => {
-        const { value: ttValue } = target as any
-        navigator.clipboard.writeText(ttValue)
+      onClick={() => {
+        navigator.clipboard.writeText(value)
           .then(() => { setIsCopied(true) })
       }}
       onClose={() => {
