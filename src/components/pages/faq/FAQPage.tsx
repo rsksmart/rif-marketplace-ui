@@ -3,7 +3,6 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Typography, colors, FAQPageTemplate } from '@rsksmart/rif-ui'
 import FAQSection, { FAQSectionProps } from 'components/molecules/FAQSection'
 
-
 // TODO:
 // - create FAQSection in rif-ui
 export interface FAQPageProps {

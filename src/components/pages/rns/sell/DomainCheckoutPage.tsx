@@ -21,7 +21,6 @@ import AddressItem from 'components/molecules/AddressItem'
 import getRnsContract from 'contracts/Rns'
 import getMarketplaceContract from 'contracts/Marketplace'
 
-
 const logger = Logger.getInstance()
 
 const NETWORK: string = process.env.REACT_APP_NETWORK || 'ganache'

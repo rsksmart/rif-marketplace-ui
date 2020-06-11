@@ -7,7 +7,6 @@ import contractAdds from 'ui-config.json'
 const network: string = process.env.REACT_APP_NETWORK || 'ganache'
 const rifTokenAddress = contractAdds[network].rif.toLowerCase()
 
-
 let contract: Contract | undefined
 
 export default (web3: Web3): Contract => {

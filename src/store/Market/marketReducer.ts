@@ -16,7 +16,6 @@ import { MarketStateType, initialState } from './MarketStore'
 
 const logger = Logger.getInstance()
 
-
 const {
   NOOP,
   SET_ITEMS,
@@ -143,7 +142,6 @@ const marketActions: MarketActionsType = {
     } : state
   },
 }
-
 
 // TODO: Extract reusable
 const marketReducer = (state = initialState, action: MarketAction) => {

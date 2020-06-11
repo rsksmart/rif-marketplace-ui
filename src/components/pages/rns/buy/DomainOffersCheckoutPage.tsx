@@ -194,7 +194,6 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
     }
   }
 
-
   return (
     <CheckoutPageTemplate
       className="domains-checkout-page"

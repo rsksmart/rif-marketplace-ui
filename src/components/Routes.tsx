@@ -18,7 +18,6 @@ import {
   SellDomainsListPage,
 } from './pages/rns'
 
-
 const logger = Logger.getInstance()
 
 const Routes = () => {

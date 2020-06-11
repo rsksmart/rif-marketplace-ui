@@ -14,7 +14,6 @@ export enum MarketListingTypes {
 
 export type MarketItemType = RnsItemType & StorageItemIface
 
-
 export interface MarketFilter {
     [filterFieldName: string]: {
         [filterType: string]: any
