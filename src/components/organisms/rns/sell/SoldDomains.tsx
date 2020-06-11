@@ -77,7 +77,6 @@ const SoldDomains: FC<{}> = () => {
     }
   }, [account, dispatch])
 
-
   if (!currentListing || listingType !== LISTING_TYPE) return null
 
   const collection = items
@@ -119,7 +118,6 @@ const SoldDomains: FC<{}> = () => {
     sellingPrice: 'Selling price',
     soldDate: 'Selling date',
   }
-
 
   return (
     <MarketPageTemplate

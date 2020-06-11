@@ -17,7 +17,6 @@ jest.spyOn(window.localStorage.__proto__, 'clear')
 
 // globalAny.localStorage = localStorageMock;
 
-
 describe('utils/LocalStorage', () => {
   beforeEach(() => {
     window.localStorage.clear()

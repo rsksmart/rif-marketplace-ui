@@ -3,7 +3,6 @@ import { Domain, DomainOffer, SoldDomain } from 'models/marketItems/DomainItem'
 import networkConfig from 'ui-config.json'
 import { fetchMarketData } from './cacheController'
 
-
 export enum RnsServicePaths {
   BUY = 'rns/v0/offers',
   SELL = 'rns/v0/domains',
@@ -53,7 +52,6 @@ export interface SoldDomainTransportItem {
     buyerAddress: string
   }
 }
-
 
 const offersTransportMapper = (item: OfferTransportItem): DomainOffer => ({
   price: parseInt(item.price, 10) / 10 ** 18,

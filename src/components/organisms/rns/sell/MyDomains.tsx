@@ -12,7 +12,6 @@ import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
 
-
 const LISTING_TYPE = MarketListingTypes.DOMAINS
 
 const MyDomains: FC<{}> = () => {
