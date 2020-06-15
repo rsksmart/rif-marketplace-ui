@@ -52,7 +52,7 @@ const MyOffers: FC<{}> = () => {
         },
       })
     }
-  }, [account, dispatch, servicePath])
+  }, [account, servicePath, dispatch])
 
   // fetch domains based on the statusFilter
   useEffect(() => {

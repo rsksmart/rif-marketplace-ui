@@ -69,7 +69,7 @@ const DomainOffersPage: FC = () => {
           },
         }))
     }
-  }, [offerFilters, dispatch, servicePath])
+  }, [offerFilters, servicePath, dispatch])
 
   // if wrong type, ignore this render
   if (!currentListing || currentListing?.listingType !== LISTING_TYPE) return null
