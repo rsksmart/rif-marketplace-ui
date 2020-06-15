@@ -32,7 +32,7 @@
   "dependencies": {
     "@feathersjs/feathers": "^4.5.3",
     "@feathersjs/socketio-client": "^4.5.4",
-    "@material-ui/core": "^4.10.1",
+    "@material-ui/core": "^4.10.2",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
     "@rsksmart/erc677": "^1.0.2",
