@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles'
 import { theme, Web3Provider, PageTemplate } from '@rsksmart/rif-ui'
@@ -8,6 +8,9 @@ import Footer from 'components/organisms/Footer'
 import Header from 'components/organisms/Header'
 import Routes from 'components/Routes'
 import '@rsksmart/rif-ui/dist/index.css'
+import Alert from '@material-ui/lab/Alert'
+
+const requiredNetworkId = process.env.REQUIRED_NETWORK || 31
 
 const useStyles = makeStyles(() => ({
   router: {
@@ -19,15 +22,40 @@ const useStyles = makeStyles(() => ({
 
 const App = () => {
   const classes = useStyles()
+  const [displayAlert, setDisplayAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
+
+  const onConnectedAccountChange = () => {
+    setAlertMessage('Your account has changed')
+    setDisplayAlert(true)
+  }
+
+  const onConnectedNetworkChange = () => {
+    setAlertMessage('Your network has changed')
+    setDisplayAlert(true)
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <AppStoreProvider>
         <MarketStoreProvider>
-          <Web3Provider.Provider>
+          <Web3Provider.Provider
+            requiredNetworkId={requiredNetworkId}
+            actions={{
+              onConnectedAccountChange: onConnectedAccountChange,
+              onConnectedNetworkChange: onConnectedNetworkChange
+            }}
+          >
             <Router>
               <div className={classes.router}>
                 <Header />
                 <PageTemplate>
+                  {
+                    displayAlert &&
+                    <Alert severity='warning' onClose={() => setDisplayAlert(false)}>
+                      {alertMessage}
+                    </Alert>
+                  }
                   <Routes />
                 </PageTemplate>
                 <Footer />
@@ -36,7 +64,7 @@ const App = () => {
           </Web3Provider.Provider>
         </MarketStoreProvider>
       </AppStoreProvider>
-    </ThemeProvider>
+    </ThemeProvider >
   )
 }
 
