@@ -11,7 +11,7 @@ import '@rsksmart/rif-ui/dist/index.css'
 import Collapse from '@material-ui/core/Collapse'
 import Alert from '@material-ui/lab/Alert'
 
-const requiredNetworkId = process.env.REQUIRED_NETWORK || 31
+const requiredNetworkId = process.env.REQUIRED_NETWORK_ID || 8545
 
 const useStyles = makeStyles(() => ({
   router: {

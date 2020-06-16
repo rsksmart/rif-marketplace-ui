@@ -1,7 +1,7 @@
 import React from 'react'
 import { Account, Web3Provider } from '@rsksmart/rif-ui'
 
-const requiredNetworkId = process.env.REQUIRED_NETWORK || 31
+const requiredNetworkId = process.env.REQUIRED_NETWORK_ID || 8545
 
 const Login = () => (
   <Web3Provider.Consumer>
