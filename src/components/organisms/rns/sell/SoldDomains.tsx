@@ -49,7 +49,7 @@ const SoldDomains: FC<{}> = () => {
         },
       })
     }
-  }, [account, dispatch])
+  }, [account, dispatch, servicePath])
 
   // fetchSoldDomains and dispatch set items
   useEffect(() => {
@@ -62,7 +62,7 @@ const SoldDomains: FC<{}> = () => {
           },
         }))
     }
-  }, [account, dispatch, domainFilters])
+  }, [account, dispatch, domainFilters, ownerAddress, servicePath])
 
   useEffect(() => {
     if (account) {
