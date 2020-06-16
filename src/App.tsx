@@ -8,6 +8,7 @@ import Footer from 'components/organisms/Footer'
 import Header from 'components/organisms/Header'
 import Routes from 'components/Routes'
 import '@rsksmart/rif-ui/dist/index.css'
+import Collapse from '@material-ui/core/Collapse'
 import Alert from '@material-ui/lab/Alert'
 
 const requiredNetworkId = process.env.REQUIRED_NETWORK || 31
@@ -28,11 +29,13 @@ const App = () => {
   const onConnectedAccountChange = () => {
     setAlertMessage('Your account has changed')
     setDisplayAlert(true)
+    setTimeout(() => window.location.href = window.location.origin, 2000)
   }
 
   const onConnectedNetworkChange = () => {
     setAlertMessage('Your network has changed')
     setDisplayAlert(true)
+    setTimeout(() => setDisplayAlert(false), 5000)
   }
 
   return (
@@ -50,12 +53,11 @@ const App = () => {
               <div className={classes.router}>
                 <Header />
                 <PageTemplate>
-                  {
-                    displayAlert &&
+                  <Collapse in={displayAlert}>
                     <Alert severity='warning' onClose={() => setDisplayAlert(false)}>
                       {alertMessage}
                     </Alert>
-                  }
+                  </Collapse>
                   <Routes />
                 </PageTemplate>
                 <Footer />
