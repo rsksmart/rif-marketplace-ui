@@ -29,7 +29,7 @@ const App = () => {
   const onConnectedAccountChange = () => {
     setAlertMessage('Your account has changed')
     setDisplayAlert(true)
-    setTimeout(() => window.location.href = window.location.origin, 2000)
+    setTimeout(() => { window.location.href = window.location.origin }, 2000)
   }
 
   const onConnectedNetworkChange = () => {
@@ -45,8 +45,8 @@ const App = () => {
           <Web3Provider.Provider
             requiredNetworkId={requiredNetworkId}
             actions={{
-              onConnectedAccountChange: onConnectedAccountChange,
-              onConnectedNetworkChange: onConnectedNetworkChange
+              onConnectedAccountChange,
+              onConnectedNetworkChange,
             }}
           >
             <Router>
@@ -54,7 +54,7 @@ const App = () => {
                 <Header />
                 <PageTemplate>
                   <Collapse in={displayAlert}>
-                    <Alert severity='warning' onClose={() => setDisplayAlert(false)}>
+                    <Alert severity="warning" onClose={() => setDisplayAlert(false)}>
                       {alertMessage}
                     </Alert>
                   </Collapse>
@@ -66,7 +66,7 @@ const App = () => {
           </Web3Provider.Provider>
         </MarketStoreProvider>
       </AppStoreProvider>
-    </ThemeProvider >
+    </ThemeProvider>
   )
 }
 
