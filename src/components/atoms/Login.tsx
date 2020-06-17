@@ -5,7 +5,7 @@ const requiredNetworkId = process.env.REACT_APP_REQUIRED_NETWORK_ID || 8545
 const requiredNetworkName = process.env.REACT_APP_REQUIRED_NETWORK_NAME
 
 const Login = () => {
-  const onWrongNetworkMessage = 'You are on the wrong network.'
+  const onNetworkMismatchMessage = 'You are on the wrong network.'
   const noNetworkMessage = 'You are not connected to any network.'
 
   return (
@@ -17,10 +17,10 @@ const Login = () => {
           setProvider={setProvider}
           requiredNetworkId={requiredNetworkId}
           currentNetworkId={networkInfo?.networkId}
-          onWrongNetworkMessage={
+          onNetworkMismatchMessage={
             requiredNetworkName
-              ? `${onWrongNetworkMessage} Please, connect to ${requiredNetworkName}.`
-              : onWrongNetworkMessage
+              ? `${onNetworkMismatchMessage} Please, connect to ${requiredNetworkName}.`
+              : onNetworkMismatchMessage
           }
           noNetworkMessage={
             requiredNetworkName
