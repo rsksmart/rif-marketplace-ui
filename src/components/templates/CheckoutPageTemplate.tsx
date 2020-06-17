@@ -34,7 +34,7 @@ const CheckoutPageTemplate: FC<CheckoutPageTemplateProps> = ({ className = '', b
   const { state: { currentOrder }, dispatch } = useContext(MarketStore)
 
   useEffect(() => () => {
-    dispatch({ type: MARKET_ACTIONS.CLEAN_UP, payload: { currentListing: true, currentOrder: true } })
+    dispatch({ type: MARKET_ACTIONS.CLEAN_UP, payload: { currentListing: true } })
   }, [dispatch])
 
   return (
