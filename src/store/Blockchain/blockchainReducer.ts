@@ -1,12 +1,13 @@
 import { initialState } from "store/Blockchain/BlockchainStore"
 import Logger from "utils/Logger"
-import { BlockchainAction, BlockchainPayload, BLOCKCHAIN_ACTIONS, ConfirmationsPayload, ConnectionPayload } from "./blockchainActions"
+import { BlockchainAction, BlockchainPayload, BLOCKCHAIN_ACTIONS, ConfirmationsPayload, ConnectionPayload, AddTxPayload } from "./blockchainActions"
 import { BlockchainState } from "./BlockchainStore"
 
 const logger = Logger.getInstance()
 
 const {
     NOOP,
+    SET_TX_HASH,
     SET_CONFIRMATIONS,
     CONNECT_CONFIRMATIONS,
 } = BLOCKCHAIN_ACTIONS
@@ -17,13 +18,24 @@ type IBlockchainActions = {
 
 const blockchainActions: IBlockchainActions = {
     [NOOP]: (state, _) => state,
+    [SET_TX_HASH]: (state, payload: AddTxPayload) => {
+        const { txHash } = payload
+        const { confirmations: { isConnected } } = state
+        return {
+            ...state,
+            confirmations: { isConnected, txHash }
+        }
+    },
     [SET_CONFIRMATIONS]: (state, payload: ConfirmationsPayload) => {
+        const { currentCt, targetCt } = payload
         const { confirmations } = state
+
         return {
             ...state,
             confirmations: {
                 ...confirmations,
-                ...payload
+                currentCt,
+                targetCt
             }
         }
     },
@@ -34,8 +46,6 @@ const blockchainActions: IBlockchainActions = {
             ...state,
             confirmations: {
                 isConnected,
-                currentCt: 0,
-                totalCt: 0,
             }
         }
     },

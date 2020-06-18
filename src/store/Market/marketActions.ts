@@ -8,6 +8,7 @@ export enum MARKET_ACTIONS {
   NOOP = 'NOOP',
   SET_ITEMS = 'SET_ITEMS',
   SELECT_ITEM = 'SELECT_ITEM',
+  SET_PROG_STATUS = 'SET_PROG_STATUS',
   SET_FILTER = 'SET_FILTER',
   TOGGLE_TX_TYPE = 'TOGGLE_TX_TYPE',
   CONNECT_SERVICE = 'CONNECT_SERVICE',
@@ -45,6 +46,10 @@ export interface ExchangeRatePayload {
   }
 }
 
+export interface ProgressStatusPayload {
+  isProcessing: boolean
+}
+
 export interface MetadataPayload {
   updatedTokenId: string
 }
@@ -58,7 +63,7 @@ export interface TxTypeChangePayload {
   txType: TxType
 }
 
-export type MarketPayloadType = ItemPayload & FilterPayload & ConnectionPayload & TxTypeChangePayload & ExchangeRatePayload & ListingPayload & MetadataPayload & CleanupPayload
+export type MarketPayloadType = ItemPayload & FilterPayload & ConnectionPayload & TxTypeChangePayload & ExchangeRatePayload & ListingPayload & MetadataPayload & CleanupPayload & ProgressStatusPayload
 
 export interface MarketAction extends ActionType<MarketPayloadType> {
   type: MARKET_ACTIONS

@@ -11,6 +11,7 @@ import {
   ExchangeRatePayload,
   MetadataPayload,
   CleanupPayload,
+  ProgressStatusPayload,
 } from './marketActions'
 import { MarketStateType, initialState } from './MarketStore'
 
@@ -20,6 +21,7 @@ const {
   NOOP,
   SET_ITEMS,
   SELECT_ITEM,
+  SET_PROG_STATUS,
   SET_FILTER,
   TOGGLE_TX_TYPE,
   CONNECT_SERVICE,
@@ -58,6 +60,19 @@ const marketActions: MarketActionsType = {
   [SELECT_ITEM]: (state: MarketStateType, payload: ItemPayload) => ({
     ...state, currentOrder: { ...payload },
   }),
+  [SET_PROG_STATUS]: (state: MarketStateType, payload: ProgressStatusPayload) => {
+    const { isProcessing } = payload
+    const { currentOrder } = state
+    if (!currentOrder) return state
+
+    return {
+      ...state,
+      currentOrder: {
+        ...currentOrder,
+        isProcessing
+      }
+    }
+  },
   [SET_FILTER]: (state: MarketStateType, payload: FilterPayload) => {
     const { filters, currentListing } = state
 

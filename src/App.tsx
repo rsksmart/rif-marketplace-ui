@@ -41,16 +41,16 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <AppStoreProvider>
-        <BlockchainStoreProvider>
-          <MarketStoreProvider>
-            <Web3Provider.Provider
-              requiredNetworkId={requiredNetworkId}
-              actions={{
-                onConnectedAccountChange,
-                onConnectedNetworkChange,
-              }}
-            >
+      <Web3Provider.Provider
+        requiredNetworkId={requiredNetworkId}
+        actions={{
+          onConnectedAccountChange,
+          onConnectedNetworkChange,
+        }}
+      >
+        <AppStoreProvider>
+          <BlockchainStoreProvider>
+            <MarketStoreProvider>
               <Router>
                 <div className={classes.router}>
                   <Header />
@@ -65,10 +65,10 @@ const App = () => {
                   <Footer />
                 </div>
               </Router>
-            </Web3Provider.Provider>
-          </MarketStoreProvider>
-        </BlockchainStoreProvider>
-      </AppStoreProvider>
+            </MarketStoreProvider>
+          </BlockchainStoreProvider>
+        </AppStoreProvider>
+      </Web3Provider.Provider>
     </ThemeProvider>
   )
 }

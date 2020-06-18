@@ -28,7 +28,7 @@ export interface AppState {
   apis: ServiceMap
 }
 
-export interface AppStorePropsType {
+export interface AppStoreProps {
   state: AppState
   dispatch: Dispatch<AppAction>
 }
@@ -39,7 +39,7 @@ export const initialState: AppState = {
   ])
 }
 
-const AppStore = React.createContext({} as AppStorePropsType | any)
+const AppStore = React.createContext({} as AppStoreProps | any)
 
 export const AppStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState)
