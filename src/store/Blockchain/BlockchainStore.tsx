@@ -30,8 +30,6 @@ const BlockchainStore = createContext({} as BlockchainStoreProps | any)
 
 export const BlockchainStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(blockchainReducer, initialState)
-  // const [pollingTimeout, setPollingTimeout] = useState(0)
-  // const [refetch, setRefetch] = useState(false)
   const { state: { apis } }: AppStoreProps = useContext(AppStore)
   const { state: { account } } = useContext(Web3Store)
   const confirmationsAPI = apis.get('confirmations') as ConfirmationAPI
@@ -40,19 +38,6 @@ export const BlockchainStoreProvider = ({ children }) => {
       txHash, currentCt: storedCurrentCt, targetCt: storedTargetCt, isConnected,
     },
   } = state
-
-  // useEffect(() => {
-  //     console.log('BlockchainStore.tsx -> pollingTimeout', pollingTimeout)
-  //     if (pollingTimeout) {
-  //         const pollTimeout = setTimeout(() => {
-  //             console.log('refetch')
-  //             // setPollingTimeout(0)
-  //             setRefetch(true)
-  //         }, pollingTimeout)
-
-  //         return () => clearTimeout(pollTimeout)
-  //     }
-  // }, [pollingTimeout])
 
   useEffect(() => {
     if (storedCurrentCt && storedTargetCt) {
@@ -63,34 +48,9 @@ export const BlockchainStoreProvider = ({ children }) => {
             txHash: undefined,
           } as any,
         })
-        // setPollingTimeout(0)
       }
     }
   }, [storedCurrentCt, storedTargetCt])
-
-  // useEffect(() => {
-  //     console.log('BlockchainStore.tsx -> txHash:', txHash)
-  //     console.log('BlockchainStore.tsx -> refetch:', refetch)
-  //     if (txHash || refetch) {
-  //         confirmationsAPI?.fetch()
-  //             .then((result: Confirmations) => {
-  //                 setPollingTimeout(5000)
-  //                 const confirmation = result[txHash as string]
-  //                 if (!confirmation) return
-
-  //                 const { currentCt, targetCt } = confirmation
-  //                 if (currentCt !== storedCurrentCt) {
-  //                     dispatch({
-  //                         type: BLOCKCHAIN_ACTIONS.SET_CONFIRMATIONS,
-  //                         payload: {
-  //                             currentCt,
-  //                             targetCt
-  //                         } as any
-  //                     })
-  //                 }
-  //             })
-  //     }
-  // }, [txHash, refetch, storedCurrentCt, confirmationsAPI])
 
   useEffect(() => {
     if (isConnected && txHash) {

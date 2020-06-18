@@ -3,9 +3,7 @@ import { APIController, ServiceEventListener } from 'store/App/AppStore'
 
 type Modify<T, R> = Omit<T, keyof R> & R;
 
-export type ConfirmationAPI = Modify<APIController, {
-  connect: (client: Application<any>, ownerAddress?: string) => string | void
-}>
+export type ConfirmationAPI = APIController
 
 export interface ConfirmationsItem {
   currentCt: number

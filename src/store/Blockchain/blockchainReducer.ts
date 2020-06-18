@@ -8,14 +8,15 @@ import { BlockchainState } from './BlockchainStore'
 const logger = Logger.getInstance()
 
 const {
-  NOOP,
-  SET_TX_HASH,
-  SET_CONFIRMATIONS,
+  CLEAR_CONFIRMATIONS,
   CONNECT_CONFIRMATIONS,
+  NOOP,
+  SET_CONFIRMATIONS,
+  SET_TX_HASH,
 } = BLOCKCHAIN_ACTIONS
 
 type IBlockchainActions = {
-    [key in BLOCKCHAIN_ACTIONS]: (state: BlockchainState, payload: BlockchainPayload) => BlockchainState
+  [key in BLOCKCHAIN_ACTIONS]: (state: BlockchainState, payload: BlockchainPayload) => BlockchainState
 }
 
 const blockchainActions: IBlockchainActions = {
@@ -51,6 +52,8 @@ const blockchainActions: IBlockchainActions = {
       },
     }
   },
+  [CLEAR_CONFIRMATIONS]: (state, _: BlockchainPayload) => ({ ...state, confirmations: { isConnected: state.confirmations.isConnected } }),
+
 }
 
 // TODO: Extract reusable
