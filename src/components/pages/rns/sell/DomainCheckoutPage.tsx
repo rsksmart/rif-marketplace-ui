@@ -1,5 +1,9 @@
-import { Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, MenuItem, Select, Table, TableBody, TableCell, TableRow, Theme } from '@material-ui/core'
-import { Button, colors, shortenAddress, UnitsInput, Web3Store } from '@rsksmart/rif-ui'
+import {
+  Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, MenuItem, Select, Table, TableBody, TableCell, TableRow, Theme,
+} from '@material-ui/core'
+import {
+  Button, colors, shortenAddress, UnitsInput, Web3Store,
+} from '@rsksmart/rif-ui'
 import PriceItem from 'components/atoms/PriceItem'
 import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
@@ -7,7 +11,9 @@ import TransactionInProgressPanel from 'components/organisms/TransactionInProgre
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import getMarketplaceContract from 'contracts/Marketplace'
 import getRnsContract from 'contracts/Rns'
-import React, { FC, useContext, useEffect, useState } from 'react'
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
@@ -147,8 +153,8 @@ const DomainsCheckoutPage: FC<{}> = () => {
         bcDispatch({
           type: BLOCKCHAIN_ACTIONS.SET_TX_HASH,
           payload: {
-            txHash: receipt.transactionHash
-          } as any
+            txHash: receipt.transactionHash,
+          } as any,
         })
         setIsPendingConfirm(true)
       } catch (e) {

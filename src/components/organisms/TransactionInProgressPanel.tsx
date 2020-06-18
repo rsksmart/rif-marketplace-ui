@@ -38,8 +38,8 @@ const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({ progM
         bcDispatch({
           type: BLOCKCHAIN_ACTIONS.SET_TX_HASH,
           payload: {
-            txHash: undefined
-          } as any
+            txHash: undefined,
+          } as any,
         })
       }
     }
@@ -55,7 +55,6 @@ const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({ progM
       })
     }
   }, [txHash, isPendingConfirm, mpDispatch])
-
 
   return (
     <div className={classes.content}>

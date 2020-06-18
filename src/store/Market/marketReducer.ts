@@ -63,14 +63,15 @@ const marketActions: MarketActionsType = {
   [SET_PROG_STATUS]: (state: MarketStateType, payload: ProgressStatusPayload) => {
     const { isProcessing } = payload
     const { currentOrder } = state
+
     if (!currentOrder) return state
 
     return {
       ...state,
       currentOrder: {
         ...currentOrder,
-        isProcessing
-      }
+        isProcessing,
+      },
     }
   },
   [SET_FILTER]: (state: MarketStateType, payload: FilterPayload) => {

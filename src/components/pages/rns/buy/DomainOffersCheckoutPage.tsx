@@ -189,8 +189,8 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
         bcDispatch({
           type: BLOCKCHAIN_ACTIONS.SET_TX_HASH,
           payload: {
-            txHash: transferReceipt.transactionHash
-          } as any
+            txHash: transferReceipt.transactionHash,
+          } as any,
         })
         setIsPendingConfirm(true)
       } catch (e) {

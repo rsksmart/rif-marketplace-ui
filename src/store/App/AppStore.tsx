@@ -24,7 +24,7 @@ export interface AppState {
   isError?: boolean
   isLoading?: boolean
   message?: string
-  formError?: any,
+  formError?: any
   apis: ServiceMap
 }
 
@@ -34,16 +34,13 @@ export interface AppStoreProps {
 }
 
 export const initialState: AppState = {
-  apis: new Map([
-    ['confirmations', new ConfirmationsController()]
-  ])
+  apis: new Map([['confirmations', new ConfirmationsController()]]),
 }
 
 const AppStore = React.createContext({} as AppStoreProps | any)
 
 export const AppStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState)
-
 
   const value = { state, dispatch }
   return <AppStore.Provider value={value}>{children}</AppStore.Provider>
