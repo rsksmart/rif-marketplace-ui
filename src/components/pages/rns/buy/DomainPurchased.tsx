@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import MarketStore from 'store/Market/MarketStore'
 import networkConfig from 'ui-config.json'
+import validUrl from 'valid-url'
 
 const network: string = process.env.REACT_APP_NETWORK || 'ganache'
 const { rnsManagerUrl } = networkConfig[network]
@@ -42,6 +43,7 @@ const DomainPurchased: FC<{}> = () => {
           color="primary"
           variant="contained"
           rounded
+          disabled={!validUrl.isUri(rnsManagerUrl)}
           shadow
           onClick={() => { window.open(`${rnsManagerUrl}?autologin=${domainName}`, '_blank') }}
         >
