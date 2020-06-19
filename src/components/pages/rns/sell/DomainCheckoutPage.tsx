@@ -1,25 +1,27 @@
-import React, {
-  FC, useContext, useEffect, useState,
-} from 'react'
 import {
   Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, MenuItem, Select, Table, TableBody, TableCell, TableRow, Theme,
 } from '@material-ui/core'
+import {
+  Button, colors, shortenAddress, UnitsInput, Web3Store,
+} from '@rsksmart/rif-ui'
 import PriceItem from 'components/atoms/PriceItem'
+import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
+import getMarketplaceContract from 'contracts/Marketplace'
+import getRnsContract from 'contracts/Rns'
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react'
 import { useHistory } from 'react-router-dom'
-import {
-  Button, colors, UnitsInput, Web3Store, shortenAddress,
-} from '@rsksmart/rif-ui'
 import ROUTES from 'routes'
+import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
+import BlockchainStore from 'store/Blockchain/BlockchainStore'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
 import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
-import AddressItem from 'components/molecules/AddressItem'
-import getRnsContract from 'contracts/Rns'
-import getMarketplaceContract from 'contracts/Marketplace'
 
 const logger = Logger.getInstance()
 
@@ -95,6 +97,8 @@ const DomainsCheckoutPage: FC<{}> = () => {
       web3,
     },
   } = useContext(Web3Store)
+  const { dispatch: bcDispatch } = useContext(BlockchainStore)
+  const [isPendingConfirm, setIsPendingConfirm] = useState(false)
 
   const currencySymbols = Object.keys(crypto)
   const currenyOptions = currencySymbols.map((symbol) => crypto[symbol].displayName)
@@ -105,9 +109,13 @@ const DomainsCheckoutPage: FC<{}> = () => {
 
   useEffect(() => {
     if (!currentOrder) {
+      // Redirect from direct navigation
       history.replace(ROUTES.LANDING)
+    } else if (isPendingConfirm && !currentOrder.isProcessing) {
+      // Post-confirmations handle
+      history.replace(ROUTES.DOMAINS.DONE.SELL)
     }
-  }, [currentOrder, history])
+  }, [currentOrder, isPendingConfirm, history])
 
   if (!currentOrder) return null
 
@@ -123,9 +131,8 @@ const DomainsCheckoutPage: FC<{}> = () => {
   const handleSubmit = async () => {
     if (web3 && account) {
       dispatch({
-        type: MARKET_ACTIONS.SELECT_ITEM,
+        type: MARKET_ACTIONS.SET_PROG_STATUS,
         payload: {
-          ...currentOrder,
           isProcessing: true,
         },
       })
@@ -139,14 +146,17 @@ const DomainsCheckoutPage: FC<{}> = () => {
         const receipt = await marketPlaceContract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).send({ from: account })
         logger.info('place receipt:', receipt)
 
-        dispatch({
-          type: MARKET_ACTIONS.SELECT_ITEM,
+        if (!receipt) {
+          throw Error('Something unexpected happened. No receipt received from the place transaction.')
+        }
+
+        bcDispatch({
+          type: BLOCKCHAIN_ACTIONS.SET_TX_HASH,
           payload: {
-            ...currentOrder,
-            isProcessing: false,
-          },
+            txHash: receipt.transactionHash,
+          } as any,
         })
-        history.replace(ROUTES.DOMAINS.DONE.SELL)
+        setIsPendingConfirm(true)
       } catch (e) {
         logger.error('Could not complete transaction:', e)
         history.replace(ROUTES.DOMAINS.SELL)
@@ -279,7 +289,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
             </CardActions>
           )}
       </Card>
-      {isProcessing && <TransactionInProgressPanel text="Listing the domain!" progMsg="The waiting period is required to securely list your domain. Please do not close this tab until the process has finished" />}
+      {isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm }} text="Listing the domain!" progMsg="The waiting period is required to securely list your domain. Please do not close this tab until the process has finished" />}
     </CheckoutPageTemplate>
   )
 }

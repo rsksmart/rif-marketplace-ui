@@ -47,7 +47,7 @@ const MyDomains: FC<{}> = () => {
         },
       })
     }
-  }, [account, dispatch, servicePath])
+  }, [account, servicePath, dispatch])
 
   // fetch domains based on the statusFilter
   useEffect(() => {
@@ -61,7 +61,7 @@ const MyDomains: FC<{}> = () => {
           },
         }))
     }
-  }, [account, dispatch, domainFilters, ownerAddress, servicePath])
+  }, [domainFilters, servicePath, ownerAddress, dispatch])
 
   useEffect(() => {
     if (account) {

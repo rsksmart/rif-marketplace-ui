@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
   Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody, TableCell, TableRow, Theme,
 } from '@material-ui/core'
@@ -16,6 +16,8 @@ import Logger from 'utils/Logger'
 import AddressItem from 'components/molecules/AddressItem'
 import getMarketplaceContract from 'contracts/Marketplace'
 import getRnsContract from 'contracts/Rns'
+import BlockchainStore from 'store/Blockchain/BlockchainStore'
+import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
 
 const logger = Logger.getInstance()
 
@@ -80,13 +82,18 @@ const CancelDomainCheckoutPage = () => {
       web3,
     },
   } = useContext(Web3Store)
+  const { dispatch: bcDispatch } = useContext(BlockchainStore)
+  const [isPendingConfirm, setIsPendingConfirm] = useState(false)
 
-  // Redirect direct link
   useEffect(() => {
     if (!currentOrder) {
+      // Redirect from direct navigation
       history.replace(ROUTES.LANDING)
+    } else if (isPendingConfirm && !currentOrder.isProcessing) {
+      // Post-confirmations handle
+      history.replace(ROUTES.DOMAINS.DONE.CANCEL)
     }
-  }, [currentOrder, history])
+  }, [currentOrder, isPendingConfirm, history])
 
   if (!currentOrder) return null
 
@@ -120,9 +127,8 @@ const CancelDomainCheckoutPage = () => {
   const handleSubmit = async () => {
     if (web3 && account) {
       dispatch({
-        type: MARKET_ACTIONS.SELECT_ITEM,
+        type: MARKET_ACTIONS.SET_PROG_STATUS,
         payload: {
-          ...currentOrder,
           isProcessing: true,
         },
       })
@@ -137,14 +143,17 @@ const CancelDomainCheckoutPage = () => {
         const receipt = await marketPlaceContract.methods.unplace(tokenId).send({ from: account })
         logger.info('unplace receipt:', receipt)
 
-        dispatch({
-          type: MARKET_ACTIONS.SELECT_ITEM,
+        if (!receipt) {
+          throw Error('Something unexpected happened. No receipt received from the place transaction.')
+        }
+
+        bcDispatch({
+          type: BLOCKCHAIN_ACTIONS.SET_TX_HASH,
           payload: {
-            ...currentOrder,
-            isProcessing: false,
-          },
+            txHash: receipt.transactionHash,
+          } as any,
         })
-        history.replace(ROUTES.DOMAINS.DONE.CANCEL)
+        setIsPendingConfirm(true)
       } catch (e) {
         logger.error('Could not complete transaction:', e)
         history.replace(ROUTES.DOMAINS.SELL)
@@ -196,7 +205,7 @@ const CancelDomainCheckoutPage = () => {
             </CardActions>
           )}
       </Card>
-      {isProcessing && <TransactionInProgressPanel text="Canceling the domain!" progMsg="The waiting period is required to securely cancel your domain listing. Please do not close this tab until the process has finished" />}
+      {isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm }} text="Canceling the domain!" progMsg="The waiting period is required to securely cancel your domain listing. Please do not close this tab until the process has finished" />}
     </CheckoutPageTemplate>
   )
 }

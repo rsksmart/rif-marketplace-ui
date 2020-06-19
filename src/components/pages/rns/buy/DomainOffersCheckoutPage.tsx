@@ -20,6 +20,8 @@ import AddressItem from 'components/molecules/AddressItem'
 import contractAdds from 'ui-config.json'
 import getRifContract from 'contracts/Rif'
 import getMarketplaceContract from 'contracts/Marketplace'
+import BlockchainStore from 'store/Blockchain/BlockchainStore'
+import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
 
 const network: string = process.env.REACT_APP_NETWORK || 'ganache'
 const marketPlaceAddress = contractAdds[network].marketplace.toLowerCase()
@@ -69,6 +71,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }))
 
 const DomainOffersCheckoutPage: FC<{}> = () => {
+  const classes = useStyles()
+
   const history = useHistory()
   const {
     state: {
@@ -86,7 +90,9 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
       web3,
     },
   } = useContext(Web3Store)
-  const classes = useStyles()
+  const { dispatch: bcDispatch } = useContext(BlockchainStore)
+  const [isPendingConfirm, setIsPendingConfirm] = useState(false)
+
   const [hasFunds, setHasFunds] = useState(false)
   const [isFundsConfirmed, setIsFundsConfirmed] = useState(false)
 
@@ -114,12 +120,15 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
     }
   }, [web3, account, currentOrder])
 
-  // redirect direct link
   useEffect(() => {
     if (!currentOrder) {
+      // Redirect from direct navigation
       history.replace(ROUTES.LANDING)
+    } else if (isPendingConfirm && !currentOrder.isProcessing) {
+      // Post-confirmations handle
+      history.replace(ROUTES.DOMAINS.DONE.BUY)
     }
-  }, [currentOrder, history])
+  }, [currentOrder, isPendingConfirm, history])
 
   if (!currentOrder) return null
 
@@ -157,9 +166,8 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   const handleBuyDomain = async () => {
     if (web3 && account) {
       dispatch({
-        type: MARKET_ACTIONS.SELECT_ITEM,
+        type: MARKET_ACTIONS.SET_PROG_STATUS,
         payload: {
-          ...currentOrder,
           isProcessing: true,
         },
       })
@@ -174,14 +182,17 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
         const transferReceipt = await rifContract.methods.transferAndCall(marketPlaceAddress, tokenPrice, tokenId).send({ from: account })
         logger.info('transferReceipt:', transferReceipt)
 
-        dispatch({
-          type: MARKET_ACTIONS.SELECT_ITEM,
+        if (!transferReceipt) {
+          throw Error('Something unexpected happened. No receipt received from the place transaction.')
+        }
+
+        bcDispatch({
+          type: BLOCKCHAIN_ACTIONS.SET_TX_HASH,
           payload: {
-            ...currentOrder,
-            isProcessing: false,
-          },
+            txHash: transferReceipt.transactionHash,
+          } as any,
         })
-        history.replace(ROUTES.DOMAINS.DONE.BUY)
+        setIsPendingConfirm(true)
       } catch (e) {
         logger.error('Could not complete transaction:', e)
 
@@ -238,7 +249,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
           )}
         {!account && <Login />}
       </Card>
-      {!!isProcessing && <TransactionInProgressPanel text="Buying the domain!" progMsg="The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished." />}
+      {!!isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm }} text="Buying the domain!" progMsg="The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished." />}
     </CheckoutPageTemplate>
   )
 }

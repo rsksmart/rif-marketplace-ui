@@ -3,7 +3,7 @@ import {
 } from 'store/App/appActions'
 import Logger from 'utils/Logger'
 import { APP_ACTIONS } from './appActions'
-import { AppStateType, initialState } from './AppStore'
+import { AppState, initialState } from './AppStore'
 
 const logger = Logger.getInstance()
 
@@ -46,5 +46,5 @@ const appReducer = (state = initialState, action: AppAction) => {
 export default appReducer
 
 type IAppActions = {
-  [key in APP_ACTIONS]: (state: AppStateType, payload: AppPayload) => AppStateType
+  [key in APP_ACTIONS]: (state: AppState, payload: AppPayload) => AppState
 }
