@@ -6,8 +6,8 @@ type Modify<T, R> = Omit<T, keyof R> & R;
 export type ConfirmationAPI = APIController
 
 export interface ConfirmationsItem {
-  currentCt: number
-  targetCt: number
+  currentCount: number
+  targetCount: number
 }
 
 export type Confirmations = Record<string, ConfirmationsItem>
@@ -22,8 +22,8 @@ interface ConfirmationsTransportItem {
 /* eslint-disable no-param-reassign */
 export const mapFromTransport = (data: ConfirmationsTransportItem[]): Confirmations => data.reduce((map, item: ConfirmationsTransportItem) => {
   map[item.transactionHash] = {
-    currentCt: item.confirmations,
-    targetCt: item.targetConfirmation,
+    currentCount: item.confirmations,
+    targetCount: item.targetConfirmation,
   }
   return map
 }, {})

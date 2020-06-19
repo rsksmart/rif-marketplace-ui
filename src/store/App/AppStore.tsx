@@ -15,7 +15,6 @@ export interface APIController {
   fetch: (filters?) => Promise<any>
   attachEvent: (name: string, callback: ServiceEventListener) => void
   detachEvent: (name: string) => void
-  // events: Set<string>
 }
 
 export type ServiceMap = Map<string, APIController>

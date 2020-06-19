@@ -35,7 +35,7 @@ export const BlockchainStoreProvider = ({ children }) => {
   const confirmationsAPI = apis.get('confirmations') as ConfirmationAPI
   const {
     confirmations: {
-      txHash, currentCt: storedCurrentCt, targetCt: storedTargetCt, isConnected,
+      txHash, currentCount: storedCurrentCt, targetCount: storedTargetCt, isConnected,
     },
   } = state
 

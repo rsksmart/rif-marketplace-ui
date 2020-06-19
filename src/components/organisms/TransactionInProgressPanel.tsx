@@ -29,19 +29,17 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({ progMsg, text, isPendingConfirm }) => {
   const classes = useStyles()
 
-  const { state: { confirmations: { txHash, currentCt, targetCt } }, dispatch: bcDispatch }: BlockchainStoreProps = useContext(BlockchainStore)
+  const { state: { confirmations: { txHash, currentCount, targetCount } }, dispatch: bcDispatch }: BlockchainStoreProps = useContext(BlockchainStore)
   const { dispatch: mDispatch } = useContext(MarketStore)
 
   useEffect(() => {
-    if (currentCt && targetCt) {
-      if (currentCt >= targetCt) {
-        bcDispatch({
-          type: BLOCKCHAIN_ACTIONS.CLEAR_CONFIRMATIONS,
-          payload: {} as any,
-        })
-      }
+    if (currentCount && targetCount && currentCount >= targetCount) {
+      bcDispatch({
+        type: BLOCKCHAIN_ACTIONS.CLEAR_CONFIRMATIONS,
+        payload: {} as any,
+      })
     }
-  }, [currentCt, targetCt, bcDispatch])
+  }, [currentCount, targetCount, bcDispatch])
 
   useEffect(() => {
     if (isPendingConfirm && !txHash) {
@@ -57,8 +55,8 @@ const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({ progM
   return (
     <div className={classes.content}>
       <Typography>{text}</Typography>
-      {txHash && !currentCt && <Typography>{`Transaction ${shortenAddress(txHash)} is waiting for the first confirmation.`}</Typography>}
-      {txHash && currentCt && <Typography>{`Transaction ${shortenAddress(txHash)} is waiting for confirmation ${currentCt + 1} of ${targetCt}.`}</Typography>}
+      {txHash && !currentCount && <Typography>{`Transaction ${shortenAddress(txHash)} is waiting for the first confirmation.`}</Typography>}
+      {txHash && currentCount && <Typography>{`Transaction ${shortenAddress(txHash)} is waiting for confirmation ${currentCount + 1} of ${targetCount}.`}</Typography>}
       <CircularProgress />
       <Typography>{progMsg}</Typography>
     </div>

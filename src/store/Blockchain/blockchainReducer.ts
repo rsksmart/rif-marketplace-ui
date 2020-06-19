@@ -30,15 +30,15 @@ const blockchainActions: IBlockchainActions = {
     }
   },
   [SET_CONFIRMATIONS]: (state, payload: ConfirmationsPayload) => {
-    const { currentCt, targetCt } = payload
+    const { currentCount, targetCount } = payload
     const { confirmations } = state
 
     return {
       ...state,
       confirmations: {
         ...confirmations,
-        currentCt,
-        targetCt,
+        currentCount,
+        targetCount,
       },
     }
   },
@@ -61,7 +61,6 @@ const blockchainReducer = (state = initialState, action: BlockchainAction) => {
   const { type, payload } = action
   const userAction = blockchainActions[type]
 
-  // if (userAction)
   logger.debug('Blockchain action:', action)
   const newState = (!!userAction && userAction(state, payload)) || state
 

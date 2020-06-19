@@ -9,8 +9,6 @@ export enum BLOCKCHAIN_ACTIONS {
     CLEAR_CONFIRMATIONS = 'CLEAR_CONFIRMATIONS'
 }
 
-type Modify<T, R> = Omit<T, keyof R> & R;
-
 export interface AddTxPayload {
     txHash: string
 }

@@ -2,9 +2,7 @@
     "ganache": {
         "rif": "0x67B5656d60a809915323Bf2C40A8bEF15A152e3e",
         "rnsDotRskOwner": "0x4bf749ec68270027C5910220CEAB30Cc284c7BA2",
-        "rnsNameResolver": "0x9561C133DD8580860B6b7E504bC5Aa500f0f06a7",
-        "marketplace": "0xFcCeD5E997E7fb1D0594518D3eD57245bB8ed17E",
-        "storageManager": "0x0000000000000000000000000000000000000000"
+        "marketplace": "0x31630Dba815db73E9e0Fe16a4F42dF4bbFDB7Ba9"
     },
     "rsktestnet": {
         "rif": "0x19f64674D8a5b4e652319F5e239EFd3bc969a1FE",
