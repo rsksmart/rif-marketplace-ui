@@ -1,6 +1,5 @@
 import { Web3Store } from '@rsksmart/rif-ui'
 import { createService } from 'api/rif-marketplace-cache/cacheController'
-import { fetchSoldDomains, RnsServicePaths } from 'api/rif-marketplace-cache/domainsController'
 import { AddressItem, CombinedPriceCell } from 'components/molecules'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
@@ -8,10 +7,10 @@ import { MarketListingTypes } from 'models/Market'
 import { SoldDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
-import MarketStore, { TxType } from 'store/Market/MarketStore'
+import MarketStore from 'store/Market/MarketStore'
 
 const LISTING_TYPE = MarketListingTypes.DOMAINS
-const TX_TYPE = TxType.SELL
+// const TX_TYPE = TxType.SELL
 
 const SoldDomains: FC<{}> = () => {
   const {
@@ -36,33 +35,33 @@ const SoldDomains: FC<{}> = () => {
   const items = currentListing?.items
   const { ownerAddress } = domainFilters
 
-  // connect service
-  useEffect(() => {
-    if (account && servicePath !== RnsServicePaths.SOLD) {
-      const serviceAddr = createService(RnsServicePaths.SOLD, dispatch)
-      dispatch({
-        type: MARKET_ACTIONS.CONNECT_SERVICE,
-        payload: {
-          servicePath: serviceAddr,
-          listingType: LISTING_TYPE,
-          txType: TX_TYPE,
-        },
-      })
-    }
-  }, [account, servicePath, dispatch])
+  // // connect service
+  // useEffect(() => {
+  //   if (account && servicePath !== RnsServicePaths.SOLD) {
+  //     const serviceAddr = createService(RnsServicePaths.SOLD, dispatch)
+  //     dispatch({
+  //       type: MARKET_ACTIONS.CONNECT_SERVICE,
+  //       payload: {
+  //         servicePath: serviceAddr,
+  //         listingType: LISTING_TYPE,
+  //         txType: TX_TYPE,
+  //       },
+  //     })
+  //   }
+  // }, [account, servicePath, dispatch])
 
-  // fetchSoldDomains and dispatch set items
-  useEffect(() => {
-    if (ownerAddress && servicePath === RnsServicePaths.SOLD) {
-      fetchSoldDomains(domainFilters)
-        .then((receivedItems) => dispatch({
-          type: MARKET_ACTIONS.SET_ITEMS,
-          payload: {
-            items: receivedItems,
-          },
-        }))
-    }
-  }, [servicePath, ownerAddress, domainFilters, dispatch])
+  // // fetchSoldDomains and dispatch set items
+  // useEffect(() => {
+  //   if (ownerAddress && servicePath === RnsServicePaths.SOLD) {
+  //     fetchSoldDomains(domainFilters)
+  //       .then((receivedItems) => dispatch({
+  //         type: MARKET_ACTIONS.SET_ITEMS,
+  //         payload: {
+  //           items: receivedItems,
+  //         },
+  //       }))
+  //   }
+  // }, [servicePath, ownerAddress, domainFilters, dispatch])
 
   useEffect(() => {
     if (account) {

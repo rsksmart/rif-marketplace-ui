@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
-import { SellDomainStatus } from 'models/marketItems/DomainItem'
+// import { DomainsSaleStatus } from 'models/marketItems/DomainItem'
 import RadioFilter from './RadioFilter'
 import SearchFilter from './SearchFilter'
 
@@ -20,20 +20,20 @@ const DomainFilters = () => {
 
   const searchValue = (nameFilter && nameFilter.$like) || ''
 
-  const domainStatusFilters = [
-    {
-      value: SellDomainStatus.OWNED,
-      label: 'Your domains',
-    },
-    {
-      value: SellDomainStatus.PLACED,
-      label: 'Your offers',
-    },
-    {
-      value: SellDomainStatus.SOLD,
-      label: 'Sold domains',
-    },
-  ]
+  // const domainStatusFilters = [
+  //   {
+  //     value: SellDomainStatus.OWNED,
+  //     label: 'Your domains',
+  //   },
+  //   {
+  //     value: SellDomainStatus.PLACED,
+  //     label: 'Your offers',
+  //   },
+  //   {
+  //     value: SellDomainStatus.SOLD,
+  //     label: 'Sold domains',
+  //   },
+  // ]
 
   const handleOnRadioChange = (_: any, value: string) => {
     dispatch({
@@ -70,12 +70,12 @@ const DomainFilters = () => {
           })
         }}
       />
-      <RadioFilter
+      {/* <RadioFilter
         title="Domain Status"
         items={domainStatusFilters}
         value={statusFilter}
         onChange={handleOnRadioChange}
-      />
+      /> */}
     </>
   )
 }

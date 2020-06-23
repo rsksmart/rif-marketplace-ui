@@ -1,8 +1,8 @@
-import { RnsFilterType } from 'api/models/RnsFilter'
-import { RnsItemType } from './marketItems/DomainItem'
-import { StorageItemIface } from './marketItems/StorageItem'
+import { RnsFilter } from 'api/models/RnsFilter'
+import { RnsItem } from './marketItems/DomainItem'
+import { StorageItem } from './marketItems/StorageItem'
 
-export interface MarketItemIface {
+export interface MarketItem {
     id: string
 }
 
@@ -12,12 +12,12 @@ export enum MarketListingTypes {
     STORAGE = 'storage',
 }
 
-export type MarketItemType = RnsItemType & StorageItemIface
+export type MarketItemType = RnsItem & StorageItem
 
 export interface MarketFilter {
     [filterFieldName: string]: {
-        [filterType: string]: any
-    } | any | undefined
+        [filterType: string]: string | number
+    } | string | number | undefined
 }
 
-export type MarketFilterType = RnsFilterType
+export type MarketFilterType = RnsFilter

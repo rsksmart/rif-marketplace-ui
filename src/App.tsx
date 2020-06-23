@@ -7,7 +7,7 @@ import Footer from 'components/organisms/Footer'
 import Header from 'components/organisms/Header'
 import Routes from 'components/Routes'
 import React, { useState } from 'react'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import { AppStoreProvider } from 'store/App/AppStore'
 import { BlockchainStoreProvider } from 'store/Blockchain/BlockchainStore'
 import { MarketStoreProvider } from 'store/Market/MarketStore'
@@ -51,7 +51,7 @@ const App = () => {
         <AppStoreProvider>
           <BlockchainStoreProvider>
             <MarketStoreProvider>
-              <Router>
+              <BrowserRouter>
                 <div className={classes.router}>
                   <Header />
                   <PageTemplate>
@@ -64,7 +64,7 @@ const App = () => {
                   </PageTemplate>
                   <Footer />
                 </div>
-              </Router>
+              </BrowserRouter>
             </MarketStoreProvider>
           </BlockchainStoreProvider>
         </AppStoreProvider>

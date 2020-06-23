@@ -33,27 +33,27 @@ const {
 const marketActions: MarketActionsType = {
   [NOOP]: (state: MarketStateType, _: MarketPayloadType) => state,
   [SET_ITEMS]: (state: MarketStateType, payload: ListingPayload) => {
-    const { currentListing, metadata } = state
-    const listingType = currentListing?.listingType
+    // const { currentListing, metadata } = state
+    // const listingType = currentListing?.listingType
 
-    if (!currentListing) return state
+    // if (!currentListing) return state
 
-    if (!listingType) return state
+    // if (!listingType) return state
 
     const newState = {
       ...state,
-      currentListing: {
-        ...currentListing,
-        ...payload,
-      },
-      metadata: {
-        ...metadata,
-        [listingType]: {
-          ...metadata[listingType],
-          lastUpdated: Date.now(),
-          updatedTokens: [],
-        },
-      },
+      // currentListing: {
+      //   ...currentListing,
+      //   ...payload,
+      // },
+      // metadata: {
+      //   ...metadata,
+      //   [listingType]: {
+      //     ...metadata[listingType],
+      //     lastUpdated: Date.now(),
+      //     updatedTokens: [],
+      //   },
+      // },
     }
     return newState
   },
@@ -61,50 +61,50 @@ const marketActions: MarketActionsType = {
     ...state, currentOrder: { ...payload },
   }),
   [SET_PROG_STATUS]: (state: MarketStateType, payload: ProgressStatusPayload) => {
-    const { isProcessing } = payload
-    const { currentOrder } = state
+    // const { isProcessing } = payload
+    // const { currentOrder } = state
 
-    if (!currentOrder) return state
+    // if (!currentOrder) return state
 
     return {
       ...state,
-      currentOrder: {
-        ...currentOrder,
-        isProcessing,
-      },
+      // currentOrder: {
+      //   ...currentOrder,
+      //   isProcessing,
+      // },
     }
   },
   [SET_FILTER]: (state: MarketStateType, payload: FilterPayload) => {
-    const { filters, currentListing } = state
+    // const { filters, currentListing } = state
 
-    if (!currentListing) return state
-    const { listingType } = currentListing
-    const { filterItems } = payload
+    // if (!currentListing) return state
+    // const { listingType } = currentListing
+    // const { filterItems } = payload
 
     return {
       ...state,
-      filters: {
-        ...filters,
-        [listingType]: {
-          ...filters[listingType],
-          ...filterItems,
-        },
-      },
+      // filters: {
+      //   ...filters,
+      //   [listingType]: {
+      //     ...filters[listingType],
+      //     ...filterItems,
+      //   },
+      // },
     }
   },
   [TOGGLE_TX_TYPE]: (state: MarketStateType, payload: TxTypeChangePayload) => {
-    const { currentListing } = state
-    const { txType } = payload
+    // const { currentListing } = state
+    // const { txType } = payload
 
-    if (!currentListing) return state
+    // if (!currentListing) return state
     return {
       ...state,
-      currentListing: {
-        txType,
-        items: [],
-        servicePath: '',
-        listingType: currentListing.listingType, // TODO: It would be better blank but that creates problems. This may be an issue also, though.
-      },
+      // currentListing: {
+      //   txType,
+      //   items: [],
+      //   servicePath: '',
+      //   listingType: currentListing.listingType, // TODO: It would be better blank but that creates problems. This may be an issue also, though.
+      // },
     }
   },
   [CONNECT_SERVICE]: (state: MarketStateType, payload: ConnectionPayload) => {
@@ -131,31 +131,31 @@ const marketActions: MarketActionsType = {
   }),
   [CLEAN_UP]: (state: MarketStateType, { currentListing, currentOrder }: CleanupPayload) => ({
     ...state,
-    currentListing: currentListing ? undefined : state.currentListing,
-    currentOrder: currentOrder ? undefined : state.currentOrder,
+    // currentListing: currentListing ? undefined : state.currentListing,
+    // currentOrder: currentOrder ? undefined : state.currentOrder,
   }),
   [SET_META]: (state: MarketStateType, payload: MetadataPayload) => {
-    const { currentListing, metadata } = state
-    const listingType = currentListing?.listingType as string
+    // const { currentListing, metadata } = state
+    // const listingType = currentListing?.listingType as string
 
-    if (!(currentListing && listingType)) return state
+    // if (!(currentListing && listingType)) return state
 
-    const updateTokens = [
-      ...metadata[listingType].updatedTokens,
-      ...[payload.updatedTokenId],
-    ]
-    const tokensSet: Set<string> = new Set(updateTokens)
+    // const updateTokens = [
+    //   ...metadata[listingType].updatedTokens,
+    //   ...[payload.updatedTokenId],
+    // ]
+    // const tokensSet: Set<string> = new Set(updateTokens)
 
-    return listingType ? {
+    return /*listingType ? */{
       ...state,
-      metadata: {
-        ...metadata,
-        [listingType]: {
-          ...metadata[listingType],
-          updatedTokens: Array.from(tokensSet),
-        },
-      },
-    } : state
+      // metadata: {
+      //   ...metadata,
+      //   [listingType]: {
+      //     ...metadata[listingType],
+      //     updatedTokens: Array.from(tokensSet),
+      //   },
+      // },
+    } //: state
   },
 }
 

@@ -1,6 +1,6 @@
-import { ActionType } from 'store/storeUtils/interfaces'
+import { StoreDispatcher } from 'store/storeUtils/interfaces'
 import {
-  MarketItemIface, MarketListingTypes, MarketItemType, MarketFilter,
+  MarketItem, MarketListingTypes, MarketItemType, MarketFilter,
 } from 'models/Market'
 import { TxType } from './MarketStore'
 
@@ -19,7 +19,7 @@ export enum MARKET_ACTIONS {
 
 export interface ItemPayload {
   listingType: MarketListingTypes
-  item: MarketItemIface
+  item: MarketItem
   txType: TxType
   isProcessing: boolean
 }
@@ -65,6 +65,6 @@ export interface TxTypeChangePayload {
 
 export type MarketPayloadType = ItemPayload & FilterPayload & ConnectionPayload & TxTypeChangePayload & ExchangeRatePayload & ListingPayload & MetadataPayload & CleanupPayload & ProgressStatusPayload
 
-export interface MarketAction extends ActionType<MarketPayloadType> {
+export interface MarketAction extends StoreDispatcher<MarketPayloadType> {
   type: MARKET_ACTIONS
 }

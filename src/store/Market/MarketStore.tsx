@@ -1,49 +1,14 @@
-import { DomainFilter, DomainOffersFilter } from 'api/models/RnsFilter'
-import { MarketItemIface, MarketItemType, MarketListingTypes } from 'models/Market'
 import React, { Dispatch, useReducer } from 'react'
-import { SellDomainStatus } from 'models/marketItems/DomainItem'
 import { MarketAction } from './marketActions'
 import marketReducer from './marketReducer'
 
 export enum TxType {
   BUY = 0,
-  SELL = 1,
-  SOLD = 2,
-}
-
-export interface CurrentOrderType {
-  listingType: MarketListingTypes
-  item: MarketItemIface
-  txType: TxType
-  isProcessing: boolean
+  SELL = 1
 }
 
 export interface MarketStateType {
-  currentListing?: {
-    servicePath: string
-    listingType: MarketListingTypes
-    txType: TxType
-    items: MarketItemType[]
-  }
-  filters: {
-    domains: DomainFilter
-    domainOffers: DomainOffersFilter
-  }
-  metadata: {
-    domains: {
-      lastUpdated: number
-      updatedTokens: []
-    }
-    domainOffers: {
-      lastUpdated: number
-      updatedTokens: []
-    }
-    storage: {
-      lastUpdated: number
-      updatedTokens: []
-    }
-  }
-  currentOrder?: CurrentOrderType
+  txType: TxType
   exchangeRates: {
     currentFiat: {
       symbol: string
@@ -64,32 +29,7 @@ interface MarketStorePropsType {
 }
 
 export const initialState: MarketStateType = {
-  filters: {
-    domains: {
-      ownerAddress: '',
-      status: SellDomainStatus.OWNED,
-    },
-    domainOffers: {
-      price: {
-        $lte: 0,
-        $gte: 0,
-      },
-    },
-  },
-  metadata: {
-    domains: {
-      lastUpdated: -1,
-      updatedTokens: [],
-    },
-    domainOffers: {
-      lastUpdated: -1,
-      updatedTokens: [],
-    },
-    storage: {
-      lastUpdated: -1,
-      updatedTokens: [],
-    },
-  },
+  txType: TxType.BUY,
   exchangeRates: {
     currentFiat: {
       symbol: 'usd',

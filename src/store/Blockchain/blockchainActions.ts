@@ -1,5 +1,5 @@
 import { ConfirmationsItem } from 'api/rif-marketplace-cache/confirmationsController'
-import { ActionType } from 'store/storeUtils/interfaces'
+import { StoreDispatcher } from 'store/storeUtils/interfaces'
 
 export enum BLOCKCHAIN_ACTIONS {
     NOOP = 'NOOP',
@@ -21,6 +21,6 @@ export interface ConnectionPayload {
 
 export type BlockchainPayload = ConfirmationsPayload & ConnectionPayload & AddTxPayload
 
-export interface BlockchainAction extends ActionType<BlockchainPayload> {
+export interface BlockchainAction extends StoreDispatcher<BlockchainPayload> {
     type: BLOCKCHAIN_ACTIONS
 }

@@ -1,23 +1,10 @@
 import { Application, Service } from '@feathersjs/feathers'
 import { ConfirmationsController } from 'api/rif-marketplace-cache/confirmationsController'
+import { OffersController } from 'api/rif-marketplace-cache/rns/offers'
 import React, { Dispatch, useReducer } from 'react'
 import { AppAction } from './appActions'
 import appReducer from './appReducer'
-
-export interface ServiceEventListener {
-  (...args: any[]): void
-}
-
-export interface APIController {
-  path: string
-  service: Service<any>
-  connect: (client: Application<any>) => string | void
-  fetch: (filters?) => Promise<any>
-  attachEvent: (name: string, callback: ServiceEventListener) => void
-  detachEvent: (name: string) => void
-}
-
-export type ServiceMap = Map<string, APIController>
+import { ServiceMap } from 'api/models/apiController'
 
 export interface AppState {
   isError?: boolean
@@ -33,7 +20,10 @@ export interface AppStoreProps {
 }
 
 export const initialState: AppState = {
-  apis: new Map([['confirmations', new ConfirmationsController()]]),
+  apis: {
+    confirmations: new ConfirmationsController(),
+    offers: new OffersController() as any // TODO: remove as any
+  },
 }
 
 const AppStore = React.createContext({} as AppStoreProps | any)

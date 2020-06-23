@@ -1,8 +1,6 @@
 import IconButton from '@material-ui/core/IconButton'
 import ClearIcon from '@material-ui/icons/Clear'
 import { Web3Store } from '@rsksmart/rif-ui'
-import { createService } from 'api/rif-marketplace-cache/cacheController'
-import { fetchDomains, RnsServicePaths } from 'api/rif-marketplace-cache/domainsController'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
@@ -40,30 +38,30 @@ const MyOffers: FC<{}> = () => {
   const items = currentListing?.items
   const { ownerAddress } = domainFilters
   // connect service
-  useEffect(() => {
-    if (account && servicePath !== RnsServicePaths.SELL) {
-      const serviceAddr = createService(RnsServicePaths.SELL, dispatch)
-      dispatch({
-        type: MARKET_ACTIONS.CONNECT_SERVICE,
-        payload: {
-          servicePath: serviceAddr,
-          listingType: LISTING_TYPE,
-          txType: TxType.SELL,
-        },
-      })
-    }
-  }, [account, servicePath, dispatch])
+  // useEffect(() => {
+  //   if (account && servicePath !== RnsServicePaths.SELL) {
+  //     const serviceAddr = createService(RnsServicePaths.SELL, dispatch)
+  //     dispatch({
+  //       type: MARKET_ACTIONS.CONNECT_SERVICE,
+  //       payload: {
+  //         servicePath: serviceAddr,
+  //         listingType: LISTING_TYPE,
+  //         txType: TxType.SELL,
+  //       },
+  //     })
+  //   }
+  // }, [account, servicePath, dispatch])
 
   // fetch domains based on the statusFilter
-  useEffect(() => {
-    if (ownerAddress && servicePath === RnsServicePaths.SELL) {
-      fetchDomains(domainFilters)
-        .then((receivedItems) => dispatch({
-          type: MARKET_ACTIONS.SET_ITEMS,
-          payload: { items: receivedItems },
-        }))
-    }
-  }, [domainFilters, ownerAddress, servicePath, dispatch])
+  // useEffect(() => {
+  //   if (ownerAddress && servicePath === RnsServicePaths.SELL) {
+  //     fetchDomains(domainFilters)
+  //       .then((receivedItems) => dispatch({
+  //         type: MARKET_ACTIONS.SET_ITEMS,
+  //         payload: { items: receivedItems },
+  //       }))
+  //   }
+  // }, [domainFilters, ownerAddress, servicePath, dispatch])
 
   useEffect(() => {
     if (account) {
@@ -142,7 +140,7 @@ const MyOffers: FC<{}> = () => {
                 payload: {
                   listingType: LISTING_TYPE,
                   item: domainItem,
-                  txType: TxType.SELL,
+                  // txType: TxType.SELL,
                 },
               })
               history.push(ROUTES.DOMAINS.CHECKOUT.CANCEL)

@@ -7,8 +7,8 @@ import React, {
 import AppStore, { AppStoreProps } from 'store/App/AppStore'
 import { BlockchainAction, BLOCKCHAIN_ACTIONS } from './blockchainActions'
 import blockchainReducer from './blockchainReducer'
+import { Modify } from 'utils/typeUtils'
 
-type Modify<T, R> = Omit<T, keyof R> & R;
 
 export interface BlockchainState {
   confirmations: Modify<Partial<ConfirmationsItem>, {
@@ -32,10 +32,13 @@ export const BlockchainStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(blockchainReducer, initialState)
   const { state: { apis } }: AppStoreProps = useContext(AppStore)
   const { state: { account } } = useContext(Web3Store)
-  const confirmationsAPI = apis.get('confirmations') as ConfirmationAPI
+  const confirmationsAPI = apis.confirmations as ConfirmationAPI
   const {
     confirmations: {
-      txHash, currentCount: storedCurrentCt, targetCount: storedTargetCt, isConnected,
+      txHash,
+      currentCount: storedCurrentCt,
+      targetCount: storedTargetCt,
+      isConnected,
     },
   } = state
 
@@ -73,12 +76,10 @@ export const BlockchainStoreProvider = ({ children }) => {
       if (confirmationsAPI) {
         const connected = !!confirmationsAPI.connect(client)
 
-        if (connected) {
-          dispatch({
-            type: BLOCKCHAIN_ACTIONS.CONNECT_CONFIRMATIONS,
-            payload: { isConnected: connected } as any,
-          })
-        }
+        dispatch({
+          type: BLOCKCHAIN_ACTIONS.CONNECT_CONFIRMATIONS,
+          payload: { isConnected: !!connected } as any,
+        })
       }
     }
   }, [account, confirmationsAPI])

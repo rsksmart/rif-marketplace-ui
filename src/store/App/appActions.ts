@@ -1,4 +1,4 @@
-import { ActionType } from 'store/storeUtils/interfaces'
+import { StoreDispatcher } from 'store/storeUtils/interfaces'
 
 export enum APP_ACTIONS {
   SET_IS_LOADING = 'SET_IS_LOADING',
@@ -18,6 +18,6 @@ export interface MessagePayloadType {
 
 export type AppPayload = LoadingPayloadType & MessagePayloadType
 
-export interface AppAction extends ActionType<AppPayload> {
+export interface AppAction extends StoreDispatcher<AppPayload> {
   type: APP_ACTIONS
 }

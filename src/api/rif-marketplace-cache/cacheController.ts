@@ -3,7 +3,7 @@ import socketio from '@feathersjs/socketio-client'
 import { MarketFilter } from 'models/Market'
 import io from 'socket.io-client'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
-import { RnsServicePaths } from './domainsController'
+import { RnsAddresses } from './rns/common'
 
 const CACHE_BASE_ADDR = process.env.REACT_APP_CACHE_ADDR || 'http://localhost:3030'
 
@@ -15,7 +15,7 @@ const service = {
   current: null,
 }
 
-export const createService = (path: RnsServicePaths, dispatch) => {
+export const createService = (path: RnsAddresses, dispatch) => {
   const promptRefresh = (updatedTokenId) => {
     dispatch({ type: MARKET_ACTIONS.SET_META, payload: { updatedTokenId } })
   }

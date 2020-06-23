@@ -1,6 +1,4 @@
 import { Web3Store } from '@rsksmart/rif-ui'
-import { createService } from 'api/rif-marketplace-cache/cacheController'
-import { fetchDomains, RnsServicePaths } from 'api/rif-marketplace-cache/domainsController'
 import { AddressItem, SelectRowButton } from 'components/molecules'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
@@ -10,7 +8,7 @@ import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
-import MarketStore, { TxType } from 'store/Market/MarketStore'
+import MarketStore from 'store/Market/MarketStore'
 
 const LISTING_TYPE = MarketListingTypes.DOMAINS
 
@@ -35,33 +33,33 @@ const MyDomains: FC<{}> = () => {
   const { ownerAddress } = domainFilters
 
   // connect service
-  useEffect(() => {
-    if (account && servicePath !== RnsServicePaths.SELL) {
-      const serviceAddr = createService(RnsServicePaths.SELL, dispatch)
-      dispatch({
-        type: MARKET_ACTIONS.CONNECT_SERVICE,
-        payload: {
-          servicePath: serviceAddr,
-          listingType: MarketListingTypes.DOMAINS,
-          txType: TxType.SELL,
-        },
-      })
-    }
-  }, [account, servicePath, dispatch])
+  // useEffect(() => {
+  //   if (account && servicePath !== RnsServicePaths.SELL) {
+  //     const serviceAddr = createService(RnsServicePaths.SELL, dispatch)
+  //     dispatch({
+  //       type: MARKET_ACTIONS.CONNECT_SERVICE,
+  //       payload: {
+  //         servicePath: serviceAddr,
+  //         listingType: MarketListingTypes.DOMAINS,
+  //         txType: TxType.SELL,
+  //       },
+  //     })
+  //   }
+  // }, [account, servicePath, dispatch])
 
-  // fetch domains based on the statusFilter
-  useEffect(() => {
-    if (ownerAddress && servicePath === RnsServicePaths.SELL) {
-      fetchDomains(domainFilters)
-        .then((receivedItems) => dispatch({
-          type: MARKET_ACTIONS.SET_ITEMS,
-          payload: {
-            listingType: MarketListingTypes.DOMAINS,
-            items: receivedItems,
-          },
-        }))
-    }
-  }, [domainFilters, servicePath, ownerAddress, dispatch])
+  // // fetch domains based on the statusFilter
+  // useEffect(() => {
+  //   if (ownerAddress && servicePath === RnsServicePaths.SELL) {
+  //     fetchDomains(domainFilters)
+  //       .then((receivedItems) => dispatch({
+  //         type: MARKET_ACTIONS.SET_ITEMS,
+  //         payload: {
+  //           listingType: MarketListingTypes.DOMAINS,
+  //           items: receivedItems,
+  //         },
+  //       }))
+  //   }
+  // }, [domainFilters, servicePath, ownerAddress, dispatch])
 
   useEffect(() => {
     if (account) {
@@ -106,7 +104,7 @@ const MyDomains: FC<{}> = () => {
               payload: {
                 listingType: LISTING_TYPE,
                 item: domainItem,
-                txType: TxType.SELL,
+                // txType: TxType.SELL,
               },
             })
             history.push(ROUTES.DOMAINS.CHECKOUT.SELL)

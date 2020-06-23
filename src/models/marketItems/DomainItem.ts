@@ -1,6 +1,6 @@
-import { MarketItemIface } from 'models/Market'
+import { MarketItem } from 'models/Market'
 
-export interface DomainOffer extends MarketItemIface {
+export interface DomainOffer extends MarketItem {
     tokenId: string
     paymentToken: string
     domainName: string
@@ -9,7 +9,7 @@ export interface DomainOffer extends MarketItemIface {
     ownerAddress: string
 }
 
-export interface Domain extends MarketItemIface {
+export interface Domain extends MarketItem {
     expirationDate: Date
     ownerAddress: string
     name: string
@@ -17,7 +17,7 @@ export interface Domain extends MarketItemIface {
     offer?: Pick<DomainOffer, 'price' | 'paymentToken'>
 }
 
-export interface SoldDomain extends MarketItemIface {
+export interface SoldDomain extends MarketItem {
     tokenId: string
     paymentToken: string
     price: number
@@ -26,9 +26,4 @@ export interface SoldDomain extends MarketItemIface {
     buyer: string
 }
 
-export type RnsItemType = Domain & DomainOffer & SoldDomain
-export const SellDomainStatus = {
-  OWNED: 'owned',
-  PLACED: 'placed',
-  SOLD: 'sold',
-}
+export type RnsItem = Domain & DomainOffer & SoldDomain
