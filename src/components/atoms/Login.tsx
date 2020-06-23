@@ -10,7 +10,7 @@ const Login = () => {
 
   return (
     <Web3Provider.Consumer>
-      {({ state: { web3, account, networkInfo }, actions: { setProvider } }) => (
+      {({ state: { web3, account, networkInfo }, actions: { setProvider }, availableProviders }) => (
         <Account
           web3={web3}
           account={account}
@@ -27,6 +27,7 @@ const Login = () => {
               ? `${noNetworkMessage} Please, connect to ${requiredNetworkName}.`
               : noNetworkMessage
           }
+          availableProviders={availableProviders}
         />
       )}
     </Web3Provider.Consumer>
