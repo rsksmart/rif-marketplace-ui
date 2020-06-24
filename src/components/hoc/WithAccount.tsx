@@ -28,6 +28,7 @@ const WithAccount = ({ WrappedComponent, onChange }) => {
       <LoginModal
         open={modalOpened}
         onProviderSet={onProviderSet}
+        handleOnClose={() => setModalOpened(false)}
       />
       <WrappedComponent onChange={handleOnChange} />
     </>
