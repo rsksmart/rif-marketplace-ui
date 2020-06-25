@@ -10,3 +10,4 @@ export {
   NotFound,
 }
 export * from './rns'
+export * from './storage'

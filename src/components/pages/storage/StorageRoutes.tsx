@@ -1,14 +1,18 @@
-import React, { FC } from 'react'
+import React from 'react'
 import {
-  Switch, Route,
+  Switch, Route, Redirect,
 } from 'react-router-dom'
 import ROUTES from 'routes'
 import { NotFound } from '..'
 import StorageLandingPage from './StorageLandingPage'
+import StorageOffersPage from './buy/StorageOffersPage'
 
-const StorageRoutes: FC<{}> = () => (
+const StorageRoutes = () => (
+
   <Switch>
-    <Route exact path={ROUTES.STORAGE} component={StorageLandingPage} />
+    <Redirect exact from={ROUTES.STORAGE.BASE} to={ROUTES.STORAGE.BUY} />
+    <Route exact path={ROUTES.STORAGE.BASE} component={StorageLandingPage} />
+    <Route exact path={ROUTES.STORAGE.BUY} component={StorageOffersPage} />
     <Route component={NotFound} />
   </Switch>
 )

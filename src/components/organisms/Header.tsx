@@ -19,7 +19,7 @@ const Header = () => {
     },
     {
       title: 'Storage',
-      to: ROUTES.STORAGE,
+      to: ROUTES.STORAGE.BUY,
       icon: <StorageIcon />,
     },
     {
