@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid'
 import { Theme, makeStyles } from '@material-ui/core/styles'
 import Marketplace from 'components/templates/marketplace/Marketplace'
 import { colors, SwitchTabs, Typography } from '@rsksmart/rif-ui'
+import StorageFilters from 'components/organisms/filters/storage/StorageFilters'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -62,7 +63,7 @@ const StorageOffersPage: FC = () => {
 
   const [txType, setTxType] = useState(0)
 
-  // TODO: here we will reference to MarketPageTemplate and MarketFilters but for the
+  // TODO: here we will reference to MarketPageTemplate and MarketFilters but for the 
   // purpose of showing a preview version we are only adding styles with hardcoded data
   return (
     <Grid container direction="row" className={`${classes.root}`}>
@@ -80,6 +81,7 @@ const StorageOffersPage: FC = () => {
               </Grid>
             </Grid>
             {/* START - filters content */}
+            <StorageFilters />
             {/* END - filters content */}
           </div>
           {/* END - MarketFilter component */}
