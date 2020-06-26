@@ -1,3 +1,5 @@
+import StorageListingPage from './sell/StorageListingPage'
 import StorageOffersPage from './buy/StorageOffersPage'
+import StorageLandingPage from './StorageLandingPage'
 
-export { StorageOffersPage }
+export { StorageListingPage, StorageLandingPage, StorageOffersPage }

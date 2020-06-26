@@ -13,21 +13,24 @@ export interface RadioFilterProps extends RadioGroupProps {
 const RadioFilter = ({
   className = '', title, items, ...rest
 }: RadioFilterProps) => (
-    <Accordion
-      id={title.toLocaleLowerCase()}
-      className={`${title} ${className}`}
-      expanded
-      title={title}
-    >
-      <RadioGroup {...rest}>
-        {items.map(
-          (itemProps) =>
-            <FormControlLabel
-              key={itemProps.value as string}
-              {...itemProps}
-              control={<Radio color="primary" />} />)}
-      </RadioGroup>
-    </Accordion>
-  )
+  <Accordion
+    id={title.toLocaleLowerCase()}
+    className={`${title} ${className}`}
+    expanded
+    title={title}
+  >
+    <RadioGroup {...rest}>
+      {items.map(
+        (itemProps) => (
+          <FormControlLabel
+            key={itemProps.value as string}
+            {...itemProps}
+            control={<Radio color="primary" />}
+          />
+        ),
+      )}
+    </RadioGroup>
+  </Accordion>
+)
 
 export default RadioFilter
