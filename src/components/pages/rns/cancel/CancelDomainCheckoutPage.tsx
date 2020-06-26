@@ -137,10 +137,19 @@ const CancelDomainCheckoutPage = () => {
         const rnsContract = getRnsContract(web3)
         const marketPlaceContract = getMarketplaceContract(web3)
 
-        const unapproveReceipt = await rnsContract.methods.approve('0x0000000000000000000000000000000000000000', tokenId).send({ from: account })
-        logger.info('unapproveReciept:', unapproveReceipt)
+        // Get gas price
+        const gasPrice = await web3.eth.getGasPrice()
 
-        const receipt = await marketPlaceContract.methods.unplace(tokenId).send({ from: account })
+        // Send unapproval transaction
+        const unapproveReceipt = await rnsContract.methods.approve('0x0000000000000000000000000000000000000000', tokenId).send({ from: account, gasPrice })
+        logger.info('unapproveReceipt:', unapproveReceipt)
+
+        // Get gas limit for unplacement transaction
+        const estimatedGas = await marketPlaceContract.methods.unplace(tokenId).estimateGas({ from: account, gasPrice })
+        const gas = Math.floor(estimatedGas * 1.1)
+
+        // Send unplacement transaction
+        const receipt = await marketPlaceContract.methods.unplace(tokenId).send({ from: account, gas, gasPrice })
         logger.info('unplace receipt:', receipt)
 
         if (!receipt) {

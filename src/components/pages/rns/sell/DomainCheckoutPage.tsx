@@ -140,10 +140,20 @@ const DomainsCheckoutPage: FC<{}> = () => {
       try {
         const rnsContract = getRnsContract(web3)
         const marketPlaceContract = getMarketplaceContract(web3)
+
+        // Get gas price
+        const gasPrice = await web3.eth.getGasPrice()
+
+        // Send approval transaction
         const approveReceipt = await rnsContract.methods.approve(marketPlaceAddress, tokenId).send({ from: account })
         logger.info('approveReciept:', approveReceipt)
 
-        const receipt = await marketPlaceContract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).send({ from: account })
+        // Get gas limit for Placement
+        const estimatedGas = await marketPlaceContract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).estimateGas({ from: account, gasPrice })
+        const gas = Math.floor(estimatedGas * 1.1)
+
+        // Send Placement transaction
+        const receipt = await marketPlaceContract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).send({ from: account, gas, gasPrice })
         logger.info('place receipt:', receipt)
 
         if (!receipt) {

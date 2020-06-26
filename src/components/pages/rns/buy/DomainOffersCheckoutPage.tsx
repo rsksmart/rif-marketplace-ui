@@ -179,7 +179,15 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
         const tokenPlacement = await marketPlaceContract.methods.placement(tokenId).call({ from: account })
         const tokenPrice = tokenPlacement[1]
 
-        const transferReceipt = await rifContract.methods.transferAndCall(marketPlaceAddress, tokenPrice, tokenId).send({ from: account })
+        // Get gas price
+        const gasPrice = await web3.eth.getGasPrice()
+
+        // Get gas limit for Payment transaction
+        const estimatedGas = await rifContract.methods.transferAndCall(marketPlaceAddress, tokenPrice, tokenId).estimateGas({ from: account, gasPrice })
+        const gas = Math.floor(estimatedGas * 1.1)
+
+        // Payment transaction
+        const transferReceipt = await rifContract.methods.transferAndCall(marketPlaceAddress, tokenPrice, tokenId).send({ from: account, gas, gasPrice })
         logger.info('transferReceipt:', transferReceipt)
 
         if (!transferReceipt) {
