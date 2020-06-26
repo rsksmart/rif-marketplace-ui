@@ -15,12 +15,13 @@ const SelectFilter = ({ className = '', title, items }: SelectFilterProps) => (
     expanded
     title={title}
   >
-    {items.map((itemProps) =>
+    {items.map((itemProps) => (
       <FormControlLabel
         key={itemProps.value as string}
         {...itemProps}
         control={<Checkbox />}
-      />)}
+      />
+    ))}
 
     {/* <FilterCheckboxCard {...rest} /> */}
   </Accordion>

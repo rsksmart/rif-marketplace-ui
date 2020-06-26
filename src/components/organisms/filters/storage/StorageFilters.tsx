@@ -1,8 +1,11 @@
 import React, { FC, useState } from 'react'
-import SearchFilter from '../SearchFilter'
 import { Accordion, FilterCheckboxCard } from '@rsksmart/rif-ui'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import { Checkbox, TextField } from '@material-ui/core'
+import {
+  Checkbox,
+  TextField,
+} from '@material-ui/core'
+import SearchFilter from '../SearchFilter'
 import RangeFilter from '../RangeFilter'
 
 const StorageFilters: FC = () => {
@@ -25,7 +28,7 @@ const StorageFilters: FC = () => {
   return (
     <>
       <SearchFilter
-        value={''}
+        value=""
         onChange={() => { }}
       />
       <RangeFilter
@@ -38,7 +41,7 @@ const StorageFilters: FC = () => {
           min: 0,
           max: 100,
         }}
-        unit="RIF"
+        unit="GB"
         handleChange={({ min, max }) => {
           setMinSize(min)
           setMaxSize(max)
@@ -62,16 +65,16 @@ const StorageFilters: FC = () => {
       />
       <AutocompleteCheckbox />
       <Accordion
-        id='currencyFilters'
+        id="currencyFilters"
         expanded
-        title='Currency'
+        title="Currency"
       >
         <FilterCheckboxCard items={storageCurrencyFilters} />
       </Accordion>
       <Accordion
-        id='currencyFilters'
+        id="currencyFilters"
         expanded
-        title='Storage System'
+        title="Storage System"
       >
         <FilterCheckboxCard items={storageSystemFilters} />
       </Accordion>
@@ -85,34 +88,31 @@ const countryFilters = [
   { name: 'Slovakia' },
   { name: 'Uruguay' },
   { name: 'Argentina' },
+  { name: 'Spain' },
 ]
 
-// TODO: - consider removing Checkbox component from rif-ui
-
-const AutocompleteCheckbox = () => {
-  return (
-    <Autocomplete
-      multiple
-      id="checkboxes-tags-demo"
-      options={countryFilters}
-      disableCloseOnSelect
-      getOptionLabel={(option) => option.name}
-      renderOption={(option, { selected }) => (
-        <React.Fragment>
-          <Checkbox
-            color='primary'
-            style={{ marginRight: 8 }}
-            checked={selected}
-          />
-          {option.name}
-        </React.Fragment>
-      )}
-      style={{ width: '100%' }}
-      renderInput={(params) => (
-        <TextField {...params} variant="outlined" label="Prefered locations" placeholder="Prefered locations" />
-      )}
-    />
-  )
-}
+const AutocompleteCheckbox = () => (
+  <Autocomplete
+    multiple
+    id="checkboxes-tags-demo"
+    options={countryFilters}
+    disableCloseOnSelect
+    getOptionLabel={(option) => option.name}
+    renderOption={(option, { selected }) => (
+      <>
+        <Checkbox
+          color="primary"
+          style={{ marginRight: 8 }}
+          checked={selected}
+        />
+        {option.name}
+      </>
+    )}
+    style={{ width: '100%' }}
+    renderInput={(params) => (
+      <TextField {...params} variant="outlined" label="Prefered locations" placeholder="Select your prefered locations" />
+    )}
+  />
+)
 
 export default StorageFilters

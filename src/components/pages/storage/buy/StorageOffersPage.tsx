@@ -63,7 +63,7 @@ const StorageOffersPage: FC = () => {
 
   const [txType, setTxType] = useState(0)
 
-  // TODO: here we will reference to MarketPageTemplate and MarketFilters but for the 
+  // TODO: here we will reference to MarketPageTemplate and MarketFilters but for the
   // purpose of showing a preview version we are only adding styles with hardcoded data
   return (
     <Grid container direction="row" className={`${classes.root}`}>
