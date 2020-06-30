@@ -8,7 +8,8 @@ const storeReducerFactory = (initialState: StoreState, actions: StoreActions, er
         const { type, payload } = dispatcher
         const action: StoreAction = actions[type]
 
-        logger.debug(`${initialState.storeID} action: ${action}`)
+        logger.debug(`${initialState.storeID} action: ${type}`)
+        logger.debug(`${initialState.storeID} payload: ${payload}`)
         try {
             const newState = (!!action && action(state, payload)) || state
 

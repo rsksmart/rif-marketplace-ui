@@ -49,15 +49,16 @@ const offersReducer: RnsReducer | StoreReducer = storeReducerFactory(initialStat
 
 
 const apiEventCallback = (dispatch) => ({ tokenId }) => {
-    dispatch({ type: 'REFRESH_TOKENS', payload: { tokenId } })
+    dispatch({ type: 'OUTDATE', payload: { tokenId } })
 }
 
 export const RnsOffersStoreProvider = ({ children }) => {
     const [state, dispatch] = useReducer(offersReducer, initialState)
     const { state: { apis: { offers } } }: AppStoreProps = useContext(AppStore)
-    const { filters } = state as RnsState;
+    const { filters, listing: { outdatedTokens } } = state as RnsState;
 
     const [isConnected, setIsConnected] = useState(false)
+    const [isOutdated, setIsOutdated] = useState(true)
 
     useEffect(() => {
         if (!isConnected) {
@@ -75,8 +76,15 @@ export const RnsOffersStoreProvider = ({ children }) => {
         }
     }, [isConnected, offers])
 
+
     useEffect(() => {
-        if (isConnected) {
+        if (outdatedTokens.length) {
+            setIsOutdated(true)
+        }
+    }, [outdatedTokens])
+
+    useEffect(() => {
+        if (isConnected && isOutdated && !outdatedTokens.length) {
             offers.fetch(filters).then((items) => {
                 dispatch({
                     type: 'SET_LISTING',
@@ -84,9 +92,10 @@ export const RnsOffersStoreProvider = ({ children }) => {
                         items,
                     },
                 })
+                setIsOutdated(false)
             })
         }
-    }, [isConnected, filters, offers])
+    }, [isConnected, filters, offers, isOutdated, outdatedTokens])
 
     const value = { state, dispatch }
     return <RnsOffersStore.Provider value={value}>{children}</RnsOffersStore.Provider>

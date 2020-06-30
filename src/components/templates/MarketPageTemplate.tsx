@@ -44,6 +44,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   itemCollection,
   headers,
   accountRequired,
+  dispatch,
   outdatedCt
 }) => {
   const classes = useStyles()
@@ -60,7 +61,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
       },
       txType
     },
-    dispatch,
+    dispatch: mDispatch
   } = useContext(MarketStore)
 
   const { rate: rifXr, displayName } = rif
@@ -79,7 +80,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
             }
             return acc
           }, {})
-          dispatch({
+          mDispatch({
             type: MARKET_ACTIONS.SET_EXCHANGE_RATE,
             payload,
           })
@@ -105,8 +106,8 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
                 button={{
                   onClick: () => {
                     dispatch({
-                      type: 'CLEAR_REFRESH'
-                    })
+                      type: 'REFRESH'
+                    } as any)
                   },
                 }}
               />

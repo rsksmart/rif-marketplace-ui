@@ -1,6 +1,6 @@
 import { RnsState } from 'store/Market/rns/interfaces'
-import { RnsPayload, RNS_ACTIONS, FilterPayload, ListingPayload, RefreshPayload, OrderPayload, ProgressPayload } from './rnsActions'
-import { Order } from './DomainsStore'
+import { StorePayload } from 'store/storeUtils/interfaces'
+import { FilterPayload, ListingPayload, OrderPayload, ProgressPayload, RefreshPayload, RnsPayload, RNS_ACTIONS } from './rnsActions'
 
 
 export interface RnsReducer {
@@ -30,7 +30,7 @@ export const rnsActions: RnsActions = {
       }
     }
   },
-  REFRESH_TOKENS: (state: RnsState, payload: RefreshPayload) => {
+  OUTDATE: (state: RnsState, payload: RefreshPayload) => {
     const { order, listing } = state
     const { tokenId } = payload
 
@@ -52,7 +52,7 @@ export const rnsActions: RnsActions = {
       }
     }
   },
-  CLEAR_REFRESH: (state: RnsState, _: RnsPayload) => ({
+  REFRESH: (state: RnsState, _: StorePayload) => ({
     ...state,
     listing: {
       ...state.listing,

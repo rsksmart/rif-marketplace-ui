@@ -43,7 +43,7 @@ const RnsDomainsStore = React.createContext({} as RnsDomainsStoreProps | any)
 const domainsReducer: RnsReducer | StoreReducer = storeReducerFactory(initialState, rnsActions as unknown as StoreActions)
 
 const apiEventCallback = (dispatch) => ({ tokenId }) => {
-    dispatch({ type: 'REFRESH_TOKENS', payload: { tokenId } })
+    dispatch({ type: 'OUTDATE', payload: { tokenId } })
 }
 
 export const RnsDomainsStoreProvider = ({ children }) => {
