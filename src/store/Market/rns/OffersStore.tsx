@@ -55,21 +55,9 @@ const apiEventCallback = (dispatch) => ({ tokenId }) => {
 export const RnsStoreProvider = ({ children }) => {
     const [state, dispatch] = useReducer(offersReducer, initialState)
     const { state: { apis: { offers } } }: AppStoreProps = useContext(AppStore)
-    const { dispatch: mDispatch } = useContext(MarketStore)
     const { filters, listing: { outdatedTokens } } = state as RnsState;
 
     const [isConnected, setIsConnected] = useState(false)
-
-    useEffect(() => {
-        if (outdatedTokens.length) {
-            mDispatch({
-                type: MARKET_ACTIONS.OUTDATE,
-                payload: {
-                    amount: outdatedTokens.length
-                }
-            })
-        }
-    }, [outdatedTokens, mDispatch])
 
     useEffect(() => {
         if (!isConnected) {

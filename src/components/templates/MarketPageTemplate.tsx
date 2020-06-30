@@ -4,11 +4,12 @@ import { Web3Store } from '@rsksmart/rif-ui'
 import { fetchExchangeRatesFor, tokenDisplayNames } from 'api/rif-marketplace-cache/exchangeRateController'
 import InfoBar from 'components/molecules/InfoBar'
 import MarketFilter from 'components/templates/marketplace/MarketFilter'
-import React, { FC, useContext, useEffect } from 'react'
+import React, { FC, useContext, useEffect, Dispatch } from 'react'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
 import { MarketItemType } from 'models/Market'
 import Marketplace, { TableHeaders } from './marketplace/Marketplace'
+import { RnsAction } from 'store/Market/rns/rnsActions'
 
 export interface MarketPageTemplateProps {
   className?: string
@@ -16,6 +17,8 @@ export interface MarketPageTemplateProps {
   headers: TableHeaders
   itemCollection: MarketItemType[]
   accountRequired?: boolean
+  dispatch: Dispatch<RnsAction>
+  outdatedCt?: number //TODO: only temporarily optional - remove '?' after merged ito's changes
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -41,6 +44,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   itemCollection,
   headers,
   accountRequired,
+  outdatedCt
 }) => {
   const classes = useStyles()
   const {
@@ -54,7 +58,6 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
           rif,
         },
       },
-      outdated,
       txType
     },
     dispatch,
@@ -95,17 +98,14 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
             </Grid>
             <Grid className={classes.resultsContainer} item sm={12} md={9}>
               <InfoBar
-                isVisible={!!outdated}
-                text={`${outdated} item(s) in this listing had been updated. Please,`}
+                isVisible={!!outdatedCt}
+                text={`${outdatedCt} item(s) in this listing had been updated. Please,`}
                 buttonText="refresh"
                 type="info"
                 button={{
                   onClick: () => {
                     dispatch({
-                      type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
-                      payload: {
-                        txType,
-                      },
+                      type: 'CLEAR_REFRESH'
                     })
                   },
                 }}

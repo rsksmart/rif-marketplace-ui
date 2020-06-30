@@ -98,6 +98,8 @@ const DomainOffersPage: FC = () => {
       filterItems={<DomainOfferFilters />}
       itemCollection={collection}
       headers={headers}
+      dispatch={dispatch}
+      outdatedCt={listing.outdatedTokens.length}
     />
   )
 }

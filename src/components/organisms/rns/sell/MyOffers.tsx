@@ -160,6 +160,7 @@ const MyOffers: FC<{}> = () => {
       itemCollection={collection}
       headers={headers}
       accountRequired
+      dispatch={dispatch}
     />
   )
 }

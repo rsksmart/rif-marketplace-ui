@@ -45,6 +45,13 @@ export const rnsActions: RnsActions = {
       }
     }
   },
+  CLEAR_REFRESH: (state: RnsState, _: RnsPayload) => ({
+    ...state,
+    listing: {
+      ...state.listing,
+      outdatedTokens: []
+    }
+  }),
   SET_ORDER: (state: RnsState, payload: OrderPayload) => ({
     ...state, order: payload
   })

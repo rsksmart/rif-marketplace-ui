@@ -122,6 +122,7 @@ const MyDomains: FC<{}> = () => {
       itemCollection={collection}
       headers={headers}
       accountRequired
+      dispatch={dispatch}
     />
   )
 }

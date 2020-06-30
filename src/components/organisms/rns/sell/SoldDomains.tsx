@@ -124,6 +124,7 @@ const SoldDomains: FC<{}> = () => {
       itemCollection={collection}
       headers={headers}
       accountRequired
+      dispatch={dispatch}
     />
   )
 }

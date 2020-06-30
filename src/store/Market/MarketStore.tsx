@@ -21,7 +21,6 @@ export interface MarketStateType {
       }
     }
   }
-  outdated: number
 }
 
 interface MarketStorePropsType {
@@ -42,7 +41,6 @@ export const initialState: MarketStateType = {
       },
     },
   },
-  outdated: 0
 }
 
 const MarketStore = React.createContext({} as MarketStorePropsType | any)
