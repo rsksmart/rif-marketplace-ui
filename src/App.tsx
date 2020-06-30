@@ -12,6 +12,7 @@ import { AppStoreProvider } from 'store/App/AppStore'
 import { BlockchainStoreProvider } from 'store/Blockchain/BlockchainStore'
 import { MarketStoreProvider } from 'store/Market/MarketStore'
 import { RnsDomainsStoreProvider } from 'store/Market/rns/DomainsStore'
+import { RnsOffersStoreProvider } from 'store/Market/rns/OffersStore'
 
 const requiredNetworkId: number = Number(process.env.REACT_APP_REQUIRED_NETWORK_ID) || 8545
 
@@ -53,20 +54,22 @@ const App = () => {
           <BlockchainStoreProvider>
             <MarketStoreProvider>
               <RnsDomainsStoreProvider>
-                <BrowserRouter>
-                  <div className={classes.router}>
-                    <Header />
-                    <PageTemplate>
-                      <Collapse in={displayAlert}>
-                        <Alert severity="warning" onClose={() => setDisplayAlert(false)}>
-                          {alertMessage}
-                        </Alert>
-                      </Collapse>
-                      <Routes />
-                    </PageTemplate>
-                    <Footer />
-                  </div>
-                </BrowserRouter>
+                <RnsOffersStoreProvider>
+                  <BrowserRouter>
+                    <div className={classes.router}>
+                      <Header />
+                      <PageTemplate>
+                        <Collapse in={displayAlert}>
+                          <Alert severity="warning" onClose={() => setDisplayAlert(false)}>
+                            {alertMessage}
+                          </Alert>
+                        </Collapse>
+                        <Routes />
+                      </PageTemplate>
+                      <Footer />
+                    </div>
+                  </BrowserRouter>
+                </RnsOffersStoreProvider>
               </RnsDomainsStoreProvider>
             </MarketStoreProvider>
           </BlockchainStoreProvider>

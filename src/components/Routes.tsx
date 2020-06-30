@@ -2,22 +2,13 @@ import React, { useEffect } from 'react'
 import { Route, Switch, useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
+import { AboutPage, FAQPage, LandingPage, NotFound } from './pages'
+import {
+  DomainOffersCheckoutPage, DomainOffersPage, DomainsCheckoutPage,
+  SellDomainsListPage
+} from './pages/rns'
 import StoragePage from './pages/storage/StoragePage'
 
-import {
-  AboutPage, FAQPage, LandingPage, NotFound,
-} from './pages'
-import {
-  DomainsCheckoutPage,
-  DomainOffersPage,
-  DomainPurchased,
-  DomainOffersCheckoutPage,
-  DomainListed,
-  CancelDomainCheckoutPage,
-  DomainCanceled,
-  SellDomainsListPage,
-} from './pages/rns'
-import { RnsStoreProvider } from 'store/Market/rns/OffersStore'
 
 const logger = Logger.getInstance()
 
@@ -34,16 +25,13 @@ const Routes = () => {
     }
   }, [history])
 
-  const RnsOffersPage = (props: JSX.IntrinsicAttributes & { children?: React.ReactNode }) =>
-    <RnsStoreProvider><DomainOffersPage {...props}></DomainOffersPage></RnsStoreProvider> //TODO: make into HOC
-
   return (
     <Switch>
 
       <Route exact path={ROUTES.LANDING} component={LandingPage} />
       <Route exact path={ROUTES.STORAGE} component={StoragePage} />
       <Route exact path={ROUTES.FAQ} component={FAQPage} />
-      <Route exact path={ROUTES.DOMAINS.BUY} component={RnsOffersPage} />
+      <Route exact path={ROUTES.DOMAINS.BUY} component={DomainOffersPage} />
       <Route exact path={ROUTES.DOMAINS.CHECKOUT.BUY} component={DomainOffersCheckoutPage} />
       <Route exact path={ROUTES.DOMAINS.SELL} component={SellDomainsListPage} />
       <Route exact path={ROUTES.DOMAINS.CHECKOUT.SELL} component={DomainsCheckoutPage} />

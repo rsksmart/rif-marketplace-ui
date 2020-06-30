@@ -52,7 +52,7 @@ const apiEventCallback = (dispatch) => ({ tokenId }) => {
     dispatch({ type: 'REFRESH_TOKENS', payload: { tokenId } })
 }
 
-export const RnsStoreProvider = ({ children }) => {
+export const RnsOffersStoreProvider = ({ children }) => {
     const [state, dispatch] = useReducer(offersReducer, initialState)
     const { state: { apis: { offers } } }: AppStoreProps = useContext(AppStore)
     const { filters } = state as RnsState;
