@@ -254,7 +254,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
           )}
         {!account && <Login />}
       </Card>
-      {!!isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm }} text="Buying the domain!" progMsg="The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished." />}
+      {!!isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, dispatch }} text="Buying the domain!" progMsg="The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished." />}
     </CheckoutPageTemplate>
   )
 }

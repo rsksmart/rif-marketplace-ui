@@ -214,7 +214,7 @@ const CancelDomainCheckoutPage = () => {
             </CardActions>
           )}
       </Card>
-      {isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm }} text="Canceling the domain!" progMsg="The waiting period is required to securely cancel your domain listing. Please do not close this tab until the process has finished" />}
+      {isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, dispatch }} text="Canceling the domain!" progMsg="The waiting period is required to securely cancel your domain listing. Please do not close this tab until the process has finished" />}
     </CheckoutPageTemplate>
   )
 }

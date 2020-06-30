@@ -18,7 +18,6 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
 import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
@@ -84,7 +83,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
 
   const {
     state: {
-      order: currentOrder
+      order
     }, dispatch,
   } = useContext(RnsDomainsStore)
 
@@ -95,7 +94,6 @@ const DomainsCheckoutPage: FC<{}> = () => {
         crypto,
       },
     },
-    mDispatch,
   } = useContext(MarketStore)
   const classes = useStyles()
   const {
@@ -115,14 +113,16 @@ const DomainsCheckoutPage: FC<{}> = () => {
   const [currency, setCurrency] = useState('0')
 
   useEffect(() => {
-    if (!currentOrder) {
+    if (!order) {
       // Redirect from direct navigation
       history.replace(ROUTES.LANDING)
-    } else if (isPendingConfirm && !currentOrder.isProcessing) {
+    } else if (isPendingConfirm && !order.isProcessing) {
       // Post-confirmations handle
       history.replace(ROUTES.DOMAINS.DONE.SELL)
     }
-  }, [currentOrder, isPendingConfirm, history])
+  }, [order, isPendingConfirm, history])
+
+  if (!order) return null
 
   const {
     item: {
@@ -131,61 +131,55 @@ const DomainsCheckoutPage: FC<{}> = () => {
       tokenId,
     },
     isProcessing,
-  } = currentOrder
+  } = order
 
   const handleSubmit = async () => {
     if (web3 && account) {
-      // dispatch({
-      //   type: 'SET_PROGRESS',
-      //   payload: {
-      //     isProcessing: true
-      //   }
-      // })
-      // dispatch({
-      //   type: MARKET_ACTIONS.SET_PROG_STATUS,
-      //   payload: {
-      //     isProcessing: true,
-      //   },
-      // })
+      dispatch({
+        type: 'SET_PROGRESS',
+        payload: {
+          isProcessing: true
+        }
+      })
 
-      // try {
-      //   const rnsContract = getRnsContract(web3)
-      //   const marketPlaceContract = getMarketplaceContract(web3)
+      try {
+        const rnsContract = getRnsContract(web3)
+        const marketPlaceContract = getMarketplaceContract(web3)
 
-      //   // Get gas price
-      //   const gasPrice = await web3.eth.getGasPrice()
+        // Get gas price
+        const gasPrice = await web3.eth.getGasPrice()
 
-      //   // Send approval transaction
-      //   const approveReceipt = await rnsContract.methods.approve(marketPlaceAddress, tokenId).send({ from: account })
-      //   logger.info('approveReciept:', approveReceipt)
+        // Send approval transaction
+        const approveReceipt = await rnsContract.methods.approve(marketPlaceAddress, tokenId).send({ from: account })
+        logger.info('approveReciept:', approveReceipt)
 
-      //   // Get gas limit for Placement
-      //   const estimatedGas = await marketPlaceContract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).estimateGas({ from: account, gasPrice })
-      //   const gas = Math.floor(estimatedGas * 1.1)
+        // Get gas limit for Placement
+        const estimatedGas = await marketPlaceContract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).estimateGas({ from: account, gasPrice })
+        const gas = Math.floor(estimatedGas * 1.1)
 
-      //   // Send Placement transaction
-      //   const receipt = await marketPlaceContract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).send({ from: account, gas, gasPrice })
-      //   logger.info('place receipt:', receipt)
+        // Send Placement transaction
+        const receipt = await marketPlaceContract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).send({ from: account, gas, gasPrice })
+        logger.info('place receipt:', receipt)
 
-      //   if (!receipt) {
-      //     throw Error('Something unexpected happened. No receipt received from the place transaction.')
-      //   }
+        if (!receipt) {
+          throw Error('Something unexpected happened. No receipt received from the place transaction.')
+        }
 
-      //   bcDispatch({
-      //     type: BLOCKCHAIN_ACTIONS.SET_TX_HASH,
-      //     payload: {
-      //       txHash: receipt.transactionHash,
-      //     } as any,
-      //   })
-      //   setIsPendingConfirm(true)
-      // } catch (e) {
-      //   logger.error('Could not complete transaction:', e)
-      //   history.replace(ROUTES.DOMAINS.SELL)
-      //   dispatch({
-      //     type: MARKET_ACTIONS.SELECT_ITEM,
-      //     payload: undefined,
-      //   })
-      // }
+        bcDispatch({
+          type: BLOCKCHAIN_ACTIONS.SET_TX_HASH,
+          payload: {
+            txHash: receipt.transactionHash,
+          } as any,
+        })
+        setIsPendingConfirm(true)
+      } catch (e) {
+        logger.error('Could not complete transaction:', e)
+        history.replace(ROUTES.DOMAINS.SELL)
+        dispatch({
+          type: 'SET_ORDER',
+          payload: undefined,
+        })
+      }
     }
   }
 
@@ -213,7 +207,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
   }
 
   return (
-    <CheckoutPageTemplate isProcessing={currentOrder?.isProcessing}
+    <CheckoutPageTemplate isProcessing={order.isProcessing}
       className="domains-checkout-page"
       backButtonProps={{
         backTo: 'domains',
@@ -310,7 +304,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
             </CardActions>
           )}
       </Card>
-      {isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm }} text="Listing the domain!" progMsg="The waiting period is required to securely list your domain. Please do not close this tab until the process has finished" />}
+      {isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, dispatch }} text="Listing the domain!" progMsg="The waiting period is required to securely list your domain. Please do not close this tab until the process has finished" />}
     </CheckoutPageTemplate>
   )
 }

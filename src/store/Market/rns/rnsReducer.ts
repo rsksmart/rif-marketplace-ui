@@ -1,4 +1,3 @@
-
 import { RnsState } from 'store/Market/rns/interfaces'
 import { RnsPayload, RNS_ACTIONS, FilterPayload, ListingPayload, RefreshPayload, OrderPayload, ProgressPayload } from './rnsActions'
 import { Order } from './DomainsStore'
@@ -21,7 +20,6 @@ export const rnsActions: RnsActions = {
     }
   }),
   SET_LISTING: (state: RnsState, payload: ListingPayload) => {
-    const { listing } = state
     const { items } = payload
 
     return {

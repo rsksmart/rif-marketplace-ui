@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Footer as RUIFooter } from '@rsksmart/rif-ui'
 /* eslint-disable-next-line import/no-unresolved */
 import { FooterProps } from '@rsksmart/rif-ui/dist/components/organisms/Footer'
-import { version } from '../../../package.json';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -15,7 +14,7 @@ const Footer = () => {
   const classes = useStyles()
 
   const footerProps: FooterProps = {
-    copyrightText: `Copyright © 2020 IOV Labs. All rights reserved. ${version}`,
+    copyrightText: 'Copyright © 2020 IOV Labs. All rights reserved. v0.1.0',
     linksColumns: [
       {
         title: 'RIF',
