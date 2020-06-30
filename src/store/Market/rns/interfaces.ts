@@ -3,7 +3,11 @@ import { RnsItem } from 'models/marketItems/DomainItem'
 import { Dispatch } from 'react'
 import { StoreState } from 'store/storeUtils/interfaces'
 import { RnsAction } from './rnsActions'
+import { StoreName as DomainsStoreName } from './DomainsStore'
+import { StoreName as OffersStoreName } from './OffersStore'
+import { StoreName as SoldStoreName } from './SoldStore'
 
+export type RnsStoreNames = DomainsStoreName | OffersStoreName | SoldStoreName
 
 export interface RnsOrder {
   item: RnsItem

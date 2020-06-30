@@ -10,6 +10,8 @@ import MarketStore from '../MarketStore'
 import { RnsListing, RnsOrder, RnsState, RnsStoreProps } from './interfaces'
 import { rnsActions, RnsReducer } from './rnsReducer'
 
+export type StoreName = 'rns_offers_store'
+
 export type Order = Modify<RnsOrder, {
     item: DomainOffer
 }>
@@ -29,7 +31,7 @@ export type RnsOffersStoreProps = Modify<RnsStoreProps, {
 }>
 
 export const initialState: OffersState = {
-    storeID: 'rns_offers_store',
+    storeID: "rns_offers_store",
     listing: {
         items: [],
         outdatedTokens: []

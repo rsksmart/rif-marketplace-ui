@@ -7,6 +7,7 @@ import { Modify } from 'utils/typeUtils'
 import { RnsListing, RnsOrder, RnsState, RnsStoreProps } from './interfaces'
 import { rnsActions, RnsReducer } from './rnsReducer'
 
+export type StoreName = 'rns_domains_store'
 
 export type Order = Modify<RnsOrder, {
     item: Domain
@@ -27,7 +28,7 @@ export type RnsDomainsStoreProps = Modify<RnsStoreProps, {
 }>
 
 export const initialState: DomainsState = {
-    storeID: 'rns_domains_store',
+    storeID: "rns_domains_store",
     listing: {
         items: [],
         outdatedTokens: []

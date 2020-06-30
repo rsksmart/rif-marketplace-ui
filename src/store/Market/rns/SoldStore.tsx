@@ -7,6 +7,7 @@ import { Modify } from 'utils/typeUtils'
 import { RnsListing, RnsOrder, RnsState, RnsStoreProps } from './interfaces'
 import { rnsActions, RnsReducer } from './rnsReducer'
 
+export type StoreName = 'rns_sold_store'
 
 export type RnsSoldOrder = Modify<RnsOrder, {
     item: SoldDomain
