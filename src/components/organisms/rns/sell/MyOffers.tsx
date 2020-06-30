@@ -15,23 +15,23 @@ import MarketStore, { TxType } from 'store/Market/MarketStore'
 const LISTING_TYPE = MarketListingTypes.DOMAINS
 
 const MyOffers: FC<{}> = () => {
-  // const {
-  //   state: {
-  //     currentListing,
-  //     filters: {
-  //       domains: domainFilters,
-  //     },
-  //     exchangeRates: {
-  //       currentFiat,
-  //       crypto,
-  //     },
-  //   },
-  //   dispatch,
-  // } = useContext(MarketStore)
-  // const {
-  //   state: { account },
-  // } = useContext(Web3Store)
-  // const history = useHistory()
+  const {
+    state: {
+      currentListing,
+      filters: {
+        domains: domainFilters,
+      },
+      exchangeRates: {
+        currentFiat,
+        crypto,
+      },
+    },
+    dispatch,
+  } = useContext(MarketStore)
+  const {
+    state: { account },
+  } = useContext(Web3Store)
+  const history = useHistory()
 
   // const servicePath = currentListing?.servicePath
   // const listingType = currentListing?.listingType
@@ -162,6 +162,7 @@ const MyOffers: FC<{}> = () => {
       headers={headers}
       accountRequired
       dispatch={dispatch}
+      outdatedCt={currentListing.outdatedTokens.length}
     />
   )
 }

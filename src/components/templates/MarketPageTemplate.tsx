@@ -18,7 +18,7 @@ export interface MarketPageTemplateProps {
   itemCollection: MarketItemType[]
   accountRequired?: boolean
   dispatch: Dispatch<RnsAction>
-  outdatedCt?: number //TODO: only temporarily optional - remove '?' after merged ito's changes
+  outdatedCt: number
 }
 
 const useStyles = makeStyles((theme: Theme) => ({

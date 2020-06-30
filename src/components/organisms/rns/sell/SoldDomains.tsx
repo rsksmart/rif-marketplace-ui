@@ -13,22 +13,22 @@ const LISTING_TYPE = MarketListingTypes.DOMAINS
 // const TX_TYPE = TxType.SELL
 
 const SoldDomains: FC<{}> = () => {
-  // const {
-  //   state: {
-  //     currentListing,
-  //     exchangeRates: {
-  //       currentFiat,
-  //       crypto,
-  //     },
-  //     filters: {
-  //       domains: domainFilters,
-  //     },
-  //   },
-  //   dispatch,
-  // } = useContext(MarketStore)
-  // const {
-  //   state: { account },
-  // } = useContext(Web3Store)
+  const {
+    state: {
+      currentListing,
+      exchangeRates: {
+        currentFiat,
+        crypto,
+      },
+      filters: {
+        domains: domainFilters,
+      },
+    },
+    dispatch,
+  } = useContext(MarketStore)
+  const {
+    state: { account },
+  } = useContext(Web3Store)
 
   // const servicePath = currentListing?.servicePath
   // const listingType = currentListing?.listingType
@@ -126,6 +126,7 @@ const SoldDomains: FC<{}> = () => {
       headers={headers}
       accountRequired
       dispatch={dispatch}
+      outdatedCt={currentListing.outdatedTokens.length}
     />
   )
 }

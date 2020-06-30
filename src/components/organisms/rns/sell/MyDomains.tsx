@@ -10,14 +10,14 @@ import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 const MyDomains: FC<{}> = () => {
   const {
     state: {
-      listing: currentListing,
+      listing,
       filters: filters
     },
     dispatch,
   } = useContext(RnsDomainsStore)
   const history = useHistory()
 
-  const items = currentListing?.items
+  const { items } = listing
 
   const headers = {
     name: 'Name',
@@ -64,6 +64,7 @@ const MyDomains: FC<{}> = () => {
       headers={headers}
       accountRequired
       dispatch={dispatch}
+      outdatedCt={listing.outdatedTokens.length}
     />
   )
 }
