@@ -55,7 +55,7 @@ const apiEventCallback = (dispatch) => ({ tokenId }) => {
 export const RnsStoreProvider = ({ children }) => {
     const [state, dispatch] = useReducer(offersReducer, initialState)
     const { state: { apis: { offers } } }: AppStoreProps = useContext(AppStore)
-    const { filters, listing: { outdatedTokens } } = state as RnsState;
+    const { filters } = state as RnsState;
 
     const [isConnected, setIsConnected] = useState(false)
 

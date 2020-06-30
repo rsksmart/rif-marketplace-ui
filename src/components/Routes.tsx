@@ -44,7 +44,7 @@ const Routes = () => {
       <Route exact path={ROUTES.STORAGE} component={StoragePage} />
       <Route exact path={ROUTES.FAQ} component={FAQPage} />
       <Route exact path={ROUTES.DOMAINS.BUY} component={RnsOffersPage} />
-      {/* <Route exact path={ROUTES.DOMAINS.CHECKOUT.BUY} component={DomainOffersCheckoutPage} /> */}
+      <Route exact path={ROUTES.DOMAINS.CHECKOUT.BUY} component={DomainOffersCheckoutPage} />
       <Route exact path={ROUTES.DOMAINS.SELL} component={SellDomainsListPage} />
       <Route exact path={ROUTES.DOMAINS.CHECKOUT.SELL} component={DomainsCheckoutPage} />
       {/* <Route exact path={ROUTES.DOMAINS.CHECKOUT.CANCEL} component={CancelDomainCheckoutPage} />

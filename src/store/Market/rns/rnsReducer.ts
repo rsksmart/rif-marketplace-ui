@@ -1,8 +1,16 @@
 
 import { RnsState } from 'store/Market/rns/interfaces'
-import { RnsPayload, RNS_ACTIONS, FilterPayload, ListingPayload, RefreshPayload, OrderPayload } from './rnsActions'
+import { RnsPayload, RNS_ACTIONS, FilterPayload, ListingPayload, RefreshPayload, OrderPayload, ProgressPayload } from './rnsActions'
 import { Order } from './DomainsStore'
 
+
+export interface RnsReducer {
+  (state: RnsState, payload: RnsPayload): RnsState
+}
+
+export type RnsActions = {
+  [key in RNS_ACTIONS]: RnsReducer
+}
 
 export const rnsActions: RnsActions = {
   NOOP: (state: RnsState, _: RnsPayload) => state,
@@ -55,14 +63,13 @@ export const rnsActions: RnsActions = {
   }),
   SET_ORDER: (state: RnsState, payload: OrderPayload) => ({
     ...state, order: payload
+  }),
+  SET_PROGRESS: (state: RnsState, { isProcessing }: ProgressPayload) => ({
+    ...state,
+    order: state.order && {
+      ...state.order,
+      isProcessing
+    }
   })
-  // ito - Add remain ing actions: [ SET_PROGRESS, CLEAN_LISTING, CLEAN_ORDER ]
-}
-
-export interface RnsReducer {
-  (state: RnsState, payload: RnsPayload): RnsState
-}
-
-export type RnsActions = {
-  [key in RNS_ACTIONS]: RnsReducer
+  // ito - Add remain ing actions: [ CLEAN_LISTING, CLEAN_ORDER ]
 }
