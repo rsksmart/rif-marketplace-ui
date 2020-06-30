@@ -13,27 +13,27 @@ const LISTING_TYPE = MarketListingTypes.DOMAINS
 // const TX_TYPE = TxType.SELL
 
 const SoldDomains: FC<{}> = () => {
-  const {
-    state: {
-      currentListing,
-      exchangeRates: {
-        currentFiat,
-        crypto,
-      },
-      filters: {
-        domains: domainFilters,
-      },
-    },
-    dispatch,
-  } = useContext(MarketStore)
-  const {
-    state: { account },
-  } = useContext(Web3Store)
+  // const {
+  //   state: {
+  //     currentListing,
+  //     exchangeRates: {
+  //       currentFiat,
+  //       crypto,
+  //     },
+  //     filters: {
+  //       domains: domainFilters,
+  //     },
+  //   },
+  //   dispatch,
+  // } = useContext(MarketStore)
+  // const {
+  //   state: { account },
+  // } = useContext(Web3Store)
 
-  const servicePath = currentListing?.servicePath
-  const listingType = currentListing?.listingType
-  const items = currentListing?.items
-  const { ownerAddress } = domainFilters
+  // const servicePath = currentListing?.servicePath
+  // const listingType = currentListing?.listingType
+  // const items = currentListing?.items
+  // const { ownerAddress } = domainFilters
 
   // // connect service
   // useEffect(() => {
@@ -63,52 +63,52 @@ const SoldDomains: FC<{}> = () => {
   //   }
   // }, [servicePath, ownerAddress, domainFilters, dispatch])
 
-  useEffect(() => {
-    if (account) {
-      dispatch({
-        type: MARKET_ACTIONS.SET_FILTER,
-        payload: {
-          filterItems: {
-            ownerAddress: account,
-          },
-        },
-      })
-    }
-  }, [account, dispatch])
+  // useEffect(() => {
+  //   if (account) {
+  //     dispatch({
+  //       type: MARKET_ACTIONS.SET_FILTER,
+  //       payload: {
+  //         filterItems: {
+  //           ownerAddress: account,
+  //         },
+  //       },
+  //     })
+  //   }
+  // }, [account, dispatch])
 
-  if (!currentListing || listingType !== LISTING_TYPE) return null
+  // if (!currentListing || listingType !== LISTING_TYPE) return null
 
-  const collection = items
-    .map((domainItem: SoldDomain) => {
-      const {
-        id,
-        domainName,
-        buyer,
-        paymentToken,
-        price,
-        soldDate,
-        tokenId,
-      } = domainItem
-      const currency = crypto[paymentToken]
+  // const collection = items
+  //   .map((domainItem: SoldDomain) => {
+  //     const {
+  //       id,
+  //       domainName,
+  //       buyer,
+  //       paymentToken,
+  //       price,
+  //       soldDate,
+  //       tokenId,
+  //     } = domainItem
+  //     const currency = crypto[paymentToken]
 
-      const pseudoResolvedName = domainFilters?.name?.$like && `${domainFilters?.name?.$like}.rsk`
-      const displayItem = {
-        id,
-        domainName: domainName || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
-        buyer: <AddressItem value={buyer} />,
-        currency: currency.displayName,
-        sellingPrice: <CombinedPriceCell
-          price={price.toString()}
-          priceFiat={(currency.rate * price).toString()}
-          currency={currency.displayName}
-          currencyFiat={currentFiat.displayName}
-          divider=" = "
-        />,
-        soldDate: soldDate.toLocaleDateString(),
-      }
+  //     const pseudoResolvedName = domainFilters?.name?.$like && `${domainFilters?.name?.$like}.rsk`
+  //     const displayItem = {
+  //       id,
+  //       domainName: domainName || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
+  //       buyer: <AddressItem value={buyer} />,
+  //       currency: currency.displayName,
+  //       sellingPrice: <CombinedPriceCell
+  //         price={price.toString()}
+  //         priceFiat={(currency.rate * price).toString()}
+  //         currency={currency.displayName}
+  //         currencyFiat={currentFiat.displayName}
+  //         divider=" = "
+  //       />,
+  //       soldDate: soldDate.toLocaleDateString(),
+  //     }
 
-      return displayItem
-    })
+  //     return displayItem
+  //   })
 
   const headers = {
     domainName: 'Name',
@@ -121,7 +121,8 @@ const SoldDomains: FC<{}> = () => {
   return (
     <MarketPageTemplate
       filterItems={<DomainFilters />}
-      itemCollection={collection}
+      itemCollection={[]}
+      // itemCollection={collection}
       headers={headers}
       accountRequired
       dispatch={dispatch}

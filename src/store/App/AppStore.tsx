@@ -5,6 +5,7 @@ import React, { Dispatch, useReducer } from 'react'
 import { AppAction } from './appActions'
 import appReducer from './appReducer'
 import { ServiceMap } from 'api/models/apiController'
+import { DomainsController } from 'api/rif-marketplace-cache/rns/domains'
 
 export interface AppState {
   isError?: boolean
@@ -22,7 +23,8 @@ export interface AppStoreProps {
 export const initialState: AppState = {
   apis: {
     confirmations: new ConfirmationsController(),
-    offers: new OffersController() as any // TODO: remove as any
+    offers: new OffersController() as any, // TODO: remove as any
+    domains: new DomainsController() as any // TODO: remove as any
   },
 }
 

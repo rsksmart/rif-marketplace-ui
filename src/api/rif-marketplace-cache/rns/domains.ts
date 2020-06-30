@@ -3,6 +3,8 @@ import { RnsFilter } from 'api/models/RnsFilter';
 import { DomainTransport } from 'api/models/transports';
 import { Domain } from 'models/marketItems/DomainItem';
 import { available_tokens, RnsAddresses, RnsAPIController } from './common';
+import { Web3Store } from '@rsksmart/rif-ui'
+import {useContext} from 'react'
 
 export const domainsAddress: RnsAddresses = 'rns/v0/domains'
 
@@ -34,11 +36,14 @@ export class DomainsController extends AbstractAPIController implements RnsAPICo
 
     fetch = async (filters: RnsFilter): Promise<Domain[]> => {
         if (!this.service) throw Error('The confirmations service is not connected')
-        const { name, status } = filters
+        const { name, status, ownerAddress } = filters
 
         const results = await this.service.find({
-            placed: status === 'placed',
-            name
+            query: {
+                placed: status === 'placed',
+                name,
+                ownerAddress
+            }
         })
 
         return results.map(mapFromTransport)

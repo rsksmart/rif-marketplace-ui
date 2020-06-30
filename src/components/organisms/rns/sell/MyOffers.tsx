@@ -15,28 +15,28 @@ import MarketStore, { TxType } from 'store/Market/MarketStore'
 const LISTING_TYPE = MarketListingTypes.DOMAINS
 
 const MyOffers: FC<{}> = () => {
-  const {
-    state: {
-      currentListing,
-      filters: {
-        domains: domainFilters,
-      },
-      exchangeRates: {
-        currentFiat,
-        crypto,
-      },
-    },
-    dispatch,
-  } = useContext(MarketStore)
-  const {
-    state: { account },
-  } = useContext(Web3Store)
-  const history = useHistory()
+  // const {
+  //   state: {
+  //     currentListing,
+  //     filters: {
+  //       domains: domainFilters,
+  //     },
+  //     exchangeRates: {
+  //       currentFiat,
+  //       crypto,
+  //     },
+  //   },
+  //   dispatch,
+  // } = useContext(MarketStore)
+  // const {
+  //   state: { account },
+  // } = useContext(Web3Store)
+  // const history = useHistory()
 
-  const servicePath = currentListing?.servicePath
-  const listingType = currentListing?.listingType
-  const items = currentListing?.items
-  const { ownerAddress } = domainFilters
+  // const servicePath = currentListing?.servicePath
+  // const listingType = currentListing?.listingType
+  // const items = currentListing?.items
+  // const { ownerAddress } = domainFilters
   // connect service
   // useEffect(() => {
   //   if (account && servicePath !== RnsServicePaths.SELL) {
@@ -63,18 +63,18 @@ const MyOffers: FC<{}> = () => {
   //   }
   // }, [domainFilters, ownerAddress, servicePath, dispatch])
 
-  useEffect(() => {
-    if (account) {
-      dispatch({
-        type: MARKET_ACTIONS.SET_FILTER,
-        payload: {
-          filterItems: {
-            ownerAddress: account,
-          },
-        },
-      })
-    }
-  }, [account, dispatch])
+  // useEffect(() => {
+  //   if (account) {
+  //     dispatch({
+  //       type: MARKET_ACTIONS.SET_FILTER,
+  //       payload: {
+  //         filterItems: {
+  //           ownerAddress: account,
+  //         },
+  //       },
+  //     })
+  //   }
+  // }, [account, dispatch])
 
   const headers = {
     name: 'Name',
@@ -84,80 +84,81 @@ const MyOffers: FC<{}> = () => {
     action2: '',
   }
 
-  if (!currentListing || listingType !== LISTING_TYPE) return null
+  // if (!currentListing || listingType !== LISTING_TYPE) return null
 
-  const collection = items
-    .map((domainItem: Domain) => {
-      const {
-        id,
-        name,
-        offer,
-        expirationDate,
-        tokenId,
-      } = domainItem
-      const pseudoResolvedName = domainFilters?.name?.$like && (`${domainFilters?.name?.$like}.rsk`)
-      const displayItem = {
-        id,
-        name: name || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
-        expirationDate: expirationDate.toLocaleDateString(),
-        action1: <SelectRowButton
-          id={id}
-          handleSelect={() => {
-            dispatch({
-              type: MARKET_ACTIONS.SELECT_ITEM,
-              payload: {
-                listingType: LISTING_TYPE,
-                item: domainItem,
-                txType: TxType.SELL,
-              },
-            })
-            history.push(ROUTES.DOMAINS.CHECKOUT.SELL)
-          }}
-        />,
-        price: <></>,
-        action2: <></>,
-      }
+  // const collection = items
+  //   .map((domainItem: Domain) => {
+  //     const {
+  //       id,
+  //       name,
+  //       offer,
+  //       expirationDate,
+  //       tokenId,
+  //     } = domainItem
+  //     const pseudoResolvedName = domainFilters?.name?.$like && (`${domainFilters?.name?.$like}.rsk`)
+  //     const displayItem = {
+  //       id,
+  //       name: name || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
+  //       expirationDate: expirationDate.toLocaleDateString(),
+  //       action1: <SelectRowButton
+  //         id={id}
+  //         handleSelect={() => {
+  //           dispatch({
+  //             type: MARKET_ACTIONS.SELECT_ITEM,
+  //             payload: {
+  //               listingType: LISTING_TYPE,
+  //               item: domainItem,
+  //               txType: TxType.SELL,
+  //             },
+  //           })
+  //           history.push(ROUTES.DOMAINS.CHECKOUT.SELL)
+  //         }}
+  //       />,
+  //       price: <></>,
+  //       action2: <></>,
+  //     }
 
-      if (offer) {
-        const { price, paymentToken } = offer
-        const currency = crypto[paymentToken]
-        displayItem.price = (
-          <CombinedPriceCell
-            price={price.toString()}
-            priceFiat={(currency.rate * price).toString()}
-            currency={currency.displayName}
-            currencyFiat={currentFiat.displayName}
-            divider=" = "
-          />
-        )
-        displayItem.action2 = (
-          <IconButton
-            color="primary"
-            id={id}
-            onClick={() => {
-              dispatch({
-                type: MARKET_ACTIONS.SELECT_ITEM,
-                payload: {
-                  listingType: LISTING_TYPE,
-                  item: domainItem,
-                  // txType: TxType.SELL,
-                },
-              })
-              history.push(ROUTES.DOMAINS.CHECKOUT.CANCEL)
-            }}
-          >
-            <ClearIcon />
-          </IconButton>
-        )
-      }
+  //     if (offer) {
+  //       const { price, paymentToken } = offer
+  //       const currency = crypto[paymentToken]
+  //       displayItem.price = (
+  //         <CombinedPriceCell
+  //           price={price.toString()}
+  //           priceFiat={(currency.rate * price).toString()}
+  //           currency={currency.displayName}
+  //           currencyFiat={currentFiat.displayName}
+  //           divider=" = "
+  //         />
+  //       )
+  //       displayItem.action2 = (
+  //         <IconButton
+  //           color="primary"
+  //           id={id}
+  //           onClick={() => {
+  //             dispatch({
+  //               type: MARKET_ACTIONS.SELECT_ITEM,
+  //               payload: {
+  //                 listingType: LISTING_TYPE,
+  //                 item: domainItem,
+  //                 // txType: TxType.SELL,
+  //               },
+  //             })
+  //             history.push(ROUTES.DOMAINS.CHECKOUT.CANCEL)
+  //           }}
+  //         >
+  //           <ClearIcon />
+  //         </IconButton>
+  //       )
+  //     }
 
-      return displayItem
-    })
+  //     return displayItem
+  //   })
 
   return (
     <MarketPageTemplate
       filterItems={<DomainFilters />}
-      itemCollection={collection}
+      itemCollection={[]}
+      // itemCollection={collection}
       headers={headers}
       accountRequired
       dispatch={dispatch}

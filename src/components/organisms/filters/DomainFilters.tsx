@@ -1,53 +1,47 @@
 import React, { useContext } from 'react'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
-import MarketStore, { TxType } from 'store/Market/MarketStore'
-// import { DomainsSaleStatus } from 'models/marketItems/DomainItem'
 import RadioFilter from './RadioFilter'
 import SearchFilter from './SearchFilter'
+import RnsDomainsStore from 'store/Market/rns/DomainsStore'
+import { DomainsSaleStatus } from 'api/models/RnsFilter'
+
+type StatusFilter = {
+  value: DomainsSaleStatus
+  label: string
+}
 
 const DomainFilters = () => {
   const {
     state: {
       filters: {
-        domains: {
-          name: nameFilter,
-          status: statusFilter,
-        },
+        name: nameFilter,
+        status: statusFilter,
       },
     },
     dispatch,
-  } = useContext(MarketStore)
+  } = useContext(RnsDomainsStore)
 
   const searchValue = (nameFilter && nameFilter.$like) || ''
 
-  // const domainStatusFilters = [
-  //   {
-  //     value: SellDomainStatus.OWNED,
-  //     label: 'Your domains',
-  //   },
-  //   {
-  //     value: SellDomainStatus.PLACED,
-  //     label: 'Your offers',
-  //   },
-  //   {
-  //     value: SellDomainStatus.SOLD,
-  //     label: 'Sold domains',
-  //   },
-  // ]
+  const domainStatusFilters: StatusFilter[] = [
+    {
+      value: 'owned',
+      label: 'Your domains',
+    },
+    {
+      value: 'placed',
+      label: 'Your offers',
+    },
+    {
+      value: 'sold',
+      label: 'Sold domains',
+    },
+  ]
 
   const handleOnRadioChange = (_: any, value: string) => {
     dispatch({
-      type: MARKET_ACTIONS.SET_FILTER,
+      type: 'FILTER',
       payload: {
-        filterItems: {
-          status: value,
-        },
-      },
-    })
-    dispatch({
-      type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
-      payload: {
-        txType: TxType.SELL,
+        status: value,
       },
     })
   }
@@ -61,21 +55,19 @@ const DomainFilters = () => {
           const value = currentTarget.value.trim()
           const name = value ? { $like: value } : undefined
           dispatch({
-            type: MARKET_ACTIONS.SET_FILTER,
+            type: 'FILTER',
             payload: {
-              filterItems: {
-                name,
-              },
+              name
             },
           })
         }}
       />
-      {/* <RadioFilter
+      <RadioFilter
         title="Domain Status"
         items={domainStatusFilters}
         value={statusFilter}
         onChange={handleOnRadioChange}
-      /> */}
+      />
     </>
   )
 }

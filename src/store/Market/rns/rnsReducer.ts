@@ -1,6 +1,7 @@
 
 import { RnsState } from 'store/Market/rns/interfaces'
 import { RnsPayload, RNS_ACTIONS, FilterPayload, ListingPayload, RefreshPayload, OrderPayload } from './rnsActions'
+import { Order } from './DomainsStore'
 
 
 export const rnsActions: RnsActions = {
@@ -56,8 +57,6 @@ export const rnsActions: RnsActions = {
     ...state, order: payload
   })
   // ito - Add remain ing actions: [ SET_PROGRESS, CLEAN_LISTING, CLEAN_ORDER ]
-  // The CONNECT_SERVICE should not be necessary here; instead it should be done in the Store Provider component (viz BlockchainStore)
-  // SET_EXCHANGE_RATE and TOGGLE_TX_TYPE should I guess stay in the marketReducer
 }
 
 export interface RnsReducer {

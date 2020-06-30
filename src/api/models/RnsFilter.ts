@@ -9,4 +9,5 @@ export interface RnsFilter extends MarketFilter {
     }
     name?: string
     status?: DomainsSaleStatus
+    ownerAddress?: string
 }

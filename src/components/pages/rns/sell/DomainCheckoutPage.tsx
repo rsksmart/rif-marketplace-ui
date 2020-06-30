@@ -22,6 +22,7 @@ import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
 import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
+import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 
 const logger = Logger.getInstance()
 
@@ -80,15 +81,21 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 const DomainsCheckoutPage: FC<{}> = () => {
   const history = useHistory()
+
   const {
     state: {
-      currentOrder,
+      order: currentOrder
+    }, dispatch,
+  } = useContext(RnsDomainsStore)
+
+  const {
+    state: {
       exchangeRates: {
         currentFiat,
         crypto,
       },
     },
-    dispatch,
+    mDispatch,
   } = useContext(MarketStore)
   const classes = useStyles()
   const {
@@ -117,8 +124,6 @@ const DomainsCheckoutPage: FC<{}> = () => {
     }
   }, [currentOrder, isPendingConfirm, history])
 
-  if (!currentOrder) return null
-
   const {
     item: {
       name,
@@ -130,51 +135,57 @@ const DomainsCheckoutPage: FC<{}> = () => {
 
   const handleSubmit = async () => {
     if (web3 && account) {
-      dispatch({
-        type: MARKET_ACTIONS.SET_PROG_STATUS,
-        payload: {
-          isProcessing: true,
-        },
-      })
+      // dispatch({
+      //   type: 'SET_PROGRESS',
+      //   payload: {
+      //     isProcessing: true
+      //   }
+      // })
+      // dispatch({
+      //   type: MARKET_ACTIONS.SET_PROG_STATUS,
+      //   payload: {
+      //     isProcessing: true,
+      //   },
+      // })
 
-      try {
-        const rnsContract = getRnsContract(web3)
-        const marketPlaceContract = getMarketplaceContract(web3)
+      // try {
+      //   const rnsContract = getRnsContract(web3)
+      //   const marketPlaceContract = getMarketplaceContract(web3)
 
-        // Get gas price
-        const gasPrice = await web3.eth.getGasPrice()
+      //   // Get gas price
+      //   const gasPrice = await web3.eth.getGasPrice()
 
-        // Send approval transaction
-        const approveReceipt = await rnsContract.methods.approve(marketPlaceAddress, tokenId).send({ from: account })
-        logger.info('approveReciept:', approveReceipt)
+      //   // Send approval transaction
+      //   const approveReceipt = await rnsContract.methods.approve(marketPlaceAddress, tokenId).send({ from: account })
+      //   logger.info('approveReciept:', approveReceipt)
 
-        // Get gas limit for Placement
-        const estimatedGas = await marketPlaceContract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).estimateGas({ from: account, gasPrice })
-        const gas = Math.floor(estimatedGas * 1.1)
+      //   // Get gas limit for Placement
+      //   const estimatedGas = await marketPlaceContract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).estimateGas({ from: account, gasPrice })
+      //   const gas = Math.floor(estimatedGas * 1.1)
 
-        // Send Placement transaction
-        const receipt = await marketPlaceContract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).send({ from: account, gas, gasPrice })
-        logger.info('place receipt:', receipt)
+      //   // Send Placement transaction
+      //   const receipt = await marketPlaceContract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).send({ from: account, gas, gasPrice })
+      //   logger.info('place receipt:', receipt)
 
-        if (!receipt) {
-          throw Error('Something unexpected happened. No receipt received from the place transaction.')
-        }
+      //   if (!receipt) {
+      //     throw Error('Something unexpected happened. No receipt received from the place transaction.')
+      //   }
 
-        bcDispatch({
-          type: BLOCKCHAIN_ACTIONS.SET_TX_HASH,
-          payload: {
-            txHash: receipt.transactionHash,
-          } as any,
-        })
-        setIsPendingConfirm(true)
-      } catch (e) {
-        logger.error('Could not complete transaction:', e)
-        history.replace(ROUTES.DOMAINS.SELL)
-        dispatch({
-          type: MARKET_ACTIONS.SELECT_ITEM,
-          payload: undefined,
-        })
-      }
+      //   bcDispatch({
+      //     type: BLOCKCHAIN_ACTIONS.SET_TX_HASH,
+      //     payload: {
+      //       txHash: receipt.transactionHash,
+      //     } as any,
+      //   })
+      //   setIsPendingConfirm(true)
+      // } catch (e) {
+      //   logger.error('Could not complete transaction:', e)
+      //   history.replace(ROUTES.DOMAINS.SELL)
+      //   dispatch({
+      //     type: MARKET_ACTIONS.SELECT_ITEM,
+      //     payload: undefined,
+      //   })
+      // }
     }
   }
 
@@ -202,7 +213,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
   }
 
   return (
-    <CheckoutPageTemplate
+    <CheckoutPageTemplate isProcessing={currentOrder?.isProcessing}
       className="domains-checkout-page"
       backButtonProps={{
         backTo: 'domains',

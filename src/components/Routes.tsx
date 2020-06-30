@@ -17,7 +17,7 @@ import {
   DomainCanceled,
   SellDomainsListPage,
 } from './pages/rns'
-import RnsOffersStore, { RnsStoreProvider } from 'store/Market/rns/OffersStore'
+import { RnsStoreProvider } from 'store/Market/rns/OffersStore'
 
 const logger = Logger.getInstance()
 
@@ -39,14 +39,15 @@ const Routes = () => {
 
   return (
     <Switch>
+
       <Route exact path={ROUTES.LANDING} component={LandingPage} />
       <Route exact path={ROUTES.STORAGE} component={StoragePage} />
       <Route exact path={ROUTES.FAQ} component={FAQPage} />
       <Route exact path={ROUTES.DOMAINS.BUY} component={RnsOffersPage} />
-      {/* <Route exact path={ROUTES.DOMAINS.CHECKOUT.BUY} component={DomainOffersCheckoutPage} />
+      {/* <Route exact path={ROUTES.DOMAINS.CHECKOUT.BUY} component={DomainOffersCheckoutPage} /> */}
       <Route exact path={ROUTES.DOMAINS.SELL} component={SellDomainsListPage} />
       <Route exact path={ROUTES.DOMAINS.CHECKOUT.SELL} component={DomainsCheckoutPage} />
-      <Route exact path={ROUTES.DOMAINS.CHECKOUT.CANCEL} component={CancelDomainCheckoutPage} />
+      {/* <Route exact path={ROUTES.DOMAINS.CHECKOUT.CANCEL} component={CancelDomainCheckoutPage} />
       <Route exact path={ROUTES.DOMAINS.DONE.SELL} component={DomainListed} />
       <Route exact path={ROUTES.DOMAINS.DONE.BUY} component={DomainPurchased} />
       <Route exact path={ROUTES.DOMAINS.DONE.CANCEL} component={DomainCanceled} /> */}

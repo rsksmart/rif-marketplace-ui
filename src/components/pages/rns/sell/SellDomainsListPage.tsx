@@ -1,10 +1,9 @@
 import MyDomains from 'components/organisms/rns/sell/MyDomains'
 import MyOffers from 'components/organisms/rns/sell/MyOffers'
 import SoldDomains from 'components/organisms/rns/sell/SoldDomains'
-import React, { FC, useContext, useEffect } from 'react'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
-import MarketStore from 'store/Market/MarketStore'
+import React, { FC, useContext } from 'react'
 import { DomainsSaleStatus } from 'api/models/RnsFilter'
+import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 
 type PerStatusComponents = {
   [key in DomainsSaleStatus]: React.ReactNode
@@ -14,19 +13,16 @@ const SellDomainsListPage: FC<{}> = () => {
   const {
     state: {
       filters: {
-        domains: { status: statusFilter },
+        status: statusFilter
       },
-    }, dispatch,
-  } = useContext(MarketStore)
+    },
+  } = useContext(RnsDomainsStore)
 
   const componentPerStatus: PerStatusComponents = {
     'owned': <MyDomains />,
     'placed': <MyOffers />,
     'sold': <SoldDomains />,
   }
-  useEffect(() => () => {
-    dispatch({ type: MARKET_ACTIONS.CLEAN_UP, payload: { currentListing: true } })
-  }, [dispatch])
 
   return <>{componentPerStatus[statusFilter]}</>
 }
