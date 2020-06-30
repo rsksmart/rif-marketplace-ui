@@ -28,10 +28,18 @@ const {
   SET_EXCHANGE_RATE,
   CLEAN_UP,
   SET_META,
+  OUTDATE
 } = MARKET_ACTIONS
 
-const marketActions: MarketActionsType = {
+const marketActions: any = {
   [NOOP]: (state: MarketStateType, _: MarketPayloadType) => state,
+  [OUTDATE]: (state: MarketStateType, payload: { amount: number }) => {
+
+    return {
+      ...state,
+      outdated: payload.amount
+    }
+  },
   [SET_ITEMS]: (state: MarketStateType, payload: ListingPayload) => {
     // const { currentListing, metadata } = state
     // const listingType = currentListing?.listingType

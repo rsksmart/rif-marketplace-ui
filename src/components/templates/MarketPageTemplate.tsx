@@ -54,8 +54,8 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
           rif,
         },
       },
-      currentListing,
-      metadata,
+      outdated,
+      txType
     },
     dispatch,
   } = useContext(MarketStore)
@@ -84,10 +84,6 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
     }
   }, [fiatSymbol, rifXr, displayName, dispatch])
 
-  // const { listingType, txType } = currentListing
-  // const updatedTokensCount = metadata[listingType].updatedTokens.length
-  // const needsRefresh = !!updatedTokensCount
-
   return (
     <Grid container direction="row" className={`${classes.root} ${className}`}>
       {accountRequired && !account && <p>Please sign in to your wallet</p>}
@@ -98,9 +94,9 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
               <MarketFilter>{filterItems}</MarketFilter>
             </Grid>
             <Grid className={classes.resultsContainer} item sm={12} md={9}>
-              {/* <InfoBar
-                isVisible={needsRefresh}
-                text={`${updatedTokensCount} item(s) in this listing had been updated. Please,`}
+              <InfoBar
+                isVisible={!!outdated}
+                text={`${outdated} item(s) in this listing had been updated. Please,`}
                 buttonText="refresh"
                 type="info"
                 button={{
@@ -113,7 +109,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
                     })
                   },
                 }}
-              /> */}
+              />
               <Marketplace items={itemCollection} headers={headers} />
             </Grid>
           </>

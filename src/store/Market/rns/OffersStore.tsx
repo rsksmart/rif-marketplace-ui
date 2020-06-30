@@ -1,14 +1,14 @@
 import { RnsFilter } from 'api/models/RnsFilter'
 import { DomainOffer } from 'models/marketItems/DomainItem'
-import React, { useReducer, useEffect, useState, useContext, Dispatch } from 'react'
+import React, { useContext, useEffect, useReducer, useState } from 'react'
+import AppStore, { AppStoreProps } from 'store/App/AppStore'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
+import { MARKET_ACTIONS } from '../marketActions'
+import MarketStore from '../MarketStore'
 import { RnsListing, RnsOrder, RnsState, RnsStoreProps } from './interfaces'
 import { rnsActions, RnsReducer } from './rnsReducer'
-import AppStore, { AppStoreProps } from 'store/App/AppStore'
-import { RnsAPIController } from 'api/rif-marketplace-cache/rns/common'
-import { RnsAction } from './rnsActions'
 
 export type Order = Modify<RnsOrder, {
     item: DomainOffer
@@ -53,15 +53,27 @@ const apiEventCallback = (dispatch) => ({ tokenId }) => {
 export const RnsStoreProvider = ({ children }) => {
     const [state, dispatch] = useReducer(offersReducer, initialState)
     const { state: { apis: { offers } } }: AppStoreProps = useContext(AppStore)
-    const { filters } = state as RnsState;
+    const { dispatch: mDispatch } = useContext(MarketStore)
+    const { filters, listing: { outdatedTokens } } = state as RnsState;
 
     const [isConnected, setIsConnected] = useState(false)
+
+    useEffect(() => {
+        if (outdatedTokens.length) {
+            mDispatch({
+                type: MARKET_ACTIONS.OUTDATE,
+                payload: {
+                    amount: outdatedTokens.length
+                }
+            })
+        }
+    }, [outdatedTokens, mDispatch])
 
     useEffect(() => {
         if (!isConnected) {
             setIsConnected(!!offers.connect())
         }
-    }, [isConnected])
+    }, [isConnected, offers])
 
 
     useEffect(() => {
@@ -84,7 +96,7 @@ export const RnsStoreProvider = ({ children }) => {
                 })
             })
         }
-    }, [isConnected])
+    }, [isConnected, filters, offers])
 
     const value = { state, dispatch }
     return <RnsOffersStore.Provider value={value}>{children}</RnsOffersStore.Provider>
