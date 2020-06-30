@@ -95,16 +95,15 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
 
   const [hasFunds, setHasFunds] = useState(false)
   const [isFundsConfirmed, setIsFundsConfirmed] = useState(false)
+  const tokenId = currentOrder?.item?.tokenId
+  const domainName = currentOrder?.item?.domainName
 
   // check funds
   useEffect(() => {
-    if (web3 && account && currentOrder?.item?.tokenId) {
-      setIsFundsConfirmed(false)
-      const { item: { tokenId } } = currentOrder
+    if (account && tokenId && !isFundsConfirmed) {
       const checkFunds = async () => {
         const rifContract = getRifContract(web3)
         const marketPlaceContract = getMarketplaceContract(web3)
-
         try {
           const myBalance = await rifContract.methods.balanceOf(account).call({ from: account })
           const tokenPlacement = await marketPlaceContract.methods.placement(tokenId).call({ from: account })
@@ -118,7 +117,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
       }
       checkFunds()
     }
-  }, [web3, account, currentOrder])
+  }, [web3, account, tokenId, isFundsConfirmed])
 
   useEffect(() => {
     if (!currentOrder) {
@@ -131,8 +130,6 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   }, [currentOrder, isPendingConfirm, history])
 
   if (!currentOrder) return null
-
-  const { item: { domainName, tokenId } } = currentOrder
 
   const {
     item: {
