@@ -8,6 +8,7 @@ import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
 import { RnsListing, RnsOrder, RnsState, RnsStoreProps } from './interfaces'
 import { rnsActions, RnsReducer } from './rnsReducer'
+import { attachApiEventCallback } from './utils'
 
 export type StoreName = 'rns_domains'
 export type Order = Modify<RnsOrder, {
@@ -42,10 +43,6 @@ export const initialState: DomainsState = {
 const RnsDomainsStore = React.createContext({} as RnsDomainsStoreProps | any)
 const domainsReducer: RnsReducer | StoreReducer = storeReducerFactory(initialState, rnsActions as unknown as StoreActions)
 
-const apiEventCallback = (dispatch) => ({ tokenId }) => {
-    dispatch({ type: 'OUTDATE', payload: { tokenId } })
-}
-
 export const RnsDomainsStoreProvider = ({ children }) => {
     const [state, dispatch] = useReducer(domainsReducer, initialState)
     const { state: { apis: { domains: service } } }: AppStoreProps = useContext(AppStore)
@@ -63,10 +60,10 @@ export const RnsDomainsStoreProvider = ({ children }) => {
 
     useEffect(() => {
         if (isConnected) {
-            service.attachEvent('updated', apiEventCallback(dispatch))
-            service.attachEvent('patched', apiEventCallback(dispatch))
-            service.attachEvent('created', apiEventCallback(dispatch))
-            service.attachEvent('removed', apiEventCallback(dispatch))
+            service.attachEvent('updated', attachApiEventCallback(dispatch))
+            service.attachEvent('patched', attachApiEventCallback(dispatch))
+            service.attachEvent('created', attachApiEventCallback(dispatch))
+            service.attachEvent('removed', attachApiEventCallback(dispatch))
         }
     }, [isConnected, service])
 
@@ -95,13 +92,6 @@ export const RnsDomainsStoreProvider = ({ children }) => {
 
     const value = { state, dispatch }
     return <RnsDomainsStore.Provider value={value}>{children}</RnsDomainsStore.Provider>
-
-
-    // ito - introduce similar connection mechanism as in the BlockchainStoreProvider component
-    // so I guess, we will have to introduce another flag here (connect or something) which would trigger a use effect
-    // that will connect the service (AppStore -> state.apis.domains.connect)
-
-    // Or the domains page can connect directly, and like we did before dispatch a CONNECT_SERVICE or rather SET_SERVICE_CONNECTED
 }
 
 export default RnsDomainsStore

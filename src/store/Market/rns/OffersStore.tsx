@@ -7,6 +7,7 @@ import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
 import { RnsListing, RnsOrder, RnsState, RnsStoreProps } from './interfaces'
 import { rnsActions, RnsReducer } from './rnsReducer'
+import { attachApiEventCallback } from './utils'
 
 export type StoreName = 'rns_offers'
 
@@ -46,9 +47,6 @@ const RnsOffersStore = React.createContext({} as RnsOffersStoreProps | any)
 const offersReducer: RnsReducer | StoreReducer = storeReducerFactory(initialState, rnsActions as unknown as StoreActions)
 
 
-const apiEventCallback = (dispatch) => ({ tokenId }) => {
-    dispatch({ type: 'OUTDATE', payload: { tokenId } })
-}
 
 export const RnsOffersStoreProvider = ({ children }) => {
     const [state, dispatch] = useReducer(offersReducer, initialState)
@@ -67,10 +65,10 @@ export const RnsOffersStoreProvider = ({ children }) => {
 
     useEffect(() => {
         if (isConnected) {
-            service.attachEvent('updated', apiEventCallback(dispatch))
-            service.attachEvent('patched', apiEventCallback(dispatch))
-            service.attachEvent('created', apiEventCallback(dispatch))
-            service.attachEvent('removed', apiEventCallback(dispatch))
+            service.attachEvent('updated', attachApiEventCallback(dispatch))
+            service.attachEvent('patched', attachApiEventCallback(dispatch))
+            service.attachEvent('created', attachApiEventCallback(dispatch))
+            service.attachEvent('removed', attachApiEventCallback(dispatch))
         }
     }, [isConnected, service])
 
