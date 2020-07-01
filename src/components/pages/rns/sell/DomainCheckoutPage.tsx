@@ -101,7 +101,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
 
   const currencySymbols = Object.keys(crypto)
-  const currenyOptions = currencySymbols.map((symbol) => crypto[symbol].displayName)
+  const currencyOptions = currencySymbols.map((symbol) => crypto[symbol].displayName)
 
   const [price, setPrice] = useState('')
   const [priceFiat, setPriceFiat] = useState('')
@@ -173,21 +173,24 @@ const DomainsCheckoutPage: FC<{}> = () => {
     }
   }
 
-  const handlePriceChange = (event) => {
-    const { target: { value: newValue } } = event
-    const newValueInt = parseFloat(newValue)
+  const handlePriceChange = ({ target: { value } }) => {
+    setPrice(value)
+    // we convert to number after setting the value because we need to allow '0.' and Number('0.') is 0
+    const priceNumber = Number(value)
 
-    if (newValueInt || newValue === '') {
-      setPrice(newValue)
-
-      if (newValue) {
-        const currencySymbol = currencySymbols[parseInt(currency, 10)]
-        const newValueInFiat = newValueInt * crypto[currencySymbol].rate
-        setPriceFiat(newValueInFiat.toFixed(4).toString())
-      } else {
-        setPriceFiat('')
-      }
+    if (priceNumber) {
+      const currencySymbol = currencySymbols[parseInt(currency, 10)]
+      const newValueInFiat = value * crypto[currencySymbol].rate
+      setPriceFiat(newValueInFiat.toFixed(4).toString())
+    } else {
+      setPriceFiat('')
     }
+  }
+
+  const handleOnPriceBlur = () => {
+    // removes 0s on the left
+    const priceNumber = Number(price)
+    setPrice(priceNumber.toString())
   }
 
   const handleSetCurrency = ({ target: { value } }) => {
@@ -195,6 +198,8 @@ const DomainsCheckoutPage: FC<{}> = () => {
     const newCurrencySymbol = currencySymbols[parseInt(value, 10)]
     setPriceFiat((parseInt(price, 10) * crypto[newCurrencySymbol].rate).toString())
   }
+
+  const submitDisabled = () => Number(price) <= 0
 
   return (
     <CheckoutPageTemplate
@@ -229,7 +234,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
                         <CombinedPriceCell {...{
                           price: `${price}`,
                           priceFiat: `${priceFiat}`,
-                          currency: currenyOptions[parseInt(currency, 10)],
+                          currency: currencyOptions[parseInt(currency, 10)],
                           currencyFiat: currentFiat.displayName,
                           divider: ' ',
                         }}
@@ -247,9 +252,9 @@ const DomainsCheckoutPage: FC<{}> = () => {
                           id="currency-select"
                           value={currency}
                           onChange={handleSetCurrency}
-                          disabled={currenyOptions.length <= 1}
+                          disabled={currencyOptions.length <= 1}
                         >
-                          {currenyOptions.map((option, i) => <MenuItem key={option} value={i}>{option}</MenuItem>)}
+                          {currencyOptions.map((option, i) => <MenuItem key={option} value={i}>{option}</MenuItem>)}
                         </Select>
                       </TableCell>
                     </TableRow>
@@ -258,10 +263,10 @@ const DomainsCheckoutPage: FC<{}> = () => {
                       <TableCell className={`${classes.detailValue} ${classes.setPrice}`}>
                         <UnitsInput
                           handleOnChange={handlePriceChange}
-                          handleOnBlur={() => { }} // eslint-disable-line @typescript-eslint/no-empty-function
-                          // FIXME: make callback optional in rif-ui
-                          units={currenyOptions[parseInt(currency, 10)]}
+                          handleOnBlur={handleOnPriceBlur}
+                          units={currencyOptions[parseInt(currency, 10)]}
                           value={price}
+                          error={Number(price) <= 0}
                         />
                       </TableCell>
                     </TableRow>
@@ -288,6 +293,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
                 rounded
                 shadow
                 onClick={handleSubmit}
+                disabled={submitDisabled()}
               >
                 List domain
               </Button>

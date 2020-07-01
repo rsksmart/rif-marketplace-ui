@@ -50,6 +50,19 @@ const DomainOfferFilters: FC<{}> = () => {
     }
   }, [servicePath, dispatch])
 
+  const handlePriceChange = ({ min, max }) => {
+    dispatch({
+      type: MARKET_ACTIONS.SET_FILTER,
+      payload: {
+        filterItems: {
+          price: {
+            $gte: min,
+            $lte: max,
+          },
+        },
+      },
+    })
+  }
   return (
     <>
       <SearchFilter
@@ -81,17 +94,7 @@ const DomainOfferFilters: FC<{}> = () => {
         }}
         unit="RIF"
         handleChange={({ min, max }) => {
-          dispatch({
-            type: MARKET_ACTIONS.SET_FILTER,
-            payload: {
-              filterItems: {
-                price: {
-                  $gte: min,
-                  $lte: max,
-                },
-              },
-            },
-          })
+          handlePriceChange({ min, max })
         }}
       />
     </>
