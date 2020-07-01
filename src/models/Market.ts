@@ -2,17 +2,11 @@ import { RnsFilter } from 'api/models/RnsFilter'
 import { RnsItem } from './marketItems/DomainItem'
 import { StorageItem } from './marketItems/StorageItem'
 
-export interface MarketItem {
+export interface Item {
     id: string
 }
 
-export enum MarketListingTypes {
-    DOMAINS = 'domains',
-    DOMAIN_OFFERS = 'domainOffers',
-    STORAGE = 'storage',
-}
-
-export type MarketItemType = RnsItem & StorageItem
+export type MarketItem = RnsItem & StorageItem
 
 export interface MarketFilter {
     [filterFieldName: string]: {

@@ -1,15 +1,9 @@
 import { Web3Store } from '@rsksmart/rif-ui'
-import { createService } from 'api/rif-marketplace-cache/cacheController'
-import { AddressItem, CombinedPriceCell } from 'components/molecules'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
-import { MarketListingTypes } from 'models/Market'
-import { SoldDomain } from 'models/marketItems/DomainItem'
-import React, { FC, useContext, useEffect } from 'react'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
+import React, { FC, useContext } from 'react'
 import MarketStore from 'store/Market/MarketStore'
 
-const LISTING_TYPE = MarketListingTypes.DOMAINS
 // const TX_TYPE = TxType.SELL
 
 const SoldDomains: FC<{}> = () => {

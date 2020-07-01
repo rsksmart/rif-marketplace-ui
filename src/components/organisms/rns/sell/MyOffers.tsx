@@ -1,18 +1,10 @@
-import IconButton from '@material-ui/core/IconButton'
-import ClearIcon from '@material-ui/icons/Clear'
 import { Web3Store } from '@rsksmart/rif-ui'
-import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
-import { MarketListingTypes } from 'models/Market'
-import { Domain } from 'models/marketItems/DomainItem'
-import React, { FC, useContext, useEffect } from 'react'
+import React, { FC, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
-import ROUTES from 'routes'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
-import MarketStore, { TxType } from 'store/Market/MarketStore'
+import MarketStore from 'store/Market/MarketStore'
 
-const LISTING_TYPE = MarketListingTypes.DOMAINS
 
 const MyOffers: FC<{}> = () => {
   const {

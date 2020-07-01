@@ -1,18 +1,14 @@
-import React, { FC, useContext } from 'react'
-import { useHistory } from 'react-router-dom'
 import { Web3Store } from '@rsksmart/rif-ui'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
-import { MarketListingTypes } from 'models/Market'
 import { DomainOffer } from 'models/marketItems/DomainItem'
+import React, { FC, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
-import MarketStore, { TxType } from 'store/Market/MarketStore'
-import RnsOffersStore, { RnsOffersStoreProps, Order } from 'store/Market/rns/OffersStore'
-import { OrderPayload } from 'store/Market/rns/rnsActions'
+import MarketStore from 'store/Market/MarketStore'
+import RnsOffersStore, { RnsOffersStoreProps } from 'store/Market/rns/OffersStore'
 
-const LISTING_TYPE = MarketListingTypes.DOMAIN_OFFERS
 
 const DomainOffersPage: FC = () => {
   const {

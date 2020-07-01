@@ -3,8 +3,6 @@ import { RnsFilter } from 'api/models/RnsFilter';
 import { DomainTransport } from 'api/models/transports';
 import { Domain } from 'models/marketItems/DomainItem';
 import { available_tokens, RnsAddresses, RnsAPIController } from './common';
-import { Web3Store } from '@rsksmart/rif-ui'
-import {useContext} from 'react'
 
 export const domainsAddress: RnsAddresses = 'rns/v0/domains'
 

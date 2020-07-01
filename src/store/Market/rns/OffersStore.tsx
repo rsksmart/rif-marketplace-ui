@@ -5,12 +5,10 @@ import AppStore, { AppStoreProps } from 'store/App/AppStore'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
-import { MARKET_ACTIONS } from '../marketActions'
-import MarketStore from '../MarketStore'
 import { RnsListing, RnsOrder, RnsState, RnsStoreProps } from './interfaces'
 import { rnsActions, RnsReducer } from './rnsReducer'
 
-export type StoreName = 'rns_offers_store'
+export type StoreName = 'rns_offers'
 
 export type Order = Modify<RnsOrder, {
     item: DomainOffer
@@ -31,7 +29,7 @@ export type RnsOffersStoreProps = Modify<RnsStoreProps, {
 }>
 
 export const initialState: OffersState = {
-    storeID: "rns_offers_store",
+    storeID: "rns_offers",
     listing: {
         items: [],
         outdatedTokens: []
@@ -54,7 +52,7 @@ const apiEventCallback = (dispatch) => ({ tokenId }) => {
 
 export const RnsOffersStoreProvider = ({ children }) => {
     const [state, dispatch] = useReducer(offersReducer, initialState)
-    const { state: { apis: { offers } } }: AppStoreProps = useContext(AppStore)
+    const { state: { apis: { offers: service } } }: AppStoreProps = useContext(AppStore)
     const { filters, listing: { outdatedTokens } } = state as RnsState;
 
     const [isConnected, setIsConnected] = useState(false)
@@ -62,19 +60,19 @@ export const RnsOffersStoreProvider = ({ children }) => {
 
     useEffect(() => {
         if (!isConnected) {
-            setIsConnected(!!offers.connect())
+            setIsConnected(!!service.connect())
         }
-    }, [isConnected, offers])
+    }, [isConnected, service])
 
 
     useEffect(() => {
         if (isConnected) {
-            offers.attachEvent('updated', apiEventCallback(dispatch))
-            offers.attachEvent('patched', apiEventCallback(dispatch))
-            offers.attachEvent('created', apiEventCallback(dispatch))
-            offers.attachEvent('removed', apiEventCallback(dispatch))
+            service.attachEvent('updated', apiEventCallback(dispatch))
+            service.attachEvent('patched', apiEventCallback(dispatch))
+            service.attachEvent('created', apiEventCallback(dispatch))
+            service.attachEvent('removed', apiEventCallback(dispatch))
         }
-    }, [isConnected, offers])
+    }, [isConnected, service])
 
 
     useEffect(() => {
@@ -85,7 +83,7 @@ export const RnsOffersStoreProvider = ({ children }) => {
 
     useEffect(() => {
         if (isConnected && isOutdated && !outdatedTokens.length) {
-            offers.fetch(filters).then((items) => {
+            service.fetch(filters).then((items) => {
                 dispatch({
                     type: 'SET_LISTING',
                     payload: {
@@ -95,7 +93,7 @@ export const RnsOffersStoreProvider = ({ children }) => {
                 setIsOutdated(false)
             })
         }
-    }, [isConnected, filters, offers, isOutdated, outdatedTokens])
+    }, [isConnected, filters, service, isOutdated, outdatedTokens])
 
     const value = { state, dispatch }
     return <RnsOffersStore.Provider value={value}>{children}</RnsOffersStore.Provider>

@@ -1,5 +1,4 @@
 import { RnsState } from 'store/Market/rns/interfaces'
-import { StorePayload } from 'store/storeUtils/interfaces'
 import { FilterPayload, ListingPayload, OrderPayload, ProgressPayload, RefreshPayload, RnsPayload, RNS_ACTIONS } from './rnsActions'
 
 
@@ -52,7 +51,7 @@ export const rnsActions: RnsActions = {
       }
     }
   },
-  REFRESH: (state: RnsState, _: StorePayload) => ({
+  REFRESH: (state: RnsState, _: RnsPayload) => ({
     ...state,
     listing: {
       ...state.listing,

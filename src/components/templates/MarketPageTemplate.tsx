@@ -7,7 +7,7 @@ import MarketFilter from 'components/templates/marketplace/MarketFilter'
 import React, { FC, useContext, useEffect, Dispatch } from 'react'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
-import { MarketItemType } from 'models/Market'
+import { MarketItem } from 'models/Market'
 import Marketplace, { TableHeaders } from './marketplace/Marketplace'
 import { RnsAction } from 'store/Market/rns/rnsActions'
 
@@ -15,7 +15,7 @@ export interface MarketPageTemplateProps {
   className?: string
   filterItems: React.ReactNode
   headers: TableHeaders
-  itemCollection: MarketItemType[]
+  itemCollection: MarketItem[]
   accountRequired?: boolean
   dispatch: Dispatch<RnsAction>
   outdatedCt: number
@@ -56,10 +56,9 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
       exchangeRates: {
         currentFiat: { symbol: fiatSymbol },
         crypto: {
-          rif,
-        },
-      },
-      txType
+          rif
+        }
+      }
     },
     dispatch: mDispatch
   } = useContext(MarketStore)
@@ -86,7 +85,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
           })
         })
     }
-  }, [fiatSymbol, rifXr, displayName, dispatch])
+  }, [fiatSymbol, rifXr, displayName, mDispatch])
 
   return (
     <Grid container direction="row" className={`${classes.root} ${className}`}>

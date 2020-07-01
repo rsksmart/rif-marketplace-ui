@@ -21,9 +21,9 @@ const TxCompletePageTemplate: FC<{}> = ({ children }) => {
 
   const { dispatch } = useContext(MarketStore)
 
-  useEffect(() => () => {
-    dispatch({ type: MARKET_ACTIONS.CLEAN_UP, payload: { currentOrder: true } })
-  }, [dispatch])
+  // useEffect(() => () => {
+  //   dispatch({ type: MARKET_ACTIONS.CLEAN_UP, payload: { currentOrder: true } })
+  // }, [dispatch])
 
   return (
     <div className={classes.body}>

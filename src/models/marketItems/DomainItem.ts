@@ -1,6 +1,6 @@
-import { MarketItem } from 'models/Market'
+import { Item } from 'models/Market'
 
-export interface DomainOffer extends MarketItem {
+export interface DomainOffer extends Item {
     tokenId: string
     paymentToken: string
     domainName: string
@@ -9,7 +9,7 @@ export interface DomainOffer extends MarketItem {
     ownerAddress: string
 }
 
-export interface Domain extends MarketItem {
+export interface Domain extends Item {
     expirationDate: Date
     ownerAddress: string
     name: string
@@ -17,7 +17,7 @@ export interface Domain extends MarketItem {
     offer?: Pick<DomainOffer, 'price' | 'paymentToken'>
 }
 
-export interface SoldDomain extends MarketItem {
+export interface SoldDomain extends Item {
     tokenId: string
     paymentToken: string
     price: number

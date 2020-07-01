@@ -1,10 +1,8 @@
 import { APIController } from 'api/models/apiController';
 import { RnsFilter } from 'api/models/RnsFilter';
-import { DomainTransport, SoldDomainTransport } from 'api/models/transports';
 import network from 'blockchain/config';
 import { Domain, DomainOffer, SoldDomain } from 'models/marketItems/DomainItem';
 import { Modify } from 'utils/typeUtils';
-import { fetchMarketData } from '../cacheController';
 
 export type RnsAddresses = 'rns/v0/offers' | 'rns/v0/domains' | 'rns/v0/sold'
 
@@ -20,13 +18,7 @@ export const available_tokens = Object.keys(network).reduce((acc, tokenSymbol) =
   return acc
 }, {})
 
-
-
-const minMaxPriceTransportMapper = (_, item: { price: string }): number => parseInt(item.price, 10) / 10 ** 18
-
-const mappings = {
-  minMaxPrice: minMaxPriceTransportMapper,
-}
+export const minMaxPriceTransportMapper = (_, item: { price: string }): number => parseInt(item.price, 10) / 10 ** 18
 
 
 // export const fetchDomainOffers = async (filters: DomainOffersFilter) => {

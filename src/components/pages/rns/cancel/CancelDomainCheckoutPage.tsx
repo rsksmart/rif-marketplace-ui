@@ -126,12 +126,12 @@ const CancelDomainCheckoutPage = () => {
 
   const handleSubmit = async () => {
     if (web3 && account) {
-      dispatch({
-        type: MARKET_ACTIONS.SET_PROG_STATUS,
-        payload: {
-          isProcessing: true,
-        },
-      })
+      // dispatch({
+      //   type: MARKET_ACTIONS.SET_PROG_STATUS,
+      //   payload: {
+      //     isProcessing: true,
+      //   },
+      // })
 
       try {
         const rnsContract = getRnsContract(web3)
@@ -166,10 +166,10 @@ const CancelDomainCheckoutPage = () => {
       } catch (e) {
         logger.error('Could not complete transaction:', e)
         history.replace(ROUTES.DOMAINS.SELL)
-        dispatch({
-          type: MARKET_ACTIONS.SELECT_ITEM,
-          payload: undefined,
-        })
+        // dispatch({
+        //   type: MARKET_ACTIONS.SELECT_ITEM,
+        //   payload: undefined,
+        // })
       }
     }
   }

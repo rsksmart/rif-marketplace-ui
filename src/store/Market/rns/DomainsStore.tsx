@@ -1,15 +1,15 @@
+import { Web3Store } from '@rsksmart/rif-ui'
 import { RnsFilter } from 'api/models/RnsFilter'
 import { Domain } from 'models/marketItems/DomainItem'
-import React, { useReducer, useContext, useState, useEffect } from 'react'
+import React, { useContext, useEffect, useReducer, useState } from 'react'
+import AppStore, { AppStoreProps } from 'store/App/AppStore'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
 import { RnsListing, RnsOrder, RnsState, RnsStoreProps } from './interfaces'
 import { rnsActions, RnsReducer } from './rnsReducer'
-import AppStore, { AppStoreProps } from 'store/App/AppStore'
-import { Web3Store } from '@rsksmart/rif-ui'
 
-export type StoreName = 'rns_domains_store'
+export type StoreName = 'rns_domains'
 export type Order = Modify<RnsOrder, {
     item: Domain
 }>
@@ -29,7 +29,7 @@ export type RnsDomainsStoreProps = Modify<RnsStoreProps, {
 }>
 
 export const initialState: DomainsState = {
-    storeID: "rns_domains_store",
+    storeID: "rns_domains",
     listing: {
         items: [],
         outdatedTokens: []
@@ -48,7 +48,7 @@ const apiEventCallback = (dispatch) => ({ tokenId }) => {
 
 export const RnsDomainsStoreProvider = ({ children }) => {
     const [state, dispatch] = useReducer(domainsReducer, initialState)
-    const { state: { apis: { domains } } }: AppStoreProps = useContext(AppStore)
+    const { state: { apis: { domains: service } } }: AppStoreProps = useContext(AppStore)
     const { filters } = state as DomainsState;
     const {
         state: { account },
@@ -58,24 +58,24 @@ export const RnsDomainsStoreProvider = ({ children }) => {
 
     useEffect(() => {
         if (!isConnected) {
-            setIsConnected(!!domains.connect())
+            setIsConnected(!!service.connect())
         }
-    }, [isConnected])
+    }, [isConnected, service])
 
     // attach events
     useEffect(() => {
         if (isConnected) {
-            domains.attachEvent('updated', apiEventCallback(dispatch))
-            domains.attachEvent('patched', apiEventCallback(dispatch))
-            domains.attachEvent('created', apiEventCallback(dispatch))
-            domains.attachEvent('removed', apiEventCallback(dispatch))
+            service.attachEvent('updated', apiEventCallback(dispatch))
+            service.attachEvent('patched', apiEventCallback(dispatch))
+            service.attachEvent('created', apiEventCallback(dispatch))
+            service.attachEvent('removed', apiEventCallback(dispatch))
         }
-    }, [isConnected, domains])
+    }, [isConnected, service])
 
     // connect
     useEffect(() => {
         if (isConnected && account) {
-            domains.fetch({
+            service.fetch({
                 ...filters,
                 ownerAddress: account,
             }).then((items) => {
@@ -87,7 +87,7 @@ export const RnsDomainsStoreProvider = ({ children }) => {
                 })
             })
         }
-    }, [isConnected, account])
+    }, [isConnected, account, service, filters])
 
     const value = { state, dispatch }
     return <RnsDomainsStore.Provider value={value}>{children}</RnsDomainsStore.Provider>

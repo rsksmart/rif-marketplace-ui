@@ -1,4 +1,4 @@
-import { client } from './cacheController'
+import client from "./config";
 
 const service = client.service('/rates/v0/')
 
