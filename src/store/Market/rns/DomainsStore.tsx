@@ -49,12 +49,11 @@ const apiEventCallback = (dispatch) => ({ tokenId }) => {
 export const RnsDomainsStoreProvider = ({ children }) => {
     const [state, dispatch] = useReducer(domainsReducer, initialState)
     const { state: { apis: { domains: service } } }: AppStoreProps = useContext(AppStore)
-    const { filters } = state as DomainsState;
-    const {
-        state: { account },
-    } = useContext(Web3Store)
+    const { filters, listing: { outdatedTokens } } = state as DomainsState
+    const { state: { account } } = useContext(Web3Store)
 
     const [isConnected, setIsConnected] = useState(false)
+    const [isOutdated, setIsOutdated] = useState(true)
 
     useEffect(() => {
         if (!isConnected) {
@@ -62,7 +61,6 @@ export const RnsDomainsStoreProvider = ({ children }) => {
         }
     }, [isConnected, service])
 
-    // attach events
     useEffect(() => {
         if (isConnected) {
             service.attachEvent('updated', apiEventCallback(dispatch))
@@ -72,9 +70,14 @@ export const RnsDomainsStoreProvider = ({ children }) => {
         }
     }, [isConnected, service])
 
-    // connect
     useEffect(() => {
-        if (isConnected && account) {
+        if (outdatedTokens.length) {
+            setIsOutdated(true)
+        }
+    }, [outdatedTokens])
+
+    useEffect(() => {
+        if (account && isConnected && isOutdated && !outdatedTokens.length) {
             service.fetch({
                 ...filters,
                 ownerAddress: account,
@@ -85,9 +88,10 @@ export const RnsDomainsStoreProvider = ({ children }) => {
                         items,
                     },
                 })
+                setIsOutdated(false)
             })
         }
-    }, [isConnected, account, service, filters])
+    }, [isConnected, filters, service, account, isOutdated, outdatedTokens])
 
     const value = { state, dispatch }
     return <RnsDomainsStore.Provider value={value}>{children}</RnsDomainsStore.Provider>

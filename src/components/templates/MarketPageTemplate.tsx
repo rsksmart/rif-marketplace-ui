@@ -63,6 +63,10 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
     dispatch: mDispatch
   } = useContext(MarketStore)
 
+  useEffect(() => {
+    dispatch({ type: 'REFRESH' } as any)
+  }, [])
+
   const { rate: rifXr, displayName } = rif
   useEffect(() => {
     if (!rifXr) {

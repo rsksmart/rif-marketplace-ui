@@ -53,7 +53,7 @@ const apiEventCallback = (dispatch) => ({ tokenId }) => {
 export const RnsOffersStoreProvider = ({ children }) => {
     const [state, dispatch] = useReducer(offersReducer, initialState)
     const { state: { apis: { offers: service } } }: AppStoreProps = useContext(AppStore)
-    const { filters, listing: { outdatedTokens } } = state as RnsState;
+    const { filters, listing: { outdatedTokens } } = state as RnsState
 
     const [isConnected, setIsConnected] = useState(false)
     const [isOutdated, setIsOutdated] = useState(true)
@@ -97,13 +97,6 @@ export const RnsOffersStoreProvider = ({ children }) => {
 
     const value = { state, dispatch }
     return <RnsOffersStore.Provider value={value}>{children}</RnsOffersStore.Provider>
-
-
-    // ito - introduce similar connection mechanism as in the BlockchainStoreProvider component
-    // so I guess, we will have to introduce another flag here (connect or something) which would trigger a use effect
-    // that will connect the service (AppStore -> offers.apis.sold.connect)
-
-    // Or the offers page can connect directly, and like we did before dispatch a CONNECT_SERVICE or rather SET_SERVICE_CONNECTED
 }
 
 export default RnsOffersStore

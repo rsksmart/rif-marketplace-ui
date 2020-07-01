@@ -67,6 +67,10 @@ export const rnsActions: RnsActions = {
       ...state.order,
       isProcessing
     }
+  }),
+  CLEAR_ORDER: (state: RnsState, _: RnsPayload) => ({
+    ...state,
+    order: undefined
   })
   // ito - Add remain ing actions: [ CLEAN_LISTING, CLEAN_ORDER ]
 }
