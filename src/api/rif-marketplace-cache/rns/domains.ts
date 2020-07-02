@@ -39,7 +39,9 @@ export class DomainsController extends AbstractAPIController implements RnsAPICo
         const results = await this.service.find({
             query: {
                 placed: status === 'placed',
-                name,
+                name: !!name && {
+                    $like: name
+                },
                 ownerAddress
             }
         })

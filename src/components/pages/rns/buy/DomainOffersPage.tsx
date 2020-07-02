@@ -21,7 +21,10 @@ const DomainOffersPage: FC = () => {
   } = useContext(MarketStore)
   const {
     state: {
-      listing,
+      listing: {
+        items,
+        outdatedTokens
+      },
       filters
     },
     dispatch
@@ -43,7 +46,7 @@ const DomainOffersPage: FC = () => {
     action1: '',
   }
 
-  collection = listing.items
+  collection = items
     .map((item: DomainOffer) => {
       const {
         id,
@@ -95,7 +98,7 @@ const DomainOffersPage: FC = () => {
       itemCollection={collection}
       headers={headers}
       dispatch={dispatch}
-      outdatedCt={listing.outdatedTokens.length}
+      outdatedCt={outdatedTokens.length}
     />
   )
 }

@@ -24,13 +24,17 @@ export class OffersController extends AbstractAPIController implements RnsAPICon
         const { price, name } = filters
 
         const results = await this.service.find({
-            domain: {
-                name
-            },
-            price: {
-                $gte: price.min * 10 ** 18,
-                $lte: price.max * 10 ** 18,
-            },
+            query: {
+                domain: !!name && {
+                    name: {
+                        $like: name
+                    }
+                },
+                price: {
+                    $gte: price.min * 10 ** 18,
+                    $lte: price.max * 10 ** 18,
+                }
+            }
         })
 
         return results.map(mapFromTransport)

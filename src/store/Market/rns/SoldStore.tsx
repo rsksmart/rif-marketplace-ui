@@ -1,3 +1,4 @@
+import { Web3Store } from '@rsksmart/rif-ui'
 import { RnsFilter } from 'api/models/RnsFilter'
 import { SoldDomain } from 'models/marketItems/DomainItem'
 import React, { useReducer, useContext, useState, useEffect } from 'react'
@@ -42,10 +43,11 @@ export const initialState: RnsSoldState = {
 const RnsSoldStore = React.createContext({} as RnsSoldStoreProps | any)
 const soldDomainsReducer: RnsReducer | StoreReducer = storeReducerFactory(initialState, rnsActions as unknown as StoreActions)
 
-export const RnsStoreProvider = ({ children }) => {
+export const RnsSoldStoreProvider = ({ children }) => {
     const [state, dispatch] = useReducer(soldDomainsReducer, initialState)
     const { state: { apis: { sold: service } } }: AppStoreProps = useContext(AppStore)
     const { filters, listing: { outdatedTokens } } = state as RnsState
+    const { state: { account } } = useContext(Web3Store)
 
     const [isConnected, setIsConnected] = useState(false)
     const [isOutdated, setIsOutdated] = useState(true)
@@ -74,8 +76,11 @@ export const RnsStoreProvider = ({ children }) => {
     }, [outdatedTokens])
 
     useEffect(() => {
-        if (isConnected && isOutdated && !outdatedTokens.length) {
-            service.fetch(filters).then((items) => {
+        if (account && isConnected && isOutdated && !outdatedTokens.length) {
+            service.fetch({
+                ...filters,
+                ownerAddress: account
+            }).then((items) => {
                 dispatch({
                     type: 'SET_LISTING',
                     payload: {
@@ -85,7 +90,7 @@ export const RnsStoreProvider = ({ children }) => {
                 setIsOutdated(false)
             })
         }
-    }, [isConnected, filters, service, isOutdated, outdatedTokens])
+    }, [isConnected, filters, service, account, isOutdated, outdatedTokens])
 
     const value = { state, dispatch }
     return <RnsSoldStore.Provider value={value}>{children}</RnsSoldStore.Provider>

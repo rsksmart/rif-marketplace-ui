@@ -21,11 +21,16 @@ export class SoldDomainsController extends AbstractAPIController implements RnsA
 
     fetch = async (filters: RnsFilter): Promise<SoldDomain[]> => {
         if (!this.service) throw Error('The confirmations service is not connected')
-        const { name } = filters
+        const { name, ownerAddress } = filters
 
         const results = await this.service.find({
-            domain: {
-                name
+            query: {
+                domain: !!name && {
+                    name: {
+                        $like: name
+                    }
+                },
+                ownerAddress
             }
         })
 
