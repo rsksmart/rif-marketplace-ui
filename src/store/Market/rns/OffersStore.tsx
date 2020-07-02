@@ -1,6 +1,7 @@
-import { RnsFilter } from 'api/models/RnsFilter'
-import { DomainOffer } from 'models/marketItems/DomainItem'
 import React, { useContext, useEffect, useReducer, useState } from 'react'
+import { RnsFilter } from 'api/models/RnsFilter'
+import { OffersController } from 'api/rif-marketplace-cache/rns/offers'
+import { DomainOffer } from 'models/marketItems/DomainItem'
 import AppStore, { AppStoreProps } from 'store/App/AppStore'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
@@ -46,12 +47,11 @@ export const initialState: OffersState = {
 const RnsOffersStore = React.createContext({} as RnsOffersStoreProps | any)
 const offersReducer: RnsReducer | StoreReducer = storeReducerFactory(initialState, rnsActions as unknown as StoreActions)
 
-
-
 export const RnsOffersStoreProvider = ({ children }) => {
     const [state, dispatch] = useReducer(offersReducer, initialState)
-    const { state: { apis: { offers: service } } }: AppStoreProps = useContext(AppStore)
+    const { state: { apis: { offers } } }: AppStoreProps = useContext(AppStore)
     const { filters, listing: { outdatedTokens } } = state as RnsState
+    const service = offers as unknown as OffersController
 
     const [isConnected, setIsConnected] = useState(false)
     const [isOutdated, setIsOutdated] = useState(true)
@@ -81,14 +81,20 @@ export const RnsOffersStoreProvider = ({ children }) => {
 
     useEffect(() => {
         if (isConnected && isOutdated && !outdatedTokens.length) {
-            service.fetch(filters).then((items) => {
+            service.fetchPriceLimits().then(price => {
                 dispatch({
-                    type: 'SET_LISTING',
-                    payload: {
-                        items,
-                    },
+                    type: 'FILTER',
+                    payload: { price }
                 })
-                setIsOutdated(false)
+                service.fetch(filters).then((items) => {
+                    dispatch({
+                        type: 'SET_LISTING',
+                        payload: {
+                            items,
+                        },
+                    })
+                    setIsOutdated(false)
+                })
             })
         }
     }, [isConnected, filters, service, isOutdated, outdatedTokens])

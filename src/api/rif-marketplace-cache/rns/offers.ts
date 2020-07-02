@@ -16,27 +16,50 @@ const mapFromTransport = (item: OfferTransport): DomainOffer => ({
     ownerAddress: item.ownerAddress,
 })
 
+enum LimitType {
+    min = 1,
+    max = -1
+}
+
+const fetchPriceLimit = async (service, limitType: LimitType): Promise<number> => {
+    const query = {
+        $limit: 1,
+        $sort: {
+            price: limitType,
+        },
+        $select: ['price'],
+    }
+    const results = await service.find({ query })
+    return results.reduce((_: unknown, item: { price: string }): number => parseInt(item.price, 10) / 10 ** 18, 0)
+}
+
 export class OffersController extends AbstractAPIController implements RnsAPIController {
     path = offersAddress
 
-    fetch = async (filters: RnsFilter): Promise<DomainOffer[]> => {
+    fetch = async (filters: Partial<RnsFilter>): Promise<DomainOffer[]> => {
         if (!this.service) throw Error('The confirmations service is not connected')
         const { price, name } = filters
 
         const results = await this.service.find({
             query: {
-                domain: !!name && {
+                domain: name ? {
                     name: {
                         $like: name
                     }
-                },
-                price: {
+                } : undefined,
+                price: price ? {
                     $gte: price.min * 10 ** 18,
                     $lte: price.max * 10 ** 18,
-                }
+                } : undefined
             }
         })
 
         return results.map(mapFromTransport)
+    }
+
+    fetchPriceLimits = async (): Promise<{ min: number, max: number }> => {
+        const min = await fetchPriceLimit(this.service, LimitType.min)
+        const max = await fetchPriceLimit(this.service, LimitType.max)
+        return { min, max }
     }
 }

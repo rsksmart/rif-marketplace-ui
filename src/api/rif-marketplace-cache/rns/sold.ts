@@ -25,11 +25,11 @@ export class SoldDomainsController extends AbstractAPIController implements RnsA
 
         const results = await this.service.find({
             query: {
-                domain: !!name && {
+                domain: name ? {
                     name: {
                         $like: name
                     }
-                },
+                } : undefined,
                 ownerAddress
             }
         })
