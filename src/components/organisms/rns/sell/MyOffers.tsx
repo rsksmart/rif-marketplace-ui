@@ -1,16 +1,14 @@
-import { Web3Store } from '@rsksmart/rif-ui'
+import { IconButton } from '@material-ui/core'
 import ClearIcon from '@material-ui/icons/Clear'
+import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
+import { RnsDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import MarketStore, { TxType } from 'store/Market/MarketStore'
-import RnsDomainsStore from 'store/Market/rns/DomainsStore'
-import { AddressItem, SelectRowButton, CombinedPriceCell } from 'components/molecules'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import ROUTES from 'routes'
-import { IconButton } from '@material-ui/core'
-import { RnsDomain } from 'models/marketItems/DomainItem'
+import MarketStore from 'store/Market/MarketStore'
+import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 
 const MyOffers: FC<{}> = () => {
   const {
@@ -19,16 +17,16 @@ const MyOffers: FC<{}> = () => {
         currentFiat,
         crypto,
       },
-    }
+    },
   } = useContext(MarketStore)
 
   const {
     state: {
       listing: {
         outdatedTokens,
-        items
+        items,
       },
-      filters
+      filters,
     },
     dispatch,
   } = useContext(RnsDomainsStore)
@@ -37,10 +35,10 @@ const MyOffers: FC<{}> = () => {
     dispatch({
       type: 'FILTER',
       payload: {
-        status: 'placed'
-      }
+        status: 'placed',
+      },
     })
-  }, [])
+  }, [dispatch])
 
   const history = useHistory()
 

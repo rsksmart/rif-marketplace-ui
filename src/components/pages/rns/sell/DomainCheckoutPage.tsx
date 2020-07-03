@@ -83,7 +83,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
 
   const {
     state: {
-      order
+      order,
     }, dispatch,
   } = useContext(RnsDomainsStore)
 
@@ -118,7 +118,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
       const { item: { name } } = order
       history.replace(ROUTES.DOMAINS.DONE.SELL, { domainName: name })
       dispatch({
-        type: 'CLEAR_ORDER'
+        type: 'CLEAR_ORDER',
       } as any)
     }
   }, [order, isPendingConfirm, history, dispatch])
@@ -142,8 +142,8 @@ const DomainsCheckoutPage: FC<{}> = () => {
       dispatch({
         type: 'SET_PROGRESS',
         payload: {
-          isProcessing: true
-        }
+          isProcessing: true,
+        },
       })
 
       try {
@@ -211,7 +211,8 @@ const DomainsCheckoutPage: FC<{}> = () => {
   }
 
   return (
-    <CheckoutPageTemplate isProcessing={order.isProcessing}
+    <CheckoutPageTemplate
+      isProcessing={order.isProcessing}
       className="domains-checkout-page"
       backButtonProps={{
         backTo: 'domains',

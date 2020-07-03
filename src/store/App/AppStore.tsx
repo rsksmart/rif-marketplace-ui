@@ -1,12 +1,11 @@
-import { Application, Service } from '@feathersjs/feathers'
+import { APIController, ServiceMap } from 'api/models/apiController'
 import { ConfirmationsController } from 'api/rif-marketplace-cache/confirmationsController'
+import { DomainsController } from 'api/rif-marketplace-cache/rns/domains'
 import { OffersController } from 'api/rif-marketplace-cache/rns/offers'
+import { SoldDomainsController } from 'api/rif-marketplace-cache/rns/sold'
 import React, { Dispatch, useReducer } from 'react'
 import { AppAction } from './appActions'
 import appReducer from './appReducer'
-import { ServiceMap, APIController } from 'api/models/apiController'
-import { DomainsController } from 'api/rif-marketplace-cache/rns/domains'
-import { SoldDomainsController } from 'api/rif-marketplace-cache/rns/sold'
 
 export interface AppState {
   isError?: boolean
@@ -26,7 +25,7 @@ export const initialState: AppState = {
     confirmations: new ConfirmationsController(),
     offers: new OffersController() as APIController,
     domains: new DomainsController() as APIController,
-    sold: new SoldDomainsController() as APIController
+    sold: new SoldDomainsController() as APIController,
   },
 }
 

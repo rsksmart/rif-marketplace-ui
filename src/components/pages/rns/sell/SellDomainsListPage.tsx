@@ -15,27 +15,27 @@ const SellDomainsListPage: FC<{}> = () => {
   const {
     state: {
       filters: {
-        status: statusFilter
+        status: statusFilter,
       },
     },
   } = useContext(RnsDomainsStore)
   const {
-    dispatch: mDispatch
+    dispatch: mDispatch,
   } = useContext(MarketStore)
 
   useEffect(() => {
     mDispatch({
       type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
       payload: {
-        txType: TxType.SELL
-      }
+        txType: TxType.SELL,
+      },
     })
-  }, [])
+  }, [mDispatch])
 
   const componentPerStatus: PerStatusComponents = {
-    'owned': <MyDomains />,
-    'placed': <MyOffers />,
-    'sold': <SoldDomains />,
+    owned: <MyDomains />,
+    placed: <MyOffers />,
+    sold: <SoldDomains />,
   }
 
   return <>{componentPerStatus[statusFilter]}</>

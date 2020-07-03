@@ -5,10 +5,9 @@ import React, {
   createContext, Dispatch, useContext, useEffect, useReducer,
 } from 'react'
 import AppStore, { AppStoreProps } from 'store/App/AppStore'
+import { Modify } from 'utils/typeUtils'
 import { BlockchainAction, BLOCKCHAIN_ACTIONS } from './blockchainActions'
 import blockchainReducer from './blockchainReducer'
-import { Modify } from 'utils/typeUtils'
-
 
 export interface BlockchainState {
   confirmations: Modify<Partial<ConfirmationsItem>, {

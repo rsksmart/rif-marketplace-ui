@@ -11,7 +11,7 @@ const MyDomains: FC<{}> = () => {
   const {
     state: {
       listing,
-      filters
+      filters,
     },
     dispatch,
   } = useContext(RnsDomainsStore)
@@ -21,8 +21,8 @@ const MyDomains: FC<{}> = () => {
     dispatch({
       type: 'FILTER',
       payload: {
-        status: 'owned'
-      }
+        status: 'owned',
+      },
     })
   }, [dispatch])
 

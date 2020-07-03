@@ -20,7 +20,7 @@ const marketActions: any = {
   [NOOP]: (state: MarketStateType, _: MarketPayloadType) => state,
   [TOGGLE_TX_TYPE]: (state: MarketStateType, payload: TxTypeChangePayload) => ({
     ...state,
-    ...payload
+    ...payload,
   }),
   [SET_EXCHANGE_RATE]: (state: MarketStateType, payload: ExchangeRatePayload) => ({
     ...state,

@@ -1,6 +1,10 @@
-import { CircularProgress, createStyles, makeStyles, Theme } from '@material-ui/core'
+import {
+  CircularProgress, createStyles, makeStyles, Theme,
+} from '@material-ui/core'
 import { shortenAddress, Typography } from '@rsksmart/rif-ui'
-import React, { Dispatch, FC, useContext, useEffect } from 'react'
+import React, {
+  Dispatch, FC, useContext, useEffect,
+} from 'react'
 import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
 import BlockchainStore, { BlockchainStoreProps } from 'store/Blockchain/BlockchainStore'
 import { StoreDispatcher, StorePayload } from 'store/storeUtils/interfaces'
@@ -24,7 +28,9 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }))
 
-const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({ progMsg, text, isPendingConfirm, dispatch }) => {
+const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
+  progMsg, text, isPendingConfirm, dispatch,
+}) => {
   const classes = useStyles()
 
   const { state: { confirmations: { txHash, currentCount, targetCount } }, dispatch: bcDispatch }: BlockchainStoreProps = useContext(BlockchainStore)

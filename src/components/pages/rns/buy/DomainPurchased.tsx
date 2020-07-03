@@ -25,6 +25,7 @@ const DomainPurchased: FC<{}> = () => {
   const history = useHistory()
   const routeState = history.location.state as { domainName: string }
   const domainName = routeState?.domainName
+
   if (!domainName) return null
 
   return (

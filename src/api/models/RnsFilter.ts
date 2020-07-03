@@ -2,9 +2,8 @@ import { MarketFilter } from 'models/Market'
 
 export type DomainsSaleStatus = 'owned' | 'placed' | 'sold'
 
-
 export type PriceFilter = {
-    min: number,
+    min: number
     max: number
 }
 

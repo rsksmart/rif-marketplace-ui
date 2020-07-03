@@ -1,4 +1,4 @@
-import client from "./config";
+import client from './config'
 
 const service = client.service('/rates/v0/')
 

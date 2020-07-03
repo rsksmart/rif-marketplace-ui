@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
-import RadioFilter from './RadioFilter'
-import SearchFilter from './SearchFilter'
 import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 import { DomainsSaleStatus } from 'api/models/RnsFilter'
+import RadioFilter from './RadioFilter'
+import SearchFilter from './SearchFilter'
 
 type StatusFilter = {
   value: DomainsSaleStatus
@@ -50,10 +50,10 @@ const DomainFilters = () => {
         value={name || ''}
         onChange={(evt) => {
           const { currentTarget } = evt
-          const name = currentTarget.value.trim()
+          const value = currentTarget.value.trim()
           dispatch({
             type: 'FILTER',
-            payload: { name },
+            payload: { value },
           })
         }}
       />

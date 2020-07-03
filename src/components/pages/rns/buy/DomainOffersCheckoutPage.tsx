@@ -1,7 +1,9 @@
-import React, { FC, useContext, useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody, TableCell, TableRow, Theme } from '@material-ui/core'
-import { Button, colors, shortenAddress, Typography, Web3Store } from '@rsksmart/rif-ui'
+import {
+  Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody, TableCell, TableRow, Theme,
+} from '@material-ui/core'
+import {
+  Button, colors, shortenAddress, Typography, Web3Store,
+} from '@rsksmart/rif-ui'
 import Login from 'components/atoms/Login'
 import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
@@ -9,6 +11,10 @@ import TransactionInProgressPanel from 'components/organisms/TransactionInProgre
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import getMarketplaceContract from 'contracts/Marketplace'
 import getRifContract from 'contracts/Rif'
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react'
+import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
@@ -74,12 +80,14 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
         currentFiat,
         crypto,
       },
-    }
+    },
   } = useContext(MarketStore)
 
-  const { state: {
-    order
-  }, dispatch } = useContext(RnsOffersStore)
+  const {
+    state: {
+      order,
+    }, dispatch,
+  } = useContext(RnsOffersStore)
   const {
     state: {
       account,
@@ -118,10 +126,9 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   useEffect(() => {
     if (isPendingConfirm && order && !order.isProcessing) {
       // Post-confirmations handle
-      const { item: { domainName } } = order
-      history.replace(ROUTES.DOMAINS.DONE.BUY, { domainName })
+      history.replace(ROUTES.DOMAINS.DONE.BUY, { domainName: order.item.domainName })
       dispatch({
-        type: 'CLEAR_ORDER'
+        type: 'CLEAR_ORDER',
       } as any)
     }
   }, [order, isPendingConfirm, history, dispatch])
@@ -163,7 +170,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   const handleBuyDomain = async () => {
     if (web3 && account) {
       dispatch({
-        type: "SET_PROGRESS",
+        type: 'SET_PROGRESS',
         payload: {
           isProcessing: true,
         },

@@ -1,13 +1,10 @@
-import { Web3Store } from '@rsksmart/rif-ui'
+import { AddressItem, CombinedPriceCell } from 'components/molecules'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
+import { RnsSoldDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext } from 'react'
 import MarketStore from 'store/Market/MarketStore'
 import RnsSoldStore, { RnsSoldStoreProps } from 'store/Market/rns/SoldStore'
-import { RnsSoldDomain } from 'models/marketItems/DomainItem'
-import { AddressItem, CombinedPriceCell } from 'components/molecules'
-
-// const TX_TYPE = TxType.SELL
 
 const SoldDomains: FC<{}> = () => {
   const {
@@ -15,13 +12,13 @@ const SoldDomains: FC<{}> = () => {
       exchangeRates: {
         currentFiat,
         crypto,
-      }
+      },
     },
   } = useContext(MarketStore)
   const {
     state: {
       listing,
-      filters
+      filters,
     },
     dispatch,
   } = useContext<RnsSoldStoreProps>(RnsSoldStore)

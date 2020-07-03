@@ -31,7 +31,7 @@ const CheckoutPageTemplate: FC<CheckoutPageTemplateProps> = ({
   className = '',
   backButtonProps,
   children,
-  isProcessing
+  isProcessing,
 }) => {
   const classes = useStyles()
 

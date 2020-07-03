@@ -1,7 +1,8 @@
-import { Dispatch } from "react"
-import { RnsAction } from "./rnsActions"
+import { Dispatch } from 'react'
+import { RnsAction } from './rnsActions'
 
-
-export const attachApiEventCallback = (dispatch: Dispatch<RnsAction>) => ({ tokenId }) => {
-    dispatch({ type: 'OUTDATE', payload: { tokenId } } as any)
+const outdateTokenId = (dispatch: Dispatch<RnsAction>) => ({ tokenId }) => {
+  dispatch({ type: 'OUTDATE', payload: { tokenId } } as any)
 }
+
+export default outdateTokenId

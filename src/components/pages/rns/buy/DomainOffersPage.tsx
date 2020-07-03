@@ -10,7 +10,6 @@ import MarketStore, { TxType } from 'store/Market/MarketStore'
 import RnsOffersStore, { RnsOffersStoreProps } from 'store/Market/rns/OffersStore'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 
-
 const DomainOffersPage: FC = () => {
   const {
     state: {
@@ -19,17 +18,17 @@ const DomainOffersPage: FC = () => {
         crypto,
       },
     },
-    dispatch: mDispatch
+    dispatch: mDispatch,
   } = useContext(MarketStore)
   const {
     state: {
       listing: {
         items,
-        outdatedTokens
+        outdatedTokens,
       },
-      filters
+      filters,
     },
-    dispatch
+    dispatch,
   } = useContext<RnsOffersStoreProps>(RnsOffersStore)
   const history = useHistory()
   const {
@@ -42,10 +41,10 @@ const DomainOffersPage: FC = () => {
     mDispatch({
       type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
       payload: {
-        txType: TxType.BUY
-      }
+        txType: TxType.BUY,
+      },
     })
-  }, [])
+  }, [mDispatch])
 
   let collection = []
 
@@ -88,9 +87,9 @@ const DomainOffersPage: FC = () => {
             id={id}
             handleSelect={() => {
               dispatch({
-                type: "SET_ORDER",
+                type: 'SET_ORDER',
                 payload: {
-                  item
+                  item,
                 } as any,
               })
               history.push(ROUTES.DOMAINS.CHECKOUT.BUY)
@@ -100,7 +99,7 @@ const DomainOffersPage: FC = () => {
       }
 
       return displayItem
-    }) as any //TODO: remove as any
+    }) as any // TODO: remove as any
 
   return (
     <MarketPageTemplate

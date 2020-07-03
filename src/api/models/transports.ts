@@ -1,4 +1,3 @@
-
 export interface OfferTransport {
     creationDate?: string
     offerId: string

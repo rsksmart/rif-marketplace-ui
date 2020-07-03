@@ -1,6 +1,7 @@
 import { RnsState } from 'store/Market/rns/interfaces'
-import { FilterPayload, ListingPayload, OrderPayload, ProgressPayload, OutdatePayload, RnsPayload, RNS_ACTIONS, LimitsPayload } from './rnsActions'
-
+import {
+  FilterPayload, ListingPayload, OrderPayload, ProgressPayload, OutdatePayload, RnsPayload, RNS_ACTIONS, LimitsPayload,
+} from './rnsActions'
 
 export interface RnsReducer {
   (state: RnsState, payload: RnsPayload): RnsState
@@ -16,15 +17,15 @@ export const rnsActions: RnsActions = {
     ...state,
     filters: {
       ...state.filters,
-      ...payload
-    }
+      ...payload,
+    },
   }),
   UPDATE_LIMITS: (state: RnsState, payload: LimitsPayload) => ({
     ...state,
     limits: {
       ...state.limits,
-      ...payload
-    }
+      ...payload,
+    },
   }),
   SET_LISTING: (state: RnsState, payload: ListingPayload) => {
     const { items } = payload
@@ -33,8 +34,8 @@ export const rnsActions: RnsActions = {
       ...state,
       listing: {
         items,
-        outdatedTokens: []
-      }
+        outdatedTokens: [],
+      },
     }
   },
   OUTDATE: (state: RnsState, payload: OutdatePayload) => {
@@ -55,30 +56,30 @@ export const rnsActions: RnsActions = {
       order,
       listing: {
         ...listing,
-        outdatedTokens: Array.from(tokenSet) as [] // TS2322 Type 'number' is not assignable to type '0'
-      }
+        outdatedTokens: Array.from(tokenSet) as [], // TS2322 Type 'number' is not assignable to type '0'
+      },
     }
   },
   REFRESH: (state: RnsState, _: RnsPayload) => ({
     ...state,
     listing: {
       ...state.listing,
-      outdatedTokens: []
-    }
+      outdatedTokens: [],
+    },
   }),
   SET_ORDER: (state: RnsState, payload: OrderPayload) => ({
-    ...state, order: payload
+    ...state, order: payload,
   }),
   SET_PROGRESS: (state: RnsState, { isProcessing }: ProgressPayload) => ({
     ...state,
     order: state.order && {
       ...state.order,
-      isProcessing
-    }
+      isProcessing,
+    },
   }),
   CLEAR_ORDER: (state: RnsState, _: RnsPayload) => ({
     ...state,
-    order: undefined
-  })
+    order: undefined,
+  }),
   // ito - Add remain ing actions: [ CLEAN_LISTING, CLEAN_ORDER ]
 }

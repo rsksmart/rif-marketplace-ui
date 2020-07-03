@@ -4,12 +4,14 @@ import { Web3Store } from '@rsksmart/rif-ui'
 import { fetchExchangeRatesFor, tokenDisplayNames } from 'api/rif-marketplace-cache/exchangeRateController'
 import InfoBar from 'components/molecules/InfoBar'
 import MarketFilter from 'components/templates/marketplace/MarketFilter'
-import React, { FC, useContext, useEffect, Dispatch } from 'react'
+import React, {
+  FC, useContext, useEffect, Dispatch,
+} from 'react'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
 import { MarketItem } from 'models/Market'
-import Marketplace, { TableHeaders } from './marketplace/Marketplace'
 import { RnsAction } from 'store/Market/rns/rnsActions'
+import Marketplace, { TableHeaders } from './marketplace/Marketplace'
 
 export interface MarketPageTemplateProps {
   className?: string
@@ -45,7 +47,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   headers,
   accountRequired,
   dispatch,
-  outdatedCt
+  outdatedCt,
 }) => {
   const classes = useStyles()
   const {
@@ -56,16 +58,16 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
       exchangeRates: {
         currentFiat: { symbol: fiatSymbol },
         crypto: {
-          rif
-        }
-      }
+          rif,
+        },
+      },
     },
-    dispatch: mDispatch
+    dispatch: mDispatch,
   } = useContext(MarketStore)
 
   useEffect(() => {
     dispatch({ type: 'REFRESH' } as any)
-  }, [])
+  }, [dispatch])
 
   const { rate: rifXr, displayName } = rif
   useEffect(() => {
@@ -109,7 +111,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
                 button={{
                   onClick: () => {
                     dispatch({
-                      type: 'REFRESH'
+                      type: 'REFRESH',
                     } as any)
                   },
                 }}

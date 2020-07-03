@@ -2,13 +2,14 @@ import React, { useEffect } from 'react'
 import { Route, Switch, useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
-import { AboutPage, FAQPage, LandingPage, NotFound } from './pages'
+import {
+  AboutPage, FAQPage, LandingPage, NotFound,
+} from './pages'
 import {
   DomainOffersCheckoutPage, DomainOffersPage, DomainsCheckoutPage,
-  SellDomainsListPage, DomainListed, DomainPurchased, CancelDomainCheckoutPage, DomainCanceled
+  SellDomainsListPage, DomainListed, DomainPurchased, CancelDomainCheckoutPage, DomainCanceled,
 } from './pages/rns'
 import StoragePage from './pages/storage/StoragePage'
-
 
 const logger = Logger.getInstance()
 

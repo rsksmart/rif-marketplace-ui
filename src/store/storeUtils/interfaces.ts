@@ -1,10 +1,9 @@
-import { RnsStoreNames } from "store/Market/rns/interfaces"
-
+import { RnsStoreNames } from 'store/Market/rns/interfaces'
 
 export type AvailableStores = RnsStoreNames
 
 export interface StorePayload {
-  [key: string]: any //TODO: make into [K in keyof T]: any where T is StoreState
+  [key: string]: any // TODO: make into [K in keyof T]: any where T is StoreState
 }
 
 export interface StoreDispatcher<T> {

@@ -11,15 +11,15 @@ const DomainOfferFilters: FC<{}> = () => {
         name,
         price: {
           min: minPrice,
-          max: maxPrice
+          max: maxPrice,
         },
       },
       limits: {
         price: {
           min: absMinPrice,
-          max: absMaxPrice
-        }
-      }
+          max: absMaxPrice,
+        },
+      },
     },
     dispatch,
   } = useContext(RnsOffersStore)
@@ -30,10 +30,10 @@ const DomainOfferFilters: FC<{}> = () => {
         value={name || ''}
         onChange={(evt) => {
           const { currentTarget } = evt
-          const name = currentTarget.value.trim()
+          const value = currentTarget.value.trim()
           dispatch({
             type: 'FILTER',
-            payload: { name },
+            payload: { name: value },
           })
         }}
       />
