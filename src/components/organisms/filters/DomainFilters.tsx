@@ -13,14 +13,12 @@ const DomainFilters = () => {
   const {
     state: {
       filters: {
-        name: nameFilter,
+        name,
         status: statusFilter,
       },
     },
     dispatch,
   } = useContext(RnsDomainsStore)
-
-  const searchValue = (nameFilter && nameFilter.$like) || ''
 
   const domainStatusFilters: StatusFilter[] = [
     {
@@ -49,15 +47,13 @@ const DomainFilters = () => {
   return (
     <>
       <SearchFilter
-        value={searchValue}
+        value={name || ''}
         onChange={(evt) => {
           const { currentTarget } = evt
           const name = currentTarget.value.trim()
           dispatch({
             type: 'FILTER',
-            payload: {
-              name
-            },
+            payload: { name },
           })
         }}
       />
