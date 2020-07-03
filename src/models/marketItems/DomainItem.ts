@@ -1,6 +1,6 @@
 import { Item } from 'models/Market'
 
-export interface DomainOffer extends Item {
+export interface RnsDomainOffer extends Item {
     tokenId: string
     paymentToken: string
     domainName: string
@@ -9,15 +9,15 @@ export interface DomainOffer extends Item {
     ownerAddress: string
 }
 
-export interface Domain extends Item {
+export interface RnsDomain extends Item {
     expirationDate: Date
     ownerAddress: string
     name: string
     tokenId: string
-    offer?: Pick<DomainOffer, 'price' | 'paymentToken'>
+    offer?: Pick<RnsDomainOffer, 'price' | 'paymentToken'>
 }
 
-export interface SoldDomain extends Item {
+export interface RnsSoldDomain extends Item {
     tokenId: string
     paymentToken: string
     price: number
@@ -26,4 +26,4 @@ export interface SoldDomain extends Item {
     buyer: string
 }
 
-export type RnsItem = Domain & DomainOffer & SoldDomain
+export type RnsItem = RnsDomain & RnsDomainOffer & RnsSoldDomain

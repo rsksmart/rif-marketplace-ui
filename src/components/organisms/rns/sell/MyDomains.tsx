@@ -1,8 +1,8 @@
 import { AddressItem, SelectRowButton } from 'components/molecules'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
-import { Domain } from 'models/marketItems/DomainItem'
-import React, { FC, useContext } from 'react'
+import { RnsDomain } from 'models/marketItems/DomainItem'
+import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import RnsDomainsStore from 'store/Market/rns/DomainsStore'
@@ -17,6 +17,15 @@ const MyDomains: FC<{}> = () => {
   } = useContext(RnsDomainsStore)
   const history = useHistory()
 
+  useEffect(() => {
+    dispatch({
+      type: 'FILTER',
+      payload: {
+        status: 'owned'
+      }
+    })
+  }, [])
+
   const { items } = listing
 
   const headers = {
@@ -26,7 +35,7 @@ const MyDomains: FC<{}> = () => {
   }
 
   const collection = items
-    .map((domainItem: Domain) => {
+    .map((domainItem: RnsDomain) => {
       const {
         id,
         name,
@@ -34,7 +43,7 @@ const MyDomains: FC<{}> = () => {
         tokenId,
       } = domainItem
 
-      const pseudoResolvedName = filters?.name?.$like && (`${filters?.name?.$like}.rsk`)
+      const pseudoResolvedName = filters.name && (`${filters.name}.rsk`)
       const displayItem = {
         id,
         name: name || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,

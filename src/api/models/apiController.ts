@@ -18,6 +18,7 @@ export interface APIController {
 export abstract class AbstractAPIController implements Omit<APIController, 'fetch'> {
     path!: string
     service!: Service<any>
+
     connect = (clientOverride?: Application<any>) => {
         const app = clientOverride || client
         try {

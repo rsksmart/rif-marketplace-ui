@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useReducer, useState } from 'react'
 import { RnsFilter } from 'api/models/RnsFilter'
 import { OffersController } from 'api/rif-marketplace-cache/rns/offers'
-import { DomainOffer } from 'models/marketItems/DomainItem'
+import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import AppStore, { AppStoreProps } from 'store/App/AppStore'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
@@ -13,11 +13,11 @@ import { attachApiEventCallback } from './utils'
 export type StoreName = 'rns_offers'
 
 export type Order = Modify<RnsOrder, {
-    item: DomainOffer
+    item: RnsDomainOffer
 }>
 
 export type Listing = Modify<RnsListing, {
-    items: DomainOffer[]
+    items: RnsDomainOffer[]
 }>
 
 export type OffersState = Modify<RnsState, {
@@ -48,30 +48,33 @@ const RnsOffersStore = React.createContext({} as RnsOffersStoreProps | any)
 const offersReducer: RnsReducer | StoreReducer = storeReducerFactory(initialState, rnsActions as unknown as StoreActions)
 
 export const RnsOffersStoreProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(offersReducer, initialState)
-    const { state: { apis: { offers } } }: AppStoreProps = useContext(AppStore)
-    const { filters, listing: { outdatedTokens } } = state as RnsState
-    const service = offers as unknown as OffersController
-
-    const [isConnected, setIsConnected] = useState(false)
+    const [isReady, setIsReady] = useState(false)
     const [isOutdated, setIsOutdated] = useState(true)
 
+    const { state: { apis: { offers } } }: AppStoreProps = useContext(AppStore)
+    const api = offers as unknown as OffersController
+
+    if (!api.service) {
+        api.connect()
+    }
+
+    const [state, dispatch] = useReducer(offersReducer, initialState)
+    const { filters, listing: { outdatedTokens } } = state as RnsState
+
     useEffect(() => {
-        if (!isConnected) {
-            setIsConnected(!!service.connect())
+        const {
+            service,
+            attachEvent
+        } = api
+        if (service && !isReady) {
+            attachEvent('updated', attachApiEventCallback(dispatch))
+            attachEvent('patched', attachApiEventCallback(dispatch))
+            attachEvent('created', attachApiEventCallback(dispatch))
+            attachEvent('removed', attachApiEventCallback(dispatch))
+
+            setIsReady(true)
         }
-    }, [isConnected, service])
-
-
-    useEffect(() => {
-        if (isConnected) {
-            service.attachEvent('updated', attachApiEventCallback(dispatch))
-            service.attachEvent('patched', attachApiEventCallback(dispatch))
-            service.attachEvent('created', attachApiEventCallback(dispatch))
-            service.attachEvent('removed', attachApiEventCallback(dispatch))
-        }
-    }, [isConnected, service])
-
+    }, [api, isReady])
 
     useEffect(() => {
         if (outdatedTokens.length) {
@@ -80,24 +83,34 @@ export const RnsOffersStoreProvider = ({ children }) => {
     }, [outdatedTokens])
 
     useEffect(() => {
-        if (isConnected && isOutdated && !outdatedTokens.length) {
-            service.fetchPriceLimits().then(price => {
+        const { fetch } = api
+        if (isReady && isOutdated && !outdatedTokens.length) {
+            fetch(filters).then((items) => {
                 dispatch({
-                    type: 'FILTER',
-                    payload: { price }
+                    type: 'SET_LISTING',
+                    payload: {
+                        items,
+                    },
                 })
-                service.fetch(filters).then((items) => {
-                    dispatch({
-                        type: 'SET_LISTING',
-                        payload: {
-                            items,
-                        },
-                    })
-                    setIsOutdated(false)
-                })
+                setIsOutdated(false)
             })
         }
-    }, [isConnected, filters, service, isOutdated, outdatedTokens])
+    }, [isReady, filters, api, isOutdated, outdatedTokens])
+
+    useEffect(() => {
+        const { fetch } = api
+        if (isReady) {
+            fetch(filters).then((items) => {
+                dispatch({
+                    type: 'SET_LISTING',
+                    payload: {
+                        items,
+                    },
+                })
+                setIsOutdated(false)
+            })
+        }
+    }, [isReady, filters, api])
 
     const value = { state, dispatch }
     return <RnsOffersStore.Provider value={value}>{children}</RnsOffersStore.Provider>

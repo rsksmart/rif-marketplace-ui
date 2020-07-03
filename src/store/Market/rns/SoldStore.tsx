@@ -1,6 +1,6 @@
 import { Web3Store } from '@rsksmart/rif-ui'
 import { RnsFilter } from 'api/models/RnsFilter'
-import { SoldDomain } from 'models/marketItems/DomainItem'
+import { RnsSoldDomain } from 'models/marketItems/DomainItem'
 import React, { useReducer, useContext, useState, useEffect } from 'react'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
@@ -13,11 +13,11 @@ import { attachApiEventCallback } from './utils'
 export type StoreName = 'rns_sold'
 
 export type RnsSoldOrder = Modify<RnsOrder, {
-    item: SoldDomain
+    item: RnsSoldDomain
 }>
 
 export type RnsSoldListing = Modify<RnsListing, {
-    items: SoldDomain[]
+    items: RnsSoldDomain[]
 }>
 
 export type RnsSoldState = Modify<RnsState, {

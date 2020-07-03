@@ -1,12 +1,12 @@
 import { AbstractAPIController } from 'api/models/apiController';
-import { DomainOffer } from 'models/marketItems/DomainItem';
+import { RnsDomainOffer } from 'models/marketItems/DomainItem';
 import { available_tokens, RnsAddresses, RnsAPIController } from './common';
 import { OfferTransport } from 'api/models/transports';
-import { RnsFilter } from 'api/models/RnsFilter';
+import { RnsFilter, PriceFilter } from 'api/models/RnsFilter';
 
 export const offersAddress: RnsAddresses = 'rns/v0/offers'
 
-const mapFromTransport = (item: OfferTransport): DomainOffer => ({
+const mapFromTransport = (item: OfferTransport): RnsDomainOffer => ({
     price: parseInt(item.price, 10) / 10 ** 18,
     expirationDate: new Date(item.domain.expiration.date),
     id: item.offerId,
@@ -36,7 +36,7 @@ const fetchPriceLimit = async (service, limitType: LimitType): Promise<number> =
 export class OffersController extends AbstractAPIController implements RnsAPIController {
     path = offersAddress
 
-    fetch = async (filters: Partial<RnsFilter>): Promise<DomainOffer[]> => {
+    fetch = async (filters: Partial<RnsFilter>): Promise<RnsDomainOffer[]> => {
         if (!this.service) throw Error('The confirmations service is not connected')
         const { price, name } = filters
 
@@ -57,7 +57,7 @@ export class OffersController extends AbstractAPIController implements RnsAPICon
         return results.map(mapFromTransport)
     }
 
-    fetchPriceLimits = async (): Promise<{ min: number, max: number }> => {
+    fetchPriceLimits = async (): Promise<PriceFilter> => {
         const min = await fetchPriceLimit(this.service, LimitType.min)
         const max = await fetchPriceLimit(this.service, LimitType.max)
         return { min, max }

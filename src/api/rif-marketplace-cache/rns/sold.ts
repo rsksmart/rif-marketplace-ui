@@ -1,12 +1,12 @@
 import { AbstractAPIController } from 'api/models/apiController';
 import { RnsFilter } from 'api/models/RnsFilter';
 import { SoldDomainTransport } from 'api/models/transports';
-import { SoldDomain } from 'models/marketItems/DomainItem';
+import { RnsSoldDomain } from 'models/marketItems/DomainItem';
 import { available_tokens, RnsAddresses, RnsAPIController } from './common';
 
 export const soldDomainsAddress: RnsAddresses = 'rns/v0/sold'
 
-const mapFromTransport = (item: SoldDomainTransport): SoldDomain => ({
+const mapFromTransport = (item: SoldDomainTransport): RnsSoldDomain => ({
     id: item.id,
     paymentToken: available_tokens[item.paymentToken.toLowerCase()],
     price: parseInt(item.price, 10) / 10 ** 18,
@@ -19,7 +19,7 @@ const mapFromTransport = (item: SoldDomainTransport): SoldDomain => ({
 export class SoldDomainsController extends AbstractAPIController implements RnsAPIController {
     path = soldDomainsAddress
 
-    fetch = async (filters: RnsFilter): Promise<SoldDomain[]> => {
+    fetch = async (filters: RnsFilter): Promise<RnsSoldDomain[]> => {
         if (!this.service) throw Error('The confirmations service is not connected')
         const { name, ownerAddress } = filters
 

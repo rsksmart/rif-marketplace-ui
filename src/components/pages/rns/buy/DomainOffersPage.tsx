@@ -2,7 +2,7 @@ import { Web3Store } from '@rsksmart/rif-ui'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
-import { DomainOffer } from 'models/marketItems/DomainItem'
+import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import React, { FC, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
@@ -47,7 +47,7 @@ const DomainOffersPage: FC = () => {
   }
 
   collection = items
-    .map((item: DomainOffer) => {
+    .map((item: RnsDomainOffer) => {
       const {
         id,
         price,

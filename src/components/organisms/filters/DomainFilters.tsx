@@ -52,8 +52,7 @@ const DomainFilters = () => {
         value={searchValue}
         onChange={(evt) => {
           const { currentTarget } = evt
-          const value = currentTarget.value.trim()
-          const name = value ? { $like: value } : undefined
+          const name = currentTarget.value.trim()
           dispatch({
             type: 'FILTER',
             payload: {

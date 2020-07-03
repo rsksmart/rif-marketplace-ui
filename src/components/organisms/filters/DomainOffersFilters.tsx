@@ -1,96 +1,84 @@
-import React, { FC, useContext, useState } from 'react'
+import React, { FC, useContext, useState, useEffect } from 'react'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
 import RangeFilter from './RangeFilter'
 import SearchFilter from './SearchFilter'
+import { RnsFilter, PriceFilter } from 'api/models/RnsFilter'
+import RnsOffersStore from 'store/Market/rns/OffersStore'
+import AppStore from 'store/App/AppStore'
 
 const DomainOfferFilters: FC<{}> = () => {
-  // const {
-  //   state: {
-  //     currentListing,
-  //     filters: {
-  //       domainOffers: {
-  //         domain,
-  //         price: {
-  //           $gte: curMinPrice,
-  //           $lte: curMaxPrice,
-  //         },
-  //       },
-  //     },
-  //   },
-  //   dispatch,
-  // } = useContext(MarketStore)
-  // const nameFilter = domain?.name
-  // const servicePath = currentListing?.servicePath
-  // const searchValue = (nameFilter && nameFilter.$like) || ''
-  // const [absMinPrice, setAbsMinPrice] = useState(curMinPrice)
-  // const [absMaxPrice, setAbsMaxPrice] = useState(curMaxPrice)
+  const {
+    state: {
+      filters: {
+        name,
+        price: {
+          min: minPrice,
+          max: maxPrice
+        },
+      },
+    },
+    dispatch,
+  } = useContext(RnsOffersStore)
+  const {
+    state: {
+      apis: {
+        offers: {
+          fetchPriceLimits
+        }
+      }
+    }
+  } = useContext(AppStore)
 
-  // useEffect(() => {
-  //   if (servicePath) {
-  //     fetchMinMaxPrice()
-  //       .then(({ minPrice, maxPrice }) => {
-  //         dispatch({
-  //           type: MARKET_ACTIONS.SET_FILTER,
-  //           payload: {
-  //             filterItems: {
-  //               price: {
-  //                 $gte: minPrice,
-  //                 $lte: maxPrice,
-  //               },
-  //             },
-  //           },
-  //         })
-  //         setAbsMinPrice(minPrice)
-  //         setAbsMaxPrice(maxPrice)
-  //       })
-  //   }
-  // }, [servicePath, dispatch])
+  const [absMinPrice, setAbsMinPrice] = useState(minPrice)
+  const [absMaxPrice, setAbsMaxPrice] = useState(maxPrice)
+
+  useEffect(() => {
+    const fetchLimits = async () => {
+      const price = await fetchPriceLimits()
+      dispatch({
+        type: 'FILTER',
+        payload: { price }
+      })
+
+      setAbsMinPrice(price.min)
+      setAbsMaxPrice(price.max)
+    }
+    fetchLimits()
+  }, [])
+
 
   return (
     <>
-      {/* <SearchFilter
-        value={searchValue}
+      <SearchFilter
+        value={name || ''}
         onChange={(evt) => {
           const { currentTarget } = evt
-          const value = currentTarget.value.trim()
+          const name = currentTarget.value.trim()
           dispatch({
-            type: MARKET_ACTIONS.SET_FILTER,
-            payload: {
-              filterItems: {
-                domain: value && {
-                  name: { $like: value },
-                },
-              },
-            },
+            type: 'FILTER',
+            payload: { name },
           })
         }}
       />
       <RangeFilter
         title="Price"
         values={{
-          start: curMinPrice,
-          end: curMaxPrice,
+          start: minPrice,
+          end: maxPrice,
         }}
         edgeValues={{
           min: absMinPrice,
           max: absMaxPrice,
         }}
         unit="RIF"
-        handleChange={({ min, max }) => {
+        handleChange={(price: PriceFilter) => {
           dispatch({
-            type: MARKET_ACTIONS.SET_FILTER,
-            payload: {
-              filterItems: {
-                price: {
-                  $gte: min,
-                  $lte: max,
-                },
-              },
-            },
+            type: 'FILTER',
+            payload: { price },
           })
         }}
-      /> */}
+      />
     </>
   )
 }

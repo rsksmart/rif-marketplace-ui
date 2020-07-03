@@ -4,7 +4,7 @@ import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import React, { FC, useContext } from 'react'
 import MarketStore from 'store/Market/MarketStore'
 import RnsSoldStore, { RnsSoldStoreProps } from 'store/Market/rns/SoldStore'
-import { SoldDomain } from 'models/marketItems/DomainItem'
+import { RnsSoldDomain } from 'models/marketItems/DomainItem'
 import { AddressItem, CombinedPriceCell } from 'components/molecules'
 
 // const TX_TYPE = TxType.SELL
@@ -38,7 +38,7 @@ const SoldDomains: FC<{}> = () => {
   }
 
   const collection = items
-    .map((domainItem: SoldDomain) => {
+    .map((domainItem: RnsSoldDomain) => {
       const {
         id,
         domainName,

@@ -11,7 +11,7 @@ export interface ListingPayload {
   items: RnsItem[]
 }
 
-export interface RefreshPayload {
+export interface OutdatePayload {
   tokenId: string
 }
 
@@ -22,7 +22,7 @@ export type ProgressPayload = Pick<RnsOrder, 'isProcessing'>
 export type RnsPayload = StorePayload &
   FilterPayload &
   ListingPayload &
-  RefreshPayload &
+  OutdatePayload &
   OrderPayload &
   ProgressPayload
 
