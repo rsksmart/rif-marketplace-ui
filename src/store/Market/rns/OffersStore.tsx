@@ -23,6 +23,7 @@ export type Listing = Modify<RnsListing, {
 export type OffersState = Modify<RnsState, {
     listing: Listing
     filters: Pick<RnsFilter, 'name' | 'price'>
+    limits: Pick<RnsFilter, 'price'>
     order?: Order
 }>
 
@@ -42,6 +43,12 @@ export const initialState: OffersState = {
             max: 0
         }
     },
+    limits: {
+        price: {
+            min: 0,
+            max: 0
+        }
+    }
 }
 
 const RnsOffersStore = React.createContext({} as RnsOffersStoreProps | any)
@@ -49,7 +56,7 @@ const offersReducer: RnsReducer | StoreReducer = storeReducerFactory(initialStat
 
 export const RnsOffersStoreProvider = ({ children }) => {
     const [isReady, setIsReady] = useState(false)
-    const [isOutdated, setIsOutdated] = useState(true)
+    const [isOutdated, setIsOutdated] = useState(false)
 
     const { state: { apis: { offers } } }: AppStoreProps = useContext(AppStore)
     const api = offers as unknown as OffersController
@@ -64,7 +71,8 @@ export const RnsOffersStoreProvider = ({ children }) => {
     useEffect(() => {
         const {
             service,
-            attachEvent
+            attachEvent,
+            fetchPriceLimits
         } = api
         if (service && !isReady) {
             attachEvent('updated', attachApiEventCallback(dispatch))
@@ -72,7 +80,20 @@ export const RnsOffersStoreProvider = ({ children }) => {
             attachEvent('created', attachApiEventCallback(dispatch))
             attachEvent('removed', attachApiEventCallback(dispatch))
 
-            setIsReady(true)
+            const fetchLimits = async () => {
+                const price = await fetchPriceLimits()
+                dispatch({
+                    type: 'UPDATE_LIMITS',
+                    payload: { price }
+                })
+                dispatch({
+                    type: 'FILTER',
+                    payload: { price }
+                })
+                setIsReady(true)
+            }
+            fetchLimits()
+
         }
     }, [api, isReady])
 
@@ -83,19 +104,23 @@ export const RnsOffersStoreProvider = ({ children }) => {
     }, [outdatedTokens])
 
     useEffect(() => {
-        const { fetch } = api
-        if (isReady && isOutdated && !outdatedTokens.length) {
-            fetch(filters).then((items) => {
+        const { fetchPriceLimits } = api
+        if (isOutdated && !outdatedTokens.length) {
+            const fetchLimits = async () => {
+                const price = await fetchPriceLimits()
                 dispatch({
-                    type: 'SET_LISTING',
-                    payload: {
-                        items,
-                    },
+                    type: 'UPDATE_LIMITS',
+                    payload: { price }
                 })
-                setIsOutdated(false)
-            })
+                dispatch({
+                    type: 'FILTER',
+                    payload: { price }
+                })
+                setIsReady(true)
+            }
+            fetchLimits()
         }
-    }, [isReady, filters, api, isOutdated, outdatedTokens])
+    }, [api, isOutdated, outdatedTokens])
 
     useEffect(() => {
         const { fetch } = api

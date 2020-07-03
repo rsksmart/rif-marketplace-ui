@@ -1,6 +1,5 @@
 import { RnsState } from 'store/Market/rns/interfaces'
-import { FilterPayload, ListingPayload, OrderPayload, ProgressPayload, OutdatePayload, RnsPayload, RNS_ACTIONS } from './rnsActions'
-import { stat } from 'fs'
+import { FilterPayload, ListingPayload, OrderPayload, ProgressPayload, OutdatePayload, RnsPayload, RNS_ACTIONS, LimitsPayload } from './rnsActions'
 
 
 export interface RnsReducer {
@@ -17,6 +16,13 @@ export const rnsActions: RnsActions = {
     ...state,
     filters: {
       ...state.filters,
+      ...payload
+    }
+  }),
+  UPDATE_LIMITS: (state: RnsState, payload: LimitsPayload) => ({
+    ...state,
+    limits: {
+      ...state.limits,
       ...payload
     }
   }),

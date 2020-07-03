@@ -23,6 +23,7 @@ export interface RnsListing {
 export interface RnsState extends StoreState {
   listing: RnsListing
   filters: Partial<RnsFilter>
+  limits?: Partial<RnsFilter>
   order?: RnsOrder
 }
 

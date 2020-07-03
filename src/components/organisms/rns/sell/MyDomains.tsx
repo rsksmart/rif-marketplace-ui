@@ -24,7 +24,7 @@ const MyDomains: FC<{}> = () => {
         status: 'owned'
       }
     })
-  }, [])
+  }, [dispatch])
 
   const { items } = listing
 
