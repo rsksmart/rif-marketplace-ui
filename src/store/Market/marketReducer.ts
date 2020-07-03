@@ -18,21 +18,10 @@ const {
 
 const marketActions: any = {
   [NOOP]: (state: MarketStateType, _: MarketPayloadType) => state,
-  [TOGGLE_TX_TYPE]: (state: MarketStateType, payload: TxTypeChangePayload) => {
-    // const { currentListing } = state
-    // const { txType } = payload
-
-    // if (!currentListing) return state
-    return {
-      ...state,
-      // currentListing: {
-      //   txType,
-      //   items: [],
-      //   servicePath: '',
-      //   listingType: currentListing.listingType, // TODO: It would be better blank but that creates problems. This may be an issue also, though.
-      // },
-    }
-  },
+  [TOGGLE_TX_TYPE]: (state: MarketStateType, payload: TxTypeChangePayload) => ({
+    ...state,
+    ...payload
+  }),
   [SET_EXCHANGE_RATE]: (state: MarketStateType, payload: ExchangeRatePayload) => ({
     ...state,
     exchangeRates: {

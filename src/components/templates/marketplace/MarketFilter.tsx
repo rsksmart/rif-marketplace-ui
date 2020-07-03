@@ -41,13 +41,12 @@ const MarketFilter: FC = ({ children }) => {
   const classes = useStyles()
   const {
     state: {
-      currentListing,
+      txType,
     },
     dispatch,
   } = useContext(MarketStore)
 
   const history = useHistory()
-  const txType = currentListing?.txType >= 1 ? 1 : 0
 
   const switchTxType = () => {
     dispatch({

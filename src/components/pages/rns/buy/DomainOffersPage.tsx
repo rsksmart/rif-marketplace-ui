@@ -3,11 +3,12 @@ import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/mole
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
-import React, { FC, useContext } from 'react'
+import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import MarketStore from 'store/Market/MarketStore'
+import MarketStore, { TxType } from 'store/Market/MarketStore'
 import RnsOffersStore, { RnsOffersStoreProps } from 'store/Market/rns/OffersStore'
+import { MARKET_ACTIONS } from 'store/Market/marketActions'
 
 
 const DomainOffersPage: FC = () => {
@@ -18,6 +19,7 @@ const DomainOffersPage: FC = () => {
         crypto,
       },
     },
+    dispatch: mDispatch
   } = useContext(MarketStore)
   const {
     state: {
@@ -35,6 +37,15 @@ const DomainOffersPage: FC = () => {
       account,
     },
   } = useContext(Web3Store)
+
+  useEffect(() => {
+    mDispatch({
+      type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
+      payload: {
+        txType: TxType.BUY
+      }
+    })
+  }, [])
 
   let collection = []
 

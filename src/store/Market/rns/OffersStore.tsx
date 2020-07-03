@@ -112,10 +112,6 @@ export const RnsOffersStoreProvider = ({ children }) => {
                     type: 'UPDATE_LIMITS',
                     payload: { price }
                 })
-                dispatch({
-                    type: 'FILTER',
-                    payload: { price }
-                })
                 setIsReady(true)
             }
             fetchLimits()
