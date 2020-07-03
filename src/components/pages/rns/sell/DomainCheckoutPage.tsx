@@ -113,10 +113,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
   const [currency, setCurrency] = useState('0')
 
   useEffect(() => {
-    if (!order) {
-      // Redirect from direct navigation
-      history.replace(ROUTES.LANDING)
-    } else if (isPendingConfirm && !order.isProcessing) {
+    if (isPendingConfirm && order && !order.isProcessing) {
       // Post-confirmations handle
       const { item: { name } } = order
       history.replace(ROUTES.DOMAINS.DONE.SELL, { domainName: name })
@@ -126,7 +123,10 @@ const DomainsCheckoutPage: FC<{}> = () => {
     }
   }, [order, isPendingConfirm, history, dispatch])
 
-  if (!order) return null
+  if (!order) {
+    history.replace(ROUTES.LANDING)
+    return null
+  }
 
   const {
     item: {

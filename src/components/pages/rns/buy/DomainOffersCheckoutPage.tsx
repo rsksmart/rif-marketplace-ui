@@ -116,13 +116,6 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   }, [web3, account, tokenId, isFundsConfirmed])
 
   useEffect(() => {
-    if (!order) {
-      // Redirect from direct navigation
-      history.replace(ROUTES.LANDING)
-    }
-  }, [order, isPendingConfirm, history])
-
-  useEffect(() => {
     if (isPendingConfirm && order && !order.isProcessing) {
       // Post-confirmations handle
       const { item: { domainName } } = order
@@ -133,7 +126,10 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
     }
   }, [order, isPendingConfirm, history, dispatch])
 
-  if (!order) return null
+  if (!order) {
+    history.replace(ROUTES.LANDING)
+    return null
+  }
 
   const {
     item: {

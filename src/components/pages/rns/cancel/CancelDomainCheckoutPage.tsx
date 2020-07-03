@@ -18,6 +18,7 @@ import getMarketplaceContract from 'contracts/Marketplace'
 import getRnsContract from 'contracts/Rns'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
 import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
+import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 
 const logger = Logger.getInstance()
 
@@ -67,14 +68,17 @@ const CancelDomainCheckoutPage = () => {
   const history = useHistory()
   const {
     state: {
-      currentOrder,
       exchangeRates: {
         currentFiat,
         crypto,
       },
     },
-    dispatch,
   } = useContext(MarketStore)
+  const {
+    state: {
+      order
+    }, dispatch
+  } = useContext(RnsDomainsStore)
   const classes = useStyles()
   const {
     state: {
@@ -86,16 +90,20 @@ const CancelDomainCheckoutPage = () => {
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
 
   useEffect(() => {
-    if (!currentOrder) {
-      // Redirect from direct navigation
-      history.replace(ROUTES.LANDING)
-    } else if (isPendingConfirm && !currentOrder.isProcessing) {
+    if (isPendingConfirm && order && !order.isProcessing) {
       // Post-confirmations handle
-      history.replace(ROUTES.DOMAINS.DONE.CANCEL)
+      const { item: { domainName } } = order
+      history.replace(ROUTES.DOMAINS.DONE.BUY, { domainName })
+      dispatch({
+        type: 'CLEAR_ORDER'
+      } as any)
     }
-  }, [currentOrder, isPendingConfirm, history])
+  }, [order, isPendingConfirm, history, dispatch])
 
-  if (!currentOrder) return null
+  if (!order) {
+    history.replace(ROUTES.LANDING)
+    return null
+  }
 
   const {
     item: {
@@ -105,7 +113,7 @@ const CancelDomainCheckoutPage = () => {
       offer,
     },
     isProcessing,
-  } = currentOrder
+  } = order
 
   const currency = crypto[offer.paymentToken]
 
@@ -126,12 +134,12 @@ const CancelDomainCheckoutPage = () => {
 
   const handleSubmit = async () => {
     if (web3 && account) {
-      // dispatch({
-      //   type: MARKET_ACTIONS.SET_PROG_STATUS,
-      //   payload: {
-      //     isProcessing: true,
-      //   },
-      // })
+      dispatch({
+        type: "SET_PROGRESS",
+        payload: {
+          isProcessing: true,
+        },
+      })
 
       try {
         const rnsContract = getRnsContract(web3)
@@ -166,10 +174,10 @@ const CancelDomainCheckoutPage = () => {
       } catch (e) {
         logger.error('Could not complete transaction:', e)
         history.replace(ROUTES.DOMAINS.SELL)
-        // dispatch({
-        //   type: MARKET_ACTIONS.SELECT_ITEM,
-        //   payload: undefined,
-        // })
+        dispatch({
+          type: 'SET_ORDER',
+          payload: undefined,
+        })
       }
     }
   }
