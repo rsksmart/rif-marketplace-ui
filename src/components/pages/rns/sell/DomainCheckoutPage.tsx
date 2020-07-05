@@ -145,11 +145,11 @@ const DomainsCheckoutPage: FC<{}> = () => {
         const gasPrice = await web3.eth.getGasPrice()
 
         // Send approval transaction
-        const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId, web3, { from: account, gasPrice })
+        const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId, { from: account, gasPrice })
         logger.info('approveReceipt:', approveReceipt)
 
         // Send Placement transaction
-        const placeReceipt = await marketPlaceContract.place(tokenId, rifTokenAddress, price, web3, { from: account, gasPrice })
+        const placeReceipt = await marketPlaceContract.place(tokenId, rifTokenAddress, price, { from: account, gasPrice })
 
         if (!placeReceipt) {
           throw Error('Something unexpected happened. No receipt received from the place transaction.')

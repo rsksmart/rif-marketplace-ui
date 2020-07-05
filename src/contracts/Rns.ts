@@ -3,11 +3,8 @@ import Web3 from 'web3'
 import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
-import contractAdds from 'ui-config.json'
-import waitForReceipt from './utils'
-
-const network: string = process.env.REACT_APP_NETWORK || 'ganache'
-const rnsAddress = contractAdds[network].rnsDotRskOwner.toLowerCase()
+import { rnsAddress } from './config'
+import waitForReceipt, { TransactionOptions } from './utils'
 
 class RNSContract {
   public static getInstance(web3: Web3): RNSContract {
@@ -21,25 +18,36 @@ class RNSContract {
 
   private contract: Contract
 
+  private web3: Web3
+
   private constructor(web3: Web3) {
     this.contract = new web3.eth.Contract(ERC721.abi as AbiItem[], rnsAddress)
+    this.web3 = web3
   }
 
   // approve: Token transfer approval
-  public approve = async (contractAddress, tokenId, web3: Web3, txOptions): Promise<TransactionReceipt> => {
+  public approve = async (contractAddress: string, tokenId: string, txOptions: TransactionOptions): Promise<TransactionReceipt> => {
+    const { from, gasPrice } = txOptions
+    const gas = 100000
     const approveReceipt = await new Promise<TransactionReceipt>((resolve, reject) => {
-      this.contract.methods.approve(contractAddress, tokenId).send({ from: txOptions.from, gas: 100000, gasPrice: txOptions.gasPrice },
+      this.contract.methods.approve(contractAddress, tokenId).send({ from, gas, gasPrice },
         async (err, txHash) => {
           if (err) return reject(err)
           try {
-            const receipt = await waitForReceipt(txHash, web3)
+            const receipt = await waitForReceipt(txHash, this.web3)
             return resolve(receipt)
           } catch (e) {
-            return reject(new Error(e))
+            return reject(e)
           }
         })
     })
     return approveReceipt
+  }
+
+  // unapprove: Token transfer unapproval
+  public unapprove = (tokenId: string, txOptions: TransactionOptions): Promise<TransactionReceipt> => {
+    const contractAddress = '0x0000000000000000000000000000000000000000'
+    return this.approve(contractAddress, tokenId, txOptions)
   }
 }
 

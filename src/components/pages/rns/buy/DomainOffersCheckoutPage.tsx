@@ -179,7 +179,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
         const gasPrice = await web3.eth.getGasPrice()
 
         // Send Transfer and call transaction
-        const transferReceipt = await rifContract.transferAndCall(marketPlaceAddress, tokenPrice, tokenId, web3, { from: account, gasPrice })
+        const transferReceipt = await rifContract.transferAndCall(marketPlaceAddress, tokenPrice, tokenId, { from: account, gasPrice })
 
         if (!transferReceipt) {
           throw Error('Something unexpected happened. No receipt received from the transfer transaction.')

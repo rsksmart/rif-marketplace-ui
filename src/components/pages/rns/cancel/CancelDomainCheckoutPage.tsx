@@ -141,11 +141,11 @@ const CancelDomainCheckoutPage = () => {
         const gasPrice = await web3.eth.getGasPrice()
 
         // Send unapproval transaction
-        const unapproveReceipt = await rnsContract.approve('0x0000000000000000000000000000000000000000', tokenId, web3, { from: account, gasPrice })
+        const unapproveReceipt = await rnsContract.unapprove(tokenId, { from: account, gasPrice })
         logger.info('unapproveReceipt:', unapproveReceipt)
 
         // Send Unplacement transaction
-        const unplaceReceipt = await marketPlaceContract.unplace(tokenId, web3, { from: account, gasPrice })
+        const unplaceReceipt = await marketPlaceContract.unplace(tokenId, { from: account, gasPrice })
 
         if (!unplaceReceipt) {
           throw Error('Something unexpected happened. No receipt received from the unplace transaction.')

@@ -1,12 +1,20 @@
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 
-function waitForReceipt(txHash, web3: Web3) {
+export interface TransactionOptions {
+  from?: string
+  gas?: number
+  gasPrice?: string
+}
+
+const TIMEOUT_LIMIT = 120000
+const POLLING_INTERVAL = 2000
+
+function waitForReceipt(txHash: string, web3: Web3): Promise<TransactionReceipt> {
   let timeElapsed = 0
-  const interval = 2000
   return new Promise<TransactionReceipt>((resolve, reject) => {
     const checkInterval = setInterval(async () => {
-      timeElapsed += interval
+      timeElapsed += POLLING_INTERVAL
       const receipt = await web3.eth.getTransactionReceipt(txHash)
 
       if (receipt != null) {
@@ -14,10 +22,10 @@ function waitForReceipt(txHash, web3: Web3) {
         resolve(receipt)
       }
 
-      if (timeElapsed > 120000) {
+      if (timeElapsed > TIMEOUT_LIMIT) {
         reject(new Error('Transaction receipt could not be retrieved - Timeout'))
       }
-    }, interval)
+    }, POLLING_INTERVAL)
   })
 }
 

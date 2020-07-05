@@ -3,11 +3,8 @@ import Web3 from 'web3'
 import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
-import contractAdds from 'ui-config.json'
-import waitForReceipt from './utils'
-
-const network: string = process.env.REACT_APP_NETWORK || 'ganache'
-const marketPlaceAddress = contractAdds[network].marketplace.toLowerCase()
+import { marketPlaceAddress } from './config'
+import waitForReceipt, { TransactionOptions } from './utils'
 
 class MarketplaceContract {
   public static getInstance(web3: Web3): MarketplaceContract {
@@ -21,26 +18,30 @@ class MarketplaceContract {
 
   private contract: Contract
 
+  private web3: Web3
+
   private constructor(web3: Web3) {
     this.contract = new web3.eth.Contract(ERC721SimplePlacementsV1.abi as AbiItem[], marketPlaceAddress)
+    this.web3 = web3
   }
 
   // Place: Proxy function for placement transaction
-  public place = async (tokenId, rifTokenAddress, price, web3: Web3, txOptions): Promise<TransactionReceipt> => {
+  public place = async (tokenId: string, rifTokenAddress: string, price: string, txOptions: TransactionOptions): Promise<TransactionReceipt> => {
     // Get gas limit for Placement
-    const estimatedGas = await this.contract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).estimateGas({ from: txOptions.from, gasPrice: txOptions.gasPrice })
+    const { from, gasPrice } = txOptions
+    const estimatedGas = await this.contract.methods.place(tokenId, rifTokenAddress, this.web3.utils.toWei(price)).estimateGas({ from, gasPrice })
     const gas = Math.floor(estimatedGas * 1.1)
 
     // Placement Transaction
     const placeReceipt = await new Promise<TransactionReceipt>((resolve, reject) => {
-      this.contract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).send({ from: txOptions.from, gas, gasPrice: txOptions.gasPrice },
+      this.contract.methods.place(tokenId, rifTokenAddress, this.web3.utils.toWei(price)).send({ from, gas, gasPrice },
         async (err, txHash) => {
           if (err) return reject(err)
           try {
-            const receipt = await waitForReceipt(txHash, web3)
+            const receipt = await waitForReceipt(txHash, this.web3)
             return resolve(receipt)
           } catch (e) {
-            return reject(new Error(e))
+            return reject(e)
           }
         })
     })
@@ -48,29 +49,31 @@ class MarketplaceContract {
   }
 
   // Unplace: Proxy function for unplacement transaction
-  public unplace = async (tokenId, web3: Web3, txOptions): Promise<TransactionReceipt> => {
+  public unplace = async (tokenId: string, txOptions: TransactionOptions): Promise<TransactionReceipt> => {
     // Get gas limit for Unplacement
-    const estimatedGas = await this.contract.methods.unplace(tokenId).estimateGas({ from: txOptions.from, gasPrice: txOptions.gasPrice })
+    const { from, gasPrice } = txOptions
+    const estimatedGas = await this.contract.methods.unplace(tokenId).estimateGas({ from, gasPrice })
     const gas = Math.floor(estimatedGas * 1.1)
 
     // Unplacement Transaction
     const unplaceReceipt = await new Promise<TransactionReceipt>((resolve, reject) => {
-      this.contract.methods.unplace(tokenId).send({ from: txOptions.from, gas, gasPrice: txOptions.gasPrice },
+      this.contract.methods.unplace(tokenId).send({ from, gas, gasPrice },
         async (err, txHash) => {
           if (err) return reject(err)
           try {
-            const receipt = await waitForReceipt(txHash, web3)
+            const receipt = await waitForReceipt(txHash, this.web3)
             return resolve(receipt)
           } catch (e) {
-            return reject(new Error(e))
+            return reject(e)
           }
         })
     })
     return unplaceReceipt
   }
 
-  public getPlacement = async (tokenId, txOptions): Promise<Array<string | number>> => {
-    const placement = await this.contract.methods.placement(tokenId).call({ from: txOptions.from })
+  public getPlacement = (tokenId: string, txOptions: TransactionOptions): Promise<Array<string>> => {
+    const { from } = txOptions
+    const placement = this.contract.methods.placement(tokenId).call({ from })
     return placement
   }
 }
