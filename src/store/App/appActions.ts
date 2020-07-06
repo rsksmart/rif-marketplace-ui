@@ -1,10 +1,6 @@
 import { StoreDispatcher } from 'store/storeUtils/interfaces'
 
-export enum APP_ACTIONS {
-  SET_IS_LOADING = 'SET_IS_LOADING',
-  SET_MESSAGE = 'SET_MESSAGE',
-  UNSET = 'UNSET',
-}
+export type APP_ACTIONS = 'SET_IS_LOADING' | 'SET_MESSAGE' | 'NOOP'
 
 export interface LoadingPayloadType {
   readonly isLoading?: boolean

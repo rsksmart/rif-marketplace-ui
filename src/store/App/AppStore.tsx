@@ -4,10 +4,14 @@ import { DomainsController } from 'api/rif-marketplace-cache/rns/domains'
 import { OffersController } from 'api/rif-marketplace-cache/rns/offers'
 import { SoldDomainsController } from 'api/rif-marketplace-cache/rns/sold'
 import React, { Dispatch, useReducer } from 'react'
+import { StoreState, StoreReducer, StoreActions } from 'store/storeUtils/interfaces'
+import storeReducerFactory from 'store/storeUtils/reducer'
 import { AppAction } from './appActions'
-import appReducer from './appReducer'
+import { AppReducer, appActions } from './appReducer'
 
-export interface AppState {
+export type StoreName = 'app'
+
+export interface AppState extends StoreState {
   isError?: boolean
   isLoading?: boolean
   message?: string
@@ -21,6 +25,7 @@ export interface AppStoreProps {
 }
 
 export const initialState: AppState = {
+  storeID: 'app',
   apis: {
     confirmations: new ConfirmationsController(),
     offers: new OffersController() as APIController,
@@ -30,6 +35,7 @@ export const initialState: AppState = {
 }
 
 const AppStore = React.createContext({} as AppStoreProps | any)
+const appReducer: AppReducer | StoreReducer = storeReducerFactory(initialState, appActions as unknown as StoreActions)
 
 export const AppStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState)

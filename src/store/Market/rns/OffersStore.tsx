@@ -70,7 +70,11 @@ export const RnsOffersStoreProvider = ({ children }) => {
   }
 
   const [state, dispatch] = useReducer(offersReducer, initialState)
-  const { filters, listing: { outdatedTokens } } = state as RnsState
+  const {
+    filters,
+    limits,
+    listing: { outdatedTokens },
+  } = state as RnsState
 
   useEffect(() => {
     const {
@@ -137,7 +141,7 @@ export const RnsOffersStoreProvider = ({ children }) => {
         setIsOutdated(false)
       })
     }
-  }, [isReady, filters, api])
+  }, [isReady, filters, limits, api])
 
   const value = { state, dispatch }
   return <RnsOffersStore.Provider value={value}>{children}</RnsOffersStore.Provider>
