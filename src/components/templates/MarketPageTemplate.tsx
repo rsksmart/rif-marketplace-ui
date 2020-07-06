@@ -64,10 +64,6 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
     dispatch: mDispatch,
   } = useContext(MarketStore)
 
-  useEffect(() => {
-    dispatch({ type: 'REFRESH' } as any)
-  }, [dispatch])
-
   const { rate: rifXr, displayName } = rif
   useEffect(() => {
     if (!rifXr) {
@@ -111,6 +107,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
                   onClick: () => {
                     dispatch({
                       type: 'REFRESH',
+                      payload: { refresh: true },
                     } as any)
                   },
                 }}

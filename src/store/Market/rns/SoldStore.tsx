@@ -8,6 +8,7 @@ import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
 import AppStore, { AppStoreProps } from 'store/App/AppStore'
+import { SoldDomainsController } from 'api/rif-marketplace-cache/rns/sold'
 import {
   RnsListing, RnsOrder, RnsState, RnsStoreProps,
 } from './interfaces'
@@ -42,6 +43,7 @@ export const initialState: RnsSoldState = {
   },
   filters: {
   },
+  needsRefresh: false,
 }
 
 const RnsSoldStore = React.createContext({} as RnsSoldStoreProps | any)
@@ -49,37 +51,47 @@ const soldDomainsReducer: RnsReducer | StoreReducer = storeReducerFactory(initia
 
 export const RnsSoldStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(soldDomainsReducer, initialState)
-  const { state: { apis: { sold: service } } }: AppStoreProps = useContext(AppStore)
-  const { filters, listing: { outdatedTokens } } = state as RnsState
+  const { state: { apis: { sold } } }: AppStoreProps = useContext(AppStore)
+  const api = sold as SoldDomainsController
+
+  const {
+    filters,
+    needsRefresh,
+  } = state as RnsState
   const { state: { account } } = useContext(Web3Store)
 
-  const [isConnected, setIsConnected] = useState(false)
-  const [isOutdated, setIsOutdated] = useState(true)
+  const [isReady, setIsReady] = useState(false)
 
+  if (!api.service) {
+    api.connect()
+  }
+
+  // Initialise
   useEffect(() => {
-    if (!isConnected) {
-      setIsConnected(!!service.connect())
+    const {
+      service,
+      attachEvent,
+    } = api
+
+    if (service && !isReady && account) {
+      attachEvent('updated', outdateTokenId(dispatch))
+      attachEvent('patched', outdateTokenId(dispatch))
+      attachEvent('created', outdateTokenId(dispatch))
+      attachEvent('removed', outdateTokenId(dispatch))
+
+      dispatch({
+        type: 'REFRESH',
+        payload: { refresh: true },
+      } as any)
+      setIsReady(true)
     }
-  }, [isConnected, service])
+  }, [api, isReady, account])
 
   useEffect(() => {
-    if (isConnected) {
-      service.attachEvent('updated', outdateTokenId(dispatch))
-      service.attachEvent('patched', outdateTokenId(dispatch))
-      service.attachEvent('created', outdateTokenId(dispatch))
-      service.attachEvent('removed', outdateTokenId(dispatch))
-    }
-  }, [isConnected, service])
+    const { fetch } = api
 
-  useEffect(() => {
-    if (outdatedTokens.length) {
-      setIsOutdated(true)
-    }
-  }, [outdatedTokens])
-
-  useEffect(() => {
-    if (account && isConnected && isOutdated && !outdatedTokens.length) {
-      service.fetch({
+    if (account && isReady && needsRefresh) {
+      fetch({
         ...filters,
         ownerAddress: account,
       }).then((items) => {
@@ -89,10 +101,13 @@ export const RnsSoldStoreProvider = ({ children }) => {
             items,
           },
         })
-        setIsOutdated(false)
+        dispatch({
+          type: 'REFRESH',
+          payload: { refresh: false },
+        } as any)
       })
     }
-  }, [isConnected, filters, service, account, isOutdated, outdatedTokens])
+  }, [isReady, needsRefresh, filters, api, account])
 
   const value = { state, dispatch }
   return <RnsSoldStore.Provider value={value}>{children}</RnsSoldStore.Provider>

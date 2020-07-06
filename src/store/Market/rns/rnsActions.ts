@@ -15,6 +15,10 @@ export interface OutdatePayload {
   tokenId: string
 }
 
+export interface RefreshPayload {
+  refresh: boolean
+}
+
 export type OrderPayload = RnsOrder
 
 export type ProgressPayload = Pick<RnsOrder, 'isProcessing'>
@@ -27,7 +31,8 @@ export type RnsPayload = StorePayload &
   OutdatePayload &
   OrderPayload &
   ProgressPayload &
-  LimitsPayload
+  LimitsPayload &
+  RefreshPayload
 
 export interface RnsAction extends StoreDispatcher<RnsPayload> {
   type: RNS_ACTIONS

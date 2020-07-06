@@ -25,6 +25,7 @@ export interface RnsState extends StoreState {
   filters: Partial<RnsFilter>
   limits?: Partial<RnsFilter>
   order?: RnsOrder
+  needsRefresh: boolean
 }
 
 export interface RnsStoreProps {

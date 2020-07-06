@@ -19,7 +19,7 @@ const mapFromTransport = (item: SoldDomainTransport): RnsSoldDomain => ({
 export class SoldDomainsController extends AbstractAPIController implements RnsAPIController {
   path = soldDomainsAddress
 
-  fetch = async (filters: RnsFilter): Promise<RnsSoldDomain[]> => {
+  fetch = async (filters: Partial<RnsFilter>): Promise<RnsSoldDomain[]> => {
     if (!this.service) throw Error('The confirmations service is not connected')
     const { name, ownerAddress } = filters
 

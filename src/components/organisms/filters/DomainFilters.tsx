@@ -53,7 +53,7 @@ const DomainFilters = () => {
           const value = currentTarget.value.trim()
           dispatch({
             type: 'FILTER',
-            payload: { value },
+            payload: { name: value },
           })
         }}
       />

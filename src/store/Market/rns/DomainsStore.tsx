@@ -43,6 +43,7 @@ export const initialState: DomainsState = {
   filters: {
     status: 'owned',
   },
+  needsRefresh: false,
 }
 
 const RnsDomainsStore = React.createContext({} as RnsDomainsStoreProps | any)
@@ -50,7 +51,6 @@ const domainsReducer: RnsReducer | StoreReducer = storeReducerFactory(initialSta
 
 export const RnsDomainsStoreProvider = ({ children }) => {
   const [isReady, setIsReady] = useState(false)
-  const [isOutdated, setIsOutdated] = useState(true)
 
   const { state: { apis: { domains } } }: AppStoreProps = useContext(AppStore)
   const api = domains as DomainsController
@@ -60,9 +60,10 @@ export const RnsDomainsStoreProvider = ({ children }) => {
   }
 
   const [state, dispatch] = useReducer(domainsReducer, initialState)
-  const { filters, listing: { outdatedTokens } } = state as DomainsState
+  const { filters, needsRefresh } = state as DomainsState
   const { state: { account } } = useContext(Web3Store)
 
+  // Initialise
   useEffect(() => {
     const {
       service,
@@ -75,20 +76,25 @@ export const RnsDomainsStoreProvider = ({ children }) => {
       attachEvent('created', outdateTokenId(dispatch))
       attachEvent('removed', outdateTokenId(dispatch))
 
+      dispatch({
+        type: 'REFRESH',
+        payload: { refresh: true },
+      } as any)
       setIsReady(true)
     }
   }, [api, isReady, account])
 
   useEffect(() => {
-    if (outdatedTokens.length) {
-      setIsOutdated(true)
-    }
-  }, [outdatedTokens])
+    dispatch({
+      type: 'REFRESH',
+      payload: { refresh: true },
+    } as any)
+  }, [filters])
 
   useEffect(() => {
     const { fetch } = api
 
-    if (account && isReady && isOutdated && !outdatedTokens.length) {
+    if (isReady && needsRefresh) {
       fetch({
         ...filters,
         ownerAddress: account,
@@ -99,29 +105,13 @@ export const RnsDomainsStoreProvider = ({ children }) => {
             items,
           },
         })
-        setIsOutdated(false)
-      })
-    }
-  }, [isReady, filters, api, account, isOutdated, outdatedTokens])
-
-  useEffect(() => {
-    const { fetch } = api
-
-    if (account && isReady) {
-      fetch({
-        ...filters,
-        ownerAddress: account,
-      }).then((items) => {
         dispatch({
-          type: 'SET_LISTING',
-          payload: {
-            items,
-          },
-        })
-        setIsOutdated(false)
+          type: 'REFRESH',
+          payload: { refresh: false },
+        } as any)
       })
     }
-  }, [isReady, filters, api, account])
+  }, [isReady, needsRefresh, filters, api, account])
 
   const value = { state, dispatch }
   return <RnsDomainsStore.Provider value={value}>{children}</RnsDomainsStore.Provider>
