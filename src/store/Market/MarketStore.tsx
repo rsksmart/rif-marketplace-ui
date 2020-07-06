@@ -1,13 +1,17 @@
 import React, { Dispatch, useReducer } from 'react'
+import { StoreReducer, StoreActions, StoreState } from 'store/storeUtils/interfaces'
+import storeReducerFactory from 'store/storeUtils/reducer'
 import { MarketAction } from './marketActions'
-import marketReducer from './marketReducer'
+import { MarketReducer, marketActions } from './marketReducer'
+
+export type StoreName = 'market'
 
 export enum TxType {
   BUY = 0,
   SELL = 1
 }
 
-export interface MarketStateType {
+export interface MarketState extends StoreState {
   txType: TxType
   exchangeRates: {
     currentFiat: {
@@ -23,12 +27,13 @@ export interface MarketStateType {
   }
 }
 
-interface MarketStorePropsType {
-  state: MarketStateType
+interface MarketStoreProps {
+  state: MarketState
   dispatch: Dispatch<MarketAction>
 }
 
-export const initialState: MarketStateType = {
+export const initialState: MarketState = {
+  storeID: 'market',
   txType: TxType.BUY,
   exchangeRates: {
     currentFiat: {
@@ -43,7 +48,8 @@ export const initialState: MarketStateType = {
   },
 }
 
-const MarketStore = React.createContext({} as MarketStorePropsType | any)
+const MarketStore = React.createContext({} as MarketStoreProps | any)
+const marketReducer: MarketReducer | StoreReducer = storeReducerFactory(initialState, marketActions as unknown as StoreActions)
 
 export const MarketStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(marketReducer, initialState)

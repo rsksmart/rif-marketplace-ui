@@ -8,7 +8,6 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
 import RnsOffersStore, { RnsOffersStoreProps } from 'store/Market/rns/OffersStore'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
 
 const DomainOffersPage: FC = () => {
   const {
@@ -39,7 +38,7 @@ const DomainOffersPage: FC = () => {
 
   useEffect(() => {
     mDispatch({
-      type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
+      type: 'TOGGLE_TX_TYPE',
       payload: {
         txType: TxType.BUY,
       },

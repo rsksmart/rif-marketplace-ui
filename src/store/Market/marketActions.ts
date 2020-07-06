@@ -1,11 +1,7 @@
 import { StoreDispatcher } from 'store/storeUtils/interfaces'
 import { TxType } from './MarketStore'
 
-export enum MARKET_ACTIONS {
-  NOOP = 'NOOP',
-  TOGGLE_TX_TYPE = 'TOGGLE_TX_TYPE',
-  SET_EXCHANGE_RATE = 'SET_EXCHANGE_RATE'
-}
+export type MARKET_ACTIONS = 'NOOP' | 'TOGGLE_TX_TYPE' | 'SET_EXCHANGE_RATE'
 
 export interface ExchangeRatePayload {
   [symbol: string]: {
@@ -18,8 +14,8 @@ export interface TxTypeChangePayload {
   txType: TxType
 }
 
-export type MarketPayloadType = TxTypeChangePayload & ExchangeRatePayload
+export type MarketPayload = TxTypeChangePayload & ExchangeRatePayload
 
-export interface MarketAction extends StoreDispatcher<MarketPayloadType> {
+export interface MarketAction extends StoreDispatcher<MarketPayload> {
   type: MARKET_ACTIONS
 }

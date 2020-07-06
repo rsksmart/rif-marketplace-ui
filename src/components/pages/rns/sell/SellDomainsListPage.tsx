@@ -5,7 +5,6 @@ import React, { FC, useContext, useEffect } from 'react'
 import { DomainsSaleStatus } from 'api/models/RnsFilter'
 import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
 
 type PerStatusComponents = {
   [key in DomainsSaleStatus]: React.ReactNode
@@ -25,7 +24,7 @@ const SellDomainsListPage: FC<{}> = () => {
 
   useEffect(() => {
     mDispatch({
-      type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
+      type: 'TOGGLE_TX_TYPE',
       payload: {
         txType: TxType.SELL,
       },

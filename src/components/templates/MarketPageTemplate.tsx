@@ -7,7 +7,6 @@ import MarketFilter from 'components/templates/marketplace/MarketFilter'
 import React, {
   FC, useContext, useEffect, Dispatch,
 } from 'react'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
 import { MarketItem } from 'models/Market'
 import { RnsAction } from 'store/Market/rns/rnsActions'
@@ -86,7 +85,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
             return acc
           }, {})
           mDispatch({
-            type: MARKET_ACTIONS.SET_EXCHANGE_RATE,
+            type: 'SET_EXCHANGE_RATE',
             payload,
           })
         })

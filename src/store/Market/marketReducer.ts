@@ -1,28 +1,25 @@
-import Logger from 'utils/Logger'
 import {
-  MarketAction,
-  MarketPayloadType,
+  ExchangeRatePayload, MarketPayload,
   MARKET_ACTIONS,
   TxTypeChangePayload,
-  ExchangeRatePayload,
 } from './marketActions'
-import { MarketStateType, initialState } from './MarketStore'
+import { MarketState } from './MarketStore'
 
-const logger = Logger.getInstance()
+export interface MarketReducer {
+  (state: MarketState, payload: MarketPayload): MarketState
+}
 
-const {
-  NOOP,
-  TOGGLE_TX_TYPE,
-  SET_EXCHANGE_RATE,
-} = MARKET_ACTIONS
+export type MarketActions = {
+  [key in MARKET_ACTIONS]: MarketReducer
+}
 
-const marketActions: any = {
-  [NOOP]: (state: MarketStateType, _: MarketPayloadType) => state,
-  [TOGGLE_TX_TYPE]: (state: MarketStateType, payload: TxTypeChangePayload) => ({
+export const marketActions: MarketActions = {
+  NOOP: (state: MarketState, _: MarketPayload) => state,
+  TOGGLE_TX_TYPE: (state: MarketState, payload: TxTypeChangePayload) => ({
     ...state,
     ...payload,
   }),
-  [SET_EXCHANGE_RATE]: (state: MarketStateType, payload: ExchangeRatePayload) => ({
+  SET_EXCHANGE_RATE: (state: MarketState, payload: ExchangeRatePayload) => ({
     ...state,
     exchangeRates: {
       ...state.exchangeRates,
@@ -32,28 +29,4 @@ const marketActions: any = {
       },
     },
   }),
-}
-
-// TODO: Extract reusable
-const marketReducer = (state = initialState, action: MarketAction) => {
-  const { type, payload } = action
-  const marketAction = marketActions[type]
-
-  // if (marketAction)
-  logger.debug('Market action:', action)
-  const newState = (!!marketAction && marketAction(state, payload)) || state
-
-  if (state !== newState) {
-    logger.debug('Prev state:', state)
-    logger.debug('Next state:', newState)
-  } else {
-    logger.debug('No change:', newState)
-  }
-
-  return newState
-}
-export default marketReducer
-
-type MarketActionsType = {
-  [key in MARKET_ACTIONS]: (state: MarketStateType, payload: MarketPayloadType) => MarketStateType
 }

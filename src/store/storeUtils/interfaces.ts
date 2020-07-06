@@ -1,7 +1,8 @@
 import { RnsStoreNames } from 'store/Market/rns/interfaces'
 import { StoreName as BlockchainStoreName } from 'store/Blockchain/BlockchainStore'
+import { StoreName as MarketStoreName } from 'store/Market/MarketStore'
 
-export type AvailableStores = RnsStoreNames | BlockchainStoreName
+export type AvailableStores = RnsStoreNames | BlockchainStoreName | MarketStoreName
 
 export interface StorePayload {
   [key: string]: any // TODO: make into [K in keyof T]: any where T is StoreState
