@@ -16,7 +16,6 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
 import MarketStore from 'store/Market/MarketStore'
 import RnsOffersStore from 'store/Market/rns/OffersStore'
@@ -199,7 +198,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
         }
 
         bcDispatch({
-          type: BLOCKCHAIN_ACTIONS.SET_TX_HASH,
+          type: 'SET_TX_HASH',
           payload: {
             txHash: transferReceipt.transactionHash,
           } as any,

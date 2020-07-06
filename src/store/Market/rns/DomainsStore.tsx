@@ -53,7 +53,7 @@ export const RnsDomainsStoreProvider = ({ children }) => {
   const [isOutdated, setIsOutdated] = useState(true)
 
   const { state: { apis: { domains } } }: AppStoreProps = useContext(AppStore)
-  const api = domains as unknown as DomainsController
+  const api = domains as DomainsController
 
   if (!api.service) {
     api.connect()

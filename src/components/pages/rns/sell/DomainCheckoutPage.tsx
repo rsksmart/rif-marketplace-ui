@@ -16,12 +16,11 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
 import MarketStore from 'store/Market/MarketStore'
+import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
-import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 
 const logger = Logger.getInstance()
 
@@ -170,7 +169,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
         }
 
         bcDispatch({
-          type: BLOCKCHAIN_ACTIONS.SET_TX_HASH,
+          type: 'SET_TX_HASH',
           payload: {
             txHash: receipt.transactionHash,
           } as any,

@@ -81,5 +81,4 @@ export const rnsActions: RnsActions = {
     ...state,
     order: undefined,
   }),
-  // ito - Add remain ing actions: [ CLEAN_LISTING, CLEAN_ORDER ]
 }

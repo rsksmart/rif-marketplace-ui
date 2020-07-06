@@ -5,14 +5,16 @@ import React, {
   createContext, Dispatch, useContext, useEffect, useReducer,
 } from 'react'
 import AppStore, { AppStoreProps } from 'store/App/AppStore'
+import { StoreActions, StoreReducer, StoreState } from 'store/storeUtils/interfaces'
+import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
-import { BlockchainAction, BLOCKCHAIN_ACTIONS } from './blockchainActions'
-import blockchainReducer from './blockchainReducer'
+import { BlockchainAction } from './blockchainActions'
+import { blockchainActions, BlockchainReducer } from './blockchainReducer'
 
-export interface BlockchainState {
+export type StoreName = 'blockchain'
+export interface BlockchainState extends StoreState {
   confirmations: Modify<Partial<ConfirmationsItem>, {
     txHash?: string
-    isConnected?: boolean
   }>
 }
 
@@ -22,30 +24,32 @@ export interface BlockchainStoreProps {
 }
 
 export const initialState: BlockchainState = {
+  storeID: 'blockchain',
   confirmations: {},
 }
 
 const BlockchainStore = createContext({} as BlockchainStoreProps | any)
+const blockchainReducer: BlockchainReducer | StoreReducer = storeReducerFactory(initialState, blockchainActions as unknown as StoreActions)
 
 export const BlockchainStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(blockchainReducer, initialState)
-  const { state: { apis } }: AppStoreProps = useContext(AppStore)
+  const { state: { apis: { confirmations } } }: AppStoreProps = useContext(AppStore)
   const { state: { account } } = useContext(Web3Store)
-  const confirmationsAPI = apis.confirmations as ConfirmationAPI
+  const api = confirmations as ConfirmationAPI
+
   const {
     confirmations: {
       txHash,
       currentCount: storedCurrentCt,
       targetCount: storedTargetCt,
-      isConnected,
     },
-  } = state
+  } = state as BlockchainState
 
   useEffect(() => {
     if (storedCurrentCt && storedTargetCt) {
       if (storedCurrentCt >= storedTargetCt) {
         dispatch({
-          type: BLOCKCHAIN_ACTIONS.SET_TX_HASH,
+          type: 'SET_TX_HASH',
           payload: {
             txHash: undefined,
           } as any,
@@ -55,33 +59,31 @@ export const BlockchainStoreProvider = ({ children }) => {
   }, [storedCurrentCt, storedTargetCt])
 
   useEffect(() => {
-    if (isConnected && txHash) {
-      confirmationsAPI.attachEvent('newConfirmation', (result) => {
+    const {
+      service,
+      attachEvent,
+    } = api
+
+    if (service && txHash) {
+      attachEvent('newConfirmation', (result) => {
         const confs = mapFromTransport([result])
         const currentTx = confs[txHash as string]
 
         if (currentTx) {
           dispatch({
-            type: BLOCKCHAIN_ACTIONS.SET_CONFIRMATIONS,
+            type: 'SET_CONFIRMATIONS',
             payload: currentTx as any,
           })
         }
       })
     }
-  }, [isConnected, txHash, confirmationsAPI])
+  }, [txHash, api])
 
   useEffect(() => {
     if (account) {
-      if (confirmationsAPI) {
-        const connected = !!confirmationsAPI.connect(client)
-
-        dispatch({
-          type: BLOCKCHAIN_ACTIONS.CONNECT_CONFIRMATIONS,
-          payload: { isConnected: !!connected } as any,
-        })
-      }
+      api.connect(client)
     }
-  }, [account, confirmationsAPI])
+  }, [account, api])
 
   const value = { state, dispatch }
   return <BlockchainStore.Provider value={value}>{children}</BlockchainStore.Provider>

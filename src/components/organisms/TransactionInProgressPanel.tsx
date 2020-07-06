@@ -5,7 +5,6 @@ import { shortenAddress, Typography } from '@rsksmart/rif-ui'
 import React, {
   Dispatch, FC, useContext, useEffect,
 } from 'react'
-import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
 import BlockchainStore, { BlockchainStoreProps } from 'store/Blockchain/BlockchainStore'
 import { StoreDispatcher, StorePayload } from 'store/storeUtils/interfaces'
 
@@ -38,7 +37,7 @@ const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
   useEffect(() => {
     if (currentCount && targetCount && currentCount >= targetCount) {
       bcDispatch({
-        type: BLOCKCHAIN_ACTIONS.CLEAR_CONFIRMATIONS,
+        type: 'CLEAR_CONFIRMATIONS',
         payload: {} as any,
       })
     }
