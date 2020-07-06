@@ -9,8 +9,8 @@ import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
-import getMarketplaceContract from 'contracts/Marketplace'
-import getRnsContract from 'contracts/Rns'
+import MarketplaceContract from 'contracts/Marketplace'
+import RNSContract from 'contracts/Rns'
 import React, {
   FC, useContext, useEffect, useState,
 } from 'react'
@@ -138,32 +138,27 @@ const DomainsCheckoutPage: FC<{}> = () => {
       })
 
       try {
-        const rnsContract = getRnsContract(web3)
-        const marketPlaceContract = getMarketplaceContract(web3)
+        const rnsContract = RNSContract.getInstance(web3)
+        const marketPlaceContract = MarketplaceContract.getInstance(web3)
 
         // Get gas price
         const gasPrice = await web3.eth.getGasPrice()
 
         // Send approval transaction
-        const approveReceipt = await rnsContract.methods.approve(marketPlaceAddress, tokenId).send({ from: account })
-        logger.info('approveReciept:', approveReceipt)
-
-        // Get gas limit for Placement
-        const estimatedGas = await marketPlaceContract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).estimateGas({ from: account, gasPrice })
-        const gas = Math.floor(estimatedGas * 1.1)
+        const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId, { from: account, gasPrice })
+        logger.info('approveReceipt:', approveReceipt)
 
         // Send Placement transaction
-        const receipt = await marketPlaceContract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).send({ from: account, gas, gasPrice })
-        logger.info('place receipt:', receipt)
+        const placeReceipt = await marketPlaceContract.place(tokenId, rifTokenAddress, price, { from: account, gasPrice })
 
-        if (!receipt) {
+        if (!placeReceipt) {
           throw Error('Something unexpected happened. No receipt received from the place transaction.')
         }
 
         bcDispatch({
           type: BLOCKCHAIN_ACTIONS.SET_TX_HASH,
           payload: {
-            txHash: receipt.transactionHash,
+            txHash: placeReceipt.transactionHash,
           } as any,
         })
         setIsPendingConfirm(true)

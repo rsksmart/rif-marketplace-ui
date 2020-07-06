@@ -18,8 +18,8 @@ import MarketStore from 'store/Market/MarketStore'
 import Logger from 'utils/Logger'
 import AddressItem from 'components/molecules/AddressItem'
 import contractAdds from 'ui-config.json'
-import getRifContract from 'contracts/Rif'
-import getMarketplaceContract from 'contracts/Marketplace'
+import RIFContract from 'contracts/Rif'
+import MarketplaceContract from 'contracts/Marketplace'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
 import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
 
@@ -72,7 +72,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 const DomainOffersCheckoutPage: FC<{}> = () => {
   const classes = useStyles()
-
   const history = useHistory()
   const {
     state: {
@@ -102,11 +101,11 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   useEffect(() => {
     if (account && tokenId && !isFundsConfirmed) {
       const checkFunds = async () => {
-        const rifContract = getRifContract(web3)
-        const marketPlaceContract = getMarketplaceContract(web3)
+        const rifContract = RIFContract.getInstance(web3)
+        const marketPlaceContract = MarketplaceContract.getInstance(web3)
         try {
-          const myBalance = await rifContract.methods.balanceOf(account).call({ from: account })
-          const tokenPlacement = await marketPlaceContract.methods.placement(tokenId).call({ from: account })
+          const myBalance = await rifContract.getBalanceOf(account, { from: account })
+          const tokenPlacement = await marketPlaceContract.getPlacement(tokenId, { from: account })
           const price = tokenPlacement[1]
 
           setHasFunds(new web3.utils.BN(myBalance).gte(new web3.utils.BN(price)))
@@ -170,25 +169,20 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
       })
 
       try {
-        const rifContract = getRifContract(web3)
-        const marketPlaceContract = getMarketplaceContract(web3)
+        const rifContract = RIFContract.getInstance(web3)
+        const marketPlaceContract = MarketplaceContract.getInstance(web3)
 
-        const tokenPlacement = await marketPlaceContract.methods.placement(tokenId).call({ from: account })
+        const tokenPlacement = await marketPlaceContract.getPlacement(tokenId, { from: account })
         const tokenPrice = tokenPlacement[1]
 
         // Get gas price
         const gasPrice = await web3.eth.getGasPrice()
 
-        // Get gas limit for Payment transaction
-        const estimatedGas = await rifContract.methods.transferAndCall(marketPlaceAddress, tokenPrice, tokenId).estimateGas({ from: account, gasPrice })
-        const gas = Math.floor(estimatedGas * 1.1)
-
-        // Payment transaction
-        const transferReceipt = await rifContract.methods.transferAndCall(marketPlaceAddress, tokenPrice, tokenId).send({ from: account, gas, gasPrice })
-        logger.info('transferReceipt:', transferReceipt)
+        // Send Transfer and call transaction
+        const transferReceipt = await rifContract.transferAndCall(marketPlaceAddress, tokenPrice, tokenId, { from: account, gasPrice })
 
         if (!transferReceipt) {
-          throw Error('Something unexpected happened. No receipt received from the place transaction.')
+          throw Error('Something unexpected happened. No receipt received from the transfer transaction.')
         }
 
         bcDispatch({
