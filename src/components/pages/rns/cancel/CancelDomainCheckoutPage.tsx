@@ -8,8 +8,8 @@ import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
-import getMarketplaceContract from 'contracts/Marketplace'
-import getRnsContract from 'contracts/Rns'
+import MarketplaceContract from 'contracts/Marketplace'
+import RNSContract from 'contracts/Rns'
 import React, { useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
@@ -140,32 +140,27 @@ const CancelDomainCheckoutPage = () => {
       })
 
       try {
-        const rnsContract = getRnsContract(web3)
-        const marketPlaceContract = getMarketplaceContract(web3)
+        const rnsContract = RNSContract.getInstance(web3)
+        const marketPlaceContract = MarketplaceContract.getInstance(web3)
 
         // Get gas price
         const gasPrice = await web3.eth.getGasPrice()
 
         // Send unapproval transaction
-        const unapproveReceipt = await rnsContract.methods.approve('0x0000000000000000000000000000000000000000', tokenId).send({ from: account, gasPrice })
+        const unapproveReceipt = await rnsContract.unapprove(tokenId, { from: account, gasPrice })
         logger.info('unapproveReceipt:', unapproveReceipt)
 
-        // Get gas limit for unplacement transaction
-        const estimatedGas = await marketPlaceContract.methods.unplace(tokenId).estimateGas({ from: account, gasPrice })
-        const gas = Math.floor(estimatedGas * 1.1)
+        // Send Unplacement transaction
+        const unplaceReceipt = await marketPlaceContract.unplace(tokenId, { from: account, gasPrice })
 
-        // Send unplacement transaction
-        const receipt = await marketPlaceContract.methods.unplace(tokenId).send({ from: account, gas, gasPrice })
-        logger.info('unplace receipt:', receipt)
-
-        if (!receipt) {
-          throw Error('Something unexpected happened. No receipt received from the place transaction.')
+        if (!unplaceReceipt) {
+          throw Error('Something unexpected happened. No receipt received from the unplace transaction.')
         }
 
         bcDispatch({
           type: 'SET_TX_HASH',
           payload: {
-            txHash: receipt.transactionHash,
+            txHash: unplaceReceipt.transactionHash,
           } as any,
         })
         setIsPendingConfirm(true)

@@ -9,8 +9,8 @@ import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
-import getMarketplaceContract from 'contracts/Marketplace'
-import getRnsContract from 'contracts/Rns'
+import MarketplaceContract from 'contracts/Marketplace'
+import RNSContract from 'contracts/Rns'
 import React, {
   FC, useContext, useEffect, useState,
 } from 'react'
@@ -105,7 +105,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
 
   const currencySymbols = Object.keys(crypto)
-  const currenyOptions = currencySymbols.map((symbol) => crypto[symbol].displayName)
+  const currencyOptions = currencySymbols.map((symbol) => crypto[symbol].displayName)
 
   const [price, setPrice] = useState('')
   const [priceFiat, setPriceFiat] = useState('')
@@ -146,32 +146,27 @@ const DomainsCheckoutPage: FC<{}> = () => {
       })
 
       try {
-        const rnsContract = getRnsContract(web3)
-        const marketPlaceContract = getMarketplaceContract(web3)
+        const rnsContract = RNSContract.getInstance(web3)
+        const marketPlaceContract = MarketplaceContract.getInstance(web3)
 
         // Get gas price
         const gasPrice = await web3.eth.getGasPrice()
 
         // Send approval transaction
-        const approveReceipt = await rnsContract.methods.approve(marketPlaceAddress, tokenId).send({ from: account })
-        logger.info('approveReciept:', approveReceipt)
-
-        // Get gas limit for Placement
-        const estimatedGas = await marketPlaceContract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).estimateGas({ from: account, gasPrice })
-        const gas = Math.floor(estimatedGas * 1.1)
+        const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId, { from: account, gasPrice })
+        logger.info('approveReceipt:', approveReceipt)
 
         // Send Placement transaction
-        const receipt = await marketPlaceContract.methods.place(tokenId, rifTokenAddress, web3.utils.toWei(price)).send({ from: account, gas, gasPrice })
-        logger.info('place receipt:', receipt)
+        const placeReceipt = await marketPlaceContract.place(tokenId, rifTokenAddress, price, { from: account, gasPrice })
 
-        if (!receipt) {
+        if (!placeReceipt) {
           throw Error('Something unexpected happened. No receipt received from the place transaction.')
         }
 
         bcDispatch({
           type: 'SET_TX_HASH',
           payload: {
-            txHash: receipt.transactionHash,
+            txHash: placeReceipt.transactionHash,
           } as any,
         })
         setIsPendingConfirm(true)
@@ -186,21 +181,24 @@ const DomainsCheckoutPage: FC<{}> = () => {
     }
   }
 
-  const handlePriceChange = (event) => {
-    const { target: { value: newValue } } = event
-    const newValueInt = parseFloat(newValue)
+  const handlePriceChange = ({ target: { value } }) => {
+    setPrice(value)
+    // we convert to number after setting the value because we need to allow '0.' and Number('0.') is 0
+    const priceNumber = Number(value)
 
-    if (newValueInt || newValue === '') {
-      setPrice(newValue)
-
-      if (newValue) {
-        const currencySymbol = currencySymbols[parseInt(currency, 10)]
-        const newValueInFiat = newValueInt * crypto[currencySymbol].rate
-        setPriceFiat(newValueInFiat.toFixed(4).toString())
-      } else {
-        setPriceFiat('')
-      }
+    if (priceNumber) {
+      const currencySymbol = currencySymbols[parseInt(currency, 10)]
+      const newValueInFiat = value * crypto[currencySymbol].rate
+      setPriceFiat(newValueInFiat.toFixed(4).toString())
+    } else {
+      setPriceFiat('')
     }
+  }
+
+  const handleOnPriceBlur = () => {
+    // removes 0s on the left
+    const priceNumber = Number(price)
+    setPrice(priceNumber.toString())
   }
 
   const handleSetCurrency = ({ target: { value } }) => {
@@ -208,6 +206,8 @@ const DomainsCheckoutPage: FC<{}> = () => {
     const newCurrencySymbol = currencySymbols[parseInt(value, 10)]
     setPriceFiat((parseInt(price, 10) * crypto[newCurrencySymbol].rate).toString())
   }
+
+  const submitDisabled = () => Number(price) <= 0
 
   return (
     <CheckoutPageTemplate
@@ -243,7 +243,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
                         <CombinedPriceCell {...{
                           price: `${price}`,
                           priceFiat: `${priceFiat}`,
-                          currency: currenyOptions[parseInt(currency, 10)],
+                          currency: currencyOptions[parseInt(currency, 10)],
                           currencyFiat: currentFiat.displayName,
                           divider: ' ',
                         }}
@@ -261,9 +261,9 @@ const DomainsCheckoutPage: FC<{}> = () => {
                           id="currency-select"
                           value={currency}
                           onChange={handleSetCurrency}
-                          disabled={currenyOptions.length <= 1}
+                          disabled={currencyOptions.length <= 1}
                         >
-                          {currenyOptions.map((option, i) => <MenuItem key={option} value={i}>{option}</MenuItem>)}
+                          {currencyOptions.map((option, i) => <MenuItem key={option} value={i}>{option}</MenuItem>)}
                         </Select>
                       </TableCell>
                     </TableRow>
@@ -272,10 +272,10 @@ const DomainsCheckoutPage: FC<{}> = () => {
                       <TableCell className={`${classes.detailValue} ${classes.setPrice}`}>
                         <UnitsInput
                           handleOnChange={handlePriceChange}
-                          handleOnBlur={() => { }} // eslint-disable-line @typescript-eslint/no-empty-function
-                          // FIXME: make callback optional in rif-ui
-                          units={currenyOptions[parseInt(currency, 10)]}
+                          handleOnBlur={handleOnPriceBlur}
+                          units={currencyOptions[parseInt(currency, 10)]}
                           value={price}
+                          error={Number(price) <= 0}
                         />
                       </TableCell>
                     </TableRow>
@@ -302,6 +302,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
                 rounded
                 shadow
                 onClick={handleSubmit}
+                disabled={submitDisabled()}
               >
                 List domain
               </Button>
