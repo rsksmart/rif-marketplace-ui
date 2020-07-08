@@ -14,9 +14,8 @@ export type StoreName = 'app'
 
 export interface AppState extends StoreState {
   isError?: boolean
-  isLoading?: boolean
   message?: string
-  formError?: any
+  isLoading?: boolean
   apis: ServiceMap
 }
 

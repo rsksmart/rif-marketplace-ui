@@ -1,17 +1,13 @@
 import { Web3Store } from '@rsksmart/rif-ui'
 import { RnsFilter } from 'api/models/RnsFilter'
+import { DomainsService } from 'api/rif-marketplace-cache/rns/domains'
 import { RnsDomain } from 'models/marketItems/DomainItem'
-import React, {
-  useContext, useEffect, useReducer, useState,
-} from 'react'
+import React, { useContext, useEffect, useReducer, useState } from 'react'
 import AppStore, { AppStoreProps } from 'store/App/AppStore'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
-import { DomainsService } from 'api/rif-marketplace-cache/rns/domains'
-import {
-  RnsListing, RnsOrder, RnsState, RnsStoreProps,
-} from './interfaces'
+import { RnsListing, RnsOrder, RnsState, RnsStoreProps } from './interfaces'
 import { rnsActions, RnsReducer } from './rnsReducer'
 import outdateTokenId from './utils'
 
@@ -52,8 +48,11 @@ const domainsReducer: RnsReducer | StoreReducer = storeReducerFactory(initialSta
 export const RnsDomainsStoreProvider = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false) // FIXME: change in all stores
 
-  const { state: { apis: { 'rns/v0/domains': domains } } }: AppStoreProps = useContext(AppStore)
-  const api = domains as DomainsService
+  const {
+    state: { apis: { 'rns/v0/domains': domains } },
+    dispatch: appDispatch
+  }: AppStoreProps = useContext(AppStore)
+  const api = domains as DomainsController
 
   if (!api.service) {
     api.connect()
@@ -102,7 +101,7 @@ export const RnsDomainsStoreProvider = ({ children }) => {
     if (isInitialised && needsRefresh) {
       fetch({
         ...filters,
-        ownerAddress: account,
+        // ownerAddress: account,
       }).then((items) => {
         dispatch({
           type: 'SET_LISTING',
@@ -114,9 +113,17 @@ export const RnsDomainsStoreProvider = ({ children }) => {
           type: 'REFRESH',
           payload: { refresh: false },
         } as any)
+      }).catch((e: Error) => {
+        appDispatch({
+          type: "SET_MESSAGE",
+          payload: {
+            message: `Couldn't fetch RNS domains. Error: ${e.message}.`,
+            isError: true
+          }
+        })
       })
     }
-  }, [isInitialised, needsRefresh, filters, api, account])
+  }, [isInitialised, needsRefresh, filters, api, account, appDispatch])
 
   const value = { state, dispatch }
   return <RnsDomainsStore.Provider value={value}>{children}</RnsDomainsStore.Provider>
