@@ -43,7 +43,9 @@ const ErrorPanel = () => {
           onClick: () => {
             dispatch({
               type: 'SET_MESSAGE',
-              payload: {}
+              payload: {
+                message: undefined, isError: undefined
+              }
             })
           },
         }}
