@@ -1,4 +1,4 @@
-import { AppPayload, LoadingPayloadType, MessagePayloadType } from 'store/App/appActions'
+import { AppPayload, LoadingPayload, MessagePayload } from 'store/App/appActions'
 import { APP_ACTIONS } from './appActions'
 import { AppState } from './AppStore'
 
@@ -12,11 +12,11 @@ export type AppActions = {
 
 export const appActions: AppActions = {
   NOOP: (state, _payload) => state,
-  SET_IS_LOADING: (state, payload: LoadingPayloadType) => ({
+  SET_IS_LOADING: (state, payload: LoadingPayload) => ({
     ...state,
     ...payload,
   }),
-  SET_MESSAGE: (state, payload: MessagePayloadType) => ({
+  SET_MESSAGE: (state, payload: MessagePayload) => ({
     ...state,
     ...payload,
   }),
