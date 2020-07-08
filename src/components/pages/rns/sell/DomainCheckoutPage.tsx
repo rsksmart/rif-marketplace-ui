@@ -2,7 +2,7 @@ import {
   Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, MenuItem, Select, Table, TableBody, TableCell, TableRow, Theme,
 } from '@material-ui/core'
 import {
-  Button, colors, shortenAddress, UnitsInput, Web3Store,
+  Button, colors, shortenAddress, UnitsInput, Web3Store, validatedNumber,
 } from '@rsksmart/rif-ui'
 import PriceItem from 'components/atoms/PriceItem'
 import AddressItem from 'components/molecules/AddressItem'
@@ -174,13 +174,15 @@ const DomainsCheckoutPage: FC<{}> = () => {
   }
 
   const handlePriceChange = ({ target: { value } }) => {
-    setPrice(value)
-    // we convert to number after setting the value because we need to allow '0.' and Number('0.') is 0
-    const priceNumber = Number(value)
+    // validatedNumber function gives as the closest value within limits
+    const newValue = validatedNumber(value)
+    setPrice(newValue)
+    // we convert to number after setting the newValue because we need to allow '0.' and Number('0.') is 0
+    const priceNumber = Number(newValue)
 
     if (priceNumber) {
       const currencySymbol = currencySymbols[parseInt(currency, 10)]
-      const newValueInFiat = value * crypto[currencySymbol].rate
+      const newValueInFiat = newValue * crypto[currencySymbol].rate
       setPriceFiat(newValueInFiat.toFixed(4).toString())
     } else {
       setPriceFiat('')
