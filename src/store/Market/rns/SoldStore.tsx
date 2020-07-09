@@ -91,10 +91,11 @@ export const RnsSoldStoreProvider = ({ children }) => {
     }
   }, [api, isInitialised, account])
 
+  // fetch if needs refresh and is initialised
   useEffect(() => {
     const { fetch } = api
 
-    if (account && isInitialised && needsRefresh) {
+    if (isInitialised && needsRefresh) {
       fetch({
         ...filters,
         ownerAddress: account,

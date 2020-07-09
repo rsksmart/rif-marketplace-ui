@@ -98,6 +98,7 @@ export const RnsOffersStoreProvider = ({ children }) => {
     }
   }, [api, isInitialised, needsRefresh])
 
+  // (re)fetch limits upon refresh if initialised
   useEffect(() => {
     const { fetchPriceLimits } = api
 

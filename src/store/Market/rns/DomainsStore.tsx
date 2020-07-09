@@ -96,6 +96,7 @@ export const RnsDomainsStoreProvider = ({ children }) => {
     } as any)
   }, [filters])
 
+  // fetch if needs refresh and is initialised
   useEffect(() => {
     const { fetch } = api
 
