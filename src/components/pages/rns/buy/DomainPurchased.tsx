@@ -48,7 +48,7 @@ const DomainPurchased: FC<{}> = () => {
           variant="contained"
           rounded
           shadow
-          onClick={() => { history.push(ROUTES.DOMAINS.BUY) }}
+          onClick={() => { history.push(ROUTES.DOMAINS.BUY, { refresh: true }) }}
         >
           Buy another domain
         </Button>

@@ -30,7 +30,7 @@ const DomainCanceled: FC<{}> = () => {
           variant="contained"
           rounded
           shadow
-          onClick={() => { history.push(ROUTES.DOMAINS.SELL) }}
+          onClick={() => { history.push(ROUTES.DOMAINS.SELL, { refresh: true }) }}
         >
           View my domains
         </Button>
@@ -39,7 +39,7 @@ const DomainCanceled: FC<{}> = () => {
           variant="contained"
           rounded
           shadow
-          onClick={() => { history.push(ROUTES.DOMAINS.BUY) }}
+          onClick={() => { history.push(ROUTES.DOMAINS.BUY, { refresh: true }) }}
         >
           View domain listing
         </Button>

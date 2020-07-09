@@ -16,6 +16,16 @@ const MyDomains: FC<{}> = () => {
     dispatch,
   } = useContext(RnsDomainsStore)
   const history = useHistory()
+  const routeState = history.location.state as { refresh?: boolean }
+  if (routeState && routeState.refresh) {
+    routeState.refresh = false
+    dispatch({
+      type: 'REFRESH',
+      payload: {
+        refresh: true
+      } as any
+    })
+  }
 
   useEffect(() => {
     dispatch({

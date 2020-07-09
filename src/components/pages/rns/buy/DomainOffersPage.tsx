@@ -30,6 +30,16 @@ const DomainOffersPage: FC = () => {
     dispatch,
   } = useContext<RnsOffersStoreProps>(RnsOffersStore)
   const history = useHistory()
+  const routeState = history.location.state as { refresh?: boolean }
+  if (routeState && routeState.refresh) {
+    routeState.refresh = false
+    dispatch({
+      type: 'REFRESH',
+      payload: {
+        refresh: true
+      } as any
+    })
+  }
   const {
     state: {
       account,
