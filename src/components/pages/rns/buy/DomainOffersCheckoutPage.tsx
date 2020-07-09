@@ -10,7 +10,7 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import {
-  Button, colors, shortenAddress, Typography, Web3Store,
+  Button, colors, shortenString, Typography, Web3Store,
 } from '@rsksmart/rif-ui'
 import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
@@ -22,6 +22,7 @@ import RIFContract from 'contracts/Rif'
 import MarketplaceContract from 'contracts/Marketplace'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
 import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
+import DomainNameItem from 'components/molecules/DomainNameItem'
 
 const network: string = process.env.REACT_APP_NETWORK || 'ganache'
 const marketPlaceAddress = contractAdds[network].marketplace.toLowerCase()
@@ -152,8 +153,14 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   }
   const PriceCell = <CombinedPriceCell {...priceCellProps} />
 
+  const displayName = domainName
+    ? <DomainNameItem value={domainName} />
+    : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+
   const details = {
-    NAME: domainName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
+    NAME: displayName,
+    // .ito
+    // NAME: domainName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
     SELLER: <AddressItem value={ownerAddress} />,
     'RENEWAL DATE': expirationDate.toLocaleDateString(),
     PRICE: PriceCell,
@@ -214,7 +221,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
       <Card
         className={classes.card}
       >
-        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Buying ${domainName || shortenAddress(tokenId)}`} />
+        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Buying ${domainName || shortenString(tokenId)}`} />
         <CardContent>
           <Typography className={classes.contentTitle} variant="h6" color="secondary">Domain details</Typography>
           <Table className={classes.contentDetails}>

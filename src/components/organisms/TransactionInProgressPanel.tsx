@@ -2,7 +2,7 @@ import React, { FC, useContext, useEffect } from 'react'
 import {
   CircularProgress, createStyles, makeStyles, Theme,
 } from '@material-ui/core'
-import { Typography, shortenAddress } from '@rsksmart/rif-ui'
+import { Typography, shortenString } from '@rsksmart/rif-ui'
 import BlockchainStore, { BlockchainStoreProps } from 'store/Blockchain/BlockchainStore'
 import MarketStore from 'store/Market/MarketStore'
 import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
@@ -55,8 +55,8 @@ const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({ progM
   return (
     <div className={classes.content}>
       <Typography>{text}</Typography>
-      {txHash && !currentCount && <Typography>{`Transaction ${shortenAddress(txHash)} is waiting for the first confirmation.`}</Typography>}
-      {txHash && currentCount && <Typography>{`Transaction ${shortenAddress(txHash)} is waiting for confirmation ${currentCount + 1} of ${targetCount}.`}</Typography>}
+      {txHash && !currentCount && <Typography>{`Transaction ${shortenString(txHash)} is waiting for the first confirmation.`}</Typography>}
+      {txHash && currentCount && <Typography>{`Transaction ${shortenString(txHash)} is waiting for confirmation ${currentCount + 1} of ${targetCount}.`}</Typography>}
       <CircularProgress />
       <Typography>{progMsg}</Typography>
     </div>

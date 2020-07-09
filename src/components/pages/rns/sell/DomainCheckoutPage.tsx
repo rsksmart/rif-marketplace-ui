@@ -2,7 +2,7 @@ import {
   Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, MenuItem, Select, Table, TableBody, TableCell, TableRow, Theme,
 } from '@material-ui/core'
 import {
-  Button, colors, shortenAddress, UnitsInput, Web3Store, validatedNumber,
+  Button, colors, shortenString, UnitsInput, Web3Store, validatedNumber,
 } from '@rsksmart/rif-ui'
 import PriceItem from 'components/atoms/PriceItem'
 import AddressItem from 'components/molecules/AddressItem'
@@ -213,7 +213,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
       <Card
         className={classes.card}
       >
-        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Listing ${name || shortenAddress(tokenId)}`} />
+        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Listing ${name || shortenString(tokenId)}`} />
         <CardContent>
           <div className={classes.contentDetails}>
             <Table>

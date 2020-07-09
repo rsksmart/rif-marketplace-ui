@@ -9,6 +9,7 @@ import { SoldDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
+import DomainNameItem from 'components/molecules/DomainNameItem'
 
 const LISTING_TYPE = MarketListingTypes.DOMAINS
 const TX_TYPE = TxType.SELL
@@ -93,9 +94,14 @@ const SoldDomains: FC<{}> = () => {
       const currency = crypto[paymentToken]
 
       const pseudoResolvedName = domainFilters?.name?.$like && `${domainFilters?.name?.$like}.rsk`
+      const displayDomainName = domainName || pseudoResolvedName
+        ? <DomainNameItem value={domainName || pseudoResolvedName} />
+        : <AddressItem pretext="Unknown RNS:" value={tokenId} />
       const displayItem = {
         id,
-        domainName: domainName || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
+        domainName: displayDomainName,
+        // .ito 
+        // domainName: domainName || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
         buyer: <AddressItem value={buyer} />,
         currency: currency.displayName,
         sellingPrice: <CombinedPriceCell
