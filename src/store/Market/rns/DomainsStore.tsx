@@ -50,7 +50,7 @@ const RnsDomainsStore = React.createContext({} as RnsDomainsStoreProps | any)
 const domainsReducer: RnsReducer | StoreReducer = storeReducerFactory(initialState, rnsActions as unknown as StoreActions)
 
 export const RnsDomainsStoreProvider = ({ children }) => {
-  const [isReady, setIsReady] = useState(false)
+  const [isInitialised, setIsInitialised] = useState(false) //FIXME: change in all stores
 
   const { state: { apis: { domains } } }: AppStoreProps = useContext(AppStore)
   const api = domains as DomainsController
@@ -70,19 +70,24 @@ export const RnsDomainsStoreProvider = ({ children }) => {
       attachEvent,
     } = api
 
-    if (service && !isReady && account) {
-      attachEvent('updated', outdateTokenId(dispatch))
-      attachEvent('patched', outdateTokenId(dispatch))
-      attachEvent('created', outdateTokenId(dispatch))
-      attachEvent('removed', outdateTokenId(dispatch))
+    if (service && !isInitialised && account) {
+      setIsInitialised(true)
+      try {
+        attachEvent('updated', outdateTokenId(dispatch))
+        attachEvent('patched', outdateTokenId(dispatch))
+        attachEvent('created', outdateTokenId(dispatch))
+        attachEvent('removed', outdateTokenId(dispatch))
 
-      dispatch({
-        type: 'REFRESH',
-        payload: { refresh: true },
-      } as any)
-      setIsReady(true)
+        dispatch({
+          type: 'REFRESH',
+          payload: { refresh: true },
+        } as any)
+      }
+      catch (e) {
+        setIsInitialised(false)
+      }
     }
-  }, [api, isReady, account])
+  }, [api, isInitialised, account])
 
   useEffect(() => {
     dispatch({
@@ -94,7 +99,7 @@ export const RnsDomainsStoreProvider = ({ children }) => {
   useEffect(() => {
     const { fetch } = api
 
-    if (isReady && needsRefresh) {
+    if (isInitialised && needsRefresh) {
       fetch({
         ...filters,
         ownerAddress: account,
@@ -111,7 +116,7 @@ export const RnsDomainsStoreProvider = ({ children }) => {
         } as any)
       })
     }
-  }, [isReady, needsRefresh, filters, api, account])
+  }, [isInitialised, needsRefresh, filters, api, account])
 
   const value = { state, dispatch }
   return <RnsDomainsStore.Provider value={value}>{children}</RnsDomainsStore.Provider>

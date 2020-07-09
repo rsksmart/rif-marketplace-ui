@@ -1,16 +1,12 @@
-import React, {
-  useContext, useEffect, useReducer, useState,
-} from 'react'
 import { RnsFilter } from 'api/models/RnsFilter'
 import { OffersController } from 'api/rif-marketplace-cache/rns/offers'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
+import React, { useContext, useEffect, useReducer, useState } from 'react'
 import AppStore, { AppStoreProps } from 'store/App/AppStore'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
-import {
-  RnsListing, RnsOrder, RnsState, RnsStoreProps,
-} from './interfaces'
+import { RnsListing, RnsOrder, RnsState, RnsStoreProps } from './interfaces'
 import { rnsActions, RnsReducer } from './rnsReducer'
 import outdateTokenId from './utils'
 
@@ -60,7 +56,7 @@ const RnsOffersStore = React.createContext({} as RnsOffersStoreProps | any)
 const offersReducer: RnsReducer | StoreReducer = storeReducerFactory(initialState, rnsActions as unknown as StoreActions)
 
 export const RnsOffersStoreProvider = ({ children }) => {
-  const [isReady, setIsReady] = useState(false)
+  const [isInitialised, setIsInitialised] = useState(false)
   const [isLimitsSet, setIsLimitsSet] = useState(false)
 
   const { state: { apis: { offers } } }: AppStoreProps = useContext(AppStore)
@@ -84,39 +80,42 @@ export const RnsOffersStoreProvider = ({ children }) => {
       attachEvent,
     } = api
 
-    if (service && !isReady && !needsRefresh) {
-      attachEvent('updated', outdateTokenId(dispatch))
-      attachEvent('patched', outdateTokenId(dispatch))
-      attachEvent('created', outdateTokenId(dispatch))
-      attachEvent('removed', outdateTokenId(dispatch))
+    if (service && !isInitialised && !needsRefresh) {
+      setIsInitialised(true)
+      try {
+        attachEvent('updated', outdateTokenId(dispatch))
+        attachEvent('patched', outdateTokenId(dispatch))
+        attachEvent('created', outdateTokenId(dispatch))
+        attachEvent('removed', outdateTokenId(dispatch))
 
-      dispatch({
-        type: 'REFRESH',
-        payload: { refresh: true },
-      } as any)
-      setIsReady(true)
+        dispatch({
+          type: 'REFRESH',
+          payload: { refresh: true },
+        } as any)
+      } catch (e) {
+        setIsInitialised(false)
+      }
     }
-  }, [api, isReady, needsRefresh])
+  }, [api, isInitialised, needsRefresh])
 
   useEffect(() => {
     const { fetchPriceLimits } = api
 
-    if (isReady && needsRefresh && !isLimitsSet) {
-      const fetchLimits = async () => {
-        const price = await fetchPriceLimits()
-        dispatch({
-          type: 'UPDATE_LIMITS',
-          payload: { price },
+    if (isInitialised && needsRefresh && !isLimitsSet) {
+      fetchPriceLimits()
+        .then(price => {
+          dispatch({
+            type: 'UPDATE_LIMITS',
+            payload: { price },
+          })
+          dispatch({
+            type: 'FILTER',
+            payload: { price },
+          })
+          setIsLimitsSet(true)
         })
-        dispatch({
-          type: 'FILTER',
-          payload: { price },
-        })
-        setIsLimitsSet(true)
-      }
-      fetchLimits()
     }
-  }, [api, isReady, needsRefresh, isLimitsSet])
+  }, [api, isInitialised, needsRefresh, isLimitsSet])
 
   // Pre-fetch limits
   useEffect(() => {
@@ -128,21 +127,22 @@ export const RnsOffersStoreProvider = ({ children }) => {
   useEffect(() => {
     const { fetch } = api
 
-    if (isReady && isLimitsSet) {
-      fetch(filters).then((items) => {
-        dispatch({
-          type: 'SET_LISTING',
-          payload: {
-            items,
-          },
+    if (isInitialised && isLimitsSet) {
+      fetch(filters)
+        .then((items) => {
+          dispatch({
+            type: 'SET_LISTING',
+            payload: {
+              items,
+            },
+          })
+          dispatch({
+            type: 'REFRESH',
+            payload: { refresh: false },
+          } as any)
         })
-        dispatch({
-          type: 'REFRESH',
-          payload: { refresh: false },
-        } as any)
-      })
     }
-  }, [isReady, isLimitsSet, filters, limits, api])
+  }, [isInitialised, isLimitsSet, filters, limits, api])
 
   const value = { state, dispatch }
   return <RnsOffersStore.Provider value={value}>{children}</RnsOffersStore.Provider>

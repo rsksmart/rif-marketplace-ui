@@ -60,7 +60,7 @@ export const RnsSoldStoreProvider = ({ children }) => {
   } = state as RnsState
   const { state: { account } } = useContext(Web3Store)
 
-  const [isReady, setIsReady] = useState(false)
+  const [isInitialised, setIsInitialised] = useState(false)
 
   if (!api.service) {
     api.connect()
@@ -73,24 +73,28 @@ export const RnsSoldStoreProvider = ({ children }) => {
       attachEvent,
     } = api
 
-    if (service && !isReady && account) {
-      attachEvent('updated', outdateTokenId(dispatch))
-      attachEvent('patched', outdateTokenId(dispatch))
-      attachEvent('created', outdateTokenId(dispatch))
-      attachEvent('removed', outdateTokenId(dispatch))
+    if (service && !isInitialised && account) {
+      setIsInitialised(true)
+      try {
+        attachEvent('updated', outdateTokenId(dispatch))
+        attachEvent('patched', outdateTokenId(dispatch))
+        attachEvent('created', outdateTokenId(dispatch))
+        attachEvent('removed', outdateTokenId(dispatch))
 
-      dispatch({
-        type: 'REFRESH',
-        payload: { refresh: true },
-      } as any)
-      setIsReady(true)
+        dispatch({
+          type: 'REFRESH',
+          payload: { refresh: true },
+        } as any)
+      } catch (e) {
+        setIsInitialised(false)
+      }
     }
-  }, [api, isReady, account])
+  }, [api, isInitialised, account])
 
   useEffect(() => {
     const { fetch } = api
 
-    if (account && isReady && needsRefresh) {
+    if (account && isInitialised && needsRefresh) {
       fetch({
         ...filters,
         ownerAddress: account,
@@ -107,7 +111,7 @@ export const RnsSoldStoreProvider = ({ children }) => {
         } as any)
       })
     }
-  }, [isReady, needsRefresh, filters, api, account])
+  }, [isInitialised, needsRefresh, filters, api, account])
 
   const value = { state, dispatch }
   return <RnsSoldStore.Provider value={value}>{children}</RnsSoldStore.Provider>
