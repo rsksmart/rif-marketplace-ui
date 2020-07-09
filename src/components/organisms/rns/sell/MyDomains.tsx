@@ -6,6 +6,7 @@ import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import RnsDomainsStore from 'store/Market/rns/DomainsStore'
+import { RefreshPayload, OrderPayload } from 'store/Market/rns/rnsActions'
 
 const MyDomains: FC<{}> = () => {
   const {
@@ -23,7 +24,7 @@ const MyDomains: FC<{}> = () => {
       type: 'REFRESH',
       payload: {
         refresh: true
-      } as any
+      } as RefreshPayload
     })
   }
 
@@ -65,7 +66,7 @@ const MyDomains: FC<{}> = () => {
               type: 'SET_ORDER',
               payload: {
                 item: domainItem,
-              } as any,
+              } as OrderPayload,
             })
             history.push(ROUTES.DOMAINS.CHECKOUT.SELL)
           }}

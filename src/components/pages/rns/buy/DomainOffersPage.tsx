@@ -7,7 +7,8 @@ import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
-import RnsOffersStore, { RnsOffersStoreProps } from 'store/Market/rns/OffersStore'
+import RnsOffersStore from 'store/Market/rns/OffersStore'
+import { OrderPayload, RefreshPayload } from 'store/Market/rns/rnsActions'
 
 const DomainOffersPage: FC = () => {
   const {
@@ -28,7 +29,7 @@ const DomainOffersPage: FC = () => {
       filters,
     },
     dispatch,
-  } = useContext<RnsOffersStoreProps>(RnsOffersStore)
+  } = useContext(RnsOffersStore)
   const history = useHistory()
   const routeState = history.location.state as { refresh?: boolean }
   if (routeState && routeState.refresh) {
@@ -37,7 +38,7 @@ const DomainOffersPage: FC = () => {
       type: 'REFRESH',
       payload: {
         refresh: true
-      } as any
+      } as RefreshPayload
     })
   }
   const {
@@ -99,7 +100,7 @@ const DomainOffersPage: FC = () => {
                 type: 'SET_ORDER',
                 payload: {
                   item,
-                } as any,
+                } as OrderPayload,
               })
               history.push(ROUTES.DOMAINS.CHECKOUT.BUY)
             }}

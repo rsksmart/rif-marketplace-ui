@@ -9,6 +9,7 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import MarketStore from 'store/Market/MarketStore'
 import RnsDomainsStore from 'store/Market/rns/DomainsStore'
+import { OrderPayload } from 'store/Market/rns/rnsActions'
 
 const MyOffers: FC<{}> = () => {
   const {
@@ -50,8 +51,6 @@ const MyOffers: FC<{}> = () => {
     action2: '',
   }
 
-  // if (!currentListing || listingType !== LISTING_TYPE) return null
-
   const collection = items
     .map((domainItem: RnsDomain) => {
       const {
@@ -73,7 +72,7 @@ const MyOffers: FC<{}> = () => {
               type: 'SET_ORDER',
               payload: {
                 item: domainItem,
-              } as any,
+              } as OrderPayload,
             })
             history.push(ROUTES.DOMAINS.CHECKOUT.SELL)
           }}
@@ -103,7 +102,7 @@ const MyOffers: FC<{}> = () => {
                 type: 'SET_ORDER',
                 payload: {
                   item: domainItem,
-                } as any,
+                } as OrderPayload,
               })
               history.push(ROUTES.DOMAINS.CHECKOUT.CANCEL)
             }}

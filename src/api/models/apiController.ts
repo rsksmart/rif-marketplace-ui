@@ -22,12 +22,8 @@ export abstract class AbstractAPIController implements Omit<APIController, 'fetc
 
   connect = (clientOverride?: Application<any>) => {
     const app = clientOverride || client
-    try {
-      this.service = app.service(this.path)
-      return this.path
-    } catch (e) { // TODO: move error handling up a level
-      return undefined
-    }
+    this.service = app.service(this.path)
+    return this.path
   }
 
   attachEvent = (name: string, callback: ServiceEventListener) => {

@@ -1,10 +1,6 @@
-import {
-  CircularProgress, createStyles, makeStyles, Theme,
-} from '@material-ui/core'
+import { CircularProgress, createStyles, makeStyles, Theme } from '@material-ui/core'
 import { shortenAddress, Typography } from '@rsksmart/rif-ui'
-import React, {
-  Dispatch, FC, useContext, useEffect,
-} from 'react'
+import React, { Dispatch, FC, useContext, useEffect } from 'react'
 import BlockchainStore, { BlockchainStoreProps } from 'store/Blockchain/BlockchainStore'
 import { StoreDispatcher, StorePayload } from 'store/storeUtils/interfaces'
 
@@ -38,7 +34,7 @@ const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
     if (currentCount && targetCount && currentCount >= targetCount) {
       bcDispatch({
         type: 'CLEAR_CONFIRMATIONS',
-        payload: {} as any,
+        payload: {} as never,
       })
     }
   }, [currentCount, targetCount, bcDispatch])

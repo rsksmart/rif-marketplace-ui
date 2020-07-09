@@ -17,6 +17,7 @@ import BlockchainStore from 'store/Blockchain/BlockchainStore'
 import MarketStore from 'store/Market/MarketStore'
 import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 import Logger from 'utils/Logger'
+import { AddTxPayload } from 'store/Blockchain/blockchainActions'
 
 const logger = Logger.getInstance()
 
@@ -94,7 +95,7 @@ const CancelDomainCheckoutPage = () => {
       history.replace(ROUTES.DOMAINS.DONE.CANCEL, { domainName })
       dispatch({
         type: 'CLEAR_ORDER',
-      } as any)
+      } as never)
     }
   }, [order, isPendingConfirm, history, dispatch])
 
@@ -161,7 +162,7 @@ const CancelDomainCheckoutPage = () => {
           type: 'SET_TX_HASH',
           payload: {
             txHash: unplaceReceipt.transactionHash,
-          } as any,
+          } as AddTxPayload,
         })
         setIsPendingConfirm(true)
       } catch (e) {

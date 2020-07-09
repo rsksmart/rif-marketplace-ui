@@ -21,6 +21,7 @@ import MarketStore from 'store/Market/MarketStore'
 import RnsOffersStore from 'store/Market/rns/OffersStore'
 import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
+import { AddTxPayload } from 'store/Blockchain/blockchainActions'
 
 const network: string = process.env.REACT_APP_NETWORK || 'ganache'
 const marketPlaceAddress = contractAdds[network].marketplace.toLowerCase()
@@ -127,7 +128,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
       history.replace(ROUTES.DOMAINS.DONE.BUY, { domainName: order.item.domainName })
       dispatch({
         type: 'CLEAR_ORDER',
-      } as any)
+      } as never)
     }
   }, [order, isPendingConfirm, history, dispatch])
 
@@ -195,7 +196,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
           type: 'SET_TX_HASH',
           payload: {
             txHash: transferReceipt.transactionHash,
-          } as any,
+          } as AddTxPayload,
         })
         setIsPendingConfirm(true)
       } catch (e) {
