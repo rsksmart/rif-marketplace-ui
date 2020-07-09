@@ -1,6 +1,5 @@
-import { Tooltip } from '@material-ui/core'
-import { shortenAddress } from '@rsksmart/rif-ui'
-import React, { FC, useState } from 'react'
+import { shortenString, CopyTextTooltip } from '@rsksmart/rif-ui'
+import React, { FC } from 'react'
 
 export interface AddressItemProps {
   pretext?: string
@@ -8,25 +7,14 @@ export interface AddressItemProps {
 }
 
 const AddressItem: FC<AddressItemProps> = ({ pretext, value }) => {
-  const [isCopied, setIsCopied] = useState(false)
-  return (
-    <Tooltip
-      interactive
-      title={isCopied ? 'Copied!' : value}
-      onClick={() => {
-        navigator.clipboard.writeText(value)
-          .then(() => { setIsCopied(true) })
-      }}
-      onClose={() => {
-        setIsCopied(false)
-      }}
-    >
-      <p>
-        {pretext && `${pretext} (${shortenAddress(value)})`}
-        {!pretext && shortenAddress(value)}
-      </p>
-    </Tooltip>
+
+  const displayElement = (
+    <p>
+      {pretext && `${pretext} (${shortenString(value)})`}
+      {!pretext && shortenString(value)}
+    </p>
   )
+  return <CopyTextTooltip fullText={value} displayElement={displayElement} />
 }
 
 export default AddressItem

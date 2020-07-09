@@ -11,6 +11,7 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
+import DomainNameItem from 'components/molecules/DomainNameItem'
 
 const LISTING_TYPE = MarketListingTypes.DOMAIN_OFFERS
 
@@ -96,9 +97,16 @@ const DomainOffersPage: FC = () => {
 
       const pseudoResolvedName = offerFilters?.domain?.name?.$like && (`${offerFilters?.domain?.name?.$like}.rsk`)
       const currency = crypto[paymentToken]
+
+
+      const displayDomainName = domainName || pseudoResolvedName
+        ? <DomainNameItem value={domainName || pseudoResolvedName} />
+        : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+
       const displayItem = {
         id,
-        domainName: domainName || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
+        domainName: displayDomainName,
+        // domainName: domainName || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
         ownerAddress: <AddressItem value={ownerAddress} />,
         expirationDate: expirationDate.toLocaleDateString(),
         combinedPrice: <CombinedPriceCell
