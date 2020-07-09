@@ -1,6 +1,10 @@
-import { CircularProgress, createStyles, makeStyles, Theme } from '@material-ui/core'
+import {
+  CircularProgress, createStyles, makeStyles, Theme,
+} from '@material-ui/core'
 import { shortenAddress, Typography } from '@rsksmart/rif-ui'
-import React, { Dispatch, FC, useContext, useEffect } from 'react'
+import React, {
+  Dispatch, FC, useContext, useEffect,
+} from 'react'
 import BlockchainStore, { BlockchainStoreProps } from 'store/Blockchain/BlockchainStore'
 import { StoreDispatcher, StorePayload } from 'store/storeUtils/interfaces'
 

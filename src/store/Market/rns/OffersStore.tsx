@@ -1,12 +1,16 @@
 import { RnsFilter } from 'api/models/RnsFilter'
 import { OffersController } from 'api/rif-marketplace-cache/rns/offers'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
-import React, { useContext, useEffect, useReducer, useState } from 'react'
+import React, {
+  useContext, useEffect, useReducer, useState,
+} from 'react'
 import AppStore, { AppStoreProps } from 'store/App/AppStore'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
-import { RnsListing, RnsOrder, RnsState, RnsStoreProps } from './interfaces'
+import {
+  RnsListing, RnsOrder, RnsState, RnsStoreProps,
+} from './interfaces'
 import { rnsActions, RnsReducer } from './rnsReducer'
 import outdateTokenId from './utils'
 
@@ -104,7 +108,7 @@ export const RnsOffersStoreProvider = ({ children }) => {
 
     if (isInitialised && needsRefresh && !isLimitsSet) {
       fetchPriceLimits()
-        .then(price => {
+        .then((price) => {
           dispatch({
             type: 'UPDATE_LIMITS',
             payload: { price },

@@ -50,7 +50,7 @@ const RnsDomainsStore = React.createContext({} as RnsDomainsStoreProps | any)
 const domainsReducer: RnsReducer | StoreReducer = storeReducerFactory(initialState, rnsActions as unknown as StoreActions)
 
 export const RnsDomainsStoreProvider = ({ children }) => {
-  const [isInitialised, setIsInitialised] = useState(false) //FIXME: change in all stores
+  const [isInitialised, setIsInitialised] = useState(false) // FIXME: change in all stores
 
   const { state: { apis: { domains } } }: AppStoreProps = useContext(AppStore)
   const api = domains as DomainsController
@@ -82,8 +82,7 @@ export const RnsDomainsStoreProvider = ({ children }) => {
           type: 'REFRESH',
           payload: { refresh: true },
         } as any)
-      }
-      catch (e) {
+      } catch (e) {
         setIsInitialised(false)
       }
     }
