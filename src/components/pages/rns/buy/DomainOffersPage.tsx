@@ -106,7 +106,6 @@ const DomainOffersPage: FC = () => {
       const displayItem = {
         id,
         domainName: displayDomainName,
-        // domainName: domainName || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
         ownerAddress: <AddressItem value={ownerAddress} />,
         expirationDate: expirationDate.toLocaleDateString(),
         combinedPrice: <CombinedPriceCell

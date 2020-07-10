@@ -100,8 +100,6 @@ const SoldDomains: FC<{}> = () => {
       const displayItem = {
         id,
         domainName: displayDomainName,
-        // .ito 
-        // domainName: domainName || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
         buyer: <AddressItem value={buyer} />,
         currency: currency.displayName,
         sellingPrice: <CombinedPriceCell

@@ -159,8 +159,6 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
 
   const details = {
     NAME: displayName,
-    // .ito
-    // NAME: domainName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
     SELLER: <AddressItem value={ownerAddress} />,
     'RENEWAL DATE': expirationDate.toLocaleDateString(),
     PRICE: PriceCell,
