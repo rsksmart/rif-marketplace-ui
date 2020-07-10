@@ -18,6 +18,7 @@ import MarketplaceContract from 'contracts/Marketplace'
 import RNSContract from 'contracts/Rns'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
 import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
+import DomainNameItem from 'components/molecules/DomainNameItem'
 
 const logger = Logger.getInstance()
 
@@ -118,8 +119,12 @@ const CancelDomainCheckoutPage = () => {
   }
   const PriceCell = <CombinedPriceCell {...priceCellProps} />
 
+  const displayName = name
+    ? <DomainNameItem value={name} />
+    : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+
   const details = {
-    NAME: name || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
+    NAME: displayName,
     'RENEWAL DATE': expirationDate.toLocaleDateString(),
     PRICE: PriceCell,
   }
@@ -179,7 +184,7 @@ const CancelDomainCheckoutPage = () => {
       <Card
         className={classes.card}
       >
-        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Canceling ${name || shortenString(tokenId)}`} />
+        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Canceling ${shortenString(name || tokenId)}`} />
         <CardContent>
           <Typography className={classes.contentTitle} variant="h6" color="secondary">Domain details</Typography>
           <Table className={classes.contentDetails}>
