@@ -7,7 +7,6 @@ export interface AddressItemProps {
 }
 
 const AddressItem: FC<AddressItemProps> = ({ pretext, value }) => {
-
   const displayElement = (
     <p>
       {pretext && `${pretext} (${shortenString(value)})`}
