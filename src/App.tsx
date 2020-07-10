@@ -42,6 +42,31 @@ const App = () => {
     setTimeout(() => setDisplayAlert(false), 5000)
   }
 
+  const orderedProviders = [
+    AppStoreProvider,
+    BlockchainStoreProvider,
+    MarketStoreProvider,
+    RnsDomainsStoreProvider,
+    RnsOffersStoreProvider,
+    RnsSoldStoreProvider,
+  ]
+  const content = (
+    <BrowserRouter>
+      <div className={classes.router}>
+        <Header />
+        <PageTemplate>
+          <Collapse in={displayAlert}>
+            <Alert severity="warning" onClose={() => setDisplayAlert(false)}>
+              {alertMessage}
+            </Alert>
+          </Collapse>
+          <Routes />
+        </PageTemplate>
+        <Footer />
+      </div>
+    </BrowserRouter>
+  )
+
   return (
     <ThemeProvider theme={theme}>
       <Web3Provider.Provider
@@ -51,32 +76,9 @@ const App = () => {
           onConnectedNetworkChange,
         }}
       >
-        <AppStoreProvider>
-          <BlockchainStoreProvider>
-            <MarketStoreProvider>
-              <RnsDomainsStoreProvider>
-                <RnsOffersStoreProvider>
-                  <RnsSoldStoreProvider>
-                    <BrowserRouter>
-                      <div className={classes.router}>
-                        <Header />
-                        <PageTemplate>
-                          <Collapse in={displayAlert}>
-                            <Alert severity="warning" onClose={() => setDisplayAlert(false)}>
-                              {alertMessage}
-                            </Alert>
-                          </Collapse>
-                          <Routes />
-                        </PageTemplate>
-                        <Footer />
-                      </div>
-                    </BrowserRouter>
-                  </RnsSoldStoreProvider>
-                </RnsOffersStoreProvider>
-              </RnsDomainsStoreProvider>
-            </MarketStoreProvider>
-          </BlockchainStoreProvider>
-        </AppStoreProvider>
+        {
+          orderedProviders.reverse().reduce((Wrapper: any, Provider: any) => <Provider>{Wrapper}</Provider>, content)
+        }
       </Web3Provider.Provider>
     </ThemeProvider>
   )
