@@ -184,7 +184,7 @@ const CancelDomainCheckoutPage = () => {
       <Card
         className={classes.card}
       >
-        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Canceling ${shortenString(name || tokenId)}`} />
+        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Canceling ${shortenString(name, 30, 25) || shortenString(tokenId)}`} />
         <CardContent>
           <Typography className={classes.contentTitle} variant="h6" color="secondary">Domain details</Typography>
           <Table className={classes.contentDetails}>
