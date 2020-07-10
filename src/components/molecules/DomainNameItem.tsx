@@ -5,11 +5,13 @@ export interface DomainNameItemProps {
   value: string
 }
 
+const MAX_DISPLAYED_LENGTH = 20
+
 const DomainNameItem: FC<DomainNameItemProps> = ({ value }) => {
   return (
     <React.Fragment>
-      {value.length > 16 && <CopyTextTooltip displayElement={<p>{shortenString(value)}</p>} fullText={value} />}
-      {value.length <= 16 && <p>{value}</p>}
+      {value.length > MAX_DISPLAYED_LENGTH && <CopyTextTooltip displayElement={<p>{shortenString(value, 20, 10)}</p>} fullText={value} />}
+      {value.length <= MAX_DISPLAYED_LENGTH && <p>{value}</p>}
     </React.Fragment>
   )
 }

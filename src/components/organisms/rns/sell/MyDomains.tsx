@@ -11,6 +11,7 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
+import DomainNameItem from 'components/molecules/DomainNameItem'
 
 const LISTING_TYPE = MarketListingTypes.DOMAINS
 
@@ -94,9 +95,13 @@ const MyDomains: FC<{}> = () => {
       } = domainItem
 
       const pseudoResolvedName = domainFilters?.name?.$like && (`${domainFilters?.name?.$like}.rsk`)
+      const displayDomainName = name || pseudoResolvedName
+        ? <DomainNameItem value={name || pseudoResolvedName} />
+        : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+
       const displayItem = {
         id,
-        name: name || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
+        name: displayDomainName,
         expirationDate: expirationDate.toLocaleDateString(),
         action1: <SelectRowButton
           id={id}
