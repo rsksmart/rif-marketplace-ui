@@ -27,7 +27,7 @@ const DomainOfferFilters: FC<{}> = () => {
   return (
     <>
       <SearchFilter
-        value={name || ''}
+        value={name}
         onChange={(evt) => {
           const { currentTarget } = evt
           const value = currentTarget.value.trim()

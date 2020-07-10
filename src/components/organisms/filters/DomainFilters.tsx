@@ -47,7 +47,7 @@ const DomainFilters = () => {
   return (
     <>
       <SearchFilter
-        value={name || ''}
+        value={name}
         onChange={(evt) => {
           const { currentTarget } = evt
           const value = currentTarget.value.trim()
