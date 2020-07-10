@@ -219,7 +219,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
       <Card
         className={classes.card}
       >
-        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Buying ${shortenString(domainName || tokenId)}`} />
+        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Buying ${shortenString(domainName, 30, 25) || shortenString(tokenId)}`} />
         <CardContent>
           <Typography className={classes.contentTitle} variant="h6" color="secondary">Domain details</Typography>
           <Table className={classes.contentDetails}>

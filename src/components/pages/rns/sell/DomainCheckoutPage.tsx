@@ -218,7 +218,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
       <Card
         className={classes.card}
       >
-        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Listing ${shortenString(name || tokenId)}`} />
+        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Listing ${shortenString(name, 30, 25) || shortenString(tokenId)}`} />
         <CardContent>
           <div className={classes.contentDetails}>
             <Table>
