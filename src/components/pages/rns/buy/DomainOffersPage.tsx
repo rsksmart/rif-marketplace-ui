@@ -98,7 +98,6 @@ const DomainOffersPage: FC = () => {
       const pseudoResolvedName = offerFilters?.domain?.name?.$like && (`${offerFilters?.domain?.name?.$like}.rsk`)
       const currency = crypto[paymentToken]
 
-
       const displayDomainName = domainName || pseudoResolvedName
         ? <DomainNameItem value={domainName || pseudoResolvedName} />
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />

@@ -22,6 +22,7 @@ import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
 import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
+import DomainNameItem from 'components/molecules/DomainNameItem'
 
 const logger = Logger.getInstance()
 
@@ -203,6 +204,10 @@ const DomainsCheckoutPage: FC<{}> = () => {
 
   const submitDisabled = () => Number(price) <= 0
 
+  const displayName = name
+    ? <DomainNameItem value={name} />
+    : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+
   return (
     <CheckoutPageTemplate
       className="domains-checkout-page"
@@ -213,14 +218,14 @@ const DomainsCheckoutPage: FC<{}> = () => {
       <Card
         className={classes.card}
       >
-        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Listing ${name || shortenString(tokenId)}`} />
+        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Listing ${shortenString(name || tokenId)}`} />
         <CardContent>
           <div className={classes.contentDetails}>
             <Table>
               <TableBody>
                 <TableRow>
                   <TableCell className={classes.detailKey}>NAME</TableCell>
-                  <TableCell className={classes.detailValue}>{name || <AddressItem pretext="Unknown RNS:" value={tokenId} />}</TableCell>
+                  <TableCell className={classes.detailValue}>{displayName}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className={classes.detailKey}>RENEWAL DATE</TableCell>
