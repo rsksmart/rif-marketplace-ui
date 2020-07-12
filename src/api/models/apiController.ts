@@ -11,7 +11,7 @@ export interface APIController {
   path: string
   service: Service<any>
   connect: (newClient?: Application<any>) => string | undefined
-  fetch: (filters?: MarketFilterType) => Promise<any>
+  fetch: (filters?: MarketFilterType | any) => Promise<any>
   attachEvent: (name: string, callback: ServiceEventListener) => void
   detachEvent: (name: string) => void
 }

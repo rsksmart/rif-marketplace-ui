@@ -1,14 +1,14 @@
-import { APIController, ServiceMap } from 'api/models/apiController'
+import { ServiceMap } from 'api/models/apiController'
 import { ConfirmationsController } from 'api/rif-marketplace-cache/confirmationsController'
+import { XEController } from 'api/rif-marketplace-cache/rates/exchangeRateController'
 import { DomainsController } from 'api/rif-marketplace-cache/rns/domains'
 import { OffersController } from 'api/rif-marketplace-cache/rns/offers'
 import { SoldDomainsController } from 'api/rif-marketplace-cache/rns/sold'
 import React, { Dispatch, useReducer } from 'react'
-import { StoreState, StoreReducer, StoreActions } from 'store/storeUtils/interfaces'
+import { StoreActions, StoreReducer, StoreState } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
-import { XEController } from 'api/rif-marketplace-cache/rates/exchangeRateController'
 import { AppAction } from './appActions'
-import { AppReducer, appActions } from './appReducer'
+import { appActions, AppReducer } from './appReducer'
 
 export type StoreName = 'app'
 
@@ -29,10 +29,10 @@ export const initialState: AppState = {
   storeID: 'app',
   apis: {
     confirmations: new ConfirmationsController(),
-    'rns/v0/offers': new OffersController() as APIController,
-    'rns/v0/domains': new DomainsController() as APIController,
-    'rns/v0/sold': new SoldDomainsController() as APIController,
-    'rates/v0': new XEController() as APIController,
+    'rns/v0/offers': new OffersController(),
+    'rns/v0/domains': new DomainsController(),
+    'rns/v0/sold': new SoldDomainsController(),
+    'rates/v0': new XEController(),
     // "storage/v0/offers": new StorageOffersController()
   },
 }
