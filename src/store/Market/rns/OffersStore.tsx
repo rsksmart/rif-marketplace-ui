@@ -63,7 +63,7 @@ export const RnsOffersStoreProvider = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)
   const [isLimitsSet, setIsLimitsSet] = useState(false)
 
-  const { state: { apis: { offers } } }: AppStoreProps = useContext(AppStore)
+  const { state: { apis: { 'rns/v0/offers': offers } } }: AppStoreProps = useContext(AppStore)
   const api = offers as unknown as OffersController
 
   if (!api.service) {

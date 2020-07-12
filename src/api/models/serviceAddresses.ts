@@ -1,4 +1,5 @@
-import { RnsAddresses } from 'api/rif-marketplace-cache/rns/common'
+import { RnsAddresses as RnsAddress } from 'api/rif-marketplace-cache/rns/common'
 import { ConfirmationAddress } from 'api/rif-marketplace-cache/confirmationsController'
+import { XEServiceAddress } from 'api/rif-marketplace-cache/rates/exchangeRateController'
 
-export type ServiceAddresses = 'rates/v0/' | ConfirmationAddress | RnsAddresses | 'storage/v0/offers'
+export type ServiceAddress = XEServiceAddress | ConfirmationAddress | RnsAddress // | 'storage/v0/offers'

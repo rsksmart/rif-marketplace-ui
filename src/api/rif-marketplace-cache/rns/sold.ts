@@ -20,7 +20,7 @@ export class SoldDomainsController extends AbstractAPIController implements RnsA
   path = soldDomainsAddress
 
   fetch = async (filters: Partial<RnsFilter>): Promise<RnsSoldDomain[]> => {
-    if (!this.service) throw Error('The confirmations service is not connected')
+    if (!this.service) throw Error('The rns sold domains service is not connected')
     const { name, ownerAddress } = filters
 
     const results = await this.service.find({

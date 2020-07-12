@@ -52,7 +52,7 @@ const domainsReducer: RnsReducer | StoreReducer = storeReducerFactory(initialSta
 export const RnsDomainsStoreProvider = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false) // FIXME: change in all stores
 
-  const { state: { apis: { domains } } }: AppStoreProps = useContext(AppStore)
+  const { state: { apis: { 'rns/v0/domains': domains } } }: AppStoreProps = useContext(AppStore)
   const api = domains as DomainsController
 
   if (!api.service) {

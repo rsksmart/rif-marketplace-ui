@@ -37,7 +37,7 @@ export class OffersController extends AbstractAPIController implements RnsAPICon
   path = offersAddress
 
   fetch = async (filters: Partial<RnsFilter>): Promise<RnsDomainOffer[]> => {
-    if (!this.service) throw Error('The confirmations service is not connected')
+    if (!this.service) throw Error('The rns offers service is not connected')
     const { price, name } = filters
 
     const results = await this.service.find({

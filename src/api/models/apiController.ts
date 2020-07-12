@@ -1,6 +1,7 @@
-import { Service, Application } from '@feathersjs/feathers'
+import { Application, Service } from '@feathersjs/feathers'
 import client from 'api/rif-marketplace-cache/config'
-import { MarketFilter } from 'models/Market'
+import { MarketFilterType } from 'models/Market'
+import { ServiceAddress } from './serviceAddresses'
 
 export interface ServiceEventListener {
   (...args: any[]): void
@@ -10,7 +11,7 @@ export interface APIController {
   path: string
   service: Service<any>
   connect: (newClient?: Application<any>) => string | undefined
-  fetch: (filters?: MarketFilter) => Promise<any>
+  fetch: (filters?: MarketFilterType) => Promise<any>
   attachEvent: (name: string, callback: ServiceEventListener) => void
   detachEvent: (name: string) => void
 }
@@ -33,4 +34,4 @@ export abstract class AbstractAPIController implements Omit<APIController, 'fetc
   detachEvent!: (name: string) => void
 }
 
-export type ServiceMap = Record<string, APIController>
+export type ServiceMap = Record<ServiceAddress, APIController>

@@ -51,7 +51,7 @@ const soldDomainsReducer: RnsReducer | StoreReducer = storeReducerFactory(initia
 
 export const RnsSoldStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(soldDomainsReducer, initialState)
-  const { state: { apis: { sold } } }: AppStoreProps = useContext(AppStore)
+  const { state: { apis: { 'rns/v0/sold': sold } } }: AppStoreProps = useContext(AppStore)
   const api = sold as SoldDomainsController
 
   const {
