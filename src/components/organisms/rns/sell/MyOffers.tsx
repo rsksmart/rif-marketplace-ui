@@ -126,7 +126,7 @@ const MyOffers: FC<{}> = () => {
       filterItems={<DomainFilters />}
       itemCollection={collection}
       headers={headers}
-      accountRequired
+      requiresAccount
       dispatch={dispatch}
       outdatedCt={outdatedTokens.length}
     />

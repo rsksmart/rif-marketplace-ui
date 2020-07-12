@@ -1,4 +1,6 @@
-import { AppPayload, LoadingPayload, MessagePayload } from 'store/App/appActions'
+import {
+  AppPayload, LoadingPayload, MessagePayload, RemoveMessagePayload,
+} from 'store/App/appActions'
 import { APP_ACTIONS } from './appActions'
 import { AppState } from './AppStore'
 
@@ -16,8 +18,28 @@ export const appActions: AppActions = {
     ...state,
     ...payload,
   }),
-  SET_MESSAGE: (state, payload: MessagePayload) => ({
-    ...state,
-    ...payload,
-  }),
+  SET_MESSAGE: (state, payload: MessagePayload) => {
+    const { messages } = state
+    const { id, ...message } = payload
+
+    return {
+      ...state,
+      messages: {
+        ...messages,
+        [id]: message,
+      },
+    }
+  },
+  REMOVE_MESSAGE: (state, payload: RemoveMessagePayload) => {
+    const { id } = payload
+    const { messages } = state
+
+    const messagesCopy = { ...messages }
+    delete messagesCopy[id]
+
+    return {
+      ...state,
+      messages: messagesCopy,
+    }
+  },
 }

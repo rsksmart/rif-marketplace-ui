@@ -76,7 +76,7 @@ const SoldDomains: FC<{}> = () => {
       filterItems={<DomainFilters />}
       itemCollection={collection as any}
       headers={headers}
-      accountRequired
+      requiresAccount
       dispatch={dispatch}
       outdatedCt={outdatedTokens.length}
     />

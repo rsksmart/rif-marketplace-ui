@@ -1,8 +1,10 @@
 import {
   Button, ButtonProps, createStyles, makeStyles, Snackbar, Theme,
 } from '@material-ui/core'
-import MuiAlert, { Color as Severity } from '@material-ui/lab/Alert'
+import MuiAlert, { Color } from '@material-ui/lab/Alert'
 import React, { FC } from 'react'
+
+export type Severity = Color
 
 export interface InfoBarProps {
   isVisible: boolean

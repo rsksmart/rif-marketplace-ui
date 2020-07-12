@@ -88,7 +88,7 @@ const MyDomains: FC<{}> = () => {
       filterItems={<DomainFilters />}
       itemCollection={collection}
       headers={headers}
-      accountRequired
+      requiresAccount
       dispatch={dispatch}
       outdatedCt={listing.outdatedTokens.length}
     />
