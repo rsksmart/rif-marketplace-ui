@@ -61,19 +61,17 @@ const MarketFilter: FC = ({ children }) => {
   const SwitchWithAccount = () => WithAccount({ WrappedComponent: SwitchTabsComponent, onChange: switchTxType })
 
   return (
-    <>
-      <div className={classes.filter}>
-        <Grid className={classes.formHeading} container>
-          <Grid item xs={6}>
-            <Typography weight="lightBold" variant="h6" color="primary">Domains</Typography>
-          </Grid>
-          <Grid className={classes.switchContainer} item xs={6}>
-            <SwitchWithAccount />
-          </Grid>
+    <div className={classes.filter}>
+      <Grid className={classes.formHeading} container>
+        <Grid item xs={6}>
+          <Typography weight="lightBold" variant="h6" color="primary">Domains</Typography>
         </Grid>
-        {children}
-      </div>
-    </>
+        <Grid className={classes.switchContainer} item xs={6}>
+          <SwitchWithAccount />
+        </Grid>
+      </Grid>
+      {children}
+    </div>
   )
 }
 

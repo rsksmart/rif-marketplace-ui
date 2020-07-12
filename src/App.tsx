@@ -3,13 +3,13 @@ import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import Alert from '@material-ui/lab/Alert'
 import { PageTemplate, theme, Web3Provider } from '@rsksmart/rif-ui'
 import '@rsksmart/rif-ui/dist/index.css'
-import InfoBar from 'components/molecules/InfoBar'
+import ErrorPanel from 'components/organisms/ErrorPanel'
 import Footer from 'components/organisms/Footer'
 import Header from 'components/organisms/Header'
 import Routes from 'components/Routes'
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import AppStore, { AppStoreProps, AppStoreProvider } from 'store/App/AppStore'
+import { AppStoreProvider } from 'store/App/AppStore'
 import { BlockchainStoreProvider } from 'store/Blockchain/BlockchainStore'
 import { MarketStoreProvider } from 'store/Market/MarketStore'
 import { RnsDomainsStoreProvider } from 'store/Market/rns/DomainsStore'
@@ -25,34 +25,6 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
   },
 }))
-
-const ErrorPanel = () => {
-  const { state: {
-    isError,
-    message
-  }, dispatch }: AppStoreProps = useContext(AppStore)
-
-  return (
-    <>
-      {!!message && <InfoBar
-        isVisible={true}
-        type={isError ? 'error' : 'warning'}
-        text={message}
-        buttonText={'dismiss'}
-        button={{
-          onClick: () => {
-            dispatch({
-              type: 'SET_MESSAGE',
-              payload: {
-                message: undefined, isError: undefined
-              }
-            })
-          },
-        }}
-      />}
-    </>
-  )
-}
 
 const App = () => {
   const classes = useStyles()
@@ -82,6 +54,7 @@ const App = () => {
   const content = (
     <BrowserRouter>
       <div className={classes.router}>
+        <ErrorPanel />
         <Header />
         <PageTemplate>
           <Collapse in={displayAlert}>
