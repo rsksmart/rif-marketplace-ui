@@ -1,4 +1,4 @@
-import { ConfirmationsItem } from 'api/rif-marketplace-cache/confirmationsController'
+import { ConfirmationsItem } from 'api/rif-marketplace-cache/blockchain/confirmations'
 import { StoreDispatcher } from 'store/storeUtils/interfaces'
 
 export type BLOCKCHAIN_ACTIONS = 'NOOP' | 'SET_CONFIRMATIONS' | 'SET_TX_HASH' | 'CLEAR_CONFIRMATIONS'

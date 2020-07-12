@@ -8,7 +8,7 @@ import AppStore, { AppStoreProps } from 'store/App/AppStore'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
-import { DomainsController } from 'api/rif-marketplace-cache/rns/domains'
+import { DomainsService } from 'api/rif-marketplace-cache/rns/domains'
 import {
   RnsListing, RnsOrder, RnsState, RnsStoreProps,
 } from './interfaces'
@@ -53,7 +53,7 @@ export const RnsDomainsStoreProvider = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false) // FIXME: change in all stores
 
   const { state: { apis: { 'rns/v0/domains': domains } } }: AppStoreProps = useContext(AppStore)
-  const api = domains as DomainsController
+  const api = domains as DomainsService
 
   if (!api.service) {
     api.connect()

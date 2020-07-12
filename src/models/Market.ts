@@ -1,5 +1,5 @@
 import { RnsFilter } from 'api/models/RnsFilter'
-import { XEFilter } from 'api/rif-marketplace-cache/rates/exchangeRateController'
+import { XRFilter } from 'api/rif-marketplace-cache/rates/xr'
 import { RnsItem } from './marketItems/DomainItem'
 import { StorageItem } from './marketItems/StorageItem'
 
@@ -15,4 +15,4 @@ export interface MarketFilter {
     } | string | number | undefined | boolean
 }
 
-export type MarketFilterType = RnsFilter & XEFilter
+export type MarketFilterType = RnsFilter & XRFilter

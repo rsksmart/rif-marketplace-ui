@@ -1,10 +1,10 @@
-import { AbstractAPIController, APIController } from 'api/models/apiController'
+import { AbstractAPIService, APIService } from 'api/models/apiService'
 import { Modify } from 'utils/typeUtils'
 
 export type ConfirmationAddress = 'confirmations'
 const confirmationAddress: ConfirmationAddress = 'confirmations'
 
-export type ConfirmationAPI = Modify<APIController, {
+export type ConfirmationAPI = Modify<APIService, {
   path: ConfirmationAddress
 }>
 
@@ -32,7 +32,7 @@ export const mapFromTransport = (data: ConfirmationsTransportItem[]): Confirmati
 }, {})
 /* eslint-enable no-param-reassign */
 
-export class ConfirmationsController extends AbstractAPIController implements ConfirmationAPI {
+export class ConfirmationsService extends AbstractAPIService implements ConfirmationAPI {
   path = confirmationAddress
 
   fetch = async (): Promise<Confirmations> => {

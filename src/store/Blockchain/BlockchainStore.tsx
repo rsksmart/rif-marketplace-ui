@@ -1,6 +1,6 @@
 import { Web3Store } from '@rsksmart/rif-ui'
 import client from 'api/rif-marketplace-cache/config'
-import { ConfirmationAPI, ConfirmationsItem, mapFromTransport } from 'api/rif-marketplace-cache/confirmationsController'
+import { ConfirmationAPI, ConfirmationsItem, mapFromTransport } from 'api/rif-marketplace-cache/blockchain/confirmations'
 import React, {
   createContext, Dispatch, useContext, useEffect, useReducer,
 } from 'react'

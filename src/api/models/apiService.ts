@@ -7,7 +7,7 @@ export interface ServiceEventListener {
   (...args: any[]): void
 }
 
-export interface APIController {
+export interface APIService {
   path: string
   service: Service<any>
   connect: (newClient?: Application<any>) => string | undefined
@@ -16,7 +16,7 @@ export interface APIController {
   detachEvent: (name: string) => void
 }
 
-export abstract class AbstractAPIController implements Omit<APIController, 'fetch'> {
+export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
   path!: string
 
   service!: Service<any>
@@ -34,4 +34,4 @@ export abstract class AbstractAPIController implements Omit<APIController, 'fetc
   detachEvent!: (name: string) => void
 }
 
-export type ServiceMap = Record<ServiceAddress, APIController>
+export type ServiceMap = Record<ServiceAddress, APIService>

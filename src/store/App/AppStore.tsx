@@ -1,12 +1,12 @@
-import { ServiceMap } from 'api/models/apiController'
-import { ConfirmationsController } from 'api/rif-marketplace-cache/confirmationsController'
-import { XEController } from 'api/rif-marketplace-cache/rates/exchangeRateController'
-import { DomainsController } from 'api/rif-marketplace-cache/rns/domains'
-import { OffersController } from 'api/rif-marketplace-cache/rns/offers'
-import { SoldDomainsController } from 'api/rif-marketplace-cache/rns/sold'
+import { ServiceMap } from 'api/models/apiService'
+import { ConfirmationsService } from 'api/rif-marketplace-cache/blockchain/confirmations'
+import { DomainsService } from 'api/rif-marketplace-cache/rns/domains'
+import { OffersService } from 'api/rif-marketplace-cache/rns/offers'
+import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
 import React, { Dispatch, useReducer } from 'react'
 import { StoreActions, StoreReducer, StoreState } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
+import { XRService } from 'api/rif-marketplace-cache/rates/xr'
 import { AppAction } from './appActions'
 import { appActions, AppReducer } from './appReducer'
 
@@ -28,12 +28,12 @@ export interface AppStoreProps {
 export const initialState: AppState = {
   storeID: 'app',
   apis: {
-    confirmations: new ConfirmationsController(),
-    'rns/v0/offers': new OffersController(),
-    'rns/v0/domains': new DomainsController(),
-    'rns/v0/sold': new SoldDomainsController(),
-    'rates/v0': new XEController(),
-    // "storage/v0/offers": new StorageOffersController()
+    confirmations: new ConfirmationsService(),
+    'rns/v0/offers': new OffersService(),
+    'rns/v0/domains': new DomainsService(),
+    'rns/v0/sold': new SoldDomainsService(),
+    'rates/v0': new XRService(),
+    // "storage/v0/offers": new StorageOffersService()
   },
 }
 

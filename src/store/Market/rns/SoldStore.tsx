@@ -8,7 +8,7 @@ import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
 import AppStore, { AppStoreProps } from 'store/App/AppStore'
-import { SoldDomainsController } from 'api/rif-marketplace-cache/rns/sold'
+import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
 import {
   RnsListing, RnsOrder, RnsState, RnsStoreProps,
 } from './interfaces'
@@ -52,7 +52,7 @@ const soldDomainsReducer: RnsReducer | StoreReducer = storeReducerFactory(initia
 export const RnsSoldStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(soldDomainsReducer, initialState)
   const { state: { apis: { 'rns/v0/sold': sold } } }: AppStoreProps = useContext(AppStore)
-  const api = sold as SoldDomainsController
+  const api = sold as SoldDomainsService
 
   const {
     filters,

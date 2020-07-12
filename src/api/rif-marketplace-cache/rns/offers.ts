@@ -1,8 +1,8 @@
-import { AbstractAPIController } from 'api/models/apiController'
+import { AbstractAPIService } from 'api/models/apiService'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import { OfferTransport } from 'api/models/transports'
 import { RnsFilter, PriceFilter } from 'api/models/RnsFilter'
-import { getAvailableTokens, RnsAddresses, RnsAPIController } from './common'
+import { getAvailableTokens, RnsAddresses, RnsAPIService } from './common'
 
 export const offersAddress: RnsAddresses = 'rns/v0/offers'
 
@@ -33,7 +33,7 @@ const fetchPriceLimit = async (service, limitType: LimitType): Promise<number> =
   return results.reduce((_: unknown, item: { price: string }): number => parseInt(item.price, 10) / 10 ** 18, 0)
 }
 
-export class OffersController extends AbstractAPIController implements RnsAPIController {
+export class OffersService extends AbstractAPIService implements RnsAPIService {
   path = offersAddress
 
   fetch = async (filters: Partial<RnsFilter>): Promise<RnsDomainOffer[]> => {

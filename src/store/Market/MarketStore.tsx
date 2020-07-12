@@ -1,4 +1,4 @@
-import { SupportedFiat, tokenDisplayNames, XEController } from 'api/rif-marketplace-cache/rates/exchangeRateController'
+import { SupportedFiat, tokenDisplayNames, XRService } from 'api/rif-marketplace-cache/rates/xr'
 import React, {
   Dispatch, useContext, useEffect, useReducer, useState,
 } from 'react'
@@ -70,7 +70,7 @@ export const MarketStoreProvider = ({ children }) => {
   const [supportedCrypto] = useState(Object.keys(crypto).filter((token) => tokenDisplayNames[token])) // prevents update to this list
 
   const { state: { apis: { 'rates/v0': rates } } }: AppStoreProps = useContext(AppStore)
-  const api = rates as XEController
+  const api = rates as XRService
 
   if (!api.service) {
     api.connect()

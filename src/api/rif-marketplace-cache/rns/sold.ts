@@ -1,8 +1,8 @@
-import { AbstractAPIController } from 'api/models/apiController'
+import { AbstractAPIService } from 'api/models/apiService'
 import { RnsFilter } from 'api/models/RnsFilter'
 import { SoldDomainTransport } from 'api/models/transports'
 import { RnsSoldDomain } from 'models/marketItems/DomainItem'
-import { getAvailableTokens, RnsAddresses, RnsAPIController } from './common'
+import { getAvailableTokens, RnsAddresses, RnsAPIService } from './common'
 
 export const soldDomainsAddress: RnsAddresses = 'rns/v0/sold'
 
@@ -16,7 +16,7 @@ const mapFromTransport = (item: SoldDomainTransport): RnsSoldDomain => ({
   tokenId: item.tokenId,
 })
 
-export class SoldDomainsController extends AbstractAPIController implements RnsAPIController {
+export class SoldDomainsService extends AbstractAPIService implements RnsAPIService {
   path = soldDomainsAddress
 
   fetch = async (filters: Partial<RnsFilter>): Promise<RnsSoldDomain[]> => {

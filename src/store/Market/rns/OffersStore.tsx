@@ -1,5 +1,5 @@
 import { RnsFilter } from 'api/models/RnsFilter'
-import { OffersController } from 'api/rif-marketplace-cache/rns/offers'
+import { OffersService } from 'api/rif-marketplace-cache/rns/offers'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import React, {
   useContext, useEffect, useReducer, useState,
@@ -64,7 +64,7 @@ export const RnsOffersStoreProvider = ({ children }) => {
   const [isLimitsSet, setIsLimitsSet] = useState(false)
 
   const { state: { apis: { 'rns/v0/offers': offers } } }: AppStoreProps = useContext(AppStore)
-  const api = offers as unknown as OffersController
+  const api = offers as unknown as OffersService
 
   if (!api.service) {
     api.connect()
