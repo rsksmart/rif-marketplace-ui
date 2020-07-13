@@ -1,10 +1,9 @@
 import { Web3Store } from '@rsksmart/rif-ui'
-import client from 'api/rif-marketplace-cache/config'
 import { ConfirmationAPI, ConfirmationsItem, mapFromTransport } from 'api/rif-marketplace-cache/blockchain/confirmations'
 import React, {
   createContext, Dispatch, useContext, useEffect, useReducer,
 } from 'react'
-import AppStore, { AppStoreProps } from 'store/App/AppStore'
+import AppStore, { AppStoreProps, errorReporter } from 'store/App/AppStore'
 import { StoreActions, StoreReducer, StoreState } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
@@ -33,7 +32,13 @@ const blockchainReducer: BlockchainReducer | StoreReducer = storeReducerFactory(
 
 export const BlockchainStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(blockchainReducer, initialState)
-  const { state: { apis: { confirmations } } }: AppStoreProps = useContext(AppStore)
+  const {
+    state: {
+      apis: {
+        confirmations,
+      },
+    }, dispatch: appDispatch,
+  }: AppStoreProps = useContext(AppStore)
   const { state: { account } } = useContext(Web3Store)
   const api = confirmations as ConfirmationAPI
 
@@ -81,9 +86,9 @@ export const BlockchainStoreProvider = ({ children }) => {
 
   useEffect(() => {
     if (account) {
-      api.connect(client)
+      api.connect(errorReporter(appDispatch))
     }
-  }, [account, api])
+  }, [account, api, appDispatch])
 
   const value = { state, dispatch }
   return <BlockchainStore.Provider value={value}>{children}</BlockchainStore.Provider>

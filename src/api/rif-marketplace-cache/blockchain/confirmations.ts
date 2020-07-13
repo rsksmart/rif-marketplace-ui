@@ -35,11 +35,8 @@ export const mapFromTransport = (data: ConfirmationsTransportItem[]): Confirmati
 export class ConfirmationsService extends AbstractAPIService implements ConfirmationAPI {
   path = confirmationAddress
 
-  fetch = async (): Promise<Confirmations> => {
-    if (!this.service) throw Error('The confirmations service is not connected')
-
+  protected _fetch = async (): Promise<Confirmations> => {
     const data = await this.service.find()
-
     return mapFromTransport(data)
   }
 }

@@ -45,6 +45,12 @@
     "jsx-a11y/href-no-hash": [
       "off"
     ],
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allowAfterThis": true
+      }
+    ],
     "react/jsx-filename-extension": [
       "warn",
       {

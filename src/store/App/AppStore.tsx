@@ -1,4 +1,4 @@
-import { ServiceMap } from 'api/models/apiService'
+import { ServiceMap, APIError } from 'api/models/apiService'
 import { ConfirmationsService } from 'api/rif-marketplace-cache/blockchain/confirmations'
 import { XRService } from 'api/rif-marketplace-cache/rates/xr'
 import { DomainsService } from 'api/rif-marketplace-cache/rns/domains'
@@ -8,7 +8,8 @@ import { Severity } from 'components/molecules/InfoBar'
 import React, { Dispatch, useReducer } from 'react'
 import { StoreActions, StoreReducer, StoreState } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
-import { AppAction } from './appActions'
+import { Modify } from 'utils/typeUtils'
+import { AppAction, MessagePayload } from './appActions'
 import { appActions, AppReducer } from './appReducer'
 
 export type StoreName = 'app'
@@ -19,6 +20,8 @@ export interface CustomAction {
 }
 
 export type MessageId = string
+
+export type ErrorId = APIError
 export interface Message {
   text: string
   type: Severity
@@ -52,6 +55,18 @@ export const initialState: AppState = {
 const AppStore = React.createContext({} as AppStoreProps | any)
 const appReducer: AppReducer | StoreReducer = storeReducerFactory(initialState, appActions as unknown as StoreActions)
 
+export type ErrorReporterError = Modify<Pick<MessagePayload, 'text' | 'id' | 'customAction'>, {
+  id: ErrorId
+}>
+export const errorReporter = (dispatch: Dispatch<AppAction>) => (error: ErrorReporterError) => {
+  dispatch({
+    type: 'SET_MESSAGE',
+    payload: {
+      ...error,
+      type: 'error',
+    } as MessagePayload,
+  } as any)
+}
 export const AppStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState)
 
