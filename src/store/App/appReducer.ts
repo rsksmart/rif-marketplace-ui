@@ -1,5 +1,5 @@
 import {
-  AppPayload, LoadingPayload, MessagePayload, RemoveMessagePayload,
+  AppPayload, LoadingPayload, MessagePayload, RemoveMessagePayload, ErrorMessagePayload,
 } from 'store/App/appActions'
 import { APP_ACTIONS } from './appActions'
 import { AppState } from './AppStore'
@@ -18,7 +18,7 @@ export const appActions: AppActions = {
     ...state,
     ...payload,
   }),
-  SET_MESSAGE: (state, payload: MessagePayload) => {
+  SET_MESSAGE: (state, payload: MessagePayload | ErrorMessagePayload) => {
     const { messages } = state
     const { id, ...message } = payload
 
