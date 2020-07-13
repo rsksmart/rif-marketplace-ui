@@ -47,7 +47,7 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
     if (!this.service) {
       this.errorReporter({
         id: 'service-connection',
-        text: 'The confirmations service is not connected',
+        text: 'Error while fetching data. The confirmations service is not connected',
       })
     }
     let data = []
@@ -56,7 +56,7 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
     } catch (e) {
       this.errorReporter({
         id: 'service-fetch',
-        text: e.message,
+        text: `Error while fetching data. ${e.message}`,
       })
     }
     return data
@@ -72,7 +72,7 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
     } catch (e) {
       this.errorReporter({
         id: 'service-connection',
-        text: e.message,
+        text: `Error while connecting to service. ${e.message}`,
       })
       return undefined
     }
@@ -84,7 +84,7 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
     } catch (e) {
       this.errorReporter({
         id: 'service-event-attach',
-        text: e.message,
+        text: `Error attempting to attach to an api event. ${e.message}`,
       })
     }
   }
