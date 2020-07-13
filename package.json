@@ -1,6 +1,6 @@
 {
   "name": "rif-marketplace-ui",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "RIF Marketplace provides a digital catalogue with a wide range of decentralised services.",
   "keywords": [
     "RIF",
@@ -38,7 +38,7 @@
     "@rsksmart/erc677": "^1.0.2",
     "@rsksmart/erc721": "^1.0.0",
     "@rsksmart/rif-marketplace-nfts": "0.1.1",
-    "@rsksmart/rif-ui": "^0.1.5",
+    "@rsksmart/rif-ui": "^0.1.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
