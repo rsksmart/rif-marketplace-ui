@@ -1,6 +1,8 @@
 import InfoBar from 'components/molecules/InfoBar'
 import React, { useContext } from 'react'
-import AppStore, { AppStoreProps, MessageId } from 'store/App/AppStore'
+import AppStore, {
+  AppStoreProps, ErrorMessage, Message, MessageId,
+} from 'store/App/AppStore'
 import Logger from 'utils/Logger'
 
 const logger = Logger.getInstance()
@@ -14,10 +16,12 @@ const ErrorPanel = () => {
 
   return (
     <>
-      {Object.keys(messages).map((id: MessageId) => {
-        const { customAction, ...rest } = messages[id]
+      {(Object.keys(messages) as MessageId[]).map((id: MessageId) => {
+        const { customAction, error, ...rest } = messages[id] as Message & ErrorMessage
 
-        logger.error(`${id}: ${rest.text}`)
+        if (error) {
+          logger.error(`${id}: ${error}`)
+        }
         return (
           <InfoBar
             key={id}

@@ -4,6 +4,7 @@ import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import React, {
   useContext, useEffect, useReducer, useState,
 } from 'react'
+import { ErrorMessagePayload } from 'store/App/appActions'
 import AppStore, { AppStoreProps, errorReporter } from 'store/App/AppStore'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
@@ -125,14 +126,15 @@ export const RnsOffersStoreProvider = ({ children }) => {
           })
           setIsLimitsSet(true)
         })
-        .catch((e) => {
+        .catch((error) => {
           appDispatch({
             type: 'SET_MESSAGE',
             payload: {
               id: 'service-fetch',
-              text: `Error while fetching limits. ${e.message}`,
+              text: 'Error while fetching limits.',
               type: 'error',
-            },
+              error,
+            } as ErrorMessagePayload,
           })
         })
     }
