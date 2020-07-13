@@ -2,7 +2,7 @@ import { SupportedFiat, tokenDisplayNames, XRService } from 'api/rif-marketplace
 import React, {
   Dispatch, useContext, useEffect, useReducer, useState,
 } from 'react'
-import AppStore, { AppStoreProps } from 'store/App/AppStore'
+import AppStore, { AppStoreProps, errorReporter } from 'store/App/AppStore'
 import { StoreActions, StoreReducer, StoreState } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { MarketAction } from './marketActions'
@@ -69,11 +69,17 @@ export const MarketStoreProvider = ({ children }) => {
   } = state as MarketState
   const [supportedCrypto] = useState(Object.keys(crypto).filter((token) => tokenDisplayNames[token])) // prevents update to this list
 
-  const { state: { apis: { 'rates/v0': rates } } }: AppStoreProps = useContext(AppStore)
+  const {
+    state: {
+      apis: {
+        'rates/v0': rates,
+      },
+    }, dispatch: appDispatch,
+  }: AppStoreProps = useContext(AppStore)
   const api = rates as XRService
 
   if (!api.service) {
-    api.connect()
+    api.connect(errorReporter(appDispatch))
   }
 
   // Initialise

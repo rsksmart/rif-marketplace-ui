@@ -4,7 +4,7 @@ import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import React, {
   useContext, useEffect, useReducer, useState,
 } from 'react'
-import AppStore, { AppStoreProps } from 'store/App/AppStore'
+import AppStore, { AppStoreProps, errorReporter } from 'store/App/AppStore'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
@@ -63,11 +63,17 @@ export const RnsOffersStoreProvider = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)
   const [isLimitsSet, setIsLimitsSet] = useState(false)
 
-  const { state: { apis: { 'rns/v0/offers': offers } } }: AppStoreProps = useContext(AppStore)
+  const {
+    state: {
+      apis: {
+        'rns/v0/offers': offers,
+      },
+    }, dispatch: appDispatch,
+  }: AppStoreProps = useContext(AppStore)
   const api = offers as unknown as OffersService
 
   if (!api.service) {
-    api.connect()
+    api.connect(errorReporter(appDispatch))
   }
 
   const [state, dispatch] = useReducer(offersReducer, initialState)
