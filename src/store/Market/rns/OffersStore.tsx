@@ -125,8 +125,18 @@ export const RnsOffersStoreProvider = ({ children }) => {
           })
           setIsLimitsSet(true)
         })
+        .catch((e) => {
+          appDispatch({
+            type: 'SET_MESSAGE',
+            payload: {
+              id: 'service-fetch',
+              text: `Error while fetching limits. ${e.message}`,
+              type: 'error',
+            },
+          })
+        })
     }
-  }, [api, isInitialised, needsRefresh, isLimitsSet])
+  }, [api, isInitialised, needsRefresh, isLimitsSet, appDispatch])
 
   // Pre-fetch limits
   useEffect(() => {
