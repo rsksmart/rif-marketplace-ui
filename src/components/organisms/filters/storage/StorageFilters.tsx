@@ -24,12 +24,17 @@ const StorageFilters: FC = () => {
   const [maxPrice, setMaxPrice] = useState(90)
   const [minSize, setMinSize] = useState(5)
   const [maxSize, setMaxSize] = useState(95)
+  const [searchText, setSearchText] = useState('')
+
+  const onSearchTextChange = ({ target: { value } }) => {
+    setSearchText(value)
+  }
 
   return (
     <>
       <SearchFilter
-        value=""
-        onChange={() => { }}
+        value={searchText}
+        onChange={onSearchTextChange}
       />
       <RangeFilter
         title="Size"
