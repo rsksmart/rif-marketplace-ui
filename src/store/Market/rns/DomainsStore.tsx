@@ -5,7 +5,7 @@ import { RnsDomain } from 'models/marketItems/DomainItem'
 import React, {
   useContext, useEffect, useReducer, useState,
 } from 'react'
-import AppStore, { AppStoreProps } from 'store/App/AppStore'
+import AppStore, { AppStoreProps, errorReporter } from 'store/App/AppStore'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
@@ -59,7 +59,7 @@ export const RnsDomainsStoreProvider = ({ children }) => {
   const api = domains as DomainsService
 
   if (!api.service) {
-    api.connect()
+    api.connect(errorReporter(appDispatch))
   }
 
   const [state, dispatch] = useReducer(domainsReducer, initialState)
