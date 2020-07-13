@@ -44,7 +44,6 @@ const App = () => {
   }
 
   const orderedProviders = [
-    AppStoreProvider,
     BlockchainStoreProvider,
     MarketStoreProvider,
     RnsDomainsStoreProvider,
@@ -70,19 +69,21 @@ const App = () => {
   )
 
   return (
-    <ThemeProvider theme={theme}>
-      <Web3Provider.Provider
-        requiredNetworkId={requiredNetworkId}
-        actions={{
-          onConnectedAccountChange,
-          onConnectedNetworkChange,
-        }}
-      >
-        {
-          orderedProviders.reverse().reduce((Wrapper: any, Provider: any) => <Provider>{Wrapper}</Provider>, content)
-        }
-      </Web3Provider.Provider>
-    </ThemeProvider>
+    <AppStoreProvider>
+      <ThemeProvider theme={theme}>
+        <Web3Provider.Provider
+          requiredNetworkId={requiredNetworkId}
+          actions={{
+            onConnectedAccountChange,
+            onConnectedNetworkChange,
+          }}
+        >
+          {
+            orderedProviders.reverse().reduce((Wrapper: any, Provider: any) => <Provider>{Wrapper}</Provider>, content)
+          }
+        </Web3Provider.Provider>
+      </ThemeProvider>
+    </AppStoreProvider>
   )
 }
 
