@@ -9,6 +9,7 @@ import React, {
 } from 'react'
 import { RnsAction } from 'store/Market/rns/rnsActions'
 import AppStore from 'store/App/AppStore'
+import { MessagePayload } from 'store/App/appActions'
 import Marketplace, { TableHeaders } from './marketplace/Marketplace'
 
 export interface MarketPageTemplateProps {
@@ -60,13 +61,14 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
         payload: {
           type: 'warning',
           text: 'Please, connect your wallet.',
+          id: 'wallet',
           // customAction: {
           //   name: 'Connect',
           //   action: () => {
           //     return <Login /> //TODO: dispatch web3dispatch action 'CONNECT' that would trigger the wallet connection modal to open
           //   }
           // }
-        },
+        } as MessagePayload,
       })
     }
   }, [appDispatch, requiresAccount, account])

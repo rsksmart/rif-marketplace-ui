@@ -1,4 +1,4 @@
-import { ServiceMap, APIError } from 'api/models/apiService'
+import { APIError, ServiceMap } from 'api/models/apiService'
 import { ConfirmationsService } from 'api/rif-marketplace-cache/blockchain/confirmations'
 import { XRService } from 'api/rif-marketplace-cache/rates/xr'
 import { DomainsService } from 'api/rif-marketplace-cache/rns/domains'
@@ -9,7 +9,7 @@ import React, { Dispatch, useReducer } from 'react'
 import { StoreActions, StoreReducer, StoreState } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
-import { AppAction, MessagePayload } from './appActions'
+import { AppAction, ErrorMessagePayload } from './appActions'
 import { appActions, AppReducer } from './appReducer'
 
 export type StoreName = 'app'
@@ -19,18 +19,23 @@ export interface CustomAction {
   action: Function
 }
 
-export type MessageId = string
-
 export type ErrorId = APIError
+export type MessageId = ErrorId | 'wallet'
 export interface Message {
   text: string
   type: Severity
   customAction?: CustomAction
 }
 
+export type ErrorMessage = Modify<Message, {
+  error: Error
+}>
+
+export type MessageMap = Record<MessageId, Message | ErrorMessage>
+
 export interface AppState extends StoreState {
   isLoading?: boolean
-  messages: Record<MessageId, Message>
+  messages: Partial<MessageMap>
   apis: ServiceMap
 }
 
@@ -55,7 +60,7 @@ export const initialState: AppState = {
 const AppStore = React.createContext({} as AppStoreProps | any)
 const appReducer: AppReducer | StoreReducer = storeReducerFactory(initialState, appActions as unknown as StoreActions)
 
-export type ErrorReporterError = Modify<Pick<MessagePayload, 'text' | 'id' | 'customAction'>, {
+export type ErrorReporterError = Modify<Omit<ErrorMessagePayload, 'type'>, {
   id: ErrorId
 }>
 export const errorReporter = (dispatch: Dispatch<AppAction>) => (error: ErrorReporterError) => {
@@ -64,7 +69,7 @@ export const errorReporter = (dispatch: Dispatch<AppAction>) => (error: ErrorRep
     payload: {
       ...error,
       type: 'error',
-    } as MessagePayload,
+    } as ErrorMessagePayload,
   } as any)
 }
 export const AppStoreProvider = ({ children }) => {
