@@ -1,5 +1,6 @@
 import { Web3Store } from '@rsksmart/rif-ui'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
+import DomainNameItem from 'components/molecules/DomainNameItem'
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
@@ -81,9 +82,14 @@ const DomainOffersPage: FC = () => {
 
       const pseudoResolvedName = filters.name && (`${filters.name}.rsk`)
       const currency = crypto[paymentToken]
+
+      const displayDomainName = domainName || pseudoResolvedName
+        ? <DomainNameItem value={domainName || pseudoResolvedName} />
+        : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+
       const displayItem = {
         id,
-        domainName: domainName || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
+        domainName: displayDomainName,
         ownerAddress: <AddressItem value={ownerAddress} />,
         expirationDate: expirationDate.toLocaleDateString(),
         combinedPrice: <CombinedPriceCell

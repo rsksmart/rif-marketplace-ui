@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary } from '@material-ui/core'
+import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import RemoveIcon from '@material-ui/icons/Remove'
 import { colors, Typography, fonts } from '@rsksmart/rif-ui'
@@ -58,20 +58,20 @@ const FAQSection: FC<FAQSectionProps> = ({
   const onChange = () => setIsExpanded(!isExpanded)
 
   return (
-    <ExpansionPanel className={`${classes.root} ${className}`.trim()} expanded={isExpanded} onChange={onChange}>
-      <ExpansionPanelSummary
+    <Accordion className={`${classes.root} ${className}`.trim()} expanded={isExpanded} onChange={onChange}>
+      <AccordionSummary
         expandIcon={isExpanded ? <RemoveIcon /> : <AddIcon />}
         aria-controls={`panel-${id}-content`}
         id={id}
       >
         <Typography className={`${classes.heading} ${isExpanded ? classes.headingExpanded : classes.headingCollapsed}`.trim()}>{question}</Typography>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails className={classes.panelDetails}>
+      </AccordionSummary>
+      <AccordionDetails className={classes.panelDetails}>
         <div className={classes.answerContainer}>
           <Typography className={classes.answerText}>{answer}</Typography>
         </div>
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
+      </AccordionDetails>
+    </Accordion>
   )
 }
 

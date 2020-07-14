@@ -3,8 +3,8 @@ import MyDomains from 'components/organisms/rns/sell/MyDomains'
 import MyOffers from 'components/organisms/rns/sell/MyOffers'
 import SoldDomains from 'components/organisms/rns/sell/SoldDomains'
 import React, { FC, useContext, useEffect } from 'react'
-import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
+import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 
 type PerStatusComponents = {
   [key in DomainsSaleStatus]: React.ReactNode

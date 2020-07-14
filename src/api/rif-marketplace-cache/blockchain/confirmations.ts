@@ -37,6 +37,7 @@ export class ConfirmationsService extends AbstractAPIService implements Confirma
 
   protected _fetch = async (): Promise<Confirmations> => {
     const data = await this.service.find()
+
     return mapFromTransport(data)
   }
 }
