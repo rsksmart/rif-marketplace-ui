@@ -6,6 +6,8 @@ import { TransactionReceipt } from 'web3-eth'
 import { rnsAddress } from './config'
 import waitForReceipt, { TransactionOptions } from './utils'
 
+export type RnsContractErrorId = 'contract-rns-approve' | 'contract-rns-unapprove'
+
 class RNSContract {
   public static getInstance(web3: Web3): RNSContract {
     if (!RNSContract.instance) {

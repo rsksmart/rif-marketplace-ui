@@ -5,6 +5,8 @@ import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import { marketPlaceAddress } from './config'
 import waitForReceipt, { TransactionOptions } from './utils'
+import { ErrorReporterError, errorReporterFactory } from 'store/App/AppStore'
+export type MarketplaceContractErrorId = 'contract-marketplace-place' | 'contract-marketplace-unplace' | 'contract-marketplace-getPlacement'
 
 class MarketplaceContract {
   public static getInstance(web3: Web3): MarketplaceContract {
@@ -36,8 +38,8 @@ class MarketplaceContract {
     const placeReceipt = await new Promise<TransactionReceipt>((resolve, reject) => {
       this.contract.methods.place(tokenId, rifTokenAddress, this.web3.utils.toWei(price)).send({ from, gas, gasPrice },
         async (err, txHash) => {
-          if (err) return reject(err)
           try {
+            if (err) throw err
             const receipt = await waitForReceipt(txHash, this.web3)
             return resolve(receipt)
           } catch (e) {

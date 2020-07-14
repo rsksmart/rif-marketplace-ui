@@ -1,9 +1,5 @@
-import {
-  Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody, TableCell, TableRow, Theme,
-} from '@material-ui/core'
-import {
-  Button, colors, shortenString, Typography, Web3Store,
-} from '@rsksmart/rif-ui'
+import { Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody, TableCell, TableRow, Theme } from '@material-ui/core'
+import { Button, colors, shortenString, Typography, Web3Store } from '@rsksmart/rif-ui'
 import Login from 'components/atoms/Login'
 import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
@@ -12,9 +8,7 @@ import TransactionInProgressPanel from 'components/organisms/TransactionInProgre
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import MarketplaceContract from 'contracts/Marketplace'
 import RIFContract from 'contracts/Rif'
-import React, {
-  FC, useContext, useEffect, useState,
-} from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import { AddTxPayload } from 'store/Blockchain/blockchainActions'
@@ -23,11 +17,11 @@ import MarketStore from 'store/Market/MarketStore'
 import RnsOffersStore from 'store/Market/rns/OffersStore'
 import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
-
-const network: string = process.env.REACT_APP_NETWORK || 'ganache'
-const marketPlaceAddress = contractAdds[network].marketplace.toLowerCase()
+import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
 
 const logger = Logger.getInstance()
+const network: string = process.env.REACT_APP_NETWORK || 'ganache'
+const marketPlaceAddress = contractAdds[network].marketplace.toLowerCase()
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   card: {
@@ -74,6 +68,9 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 const DomainOffersCheckoutPage: FC<{}> = () => {
   const classes = useStyles()
   const history = useHistory()
+
+  const { dispatch: appDispatch } = useContext<AppStoreProps>(AppStore)
+  const reportError = errorReporterFactory(appDispatch)
   const {
     state: {
       exchangeRates: {
@@ -108,20 +105,31 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
       const checkFunds = async () => {
         const rifContract = RIFContract.getInstance(web3)
         const marketPlaceContract = MarketplaceContract.getInstance(web3)
-        try {
-          const myBalance = await rifContract.getBalanceOf(account, { from: account })
-          const tokenPlacement = await marketPlaceContract.getPlacement(tokenId, { from: account })
-          const price = tokenPlacement[1]
+        const myBalance = await rifContract.getBalanceOf(account, { from: account })
+          .catch((error) => reportError({
+            error,
+            id: 'contract-rif-getBalanceOf',
+            text: 'Could not get balance from the crypto contract.',
+          }))
+        if (!myBalance) return
 
-          setHasFunds(new web3.utils.BN(myBalance).gte(new web3.utils.BN(price)))
-          setIsFundsConfirmed(true)
-        } catch (e) {
-          logger.error('Could not complete transaction:', e)
-        }
+        const tokenPlacement = await marketPlaceContract.getPlacement(tokenId, { from: account })
+          .catch((error) => reportError({
+            error,
+            id: 'contract-marketplace-getPlacement',
+            text: `Could not retreive placement for ${domainName} from the marketplace contract.`,
+          }))
+        if (!tokenPlacement) return
+
+        const price = tokenPlacement[1]
+        const { utils: { BN } } = web3
+
+        setHasFunds(new BN(myBalance).gte(new BN(price)))
+        setIsFundsConfirmed(true)
       }
       checkFunds()
     }
-  }, [web3, account, tokenId, isFundsConfirmed])
+  }, [web3, account, tokenId, isFundsConfirmed, reportError])
 
   useEffect(() => {
     if (isPendingConfirm && order && !order.isProcessing) {
@@ -180,39 +188,39 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
         },
       })
 
-      try {
-        const rifContract = RIFContract.getInstance(web3)
-        const marketPlaceContract = MarketplaceContract.getInstance(web3)
+      const rifContract = RIFContract.getInstance(web3)
+      const marketPlaceContract = MarketplaceContract.getInstance(web3)
 
-        const tokenPlacement = await marketPlaceContract.getPlacement(tokenId, { from: account })
-        const tokenPrice = tokenPlacement[1]
+      const tokenPlacement = await marketPlaceContract.getPlacement(tokenId, { from: account })
+        .catch((error) => reportError({
+          error,
+          id: 'contract-marketplace-getPlacement',
+          text: `Could not retreive placement for ${domainName} from the marketplace contract.`,
+        }))
+      if (!tokenPlacement) return
+      const tokenPrice = tokenPlacement[1]
 
-        // Get gas price
-        const gasPrice = await web3.eth.getGasPrice()
+      // Get gas price
+      const gasPrice = await web3.eth.getGasPrice()
 
-        // Send Transfer and call transaction
-        const transferReceipt = await rifContract.transferAndCall(marketPlaceAddress, tokenPrice, tokenId, { from: account, gasPrice })
+      // Send Transfer and call transaction
+      const transferReceipt = await rifContract.transferAndCall(marketPlaceAddress, tokenPrice, tokenId, { from: account, gasPrice })
+        .catch((error) => reportError({
+          error,
+          id: 'contract-rif-transferAndCall',
+          text: `Transfer of ${tokenPrice} ${currency.displayName} failed. Check your funds and try again.`,
+        }))
+      logger.info('transferReceipt:', transferReceipt)
+      if (!transferReceipt) return
 
-        if (!transferReceipt) {
-          throw Error('Something unexpected happened. No receipt received from the transfer transaction.')
-        }
+      bcDispatch({
+        type: 'SET_TX_HASH',
+        payload: {
+          txHash: transferReceipt.transactionHash,
+        } as AddTxPayload,
+      })
+      setIsPendingConfirm(true)
 
-        bcDispatch({
-          type: 'SET_TX_HASH',
-          payload: {
-            txHash: transferReceipt.transactionHash,
-          } as AddTxPayload,
-        })
-        setIsPendingConfirm(true)
-      } catch (e) {
-        logger.error('Could not complete transaction:', e)
-
-        history.replace(ROUTES.DOMAINS.SELL)
-        dispatch({
-          type: 'SET_ORDER',
-          payload: undefined,
-        })
-      }
     }
   }
 

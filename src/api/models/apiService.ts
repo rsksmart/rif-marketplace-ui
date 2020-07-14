@@ -4,7 +4,7 @@ import { MarketFilterType } from 'models/Market'
 import { ErrorReporterError } from 'store/App/AppStore'
 import { ServiceAddress } from './serviceAddresses'
 
-export type APIError = 'service-connection' | 'service-event-attach' | 'service-fetch'
+export type APIErrorId = 'service-connection' | 'service-event-attach' | 'service-fetch'
 
 export interface ServiceEventListener {
   (...args: any[]): void

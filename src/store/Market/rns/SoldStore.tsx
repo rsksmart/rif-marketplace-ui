@@ -7,7 +7,7 @@ import React, {
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
-import AppStore, { AppStoreProps, errorReporter } from 'store/App/AppStore'
+import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
 import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
 import {
   RnsListing, RnsOrder, RnsState, RnsStoreProps,
@@ -69,7 +69,7 @@ export const RnsSoldStoreProvider = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)
 
   if (!api.service) {
-    api.connect(errorReporter(appDispatch))
+    api.connect(errorReporterFactory(appDispatch))
   }
 
   // Initialise
