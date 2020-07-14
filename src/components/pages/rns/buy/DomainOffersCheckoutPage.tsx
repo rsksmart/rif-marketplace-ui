@@ -1,5 +1,9 @@
-import { Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody, TableCell, TableRow, Theme } from '@material-ui/core'
-import { Button, colors, shortenString, Typography, Web3Store } from '@rsksmart/rif-ui'
+import {
+  Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody, TableCell, TableRow, Theme,
+} from '@material-ui/core'
+import {
+  Button, colors, shortenString, Typography, Web3Store,
+} from '@rsksmart/rif-ui'
 import Login from 'components/atoms/Login'
 import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
@@ -8,7 +12,9 @@ import TransactionInProgressPanel from 'components/organisms/TransactionInProgre
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import MarketplaceContract from 'contracts/Marketplace'
 import RIFContract from 'contracts/Rif'
-import React, { FC, useContext, useEffect, useState } from 'react'
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import { AddTxPayload } from 'store/Blockchain/blockchainActions'
@@ -111,6 +117,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
             id: 'contract-rif-getBalanceOf',
             text: 'Could not get balance from the crypto contract.',
           }))
+
         if (!myBalance) return
 
         const tokenPlacement = await marketPlaceContract.getPlacement(tokenId, { from: account })
@@ -119,6 +126,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
             id: 'contract-marketplace-getPlacement',
             text: `Could not retreive placement for ${domainName} from the marketplace contract.`,
           }))
+
         if (!tokenPlacement) return
 
         const price = tokenPlacement[1]
@@ -129,7 +137,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
       }
       checkFunds()
     }
-  }, [web3, account, tokenId, isFundsConfirmed, reportError])
+  }, [web3, account, tokenId, isFundsConfirmed, reportError, domainName])
 
   useEffect(() => {
     if (isPendingConfirm && order && !order.isProcessing) {
@@ -197,6 +205,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
           id: 'contract-marketplace-getPlacement',
           text: `Could not retreive placement for ${domainName} from the marketplace contract.`,
         }))
+
       if (!tokenPlacement) return
       const tokenPrice = tokenPlacement[1]
 
@@ -211,6 +220,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
           text: `Transfer of ${tokenPrice} ${currency.displayName} failed. Check your funds and try again.`,
         }))
       logger.info('transferReceipt:', transferReceipt)
+
       if (!transferReceipt) return
 
       bcDispatch({
@@ -220,7 +230,6 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
         } as AddTxPayload,
       })
       setIsPendingConfirm(true)
-
     }
   }
 

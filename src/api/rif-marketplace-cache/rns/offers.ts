@@ -36,7 +36,7 @@ const fetchPriceLimit = async (service, limitType: LimitType): Promise<number> =
 export class OffersService extends AbstractAPIService implements RnsAPIService {
   path = offersAddress
 
-  protected _fetch = async (filters: Partial<RnsFilter>): Promise<RnsDomainOffer[]> => {
+  _fetch = async (filters: Partial<RnsFilter>): Promise<RnsDomainOffer[]> => {
     const { price, name } = filters
 
     const results = await this.service.find({

@@ -32,7 +32,7 @@ const mapFromTransport = (item: DomainTransport): RnsDomain => {
 export class DomainsService extends AbstractAPIService implements RnsAPIService {
   path = domainsAddress
 
-  protected _fetch = async (filters: Partial<RnsFilter>): Promise<RnsDomain[]> => {
+  _fetch = async (filters: Partial<RnsFilter>): Promise<RnsDomain[]> => {
     const { name, status, ownerAddress } = filters
 
     const results = await this.service.find({

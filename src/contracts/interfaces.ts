@@ -1,6 +1,6 @@
-import { MarketplaceContractErrorId } from "./Marketplace";
-import { RifContractErrorId } from "./Rif";
-import { RnsContractErrorId } from "./Rns";
+import { MarketplaceContractErrorId } from './Marketplace'
+import { RifContractErrorId } from './Rif'
+import { RnsContractErrorId } from './Rns'
 
 export type Web3ErrorId = 'web3-getGasPrice'
 

@@ -10,15 +10,6 @@ export interface ServiceEventListener {
   (...args: any[]): void
 }
 
-// export interface ConnectServiceArgs {
-//   newClient?: Application<any>
-//   onError?: Function
-// }
-
-// export interface FetchArgs {
-//   filters?: MarketFilterType | any
-//   onError?: Function
-// }
 export interface ErrorReporter {
   (e: ErrorReporterError): void
 }
@@ -28,7 +19,7 @@ export interface APIService {
   service: Service<any>
   connect: (errorReporter: ErrorReporter, newClient?: Application<any>) => string | undefined
   fetch: (filters?: MarketFilterType | any) => Promise<any>
-  // _fetch: (filters?: MarketFilterType | any) => Promise<any>
+  _fetch: (filters?: MarketFilterType | any) => Promise<any>
   attachEvent: (name: string, callback: ServiceEventListener) => void
   detachEvent: (name: string) => void
   errorReporter: ErrorReporter
@@ -41,7 +32,7 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
 
   errorReporter!: ErrorReporter
 
-  protected _fetch!: (filters?: MarketFilterType | any) => Promise<any>
+  abstract _fetch: (filters?: MarketFilterType | any) => Promise<any>
 
   fetch = async (filters?: MarketFilterType | any): Promise<any> => {
     if (!this.service) {

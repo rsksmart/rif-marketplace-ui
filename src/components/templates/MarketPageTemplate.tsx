@@ -9,8 +9,8 @@ import React, {
 } from 'react'
 import { RnsAction } from 'store/Market/rns/rnsActions'
 import AppStore from 'store/App/AppStore'
-import Marketplace, { TableHeaders } from './marketplace/Marketplace'
 import { MessagePayload } from 'store/App/appActions'
+import Marketplace, { TableHeaders } from './marketplace/Marketplace'
 
 export interface MarketPageTemplateProps {
   className?: string
@@ -61,7 +61,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
         payload: {
           type: 'warning',
           text: 'Please, connect your wallet.',
-          id: 'wallet'
+          id: 'wallet',
           // customAction: {
           //   name: 'Connect',
           //   action: () => {

@@ -1,11 +1,11 @@
 import ERC721SimplePlacementsV1 from '@rsksmart/rif-marketplace-nfts/ERC721SimplePlacementsV1Data.json'
 import Web3 from 'web3'
+import { TransactionReceipt } from 'web3-eth'
 import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
-import { TransactionReceipt } from 'web3-eth'
 import { marketPlaceAddress } from './config'
 import waitForReceipt, { TransactionOptions } from './utils'
-import { ErrorReporterError, errorReporterFactory } from 'store/App/AppStore'
+
 export type MarketplaceContractErrorId = 'contract-marketplace-place' | 'contract-marketplace-unplace' | 'contract-marketplace-getPlacement'
 
 class MarketplaceContract {
