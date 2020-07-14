@@ -23,6 +23,7 @@ import MarketStore from 'store/Market/MarketStore'
 import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
+import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
 
 const logger = Logger.getInstance()
 
@@ -105,6 +106,8 @@ const DomainsCheckoutPage: FC<{}> = () => {
   } = useContext(Web3Store)
   const { dispatch: bcDispatch } = useContext(BlockchainStore)
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
+  const { dispatch: appDispatch } = useContext<AppStoreProps>(AppStore)
+  const reportError = errorReporterFactory(appDispatch)
 
   const currencySymbols = Object.keys(crypto)
   const currencyOptions = currencySymbols.map((symbol) => crypto[symbol].displayName)
@@ -147,39 +150,44 @@ const DomainsCheckoutPage: FC<{}> = () => {
         },
       })
 
-      try {
-        const rnsContract = RNSContract.getInstance(web3)
-        const marketPlaceContract = MarketplaceContract.getInstance(web3)
+      const rnsContract = RNSContract.getInstance(web3)
+      const marketPlaceContract = MarketplaceContract.getInstance(web3)
 
-        // Get gas price
-        const gasPrice = await web3.eth.getGasPrice()
+      // Get gas price
+      const gasPrice = await web3.eth.getGasPrice()
+        .catch((error) => reportError({
+          error,
+          id: 'web3-getGasPrice',
+          text: 'Could not retreive gas price from the blockchain.',
+        }))
 
-        // Send approval transaction
-        const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId, { from: account, gasPrice })
-        logger.info('approveReceipt:', approveReceipt)
+      // Send approval transaction
+      const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId, { from: account, gasPrice })
+        .catch((error) => reportError({
+          error,
+          id: 'contract-rns-approve',
+          text: `Could not approve domain ${name}.`,
+        }))
+      logger.info('approveReceipt:', approveReceipt)
+      if (!approveReceipt) return
 
-        // Send Placement transaction
-        const placeReceipt = await marketPlaceContract.place(tokenId, rifTokenAddress, price, { from: account, gasPrice })
+      // Send Placement transaction
+      const placeReceipt = await marketPlaceContract.place(tokenId, rifTokenAddress, price, { from: account, gasPrice })
+        .catch((error) => reportError({
+          error,
+          id: 'contract-marketplace-place',
+          text: `Could not place domain ${name}.`,
+        }))
+      logger.info('placeReceipt:', placeReceipt)
+      if (!placeReceipt) return
 
-        if (!placeReceipt) {
-          throw Error('Something unexpected happened. No receipt received from the place transaction.')
-        }
-
-        bcDispatch({
-          type: 'SET_TX_HASH',
-          payload: {
-            txHash: placeReceipt.transactionHash,
-          } as AddTxPayload,
-        })
-        setIsPendingConfirm(true)
-      } catch (e) {
-        logger.error('Could not complete transaction:', e)
-        history.replace(ROUTES.DOMAINS.SELL)
-        dispatch({
-          type: 'SET_ORDER',
-          payload: undefined,
-        })
-      }
+      bcDispatch({
+        type: 'SET_TX_HASH',
+        payload: {
+          txHash: placeReceipt.transactionHash,
+        } as AddTxPayload,
+      })
+      setIsPendingConfirm(true)
     }
   }
 

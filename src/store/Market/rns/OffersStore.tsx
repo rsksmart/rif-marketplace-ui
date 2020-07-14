@@ -5,7 +5,7 @@ import React, {
   useContext, useEffect, useReducer, useState,
 } from 'react'
 import { ErrorMessagePayload } from 'store/App/appActions'
-import AppStore, { AppStoreProps, errorReporter } from 'store/App/AppStore'
+import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
@@ -74,7 +74,7 @@ export const RnsOffersStoreProvider = ({ children }) => {
   const api = offers as unknown as OffersService
 
   if (!api.service) {
-    api.connect(errorReporter(appDispatch))
+    api.connect(errorReporterFactory(appDispatch))
   }
 
   const [state, dispatch] = useReducer(offersReducer, initialState)

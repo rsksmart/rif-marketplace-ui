@@ -20,7 +20,7 @@ const ErrorPanel = () => {
         const { customAction, error, ...rest } = messages[id] as Message & ErrorMessage
 
         if (error) {
-          logger.error(`${id}: ${error}`)
+          logger.error(id, ':', error)
         }
         return (
           <InfoBar

@@ -19,6 +19,7 @@ import BlockchainStore from 'store/Blockchain/BlockchainStore'
 import MarketStore from 'store/Market/MarketStore'
 import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 import Logger from 'utils/Logger'
+import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
 
 const logger = Logger.getInstance()
 
@@ -89,6 +90,9 @@ const CancelDomainCheckoutPage = () => {
   const { dispatch: bcDispatch } = useContext(BlockchainStore)
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
 
+  const { dispatch: appDispatch } = useContext<AppStoreProps>(AppStore)
+  const reportError = errorReporterFactory(appDispatch)
+
   useEffect(() => {
     if (isPendingConfirm && order && !order.isProcessing) {
       // Post-confirmations handle
@@ -145,39 +149,44 @@ const CancelDomainCheckoutPage = () => {
         },
       })
 
-      try {
-        const rnsContract = RNSContract.getInstance(web3)
-        const marketPlaceContract = MarketplaceContract.getInstance(web3)
+      const rnsContract = RNSContract.getInstance(web3)
+      const marketPlaceContract = MarketplaceContract.getInstance(web3)
 
-        // Get gas price
-        const gasPrice = await web3.eth.getGasPrice()
+      // Get gas price
+      const gasPrice = await web3.eth.getGasPrice()
+        .catch((error) => reportError({
+          error,
+          id: 'web3-getGasPrice',
+          text: 'Could not retreive gas price from the blockchain.',
+        }))
 
-        // Send unapproval transaction
-        const unapproveReceipt = await rnsContract.unapprove(tokenId, { from: account, gasPrice })
-        logger.info('unapproveReceipt:', unapproveReceipt)
+      // Send unapproval transaction
+      const unapproveReceipt = await rnsContract.unapprove(tokenId, { from: account, gasPrice })
+        .catch((error) => reportError({
+          error,
+          id: 'contract-rns-unapprove',
+          text: `Could not unapprove domain ${name}.`,
+        }))
+      logger.info('unapproveReceipt:', unapproveReceipt)
+      if (!unapproveReceipt) return
 
-        // Send Unplacement transaction
-        const unplaceReceipt = await marketPlaceContract.unplace(tokenId, { from: account, gasPrice })
+      // Send Unplacement transaction
+      const unplaceReceipt = await marketPlaceContract.unplace(tokenId, { from: account, gasPrice })
+        .catch((error) => reportError({
+          error,
+          id: 'contract-marketplace-unplace',
+          text: `Could not unplace domain ${name}.`,
+        }))
+      logger.info('unplaceReceipt:', unplaceReceipt)
+      if (!unplaceReceipt) return
 
-        if (!unplaceReceipt) {
-          throw Error('Something unexpected happened. No receipt received from the unplace transaction.')
-        }
-
-        bcDispatch({
-          type: 'SET_TX_HASH',
-          payload: {
-            txHash: unplaceReceipt.transactionHash,
-          } as AddTxPayload,
-        })
-        setIsPendingConfirm(true)
-      } catch (e) {
-        logger.error('Could not complete transaction:', e)
-        history.replace(ROUTES.DOMAINS.SELL)
-        dispatch({
-          type: 'SET_ORDER',
-          payload: undefined,
-        })
-      }
+      bcDispatch({
+        type: 'SET_TX_HASH',
+        payload: {
+          txHash: unplaceReceipt.transactionHash,
+        } as AddTxPayload,
+      })
+      setIsPendingConfirm(true)
     }
   }
 

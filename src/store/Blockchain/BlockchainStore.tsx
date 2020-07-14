@@ -3,7 +3,7 @@ import { ConfirmationAPI, ConfirmationsItem, mapFromTransport } from 'api/rif-ma
 import React, {
   createContext, Dispatch, useContext, useEffect, useReducer,
 } from 'react'
-import AppStore, { AppStoreProps, errorReporter } from 'store/App/AppStore'
+import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
 import { StoreActions, StoreReducer, StoreState } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
@@ -86,7 +86,7 @@ export const BlockchainStoreProvider = ({ children }) => {
 
   useEffect(() => {
     if (account) {
-      api.connect(errorReporter(appDispatch))
+      api.connect(errorReporterFactory(appDispatch))
     }
   }, [account, api, appDispatch])
 

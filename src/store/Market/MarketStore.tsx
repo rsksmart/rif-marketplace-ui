@@ -2,7 +2,7 @@ import { SupportedFiat, tokenDisplayNames, XRService } from 'api/rif-marketplace
 import React, {
   Dispatch, useContext, useEffect, useReducer, useState,
 } from 'react'
-import AppStore, { AppStoreProps, errorReporter } from 'store/App/AppStore'
+import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
 import { StoreActions, StoreReducer, StoreState } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { MarketAction } from './marketActions'
@@ -79,7 +79,7 @@ export const MarketStoreProvider = ({ children }) => {
   const api = rates as XRService
 
   if (!api.service) {
-    api.connect(errorReporter(appDispatch))
+    api.connect(errorReporterFactory(appDispatch))
   }
 
   // Initialise

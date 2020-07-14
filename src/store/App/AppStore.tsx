@@ -1,4 +1,4 @@
-import { APIError, ServiceMap } from 'api/models/apiService'
+import { APIErrorId, ServiceMap } from 'api/models/apiService'
 import { ConfirmationsService } from 'api/rif-marketplace-cache/blockchain/confirmations'
 import { XRService } from 'api/rif-marketplace-cache/rates/xr'
 import { DomainsService } from 'api/rif-marketplace-cache/rns/domains'
@@ -11,6 +11,7 @@ import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
 import { AppAction, ErrorMessagePayload } from './appActions'
 import { appActions, AppReducer } from './appReducer'
+import { ContractErrorId } from 'contracts/interfaces'
 
 export type StoreName = 'app'
 
@@ -19,7 +20,7 @@ export interface CustomAction {
   action: Function
 }
 
-export type ErrorId = APIError
+export type ErrorId = APIErrorId | ContractErrorId
 export type MessageId = ErrorId | 'wallet'
 export interface Message {
   text: string
@@ -63,7 +64,14 @@ const appReducer: AppReducer | StoreReducer = storeReducerFactory(initialState, 
 export type ErrorReporterError = Modify<Omit<ErrorMessagePayload, 'type'>, {
   id: ErrorId
 }>
-export const errorReporter = (dispatch: Dispatch<AppAction>) => (error: ErrorReporterError) => {
+export interface ErrorReporter {
+  (error: ErrorReporterError): void
+}
+export interface ErrorReporterFactory {
+  (dispatch: Dispatch<AppAction>): ErrorReporter
+}
+
+export const errorReporterFactory: ErrorReporterFactory = (dispatch: Dispatch<AppAction>) => (error: ErrorReporterError) => {
   dispatch({
     type: 'SET_MESSAGE',
     payload: {
