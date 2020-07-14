@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import {
   makeStyles, Table, TableHead, TableRow, TableCell, TableBody, Theme,
 } from '@material-ui/core'
-import { MarketItemType } from 'models/Market'
+import { MarketItem } from 'models/Market'
 import {
   colors, fonts,
 } from '@rsksmart/rif-ui'
@@ -12,7 +12,7 @@ export interface TableHeaders {
 }
 export interface MarketplaceProps {
   className?: string
-  items: MarketItemType[]
+  items: MarketItem[]
   headers: TableHeaders
 }
 

@@ -7,10 +7,13 @@ import Footer from 'components/organisms/Footer'
 import Header from 'components/organisms/Header'
 import Routes from 'components/Routes'
 import React, { useState } from 'react'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import { AppStoreProvider } from 'store/App/AppStore'
 import { BlockchainStoreProvider } from 'store/Blockchain/BlockchainStore'
 import { MarketStoreProvider } from 'store/Market/MarketStore'
+import { RnsDomainsStoreProvider } from 'store/Market/rns/DomainsStore'
+import { RnsOffersStoreProvider } from 'store/Market/rns/OffersStore'
+import { RnsSoldStoreProvider } from 'store/Market/rns/SoldStore'
 
 const requiredNetworkId: number = Number(process.env.REACT_APP_REQUIRED_NETWORK_ID) || 8545
 
@@ -39,6 +42,31 @@ const App = () => {
     setTimeout(() => setDisplayAlert(false), 5000)
   }
 
+  const orderedProviders = [
+    AppStoreProvider,
+    BlockchainStoreProvider,
+    MarketStoreProvider,
+    RnsDomainsStoreProvider,
+    RnsOffersStoreProvider,
+    RnsSoldStoreProvider,
+  ]
+  const content = (
+    <BrowserRouter>
+      <div className={classes.router}>
+        <Header />
+        <PageTemplate>
+          <Collapse in={displayAlert}>
+            <Alert severity="warning" onClose={() => setDisplayAlert(false)}>
+              {alertMessage}
+            </Alert>
+          </Collapse>
+          <Routes />
+        </PageTemplate>
+        <Footer />
+      </div>
+    </BrowserRouter>
+  )
+
   return (
     <ThemeProvider theme={theme}>
       <Web3Provider.Provider
@@ -48,26 +76,9 @@ const App = () => {
           onConnectedNetworkChange,
         }}
       >
-        <AppStoreProvider>
-          <BlockchainStoreProvider>
-            <MarketStoreProvider>
-              <Router>
-                <div className={classes.router}>
-                  <Header />
-                  <PageTemplate>
-                    <Collapse in={displayAlert}>
-                      <Alert severity="warning" onClose={() => setDisplayAlert(false)}>
-                        {alertMessage}
-                      </Alert>
-                    </Collapse>
-                    <Routes />
-                  </PageTemplate>
-                  <Footer />
-                </div>
-              </Router>
-            </MarketStoreProvider>
-          </BlockchainStoreProvider>
-        </AppStoreProvider>
+        {
+          orderedProviders.reverse().reduce((Wrapper: any, Provider: any) => <Provider>{Wrapper}</Provider>, content)
+        }
       </Web3Provider.Provider>
     </ThemeProvider>
   )

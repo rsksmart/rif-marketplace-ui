@@ -1,28 +1,28 @@
 import {
   Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody, TableCell, TableRow, Theme,
 } from '@material-ui/core'
+import {
+  Button, colors, shortenString, Typography, Web3Store,
+} from '@rsksmart/rif-ui'
 import Login from 'components/atoms/Login'
+import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
+import DomainNameItem from 'components/molecules/DomainNameItem'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
+import MarketplaceContract from 'contracts/Marketplace'
+import RIFContract from 'contracts/Rif'
 import React, {
   FC, useContext, useEffect, useState,
 } from 'react'
 import { useHistory } from 'react-router-dom'
-import {
-  Button, colors, shortenString, Typography, Web3Store,
-} from '@rsksmart/rif-ui'
 import ROUTES from 'routes'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
-import MarketStore from 'store/Market/MarketStore'
-import Logger from 'utils/Logger'
-import AddressItem from 'components/molecules/AddressItem'
-import contractAdds from 'ui-config.json'
-import RIFContract from 'contracts/Rif'
-import MarketplaceContract from 'contracts/Marketplace'
+import { AddTxPayload } from 'store/Blockchain/blockchainActions'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
-import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
-import DomainNameItem from 'components/molecules/DomainNameItem'
+import MarketStore from 'store/Market/MarketStore'
+import RnsOffersStore from 'store/Market/rns/OffersStore'
+import contractAdds from 'ui-config.json'
+import Logger from 'utils/Logger'
 
 const network: string = process.env.REACT_APP_NETWORK || 'ganache'
 const marketPlaceAddress = contractAdds[network].marketplace.toLowerCase()
@@ -76,14 +76,18 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   const history = useHistory()
   const {
     state: {
-      currentOrder,
       exchangeRates: {
         currentFiat,
         crypto,
       },
     },
-    dispatch,
   } = useContext(MarketStore)
+
+  const {
+    state: {
+      order,
+    }, dispatch,
+  } = useContext(RnsOffersStore)
   const {
     state: {
       account,
@@ -95,8 +99,8 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
 
   const [hasFunds, setHasFunds] = useState(false)
   const [isFundsConfirmed, setIsFundsConfirmed] = useState(false)
-  const tokenId = currentOrder?.item?.tokenId
-  const domainName = currentOrder?.item?.domainName
+  const tokenId = order?.item?.tokenId
+  const domainName = order?.item?.domainName
 
   // check funds
   useEffect(() => {
@@ -120,16 +124,19 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   }, [web3, account, tokenId, isFundsConfirmed])
 
   useEffect(() => {
-    if (!currentOrder) {
-      // Redirect from direct navigation
-      history.replace(ROUTES.LANDING)
-    } else if (isPendingConfirm && !currentOrder.isProcessing) {
+    if (isPendingConfirm && order && !order.isProcessing) {
       // Post-confirmations handle
-      history.replace(ROUTES.DOMAINS.DONE.BUY)
+      history.replace(ROUTES.DOMAINS.DONE.BUY, { domainName: order.item.domainName })
+      dispatch({
+        type: 'CLEAR_ORDER',
+      } as never)
     }
-  }, [currentOrder, isPendingConfirm, history])
+  }, [order, isPendingConfirm, history, dispatch])
 
-  if (!currentOrder) return null
+  if (!order) {
+    history.replace(ROUTES.LANDING)
+    return null
+  }
 
   const {
     item: {
@@ -139,7 +146,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
       paymentToken,
     },
     isProcessing,
-  } = currentOrder
+  } = order
   const isOwnDomain = account?.toLowerCase() === ownerAddress.toLowerCase()
 
   const currency = crypto[paymentToken]
@@ -167,7 +174,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   const handleBuyDomain = async () => {
     if (web3 && account) {
       dispatch({
-        type: MARKET_ACTIONS.SET_PROG_STATUS,
+        type: 'SET_PROGRESS',
         payload: {
           isProcessing: true,
         },
@@ -191,10 +198,10 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
         }
 
         bcDispatch({
-          type: BLOCKCHAIN_ACTIONS.SET_TX_HASH,
+          type: 'SET_TX_HASH',
           payload: {
             txHash: transferReceipt.transactionHash,
-          } as any,
+          } as AddTxPayload,
         })
         setIsPendingConfirm(true)
       } catch (e) {
@@ -202,7 +209,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
 
         history.replace(ROUTES.DOMAINS.SELL)
         dispatch({
-          type: MARKET_ACTIONS.SELECT_ITEM,
+          type: 'SET_ORDER',
           payload: undefined,
         })
       }
@@ -253,7 +260,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
           )}
         {!account && <Login />}
       </Card>
-      {!!isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm }} text="Buying the domain!" progMsg="The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished." />}
+      {!!isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, dispatch }} text="Buying the domain!" progMsg="The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished." />}
     </CheckoutPageTemplate>
   )
 }

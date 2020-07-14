@@ -1,28 +1,15 @@
 import { MarketFilter } from 'models/Market'
 
-export interface DomainOffersFilter extends MarketFilter {
-    price: {
-        $lte: number
-        $gte: number
-    }
-    domain?: {
-        name: {
-            $like: string
-        }
-    }
-    ownerAddress?: {
-        $ne: string
-    }
-}
-export interface DomainFilter extends MarketFilter {
-    ownerAddress: string
-    name?: {
-        $like: string
-    }
-    price?: {
-        $lte: number
-        $gte: number
-    }
+export type DomainsSaleStatus = 'owned' | 'placed' | 'sold'
+
+export type PriceFilter = {
+    min: number
+    max: number
 }
 
-export type RnsFilterType = DomainFilter & DomainOffersFilter
+export interface RnsFilter extends MarketFilter {
+    price: PriceFilter
+    name?: string
+    status?: DomainsSaleStatus
+    ownerAddress?: string
+}

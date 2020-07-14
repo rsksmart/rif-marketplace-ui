@@ -1,83 +1,48 @@
-import IconButton from '@material-ui/core/IconButton'
+import { IconButton } from '@material-ui/core'
 import ClearIcon from '@material-ui/icons/Clear'
-import { Web3Store } from '@rsksmart/rif-ui'
-import { createService } from 'api/rif-marketplace-cache/cacheController'
-import { fetchDomains, RnsServicePaths } from 'api/rif-marketplace-cache/domainsController'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
+import DomainNameItem from 'components/molecules/DomainNameItem'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
-import { MarketListingTypes } from 'models/Market'
-import { Domain } from 'models/marketItems/DomainItem'
+import { RnsDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
-import MarketStore, { TxType } from 'store/Market/MarketStore'
-import DomainNameItem from 'components/molecules/DomainNameItem'
-
-const LISTING_TYPE = MarketListingTypes.DOMAINS
+import MarketStore from 'store/Market/MarketStore'
+import RnsDomainsStore from 'store/Market/rns/DomainsStore'
+import { OrderPayload } from 'store/Market/rns/rnsActions'
 
 const MyOffers: FC<{}> = () => {
   const {
     state: {
-      currentListing,
-      filters: {
-        domains: domainFilters,
-      },
       exchangeRates: {
         currentFiat,
         crypto,
       },
     },
-    dispatch,
   } = useContext(MarketStore)
+
   const {
-    state: { account },
-  } = useContext(Web3Store)
+    state: {
+      listing: {
+        outdatedTokens,
+        items,
+      },
+      filters,
+    },
+    dispatch,
+  } = useContext(RnsDomainsStore)
+
+  useEffect(() => {
+    dispatch({
+      type: 'FILTER',
+      payload: {
+        status: 'placed',
+      },
+    })
+  }, [dispatch])
+
   const history = useHistory()
-
-  const servicePath = currentListing?.servicePath
-  const listingType = currentListing?.listingType
-  const items = currentListing?.items
-  const { ownerAddress } = domainFilters
-  // connect service
-  useEffect(() => {
-    if (account && servicePath !== RnsServicePaths.SELL) {
-      const serviceAddr = createService(RnsServicePaths.SELL, dispatch)
-      dispatch({
-        type: MARKET_ACTIONS.CONNECT_SERVICE,
-        payload: {
-          servicePath: serviceAddr,
-          listingType: LISTING_TYPE,
-          txType: TxType.SELL,
-        },
-      })
-    }
-  }, [account, servicePath, dispatch])
-
-  // fetch domains based on the statusFilter
-  useEffect(() => {
-    if (ownerAddress && servicePath === RnsServicePaths.SELL) {
-      fetchDomains(domainFilters)
-        .then((receivedItems) => dispatch({
-          type: MARKET_ACTIONS.SET_ITEMS,
-          payload: { items: receivedItems },
-        }))
-    }
-  }, [domainFilters, ownerAddress, servicePath, dispatch])
-
-  useEffect(() => {
-    if (account) {
-      dispatch({
-        type: MARKET_ACTIONS.SET_FILTER,
-        payload: {
-          filterItems: {
-            ownerAddress: account,
-          },
-        },
-      })
-    }
-  }, [account, dispatch])
 
   const headers = {
     name: 'Name',
@@ -87,10 +52,8 @@ const MyOffers: FC<{}> = () => {
     action2: '',
   }
 
-  if (!currentListing || listingType !== LISTING_TYPE) return null
-
   const collection = items
-    .map((domainItem: Domain) => {
+    .map((domainItem: RnsDomain) => {
       const {
         id,
         name,
@@ -98,7 +61,7 @@ const MyOffers: FC<{}> = () => {
         expirationDate,
         tokenId,
       } = domainItem
-      const pseudoResolvedName = domainFilters?.name?.$like && (`${domainFilters?.name?.$like}.rsk`)
+      const pseudoResolvedName = filters.name && (`${filters.name}.rsk`)
 
       const displayDomainName = name || pseudoResolvedName
         ? <DomainNameItem value={name || pseudoResolvedName} />
@@ -112,12 +75,10 @@ const MyOffers: FC<{}> = () => {
           id={id}
           handleSelect={() => {
             dispatch({
-              type: MARKET_ACTIONS.SELECT_ITEM,
+              type: 'SET_ORDER',
               payload: {
-                listingType: LISTING_TYPE,
                 item: domainItem,
-                txType: TxType.SELL,
-              },
+              } as OrderPayload,
             })
             history.push(ROUTES.DOMAINS.CHECKOUT.SELL)
           }}
@@ -144,12 +105,10 @@ const MyOffers: FC<{}> = () => {
             id={id}
             onClick={() => {
               dispatch({
-                type: MARKET_ACTIONS.SELECT_ITEM,
+                type: 'SET_ORDER',
                 payload: {
-                  listingType: LISTING_TYPE,
                   item: domainItem,
-                  txType: TxType.SELL,
-                },
+                } as OrderPayload,
               })
               history.push(ROUTES.DOMAINS.CHECKOUT.CANCEL)
             }}
@@ -168,6 +127,8 @@ const MyOffers: FC<{}> = () => {
       itemCollection={collection}
       headers={headers}
       accountRequired
+      dispatch={dispatch}
+      outdatedCt={outdatedTokens.length}
     />
   )
 }

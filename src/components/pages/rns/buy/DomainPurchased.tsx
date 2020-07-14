@@ -2,10 +2,9 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core'
 import { Button } from '@rsksmart/rif-ui'
 import JobDoneBox from 'components/molecules/JobDoneBox'
 import TxCompletePageTemplate from 'components/templates/TxCompletePageTemplate'
-import React, { FC, useContext } from 'react'
+import React, { FC } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import MarketStore from 'store/Market/MarketStore'
 import networkConfig from 'ui-config.json'
 
 const network: string = process.env.REACT_APP_NETWORK || 'ganache'
@@ -24,14 +23,10 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 const DomainPurchased: FC<{}> = () => {
   const classes = useStyles()
   const history = useHistory()
+  const routeState = history.location.state as { domainName: string }
+  const domainName = routeState?.domainName
 
-  const {
-    state: {
-      currentOrder,
-    },
-  } = useContext(MarketStore)
-
-  const { item: { domainName } } = currentOrder
+  if (!domainName) return null
 
   return (
     <TxCompletePageTemplate>
@@ -53,7 +48,7 @@ const DomainPurchased: FC<{}> = () => {
           variant="contained"
           rounded
           shadow
-          onClick={() => { history.push(ROUTES.DOMAINS.BUY) }}
+          onClick={() => { history.push(ROUTES.DOMAINS.BUY, { refresh: true }) }}
         >
           Buy another domain
         </Button>

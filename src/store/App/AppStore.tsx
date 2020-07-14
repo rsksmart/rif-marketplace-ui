@@ -1,25 +1,18 @@
-import { Application, Service } from '@feathersjs/feathers'
-import { ConfirmationsController } from 'api/rif-marketplace-cache/confirmationsController'
+import { ServiceMap } from 'api/models/apiService'
+import { ConfirmationsService } from 'api/rif-marketplace-cache/blockchain/confirmations'
+import { DomainsService } from 'api/rif-marketplace-cache/rns/domains'
+import { OffersService } from 'api/rif-marketplace-cache/rns/offers'
+import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
 import React, { Dispatch, useReducer } from 'react'
+import { StoreActions, StoreReducer, StoreState } from 'store/storeUtils/interfaces'
+import storeReducerFactory from 'store/storeUtils/reducer'
+import { XRService } from 'api/rif-marketplace-cache/rates/xr'
 import { AppAction } from './appActions'
-import appReducer from './appReducer'
+import { appActions, AppReducer } from './appReducer'
 
-export interface ServiceEventListener {
-  (...args: any[]): void
-}
+export type StoreName = 'app'
 
-export interface APIController {
-  path: string
-  service: Service<any>
-  connect: (client: Application<any>) => string | void
-  fetch: (filters?) => Promise<any>
-  attachEvent: (name: string, callback: ServiceEventListener) => void
-  detachEvent: (name: string) => void
-}
-
-export type ServiceMap = Map<string, APIController>
-
-export interface AppState {
+export interface AppState extends StoreState {
   isError?: boolean
   isLoading?: boolean
   message?: string
@@ -33,10 +26,19 @@ export interface AppStoreProps {
 }
 
 export const initialState: AppState = {
-  apis: new Map([['confirmations', new ConfirmationsController()]]),
+  storeID: 'app',
+  apis: {
+    confirmations: new ConfirmationsService(),
+    'rns/v0/offers': new OffersService(),
+    'rns/v0/domains': new DomainsService(),
+    'rns/v0/sold': new SoldDomainsService(),
+    'rates/v0': new XRService(),
+    // "storage/v0/offers": new StorageOffersService()
+  },
 }
 
 const AppStore = React.createContext({} as AppStoreProps | any)
+const appReducer: AppReducer | StoreReducer = storeReducerFactory(initialState, appActions as unknown as StoreActions)
 
 export const AppStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState)

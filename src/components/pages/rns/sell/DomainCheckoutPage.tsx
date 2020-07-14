@@ -2,11 +2,12 @@ import {
   Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, MenuItem, Select, Table, TableBody, TableCell, TableRow, Theme,
 } from '@material-ui/core'
 import {
-  Button, colors, shortenString, UnitsInput, Web3Store, validatedNumber,
+  Button, colors, shortenString, UnitsInput, validatedNumber, Web3Store,
 } from '@rsksmart/rif-ui'
 import PriceItem from 'components/atoms/PriceItem'
 import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
+import DomainNameItem from 'components/molecules/DomainNameItem'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import MarketplaceContract from 'contracts/Marketplace'
@@ -16,13 +17,12 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
+import { AddTxPayload } from 'store/Blockchain/blockchainActions'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore from 'store/Market/MarketStore'
+import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
-import DomainNameItem from 'components/molecules/DomainNameItem'
 
 const logger = Logger.getInstance()
 
@@ -81,15 +81,20 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 const DomainsCheckoutPage: FC<{}> = () => {
   const history = useHistory()
+
   const {
     state: {
-      currentOrder,
+      order,
+    }, dispatch,
+  } = useContext(RnsDomainsStore)
+
+  const {
+    state: {
       exchangeRates: {
         currentFiat,
         crypto,
       },
     },
-    dispatch,
   } = useContext(MarketStore)
   const classes = useStyles()
   const {
@@ -109,16 +114,20 @@ const DomainsCheckoutPage: FC<{}> = () => {
   const [currency, setCurrency] = useState('0')
 
   useEffect(() => {
-    if (!currentOrder) {
-      // Redirect from direct navigation
-      history.replace(ROUTES.LANDING)
-    } else if (isPendingConfirm && !currentOrder.isProcessing) {
+    if (isPendingConfirm && order && !order.isProcessing) {
       // Post-confirmations handle
-      history.replace(ROUTES.DOMAINS.DONE.SELL)
+      const { item: { name } } = order
+      history.replace(ROUTES.DOMAINS.DONE.SELL, { domainName: name })
+      dispatch({
+        type: 'CLEAR_ORDER',
+      } as never)
     }
-  }, [currentOrder, isPendingConfirm, history])
+  }, [order, isPendingConfirm, history, dispatch])
 
-  if (!currentOrder) return null
+  if (!order) {
+    history.replace(ROUTES.LANDING)
+    return null
+  }
 
   const {
     item: {
@@ -127,12 +136,12 @@ const DomainsCheckoutPage: FC<{}> = () => {
       tokenId,
     },
     isProcessing,
-  } = currentOrder
+  } = order
 
   const handleSubmit = async () => {
     if (web3 && account) {
       dispatch({
-        type: MARKET_ACTIONS.SET_PROG_STATUS,
+        type: 'SET_PROGRESS',
         payload: {
           isProcessing: true,
         },
@@ -157,17 +166,17 @@ const DomainsCheckoutPage: FC<{}> = () => {
         }
 
         bcDispatch({
-          type: BLOCKCHAIN_ACTIONS.SET_TX_HASH,
+          type: 'SET_TX_HASH',
           payload: {
             txHash: placeReceipt.transactionHash,
-          } as any,
+          } as AddTxPayload,
         })
         setIsPendingConfirm(true)
       } catch (e) {
         logger.error('Could not complete transaction:', e)
         history.replace(ROUTES.DOMAINS.SELL)
         dispatch({
-          type: MARKET_ACTIONS.SELECT_ITEM,
+          type: 'SET_ORDER',
           payload: undefined,
         })
       }
@@ -210,6 +219,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
 
   return (
     <CheckoutPageTemplate
+      isProcessing={order.isProcessing}
       className="domains-checkout-page"
       backButtonProps={{
         backTo: 'domains',
@@ -307,7 +317,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
             </CardActions>
           )}
       </Card>
-      {isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm }} text="Listing the domain!" progMsg="The waiting period is required to securely list your domain. Please do not close this tab until the process has finished" />}
+      {isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, dispatch }} text="Listing the domain!" progMsg="The waiting period is required to securely list your domain. Please do not close this tab until the process has finished" />}
     </CheckoutPageTemplate>
   )
 }

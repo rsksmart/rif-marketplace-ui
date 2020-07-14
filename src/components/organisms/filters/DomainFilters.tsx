@@ -1,53 +1,45 @@
 import React, { useContext } from 'react'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
-import MarketStore, { TxType } from 'store/Market/MarketStore'
-import { SellDomainStatus } from 'models/marketItems/DomainItem'
+import RnsDomainsStore from 'store/Market/rns/DomainsStore'
+import { DomainsSaleStatus } from 'api/models/RnsFilter'
 import RadioFilter from './RadioFilter'
 import SearchFilter from './SearchFilter'
+
+type StatusFilter = {
+  value: DomainsSaleStatus
+  label: string
+}
 
 const DomainFilters = () => {
   const {
     state: {
       filters: {
-        domains: {
-          name: nameFilter,
-          status: statusFilter,
-        },
+        name,
+        status: statusFilter,
       },
     },
     dispatch,
-  } = useContext(MarketStore)
+  } = useContext(RnsDomainsStore)
 
-  const searchValue = (nameFilter && nameFilter.$like) || ''
-
-  const domainStatusFilters = [
+  const domainStatusFilters: StatusFilter[] = [
     {
-      value: SellDomainStatus.OWNED,
+      value: 'owned',
       label: 'Your domains',
     },
     {
-      value: SellDomainStatus.PLACED,
+      value: 'placed',
       label: 'Your offers',
     },
     {
-      value: SellDomainStatus.SOLD,
+      value: 'sold',
       label: 'Sold domains',
     },
   ]
 
   const handleOnRadioChange = (_: any, value: string) => {
     dispatch({
-      type: MARKET_ACTIONS.SET_FILTER,
+      type: 'FILTER',
       payload: {
-        filterItems: {
-          status: value,
-        },
-      },
-    })
-    dispatch({
-      type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
-      payload: {
-        txType: TxType.SELL,
+        status: value,
       },
     })
   }
@@ -55,18 +47,13 @@ const DomainFilters = () => {
   return (
     <>
       <SearchFilter
-        value={searchValue}
+        value={name}
         onChange={(evt) => {
           const { currentTarget } = evt
           const value = currentTarget.value.trim()
-          const name = value ? { $like: value } : undefined
           dispatch({
-            type: MARKET_ACTIONS.SET_FILTER,
-            payload: {
-              filterItems: {
-                name,
-              },
-            },
+            type: 'FILTER',
+            payload: { name: value },
           })
         }}
       />

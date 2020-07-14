@@ -1,23 +1,18 @@
-import { RnsFilterType } from 'api/models/RnsFilter'
-import { RnsItemType } from './marketItems/DomainItem'
-import { StorageItemIface } from './marketItems/StorageItem'
+import { RnsFilter } from 'api/models/RnsFilter'
+import { XRFilter } from 'api/rif-marketplace-cache/rates/xr'
+import { RnsItem } from './marketItems/DomainItem'
+import { StorageItem } from './marketItems/StorageItem'
 
-export interface MarketItemIface {
+export interface Item {
     id: string
 }
 
-export enum MarketListingTypes {
-    DOMAINS = 'domains',
-    DOMAIN_OFFERS = 'domainOffers',
-    STORAGE = 'storage',
-}
-
-export type MarketItemType = RnsItemType & StorageItemIface
+export type MarketItem = RnsItem & StorageItem
 
 export interface MarketFilter {
     [filterFieldName: string]: {
-        [filterType: string]: any
-    } | any | undefined
+        [filterType: string]: string | number | boolean
+    } | string | number | undefined | boolean
 }
 
-export type MarketFilterType = RnsFilterType
+export type MarketFilterType = RnsFilter & XRFilter

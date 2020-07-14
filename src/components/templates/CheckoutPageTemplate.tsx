@@ -1,13 +1,12 @@
-import React, { FC, useContext, useEffect } from 'react'
 import Grid from '@material-ui/core/Grid'
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import ReturnButton, { ReturnButtonProps } from 'components/molecules/ReturnButton'
-import MarketStore from 'store/Market/MarketStore'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
+import React, { FC } from 'react'
 
 export interface CheckoutPageTemplateProps {
   className?: string
   backButtonProps: ReturnButtonProps
+  isProcessing?: boolean
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -28,19 +27,18 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }))
 
-const CheckoutPageTemplate: FC<CheckoutPageTemplateProps> = ({ className = '', backButtonProps, children }) => {
+const CheckoutPageTemplate: FC<CheckoutPageTemplateProps> = ({
+  className = '',
+  backButtonProps,
+  children,
+  isProcessing,
+}) => {
   const classes = useStyles()
-
-  const { state: { currentOrder }, dispatch } = useContext(MarketStore)
-
-  useEffect(() => () => {
-    dispatch({ type: MARKET_ACTIONS.CLEAN_UP, payload: { currentListing: true } })
-  }, [dispatch])
 
   return (
     <Grid container direction="row" className={`${classes.body} ${className}`}>
       <Grid item xs={12} md={3} className={classes.returnBtnContainer}>
-        {!currentOrder.isProcessing && <ReturnButton {...backButtonProps} />}
+        {!isProcessing && <ReturnButton {...backButtonProps} />}
       </Grid>
       <Grid className={classes.mainContent} item xs={12} md={6}>
         {children}

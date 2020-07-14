@@ -9,7 +9,6 @@ import {
   colors, SwitchTabs, Typography,
 } from '@rsksmart/rif-ui'
 import ROUTES from 'routes'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
 import WithAccount from '../../hoc/WithAccount'
 
@@ -41,17 +40,16 @@ const MarketFilter: FC = ({ children }) => {
   const classes = useStyles()
   const {
     state: {
-      currentListing,
+      txType,
     },
     dispatch,
   } = useContext(MarketStore)
 
   const history = useHistory()
-  const txType = currentListing?.txType >= 1 ? 1 : 0
 
   const switchTxType = () => {
     dispatch({
-      type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
+      type: 'TOGGLE_TX_TYPE',
       payload: {
         txType: txType === TxType.BUY ? TxType.SELL : TxType.BUY,
       },

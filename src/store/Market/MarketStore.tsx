@@ -1,52 +1,25 @@
-import { DomainFilter, DomainOffersFilter } from 'api/models/RnsFilter'
-import { MarketItemIface, MarketItemType, MarketListingTypes } from 'models/Market'
-import React, { Dispatch, useReducer } from 'react'
-import { SellDomainStatus } from 'models/marketItems/DomainItem'
+import { SupportedFiat, tokenDisplayNames, XRService } from 'api/rif-marketplace-cache/rates/xr'
+import React, {
+  Dispatch, useContext, useEffect, useReducer, useState,
+} from 'react'
+import AppStore, { AppStoreProps } from 'store/App/AppStore'
+import { StoreActions, StoreReducer, StoreState } from 'store/storeUtils/interfaces'
+import storeReducerFactory from 'store/storeUtils/reducer'
 import { MarketAction } from './marketActions'
-import marketReducer from './marketReducer'
+import { marketActions, MarketReducer } from './marketReducer'
+
+export type StoreName = 'market'
 
 export enum TxType {
   BUY = 0,
-  SELL = 1,
-  SOLD = 2,
+  SELL = 1
 }
 
-export interface CurrentOrderType {
-  listingType: MarketListingTypes
-  item: MarketItemIface
+export interface MarketState extends StoreState {
   txType: TxType
-  isProcessing: boolean
-}
-
-export interface MarketStateType {
-  currentListing?: {
-    servicePath: string
-    listingType: MarketListingTypes
-    txType: TxType
-    items: MarketItemType[]
-  }
-  filters: {
-    domains: DomainFilter
-    domainOffers: DomainOffersFilter
-  }
-  metadata: {
-    domains: {
-      lastUpdated: number
-      updatedTokens: []
-    }
-    domainOffers: {
-      lastUpdated: number
-      updatedTokens: []
-    }
-    storage: {
-      lastUpdated: number
-      updatedTokens: []
-    }
-  }
-  currentOrder?: CurrentOrderType
   exchangeRates: {
     currentFiat: {
-      symbol: string
+      symbol: SupportedFiat
       displayName: string
     }
     crypto: {
@@ -58,38 +31,14 @@ export interface MarketStateType {
   }
 }
 
-interface MarketStorePropsType {
-  state: MarketStateType
+interface MarketStoreProps {
+  state: MarketState
   dispatch: Dispatch<MarketAction>
 }
 
-export const initialState: MarketStateType = {
-  filters: {
-    domains: {
-      ownerAddress: '',
-      status: SellDomainStatus.OWNED,
-    },
-    domainOffers: {
-      price: {
-        $lte: 0,
-        $gte: 0,
-      },
-    },
-  },
-  metadata: {
-    domains: {
-      lastUpdated: -1,
-      updatedTokens: [],
-    },
-    domainOffers: {
-      lastUpdated: -1,
-      updatedTokens: [],
-    },
-    storage: {
-      lastUpdated: -1,
-      updatedTokens: [],
-    },
-  },
+export const initialState: MarketState = {
+  storeID: 'market',
+  txType: TxType.BUY,
   exchangeRates: {
     currentFiat: {
       symbol: 'usd',
@@ -103,10 +52,73 @@ export const initialState: MarketStateType = {
   },
 }
 
-const MarketStore = React.createContext({} as MarketStorePropsType | any)
+const MarketStore = React.createContext({} as MarketStoreProps | any)
+const marketReducer: MarketReducer | StoreReducer = storeReducerFactory(initialState, marketActions as unknown as StoreActions)
 
 export const MarketStoreProvider = ({ children }) => {
+  const [isInitialised, setIsInitialised] = useState(false)
+
   const [state, dispatch] = useReducer(marketReducer, initialState)
+  const {
+    exchangeRates: {
+      currentFiat: {
+        symbol: fiatSymbol,
+      },
+      crypto,
+    },
+  } = state as MarketState
+  const [supportedCrypto] = useState(Object.keys(crypto).filter((token) => tokenDisplayNames[token])) // prevents update to this list
+
+  const { state: { apis: { 'rates/v0': rates } } }: AppStoreProps = useContext(AppStore)
+  const api = rates as XRService
+
+  if (!api.service) {
+    api.connect()
+  }
+
+  // Initialise
+  useEffect(() => {
+    const {
+      service,
+    } = api
+
+    if (service && !isInitialised) {
+      setIsInitialised(true)
+      try {
+        dispatch({
+          type: 'REFRESH',
+          payload: { refresh: true },
+        } as any)
+      } catch (e) {
+        setIsInitialised(false)
+      }
+    }
+  }, [api, isInitialised])
+
+  // fetch if is initialised
+  useEffect(() => {
+    const { fetch } = api
+
+    if (isInitialised) {
+      fetch({ fiatSymbol }).then((newRates: { [fiatSymbol: string]: number }[]) => {
+        const payload = Object.keys(newRates).reduce((acc, i) => {
+          const symbol = newRates[i].token
+
+          if (supportedCrypto.includes(symbol)) {
+            acc[symbol] = {
+              rate: newRates[i][fiatSymbol],
+              displayName: tokenDisplayNames[symbol],
+            }
+          }
+          return acc
+        }, {})
+        dispatch({
+          type: 'SET_EXCHANGE_RATE',
+          payload,
+        })
+      })
+    }
+  }, [isInitialised, api, fiatSymbol, supportedCrypto])
 
   const value = { state, dispatch }
   return <MarketStore.Provider value={value}>{children}</MarketStore.Provider>

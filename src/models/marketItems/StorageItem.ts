@@ -1,6 +1,6 @@
-import { MarketItemIface } from 'models/Market'
+import { Item } from 'models/Market'
 
-export interface StorageItemIface extends MarketItemIface {
+export interface StorageItem extends Item {
     provider: string // TODO: iface User/Provider?
     size: number
     contractLengthMonths: number
@@ -13,7 +13,7 @@ export interface StorageItemIface extends MarketItemIface {
 
 // }
 
-export class StorageItem implements StorageItemIface {
+export class StorageItem implements StorageItem {
     provider!: string;
 
     size!: number;

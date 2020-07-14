@@ -1,9 +1,12 @@
-import { Application, Service } from '@feathersjs/feathers'
-import { APIController, ServiceEventListener } from 'store/App/AppStore'
+import { AbstractAPIService, APIService } from 'api/models/apiService'
+import { Modify } from 'utils/typeUtils'
 
-type Modify<T, R> = Omit<T, keyof R> & R;
+export type ConfirmationAddress = 'confirmations'
+const confirmationAddress: ConfirmationAddress = 'confirmations'
 
-export type ConfirmationAPI = APIController
+export type ConfirmationAPI = Modify<APIService, {
+  path: ConfirmationAddress
+}>
 
 export interface ConfirmationsItem {
   currentCount: number
@@ -29,19 +32,8 @@ export const mapFromTransport = (data: ConfirmationsTransportItem[]): Confirmati
 }, {})
 /* eslint-enable no-param-reassign */
 
-export class ConfirmationsController implements ConfirmationAPI {
-  path = '/confirmations'
-
-  service!: Service<any>
-
-  connect = (client: Application<any>) => {
-    try {
-      this.service = client.service(this.path)
-      return this.path
-    } catch (e) {
-      return undefined
-    }
-  }
+export class ConfirmationsService extends AbstractAPIService implements ConfirmationAPI {
+  path = confirmationAddress
 
   fetch = async (): Promise<Confirmations> => {
     if (!this.service) throw Error('The confirmations service is not connected')
@@ -50,10 +42,4 @@ export class ConfirmationsController implements ConfirmationAPI {
 
     return mapFromTransport(data)
   }
-
-  attachEvent = (name: string, callback: ServiceEventListener) => {
-    if (this.service) this.service.on(name, callback)
-  }
-
-  detachEvent = (name: string) => name
 }

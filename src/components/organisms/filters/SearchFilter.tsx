@@ -1,16 +1,13 @@
 import React, { FC, useState } from 'react'
 import {
-  InputAdornment, makeStyles, TextField, Theme, createStyles,
+  InputAdornment, makeStyles, TextField, Theme, createStyles, TextFieldProps,
 } from '@material-ui/core'
 import {
   colors,
 } from '@rsksmart/rif-ui'
 import Search from '@material-ui/icons/Search'
 
-export interface SearchFilterProps {
-  onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
-  value: string
-}
+export type SearchFilterProps = TextFieldProps
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
@@ -45,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }))
 
-const SearchFilter: FC<SearchFilterProps> = ({ onChange, ...rest }) => {
+const SearchFilter: FC<SearchFilterProps> = (props) => {
   const classes = useStyles()
 
   // we only want to display the adornment (search icon) when the textfield is not focused and empty
@@ -77,8 +74,7 @@ const SearchFilter: FC<SearchFilterProps> = ({ onChange, ...rest }) => {
       }}
       name="search"
       onBlur={handleOnBlur}
-      onChange={onChange}
-      {...rest}
+      {...props}
       placeholder="Search your domain"
       variant="outlined"
     />

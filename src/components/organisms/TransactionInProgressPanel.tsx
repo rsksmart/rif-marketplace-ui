@@ -1,17 +1,18 @@
-import React, { FC, useContext, useEffect } from 'react'
 import {
   CircularProgress, createStyles, makeStyles, Theme,
 } from '@material-ui/core'
-import { Typography, shortenString } from '@rsksmart/rif-ui'
+import { shortenString, Typography } from '@rsksmart/rif-ui'
+import React, {
+  Dispatch, FC, useContext, useEffect,
+} from 'react'
 import BlockchainStore, { BlockchainStoreProps } from 'store/Blockchain/BlockchainStore'
-import MarketStore from 'store/Market/MarketStore'
-import { BLOCKCHAIN_ACTIONS } from 'store/Blockchain/blockchainActions'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
+import { StoreDispatcher, StorePayload } from 'store/storeUtils/interfaces'
 
 export interface TransactionInProgressPanelProps {
   text: string
   progMsg: string
   isPendingConfirm?: boolean
+  dispatch: Dispatch<StoreDispatcher<StorePayload>>
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -26,31 +27,32 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }))
 
-const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({ progMsg, text, isPendingConfirm }) => {
+const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
+  progMsg, text, isPendingConfirm, dispatch,
+}) => {
   const classes = useStyles()
 
   const { state: { confirmations: { txHash, currentCount, targetCount } }, dispatch: bcDispatch }: BlockchainStoreProps = useContext(BlockchainStore)
-  const { dispatch: mDispatch } = useContext(MarketStore)
 
   useEffect(() => {
     if (currentCount && targetCount && currentCount >= targetCount) {
       bcDispatch({
-        type: BLOCKCHAIN_ACTIONS.CLEAR_CONFIRMATIONS,
-        payload: {} as any,
+        type: 'CLEAR_CONFIRMATIONS',
+        payload: {} as never,
       })
     }
   }, [currentCount, targetCount, bcDispatch])
 
   useEffect(() => {
     if (isPendingConfirm && !txHash) {
-      mDispatch({
-        type: MARKET_ACTIONS.SET_PROG_STATUS,
+      dispatch({
+        type: 'SET_PROGRESS',
         payload: {
           isProcessing: false,
         },
       })
     }
-  }, [txHash, isPendingConfirm, mDispatch])
+  }, [txHash, isPendingConfirm, dispatch])
 
   return (
     <div className={classes.content}>

@@ -1,21 +1,21 @@
 import { Grid } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Web3Store } from '@rsksmart/rif-ui'
-import { fetchExchangeRatesFor, tokenDisplayNames } from 'api/rif-marketplace-cache/exchangeRateController'
 import InfoBar from 'components/molecules/InfoBar'
 import MarketFilter from 'components/templates/marketplace/MarketFilter'
-import React, { FC, useContext, useEffect } from 'react'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
-import MarketStore from 'store/Market/MarketStore'
-import { MarketItemType } from 'models/Market'
+import { MarketItem } from 'models/Market'
+import React, { Dispatch, FC, useContext } from 'react'
+import { RnsAction } from 'store/Market/rns/rnsActions'
 import Marketplace, { TableHeaders } from './marketplace/Marketplace'
 
 export interface MarketPageTemplateProps {
   className?: string
   filterItems: React.ReactNode
   headers: TableHeaders
-  itemCollection: MarketItemType[]
+  itemCollection: MarketItem[]
   accountRequired?: boolean
+  dispatch: Dispatch<RnsAction>
+  outdatedCt: number
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -41,52 +41,13 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   itemCollection,
   headers,
   accountRequired,
+  dispatch,
+  outdatedCt,
 }) => {
   const classes = useStyles()
   const {
     state: { account },
   } = useContext(Web3Store)
-  const {
-    state: {
-      exchangeRates: {
-        currentFiat: { symbol: fiatSymbol },
-        crypto: {
-          rif,
-        },
-      },
-      currentListing,
-      metadata,
-    },
-    dispatch,
-  } = useContext(MarketStore)
-
-  const { rate: rifXr, displayName } = rif
-  useEffect(() => {
-    if (!rifXr) {
-      fetchExchangeRatesFor(fiatSymbol)
-        .then((rates: { [fiatSymbol: string]: number }[]) => {
-          const payload = Object.keys(rates).reduce((acc, i) => {
-            const symbol = rates[i].token
-
-            if (symbol === 'rif') { // FIXME: This is here only temporary as atm we don't want to support more than RIF.
-              acc[symbol] = {
-                rate: rates[i][fiatSymbol],
-                displayName: tokenDisplayNames[symbol],
-              }
-            }
-            return acc
-          }, {})
-          dispatch({
-            type: MARKET_ACTIONS.SET_EXCHANGE_RATE,
-            payload,
-          })
-        })
-    }
-  }, [fiatSymbol, rifXr, displayName, dispatch])
-
-  const { listingType, txType } = currentListing
-  const updatedTokensCount = metadata[listingType].updatedTokens.length
-  const needsRefresh = !!updatedTokensCount
 
   return (
     <Grid container direction="row" className={`${classes.root} ${className}`}>
@@ -99,18 +60,16 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
             </Grid>
             <Grid className={classes.resultsContainer} item sm={12} md={9}>
               <InfoBar
-                isVisible={needsRefresh}
-                text={`${updatedTokensCount} item(s) in this listing had been updated. Please,`}
+                isVisible={!!outdatedCt}
+                text={`${outdatedCt} item(s) in this listing had been updated. Please,`}
                 buttonText="refresh"
                 type="info"
                 button={{
                   onClick: () => {
                     dispatch({
-                      type: MARKET_ACTIONS.TOGGLE_TX_TYPE,
-                      payload: {
-                        txType,
-                      },
-                    })
+                      type: 'REFRESH',
+                      payload: { refresh: true },
+                    } as any)
                   },
                 }}
               />

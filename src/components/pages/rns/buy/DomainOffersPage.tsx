@@ -1,79 +1,64 @@
 import { Web3Store } from '@rsksmart/rif-ui'
-import { createService } from 'api/rif-marketplace-cache/cacheController'
-import { fetchDomainOffers, RnsServicePaths } from 'api/rif-marketplace-cache/domainsController'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
+import DomainNameItem from 'components/molecules/DomainNameItem'
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
-import { MarketListingTypes } from 'models/Market'
-import { DomainOffer } from 'models/marketItems/DomainItem'
+import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import { MARKET_ACTIONS } from 'store/Market/marketActions'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
-import DomainNameItem from 'components/molecules/DomainNameItem'
-
-const LISTING_TYPE = MarketListingTypes.DOMAIN_OFFERS
+import RnsOffersStore from 'store/Market/rns/OffersStore'
+import { OrderPayload, RefreshPayload } from 'store/Market/rns/rnsActions'
 
 const DomainOffersPage: FC = () => {
   const {
     state: {
-      currentListing,
-      filters: {
-        domainOffers: offerFilters,
-      },
       exchangeRates: {
         currentFiat,
         crypto,
       },
     },
-    dispatch,
+    dispatch: mDispatch,
   } = useContext(MarketStore)
+  const {
+    state: {
+      listing: {
+        items,
+        outdatedTokens,
+      },
+      filters,
+    },
+    dispatch,
+  } = useContext(RnsOffersStore)
   const history = useHistory()
+  const routeState = history.location.state as { refresh?: boolean }
+
+  if (routeState && routeState.refresh) {
+    routeState.refresh = false
+    dispatch({
+      type: 'REFRESH',
+      payload: {
+        refresh: true,
+      } as RefreshPayload,
+    })
+  }
   const {
     state: {
       account,
     },
   } = useContext(Web3Store)
 
-  const servicePath = currentListing?.servicePath
+  useEffect(() => {
+    mDispatch({
+      type: 'TOGGLE_TX_TYPE',
+      payload: {
+        txType: TxType.BUY,
+      },
+    })
+  }, [mDispatch])
+
   let collection = []
-
-  // component will unmount - clean up
-  useEffect(() => () => {
-    dispatch({ type: MARKET_ACTIONS.CLEAN_UP, payload: { currentListing: true } })
-  }, [dispatch])
-
-  // connect service
-  useEffect(() => {
-    if (servicePath !== RnsServicePaths.BUY) {
-      const serviceAddr = createService(RnsServicePaths.BUY, dispatch)
-      dispatch({
-        type: MARKET_ACTIONS.CONNECT_SERVICE,
-        payload: {
-          servicePath: serviceAddr,
-          listingType: LISTING_TYPE,
-          txType: TxType.BUY,
-        },
-      })
-    }
-  }, [dispatch, servicePath])
-
-  // fetchDomainOffers and dispatch set items
-  useEffect(() => {
-    if (servicePath && servicePath === RnsServicePaths.BUY) {
-      fetchDomainOffers(offerFilters)
-        .then((items) => dispatch({
-          type: MARKET_ACTIONS.SET_ITEMS,
-          payload: {
-            items,
-          },
-        }))
-    }
-  }, [offerFilters, servicePath, dispatch])
-
-  // if wrong type, ignore this render
-  if (!currentListing || currentListing?.listingType !== LISTING_TYPE) return null
 
   const headers = {
     domainName: 'Name',
@@ -83,8 +68,8 @@ const DomainOffersPage: FC = () => {
     action1: '',
   }
 
-  collection = currentListing?.items
-    .map((domainItem: DomainOffer) => {
+  collection = items
+    .map((item: RnsDomainOffer) => {
       const {
         id,
         price,
@@ -93,9 +78,9 @@ const DomainOffersPage: FC = () => {
         ownerAddress,
         expirationDate,
         tokenId,
-      } = domainItem
+      } = item
 
-      const pseudoResolvedName = offerFilters?.domain?.name?.$like && (`${offerFilters?.domain?.name?.$like}.rsk`)
+      const pseudoResolvedName = filters.name && (`${filters.name}.rsk`)
       const currency = crypto[paymentToken]
 
       const displayDomainName = domainName || pseudoResolvedName
@@ -119,12 +104,10 @@ const DomainOffersPage: FC = () => {
             id={id}
             handleSelect={() => {
               dispatch({
-                type: MARKET_ACTIONS.SELECT_ITEM,
+                type: 'SET_ORDER',
                 payload: {
-                  listingType: LISTING_TYPE,
-                  item: domainItem,
-                  txType: TxType.BUY,
-                },
+                  item,
+                } as OrderPayload,
               })
               history.push(ROUTES.DOMAINS.CHECKOUT.BUY)
             }}
@@ -133,7 +116,7 @@ const DomainOffersPage: FC = () => {
       }
 
       return displayItem
-    })
+    }) as any // TODO: remove as any
 
   return (
     <MarketPageTemplate
@@ -141,6 +124,8 @@ const DomainOffersPage: FC = () => {
       filterItems={<DomainOfferFilters />}
       itemCollection={collection}
       headers={headers}
+      dispatch={dispatch}
+      outdatedCt={outdatedTokens.length}
     />
   )
 }
