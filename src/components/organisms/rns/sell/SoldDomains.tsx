@@ -1,4 +1,5 @@
 import { AddressItem, CombinedPriceCell } from 'components/molecules'
+import DomainNameItem from 'components/molecules/DomainNameItem'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsSoldDomain } from 'models/marketItems/DomainItem'
@@ -47,10 +48,14 @@ const SoldDomains: FC<{}> = () => {
       } = domainItem
       const currency = crypto[paymentToken]
 
-      const pseudoResolvedName = !!name && `${name}.rsk`
+      const pseudoResolvedName = name && `${name}.rsk`
+      const displayDomainName = domainName || pseudoResolvedName
+        ? <DomainNameItem value={domainName || pseudoResolvedName as string} />
+        : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+
       const displayItem = {
         id,
-        domainName: domainName || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
+        domainName: displayDomainName,
         buyer: <AddressItem value={buyer} />,
         currency: currency.displayName,
         sellingPrice: <CombinedPriceCell

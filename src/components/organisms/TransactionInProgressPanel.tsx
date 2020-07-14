@@ -1,7 +1,7 @@
 import {
   CircularProgress, createStyles, makeStyles, Theme,
 } from '@material-ui/core'
-import { shortenAddress, Typography } from '@rsksmart/rif-ui'
+import { shortenString, Typography } from '@rsksmart/rif-ui'
 import React, {
   Dispatch, FC, useContext, useEffect,
 } from 'react'
@@ -57,8 +57,8 @@ const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
   return (
     <div className={classes.content}>
       <Typography>{text}</Typography>
-      {txHash && !currentCount && <Typography>{`Transaction ${shortenAddress(txHash)} is waiting for the first confirmation.`}</Typography>}
-      {txHash && currentCount && <Typography>{`Transaction ${shortenAddress(txHash)} is waiting for confirmation ${currentCount + 1} of ${targetCount}.`}</Typography>}
+      {txHash && !currentCount && <Typography>{`Transaction ${shortenString(txHash)} is waiting for the first confirmation.`}</Typography>}
+      {txHash && currentCount && <Typography>{`Transaction ${shortenString(txHash)} is waiting for confirmation ${currentCount + 1} of ${targetCount}.`}</Typography>}
       <CircularProgress />
       <Typography>{progMsg}</Typography>
     </div>

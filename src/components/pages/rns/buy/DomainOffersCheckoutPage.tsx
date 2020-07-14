@@ -2,11 +2,12 @@ import {
   Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody, TableCell, TableRow, Theme,
 } from '@material-ui/core'
 import {
-  Button, colors, shortenAddress, Typography, Web3Store,
+  Button, colors, shortenString, Typography, Web3Store,
 } from '@rsksmart/rif-ui'
 import Login from 'components/atoms/Login'
 import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
+import DomainNameItem from 'components/molecules/DomainNameItem'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import MarketplaceContract from 'contracts/Marketplace'
@@ -16,12 +17,12 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
+import { AddTxPayload } from 'store/Blockchain/blockchainActions'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
 import MarketStore from 'store/Market/MarketStore'
 import RnsOffersStore from 'store/Market/rns/OffersStore'
 import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
-import { AddTxPayload } from 'store/Blockchain/blockchainActions'
 
 const network: string = process.env.REACT_APP_NETWORK || 'ganache'
 const marketPlaceAddress = contractAdds[network].marketplace.toLowerCase()
@@ -159,8 +160,12 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   }
   const PriceCell = <CombinedPriceCell {...priceCellProps} />
 
+  const displayName = domainName
+    ? <DomainNameItem value={domainName} />
+    : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+
   const details = {
-    NAME: domainName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
+    NAME: displayName,
     SELLER: <AddressItem value={ownerAddress} />,
     'RENEWAL DATE': expirationDate.toLocaleDateString(),
     PRICE: PriceCell,
@@ -221,7 +226,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
       <Card
         className={classes.card}
       >
-        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Buying ${domainName || shortenAddress(tokenId)}`} />
+        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Buying ${shortenString(domainName, 30, 25) || shortenString(tokenId)}`} />
         <CardContent>
           <Typography className={classes.contentTitle} variant="h6" color="secondary">Domain details</Typography>
           <Table className={classes.contentDetails}>

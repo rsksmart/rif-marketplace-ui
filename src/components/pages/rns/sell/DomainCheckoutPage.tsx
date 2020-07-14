@@ -2,11 +2,12 @@ import {
   Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, MenuItem, Select, Table, TableBody, TableCell, TableRow, Theme,
 } from '@material-ui/core'
 import {
-  Button, colors, shortenAddress, UnitsInput, Web3Store,
+  Button, colors, shortenString, UnitsInput, validatedNumber, Web3Store,
 } from '@rsksmart/rif-ui'
 import PriceItem from 'components/atoms/PriceItem'
 import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
+import DomainNameItem from 'components/molecules/DomainNameItem'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import MarketplaceContract from 'contracts/Marketplace'
@@ -16,12 +17,12 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
+import { AddTxPayload } from 'store/Blockchain/blockchainActions'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
 import MarketStore from 'store/Market/MarketStore'
 import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
-import { AddTxPayload } from 'store/Blockchain/blockchainActions'
 
 const logger = Logger.getInstance()
 
@@ -183,13 +184,15 @@ const DomainsCheckoutPage: FC<{}> = () => {
   }
 
   const handlePriceChange = ({ target: { value } }) => {
-    setPrice(value)
-    // we convert to number after setting the value because we need to allow '0.' and Number('0.') is 0
-    const priceNumber = Number(value)
+    // validatedNumber function gives as the closest value within limits
+    const newValue = validatedNumber(value)
+    setPrice(newValue)
+    // we convert to number after setting the newValue because we need to allow '0.' and Number('0.') is 0
+    const priceNumber = Number(newValue)
 
     if (priceNumber) {
       const currencySymbol = currencySymbols[parseInt(currency, 10)]
-      const newValueInFiat = value * crypto[currencySymbol].rate
+      const newValueInFiat = newValue * crypto[currencySymbol].rate
       setPriceFiat(newValueInFiat.toFixed(4).toString())
     } else {
       setPriceFiat('')
@@ -210,6 +213,10 @@ const DomainsCheckoutPage: FC<{}> = () => {
 
   const submitDisabled = () => Number(price) <= 0
 
+  const displayName = name
+    ? <DomainNameItem value={name} />
+    : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+
   return (
     <CheckoutPageTemplate
       isProcessing={order.isProcessing}
@@ -221,14 +228,14 @@ const DomainsCheckoutPage: FC<{}> = () => {
       <Card
         className={classes.card}
       >
-        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Listing ${name || shortenAddress(tokenId)}`} />
+        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Listing ${shortenString(name, 30, 25) || shortenString(tokenId)}`} />
         <CardContent>
           <div className={classes.contentDetails}>
             <Table>
               <TableBody>
                 <TableRow>
                   <TableCell className={classes.detailKey}>NAME</TableCell>
-                  <TableCell className={classes.detailValue}>{name || <AddressItem pretext="Unknown RNS:" value={tokenId} />}</TableCell>
+                  <TableCell className={classes.detailValue}>{displayName}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className={classes.detailKey}>RENEWAL DATE</TableCell>

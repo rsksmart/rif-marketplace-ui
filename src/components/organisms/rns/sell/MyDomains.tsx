@@ -1,4 +1,5 @@
 import { AddressItem, SelectRowButton } from 'components/molecules'
+import DomainNameItem from 'components/molecules/DomainNameItem'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsDomain } from 'models/marketItems/DomainItem'
@@ -6,7 +7,7 @@ import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import RnsDomainsStore from 'store/Market/rns/DomainsStore'
-import { RefreshPayload, OrderPayload } from 'store/Market/rns/rnsActions'
+import { OrderPayload, RefreshPayload } from 'store/Market/rns/rnsActions'
 
 const MyDomains: FC<{}> = () => {
   const {
@@ -56,9 +57,13 @@ const MyDomains: FC<{}> = () => {
       } = domainItem
 
       const pseudoResolvedName = filters.name && (`${filters.name}.rsk`)
+      const displayDomainName = name || pseudoResolvedName
+        ? <DomainNameItem value={name || pseudoResolvedName} />
+        : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+
       const displayItem = {
         id,
-        name: name || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
+        name: displayDomainName,
         expirationDate: expirationDate.toLocaleDateString(),
         action1: <SelectRowButton
           id={id}

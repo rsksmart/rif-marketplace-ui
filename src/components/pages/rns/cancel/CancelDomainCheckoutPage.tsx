@@ -2,10 +2,11 @@ import {
   Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody, TableCell, TableRow, Theme,
 } from '@material-ui/core'
 import {
-  Button, colors, shortenAddress, Typography, Web3Store,
+  Button, colors, shortenString, Typography, Web3Store,
 } from '@rsksmart/rif-ui'
 import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
+import DomainNameItem from 'components/molecules/DomainNameItem'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import MarketplaceContract from 'contracts/Marketplace'
@@ -13,11 +14,11 @@ import RNSContract from 'contracts/Rns'
 import React, { useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
+import { AddTxPayload } from 'store/Blockchain/blockchainActions'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
 import MarketStore from 'store/Market/MarketStore'
 import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 import Logger from 'utils/Logger'
-import { AddTxPayload } from 'store/Blockchain/blockchainActions'
 
 const logger = Logger.getInstance()
 
@@ -125,8 +126,12 @@ const CancelDomainCheckoutPage = () => {
   }
   const PriceCell = <CombinedPriceCell {...priceCellProps} />
 
+  const displayName = name
+    ? <DomainNameItem value={name} />
+    : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+
   const details = {
-    NAME: name || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
+    NAME: displayName,
     'RENEWAL DATE': expirationDate.toLocaleDateString(),
     PRICE: PriceCell,
   }
@@ -186,7 +191,7 @@ const CancelDomainCheckoutPage = () => {
       <Card
         className={classes.card}
       >
-        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Canceling ${name || shortenAddress(tokenId)}`} />
+        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Canceling ${shortenString(name, 30, 25) || shortenString(tokenId)}`} />
         <CardContent>
           <Typography className={classes.contentTitle} variant="h6" color="secondary">Domain details</Typography>
           <Table className={classes.contentDetails}>

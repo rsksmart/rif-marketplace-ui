@@ -1,6 +1,7 @@
 import { IconButton } from '@material-ui/core'
 import ClearIcon from '@material-ui/icons/Clear'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
+import DomainNameItem from 'components/molecules/DomainNameItem'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsDomain } from 'models/marketItems/DomainItem'
@@ -61,9 +62,14 @@ const MyOffers: FC<{}> = () => {
         tokenId,
       } = domainItem
       const pseudoResolvedName = filters.name && (`${filters.name}.rsk`)
+
+      const displayDomainName = name || pseudoResolvedName
+        ? <DomainNameItem value={name || pseudoResolvedName} />
+        : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+
       const displayItem = {
         id,
-        name: name || pseudoResolvedName || <AddressItem pretext="Unknown RNS:" value={tokenId} />,
+        name: displayDomainName,
         expirationDate: expirationDate.toLocaleDateString(),
         action1: <SelectRowButton
           id={id}
