@@ -161,6 +161,8 @@ const DomainsCheckoutPage: FC<{}> = () => {
           text: 'Could not retreive gas price from the blockchain.',
         }))
 
+      if (!gasPrice) return
+
       // Send approval transaction
       const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId, { from: account, gasPrice })
         .catch((error) => reportError({
@@ -169,6 +171,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
           text: `Could not approve domain ${name}.`,
         }))
       logger.info('approveReceipt:', approveReceipt)
+
       if (!approveReceipt) return
 
       // Send Placement transaction
@@ -179,6 +182,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
           text: `Could not place domain ${name}.`,
         }))
       logger.info('placeReceipt:', placeReceipt)
+
       if (!placeReceipt) return
 
       bcDispatch({

@@ -9,6 +9,7 @@ import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStor
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
+import { ErrorMessagePayload } from 'store/App/appActions'
 import {
   RnsListing, RnsOrder, RnsState, RnsStoreProps,
 } from './interfaces'
@@ -121,9 +122,10 @@ export const RnsDomainsStoreProvider = ({ children }) => {
         appDispatch({
           type: 'SET_MESSAGE',
           payload: {
+            id: 'service-fetch',
             text: `Couldn't fetch RNS domains. Error: ${e.message}`,
             type: 'error',
-          } as any, // TODO: any
+          } as ErrorMessagePayload,
         })
       })
     }

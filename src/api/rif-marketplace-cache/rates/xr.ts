@@ -23,7 +23,7 @@ export type XRAPIService = Modify<APIService, {
 export class XRService extends AbstractAPIService implements XRAPIService {
   path = xeServiceAddress
 
-  protected _fetch = async (filters: XRFilter): Promise<[]> => {
+  _fetch = async (filters: XRFilter): Promise<[]> => {
     const { fiatSymbol } = filters
 
     const results = await this.service.find({

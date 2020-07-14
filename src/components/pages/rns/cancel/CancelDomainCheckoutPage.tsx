@@ -168,6 +168,7 @@ const CancelDomainCheckoutPage = () => {
           text: `Could not unapprove domain ${name}.`,
         }))
       logger.info('unapproveReceipt:', unapproveReceipt)
+
       if (!unapproveReceipt) return
 
       // Send Unplacement transaction
@@ -178,6 +179,7 @@ const CancelDomainCheckoutPage = () => {
           text: `Could not unplace domain ${name}.`,
         }))
       logger.info('unplaceReceipt:', unplaceReceipt)
+
       if (!unplaceReceipt) return
 
       bcDispatch({

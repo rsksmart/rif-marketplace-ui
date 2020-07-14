@@ -35,7 +35,7 @@ export const mapFromTransport = (data: ConfirmationsTransportItem[]): Confirmati
 export class ConfirmationsService extends AbstractAPIService implements ConfirmationAPI {
   path = confirmationAddress
 
-  protected _fetch = async (): Promise<Confirmations> => {
+  _fetch = async (): Promise<Confirmations> => {
     const data = await this.service.find()
     return mapFromTransport(data)
   }

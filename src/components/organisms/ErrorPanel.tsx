@@ -1,8 +1,7 @@
 import InfoBar from 'components/molecules/InfoBar'
 import React, { useContext } from 'react'
-import AppStore, {
-  AppStoreProps, ErrorMessage, Message, MessageId,
-} from 'store/App/AppStore'
+import { RemoveMessagePayload } from 'store/App/appActions'
+import AppStore, { ErrorMessage, Message, MessageId } from 'store/App/AppStore'
 import Logger from 'utils/Logger'
 
 const logger = Logger.getInstance()
@@ -12,7 +11,7 @@ const ErrorPanel = () => {
     state: {
       messages,
     }, dispatch,
-  }: AppStoreProps = useContext(AppStore)
+  } = useContext(AppStore)
 
   return (
     <>
@@ -35,7 +34,7 @@ const ErrorPanel = () => {
                 }
                 dispatch({
                   type: 'REMOVE_MESSAGE',
-                  payload: { id } as any, // TODO: any
+                  payload: { id } as RemoveMessagePayload,
                 })
               },
             }}
