@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { validatedNumber } from '@rsksmart/rif-ui'
 import AddIcon from '@material-ui/icons/Add';
 import InfoIcon from '@material-ui/icons/Info';
@@ -9,7 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Tooltip from '@material-ui/core/Tooltip';
 import { colors } from '@rsksmart/rif-ui'
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton'
 import { StoragePlan } from 'models/marketItems/StorageItem';
 import { mayBePluralize } from '../../../../utils/utils'
@@ -17,10 +17,10 @@ import { mayBePluralize } from '../../../../utils/utils'
 export interface EditablePlanProps {
   onPlanAdded: (plan: StoragePlan) => void
   availableMonths: number[]
-  initialMonth?: number
+  suggestedMonth?: number
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   subscriptionCreator: {
     alignItems: 'center'
   },
@@ -30,11 +30,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }))
 
-const EditablePlan: FC<EditablePlanProps> = ({ onPlanAdded, availableMonths, initialMonth = 0 }) => {
+const EditablePlan: FC<EditablePlanProps> = ({ onPlanAdded, availableMonths, suggestedMonth = 1 }) => {
   const classes = useStyles()
   const [pricePerGb, setPricePerGb] = useState(0)
-  const [monthsDuration, setMonthsDuration] = useState(1)
+  const [monthsDuration, setMonthsDuration] = useState(suggestedMonth)
   const currency = 'RIF'
+
+  // when suggested month changes, we set the monthsDuration to that value
+  // useEffect(() => {
+  //   setMonthsDuration(suggestedMonth)
+  // }, [suggestedMonth])
 
   const handleOnAddClick = () => {
     const plan: StoragePlan = {
@@ -81,7 +86,8 @@ const EditablePlan: FC<EditablePlanProps> = ({ onPlanAdded, availableMonths, ini
             <TextField
               fullWidth required label='Price/GB'
               id="price-gb"
-              value={pricePerGb}
+              type='number'
+              value={pricePerGb.toString()}
               onChange={onPricePerGbChange}
               error={pricePerGb <= 0}
               InputProps={{
