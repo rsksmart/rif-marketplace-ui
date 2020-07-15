@@ -1,8 +1,9 @@
 import { AbstractAPIService, APIService } from 'api/models/apiService'
 import { Modify } from 'utils/typeUtils'
+import utils from './utils'
 
 export type ConfirmationAddress = 'confirmations'
-const confirmationAddress: ConfirmationAddress = 'confirmations'
+export const confirmationAddress: ConfirmationAddress = 'confirmations'
 
 export type ConfirmationAPI = Modify<APIService, {
   path: ConfirmationAddress
@@ -15,28 +16,17 @@ export interface ConfirmationsItem {
 
 export type Confirmations = Record<string, ConfirmationsItem>
 
-interface ConfirmationsTransportItem {
+export interface ConfirmationsTransportItem {
   transactionHash: string
   confirmations: number
   targetConfirmation: number
   event: string
 }
-
-/* eslint-disable no-param-reassign */
-export const mapFromTransport = (data: ConfirmationsTransportItem[]): Confirmations => data.reduce((map, item: ConfirmationsTransportItem) => {
-  map[item.transactionHash] = {
-    currentCount: item.confirmations,
-    targetCount: item.targetConfirmation,
-  }
-  return map
-}, {})
-/* eslint-enable no-param-reassign */
-
 export class ConfirmationsService extends AbstractAPIService implements ConfirmationAPI {
   path = confirmationAddress
 
   _fetch = async (): Promise<Confirmations> => {
     const data = await this.service.find() as unknown as ConfirmationsTransportItem[]
-    return mapFromTransport(data)
+    return utils.mapFromTransport(data)
   }
 }
