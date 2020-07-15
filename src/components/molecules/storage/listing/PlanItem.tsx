@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
@@ -9,11 +9,12 @@ import EditIcon from '@material-ui/icons/Edit'
 import { colors } from '@rsksmart/rif-ui'
 
 export interface PlanItemProps {
-  duration: string
+  monthlyDuration: string
   rifPrice: number
+  onItemRemoved: () => void
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   innerContainer: {
     backgroundColor: colors.gray1,
     borderRadius: 5,
@@ -21,27 +22,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const PlanItem: FC<PlanItemProps> = ({ duration, rifPrice }) => {
+const PlanItem: FC<PlanItemProps> = ({ monthlyDuration, rifPrice, onItemRemoved }) => {
   const classes = useStyles()
 
   return (
     <Grid container alignItems="center" spacing={2}>
       <Grid item xs={10}>
-        <Grid
-          container
-          alignItems="center"
-          className={classes.innerContainer}
-          // TODO: move to clases
-          style={{
-          }}
-        >
-          {/* TODO: remove borderRight on xs devices */}
+        <Grid container alignItems='center'
+          className={classes.innerContainer}>
+          {/* TODO: move to clases and remove borderRight on xs devices */}
           <Grid item xs={12} sm={6} style={{ borderRight: `1px solid ${colors.gray3}` }}>
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={4}>
-                <Typography component="div">
-                  <Box fontWeight="fontWeightMedium" textAlign="center" color={`${colors.gray5}`}>
-                    {duration}
+                <Typography component='div'>
+                  <Box fontWeight='fontWeightMedium' textAlign='center' color={`${colors.gray5}`}>
+                    {monthlyDuration}
                   </Box>
                 </Typography>
               </Grid>
@@ -91,8 +86,8 @@ const PlanItem: FC<PlanItemProps> = ({ duration, rifPrice }) => {
         </Grid>
       </Grid>
       <Grid item xs={2}>
-        <Grid container direction="row">
-          <IconButton color="primary">
+        <Grid container direction='row'>
+          <IconButton onClick={onItemRemoved} color='primary'>
             <ClearIcon />
           </IconButton>
           <IconButton color="primary">

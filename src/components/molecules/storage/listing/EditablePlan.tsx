@@ -1,19 +1,21 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import AddIcon from '@material-ui/icons/Add';
 import InfoIcon from '@material-ui/icons/Info';
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Tooltip from '@material-ui/core/Tooltip';
-import PlanItem from './PlanItem';
 import { colors } from '@rsksmart/rif-ui'
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton'
+import { StoragePlan } from 'models/marketItems/StorageItem';
+import { mayBePluralize } from '../../../../utils/utils'
 
-export interface EditablePlanProps { }
+export interface EditablePlanProps {
+  onPlanAdded: (plan: StoragePlan) => any
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
   subscriptionCreator: {
@@ -25,8 +27,30 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }))
 
-const EditablePlan: FC<EditablePlanProps> = props => {
+const EditablePlan: FC<EditablePlanProps> = ({ onPlanAdded }) => {
   const classes = useStyles()
+  const [pricePerGb, setpricePerGb] = useState(0)
+  const [monthsDuration, setMonthsDuration] = useState(1)
+  const currency = 'RIF'
+
+  const handleOnAddClick = () => {
+    // TODO: add validations
+    const plan: StoragePlan = {
+      pricePerGb,
+      monthsDuration,
+      currency
+    }
+    onPlanAdded(plan)
+  }
+
+  const onContractLengthChange = ({ target: { value } }) => {
+    setMonthsDuration(value)
+  }
+  const onPricePerGbChange = ({ target: { value } }) => {
+    setpricePerGb(value)
+  }
+
+  const monthlyOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
   return (
     <Grid className={classes.subscriptionCreator} container spacing={2}>
@@ -37,11 +61,14 @@ const EditablePlan: FC<EditablePlanProps> = props => {
         <TextField
           select fullWidth required label='Subscription Period'
           id="subscription-period-select"
-          value='1'
+          value={monthsDuration}
+          onChange={onContractLengthChange}
         >
-          <MenuItem value='1'>1 month</MenuItem>
-          <MenuItem value='2'>2 months</MenuItem>
-          <MenuItem value='3'>3 months</MenuItem>
+          {
+            monthlyOptions.map(mo => (
+              <MenuItem value={mo} key={mo}>{mayBePluralize(mo, 'month')}</MenuItem>
+            ))
+          }
         </TextField>
       </Grid>
       <Grid item xs={10} md={5}>
@@ -50,7 +77,9 @@ const EditablePlan: FC<EditablePlanProps> = props => {
             <TextField
               fullWidth required label='Price/GB'
               id="price-gb"
-              value='2020'
+              value={pricePerGb}
+              onChange={onPricePerGbChange}
+              error={pricePerGb <= 0}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -62,9 +91,10 @@ const EditablePlan: FC<EditablePlanProps> = props => {
             />
           </Grid>
           <Grid item xs={6}>
-            <TextField disabled
+            <TextField
+              disabled
               fullWidth label=' '
-              id="price-gb"
+              id="price-gb-usd"
               value='100'
               InputProps={{
                 endAdornment: (
@@ -81,7 +111,7 @@ const EditablePlan: FC<EditablePlanProps> = props => {
       <Grid item xs={2} md={2}>
         <Grid container direction='row'>
           <Tooltip title='Add plan'>
-            <IconButton color="primary">
+            <IconButton onClick={handleOnAddClick} color="primary">
               <AddIcon />
             </IconButton>
           </Tooltip>

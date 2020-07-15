@@ -5,7 +5,7 @@ import { colors } from '@rsksmart/rif-ui'
 
 export interface BaseSettingsProps { }
 
-const BaseSettings: FC<BaseSettingsProps> = ({ }) => {
+const BaseSettings: FC<BaseSettingsProps> = () => {
   return (
     <>
       <Grid item xs={12} md={6}>

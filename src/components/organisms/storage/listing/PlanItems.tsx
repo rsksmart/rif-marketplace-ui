@@ -1,18 +1,12 @@
-import React, { FC } from 'react'
-import AddIcon from '@material-ui/icons/Add';
-import InfoIcon from '@material-ui/icons/Info';
+import React, { FC, useState } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import Box from '@material-ui/core/Box'
-import IconButton from '@material-ui/core/IconButton'
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Tooltip from '@material-ui/core/Tooltip';
 import { colors } from '@rsksmart/rif-ui'
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import EditablePlan from 'components/molecules/storage/listing/EditablePlan';
 import PlanItem from 'components/molecules/storage/listing/PlanItem';
+import { StoragePlan } from 'models/marketItems/StorageItem';
+import { mayBePluralize } from 'utils/utils';
 
 export interface PlanItemsProps { }
 
@@ -32,18 +26,43 @@ const useStyles = makeStyles((theme: Theme) => ({
 const PlanItems: FC<PlanItemsProps> = props => {
   const classes = useStyles()
 
+  const [currentPlans, setCurrentPlans] = useState([] as StoragePlan[])
+  const [plansCounter, setPlansCounter] = useState(0)
+
+  const onPlanAdded = (plan: StoragePlan) => {
+    const newPlan = {
+      ...plan,
+      _internalId: plansCounter
+    }
+    setPlansCounter(plansCounter + 1)
+    setCurrentPlans([newPlan, ...currentPlans])
+  }
+
+  const onItemRemoved = (plan: StoragePlan) => {
+    setCurrentPlans([...currentPlans.filter(x => x._internalId !== plan._internalId)])
+  }
+
   return (
     <>
       {/* SET PLAN PRICES */}
       <Grid item xs={12}>
         <Typography color='secondary' variant='subtitle1'>SET PLAN PRICES</Typography>
-        <EditablePlan />
+        <EditablePlan onPlanAdded={onPlanAdded} />
       </Grid>
       {/* STORAGE PLANS */}
       <Grid item xs={12}>
         <Typography gutterBottom color='secondary' variant='subtitle1'>STORAGE PLANS</Typography>
         <Grid className={classes.storagePlans} container spacing={2}>
-          <PlanItem duration={'1 month'} rifPrice={12345} />
+          {
+            currentPlans.map((p: StoragePlan) => (
+              <PlanItem
+                key={p._internalId}
+                monthlyDuration={mayBePluralize(p.monthsDuration, 'month')}
+                rifPrice={p.pricePerGb}
+                onItemRemoved={() => onItemRemoved(p)}
+              />
+            ))
+          }
         </Grid>
       </Grid>
     </>
