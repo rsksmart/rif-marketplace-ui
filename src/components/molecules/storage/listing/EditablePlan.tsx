@@ -18,6 +18,8 @@ export interface EditablePlanProps {
   onPlanAdded: (plan: StoragePlan) => void
   availableMonths: number[]
   suggestedMonth?: number
+  contractLength: number
+  onContractLengthChange: (value: number) => void
 }
 
 const useStyles = makeStyles(() => ({
@@ -30,36 +32,26 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const EditablePlan: FC<EditablePlanProps> = ({ onPlanAdded, availableMonths, suggestedMonth = 1 }) => {
+const EditablePlan: FC<EditablePlanProps> = ({ onPlanAdded, availableMonths, contractLength, onContractLengthChange }) => {
   const classes = useStyles()
   const [pricePerGb, setPricePerGb] = useState(0)
-  const [monthsDuration, setMonthsDuration] = useState(suggestedMonth)
   const currency = 'RIF'
-
-  // when suggested month changes, we set the monthsDuration to that value
-  // useEffect(() => {
-  //   setMonthsDuration(suggestedMonth)
-  // }, [suggestedMonth])
 
   const handleOnAddClick = () => {
     const plan: StoragePlan = {
       pricePerGb,
-      monthsDuration,
+      monthsDuration: contractLength,
       currency
     }
     onPlanAdded(plan)
   }
 
-  const onContractLengthChange = ({ target: { value } }) => {
-    setMonthsDuration(Number(value))
+  const onPeriodChange = ({ target: { value } }) => {
+    onContractLengthChange(Number(value))
   }
   const onPricePerGbChange = ({ target: { value } }) => {
     setPricePerGb(validatedNumber(Number(value)))
   }
-
-  const isAddEnabled = (): boolean => (
-    pricePerGb > 0 && availableMonths.indexOf(monthsDuration) !== -1
-  )
 
   return (
     <Grid className={classes.subscriptionCreator} container spacing={2}>
@@ -70,8 +62,8 @@ const EditablePlan: FC<EditablePlanProps> = ({ onPlanAdded, availableMonths, sug
         <TextField
           select fullWidth required label='Subscription Period'
           id="subscription-period-select"
-          value={monthsDuration}
-          onChange={onContractLengthChange}
+          value={contractLength}
+          onChange={onPeriodChange}
         >
           {
             availableMonths.sort((a, b) => a - b).map(mo => (
@@ -121,13 +113,15 @@ const EditablePlan: FC<EditablePlanProps> = ({ onPlanAdded, availableMonths, sug
       <Grid item xs={2} md={2}>
         <Grid container direction='row'>
           <Tooltip title='Add plan'>
-            <IconButton
-              onClick={handleOnAddClick}
-              disabled={!isAddEnabled()}
-              color="primary"
-            >
-              <AddIcon />
-            </IconButton>
+            <span>
+              <IconButton
+                onClick={handleOnAddClick}
+                disabled={pricePerGb <= 0 || availableMonths.indexOf(contractLength) === -1}
+                color="primary"
+              >
+                <AddIcon />
+              </IconButton>
+            </span>
           </Tooltip>
           <Tooltip title='The average price for a monthly suscription is 2020 RIF'>
             <IconButton>

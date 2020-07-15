@@ -30,11 +30,17 @@ const PlanItems: FC<PlanItemsProps> = props => {
   const [plansCounter, setPlansCounter] = useState(0)
   const [availableMonths, setAvailableMonths] = useState([1, 2, 3])
   // const [availableMonths, setAvailableMonths] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
-  const [suggestedMonth, setSuggestedMonth] = useState(availableMonths[0])
+  const [newContractLength, setNewContractLength] = useState(availableMonths[0])
 
   useEffect(() => {
-    if (availableMonths.length > 0) setSuggestedMonth(availableMonths[0])
+    if (availableMonths.length > 0) {
+      setNewContractLength(availableMonths[0])
+    }
   }, [availableMonths])
+
+  const onNewContractLengthChange = (value: number) => {
+    setNewContractLength(value)
+  }
 
   const onPlanAdded = (plan: StoragePlan) => {
     const newPlan = {
@@ -63,7 +69,8 @@ const PlanItems: FC<PlanItemsProps> = props => {
         (
           <Grid item xs={12}>
             <Typography color='secondary' variant='subtitle1'>SET PLAN PRICES</Typography>
-            <EditablePlan suggestedMonth={suggestedMonth} availableMonths={availableMonths} onPlanAdded={onPlanAdded} />
+            <EditablePlan availableMonths={availableMonths} onPlanAdded={onPlanAdded}
+              contractLength={newContractLength} onContractLengthChange={onNewContractLengthChange} />
           </Grid>
         )
       }
