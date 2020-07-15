@@ -67,7 +67,6 @@ const StorageOffersPage: FC = () => {
   // purpose of showing a preview version we are only adding styles with hardcoded data
   return (
     <Grid container direction="row" className={`${classes.root}`}>
-
       <>
         <Grid className={classes.filtersContainer} item sm={12} md={3}>
           {/* START - MarketFilter component */}

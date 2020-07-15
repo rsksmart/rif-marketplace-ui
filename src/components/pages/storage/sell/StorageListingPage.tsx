@@ -19,7 +19,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     marginTop: theme.spacing(2),
-    maxWidth: theme.spacing(100),
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: '90%',
+    },
+    [theme.breakpoints.up('md')]: {
+      maxWidth: theme.spacing(100),
+    },
     width: '100%'
   },
   planGrid: {
