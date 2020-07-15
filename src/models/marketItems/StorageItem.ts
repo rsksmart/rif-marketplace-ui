@@ -9,22 +9,29 @@ export interface StorageItem extends Item {
     priceUsd: number
 }
 
-// export interface StorageFilterIface extends MarketFilterIface {
+export interface StoragePlan {
+  _internalId?: number
+  currency: string // for now we only support RIF but in the future we may need something like an enum
+  pricePerGb: number
+  monthsDuration: number
+}
 
-// }
+// // export interface StorageFilterIface extends MarketFilterIface {
+
+// // }
 
 export class StorageItem implements StorageItem {
     provider!: string;
 
-    size!: number;
+//     size!: number;
 
-    contractLengthMonths!: number;
+//     contractLengthMonths!: number;
 
-    pricePerMonth!: number;
+//     pricePerMonth!: number;
 
-    currency!: string;
+//     currency!: string;
 
-    priceUsd!: number;
+//     priceUsd!: number;
 
-    id!: string;
-}
+//     id!: string;
+// }
