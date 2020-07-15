@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
@@ -14,12 +14,17 @@ export interface PlanItemProps {
   onItemRemoved: () => void
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   innerContainer: {
     backgroundColor: colors.gray1,
     borderRadius: 5,
-    padding: 10,
+    padding: 10
   },
+  leftContent: {
+    [theme.breakpoints.up('sm')]: {
+      borderRight: `1px solid ${colors.gray3}`
+    }
+  }
 }))
 
 const PlanItem: FC<PlanItemProps> = ({ monthlyDuration, rifPrice, onItemRemoved }) => {
@@ -30,9 +35,8 @@ const PlanItem: FC<PlanItemProps> = ({ monthlyDuration, rifPrice, onItemRemoved 
       <Grid item xs={10}>
         <Grid container alignItems='center'
           className={classes.innerContainer}>
-          {/* TODO: move to clases and remove borderRight on xs devices */}
-          <Grid item xs={12} sm={6} style={{ borderRight: `1px solid ${colors.gray3}` }}>
-            <Grid container spacing={2} alignItems="center">
+          <Grid item xs={12} sm={6} className={classes.leftContent}>
+            <Grid container spacing={2} alignItems='center'>
               <Grid item xs={4}>
                 <Typography component='div'>
                   <Box fontWeight='fontWeightMedium' textAlign='center' color={`${colors.gray5}`}>
@@ -63,23 +67,17 @@ const PlanItem: FC<PlanItemProps> = ({ monthlyDuration, rifPrice, onItemRemoved 
           <Grid item xs={12} sm={6}>
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={4}>
-                <Typography component="div" variant="caption" color="textSecondary">
-                  <Box textAlign="center">
-                    Monthly fee
-                  </Box>
+                <Typography component='div' variant='caption' color='textSecondary'>
+                  <Box textAlign='center'>Monthly fee</Box>
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography component="div">
-                  <Box textAlign="center" color={`${colors.gray5}`}>
-                    1234 RIF
-                  </Box>
+                <Typography component='div'>
+                  <Box textAlign='center' color={`${colors.gray5}`}>1234 RIF</Box>
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography align="center" color="textSecondary">
-                  1234 USD
-                </Typography>
+                <Typography align='center' color='textSecondary'>1234 USD</Typography>
               </Grid>
             </Grid>
           </Grid>
