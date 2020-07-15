@@ -28,7 +28,8 @@ const PlanItems: FC<PlanItemsProps> = props => {
 
   const [currentPlans, setCurrentPlans] = useState([] as StoragePlan[])
   const [plansCounter, setPlansCounter] = useState(0)
-  const [availableMonths, setAvailableMonths] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+  const [availableMonths, setAvailableMonths] = useState([1, 2, 3])
+  // const [availableMonths, setAvailableMonths] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
   const [defaultNewMonth, setDefaultNewMonth] = useState(availableMonths[0])
 
   const onPlanAdded = (plan: StoragePlan) => {
@@ -53,10 +54,10 @@ const PlanItems: FC<PlanItemsProps> = props => {
   return (
     <>
       {/* SET PLAN PRICES */}
-      <Grid item xs={12}>
+      {availableMonths.length > 0 && (<Grid item xs={12}>
         <Typography color='secondary' variant='subtitle1'>SET PLAN PRICES</Typography>
         <EditablePlan initialMonth={availableMonths[0]} availableMonths={availableMonths} onPlanAdded={onPlanAdded} />
-      </Grid>
+      </Grid>)}
       {/* STORAGE PLANS */}
       <Grid item xs={12}>
         <Typography gutterBottom color='secondary' variant='subtitle1'>STORAGE PLANS</Typography>
