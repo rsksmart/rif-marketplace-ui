@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import { colors } from '@rsksmart/rif-ui'
@@ -30,7 +30,11 @@ const PlanItems: FC<PlanItemsProps> = props => {
   const [plansCounter, setPlansCounter] = useState(0)
   const [availableMonths, setAvailableMonths] = useState([1, 2, 3])
   // const [availableMonths, setAvailableMonths] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
-  const [defaultNewMonth, setDefaultNewMonth] = useState(availableMonths[0])
+  const [suggestedMonth, setSuggestedMonth] = useState(availableMonths[0])
+
+  useEffect(() => {
+    if (availableMonths.length > 0) setSuggestedMonth(availableMonths[0])
+  }, [availableMonths])
 
   const onPlanAdded = (plan: StoragePlan) => {
     const newPlan = {
@@ -38,42 +42,52 @@ const PlanItems: FC<PlanItemsProps> = props => {
       _internalId: plansCounter
     }
     setPlansCounter(plansCounter + 1)
+    // add to the currentPlans
     setCurrentPlans([newPlan, ...currentPlans])
     // remove month from the available options
     setAvailableMonths([...availableMonths.filter(x => x !== plan.monthsDuration)])
-    setDefaultNewMonth(availableMonths[0])
   }
 
   const onItemRemoved = (plan: StoragePlan) => {
     // add the month to the available options
     setAvailableMonths([...availableMonths, plan.monthsDuration])
+    // remove from the currentPlans
     setCurrentPlans([...currentPlans.filter(x => x._internalId !== plan._internalId)])
-    setDefaultNewMonth(availableMonths[0])
   }
 
   return (
     <>
       {/* SET PLAN PRICES */}
-      {availableMonths.length > 0 && (<Grid item xs={12}>
-        <Typography color='secondary' variant='subtitle1'>SET PLAN PRICES</Typography>
-        <EditablePlan initialMonth={availableMonths[0]} availableMonths={availableMonths} onPlanAdded={onPlanAdded} />
-      </Grid>)}
+      {
+        availableMonths.length > 0 &&
+        (
+          <Grid item xs={12}>
+            <Typography color='secondary' variant='subtitle1'>SET PLAN PRICES</Typography>
+            <EditablePlan suggestedMonth={suggestedMonth} availableMonths={availableMonths} onPlanAdded={onPlanAdded} />
+          </Grid>
+        )
+      }
       {/* STORAGE PLANS */}
-      <Grid item xs={12}>
-        <Typography gutterBottom color='secondary' variant='subtitle1'>STORAGE PLANS</Typography>
-        <Grid className={classes.storagePlans} container spacing={2}>
-          {
-            currentPlans.sort((a, b) => a.monthsDuration - b.monthsDuration).map((p: StoragePlan) => (
-              <PlanItem
-                key={p._internalId}
-                monthlyDuration={mayBePluralize(p.monthsDuration, 'month')}
-                rifPrice={p.pricePerGb}
-                onItemRemoved={() => onItemRemoved(p)}
-              />
-            ))
-          }
-        </Grid>
-      </Grid>
+      {
+        currentPlans.length > 0 &&
+        (
+          <Grid item xs={12}>
+            <Typography gutterBottom color='secondary' variant='subtitle1'>STORAGE PLANS</Typography>
+            <Grid className={classes.storagePlans} container spacing={2}>
+              {
+                currentPlans.sort((a, b) => a.monthsDuration - b.monthsDuration).map((p: StoragePlan) => (
+                  <PlanItem
+                    key={p._internalId}
+                    monthlyDuration={mayBePluralize(p.monthsDuration, 'month')}
+                    rifPrice={p.pricePerGb}
+                    onItemRemoved={() => onItemRemoved(p)}
+                  />
+                ))
+              }
+            </Grid>
+          </Grid>
+        )
+      }
     </>
   )
 }
