@@ -1,6 +1,6 @@
 import { Application, Service } from '@feathersjs/feathers'
 import { AuthenticationResult } from '@feathersjs/authentication'
-import client from 'api/rif-marketplace-cache/config'
+import client from 'api/rif-marketplace-cache/client'
 import { MarketFilterType } from 'models/Market'
 import { ErrorReporterError } from 'store/App/AppStore'
 import { ServiceAddress } from './serviceAddresses'
@@ -44,7 +44,7 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
       this.errorReporter({
         id: 'service-connection',
         text: 'Error while fetching data.',
-        error: new Error('The confirmations service is not connected'),
+        error: new Error(`The ${this.path} service is not connected`),
       })
     }
     let data = []
