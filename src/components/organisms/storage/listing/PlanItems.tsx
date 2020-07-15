@@ -28,6 +28,8 @@ const PlanItems: FC<PlanItemsProps> = props => {
 
   const [currentPlans, setCurrentPlans] = useState([] as StoragePlan[])
   const [plansCounter, setPlansCounter] = useState(0)
+  const [availableMonths, setAvailableMonths] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+  const [defaultNewMonth, setDefaultNewMonth] = useState(availableMonths[0])
 
   const onPlanAdded = (plan: StoragePlan) => {
     const newPlan = {
@@ -36,10 +38,16 @@ const PlanItems: FC<PlanItemsProps> = props => {
     }
     setPlansCounter(plansCounter + 1)
     setCurrentPlans([newPlan, ...currentPlans])
+    // remove month from the available options
+    setAvailableMonths([...availableMonths.filter(x => x !== plan.monthsDuration)])
+    setDefaultNewMonth(availableMonths[0])
   }
 
   const onItemRemoved = (plan: StoragePlan) => {
+    // add the month to the available options
+    setAvailableMonths([...availableMonths, plan.monthsDuration])
     setCurrentPlans([...currentPlans.filter(x => x._internalId !== plan._internalId)])
+    setDefaultNewMonth(availableMonths[0])
   }
 
   return (
@@ -47,14 +55,14 @@ const PlanItems: FC<PlanItemsProps> = props => {
       {/* SET PLAN PRICES */}
       <Grid item xs={12}>
         <Typography color='secondary' variant='subtitle1'>SET PLAN PRICES</Typography>
-        <EditablePlan onPlanAdded={onPlanAdded} />
+        <EditablePlan initialMonth={availableMonths[0]} availableMonths={availableMonths} onPlanAdded={onPlanAdded} />
       </Grid>
       {/* STORAGE PLANS */}
       <Grid item xs={12}>
         <Typography gutterBottom color='secondary' variant='subtitle1'>STORAGE PLANS</Typography>
         <Grid className={classes.storagePlans} container spacing={2}>
           {
-            currentPlans.map((p: StoragePlan) => (
+            currentPlans.sort((a, b) => a.monthsDuration - b.monthsDuration).map((p: StoragePlan) => (
               <PlanItem
                 key={p._internalId}
                 monthlyDuration={mayBePluralize(p.monthsDuration, 'month')}

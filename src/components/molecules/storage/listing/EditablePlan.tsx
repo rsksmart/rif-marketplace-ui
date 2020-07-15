@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react'
+import { validatedNumber } from '@rsksmart/rif-ui'
 import AddIcon from '@material-ui/icons/Add';
 import InfoIcon from '@material-ui/icons/Info';
 import Grid from '@material-ui/core/Grid'
@@ -14,7 +15,9 @@ import { StoragePlan } from 'models/marketItems/StorageItem';
 import { mayBePluralize } from '../../../../utils/utils'
 
 export interface EditablePlanProps {
-  onPlanAdded: (plan: StoragePlan) => any
+  onPlanAdded: (plan: StoragePlan) => void
+  availableMonths: number[]
+  initialMonth?: number
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -27,14 +30,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }))
 
-const EditablePlan: FC<EditablePlanProps> = ({ onPlanAdded }) => {
+const EditablePlan: FC<EditablePlanProps> = ({ onPlanAdded, availableMonths, initialMonth = 0 }) => {
   const classes = useStyles()
-  const [pricePerGb, setpricePerGb] = useState(0)
+  const [pricePerGb, setPricePerGb] = useState(0)
   const [monthsDuration, setMonthsDuration] = useState(1)
   const currency = 'RIF'
 
   const handleOnAddClick = () => {
-    // TODO: add validations
     const plan: StoragePlan = {
       pricePerGb,
       monthsDuration,
@@ -44,13 +46,15 @@ const EditablePlan: FC<EditablePlanProps> = ({ onPlanAdded }) => {
   }
 
   const onContractLengthChange = ({ target: { value } }) => {
-    setMonthsDuration(value)
+    setMonthsDuration(Number(value))
   }
   const onPricePerGbChange = ({ target: { value } }) => {
-    setpricePerGb(value)
+    setPricePerGb(validatedNumber(Number(value)))
   }
 
-  const monthlyOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  const isAddEnabled = (): boolean => (
+    pricePerGb > 0 && availableMonths.indexOf(monthsDuration) !== -1
+  )
 
   return (
     <Grid className={classes.subscriptionCreator} container spacing={2}>
@@ -65,7 +69,7 @@ const EditablePlan: FC<EditablePlanProps> = ({ onPlanAdded }) => {
           onChange={onContractLengthChange}
         >
           {
-            monthlyOptions.map(mo => (
+            availableMonths.sort((a, b) => a - b).map(mo => (
               <MenuItem value={mo} key={mo}>{mayBePluralize(mo, 'month')}</MenuItem>
             ))
           }
@@ -111,7 +115,11 @@ const EditablePlan: FC<EditablePlanProps> = ({ onPlanAdded }) => {
       <Grid item xs={2} md={2}>
         <Grid container direction='row'>
           <Tooltip title='Add plan'>
-            <IconButton onClick={handleOnAddClick} color="primary">
+            <IconButton
+              onClick={handleOnAddClick}
+              disabled={!isAddEnabled()}
+              color="primary"
+            >
               <AddIcon />
             </IconButton>
           </Tooltip>

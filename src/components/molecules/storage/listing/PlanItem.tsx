@@ -27,6 +27,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }))
 
+// .ito - 2 -> see how to convert a plan item to an editablePlan and act upon that, may be 
+// tal vez tenga que pasar a ser un componente como de alto nivel que maneja cuando mostrar un componente u otro
+// y al clickear editar haya tambien que agregar un save o check button
 const PlanItem: FC<PlanItemProps> = ({ monthlyDuration, rifPrice, onItemRemoved }) => {
   const classes = useStyles()
 
