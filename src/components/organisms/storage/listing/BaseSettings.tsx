@@ -13,6 +13,7 @@ import CountrySelect from 'components/molecules/storage/CountrySelect';
 
 export interface BaseSettingsProps { }
 
+// TODO: - level up the props
 const BaseSettings: FC<BaseSettingsProps> = () => {
   const system = 'IPFS'
   const currency = 'RIF'

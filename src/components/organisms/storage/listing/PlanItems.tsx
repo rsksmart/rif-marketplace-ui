@@ -3,10 +3,11 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import { colors } from '@rsksmart/rif-ui'
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import EditablePlan from 'components/molecules/storage/listing/EditablePlan';
+import EditablePlan, { EditablePlanProps } from 'components/molecules/storage/listing/EditablePlan';
 import PlanItem from 'components/molecules/storage/listing/PlanItem';
 import { StoragePlan } from 'models/marketItems/StorageItem';
 import { mayBePluralize } from 'utils/utils';
+import PlanItemEditable from 'components/organisms/storage/listing/PlanItemEditable';
 
 export interface PlanItemsProps { }
 
@@ -61,6 +62,13 @@ const PlanItems: FC<PlanItemsProps> = props => {
     setCurrentPlans([...currentPlans.filter(x => x._internalId !== plan._internalId)])
   }
 
+  const editableProps: EditablePlanProps = {
+    availableMonths,
+    onPlanAdded,
+    contractLength: newContractLength,
+    onContractLengthChange: onNewContractLengthChange
+  }
+
   return (
     <>
       {/* SET PLAN PRICES */}
@@ -81,14 +89,22 @@ const PlanItems: FC<PlanItemsProps> = props => {
           <Grid item xs={12}>
             <Typography gutterBottom color='secondary' variant='subtitle1'>STORAGE PLANS</Typography>
             <Grid className={classes.storagePlans} container spacing={2}>
+              {/* {
+                <PlanItemEditable />
+              } */}
               {
-                currentPlans.sort((a, b) => a.monthsDuration - b.monthsDuration).map((p: StoragePlan) => (
-                  <PlanItem
-                    key={p._internalId}
-                    monthlyDuration={mayBePluralize(p.monthsDuration, 'month')}
-                    rifPrice={p.pricePerGb}
-                    onItemRemoved={() => onItemRemoved(p)}
-                  />
+                (currentPlans.sort((a, b) => a.monthsDuration - b.monthsDuration).map((p: StoragePlan) => {
+
+                  const planItemProps = {
+                    monthlyDuration: mayBePluralize(p.monthsDuration, 'month'),
+                    rifPrice: p.pricePerGb,
+                    onItemRemoved: () => onItemRemoved(p)
+                  }
+                  return (
+                    <PlanItemEditable editableProps={{ ...editableProps, availableMonths: [...editableProps.availableMonths, p.monthsDuration] }}
+                      planItemProps={planItemProps} />
+                  )
+                }
                 ))
               }
             </Grid>

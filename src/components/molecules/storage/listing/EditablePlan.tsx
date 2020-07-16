@@ -16,7 +16,6 @@ import { mayBePluralize } from '../../../../utils/utils'
 export interface EditablePlanProps {
   onPlanAdded: (plan: StoragePlan) => void
   availableMonths: number[]
-  suggestedMonth?: number
   contractLength: number
   onContractLengthChange: (value: number) => void
 }
@@ -33,7 +32,7 @@ const useStyles = makeStyles(() => ({
 
 const EditablePlan: FC<EditablePlanProps> = ({ onPlanAdded, availableMonths, contractLength, onContractLengthChange }) => {
   const classes = useStyles()
-  const [pricePerGb, setPricePerGb] = useState(0)
+  const [pricePerGb, setPricePerGb] = useState(1)
   const currency = 'RIF'
 
   const handleOnAddClick = () => {
