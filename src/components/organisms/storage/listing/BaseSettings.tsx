@@ -13,7 +13,6 @@ import CountrySelect from 'components/molecules/storage/CountrySelect';
 
 export interface BaseSettingsProps { }
 
-// .ito - level up the props
 const BaseSettings: FC<BaseSettingsProps> = () => {
   const system = 'IPFS'
   const currency = 'RIF'
@@ -51,7 +50,13 @@ const BaseSettings: FC<BaseSettingsProps> = () => {
                     <Typography variant='caption' color='primary'>GB</Typography>
                   </InputAdornment>
                 ),
-                style: { color: colors.primary }
+                inputProps: {
+                  min: '0',
+                  style: {
+                    color: colors.primary
+                  }
+                },
+                // style: { color: colors.primary }
               }}
             />
           </Grid>

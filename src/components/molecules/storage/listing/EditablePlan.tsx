@@ -1,5 +1,4 @@
-import React, { FC, useState, useEffect } from 'react'
-import { validatedNumber } from '@rsksmart/rif-ui'
+import React, { FC, useState } from 'react'
 import AddIcon from '@material-ui/icons/Add';
 import InfoIcon from '@material-ui/icons/Info';
 import Grid from '@material-ui/core/Grid'
@@ -8,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Tooltip from '@material-ui/core/Tooltip';
-import { colors } from '@rsksmart/rif-ui'
+import { colors, validatedNumber } from '@rsksmart/rif-ui'
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton'
 import { StoragePlan } from 'models/marketItems/StorageItem';
@@ -82,6 +81,9 @@ const EditablePlan: FC<EditablePlanProps> = ({ onPlanAdded, availableMonths, con
               value={pricePerGb.toString()}
               onChange={onPricePerGbChange}
               error={pricePerGb <= 0}
+              inputProps={{
+                min: "0"
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -95,7 +97,8 @@ const EditablePlan: FC<EditablePlanProps> = ({ onPlanAdded, availableMonths, con
           <Grid item xs={6}>
             <TextField
               disabled
-              fullWidth label=' '
+              fullWidth
+              label=' '
               id="price-gb-usd"
               value='100'
               InputProps={{
