@@ -81,7 +81,7 @@ const DomainOffersPage: FC = () => {
       } = item
 
       const pseudoResolvedName = filters.name && (`${filters.name}.rsk`)
-      const currency = crypto[paymentToken]
+      const { rate, displayName } = crypto[paymentToken]
 
       const displayDomainName = domainName || pseudoResolvedName
         ? <DomainNameItem value={domainName || pseudoResolvedName} />
@@ -94,8 +94,8 @@ const DomainOffersPage: FC = () => {
         expirationDate: expirationDate.toLocaleDateString(),
         combinedPrice: <CombinedPriceCell
           price={price.toString()}
-          priceFiat={(currency.rate * price).toString()}
-          currency={currency.displayName}
+          priceFiat={price.times(rate).toString()}
+          currency={displayName}
           currencyFiat={currentFiat.displayName}
           divider=" = "
         />,

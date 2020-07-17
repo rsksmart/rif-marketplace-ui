@@ -2,6 +2,7 @@ import { AbstractAPIService } from 'api/models/apiService'
 import { RnsFilter } from 'api/models/RnsFilter'
 import { DomainTransport } from 'api/models/transports'
 import { RnsDomain } from 'models/marketItems/DomainItem'
+import { parseToBigDecimal } from 'utils/parsers'
 import { getAvailableTokens, RnsAddresses, RnsAPIService } from './common'
 
 export const domainsAddress: RnsAddresses = 'rns/v0/domains'
@@ -23,7 +24,7 @@ const mapFromTransport = (item: DomainTransport): RnsDomain => {
     domain.offer = {
       ...offer,
       paymentToken: getAvailableTokens[offer.paymentToken.toLowerCase()],
-      price: parseInt(offer.price, 10) / 10 ** 18,
+      price: parseToBigDecimal(offer.priceString, 18),
     }
   }
   return domain
