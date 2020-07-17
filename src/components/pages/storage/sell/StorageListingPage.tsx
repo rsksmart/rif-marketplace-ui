@@ -1,10 +1,11 @@
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button as RUIButton } from '@rsksmart/rif-ui'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import PlanItems from 'components/organisms/storage/listing/PlanItems'
 import BaseSettings from 'components/organisms/storage/listing/BaseSettings'
+import StorageListingStore from 'store/Market/storage/ListingStore'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -33,7 +34,19 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const StorageListingPage = () => {
+  const { state: { plan } } = useContext(StorageListingStore)
+
   const classes = useStyles()
+
+  const handleSubmit = () => {
+    // TODO: validate the plan and comunicate with the contract
+  }
+
+  const isSubmitEnabled = plan?.planItems.length
+    && plan?.availableSize
+    && plan?.country.length
+    && plan?.currency.length
+    && plan?.system.length
 
   return (
     <div className={classes.root}>
@@ -46,7 +59,8 @@ const StorageListingPage = () => {
           <BaseSettings />
           <PlanItems />
         </Grid>
-        <RUIButton
+        <RUIButton onClick={handleSubmit}
+          disabled={!isSubmitEnabled}
           color="primary" rounded variant="contained">List storage</RUIButton>
         <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
           Your wallet will open and you will be asked to confirm the transaction for listing your service.
