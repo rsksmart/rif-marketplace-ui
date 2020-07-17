@@ -1,18 +1,11 @@
 import React, { FC, useState } from 'react'
-import { StoragePlan } from 'models/marketItems/StorageItem'
+import { Button } from '@material-ui/core'
 import EditablePlan, { EditablePlanProps } from '../../../molecules/storage/listing/EditablePlan'
 import PlanItem, { PlanItemProps } from '../../../molecules/storage/listing/PlanItem'
-import { Button } from '@material-ui/core'
 
 export interface PlanItemEditableProps {
   editableProps: EditablePlanProps
   planItemProps: PlanItemProps
-
-  // planItemProps: 
-  // availableMonths: number[]
-  // contractLength: number
-  // onContractLengthChange: (value: number) => void
-  // onPlanSaved: (plan: StoragePlan) => void
 }
 
 const PlanItemEditable: FC<PlanItemEditableProps> = ({ editableProps, planItemProps }) => {
@@ -21,14 +14,14 @@ const PlanItemEditable: FC<PlanItemEditableProps> = ({ editableProps, planItemPr
     <>
       <Button onClick={() => setEditMode(!editMode)}>switch</Button>
       {
-        editMode &&
-        (
+        editMode
+        && (
           <EditablePlan {...editableProps} />
         )
       }
       {
-        !editMode &&
-        (
+        !editMode
+        && (
           <PlanItem {...planItemProps} />
         )
       }

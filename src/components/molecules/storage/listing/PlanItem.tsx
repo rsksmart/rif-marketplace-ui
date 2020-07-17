@@ -18,13 +18,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   innerContainer: {
     backgroundColor: colors.gray1,
     borderRadius: 5,
-    padding: 10
+    padding: 10,
   },
   leftContent: {
     [theme.breakpoints.up('sm')]: {
-      borderRight: `1px solid ${colors.gray3}`
-    }
-  }
+      borderRight: `1px solid ${colors.gray3}`,
+    },
+  },
 }))
 
 const PlanItem: FC<PlanItemProps> = ({ monthlyDuration, rifPrice, onItemRemoved }) => {
@@ -33,13 +33,16 @@ const PlanItem: FC<PlanItemProps> = ({ monthlyDuration, rifPrice, onItemRemoved 
   return (
     <Grid container alignItems="center" spacing={2}>
       <Grid item xs={10}>
-        <Grid container alignItems='center'
-          className={classes.innerContainer}>
+        <Grid
+          container
+          alignItems="center"
+          className={classes.innerContainer}
+        >
           <Grid item xs={12} sm={6} className={classes.leftContent}>
-            <Grid container spacing={2} alignItems='center'>
+            <Grid container spacing={2} alignItems="center">
               <Grid item xs={4}>
-                <Typography component='div'>
-                  <Box fontWeight='fontWeightMedium' textAlign='center' color={`${colors.gray5}`}>
+                <Typography component="div">
+                  <Box fontWeight="fontWeightMedium" textAlign="center" color={`${colors.gray5}`}>
                     {monthlyDuration}
                   </Box>
                 </Typography>
@@ -67,28 +70,28 @@ const PlanItem: FC<PlanItemProps> = ({ monthlyDuration, rifPrice, onItemRemoved 
           <Grid item xs={12} sm={6}>
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={4}>
-                <Typography component='div' variant='caption' color='textSecondary'>
-                  <Box textAlign='center'>Monthly fee</Box>
+                <Typography component="div" variant="caption" color="textSecondary">
+                  <Box textAlign="center">Monthly fee</Box>
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography component='div'>
-                  <Box textAlign='center' color={`${colors.gray5}`}>1234 RIF</Box>
+                <Typography component="div">
+                  <Box textAlign="center" color={`${colors.gray5}`}>1234 RIF</Box>
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography align='center' color='textSecondary'>1234 USD</Typography>
+                <Typography align="center" color="textSecondary">1234 USD</Typography>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
       <Grid item xs={2}>
-        <Grid container direction='row'>
-          <IconButton color='primary'>
+        <Grid container direction="row">
+          <IconButton color="primary">
             <EditIcon />
           </IconButton>
-          <IconButton onClick={onItemRemoved} color='primary'>
+          <IconButton onClick={onItemRemoved} color="primary">
             <ClearIcon />
           </IconButton>
         </Grid>
