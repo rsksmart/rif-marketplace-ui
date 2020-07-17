@@ -89,12 +89,12 @@ const MyOffers: FC<{}> = () => {
 
       if (offer) {
         const { price, paymentToken } = offer
-        const currency = crypto[paymentToken]
+        const { rate, displayName } = crypto[paymentToken]
         displayItem.price = (
           <CombinedPriceCell
             price={price.toString()}
-            priceFiat={(currency.rate * price).toString()}
-            currency={currency.displayName}
+            priceFiat={price.times(rate).toString()}
+            currency={displayName}
             currencyFiat={currentFiat.displayName}
             divider=" = "
           />

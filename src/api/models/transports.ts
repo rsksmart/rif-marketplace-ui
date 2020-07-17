@@ -2,7 +2,7 @@ export interface OfferTransport {
     creationDate?: string
     offerId: string
     paymentToken: string
-    price: string
+    priceString: string
     ownerAddress: string
     ownerDomain: string
     tokenId: string
@@ -25,7 +25,7 @@ export interface SoldDomainTransport {
     id: string
     tokenId: string
     paymentToken: string
-    price: string
+    priceString: string
     soldDate: string
     domain: DomainTransport
     transfer: {

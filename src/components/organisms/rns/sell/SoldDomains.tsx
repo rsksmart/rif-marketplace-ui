@@ -46,7 +46,7 @@ const SoldDomains: FC<{}> = () => {
         soldDate,
         tokenId,
       } = domainItem
-      const currency = crypto[paymentToken]
+      const { rate, displayName } = crypto[paymentToken]
 
       const pseudoResolvedName = name && `${name}.rsk`
       const displayDomainName = domainName || pseudoResolvedName
@@ -57,11 +57,11 @@ const SoldDomains: FC<{}> = () => {
         id,
         domainName: displayDomainName,
         buyer: <AddressItem value={buyer} />,
-        currency: currency.displayName,
+        currency: displayName,
         sellingPrice: <CombinedPriceCell
           price={price.toString()}
-          priceFiat={(currency.rate * price).toString()}
-          currency={currency.displayName}
+          priceFiat={price.times(rate).toString()}
+          currency={displayName}
           currencyFiat={currentFiat.displayName}
           divider=" = "
         />,

@@ -2,18 +2,31 @@ import { AbstractAPIService } from 'api/models/apiService'
 import { RnsFilter } from 'api/models/RnsFilter'
 import { SoldDomainTransport } from 'api/models/transports'
 import { RnsSoldDomain } from 'models/marketItems/DomainItem'
+import { parseToBigDecimal } from 'utils/parsers'
 import { getAvailableTokens, RnsAddresses, RnsAPIService } from './common'
 
 export const soldDomainsAddress: RnsAddresses = 'rns/v0/sold'
 
-const mapFromTransport = (item: SoldDomainTransport): RnsSoldDomain => ({
-  id: item.id,
-  paymentToken: getAvailableTokens[item.paymentToken.toLowerCase()],
-  price: parseInt(item.price, 10) / 10 ** 18,
-  soldDate: new Date(item.soldDate),
-  domainName: item.domain.name,
-  buyer: item.transfer.buyerAddress,
-  tokenId: item.tokenId,
+const mapFromTransport = ({
+  id,
+  paymentToken,
+  priceString,
+  soldDate,
+  domain: {
+    name: domainName,
+  },
+  transfer: {
+    buyerAddress: buyer,
+  },
+  tokenId,
+}: SoldDomainTransport): RnsSoldDomain => ({
+  id,
+  buyer,
+  tokenId,
+  domainName,
+  paymentToken: getAvailableTokens[paymentToken.toLowerCase()],
+  price: parseToBigDecimal(priceString, 18),
+  soldDate: new Date(soldDate),
 })
 
 export class SoldDomainsService extends AbstractAPIService implements RnsAPIService {

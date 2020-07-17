@@ -2,18 +2,29 @@ import { AbstractAPIService } from 'api/models/apiService'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import { OfferTransport } from 'api/models/transports'
 import { RnsFilter, PriceFilter } from 'api/models/RnsFilter'
+import { parseToBigDecimal, convertToBigString, parseToInt } from 'utils/parsers'
 import { getAvailableTokens, RnsAddresses, RnsAPIService } from './common'
 
 export const offersAddress: RnsAddresses = 'rns/v0/offers'
 
-const mapFromTransport = (item: OfferTransport): RnsDomainOffer => ({
-  price: parseInt(item.price, 10) / 10 ** 18,
-  expirationDate: new Date(item.domain.expiration.date),
-  id: item.offerId,
-  domainName: item.domain.name,
-  paymentToken: getAvailableTokens[item.paymentToken.toLowerCase()],
-  tokenId: item.tokenId,
-  ownerAddress: item.ownerAddress,
+const mapFromTransport = ({
+  priceString,
+  domain: {
+    expiration: { date },
+    name: domainName,
+  },
+  offerId: id,
+  paymentToken,
+  tokenId,
+  ownerAddress,
+}: OfferTransport): RnsDomainOffer => ({
+  id,
+  ownerAddress,
+  domainName,
+  price: parseToBigDecimal(priceString, 18),
+  expirationDate: new Date(date),
+  paymentToken: getAvailableTokens[paymentToken.toLowerCase()],
+  tokenId,
 })
 
 enum LimitType {
@@ -27,10 +38,15 @@ const fetchPriceLimit = async (service, limitType: LimitType): Promise<number> =
     $sort: {
       price: limitType,
     },
-    $select: ['price'],
+    $select: ['priceString'],
   }
   const results = await service.find({ query })
-  return results.reduce((_: unknown, item: { price: string }): number => parseInt(item.price, 10) / 10 ** 18, 0)
+
+  // Gets the result parses it io the correct decimal and ensures that the limits are always 1bigger/smaller than the actual largest/smallest price
+  return results.reduce(
+    (_, item: { priceString: string }): number => Math.round(parseToInt(item.priceString, 18)) - limitType,
+    0,
+  )
 }
 
 export class OffersService extends AbstractAPIService implements RnsAPIService {
@@ -47,8 +63,8 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
           },
         } : undefined,
         price: price ? {
-          $gte: price.min * 10 ** 18,
-          $lte: price.max * 10 ** 18,
+          $gte: convertToBigString(price.min, 18),
+          $lte: convertToBigString(price.max, 18),
         } : undefined,
       },
     })

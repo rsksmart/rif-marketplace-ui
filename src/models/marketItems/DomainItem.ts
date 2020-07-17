@@ -1,11 +1,12 @@
 import { Item } from 'models/Market'
+import Big from 'big.js'
 
 export interface RnsDomainOffer extends Item {
     tokenId: string
     paymentToken: string
     domainName: string
     expirationDate: Date
-    price: number
+    price: Big
     ownerAddress: string
 }
 
@@ -20,7 +21,7 @@ export interface RnsDomain extends Item {
 export interface RnsSoldDomain extends Item {
     tokenId: string
     paymentToken: string
-    price: number
+    price: Big
     soldDate: Date
     domainName: string
     buyer: string
