@@ -8,11 +8,3 @@ export interface StorageItem extends Item {
     currency: string
     priceUsd: number
 }
-
-export interface StoragePlan {
-  _internalId?: number
-  currency: string // for now we only support RIF but in the future we may need something like an enum
-  pricePerGb: number
-  monthsDuration: number
-}
-
