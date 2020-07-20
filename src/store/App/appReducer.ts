@@ -1,6 +1,7 @@
 import {
-  AppPayload, LoadingPayload, MessagePayload, RemoveMessagePayload, ErrorMessagePayload,
+  AppPayload, ErrorMessagePayload, LoadingPayload, MessagePayload, RemoveMessagePayload,
 } from 'store/App/appActions'
+
 import { APP_ACTIONS } from './appActions'
 import { AppState } from './AppStore'
 
@@ -12,12 +13,33 @@ export type AppActions = {
   [key in APP_ACTIONS]: AppReducer
 }
 
+const LOADING_MSG_ID = 'loading'
+
 export const appActions: AppActions = {
   NOOP: (state, _payload) => state,
-  SET_IS_LOADING: (state, payload: LoadingPayload) => ({
-    ...state,
-    ...payload,
-  }),
+  SET_IS_LOADING: (state, payload: LoadingPayload) => {
+    const { isLoading, message, id } = payload
+    const { messages, loaders } = state
+    const messagesCopy = { ...messages }
+
+    if (!isLoading) {
+      delete messagesCopy[LOADING_MSG_ID]
+    }
+    return {
+      ...state,
+      messages: message ? {
+        ...messagesCopy,
+        [LOADING_MSG_ID]: {
+          text: message,
+          type: 'info',
+        },
+      } : messagesCopy,
+      loaders: {
+        ...loaders,
+        [id]: isLoading,
+      },
+    }
+  },
   SET_MESSAGE: (state, payload: MessagePayload | ErrorMessagePayload) => {
     const { messages } = state
     const { id, ...message } = payload

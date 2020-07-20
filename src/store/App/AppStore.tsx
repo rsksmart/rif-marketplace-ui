@@ -1,41 +1,26 @@
-import { APIErrorId, ServiceMap } from 'api/models/apiService'
+import { ServiceMap } from 'api/models/apiService'
 import { ConfirmationsService } from 'api/rif-marketplace-cache/blockchain/confirmations'
 import { XRService } from 'api/rif-marketplace-cache/rates/xr'
 import { DomainsService } from 'api/rif-marketplace-cache/rns/domains'
 import { OffersService } from 'api/rif-marketplace-cache/rns/offers'
 import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
-import { Severity } from 'models/misc'
+import {
+  ErrorId, ErrorMessage, Message, MessageId, LoaderId,
+} from 'models/UIMessage'
 import React, { Dispatch, useReducer } from 'react'
 import { StoreActions, StoreReducer, StoreState } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
-import { ContractErrorId } from 'contracts/interfaces'
 import { AppAction, ErrorMessagePayload } from './appActions'
 import { appActions, AppReducer } from './appReducer'
 
 export type StoreName = 'app'
 
-export interface CustomAction {
-  name: string
-  action: Function
-}
-
-export type ErrorId = APIErrorId | ContractErrorId
-export type MessageId = ErrorId | 'wallet'
-export interface Message {
-  text: string
-  type: Severity
-  customAction?: CustomAction
-}
-
-export type ErrorMessage = Modify<Message, {
-  error: Error
-}>
-
 export type MessageMap = Record<MessageId, Message | ErrorMessage>
+export type LoaderMap = Record<LoaderId, boolean>
 
 export interface AppState extends StoreState {
-  isLoading?: boolean
+  loaders: LoaderMap
   messages: Partial<MessageMap>
   apis: ServiceMap
 }
@@ -56,6 +41,12 @@ export const initialState: AppState = {
     // "storage/v0/offers": new StorageOffersService()
   },
   messages: {},
+  loaders: {
+    contract: false,
+    data: false,
+    filters: false,
+    other: false,
+  },
 }
 
 const AppStore = React.createContext({} as AppStoreProps | any)

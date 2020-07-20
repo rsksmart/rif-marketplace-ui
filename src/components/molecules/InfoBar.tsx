@@ -2,7 +2,7 @@ import {
   Button, ButtonProps, createStyles, makeStyles, Snackbar, Theme,
 } from '@material-ui/core'
 import MuiAlert from '@material-ui/lab/Alert'
-import { Severity } from 'models/misc'
+import { Severity } from 'models/UIMessage'
 import React, { FC } from 'react'
 
 export interface InfoBarProps {

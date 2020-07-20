@@ -11,7 +11,9 @@ import TransactionInProgressPanel from 'components/organisms/TransactionInProgre
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import MarketplaceContract from 'contracts/Marketplace'
 import RNSContract from 'contracts/Rns'
-import React, { useContext, useEffect, useState } from 'react'
+import React, {
+  useContext, useEffect, useState, useCallback,
+} from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import { AddTxPayload } from 'store/Blockchain/blockchainActions'
@@ -20,6 +22,8 @@ import MarketStore from 'store/Market/MarketStore'
 import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 import Logger from 'utils/Logger'
 import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
+import { UIError } from 'models/UIMessage'
+import { LoadingPayload } from 'store/App/appActions'
 
 const logger = Logger.getInstance()
 
@@ -91,7 +95,7 @@ const CancelDomainCheckoutPage = () => {
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
 
   const { dispatch: appDispatch } = useContext<AppStoreProps>(AppStore)
-  const reportError = errorReporterFactory(appDispatch)
+  const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
   useEffect(() => {
     if (isPendingConfirm && order && !order.isProcessing) {
@@ -146,49 +150,79 @@ const CancelDomainCheckoutPage = () => {
         type: 'SET_PROGRESS',
         payload: {
           isProcessing: true,
+          id: 'contract',
         },
       })
-
-      const rnsContract = RNSContract.getInstance(web3)
-      const marketPlaceContract = MarketplaceContract.getInstance(web3)
-
-      // Get gas price
-      const gasPrice = await web3.eth.getGasPrice()
-        .catch((error) => reportError({
-          error,
-          id: 'web3-getGasPrice',
-          text: 'Could not retreive gas price from the blockchain.',
-        }))
-
-      // Send unapproval transaction
-      const unapproveReceipt = await rnsContract.unapprove(tokenId, { from: account, gasPrice })
-        .catch((error) => reportError({
-          error,
-          id: 'contract-rns-unapprove',
-          text: `Could not unapprove domain ${name}.`,
-        }))
-      logger.info('unapproveReceipt:', unapproveReceipt)
-
-      if (!unapproveReceipt) return
-
-      // Send Unplacement transaction
-      const unplaceReceipt = await marketPlaceContract.unplace(tokenId, { from: account, gasPrice })
-        .catch((error) => reportError({
-          error,
-          id: 'contract-marketplace-unplace',
-          text: `Could not unplace domain ${name}.`,
-        }))
-      logger.info('unplaceReceipt:', unplaceReceipt)
-
-      if (!unplaceReceipt) return
-
-      bcDispatch({
-        type: 'SET_TX_HASH',
+      appDispatch({
+        type: 'SET_IS_LOADING',
         payload: {
-          txHash: unplaceReceipt.transactionHash,
-        } as AddTxPayload,
-      })
-      setIsPendingConfirm(true)
+          isLoading: true,
+          id: 'contract',
+          message: 'Executing transfer...',
+        } as LoadingPayload,
+      } as any)
+
+      try {
+        const rnsContract = RNSContract.getInstance(web3)
+        const marketPlaceContract = MarketplaceContract.getInstance(web3)
+
+        // Get gas price
+        const gasPrice = await web3.eth.getGasPrice()
+          .catch((error: Error) => {
+            throw new UIError({
+              error,
+              id: 'web3-getGasPrice',
+              text: 'Could not retreive gas price from the blockchain.',
+            })
+          })
+
+        // Send unapproval transaction
+        const unapproveReceipt = await rnsContract.unapprove(tokenId, { from: account, gasPrice })
+          .catch((error) => {
+            throw new UIError({
+              error,
+              id: 'contract-rns-unapprove',
+              text: `Could not unapprove domain ${name}.`,
+            })
+          })
+        logger.info('unapproveReceipt:', unapproveReceipt)
+
+        // Send Unplacement transaction
+        const unplaceReceipt = await marketPlaceContract.unplace(tokenId, { from: account, gasPrice })
+          .catch((error) => {
+            throw new UIError({
+              error,
+              id: 'contract-marketplace-unplace',
+              text: `Could not unplace domain ${name}.`,
+            })
+          })
+        logger.info('unplaceReceipt:', unplaceReceipt)
+
+        bcDispatch({
+          type: 'SET_TX_HASH',
+          payload: {
+            txHash: unplaceReceipt.transactionHash,
+          } as AddTxPayload,
+        })
+        setIsPendingConfirm(true)
+      } catch (e) {
+        reportError(e)
+
+        dispatch({
+          type: 'SET_PROGRESS',
+          payload: {
+            isProcessing: false,
+          },
+        })
+      } finally {
+        appDispatch({
+          type: 'SET_IS_LOADING',
+          payload: {
+            isLoading: false,
+            id: 'contract',
+          } as LoadingPayload,
+        } as any)
+      }
     }
   }
 

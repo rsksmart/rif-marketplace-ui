@@ -6,6 +6,7 @@ import { MarketItem } from 'models/Market'
 import {
   colors, fonts,
 } from '@rsksmart/rif-ui'
+import WithSpinner from 'components/hoc/WithSpinner'
 
 export interface TableHeaders {
   [itemName: string]: string | React.ElementType
@@ -82,4 +83,4 @@ const Marketplace: FC<MarketplaceProps> = ({
   )
 }
 
-export default Marketplace
+export default WithSpinner(Marketplace)

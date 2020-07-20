@@ -4,7 +4,7 @@ import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import React, {
   useContext, useEffect, useReducer, useState,
 } from 'react'
-import { ErrorMessagePayload } from 'store/App/appActions'
+import { ErrorMessagePayload, LoadingPayload } from 'store/App/appActions'
 import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
@@ -114,6 +114,13 @@ export const RnsOffersStoreProvider = ({ children }) => {
     const { fetchPriceLimits } = api
 
     if (isInitialised && needsRefresh && !isLimitsSet) {
+      appDispatch({
+        type: 'SET_IS_LOADING',
+        payload: {
+          isLoading: true,
+          id: 'filters',
+        } as LoadingPayload,
+      } as any)
       fetchPriceLimits()
         .then((price) => {
           dispatch({
@@ -135,7 +142,16 @@ export const RnsOffersStoreProvider = ({ children }) => {
               type: 'error',
               error,
             } as ErrorMessagePayload,
-          })
+          } as any)
+        })
+        .finally(() => {
+          appDispatch({
+            type: 'SET_IS_LOADING',
+            payload: {
+              isLoading: false,
+              id: 'filters',
+            } as LoadingPayload,
+          } as any)
         })
     }
   }, [api, isInitialised, needsRefresh, isLimitsSet, appDispatch])
@@ -151,6 +167,13 @@ export const RnsOffersStoreProvider = ({ children }) => {
     const { fetch } = api
 
     if (isInitialised && isLimitsSet) {
+      appDispatch({
+        type: 'SET_IS_LOADING',
+        payload: {
+          isLoading: true,
+          id: 'data',
+        } as LoadingPayload,
+      } as any)
       fetch(filters)
         .then((items) => {
           dispatch({
@@ -164,8 +187,17 @@ export const RnsOffersStoreProvider = ({ children }) => {
             payload: { refresh: false },
           } as any)
         })
+        .finally(() => {
+          appDispatch({
+            type: 'SET_IS_LOADING',
+            payload: {
+              isLoading: false,
+              id: 'data',
+            } as LoadingPayload,
+          } as any)
+        })
     }
-  }, [isInitialised, isLimitsSet, filters, limits, api])
+  }, [isInitialised, isLimitsSet, filters, limits, api, appDispatch])
 
   const value = { state, dispatch }
   return <RnsOffersStore.Provider value={value}>{children}</RnsOffersStore.Provider>

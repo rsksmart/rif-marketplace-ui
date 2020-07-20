@@ -1,9 +1,3 @@
-import {
-  Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody, TableCell, TableRow, Theme,
-} from '@material-ui/core'
-import {
-  Button, colors, shortenString, Typography, Web3Store,
-} from '@rsksmart/rif-ui'
 import Login from 'components/atoms/Login'
 import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
@@ -12,18 +6,30 @@ import TransactionInProgressPanel from 'components/organisms/TransactionInProgre
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import MarketplaceContract from 'contracts/Marketplace'
 import RIFContract from 'contracts/Rif'
+import { UIError } from 'models/UIMessage'
 import React, {
-  FC, useContext, useEffect, useState,
+  FC, useCallback, useContext, useEffect, useState,
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
+import { LoadingPayload } from 'store/App/appActions'
+import AppStore, { errorReporterFactory } from 'store/App/AppStore'
 import { AddTxPayload } from 'store/Blockchain/blockchainActions'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
 import MarketStore from 'store/Market/MarketStore'
 import RnsOffersStore from 'store/Market/rns/OffersStore'
 import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
-import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
+
+import {
+  Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody,
+  TableCell, TableRow, Theme,
+} from '@material-ui/core'
+import {
+  Button, colors, shortenString, Typography, Web3Store,
+} from '@rsksmart/rif-ui'
+
+import { parseToBigDecimal } from '../../../../utils/parsers'
 
 const logger = Logger.getInstance()
 const network: string = process.env.REACT_APP_NETWORK || 'ganache'
@@ -75,8 +81,9 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   const classes = useStyles()
   const history = useHistory()
 
-  const { dispatch: appDispatch } = useContext<AppStoreProps>(AppStore)
-  const reportError = errorReporterFactory(appDispatch)
+  const { dispatch: appDispatch } = useContext(AppStore)
+  const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
+
   const {
     state: {
       exchangeRates: {
@@ -109,25 +116,33 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   useEffect(() => {
     if (account && tokenId && !isFundsConfirmed) {
       const checkFunds = async () => {
+        appDispatch({
+          type: 'SET_IS_LOADING',
+          payload: {
+            isLoading: true,
+            id: 'contract',
+            message: 'Checking funds...',
+          } as LoadingPayload,
+        })
         const rifContract = RIFContract.getInstance(web3)
         const marketPlaceContract = MarketplaceContract.getInstance(web3)
         const myBalance = await rifContract.getBalanceOf(account, { from: account })
-          .catch((error) => reportError({
-            error,
-            id: 'contract-rif-getBalanceOf',
-            text: 'Could not get balance from the crypto contract.',
-          }))
-
-        if (!myBalance) return
+          .catch((error) => {
+            throw new UIError({
+              error,
+              id: 'contract-rif-getBalanceOf',
+              text: 'Could not get balance from the crypto contract.',
+            })
+          })
 
         const tokenPlacement = await marketPlaceContract.getPlacement(tokenId, { from: account })
-          .catch((error) => reportError({
-            error,
-            id: 'contract-marketplace-getPlacement',
-            text: `Could not retreive placement for ${domainName} from the marketplace contract.`,
-          }))
-
-        if (!tokenPlacement) return
+          .catch((error) => {
+            throw new UIError({
+              error,
+              id: 'contract-marketplace-getPlacement',
+              text: `Could not retreive placement for ${domainName} from the marketplace contract.`,
+            })
+          })
 
         const price = tokenPlacement[1]
         const { utils: { BN } } = web3
@@ -136,8 +151,20 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
         setIsFundsConfirmed(true)
       }
       checkFunds()
+        .catch((error) => {
+          reportError(error)
+        })
+        .finally(() => {
+          appDispatch({
+            type: 'SET_IS_LOADING',
+            payload: {
+              isLoading: false,
+              id: 'contract',
+            },
+          })
+        })
     }
-  }, [web3, account, tokenId, isFundsConfirmed, reportError, domainName])
+  }, [web3, account, tokenId, isFundsConfirmed, reportError, domainName, appDispatch])
 
   useEffect(() => {
     if (isPendingConfirm && order && !order.isProcessing) {
@@ -195,41 +222,73 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
           isProcessing: true,
         },
       })
-
-      const rifContract = RIFContract.getInstance(web3)
-      const marketPlaceContract = MarketplaceContract.getInstance(web3)
-
-      const tokenPlacement = await marketPlaceContract.getPlacement(tokenId, { from: account })
-        .catch((error) => reportError({
-          error,
-          id: 'contract-marketplace-getPlacement',
-          text: `Could not retreive placement for ${domainName} from the marketplace contract.`,
-        }))
-
-      if (!tokenPlacement) return
-      const tokenPrice = tokenPlacement[1]
-
-      // Get gas price
-      const gasPrice = await web3.eth.getGasPrice()
-
-      // Send Transfer and call transaction
-      const transferReceipt = await rifContract.transferAndCall(marketPlaceAddress, tokenPrice, tokenId, { from: account, gasPrice })
-        .catch((error) => reportError({
-          error,
-          id: 'contract-rif-transferAndCall',
-          text: `Transfer of ${tokenPrice} ${currency.displayName} failed. Check your funds and try again.`,
-        }))
-      logger.info('transferReceipt:', transferReceipt)
-
-      if (!transferReceipt) return
-
-      bcDispatch({
-        type: 'SET_TX_HASH',
+      appDispatch({
+        type: 'SET_IS_LOADING',
         payload: {
-          txHash: transferReceipt.transactionHash,
-        } as AddTxPayload,
+          isLoading: true,
+          id: 'contract',
+          message: 'Executing transfer...',
+        } as LoadingPayload,
       })
-      setIsPendingConfirm(true)
+
+      try {
+        const rifContract = RIFContract.getInstance(web3)
+        const marketPlaceContract = MarketplaceContract.getInstance(web3)
+
+        const tokenPlacement = await marketPlaceContract.getPlacement(tokenId, { from: account })
+          .catch((error) => {
+            throw new UIError({
+              error,
+              id: 'contract-marketplace-getPlacement',
+              text: `Could not retreive placement for ${domainName} from the marketplace contract.`,
+            })
+          })
+
+        const tokenPrice = tokenPlacement[1]
+
+        // Get gas price
+        const gasPrice = await web3.eth.getGasPrice()
+
+        // Send Transfer and call transaction
+        const transferReceipt = await rifContract.transferAndCall(marketPlaceAddress, tokenPrice, tokenId, { from: account, gasPrice })
+          .catch((error) => {
+            const adjustedPrice = parseToBigDecimal(tokenPrice, 18).toString()
+            throw new UIError({
+              error,
+              id: 'contract-rif-transferAndCall',
+              text: `Transfer of ${adjustedPrice} ${currency.displayName} failed. Check your funds and try again.`,
+              // customAction: () => {
+
+              // }
+            })
+          })
+        logger.info('transferReceipt:', transferReceipt)
+
+        bcDispatch({
+          type: 'SET_TX_HASH',
+          payload: {
+            txHash: transferReceipt.transactionHash,
+          } as AddTxPayload,
+        })
+        setIsPendingConfirm(true)
+      } catch (e) {
+        reportError(e)
+
+        dispatch({
+          type: 'SET_PROGRESS',
+          payload: {
+            isProcessing: false,
+          },
+        })
+      } finally {
+        appDispatch({
+          type: 'SET_IS_LOADING',
+          payload: {
+            isLoading: false,
+            id: 'contract',
+          } as LoadingPayload,
+        })
+      }
     }
   }
 

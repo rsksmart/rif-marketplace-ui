@@ -10,6 +10,7 @@ import {
 } from '@rsksmart/rif-ui'
 import ROUTES from 'routes'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
+import WithSpinner from 'components/hoc/WithSpinner'
 import WithAccount from '../../hoc/WithAccount'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -75,4 +76,4 @@ const MarketFilter: FC = ({ children }) => {
   )
 }
 
-export default MarketFilter
+export default WithSpinner(MarketFilter)
