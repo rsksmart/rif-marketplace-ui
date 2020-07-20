@@ -33,8 +33,12 @@ const StorageFilters: FC = () => {
   return (
     <>
       <SearchFilter
+<<<<<<< HEAD
         value={searchText}
         onChange={onSearchTextChange}
+=======
+        value=""
+>>>>>>> feat: handles country and available size on the store
       />
       <RangeFilter
         title="Size"

@@ -59,9 +59,15 @@ const StorageListingPage = () => {
           <BaseSettings />
           <PlanItems />
         </Grid>
-        <RUIButton onClick={handleSubmit}
+        <RUIButton
+          onClick={handleSubmit}
           disabled={!isSubmitEnabled}
-          color="primary" rounded variant="contained">List storage</RUIButton>
+          color="primary"
+          rounded
+          variant="contained"
+        >
+          List storage
+        </RUIButton>
         <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
           Your wallet will open and you will be asked to confirm the transaction for listing your service.
         </Typography>

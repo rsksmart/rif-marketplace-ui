@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
 // for now we are just mocking the visual page without using the store
 // import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import Grid from '@material-ui/core/Grid'
@@ -61,7 +61,7 @@ const StorageOffersPage: FC = () => {
   }
   const itemCollection = []
 
-  const [txType, setTxType] = useState(0)
+  const txType = 0
 
   // TODO: here we will reference to MarketPageTemplate and MarketFilters but for the
   // purpose of showing a preview version we are only adding styles with hardcoded data
@@ -76,7 +76,7 @@ const StorageOffersPage: FC = () => {
                 <Typography weight="lightBold" variant="h6" color="primary">Storage</Typography>
               </Grid>
               <Grid className={classes.switchContainer} item xs={6}>
-                <SwitchTabs label1="Buy" label2="Sell" value={txType} onChange={() => { txType === 0 ? setTxType(1) : setTxType(0) }} />
+                <SwitchTabs label1="Buy" label2="Sell" value={txType} />
               </Grid>
             </Grid>
             {/* START - filters content */}

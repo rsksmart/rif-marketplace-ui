@@ -1,9 +1,8 @@
 import React, { useReducer } from 'react'
-// import AppStore, { AppStoreProps } from 'store/App/AppStore'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
-import { StorageState, StorageListingPlan, StorageStoreProps } from './interfaces'
 import { Modify } from 'utils/typeUtils'
+import { StorageState, StorageListingPlan, StorageStoreProps } from './interfaces'
 import { StorageReducer, storageActions } from './storageReducer'
 
 export type StoreName = 'storage_listing'
@@ -19,8 +18,8 @@ export const initialState: StorageListingState = {
     availableSize: 1,
     country: '',
     currency: 'RIF',
-    planItems: []
-  }
+    planItems: [],
+  },
 }
 
 const StorageListingStore = React.createContext({} as StorageStoreProps)
