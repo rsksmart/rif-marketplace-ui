@@ -13,9 +13,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { StoragePlanItem } from 'store/Market/storage/interfaces'
 import { mayBePluralize } from '../../../../utils/utils'
 
-// TODO: - rename this component to editable plan item .ito
-
-export interface EditablePlanProps {
+export interface EditablePlanItemProps {
   onPlanAdded: (plan: StoragePlanItem) => void
   availableMonths: number[]
   contractLength: number
@@ -32,7 +30,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const EditablePlan: FC<EditablePlanProps> = ({
+const EditablePlanItem: FC<EditablePlanItemProps> = ({
   onPlanAdded, availableMonths, contractLength, onContractLengthChange,
 }) => {
   const classes = useStyles()
@@ -145,4 +143,4 @@ const EditablePlan: FC<EditablePlanProps> = ({
   )
 }
 
-export default EditablePlan
+export default EditablePlanItem

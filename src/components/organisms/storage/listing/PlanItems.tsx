@@ -1,12 +1,15 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, {
+  FC, useState, useEffect, useContext,
+} from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import { colors } from '@rsksmart/rif-ui'
 import { makeStyles } from '@material-ui/core/styles'
-import EditablePlan, { EditablePlanProps } from 'components/molecules/storage/listing/EditablePlan'
+import EditablePlanItem, { EditablePlanItemProps } from 'components/molecules/storage/listing/EditablePlanItem'
 import { StoragePlanItem } from 'store/Market/storage/interfaces'
 import { mayBePluralize } from 'utils/utils'
 import PlanItemEditable from 'components/organisms/storage/listing/PlanItemEditable'
+import StorageListingStore from 'store/Market/storage/ListingStore'
 
 const useStyles = makeStyles(() => ({
   subscriptionCreator: {
@@ -21,12 +24,16 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
+// .ito - seguir por aca, agarrar los planItems y darle al add, edit y remove
+
 const PlanItems: FC<{}> = () => {
+  const { state: { plan }, dispatch } = useContext(StorageListingStore)
+  const planItems = plan?.planItems || []
+  const availableMonths = plan?.availableMonths || []
+
   const classes = useStyles()
 
-  const [currentPlans, setCurrentPlans] = useState([] as StoragePlanItem[])
-  const [plansCounter, setPlansCounter] = useState(0)
-  const [availableMonths, setAvailableMonths] = useState([1, 2, 3])
+  // const [availableMonths, setAvailableMonths] = useState([1, 2, 3])
   // const [availableMonths, setAvailableMonths] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
   const [newContractLength, setNewContractLength] = useState(availableMonths[0])
 
@@ -40,26 +47,23 @@ const PlanItems: FC<{}> = () => {
     setNewContractLength(value)
   }
 
-  const onPlanAdded = (plan: StoragePlanItem) => {
-    const newPlan = {
-      ...plan,
-      internalId: plansCounter,
-    }
-    setPlansCounter(plansCounter + 1)
-    // add to the currentPlans
-    setCurrentPlans([newPlan, ...currentPlans])
-    // remove month from the available options
-    setAvailableMonths([...availableMonths.filter((x) => x !== plan.monthsDuration)])
+  const onPlanAdded = (planItem: StoragePlanItem) => {
+    dispatch({
+      type: 'ADD_ITEM',
+      payload: planItem as any,
+      // TODO: type properly
+    })
   }
 
-  const onItemRemoved = (plan: StoragePlanItem) => {
-    // add the month to the available options
-    setAvailableMonths([...availableMonths, plan.monthsDuration])
-    // remove from the currentPlans
-    setCurrentPlans([...currentPlans.filter((x) => x.internalId !== plan.internalId)])
+  const onItemRemoved = (planItem: StoragePlanItem) => {
+    dispatch({
+      type: 'REMOVE_ITEM',
+      payload: planItem as any,
+      // TODO: type properly
+    })
   }
 
-  const editableProps: EditablePlanProps = {
+  const editableProps: EditablePlanItemProps = {
     availableMonths,
     onPlanAdded,
     contractLength: newContractLength,
@@ -74,7 +78,7 @@ const PlanItems: FC<{}> = () => {
         && (
           <Grid item xs={12}>
             <Typography color="secondary" variant="subtitle1">SET PLAN PRICES</Typography>
-            <EditablePlan
+            <EditablePlanItem
               availableMonths={availableMonths}
               onPlanAdded={onPlanAdded}
               contractLength={newContractLength}
@@ -85,16 +89,13 @@ const PlanItems: FC<{}> = () => {
       }
       {/* STORAGE PLANS */}
       {
-        currentPlans.length > 0
+        planItems.length > 0
         && (
           <Grid item xs={12}>
             <Typography gutterBottom color="secondary" variant="subtitle1">STORAGE PLANS</Typography>
             <Grid className={classes.storagePlans} container spacing={2}>
-              {/* {
-                <PlanItemEditable />
-              } */}
               {
-                (currentPlans.sort((a, b) => a.monthsDuration - b.monthsDuration).map((p: StoragePlanItem) => {
+                (planItems.sort((a, b) => a.monthsDuration - b.monthsDuration).map((p: StoragePlanItem) => {
                   const planItemProps = {
                     monthlyDuration: mayBePluralize(p.monthsDuration, 'month'),
                     rifPrice: p.pricePerGb,
@@ -102,6 +103,7 @@ const PlanItems: FC<{}> = () => {
                   }
                   return (
                     <PlanItemEditable
+                      key={p.internalId}
                       editableProps={{ ...editableProps, availableMonths: [...editableProps.availableMonths, p.monthsDuration] }}
                       planItemProps={planItemProps}
                     />

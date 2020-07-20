@@ -1,10 +1,10 @@
 import React, { FC, useState } from 'react'
 import { Button } from '@material-ui/core'
-import EditablePlan, { EditablePlanProps } from '../../../molecules/storage/listing/EditablePlan'
+import EditablePlanItem, { EditablePlanItemProps } from '../../../molecules/storage/listing/EditablePlanItem'
 import PlanItem, { PlanItemProps } from '../../../molecules/storage/listing/PlanItem'
 
 export interface PlanItemEditableProps {
-  editableProps: EditablePlanProps
+  editableProps: EditablePlanItemProps
   planItemProps: PlanItemProps
 }
 
@@ -16,7 +16,7 @@ const PlanItemEditable: FC<PlanItemEditableProps> = ({ editableProps, planItemPr
       {
         editMode
         && (
-          <EditablePlan {...editableProps} />
+          <EditablePlanItem {...editableProps} />
         )
       }
       {

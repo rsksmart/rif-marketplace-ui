@@ -18,12 +18,52 @@ export type StorageActions = {
 }
 
 export const storageActions: StorageActions = {
-  // add the item and return new copy of the state
-  ADD_ITEM: (state: StorageState, _payload: AddItemPayload) => ({ ...state }),
+  ADD_ITEM: (state: StorageState, payload: AddItemPayload) => {
+    const internalCounter = state.plan?.internalCounter || 1
+    const newPlan = {
+      ...payload,
+      internalId: internalCounter,
+    }
+    return {
+      ...state,
+      plan: state.plan && {
+        ...state.plan,
+        availableMonths: [
+          ...state.plan?.availableMonths.filter(
+            (x) => x !== payload.monthsDuration
+          ),
+        ],
+        internalCounter: internalCounter + 1,
+        planItems: [...state.plan?.planItems, newPlan],
+      },
+    }
+  },
+  REMOVE_ITEM: (
+    state: StorageState,
+    { internalId, monthsDuration }: RemoveItemPayload,
+  ) => ({
+    ...state,
+    plan: state.plan && {
+      ...state.plan,
+      availableMonths: [...state.plan?.availableMonths, monthsDuration],
+      planItems: [...state.plan?.planItems.filter((x) => x.internalId !== internalId)],
+    },
+  }),
   // TODO
-  REMOVE_ITEM: (state: StorageState, _payload: RemoveItemPayload) => ({ ...state }),
-  // TODO
-  EDIT_ITEM: (state: StorageState, _payload: EditItemPayload) => ({ ...state }),
+  EDIT_ITEM: (state: StorageState, payload: EditItemPayload) => {
+    // remove the item with the internalId provided and add the one of the payload
+    const { internalId } = payload
+    return {
+      ...state,
+      plan: state.plan && {
+        ...state.plan,
+        planItems: [
+          ...state.plan?.planItems.filter((x) => x.internalId !== internalId),
+          { ...payload },
+        ],
+      },
+    }
+  },
   SET_AVAILABLE_SIZE: (
     state: StorageState,
     { availableSize }: SetAvailableSizePayload,
