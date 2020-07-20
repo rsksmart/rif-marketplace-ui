@@ -13,7 +13,7 @@ import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import MarketplaceContract from 'contracts/Marketplace'
 import RNSContract from 'contracts/Rns'
 import React, {
-  FC, useContext, useEffect, useState,
+  FC, useContext, useEffect, useState, useCallback,
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
@@ -24,6 +24,8 @@ import RnsDomainsStore from 'store/Market/rns/DomainsStore'
 import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
 import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
+import { UIError } from 'models/UIMessage'
+import { LoadingPayload } from 'store/App/appActions'
 
 const logger = Logger.getInstance()
 
@@ -107,7 +109,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
   const { dispatch: bcDispatch } = useContext(BlockchainStore)
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
   const { dispatch: appDispatch } = useContext<AppStoreProps>(AppStore)
-  const reportError = errorReporterFactory(appDispatch)
+  const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
   const currencySymbols = Object.keys(crypto)
   const currencyOptions = currencySymbols.map((symbol) => crypto[symbol].displayName)
@@ -147,51 +149,85 @@ const DomainsCheckoutPage: FC<{}> = () => {
         type: 'SET_PROGRESS',
         payload: {
           isProcessing: true,
+          id: 'contract',
         },
       })
-
       const rnsContract = RNSContract.getInstance(web3)
       const marketPlaceContract = MarketplaceContract.getInstance(web3)
+      try {
+        // Get gas price
+        const gasPrice = await web3.eth.getGasPrice()
+          .catch((error: Error) => {
+            throw new UIError({
+              error,
+              id: 'web3-getGasPrice',
+              text: 'Could not retreive gas price from the blockchain.',
+            })
+          })
 
-      // Get gas price
-      const gasPrice = await web3.eth.getGasPrice()
-        .catch((error) => reportError({
-          error,
-          id: 'web3-getGasPrice',
-          text: 'Could not retreive gas price from the blockchain.',
-        }))
+        appDispatch({
+          type: 'SET_IS_LOADING',
+          payload: {
+            isLoading: true,
+            id: 'contract',
+            message: 'Approving domain placement...',
+          } as LoadingPayload,
+        } as any)
 
-      if (!gasPrice) return
+        // Send approval transaction
+        const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId, { from: account, gasPrice })
+          .catch((error) => {
+            throw new UIError({
+              error,
+              id: 'contract-rns-approve',
+              text: `Could not approve domain ${name}.`,
+            })
+          })
+        logger.info('approveReceipt:', approveReceipt)
 
-      // Send approval transaction
-      const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId, { from: account, gasPrice })
-        .catch((error) => reportError({
-          error,
-          id: 'contract-rns-approve',
-          text: `Could not approve domain ${name}.`,
-        }))
-      logger.info('approveReceipt:', approveReceipt)
+        appDispatch({
+          type: 'SET_IS_LOADING',
+          payload: {
+            isLoading: true,
+            id: 'contract',
+            message: 'Placing domain...',
+          } as LoadingPayload,
+        } as any)
+        // Send Placement transaction
+        const placeReceipt = await marketPlaceContract.place(tokenId, rifTokenAddress, price, { from: account, gasPrice })
+          .catch((error) => {
+            throw new UIError({
+              error,
+              id: 'contract-marketplace-place',
+              text: `Could not place domain ${name}.`,
+            })
+          })
+        logger.info('placeReceipt:', placeReceipt)
 
-      if (!approveReceipt) return
-
-      // Send Placement transaction
-      const placeReceipt = await marketPlaceContract.place(tokenId, rifTokenAddress, price, { from: account, gasPrice })
-        .catch((error) => reportError({
-          error,
-          id: 'contract-marketplace-place',
-          text: `Could not place domain ${name}.`,
-        }))
-      logger.info('placeReceipt:', placeReceipt)
-
-      if (!placeReceipt) return
-
-      bcDispatch({
-        type: 'SET_TX_HASH',
-        payload: {
-          txHash: placeReceipt.transactionHash,
-        } as AddTxPayload,
-      })
-      setIsPendingConfirm(true)
+        bcDispatch({
+          type: 'SET_TX_HASH',
+          payload: {
+            txHash: placeReceipt.transactionHash,
+          } as AddTxPayload,
+        })
+        setIsPendingConfirm(true)
+      } catch (e) {
+        reportError(e)
+        dispatch({
+          type: 'SET_PROGRESS',
+          payload: {
+            isProcessing: false,
+          },
+        })
+      } finally {
+        appDispatch({
+          type: 'SET_IS_LOADING',
+          payload: {
+            isLoading: false,
+            id: 'contract',
+          } as LoadingPayload,
+        } as any)
+      }
     }
   }
 

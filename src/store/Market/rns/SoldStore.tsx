@@ -9,6 +9,7 @@ import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
 import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
 import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
+import { LoadingPayload } from 'store/App/appActions'
 import {
   RnsListing, RnsOrder, RnsState, RnsStoreProps,
 } from './interfaces'
@@ -102,6 +103,13 @@ export const RnsSoldStoreProvider = ({ children }) => {
     const { fetch } = api
 
     if (isInitialised && needsRefresh) {
+      appDispatch({
+        type: 'SET_IS_LOADING',
+        payload: {
+          isLoading: true,
+          id: 'data',
+        } as LoadingPayload,
+      } as any)
       fetch({
         ...filters,
         ownerAddress: account,
@@ -117,8 +125,17 @@ export const RnsSoldStoreProvider = ({ children }) => {
           payload: { refresh: false },
         } as any)
       })
+        .finally(() => {
+          appDispatch({
+            type: 'SET_IS_LOADING',
+            payload: {
+              isLoading: false,
+              id: 'data',
+            } as LoadingPayload,
+          } as any)
+        })
     }
-  }, [isInitialised, needsRefresh, filters, api, account])
+  }, [isInitialised, needsRefresh, filters, api, account, appDispatch])
 
   const value = { state, dispatch }
   return <RnsSoldStore.Provider value={value}>{children}</RnsSoldStore.Provider>

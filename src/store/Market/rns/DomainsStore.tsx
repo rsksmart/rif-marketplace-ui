@@ -9,7 +9,7 @@ import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStor
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
-import { ErrorMessagePayload } from 'store/App/appActions'
+import { ErrorMessagePayload, LoadingPayload } from 'store/App/appActions'
 import {
   RnsListing, RnsOrder, RnsState, RnsStoreProps,
 } from './interfaces'
@@ -56,7 +56,7 @@ export const RnsDomainsStoreProvider = ({ children }) => {
   const {
     state: { apis: { 'rns/v0/domains': domains } },
     dispatch: appDispatch,
-  }: AppStoreProps = useContext(AppStore)
+  } = useContext<AppStoreProps>(AppStore)
   const api = domains as DomainsService
 
   if (!api.service) {
@@ -104,6 +104,13 @@ export const RnsDomainsStoreProvider = ({ children }) => {
     const { fetch } = api
 
     if (isInitialised && needsRefresh) {
+      appDispatch({
+        type: 'SET_IS_LOADING',
+        payload: {
+          isLoading: true,
+          id: 'data',
+        } as LoadingPayload,
+      } as any)
       fetch({
         ...filters,
         ownerAddress: account,
@@ -126,7 +133,15 @@ export const RnsDomainsStoreProvider = ({ children }) => {
             text: `Couldn't fetch RNS domains. Error: ${e.message}`,
             type: 'error',
           } as ErrorMessagePayload,
-        })
+        } as any)
+      }).finally(() => {
+        appDispatch({
+          type: 'SET_IS_LOADING',
+          payload: {
+            isLoading: false,
+            id: 'data',
+          } as LoadingPayload,
+        } as any)
       })
     }
   }, [isInitialised, needsRefresh, filters, api, account, appDispatch])

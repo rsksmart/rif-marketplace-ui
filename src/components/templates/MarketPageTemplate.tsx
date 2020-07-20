@@ -11,6 +11,7 @@ import { RnsAction } from 'store/Market/rns/rnsActions'
 import AppStore from 'store/App/AppStore'
 import { MessagePayload } from 'store/App/appActions'
 import Marketplace, { TableHeaders } from './marketplace/Marketplace'
+import { AppStoreProps } from '../../store/App/AppStore'
 
 export interface MarketPageTemplateProps {
   className?: string
@@ -52,7 +53,15 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   const {
     state: { account },
   } = useContext(Web3Store)
-  const { dispatch: appDispatch } = useContext(AppStore)
+  const {
+    state: {
+      loaders,
+    },
+    dispatch: appDispatch,
+  } = useContext<AppStoreProps>(AppStore)
+
+  const isLoadingFilters = loaders.filters
+  const isLoadingItems = loaders.data
 
   useEffect(() => {
     if (requiresAccount && !account) {
@@ -69,14 +78,14 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
           //   }
           // }
         } as MessagePayload,
-      })
+      } as any)
     }
   }, [appDispatch, requiresAccount, account])
 
   return (
     <Grid container direction="row" className={`${classes.root} ${className}`}>
       <Grid className={classes.filtersContainer} item sm={12} md={3}>
-        <MarketFilter>{filterItems}</MarketFilter>
+        <MarketFilter isLoading={isLoadingFilters}>{filterItems}</MarketFilter>
       </Grid>
       <Grid className={classes.resultsContainer} item sm={12} md={9}>
         <InfoBar
@@ -93,7 +102,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
             },
           }}
         />
-        <Marketplace items={itemCollection} headers={headers} />
+        <Marketplace items={itemCollection} headers={headers} isLoading={isLoadingItems} />
       </Grid>
     </Grid>
   )

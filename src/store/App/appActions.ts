@@ -1,11 +1,13 @@
 import { StoreDispatcher } from 'store/storeUtils/interfaces'
 import { Modify } from 'utils/typeUtils'
-import { ErrorMessage, Message, MessageId } from './AppStore'
+import { Message, MessageId, ErrorMessage } from 'models/UIMessage'
+import { LoaderId } from '../../models/UIMessage'
 
 export type APP_ACTIONS = 'NOOP' | 'SET_IS_LOADING' | 'SET_MESSAGE' | 'REMOVE_MESSAGE'
 
 export interface LoadingPayload {
-  readonly isLoading?: boolean
+  readonly id: LoaderId
+  readonly isLoading: boolean
   readonly message?: string
 }
 

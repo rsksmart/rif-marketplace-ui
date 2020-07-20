@@ -1,8 +1,9 @@
 import InfoBar from 'components/molecules/InfoBar'
 import React, { useContext } from 'react'
 import { RemoveMessagePayload } from 'store/App/appActions'
-import AppStore, { ErrorMessage, Message, MessageId } from 'store/App/AppStore'
+import AppStore from 'store/App/AppStore'
 import Logger from 'utils/Logger'
+import { MessageId, Message, ErrorMessage } from 'models/UIMessage'
 
 const logger = Logger.getInstance()
 
