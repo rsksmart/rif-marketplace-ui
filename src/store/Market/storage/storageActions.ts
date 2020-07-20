@@ -11,6 +11,7 @@ export type STORAGE_ACTIONS =
 export type AddItemPayload = StoragePlanItem
 
 export interface RemoveItemPayload {
+  monthsDuration: number
   internalId: number
 }
 

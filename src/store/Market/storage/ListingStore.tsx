@@ -19,6 +19,10 @@ export const initialState: StorageListingState = {
     country: '',
     currency: 'RIF',
     planItems: [],
+    internalCounter: 1,
+    availableMonths: [1, 2, 3],
+    // TODO: now only 3 for testing
+    // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   },
 }
 

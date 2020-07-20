@@ -15,6 +15,8 @@ export interface StorageListingPlan {
   country: string
   currency: string
   planItems: StoragePlanItem[]
+  internalCounter: number
+  availableMonths: number[]
 }
 
 export interface StorageState extends StoreState {
