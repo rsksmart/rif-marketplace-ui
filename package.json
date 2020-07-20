@@ -47,7 +47,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "socket.io-client": "^2.3.0",
-    "typescript": "^3.9.6",
+    "typescript": "^3.9.7",
     "web3": "^1.2.8",
     "web3-eth": "^1.2.9",
     "web3-eth-contract": "^1.2.8",
