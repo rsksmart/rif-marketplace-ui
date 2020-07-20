@@ -3,7 +3,7 @@ import { Dispatch } from 'react'
 import { StorageAction } from './storageActions'
 
 export interface StoragePlanItem {
-  _internalId?: number
+  internalId?: number
   currency: string // for now we only support RIF but in the future we may need something like an enum
   pricePerGb: number
   monthsDuration: number

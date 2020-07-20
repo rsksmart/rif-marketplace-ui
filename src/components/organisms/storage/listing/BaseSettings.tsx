@@ -1,5 +1,4 @@
-import React, { FC, useState } from 'react'
-
+import React, { FC, useContext } from 'react'
 import InfoIcon from '@material-ui/icons/Info'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
@@ -7,20 +6,37 @@ import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import Tooltip from '@material-ui/core/Tooltip'
-
 import { colors, validatedNumber } from '@rsksmart/rif-ui'
 import CountrySelect from 'components/molecules/storage/CountrySelect'
+import StorageListingStore from 'store/Market/storage/ListingStore'
+import { CountryType } from 'models/Country'
 
-export interface BaseSettingsProps { }
+const BaseSettings: FC<{}> = () => {
+  const { state: { plan }, dispatch } = useContext(StorageListingStore)
 
-// TODO: - level up the props
-const BaseSettings: FC<BaseSettingsProps> = () => {
+  const availableSize = plan?.availableSize || 1
+
   const system = 'IPFS'
   const currency = 'RIF'
-  const [availableSize, setAvailableSize] = useState(1)
 
   const onSizeChange = ({ target: { value } }) => {
-    setAvailableSize(validatedNumber(Number(value)))
+    dispatch({
+      type: 'SET_AVAILABLE_SIZE',
+      payload: {
+        availableSize: validatedNumber(Number(value)),
+      } as any,
+      // TODO: type properly
+    })
+  }
+
+  const onCountryChange = (country: CountryType | null) => {
+    dispatch({
+      type: 'SET_COUNTRY',
+      payload: {
+        country: country?.name,
+      } as any,
+      // TODO: type properly
+    })
   }
 
   return (
@@ -60,7 +76,6 @@ const BaseSettings: FC<BaseSettingsProps> = () => {
                     color: colors.primary,
                   },
                 },
-                // style: { color: colors.primary }
               }}
             />
           </Grid>
@@ -74,7 +89,7 @@ const BaseSettings: FC<BaseSettingsProps> = () => {
       <Grid item xs={12} md={6}>
         <Grid container spacing={1} alignItems="center">
           <Grid item xs={10}>
-            <CountrySelect />
+            <CountrySelect onChange={onCountryChange} />
           </Grid>
           <Grid item xs={2}>
             <Tooltip title="Regulations to use the uploaded content are directly associated to the location.">

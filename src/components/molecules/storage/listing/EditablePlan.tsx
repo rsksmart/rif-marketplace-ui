@@ -13,7 +13,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { StoragePlanItem } from 'store/Market/storage/interfaces'
 import { mayBePluralize } from '../../../../utils/utils'
 
-// .ito - rename this component to editable plan item
+// TODO: - rename this component to editable plan item .ito
 
 export interface EditablePlanProps {
   onPlanAdded: (plan: StoragePlanItem) => void
@@ -89,10 +89,10 @@ const EditablePlan: FC<EditablePlanProps> = ({
               value={pricePerGb.toString()}
               onChange={onPricePerGbChange}
               error={pricePerGb <= 0}
-              inputProps={{
-                min: '0',
-              }}
               InputProps={{
+                inputProps: {
+                  min: '0',
+                },
                 endAdornment: (
                   <InputAdornment position="end">
                     <Typography variant="caption" color="primary">RIF</Typography>

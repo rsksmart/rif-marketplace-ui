@@ -2,15 +2,13 @@ import React, { FC, useState, useEffect } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import { colors } from '@rsksmart/rif-ui'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import EditablePlan, { EditablePlanProps } from 'components/molecules/storage/listing/EditablePlan'
 import { StoragePlanItem } from 'store/Market/storage/interfaces'
 import { mayBePluralize } from 'utils/utils'
 import PlanItemEditable from 'components/organisms/storage/listing/PlanItemEditable'
 
-export interface PlanItemsProps { }
-
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   subscriptionCreator: {
     alignItems: 'center',
   },
@@ -23,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const PlanItems: FC<PlanItemsProps> = (props) => {
+const PlanItems: FC<{}> = () => {
   const classes = useStyles()
 
   const [currentPlans, setCurrentPlans] = useState([] as StoragePlanItem[])
@@ -45,7 +43,7 @@ const PlanItems: FC<PlanItemsProps> = (props) => {
   const onPlanAdded = (plan: StoragePlanItem) => {
     const newPlan = {
       ...plan,
-      _internalId: plansCounter,
+      internalId: plansCounter,
     }
     setPlansCounter(plansCounter + 1)
     // add to the currentPlans
@@ -58,7 +56,7 @@ const PlanItems: FC<PlanItemsProps> = (props) => {
     // add the month to the available options
     setAvailableMonths([...availableMonths, plan.monthsDuration])
     // remove from the currentPlans
-    setCurrentPlans([...currentPlans.filter((x) => x._internalId !== plan._internalId)])
+    setCurrentPlans([...currentPlans.filter((x) => x.internalId !== plan.internalId)])
   }
 
   const editableProps: EditablePlanProps = {

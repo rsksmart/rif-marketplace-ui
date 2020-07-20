@@ -50,7 +50,7 @@ const App = () => {
     RnsDomainsStoreProvider,
     RnsOffersStoreProvider,
     RnsSoldStoreProvider,
-    StorageListingStoreProvider
+    StorageListingStoreProvider,
   ]
   const content = (
     <BrowserRouter>
