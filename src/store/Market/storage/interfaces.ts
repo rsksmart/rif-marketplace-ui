@@ -1,6 +1,6 @@
 import { StoreState } from 'store/storeUtils/interfaces'
 import { Dispatch } from 'react'
-import { StorageAction } from './storageActions'
+import { StorageAction } from './listingActions'
 
 export interface StoragePlanItem {
   internalId?: number
@@ -9,7 +9,7 @@ export interface StoragePlanItem {
   monthsDuration: number
 }
 
-export interface StorageListingPlan {
+export interface ListingState extends StoreState {
   system: string
   availableSize: number
   country: string
@@ -20,11 +20,7 @@ export interface StorageListingPlan {
   allMonthsOptions: number[]
 }
 
-export interface StorageState extends StoreState {
-  plan?: StorageListingPlan
-}
-
-export interface StorageStoreProps {
-  state: StorageState
+export interface StorageListingStoreProps {
+  state: ListingState
   dispatch: Dispatch<StorageAction>
 }

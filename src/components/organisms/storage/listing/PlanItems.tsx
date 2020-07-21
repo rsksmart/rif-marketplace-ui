@@ -24,9 +24,9 @@ const useStyles = makeStyles(() => ({
 }))
 
 const PlanItems: FC<{}> = () => {
-  const { state: { plan } } = useContext(StorageListingStore)
-  const planItems = plan?.planItems || []
-  const availableMonths = plan?.availableMonths || []
+  const { state: { planItems, availableMonths } } = useContext(StorageListingStore)
+  // const planItems = plan?.planItems || []
+  // const availableMonths = plan?.availableMonths || []
 
   const classes = useStyles()
 

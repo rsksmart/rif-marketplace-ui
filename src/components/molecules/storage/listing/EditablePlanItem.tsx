@@ -31,12 +31,10 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
   planItem,
   onPlanSaved,
 }) => {
-  const { state: { plan }, dispatch } = useContext(StorageListingStore)
+  const { state: { availableMonths, currency }, dispatch } = useContext(StorageListingStore)
 
   const classes = useStyles()
   const [pricePerGb, setPricePerGb] = useState(1)
-  const currency = 'RIF'
-  const availableMonths = plan?.availableMonths || []
   const [selectedMonth, setSelectedMonth] = useState(planItem?.monthsDuration || availableMonths[0])
 
   useEffect(() => {

@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const StorageListingPage = () => {
-  const { state: { plan } } = useContext(StorageListingStore)
+  const { state: { planItems, availableSize, country, currency, system } } = useContext(StorageListingStore)
 
   const classes = useStyles()
 
@@ -42,11 +42,11 @@ const StorageListingPage = () => {
     // TODO: validate the plan and comunicate with the contract
   }
 
-  const isSubmitEnabled = plan?.planItems.length
-    && plan?.availableSize
-    && plan?.country
-    && plan?.currency
-    && plan?.system
+  const isSubmitEnabled = planItems.length
+    && availableSize
+    && country
+    && currency
+    && system
 
   return (
     <div className={classes.root}>
