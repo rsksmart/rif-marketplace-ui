@@ -1,137 +1,161 @@
-import React, { FC, useState } from 'react'
+import React, {
+  FC, useState, useContext, useEffect,
+} from 'react'
 import AddIcon from '@material-ui/icons/Add'
 import InfoIcon from '@material-ui/icons/Info'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import TextField from '@material-ui/core/TextField'
-import MenuItem from '@material-ui/core/MenuItem'
-import InputAdornment from '@material-ui/core/InputAdornment'
 import Tooltip from '@material-ui/core/Tooltip'
-import { colors, validatedNumber } from '@rsksmart/rif-ui'
 import { makeStyles } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
 import { StoragePlanItem } from 'store/Market/storage/interfaces'
-import { mayBePluralize } from '../../../../utils/utils'
+import SaveIcon from '@material-ui/icons/Save'
+import StorageListingStore from 'store/Market/storage/ListingStore'
+import PlanItemBaseForm from './PlanItemBaseForm'
 
 export interface EditablePlanItemProps {
-  onPlanAdded: (plan: StoragePlanItem) => void
-  availableMonths: number[]
-  contractLength: number
-  onContractLengthChange: (value: number) => void
+  onPlanAdded?: (planItem: StoragePlanItem) => void
+  onPlanSaved?: () => void
+  // if there is a planItem, it's on edit mode. Otherwise we are adding a new plan
+  planItem?: StoragePlanItem
 }
 
 const useStyles = makeStyles(() => ({
   subscriptionCreator: {
     alignItems: 'center',
   },
-  subscriptionCreatorPrice: {
-    backgroundColor: colors.gray1,
-    borderRadius: '5px',
-  },
 }))
 
 const EditablePlanItem: FC<EditablePlanItemProps> = ({
-  onPlanAdded, availableMonths, contractLength, onContractLengthChange,
+  onPlanAdded,
+  planItem,
+  onPlanSaved,
 }) => {
+  const { state: { plan }, dispatch } = useContext(StorageListingStore)
+
   const classes = useStyles()
   const [pricePerGb, setPricePerGb] = useState(1)
   const currency = 'RIF'
+  const availableMonths = plan?.availableMonths || []
+  const [selectedMonth, setSelectedMonth] = useState(planItem?.monthsDuration || availableMonths[0])
+
+  useEffect(() => {
+    if (availableMonths.length > 0) setSelectedMonth(planItem?.monthsDuration || availableMonths[0])
+  }, [availableMonths, planItem])
 
   const handleOnAddClick = () => {
-    const plan: StoragePlanItem = {
+    const newPlanItem: StoragePlanItem = {
       pricePerGb,
-      monthsDuration: contractLength,
+      monthsDuration: selectedMonth,
       currency,
     }
-    onPlanAdded(plan)
+
+    dispatch({
+      type: 'ADD_ITEM',
+      payload: newPlanItem as any,
+      // TODO: type properly
+    })
+
+    if (onPlanAdded) onPlanAdded(newPlanItem)
   }
 
-  const onPeriodChange = ({ target: { value } }) => {
-    onContractLengthChange(Number(value))
+  const handleOnSaveClick = () => {
+    // dispatch EDIT
+    const internalId = planItem?.internalId
+    const planItemEdited: StoragePlanItem = {
+      internalId,
+      pricePerGb,
+      monthsDuration: selectedMonth,
+      currency,
+    }
+    // TODO: handle properly
+    dispatch(({
+      type: 'EDIT_ITEM',
+      payload: planItemEdited as any,
+    }))
+
+    if (onPlanSaved) onPlanSaved()
   }
-  const onPricePerGbChange = ({ target: { value } }) => {
-    setPricePerGb(validatedNumber(Number(value)))
+
+  const onPricePerGbChange = (value: number) => {
+    setPricePerGb(value)
+  }
+
+  const onSelectedMonthChange = (value: number) => {
+    setSelectedMonth(value)
   }
 
   return (
     <Grid className={classes.subscriptionCreator} container spacing={2}>
-      <Grid item xs={12}>
-        <Typography gutterBottom color="secondary" variant="caption">Select the subscription period and the price and add a new storage plan to your list</Typography>
-      </Grid>
-      <Grid item xs={12} md={5}>
-        <TextField
-          select
-          fullWidth
-          required
-          label="Subscription Period"
-          id="subscription-period-select"
-          value={contractLength}
-          onChange={onPeriodChange}
-        >
-          {
-            availableMonths.sort((a, b) => a - b).map((mo) => (
-              <MenuItem value={mo} key={mo}>{mayBePluralize(mo, 'month')}</MenuItem>
-            ))
-          }
-        </TextField>
-      </Grid>
-      <Grid item xs={10} md={5}>
-        <Grid className={classes.subscriptionCreatorPrice} container spacing={1}>
-          <Grid item xs={6}>
-            <TextField
-              fullWidth
-              required
-              label="Price/GB"
-              id="price-gb"
-              type="number"
-              value={pricePerGb.toString()}
-              onChange={onPricePerGbChange}
-              error={pricePerGb <= 0}
-              InputProps={{
-                inputProps: {
-                  min: '0',
-                },
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Typography variant="caption" color="primary">RIF</Typography>
-                  </InputAdornment>
-                ),
-                style: { color: colors.primary },
-              }}
-            />
+      {
+        !planItem
+        && (
+        <>
+          <Grid item xs={12}>
+            <Typography gutterBottom color="secondary" variant="caption">Select the subscription period and the price and add a new storage plan to your list</Typography>
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              disabled
-              fullWidth
-              label=" "
-              id="price-gb-usd"
-              value="100"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Typography variant="caption" color="secondary">USD</Typography>
-                  </InputAdornment>
-                ),
-                style: { color: colors.gray4 },
-              }}
-            />
-          </Grid>
-        </Grid>
-      </Grid>
+          <PlanItemBaseForm
+            monthsOptions={availableMonths}
+            contractLength={selectedMonth}
+            onPeriodChange={onSelectedMonthChange}
+            onPriceChange={onPricePerGbChange}
+            price={pricePerGb}
+          />
+        </>
+        )
+      }
+      {
+        // when editing we add the current month as available
+        planItem
+        && (
+        <PlanItemBaseForm
+          monthsOptions={[...availableMonths, planItem.monthsDuration]}
+          contractLength={selectedMonth}
+          onPeriodChange={onSelectedMonthChange}
+          onPriceChange={onPricePerGbChange}
+          price={pricePerGb}
+        />
+        )
+      }
+
       <Grid item xs={2} md={2}>
         <Grid container direction="row">
-          <Tooltip title="Add plan">
-            <span>
-              <IconButton
-                onClick={handleOnAddClick}
-                disabled={pricePerGb <= 0 || availableMonths.indexOf(contractLength) === -1}
-                color="primary"
-              >
-                <AddIcon />
-              </IconButton>
-            </span>
-          </Tooltip>
+          {/* START - PENDING EXTRACTION */}
+          {/* EXTRACT TO NEW ATOM COMPONENT */}
+          {
+            planItem
+            && (
+            <Tooltip title="Save plan">
+              <span>
+                <IconButton
+                  onClick={handleOnSaveClick}
+                  disabled={pricePerGb <= 0}
+                  color="primary"
+                >
+                  <SaveIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
+            )
+          }
+          {/* EXTRACT TO NEW ATOM COMPONENT */}
+          {
+            !planItem
+            && (
+              <Tooltip title="Add plan">
+                <span>
+                  <IconButton
+                    onClick={handleOnAddClick}
+                    disabled={pricePerGb <= 0}
+                    color="primary"
+                  >
+                    <AddIcon />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            )
+          }
+          {/* END - PENDING EXTRACTION */}
           <Tooltip title="The average price for a monthly suscription is 2020 RIF">
             <IconButton>
               <InfoIcon color="secondary" />

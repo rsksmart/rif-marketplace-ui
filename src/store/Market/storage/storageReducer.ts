@@ -49,9 +49,8 @@ export const storageActions: StorageActions = {
       planItems: [...state.plan?.planItems.filter((x) => x.internalId !== internalId)],
     },
   }),
-  // TODO
   EDIT_ITEM: (state: StorageState, payload: EditItemPayload) => {
-    // remove the item with the internalId provided and add the one of the payload
+    // TODO: remove the item with the internalId provided and add the one of the payload
     const { internalId } = payload
     return {
       ...state,
