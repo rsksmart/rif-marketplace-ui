@@ -6,7 +6,7 @@ import { listingActions, ListingReducer } from './listingReducer'
 
 export type StoreName = 'storage_listing'
 
-const monthsOptions = [1, 2, 3]
+const monthsOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 export const initialState: ListingState = {
   storeID: 'storage_listing',
   system: 'IPFS',
@@ -17,7 +17,6 @@ export const initialState: ListingState = {
   internalCounter: 1,
   availableMonths: monthsOptions,
   allMonthsOptions: monthsOptions,
-  // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 }
 
 const StorageListingStore = React.createContext({} as StorageListingStoreProps | any)

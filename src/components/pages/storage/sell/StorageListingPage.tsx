@@ -34,7 +34,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const StorageListingPage = () => {
-  const { state: { planItems, availableSize, country, currency, system } } = useContext(StorageListingStore)
+  const {
+    state: {
+      planItems, availableSize, country, currency, system,
+    },
+  } = useContext(StorageListingStore)
 
   const classes = useStyles()
 
@@ -69,10 +73,12 @@ const StorageListingPage = () => {
           List storage
         </RUIButton>
         {
-          !!isSubmitEnabled &&
-          <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
-            Your wallet will open and you will be asked to confirm the transaction for listing your service.
+          !!isSubmitEnabled
+          && (
+            <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
+              Your wallet will open and you will be asked to confirm the transaction for listing your service.
             </Typography>
+          )
         }
       </div>
     </div>

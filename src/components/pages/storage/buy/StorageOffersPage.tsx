@@ -1,6 +1,4 @@
 import React, { FC } from 'react'
-// for now we are just mocking the visual page without using the store
-// import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import Grid from '@material-ui/core/Grid'
 import { Theme, makeStyles } from '@material-ui/core/styles'
 import Marketplace from 'components/templates/marketplace/Marketplace'
@@ -69,7 +67,6 @@ const StorageOffersPage: FC = () => {
     <Grid container direction="row" className={`${classes.root}`}>
       <>
         <Grid className={classes.filtersContainer} item sm={12} md={3}>
-          {/* START - MarketFilter component */}
           <div className={classes.filter}>
             <Grid className={classes.formHeading} container>
               <Grid item xs={6}>
@@ -79,11 +76,8 @@ const StorageOffersPage: FC = () => {
                 <SwitchTabs label1="Buy" label2="Sell" value={txType} />
               </Grid>
             </Grid>
-            {/* START - filters content */}
             <StorageFilters />
-            {/* END - filters content */}
           </div>
-          {/* END - MarketFilter component */}
         </Grid>
         <Grid className={classes.resultsContainer} item sm={12} md={9}>
           <Marketplace items={itemCollection} headers={headers} isLoading={false} />
