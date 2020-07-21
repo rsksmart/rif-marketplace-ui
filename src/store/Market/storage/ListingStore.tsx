@@ -22,6 +22,7 @@ export const initialState: StorageListingState = {
     internalCounter: 1,
     availableMonths: [1, 2, 3],
     // TODO: now only 3 for testing
+    // TODO: consider moving props to root and remove plan prop
     // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   },
 }
@@ -33,6 +34,7 @@ export const StorageListingStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(listingReducer, initialState)
 
   const value = { state, dispatch }
+
   return <StorageListingStore.Provider value={value}>{children}</StorageListingStore.Provider>
 }
 

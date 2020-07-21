@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
@@ -7,11 +7,13 @@ import IconButton from '@material-ui/core/IconButton'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditIcon from '@material-ui/icons/Edit'
 import { colors } from '@rsksmart/rif-ui'
+import { StoragePlanItem } from 'store/Market/storage/interfaces'
+import StorageListingStore from 'store/Market/storage/ListingStore'
+import { mayBePluralize } from 'utils/utils'
 
 export interface PlanItemProps {
-  monthlyDuration: string
-  rifPrice: number
-  onItemRemoved: () => void
+  onEditClick: () => void
+  planItem: StoragePlanItem
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -27,8 +29,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const PlanItem: FC<PlanItemProps> = ({ monthlyDuration, rifPrice, onItemRemoved }) => {
+const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
+  const { dispatch } = useContext(StorageListingStore)
   const classes = useStyles()
+
+  const { monthsDuration, pricePerGb } = planItem
+
+  const onItemRemoved = () => {
+    dispatch({
+      type: 'REMOVE_ITEM',
+      payload: planItem as any,
+      // TODO: type properly
+    })
+  }
 
   return (
     <Grid container alignItems="center" spacing={2}>
@@ -43,7 +56,7 @@ const PlanItem: FC<PlanItemProps> = ({ monthlyDuration, rifPrice, onItemRemoved 
               <Grid item xs={4}>
                 <Typography component="div">
                   <Box fontWeight="fontWeightMedium" textAlign="center" color={`${colors.gray5}`}>
-                    {monthlyDuration}
+                    {mayBePluralize(monthsDuration, 'month')}
                   </Box>
                 </Typography>
               </Grid>
@@ -51,14 +64,14 @@ const PlanItem: FC<PlanItemProps> = ({ monthlyDuration, rifPrice, onItemRemoved 
                 <Grid container alignItems="center">
                   <Grid item xs={6}>
                     <Typography align="center" color="primary">
-                      {rifPrice}
+                      {pricePerGb}
                       {' '}
                       RIF
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography align="center" color="secondary">
-                      {rifPrice}
+                      {pricePerGb}
                       {' '}
                       USD
                     </Typography>
@@ -88,7 +101,7 @@ const PlanItem: FC<PlanItemProps> = ({ monthlyDuration, rifPrice, onItemRemoved 
       </Grid>
       <Grid item xs={2}>
         <Grid container direction="row">
-          <IconButton color="primary">
+          <IconButton onClick={onEditClick} color="primary">
             <EditIcon />
           </IconButton>
           <IconButton onClick={onItemRemoved} color="primary">
