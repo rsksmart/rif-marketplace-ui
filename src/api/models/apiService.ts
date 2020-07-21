@@ -60,6 +60,7 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
     this.errorReporter = errorReporter
 
     try {
+
       this.service = app.service(this.path)
       return this.path
     } catch (error) {
