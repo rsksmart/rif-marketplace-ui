@@ -36,7 +36,7 @@ export class ConfirmationsService extends AbstractAPIService implements Confirma
   path = confirmationAddress
 
   _fetch = async (): Promise<Confirmations> => {
-    const data = await this.service.find()
+    const data = await this.service.find() as unknown as ConfirmationsTransportItem[]
     return mapFromTransport(data)
   }
 }

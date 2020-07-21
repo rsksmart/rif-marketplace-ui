@@ -44,7 +44,7 @@ export class DomainsService extends AbstractAPIService implements RnsAPIService 
         } : undefined,
         ownerAddress,
       },
-    })
+    }) as unknown as DomainTransport[]
 
     return results.map(mapFromTransport)
   }

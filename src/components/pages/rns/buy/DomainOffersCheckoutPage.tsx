@@ -29,7 +29,7 @@ import {
   Button, colors, shortenString, Typography, Web3Store,
 } from '@rsksmart/rif-ui'
 
-import { parseToBigDecimal } from '../../../../utils/parsers'
+import { parseToBigDecimal } from 'utils/parsers'
 
 const logger = Logger.getInstance()
 const network: string = process.env.REACT_APP_NETWORK || 'ganache'
@@ -131,7 +131,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
             throw new UIError({
               error,
               id: 'contract-rif-getBalanceOf',
-              text: 'Could not get balance from the crypto contract.',
+              text: 'Could not get funds balance from contract.',
             })
           })
 
@@ -140,7 +140,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
             throw new UIError({
               error,
               id: 'contract-marketplace-getPlacement',
-              text: `Could not retreive placement for ${domainName} from the marketplace contract.`,
+              text: `Could not retrieve placement for ${domainName} from contract.`,
             })
           })
 
@@ -240,7 +240,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
             throw new UIError({
               error,
               id: 'contract-marketplace-getPlacement',
-              text: `Could not retreive placement for ${domainName} from the marketplace contract.`,
+              text: `Could not retrieve placement for ${domainName} from contract.`,
             })
           })
 

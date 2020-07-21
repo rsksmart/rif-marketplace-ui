@@ -9,7 +9,6 @@ const useStyles = makeStyles(() => ({
   },
   overlay: {
     position: 'absolute',
-    backdropFilter: 'blur(2px)',
     zIndex: 2,
     height: '100%',
     width: '100%',
@@ -36,10 +35,10 @@ const WithSpinner = (WrappedComponent: React.ElementType) => {
     return (
       <div className={classes.root}>
         {
-          !!isLoading
+          isLoading
           && (
             <div className={classes.overlay}>
-              <img className={classes.spinner} src={logoBlueIcon} alt='logo' />
+              <img className={classes.spinner} src={logoBlueIcon} alt="logo" />
             </div>
           )
         }

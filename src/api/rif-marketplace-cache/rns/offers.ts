@@ -67,7 +67,7 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
           $lte: convertToBigString(price.max, 18),
         } : undefined,
       },
-    })
+    }) as unknown as OfferTransport[]
 
     return results.map(mapFromTransport)
   }
