@@ -32,10 +32,13 @@ const mapFromTransport = ({
 
 enum LimitType {
   min = 1,
-  max = -1
+  max = -1,
 }
 
-const fetchPriceLimit = async (service, limitType: LimitType): Promise<number> => {
+const fetchPriceLimit = async (
+  service,
+  limitType: LimitType,
+): Promise<number> => {
   const query = {
     $limit: 1,
     $sort: {

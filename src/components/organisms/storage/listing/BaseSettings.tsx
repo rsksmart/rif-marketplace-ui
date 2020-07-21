@@ -10,14 +10,10 @@ import { colors, validatedNumber } from '@rsksmart/rif-ui'
 import CountrySelect from 'components/molecules/storage/CountrySelect'
 import StorageListingStore from 'store/Market/storage/ListingStore'
 import { CountryType } from 'models/Country'
+import { StorageListingStoreProps } from 'store/Market/storage/interfaces'
 
 const BaseSettings: FC<{}> = () => {
-  const { state: { plan }, dispatch } = useContext(StorageListingStore)
-
-  const availableSize = plan?.availableSize || 1
-
-  const system = 'IPFS'
-  const currency = 'RIF'
+  const { state: { availableSize, system, currency }, dispatch } = useContext<StorageListingStoreProps>(StorageListingStore)
 
   const onSizeChange = ({ target: { value } }) => {
     dispatch({
