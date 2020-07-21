@@ -44,9 +44,9 @@ const StorageListingPage = () => {
 
   const isSubmitEnabled = plan?.planItems.length
     && plan?.availableSize
-    && plan?.country.length
-    && plan?.currency.length
-    && plan?.system.length
+    && plan?.country
+    && plan?.currency
+    && plan?.system
 
   return (
     <div className={classes.root}>
@@ -68,9 +68,12 @@ const StorageListingPage = () => {
         >
           List storage
         </RUIButton>
-        <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
-          Your wallet will open and you will be asked to confirm the transaction for listing your service.
-        </Typography>
+        {
+          !!isSubmitEnabled &&
+          <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
+            Your wallet will open and you will be asked to confirm the transaction for listing your service.
+            </Typography>
+        }
       </div>
     </div>
   )
