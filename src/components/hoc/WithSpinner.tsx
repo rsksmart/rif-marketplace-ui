@@ -1,5 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core'
+import logoBlueIcon from 'assets/images/logoBlueIcon.svg'
 import './WithSpinner.css'
 
 const useStyles = makeStyles(() => ({
@@ -23,8 +24,6 @@ const useStyles = makeStyles(() => ({
     width: '50px',
     height: '50px',
     border: 'none',
-    backgroundImage: 'url(/favicon.ico)',
-    backgroundPosition: 'center',
     animation: 'spin 2s ease-in-out infinite',
     WebkitAnimation: 'spin 2s ease-in-out infinite',
   },
@@ -40,7 +39,7 @@ const WithSpinner = (WrappedComponent: React.ElementType) => {
           !!isLoading
           && (
             <div className={classes.overlay}>
-              <div className={classes.spinner} />
+              <img className={classes.spinner} src={logoBlueIcon} alt='logo' />
             </div>
           )
         }
