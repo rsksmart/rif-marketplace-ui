@@ -158,7 +158,7 @@ const CancelDomainCheckoutPage = () => {
         payload: {
           isLoading: true,
           id: 'contract',
-          message: 'Executing transfer...',
+          message: 'Executing cancel...',
         } as LoadingPayload,
       } as any)
 

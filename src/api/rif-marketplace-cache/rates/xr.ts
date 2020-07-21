@@ -30,7 +30,7 @@ export class XRService extends AbstractAPIService implements XRAPIService {
       query: {
         $select: ['token', fiatSymbol],
       },
-    })
+    }) as unknown as []
 
     return results
   }

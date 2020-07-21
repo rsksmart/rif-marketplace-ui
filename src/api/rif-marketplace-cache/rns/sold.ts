@@ -44,7 +44,7 @@ export class SoldDomainsService extends AbstractAPIService implements RnsAPIServ
         } : undefined,
         ownerAddress,
       },
-    })
+    }) as unknown as SoldDomainTransport[]
 
     return results.map(mapFromTransport)
   }
