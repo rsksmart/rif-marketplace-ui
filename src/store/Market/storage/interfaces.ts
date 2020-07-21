@@ -17,6 +17,7 @@ export interface StorageListingPlan {
   planItems: StoragePlanItem[]
   internalCounter: number
   availableMonths: number[]
+  allMonthsOptions: number[]
 }
 
 export interface StorageState extends StoreState {
