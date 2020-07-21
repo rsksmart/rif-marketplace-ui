@@ -52,7 +52,6 @@ export const storageActions: StorageActions = {
     },
   }),
   EDIT_ITEM: (state: StorageState, payload: EditItemPayload) => {
-    // TODO: update the available months
     const { internalId, monthsDuration, pricePerGb, currency } = payload
     const newPlanItems =
       state.plan?.planItems.map((p) => {
