@@ -40,32 +40,51 @@ export const storageActions: StorageActions = {
   },
   REMOVE_ITEM: (
     state: StorageState,
-    { internalId, monthsDuration }: RemoveItemPayload,
+    { internalId, monthsDuration }: RemoveItemPayload
   ) => ({
     ...state,
     plan: state.plan && {
       ...state.plan,
       availableMonths: [...state.plan?.availableMonths, monthsDuration],
-      planItems: [...state.plan?.planItems.filter((x) => x.internalId !== internalId)],
+      planItems: [
+        ...state.plan?.planItems.filter((x) => x.internalId !== internalId),
+      ],
     },
   }),
   EDIT_ITEM: (state: StorageState, payload: EditItemPayload) => {
-    // TODO: remove the item with the internalId provided and add the one of the payload
-    const { internalId } = payload
+    // TODO: update the available months
+    const { internalId, monthsDuration, pricePerGb, currency } = payload
+    const newPlanItems =
+      state.plan?.planItems.map((p) => {
+        if (p.internalId === internalId) {
+          return {
+            ...p,
+            monthsDuration,
+            pricePerGb,
+            currency,
+          }
+        }
+        return p
+      }) || []
+
+    // TODO: move the state from plan, it's too nested and confusing
+    const unavailableMonths = newPlanItems.map((x) => x.monthsDuration)
+    const newAvailableMonths =
+      state.plan?.allMonthsOptions.filter(
+        (x) => unavailableMonths.indexOf(x) === -1
+      ) || []
     return {
       ...state,
       plan: state.plan && {
         ...state.plan,
-        planItems: [
-          ...state.plan?.planItems.filter((x) => x.internalId !== internalId),
-          { ...payload },
-        ],
+        planItems: newPlanItems,
+        availableMonths: newAvailableMonths,
       },
     }
   },
   SET_AVAILABLE_SIZE: (
     state: StorageState,
-    { availableSize }: SetAvailableSizePayload,
+    { availableSize }: SetAvailableSizePayload
   ) => ({
     ...state,
     plan: state.plan && {
