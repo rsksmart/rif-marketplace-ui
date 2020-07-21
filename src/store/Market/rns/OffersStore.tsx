@@ -138,7 +138,7 @@ export const RnsOffersStoreProvider = ({ children }) => {
             type: 'SET_MESSAGE',
             payload: {
               id: 'service-fetch',
-              text: 'Error while fetching limits.',
+              text: 'Error while fetching filters.',
               type: 'error',
               error,
             } as ErrorMessagePayload,
