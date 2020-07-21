@@ -19,30 +19,30 @@ export type ListingActions = {
 
 export const listingActions: ListingActions = {
   ADD_ITEM: (state: ListingState, payload: AddItemPayload) => {
-    const internalCounter = state.internalCounter
+    const { internalCounter } = state
     const newPlan = {
       ...payload,
       internalId: internalCounter,
     }
     return {
       ...state,
-      availableMonths: [
-        ...state.availableMonths.filter((x) => x !== payload.monthsDuration),
-      ],
+      availableMonths: [...state.availableMonths.filter((x) => x !== payload.monthsDuration)],
       internalCounter: internalCounter + 1,
       planItems: [...state.planItems, newPlan],
     }
   },
   REMOVE_ITEM: (
     state: ListingState,
-    { internalId, monthsDuration }: RemoveItemPayload
+    { internalId, monthsDuration }: RemoveItemPayload,
   ) => ({
     ...state,
     availableMonths: [...state.availableMonths, monthsDuration],
     planItems: [...state.planItems.filter((x) => x.internalId !== internalId)],
   }),
   EDIT_ITEM: (state: ListingState, payload: EditItemPayload) => {
-    const { internalId, monthsDuration, pricePerGb, currency } = payload
+    const {
+      internalId, monthsDuration, pricePerGb, currency,
+    } = payload
     const newPlanItems = state.planItems.map((p) => {
       if (p.internalId === internalId) {
         return {
@@ -56,7 +56,7 @@ export const listingActions: ListingActions = {
     })
     const unavailableMonths = newPlanItems.map((x) => x.monthsDuration)
     const newAvailableMonths = state.allMonthsOptions.filter(
-      (x) => unavailableMonths.indexOf(x) === -1
+      (x) => unavailableMonths.indexOf(x) === -1,
     )
     return {
       ...state,
@@ -66,7 +66,7 @@ export const listingActions: ListingActions = {
   },
   SET_AVAILABLE_SIZE: (
     state: ListingState,
-    { availableSize }: SetAvailableSizePayload
+    { availableSize }: SetAvailableSizePayload,
   ) => ({
     ...state,
     availableSize,

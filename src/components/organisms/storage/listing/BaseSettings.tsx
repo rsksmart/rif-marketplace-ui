@@ -11,6 +11,7 @@ import CountrySelect from 'components/molecules/storage/CountrySelect'
 import StorageListingStore from 'store/Market/storage/ListingStore'
 import { CountryType } from 'models/Country'
 import { StorageListingStoreProps } from 'store/Market/storage/interfaces'
+import { SetAvailableSizePayload, SetCountryPayload } from 'store/Market/storage/listingActions'
 
 const BaseSettings: FC<{}> = () => {
   const { state: { availableSize, system, currency }, dispatch } = useContext<StorageListingStoreProps>(StorageListingStore)
@@ -20,9 +21,8 @@ const BaseSettings: FC<{}> = () => {
       type: 'SET_AVAILABLE_SIZE',
       payload: {
         availableSize: validatedNumber(Number(value)),
-      } as any,
-      // TODO: type properly
-    })
+      } as SetAvailableSizePayload,
+    } as any)
   }
 
   const onCountryChange = (country: CountryType | null) => {
@@ -30,9 +30,8 @@ const BaseSettings: FC<{}> = () => {
       type: 'SET_COUNTRY',
       payload: {
         country: country?.name,
-      } as any,
-      // TODO: type properly
-    })
+      } as SetCountryPayload,
+    } as any)
   }
 
   return (

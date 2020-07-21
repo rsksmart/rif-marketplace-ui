@@ -1,7 +1,6 @@
 import React, {
   FC, useState, useContext, useEffect,
 } from 'react'
-import AddIcon from '@material-ui/icons/Add'
 import InfoIcon from '@material-ui/icons/Info'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
@@ -9,14 +8,16 @@ import Tooltip from '@material-ui/core/Tooltip'
 import { makeStyles } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
 import { StoragePlanItem } from 'store/Market/storage/interfaces'
-import SaveIcon from '@material-ui/icons/Save'
 import StorageListingStore from 'store/Market/storage/ListingStore'
+import { EditItemPayload, AddItemPayload } from 'store/Market/storage/listingActions'
 import PlanItemBaseForm from './PlanItemBaseForm'
+import SavePlanItemButton from './SavePlanItemButton'
+import AddPlanItemButton from './AddPlanItemButton'
 
 export interface EditablePlanItemProps {
   onPlanAdded?: (planItem: StoragePlanItem) => void
   onPlanSaved?: () => void
-  // if there is a planItem, it's on edit mode. Otherwise we are adding a new plan
+  // if there is a planItem, it's on edit mode. Otherwise we are just creating a new plan
   planItem?: StoragePlanItem
 }
 
@@ -34,7 +35,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
   const { state: { availableMonths, currency }, dispatch } = useContext(StorageListingStore)
 
   const classes = useStyles()
-  const [pricePerGb, setPricePerGb] = useState(1)
+  const [pricePerGb, setPricePerGb] = useState(planItem?.pricePerGb || 1)
   const [selectedMonth, setSelectedMonth] = useState(planItem?.monthsDuration || availableMonths[0])
 
   useEffect(() => {
@@ -47,29 +48,24 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
       monthsDuration: selectedMonth,
       currency,
     }
-
     dispatch({
       type: 'ADD_ITEM',
-      payload: newPlanItem as any,
-      // TODO: type properly
+      payload: newPlanItem as AddItemPayload,
     })
 
     if (onPlanAdded) onPlanAdded(newPlanItem)
   }
 
   const handleOnSaveClick = () => {
-    // dispatch EDIT
     const internalId = planItem?.internalId
-    const planItemEdited: StoragePlanItem = {
-      internalId,
-      pricePerGb,
-      monthsDuration: selectedMonth,
-      currency,
-    }
-    // TODO: handle properly
     dispatch(({
       type: 'EDIT_ITEM',
-      payload: planItemEdited as any,
+      payload: {
+        internalId,
+        pricePerGb,
+        monthsDuration: selectedMonth,
+        currency,
+      } as EditItemPayload,
     }))
 
     if (onPlanSaved) onPlanSaved()
@@ -88,76 +84,59 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
       {
         !planItem
         && (
-        <>
-          <Grid item xs={12}>
-            <Typography gutterBottom color="secondary" variant="caption">Select the subscription period and the price and add a new storage plan to your list</Typography>
-          </Grid>
-          <PlanItemBaseForm
-            monthsOptions={availableMonths}
-            contractLength={selectedMonth}
-            onPeriodChange={onSelectedMonthChange}
-            onPriceChange={onPricePerGbChange}
-            price={pricePerGb}
-          />
-        </>
+          <>
+            <Grid item xs={12}>
+              <Typography gutterBottom color="secondary" variant="caption">Select the subscription period and the price and add a new storage plan to your list</Typography>
+            </Grid>
+            <PlanItemBaseForm
+              monthsOptions={availableMonths}
+              contractLength={selectedMonth}
+              onPeriodChange={onSelectedMonthChange}
+              onPriceChange={onPricePerGbChange}
+              price={pricePerGb}
+            />
+          </>
         )
       }
       {
         // when editing we add the current month as available
         planItem
         && (
-        <PlanItemBaseForm
-          monthsOptions={[...availableMonths, planItem.monthsDuration]}
-          contractLength={selectedMonth}
-          onPeriodChange={onSelectedMonthChange}
-          onPriceChange={onPricePerGbChange}
-          price={pricePerGb}
-        />
+          <PlanItemBaseForm
+            monthsOptions={[...availableMonths, planItem.monthsDuration]}
+            contractLength={selectedMonth}
+            onPeriodChange={onSelectedMonthChange}
+            onPriceChange={onPricePerGbChange}
+            price={pricePerGb}
+          />
         )
       }
-
       <Grid item xs={2} md={2}>
         <Grid container direction="row">
-          {/* START - PENDING EXTRACTION */}
-          {/* EXTRACT TO NEW ATOM COMPONENT */}
           {
             planItem
             && (
-            <Tooltip title="Save plan">
-              <span>
-                <IconButton
-                  onClick={handleOnSaveClick}
-                  disabled={pricePerGb <= 0}
-                  color="primary"
-                >
-                  <SaveIcon />
-                </IconButton>
-              </span>
-            </Tooltip>
+              <SavePlanItemButton
+                onSaveClick={handleOnSaveClick}
+                disabled={pricePerGb <= 0}
+              />
             )
           }
-          {/* EXTRACT TO NEW ATOM COMPONENT */}
           {
             !planItem
             && (
-              <Tooltip title="Add plan">
-                <span>
-                  <IconButton
-                    onClick={handleOnAddClick}
-                    disabled={pricePerGb <= 0}
-                    color="primary"
-                  >
-                    <AddIcon />
-                  </IconButton>
-                </span>
-              </Tooltip>
+              <AddPlanItemButton
+                onAddClick={handleOnAddClick}
+                disabled={pricePerGb <= 0}
+              />
             )
           }
-          {/* END - PENDING EXTRACTION */}
           <Tooltip title="The average price for a monthly suscription is 2020 RIF">
-            <IconButton>
-              <InfoIcon color="secondary" />
-            </IconButton>
+            <span>
+              <IconButton disabled>
+                <InfoIcon color="secondary" />
+              </IconButton>
+            </span>
           </Tooltip>
         </Grid>
       </Grid>
