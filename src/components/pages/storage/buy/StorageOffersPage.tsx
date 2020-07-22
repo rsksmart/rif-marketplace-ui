@@ -1,9 +1,11 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import Grid from '@material-ui/core/Grid'
 import { Theme, makeStyles } from '@material-ui/core/styles'
 import Marketplace from 'components/templates/marketplace/Marketplace'
 import { colors, SwitchTabs, Typography } from '@rsksmart/rif-ui'
+import { useHistory } from 'react-router-dom'
 import StorageFilters from 'components/organisms/filters/storage/StorageFilters'
+import ROUTES from 'routes'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -47,6 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const StorageOffersPage: FC = () => {
   const classes = useStyles()
+  const history = useHistory()
 
   const headers = {
     provider: 'Provider',
@@ -59,7 +62,17 @@ const StorageOffersPage: FC = () => {
   }
   const itemCollection = []
 
-  const txType = 0
+  const [txType, setTxType] = useState(0)
+  // TODO: this will be removed soon as per the buy/sell restructure
+  const switchTxType = () => {
+    if (!txType) {
+      setTxType(1)
+      history.replace(ROUTES.STORAGE.SELL)
+      return
+    }
+    setTxType(0)
+    history.replace(ROUTES.STORAGE.BUY)
+  }
 
   // TODO: here we will reference to MarketPageTemplate and MarketFilters but for the
   // purpose of showing a preview version we are only adding styles with hardcoded data
@@ -73,7 +86,7 @@ const StorageOffersPage: FC = () => {
                 <Typography weight="lightBold" variant="h6" color="primary">Storage</Typography>
               </Grid>
               <Grid className={classes.switchContainer} item xs={6}>
-                <SwitchTabs label1="Buy" label2="Sell" value={txType} />
+                <SwitchTabs label1="Buy" label2="Sell" value={txType} onChange={switchTxType} />
               </Grid>
             </Grid>
             <StorageFilters />
