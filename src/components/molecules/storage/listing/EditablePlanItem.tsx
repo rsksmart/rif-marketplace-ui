@@ -5,12 +5,11 @@ import InfoIcon from '@material-ui/icons/Info'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Tooltip from '@material-ui/core/Tooltip'
-import { makeStyles } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
 import { StoragePlanItem } from 'store/Market/storage/interfaces'
 import StorageListingStore from 'store/Market/storage/ListingStore'
 import { EditItemPayload, AddItemPayload } from 'store/Market/storage/listingActions'
-import PlanItemBaseForm from './PlanItemBaseForm'
+import PlanItemBaseFormTemplate from 'components/templates/storage/listing/PlanItemBaseFormTemplate'
 import SavePlanItemButton from './SavePlanItemButton'
 import AddPlanItemButton from './AddPlanItemButton'
 
@@ -21,12 +20,6 @@ export interface EditablePlanItemProps {
   planItem?: StoragePlanItem
 }
 
-const useStyles = makeStyles(() => ({
-  subscriptionCreator: {
-    alignItems: 'center',
-  },
-}))
-
 const EditablePlanItem: FC<EditablePlanItemProps> = ({
   onPlanAdded,
   planItem,
@@ -34,7 +27,6 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
 }) => {
   const { state: { availableMonths, currency }, dispatch } = useContext(StorageListingStore)
 
-  const classes = useStyles()
   const [pricePerGb, setPricePerGb] = useState(planItem?.pricePerGb || 1)
   const [selectedMonth, setSelectedMonth] = useState(planItem?.monthsDuration || availableMonths[0])
 
@@ -80,7 +72,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
   }
 
   return (
-    <Grid className={classes.subscriptionCreator} container spacing={2}>
+    <Grid alignItems="center" container spacing={2}>
       {
         !planItem
         && (
@@ -88,7 +80,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
             <Grid item xs={12}>
               <Typography gutterBottom color="secondary" variant="caption">Select the subscription period and the price and add a new storage plan to your list</Typography>
             </Grid>
-            <PlanItemBaseForm
+            <PlanItemBaseFormTemplate
               monthsOptions={availableMonths}
               contractLength={selectedMonth}
               onPeriodChange={onSelectedMonthChange}
@@ -99,10 +91,9 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
         )
       }
       {
-        // when editing we add the current month as available
         planItem
         && (
-          <PlanItemBaseForm
+          <PlanItemBaseFormTemplate
             monthsOptions={[...availableMonths, planItem.monthsDuration]}
             contractLength={selectedMonth}
             onPeriodChange={onSelectedMonthChange}

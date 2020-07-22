@@ -26,7 +26,9 @@ export const listingActions: ListingActions = {
     }
     return {
       ...state,
-      availableMonths: [...state.availableMonths.filter((x) => x !== payload.monthsDuration)],
+      availableMonths: state.availableMonths.filter(
+        (x) => x !== payload.monthsDuration,
+      ),
       internalCounter: internalCounter + 1,
       planItems: [...state.planItems, newPlan],
     }
@@ -37,7 +39,7 @@ export const listingActions: ListingActions = {
   ) => ({
     ...state,
     availableMonths: [...state.availableMonths, monthsDuration],
-    planItems: [...state.planItems.filter((x) => x.internalId !== internalId)],
+    planItems: state.planItems.filter((x) => x.internalId !== internalId),
   }),
   EDIT_ITEM: (state: ListingState, payload: EditItemPayload) => {
     const {
@@ -54,9 +56,8 @@ export const listingActions: ListingActions = {
       }
       return p
     })
-    const unavailableMonths = newPlanItems.map((x) => x.monthsDuration)
     const newAvailableMonths = state.allMonthsOptions.filter(
-      (x) => unavailableMonths.indexOf(x) === -1,
+      (x) => !newPlanItems.find((newPlanItem) => newPlanItem.monthsDuration === x),
     )
     return {
       ...state,

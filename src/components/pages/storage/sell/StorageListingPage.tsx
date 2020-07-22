@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const StorageListingPage = () => {
   const {
     state: {
-      planItems, availableSize, country, currency, system,
+      planItems, availableSize, currency, system,
     },
   } = useContext(StorageListingStore)
 
@@ -48,7 +48,6 @@ const StorageListingPage = () => {
 
   const isSubmitEnabled = planItems.length
     && availableSize
-    && country
     && currency
     && system
 
