@@ -11,6 +11,7 @@ import { StoragePlanItem, StorageListingStoreProps } from 'store/Market/storage/
 import StorageListingStore from 'store/Market/storage/ListingStore'
 import { mayBePluralize } from 'utils/utils'
 import { RemoveItemPayload } from 'store/Market/storage/listingActions'
+import ShortenTextTooltip from 'components/molecules/ShortenTextTooltip'
 
 export interface PlanItemProps {
   onEditClick: () => void
@@ -90,7 +91,8 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
               <Grid item xs={4}>
                 <Typography component="div">
                   <Box textAlign="center" color={`${colors.gray5}`}>
-                    {pricePerGb / monthsDuration}
+                    <ShortenTextTooltip value={(pricePerGb / monthsDuration).toString()} maxLength={5} />
+                    {/* {pricePerGb / monthsDuration} */}
                     {' '}
                     RIF
                   </Box>
