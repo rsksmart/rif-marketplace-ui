@@ -8,6 +8,7 @@ export interface DomainNameItemProps {
 
 const MAX_DISPLAYED_LENGTH = 30
 
+// TODO: replace with ShortenTextTooltip
 const DomainNameItem: FC<DomainNameItemProps> = ({ value }) => (
   <>
     {
