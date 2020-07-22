@@ -22,8 +22,6 @@ const SelectFilter = ({ className = '', title, items }: SelectFilterProps) => (
         control={<Checkbox />}
       />
     ))}
-
-    {/* <FilterCheckboxCard {...rest} /> */}
   </Accordion>
 )
 

@@ -1,12 +1,8 @@
 import React, { FC, useState } from 'react'
 import { Accordion, FilterCheckboxCard } from '@rsksmart/rif-ui'
-import Autocomplete from '@material-ui/lab/Autocomplete'
-import {
-  Checkbox,
-  TextField,
-} from '@material-ui/core'
 import SearchFilter from '../SearchFilter'
 import RangeFilter from '../RangeFilter'
+import AutoCompleteCheckbox from '../AutoCompleteCheckbox'
 
 const StorageFilters: FC = () => {
   const storageCurrencyFilters = [
@@ -20,6 +16,16 @@ const StorageFilters: FC = () => {
     { labelText: 'IPFS' },
     { labelText: 'SIA' },
   ]
+
+  const countryOptions = [
+    { labelText: 'Ukraine', id: 'UA' },
+    { labelText: 'Czech Republic', id: 'CZ' },
+    { labelText: 'Slovakia', id: 'SK' },
+    { labelText: 'Uruguay', id: 'UY' },
+    { labelText: 'Argentina', id: 'AR' },
+    { labelText: 'Spain', id: 'ES' },
+  ]
+
   const [minPrice, setMinPrice] = useState(10)
   const [maxPrice, setMaxPrice] = useState(90)
   const [minSize, setMinSize] = useState(5)
@@ -72,7 +78,7 @@ const StorageFilters: FC = () => {
           setMaxPrice(max)
         }}
       />
-      <AutocompleteCheckbox />
+      <AutoCompleteCheckbox options={countryOptions} />
       <Accordion
         id="currencyFilters"
         expanded
@@ -90,38 +96,5 @@ const StorageFilters: FC = () => {
     </>
   )
 }
-
-const countryFilters = [
-  { name: 'Ukraine' },
-  { name: 'Czech Republic' },
-  { name: 'Slovakia' },
-  { name: 'Uruguay' },
-  { name: 'Argentina' },
-  { name: 'Spain' },
-]
-
-const AutocompleteCheckbox = () => (
-  <Autocomplete
-    multiple
-    id="checkboxes-tags-demo"
-    options={countryFilters}
-    disableCloseOnSelect
-    getOptionLabel={(option) => option.name}
-    renderOption={(option, { selected }) => (
-      <>
-        <Checkbox
-          color="primary"
-          style={{ marginRight: 8 }}
-          checked={selected}
-        />
-        {option.name}
-      </>
-    )}
-    style={{ width: '100%' }}
-    renderInput={(params) => (
-      <TextField {...params} variant="outlined" label="Prefered locations" placeholder="Select your prefered locations" />
-    )}
-  />
-)
 
 export default StorageFilters

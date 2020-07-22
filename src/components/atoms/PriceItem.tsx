@@ -16,7 +16,6 @@ const PriceItem: FC<PriceItemProps> = ({
   type, price, currency, classes,
 }) => <span className={`price_item ${classes[type]}`}>{`${price} ${currency}`}</span>
 
-// TODO: move to Material UI classes
 const styles = {
   crypto: {
     color: colors.primary,

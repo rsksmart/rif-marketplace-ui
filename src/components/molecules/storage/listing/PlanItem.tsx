@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditIcon from '@material-ui/icons/Edit'
 import { colors } from '@rsksmart/rif-ui'
-import { StoragePlanItem } from 'store/Market/storage/interfaces'
+import { StoragePlanItem, StorageListingStoreProps } from 'store/Market/storage/interfaces'
 import StorageListingStore from 'store/Market/storage/ListingStore'
 import { mayBePluralize } from 'utils/utils'
 import { RemoveItemPayload } from 'store/Market/storage/listingActions'
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   innerContainer: {
     backgroundColor: colors.gray1,
     borderRadius: 5,
-    padding: 10,
+    padding: theme.spacing(2),
   },
   leftContent: {
     [theme.breakpoints.up('sm')]: {
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
-  const { dispatch } = useContext(StorageListingStore)
+  const { dispatch } = useContext<StorageListingStoreProps>(StorageListingStore)
   const classes = useStyles()
 
   const { monthsDuration, pricePerGb } = planItem
@@ -40,7 +40,7 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
     dispatch({
       type: 'REMOVE_ITEM',
       payload: planItem as RemoveItemPayload,
-    })
+    } as any)
   }
 
   return (

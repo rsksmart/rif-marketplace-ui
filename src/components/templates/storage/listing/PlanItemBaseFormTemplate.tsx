@@ -8,7 +8,7 @@ import { colors, validatedNumber } from '@rsksmart/rif-ui'
 import { makeStyles } from '@material-ui/core'
 import { mayBePluralize } from '../../../../utils/utils'
 
-export interface PlanItemBaseFormProps {
+export interface PlanItemBaseFormTemplateProps {
   monthsOptions: number[]
   contractLength: number
   onPeriodChange: (value: number) => void
@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const PlanItemBaseForm: FC<PlanItemBaseFormProps> = ({
+const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = ({
   monthsOptions, contractLength, onPeriodChange, price, onPriceChange,
 }) => {
   const classes = useStyles()
@@ -105,4 +105,4 @@ const PlanItemBaseForm: FC<PlanItemBaseFormProps> = ({
   )
 }
 
-export default PlanItemBaseForm
+export default PlanItemBaseFormTemplate
