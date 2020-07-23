@@ -10,8 +10,9 @@ import { StoragePlanItem } from 'store/Market/storage/interfaces'
 import StorageListingStore from 'store/Market/storage/ListingStore'
 import { EditItemPayload, AddItemPayload } from 'store/Market/storage/listingActions'
 import PlanItemBaseFormTemplate from 'components/templates/storage/listing/PlanItemBaseFormTemplate'
-import SavePlanItemButton from './SavePlanItemButton'
-import AddPlanItemButton from './AddPlanItemButton'
+import TooltipIconButton from 'components/molecules/TooltipIconButton'
+import AddIcon from '@material-ui/icons/Add'
+import SaveIcon from '@material-ui/icons/Save'
 
 export interface EditablePlanItemProps {
   onPlanAdded?: (planItem: StoragePlanItem) => void
@@ -107,19 +108,18 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
           {
             planItem
             && (
-              <SavePlanItemButton
-                onSaveClick={handleOnSaveClick}
+              <TooltipIconButton
+                tooltipTitle="Save plan"
+                icon={<SaveIcon />}
                 disabled={pricePerGb <= 0}
+                onClick={handleOnSaveClick}
               />
             )
           }
           {
             !planItem
             && (
-              <AddPlanItemButton
-                onAddClick={handleOnAddClick}
-                disabled={pricePerGb <= 0}
-              />
+              <TooltipIconButton tooltipTitle="Add plan" icon={<AddIcon />} disabled={pricePerGb <= 0} onClick={handleOnAddClick} />
             )
           }
           <Tooltip title="The average price for a monthly suscription is 2020 RIF">
