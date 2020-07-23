@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton'
 
 export interface TooltipIconButtonProps {
   tooltipTitle: string
-  onClick: () => void
+  onClick?: () => void
   disabled?: boolean
   icon: React.ReactNode
 }

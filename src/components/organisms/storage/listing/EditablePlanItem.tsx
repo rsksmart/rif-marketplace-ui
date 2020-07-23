@@ -1,16 +1,14 @@
 import React, {
-  FC, useState, useContext, useEffect,
+  FC, useState, useContext,
 } from 'react'
 import InfoIcon from '@material-ui/icons/Info'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import Tooltip from '@material-ui/core/Tooltip'
-import IconButton from '@material-ui/core/IconButton'
 import { StoragePlanItem } from 'store/Market/storage/interfaces'
 import StorageListingStore from 'store/Market/storage/ListingStore'
 import { EditItemPayload, AddItemPayload } from 'store/Market/storage/listingActions'
 import PlanItemBaseFormTemplate from 'components/templates/storage/listing/PlanItemBaseFormTemplate'
-import TooltipIconButton from 'components/molecules/TooltipIconButton'
+import TooltipIconButton, { TooltipIconButtonProps } from 'components/molecules/TooltipIconButton'
 import AddIcon from '@material-ui/icons/Add'
 import SaveIcon from '@material-ui/icons/Save'
 
@@ -26,14 +24,10 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
   planItem,
   onPlanSaved,
 }) => {
-  const { state: { availableMonths, currency }, dispatch } = useContext(StorageListingStore)
+  const { state: { allMonthsOptions, availableMonths, currency }, dispatch } = useContext(StorageListingStore)
 
   const [pricePerGb, setPricePerGb] = useState(planItem?.pricePerGb || 1)
   const [selectedMonth, setSelectedMonth] = useState(planItem?.monthsDuration || availableMonths[0])
-
-  useEffect(() => {
-    if (availableMonths.length > 0) setSelectedMonth(planItem?.monthsDuration || availableMonths[0])
-  }, [availableMonths, planItem])
 
   const handleOnAddClick = () => {
     const newPlanItem: StoragePlanItem = {
@@ -72,63 +66,46 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
     setSelectedMonth(value)
   }
 
+  const actionButtonProps: TooltipIconButtonProps = planItem
+    ? {
+      tooltipTitle: 'Save plan',
+      icon: <SaveIcon />,
+      disabled: pricePerGb <= 0 || [...availableMonths, planItem.monthsDuration].indexOf(selectedMonth) === -1,
+      onClick: handleOnSaveClick,
+    }
+    : {
+      tooltipTitle: 'Add plan',
+      icon: <AddIcon />,
+      disabled: pricePerGb <= 0 || availableMonths.indexOf(selectedMonth) === -1,
+      onClick: handleOnAddClick,
+    }
+
   return (
     <Grid alignItems="center" container spacing={2}>
       {
         !planItem
         && (
-          <>
-            <Grid item xs={12}>
-              <Typography gutterBottom color="secondary" variant="caption">Select the subscription period and the price and add a new storage plan to your list</Typography>
-            </Grid>
-            <PlanItemBaseFormTemplate
-              monthsOptions={availableMonths}
-              contractLength={selectedMonth}
-              onPeriodChange={onSelectedMonthChange}
-              onPriceChange={onPricePerGbChange}
-              price={pricePerGb}
-            />
-          </>
+        <Grid item xs={12}>
+          <Typography gutterBottom color="secondary" variant="caption">Select the subscription period and the price and add a new storage plan to your list</Typography>
+        </Grid>
         )
       }
-      {
-        planItem
-        && (
-          <PlanItemBaseFormTemplate
-            monthsOptions={[...availableMonths, planItem.monthsDuration]}
-            contractLength={selectedMonth}
-            onPeriodChange={onSelectedMonthChange}
-            onPriceChange={onPricePerGbChange}
-            price={pricePerGb}
-          />
-        )
-      }
+      <PlanItemBaseFormTemplate
+        monthsOptions={allMonthsOptions}
+        contractLength={selectedMonth}
+        onPeriodChange={onSelectedMonthChange}
+        onPriceChange={onPricePerGbChange}
+        price={pricePerGb}
+      />
+
       <Grid item xs={2} md={2}>
         <Grid container direction="row">
-          {
-            planItem
-            && (
-              <TooltipIconButton
-                tooltipTitle="Save plan"
-                icon={<SaveIcon />}
-                disabled={pricePerGb <= 0}
-                onClick={handleOnSaveClick}
-              />
-            )
-          }
-          {
-            !planItem
-            && (
-              <TooltipIconButton tooltipTitle="Add plan" icon={<AddIcon />} disabled={pricePerGb <= 0} onClick={handleOnAddClick} />
-            )
-          }
-          <Tooltip title="The average price for a monthly suscription is 2020 RIF">
-            <span>
-              <IconButton disabled>
-                <InfoIcon color="secondary" />
-              </IconButton>
-            </span>
-          </Tooltip>
+          <TooltipIconButton {...actionButtonProps} />
+          <TooltipIconButton
+            tooltipTitle="The average price for a monthly suscription is 2020 RIF"
+            icon={<InfoIcon color="secondary" />}
+            disabled
+          />
         </Grid>
       </Grid>
     </Grid>

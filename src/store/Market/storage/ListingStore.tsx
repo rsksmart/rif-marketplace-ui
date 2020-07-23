@@ -6,6 +6,7 @@ import { listingActions, ListingReducer } from './listingReducer'
 
 export type StoreName = 'storage_listing'
 
+// TODO: instead of months, extract to value and label so we can display any unit
 const monthsOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 export const initialState: ListingState = {
   storeID: 'storage_listing',

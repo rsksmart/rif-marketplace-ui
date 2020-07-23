@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { colors, validatedNumber } from '@rsksmart/rif-ui'
 import { makeStyles } from '@material-ui/core'
-import { mayBePluralize } from '../../../../utils/utils'
+import { mayBePluralize } from 'utils/utils'
 
 export interface PlanItemBaseFormTemplateProps {
   monthsOptions: number[]
@@ -50,8 +50,8 @@ const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = ({
           onChange={handleOnPeriodChange}
         >
           {
-            monthsOptions.sort((a, b) => a - b).map((mo) => (
-              <MenuItem value={mo} key={mo}>{mayBePluralize(mo, 'month')}</MenuItem>
+            monthsOptions.sort((a, b) => a - b).map((option) => (
+              <MenuItem value={option} key={option}>{mayBePluralize(option, 'month')}</MenuItem>
             ))
           }
         </TextField>

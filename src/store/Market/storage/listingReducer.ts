@@ -27,7 +27,7 @@ export const listingActions: ListingActions = {
     return {
       ...state,
       availableMonths: state.availableMonths.filter(
-        (x) => x !== payload.monthsDuration,
+        (option) => option !== payload.monthsDuration,
       ),
       internalCounter: internalCounter + 1,
       planItems: [...state.planItems, newPlan],
@@ -45,19 +45,22 @@ export const listingActions: ListingActions = {
     const {
       internalId, monthsDuration, pricePerGb, currency,
     } = payload
-    const newPlanItems = state.planItems.map((p) => {
-      if (p.internalId === internalId) {
+    const { planItems } = state
+    const newPlanItems = planItems.map((planItem) => {
+      if (planItem.internalId === internalId) {
         return {
-          ...p,
+          ...planItem,
           monthsDuration,
           pricePerGb,
           currency,
         }
       }
-      return p
+      return planItem
     })
     const newAvailableMonths = state.allMonthsOptions.filter(
-      (x) => !newPlanItems.find((newPlanItem) => newPlanItem.monthsDuration === x),
+      (option) => !newPlanItems.find(
+        (newPlanItem) => newPlanItem.monthsDuration === option,
+      ),
     )
     return {
       ...state,
