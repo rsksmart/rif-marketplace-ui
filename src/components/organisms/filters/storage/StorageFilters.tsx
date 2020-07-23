@@ -6,15 +6,15 @@ import AutoCompleteCheckbox from '../AutoCompleteCheckbox'
 
 const StorageFilters: FC = () => {
   const storageCurrencyFilters = [
-    { labelText: 'RIF' },
-    { labelText: 'R-BTC' },
-    { labelText: 'DOC (Dollar on Chain)' },
+    { labelText: 'RIF', id: 'RIF' },
+    { labelText: 'R-BTC', id: 'R-BTC' },
+    { labelText: 'DOC (Dollar on Chain)', id: 'DOC (Dollar on Chain)' },
   ]
 
   const storageSystemFilters = [
-    { labelText: 'Swarm' },
-    { labelText: 'IPFS' },
-    { labelText: 'SIA' },
+    { labelText: 'Swarm', id: 'Swarm' },
+    { labelText: 'IPFS', id: 'IPFS' },
+    { labelText: 'SIA', id: 'SIA' },
   ]
 
   const countryOptions = [
