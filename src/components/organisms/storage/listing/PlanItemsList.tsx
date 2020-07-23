@@ -15,7 +15,7 @@ const PlanItemsList: FC<{}> = () => {
     <>
       {/* SET PLAN PRICES */}
       {
-        availableMonths.length
+        availableMonths.length > 0
         && (
           <Grid item xs={12}>
             <Typography color="secondary" variant="subtitle1">SET PLAN PRICES</Typography>
