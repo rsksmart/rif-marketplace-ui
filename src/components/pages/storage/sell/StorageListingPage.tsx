@@ -3,7 +3,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button as RUIButton } from '@rsksmart/rif-ui'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import PlanItems from 'components/organisms/storage/listing/PlanItems'
+import PlanItemsList from 'components/organisms/storage/listing/PlanItemsList'
 import BaseSettings from 'components/organisms/storage/listing/BaseSettings'
 import StorageListingStore from 'store/Market/storage/ListingStore'
 
@@ -60,7 +60,7 @@ const StorageListingPage = () => {
         </Typography>
         <Grid className={classes.planGrid} container spacing={5}>
           <BaseSettings />
-          <PlanItems />
+          <PlanItemsList />
         </Grid>
         <RUIButton
           onClick={handleSubmit}

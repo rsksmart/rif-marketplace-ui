@@ -3,12 +3,12 @@ import React, {
 } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import EditablePlanItem from 'components/molecules/storage/listing/EditablePlanItem'
+import EditablePlanItem from 'components/organisms/storage/listing/EditablePlanItem'
 import { StoragePlanItem } from 'store/Market/storage/interfaces'
 import PlanItemWithEdit from 'components/organisms/storage/listing/PlanItemWithEdit'
 import StorageListingStore from 'store/Market/storage/ListingStore'
 
-const PlanItems: FC<{}> = () => {
+const PlanItemsList: FC<{}> = () => {
   const { state: { planItems, availableMonths } } = useContext(StorageListingStore)
 
   return (
@@ -51,4 +51,4 @@ const PlanItems: FC<{}> = () => {
   )
 }
 
-export default PlanItems
+export default PlanItemsList

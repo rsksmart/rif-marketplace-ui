@@ -3,7 +3,6 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
-import IconButton from '@material-ui/core/IconButton'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditIcon from '@material-ui/icons/Edit'
 import { colors } from '@rsksmart/rif-ui'
@@ -12,6 +11,7 @@ import StorageListingStore from 'store/Market/storage/ListingStore'
 import { mayBePluralize } from 'utils/utils'
 import { RemoveItemPayload } from 'store/Market/storage/listingActions'
 import ShortenTextTooltip from 'components/molecules/ShortenTextTooltip'
+import TooltipIconButton from 'components/molecules/TooltipIconButton'
 
 export interface PlanItemProps {
   onEditClick: () => void
@@ -92,7 +92,6 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
                 <Typography component="div">
                   <Box textAlign="center" color={`${colors.gray5}`}>
                     <ShortenTextTooltip value={(pricePerGb / monthsDuration).toString()} maxLength={5} />
-                    {/* {pricePerGb / monthsDuration} */}
                     {' '}
                     RIF
                   </Box>
@@ -107,12 +106,8 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
       </Grid>
       <Grid item xs={2}>
         <Grid container direction="row">
-          <IconButton onClick={onEditClick} color="primary">
-            <EditIcon />
-          </IconButton>
-          <IconButton onClick={onItemRemoved} color="primary">
-            <ClearIcon />
-          </IconButton>
+          <TooltipIconButton icon={<EditIcon />} onClick={onEditClick} tooltipTitle="Edit item" />
+          <TooltipIconButton icon={<ClearIcon />} onClick={onItemRemoved} tooltipTitle="Remove item" />
         </Grid>
       </Grid>
     </Grid>

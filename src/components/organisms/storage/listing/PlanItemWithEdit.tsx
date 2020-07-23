@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 import { StoragePlanItem } from 'store/Market/storage/interfaces'
-import EditablePlanItem from '../../../molecules/storage/listing/EditablePlanItem'
-import PlanItem from '../../../molecules/storage/listing/PlanItem'
+import EditablePlanItem from './EditablePlanItem'
+import PlanItem from './PlanItem'
 
 export interface PlanItemWithEditProps {
   planItem: StoragePlanItem
