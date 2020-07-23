@@ -15,7 +15,7 @@ const PlanItemsList: FC<{}> = () => {
     <>
       {/* SET PLAN PRICES */}
       {
-        availableMonths.length > 0
+        availableMonths.length
         && (
           <Grid item xs={12}>
             <Typography color="secondary" variant="subtitle1">SET PLAN PRICES</Typography>
@@ -33,13 +33,9 @@ const PlanItemsList: FC<{}> = () => {
               {
                 (planItems.sort(
                   (a: StoragePlanItem, b: StoragePlanItem) => (a.monthsDuration - b.monthsDuration),
-                ).map((p: StoragePlanItem) => (
-                  <Grid
-                    item
-                    xs={12}
-                    key={p.internalId}
-                  >
-                    <PlanItemWithEdit planItem={p} />
+                ).map((planItem: StoragePlanItem) => (
+                  <Grid item xs={12} key={planItem.internalId}>
+                    <PlanItemWithEdit planItem={planItem} />
                   </Grid>
                 )))
               }

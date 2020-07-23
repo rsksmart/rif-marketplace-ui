@@ -18,25 +18,16 @@ const PlanItemWithEdit: FC<PlanItemWithEditProps> = ({ planItem }) => {
     setEditMode(false)
   }
 
-  return (
-    <>
-      {
-        editMode
-        && (
-          <EditablePlanItem
-            planItem={planItem}
-            onPlanSaved={handleOnSaveClick}
-          />
-        )
-      }
-      {
-        !editMode
-        && (
-          <PlanItem planItem={planItem} onEditClick={handleOnEditClick} />
-        )
-      }
-    </>
-  )
+  if (editMode) {
+    return (
+      <EditablePlanItem
+        planItem={planItem}
+        onPlanSaved={handleOnSaveClick}
+      />
+    )
+  }
+
+  return <PlanItem planItem={planItem} onEditClick={handleOnEditClick} />
 }
 
 export default PlanItemWithEdit
