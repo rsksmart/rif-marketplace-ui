@@ -13,7 +13,8 @@ const Header = () => {
   const headerItems: HeaderItemProps[] = [
     {
       title: 'Domains',
-      to: ROUTES.DOMAINS.BUY,
+      to: ROUTES.DOMAINS.BASE,
+      // to: ROUTES.DOMAINS.BUY,
       isActive: (_, { pathname }) => pathname.includes(ROUTES.DOMAINS.BASE),
       icon: <PeopleIcon />,
     },
