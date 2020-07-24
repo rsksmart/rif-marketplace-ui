@@ -3,7 +3,7 @@ import { Typography } from '@rsksmart/rif-ui'
 import Icon, { Icons } from 'components/atoms/Icon'
 import SideImageTemplate from '../../templates/SideImageTemplate'
 
-const StoragePage: FC = () => {
+const StorageLandingPage: FC = () => {
   const storageIcon = (<Icon src={Icons.STORAGE} />)
   const sideText = (
     <>
@@ -59,4 +59,4 @@ const StoragePage: FC = () => {
   )
 }
 
-export default StoragePage
+export default StorageLandingPage

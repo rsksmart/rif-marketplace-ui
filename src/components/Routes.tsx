@@ -9,7 +9,7 @@ import {
   DomainOffersCheckoutPage, DomainOffersPage, DomainsCheckoutPage,
   SellDomainsListPage, DomainListed, DomainPurchased, CancelDomainCheckoutPage, DomainCanceled,
 } from './pages/rns'
-import StoragePage from './pages/storage/StoragePage'
+import StorageLandingPage from './pages/storage/StorageLandingPage'
 
 const logger = Logger.getInstance()
 
@@ -29,7 +29,7 @@ const Routes = () => {
   return (
     <Switch>
       <Route exact path={ROUTES.LANDING} component={LandingPage} />
-      <Route exact path={ROUTES.STORAGE} component={StoragePage} />
+      <Route exact path={ROUTES.STORAGE} component={StorageLandingPage} />
       <Route exact path={ROUTES.FAQ} component={FAQPage} />
       <Route exact path={ROUTES.DOMAINS.BUY} component={DomainOffersPage} />
       <Route exact path={ROUTES.DOMAINS.CHECKOUT.BUY} component={DomainOffersCheckoutPage} />
