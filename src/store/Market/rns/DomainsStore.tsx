@@ -15,6 +15,7 @@ import {
 } from './interfaces'
 import { rnsActions, RnsReducer } from './rnsReducer'
 import outdateTokenId from './utils'
+import { RefreshPayload } from './rnsActions'
 
 export type StoreName = 'rns_domains'
 export type Order = Modify<RnsOrder, {
@@ -86,8 +87,8 @@ export const RnsDomainsStoreProvider = ({ children }) => {
 
         dispatch({
           type: 'REFRESH',
-          payload: { refresh: true },
-        } as any)
+          payload: { refresh: true } as RefreshPayload,
+        })
       } catch (e) {
         setIsInitialised(false)
       }

@@ -15,6 +15,7 @@ import {
 } from './interfaces'
 import { rnsActions, RnsReducer } from './rnsReducer'
 import outdateTokenId from './utils'
+import { RefreshPayload } from 'store/Market/rns/rnsActions';
 
 export type StoreName = 'rns_sold'
 
@@ -75,14 +76,16 @@ export const RnsSoldStoreProvider = ({ children }) => {
 
   // Initialise
   useEffect(() => {
-    const {
-      service,
-      attachEvent,
-    } = api
+    const initialise = async () => {
+      const {
+        attachEvent,
+        authenticate
+      } = api
 
-    if (service && !isInitialised && account) {
       setIsInitialised(true)
       try {
+        await authenticate(account)
+
         attachEvent('updated', outdateTokenId(dispatch))
         attachEvent('patched', outdateTokenId(dispatch))
         attachEvent('created', outdateTokenId(dispatch))
@@ -90,11 +93,15 @@ export const RnsSoldStoreProvider = ({ children }) => {
 
         dispatch({
           type: 'REFRESH',
-          payload: { refresh: true },
-        } as any)
+          payload: { refresh: true } as RefreshPayload,
+        })
       } catch (e) {
         setIsInitialised(false)
       }
+    }
+
+    if (api.service && !isInitialised && account) {
+      initialise()
     }
   }, [api, isInitialised, account])
 
@@ -124,16 +131,15 @@ export const RnsSoldStoreProvider = ({ children }) => {
           type: 'REFRESH',
           payload: { refresh: false },
         } as any)
+      }).finally(() => {
+        appDispatch({
+          type: 'SET_IS_LOADING',
+          payload: {
+            isLoading: false,
+            id: 'data',
+          } as LoadingPayload,
+        } as any)
       })
-        .finally(() => {
-          appDispatch({
-            type: 'SET_IS_LOADING',
-            payload: {
-              isLoading: false,
-              id: 'data',
-            } as LoadingPayload,
-          } as any)
-        })
     }
   }, [isInitialised, needsRefresh, filters, api, account, appDispatch])
 
