@@ -10,12 +10,12 @@ import { Modify } from 'utils/typeUtils'
 import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
 import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
 import { LoadingPayload } from 'store/App/appActions'
+import { RefreshPayload } from 'store/Market/rns/rnsActions'
 import {
   RnsListing, RnsOrder, RnsState, RnsStoreProps,
 } from './interfaces'
 import { rnsActions, RnsReducer } from './rnsReducer'
 import outdateTokenId from './utils'
-import { RefreshPayload } from 'store/Market/rns/rnsActions';
 
 export type StoreName = 'rns_sold'
 
@@ -79,7 +79,7 @@ export const RnsSoldStoreProvider = ({ children }) => {
     const initialise = async () => {
       const {
         attachEvent,
-        authenticate
+        authenticate,
       } = api
 
       setIsInitialised(true)
