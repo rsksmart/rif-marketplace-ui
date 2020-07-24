@@ -10,5 +10,8 @@
         "rnsDotRskOwner": "0xca0a477e19bac7e0e172ccfd2e3c28a7200bdb71",
         "marketplace": "0xA5c1afA6A7928aa017E800fB6B89f11219836C58",
         "rnsManagerUrl": "https://testnet.manager.rns.rifos.org"
-    }
+    },
+    "services": [
+        "rns"
+    ]
 }
