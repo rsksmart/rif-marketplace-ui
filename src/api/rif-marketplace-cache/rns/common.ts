@@ -5,9 +5,11 @@ import { RnsDomain, RnsDomainOffer, RnsSoldDomain } from 'models/marketItems/Dom
 import { Modify } from 'utils/typeUtils'
 
 export type RnsAddresses = 'rns/v0/offers' | 'rns/v0/domains' | 'rns/v0/sold'
+export type RnsChannels = 'domains' | 'sold' | 'offers'
 
 export type RnsAPIService = Modify<APIService, {
   path: RnsAddresses
+  _channel: RnsChannels
   fetch: (filters: RnsFilter) => Promise<RnsDomain[] | RnsDomainOffer[] | RnsSoldDomain[]>
 }>
 

@@ -69,14 +69,16 @@ export const RnsDomainsStoreProvider = ({ children }) => {
 
   // Initialise
   useEffect(() => {
-    const {
-      service,
-      attachEvent,
-    } = api
+    const initialise = async () => {
+      const {
+        attachEvent,
+        authenticate
+      } = api
 
-    if (service && !isInitialised && account) {
       setIsInitialised(true)
       try {
+        await authenticate(account)
+
         attachEvent('updated', outdateTokenId(dispatch))
         attachEvent('patched', outdateTokenId(dispatch))
         attachEvent('created', outdateTokenId(dispatch))
@@ -89,6 +91,10 @@ export const RnsDomainsStoreProvider = ({ children }) => {
       } catch (e) {
         setIsInitialised(false)
       }
+    }
+
+    if (api.service && !isInitialised && account) {
+      initialise()
     }
   }, [api, isInitialised, account])
 

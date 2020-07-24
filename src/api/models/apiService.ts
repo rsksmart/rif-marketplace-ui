@@ -1,4 +1,5 @@
 import { Application, Service } from '@feathersjs/feathers'
+import { AuthenticationResult } from '@feathersjs/authentication'
 import client from 'api/rif-marketplace-cache/config'
 import { MarketFilterType } from 'models/Market'
 import { ErrorReporterError } from 'store/App/AppStore'
@@ -16,7 +17,9 @@ export interface ErrorReporter {
 
 export interface APIService {
   path: string
+  _channel: string
   service: Service<any>
+  authenticate: (ownerAddress: string) => Promise<AuthenticationResult | undefined>
   connect: (errorReporter: ErrorReporter, newClient?: Application<any>) => string | undefined
   fetch: (filters?: MarketFilterType | any) => Promise<any>
   _fetch: (filters?: MarketFilterType | any) => Promise<any>
@@ -27,6 +30,7 @@ export interface APIService {
 
 export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
   path!: string
+  _channel!: string
 
   service!: Service<any>
 
@@ -70,6 +74,24 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
         error,
       })
       return undefined
+    }
+  }
+
+  authenticate = async (ownerAddress: string) => {
+    try {
+      return await client.authenticate({
+        strategy: 'anonymous',
+        channels: [
+          this._channel
+        ],
+        ownerAddress
+      })
+    } catch (error) {
+      this.errorReporter({
+        id: 'service-event-attach',
+        text: 'Error attempting to authenticate with the api.',
+        error,
+      })
     }
   }
 

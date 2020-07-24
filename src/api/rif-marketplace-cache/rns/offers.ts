@@ -3,9 +3,10 @@ import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import { OfferTransport } from 'api/models/transports'
 import { RnsFilter, PriceFilter } from 'api/models/RnsFilter'
 import { parseToBigDecimal, convertToBigString, parseToInt } from 'utils/parsers'
-import { getAvailableTokens, RnsAddresses, RnsAPIService } from './common'
+import { getAvailableTokens, RnsAddresses, RnsAPIService, RnsChannels } from './common'
 
 export const offersAddress: RnsAddresses = 'rns/v0/offers'
+export const offersChannel: RnsChannels = 'offers'
 
 const mapFromTransport = ({
   priceString,
@@ -51,6 +52,7 @@ const fetchPriceLimit = async (service, limitType: LimitType): Promise<number> =
 
 export class OffersService extends AbstractAPIService implements RnsAPIService {
   path = offersAddress
+  _channel = offersChannel
 
   _fetch = async (filters: Partial<RnsFilter>): Promise<RnsDomainOffer[]> => {
     const { price, name } = filters
