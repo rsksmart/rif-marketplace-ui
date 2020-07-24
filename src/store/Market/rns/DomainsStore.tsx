@@ -73,7 +73,7 @@ export const RnsDomainsStoreProvider = ({ children }) => {
     const initialise = async () => {
       const {
         attachEvent,
-        authenticate
+        authenticate,
       } = api
 
       setIsInitialised(true)

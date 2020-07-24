@@ -19,7 +19,7 @@ export interface APIService {
   path: string
   _channel: string
   service: Service<any>
-  authenticate: (ownerAddress: string) => Promise<AuthenticationResult | undefined>
+  authenticate: (ownerAddress: string) => Promise<AuthenticationResult | void>
   connect: (errorReporter: ErrorReporter, newClient?: Application<any>) => string | undefined
   fetch: (filters?: MarketFilterType | any) => Promise<any>
   _fetch: (filters?: MarketFilterType | any) => Promise<any>
@@ -30,6 +30,7 @@ export interface APIService {
 
 export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
   path!: string
+
   _channel!: string
 
   service!: Service<any>
@@ -64,7 +65,6 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
     this.errorReporter = errorReporter
 
     try {
-
       this.service = app.service(this.path)
       return this.path
     } catch (error) {
@@ -77,23 +77,17 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
     }
   }
 
-  authenticate = async (ownerAddress: string) => {
-    try {
-      return await client.authenticate({
-        strategy: 'anonymous',
-        channels: [
-          this._channel
-        ],
-        ownerAddress
-      })
-    } catch (error) {
-      this.errorReporter({
-        id: 'service-event-attach',
-        text: 'Error attempting to authenticate with the api.',
-        error,
-      })
-    }
-  }
+  authenticate = (ownerAddress: string) => client.authenticate({
+    strategy: 'anonymous',
+    channels: [this._channel],
+    ownerAddress,
+  }).catch((error) => {
+    this.errorReporter({
+      id: 'service-event-attach',
+      text: 'Error attempting to authenticate with the api.',
+      error,
+    })
+  })
 
   attachEvent = (name: string, callback: ServiceEventListener) => {
     try {

@@ -3,7 +3,9 @@ import { RnsFilter } from 'api/models/RnsFilter'
 import { SoldDomainTransport } from 'api/models/transports'
 import { RnsSoldDomain } from 'models/marketItems/DomainItem'
 import { parseToBigDecimal } from 'utils/parsers'
-import { getAvailableTokens, RnsAddresses, RnsAPIService, RnsChannels } from './common'
+import {
+  getAvailableTokens, RnsAddresses, RnsAPIService, RnsChannels,
+} from './common'
 
 export const soldDomainsAddress: RnsAddresses = 'rns/v0/sold'
 export const soldDomainsChannel: RnsChannels = 'sold'
@@ -32,6 +34,7 @@ const mapFromTransport = ({
 
 export class SoldDomainsService extends AbstractAPIService implements RnsAPIService {
   path = soldDomainsAddress
+
   _channel = soldDomainsChannel
 
   _fetch = async (filters: Partial<RnsFilter>): Promise<RnsSoldDomain[]> => {
