@@ -68,9 +68,15 @@ workflows:
       - node-tests:
           version: "10"
           name: node-10
+          requires:
+            - check
       - node-tests:
           version: "12"
           name: node-12
+          requires:
+            - check
       - node-tests:
-          version: "13"
-          name: node-13
+          version: "14"
+          name: node-14
+          requires:
+            - check
