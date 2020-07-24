@@ -265,6 +265,10 @@ const DomainsCheckoutPage: FC<{}> = () => {
     ? <DomainNameItem value={name} />
     : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
+  const listingNameTitle = name
+    ? shortenString(name, 30, 25)
+    : shortenString(tokenId)
+
   return (
     <CheckoutPageTemplate
       isProcessing={order.isProcessing}
@@ -276,7 +280,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
       <Card
         className={classes.card}
       >
-        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Listing ${shortenString(name, 30, 25) || shortenString(tokenId)}`} />
+        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Listing ${listingNameTitle}`} />
         <CardContent>
           <div className={classes.contentDetails}>
             <Table>
