@@ -7,8 +7,8 @@ import Logger from 'utils/Logger'
 import {
   AboutPage, FAQPage, LandingPage, NotFound,
 } from './pages'
-import StorageLandingPage from './pages/storage/StorageLandingPage'
 import RnsRoutes from './pages/rns/RnsRoutes'
+import StorageRoutes from './pages/storage/StorageRoutes'
 
 const logger = Logger.getInstance()
 
@@ -28,7 +28,7 @@ const Routes = () => {
   return (
     <Switch>
       <Route exact path={ROUTES.LANDING} component={LandingPage} />
-      <Route exact path={ROUTES.STORAGE} component={StorageLandingPage} />
+      <Route exact path={ROUTES.STORAGE} component={StorageRoutes} />
       <Route exact path={ROUTES.FAQ} component={FAQPage} />
       <Route path={ROUTES.DOMAINS.BASE} component={RnsRoutes} />
       <Route exact path={ROUTES.ABOUT} component={AboutPage} />

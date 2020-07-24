@@ -14,7 +14,6 @@ const Header = () => {
     {
       title: 'Domains',
       to: ROUTES.DOMAINS.BASE,
-      // to: ROUTES.DOMAINS.BUY,
       isActive: (_, { pathname }) => pathname.includes(ROUTES.DOMAINS.BASE),
       icon: <PeopleIcon />,
     },
