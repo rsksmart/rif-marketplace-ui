@@ -1,7 +1,8 @@
-import contractAdds from 'ui-config.json'
+import uiConfig from 'ui-config.json'
 
 const network: string = process.env.REACT_APP_NETWORK || 'ganache'
+const { contractAddresses } = uiConfig[network]
 
-export const marketPlaceAddress = contractAdds[network].marketplace.toLowerCase()
-export const rifTokenAddress = contractAdds[network].rif.toLowerCase()
-export const rnsAddress = contractAdds[network].rnsDotRskOwner.toLowerCase()
+export const marketPlaceAddress = contractAddresses.marketplace.toLowerCase()
+export const rifTokenAddress = contractAddresses.rif.toLowerCase()
+export const rnsAddress = contractAddresses.rnsDotRskOwner.toLowerCase()

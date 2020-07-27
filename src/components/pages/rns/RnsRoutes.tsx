@@ -12,7 +12,9 @@ import {
 import RnsLandingPage from './RnsLandingPage'
 
 const RnsRoutes: FC<{}> = () => {
-  const { services } = uiConfig
+  const network: string = process.env.REACT_APP_NETWORK || 'ganache'
+  const { services } = uiConfig[network]
+
   const rnsEnabled = services && (services as string[]).indexOf('rns') !== -1
 
   if (rnsEnabled) {
