@@ -1,4 +1,4 @@
-import ERC721SimplePlacementsV1 from '@rsksmart/rif-marketplace-nfts/ERC721SimplePlacementsV1Data.json'
+import RNSSimplePlacementsV1 from '@rsksmart/rif-marketplace-nfts/RNSSimplePlacementsV1Data.json'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 import { Contract } from 'web3-eth-contract'
@@ -23,7 +23,7 @@ class MarketplaceContract {
   private web3: Web3
 
   private constructor(web3: Web3) {
-    this.contract = new web3.eth.Contract(ERC721SimplePlacementsV1.abi as AbiItem[], marketPlaceAddress)
+    this.contract = new web3.eth.Contract(RNSSimplePlacementsV1.abi as AbiItem[], marketPlaceAddress)
     this.web3 = web3
   }
 
