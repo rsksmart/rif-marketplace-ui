@@ -18,7 +18,6 @@ import { AddTxPayload } from 'store/Blockchain/blockchainActions'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
 import MarketStore from 'store/Market/MarketStore'
 import RnsOffersStore from 'store/Market/rns/OffersStore'
-import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
 
 import {
@@ -30,10 +29,9 @@ import {
 } from '@rsksmart/rif-ui'
 
 import { parseToBigDecimal } from 'utils/parsers'
+import { marketPlaceAddress } from 'contracts/config'
 
 const logger = Logger.getInstance()
-const network: string = process.env.REACT_APP_NETWORK || 'ganache'
-const marketPlaceAddress = contractAdds[network].marketplace.toLowerCase()
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   card: {

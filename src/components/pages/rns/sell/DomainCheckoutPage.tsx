@@ -21,17 +21,13 @@ import { AddTxPayload } from 'store/Blockchain/blockchainActions'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
 import MarketStore from 'store/Market/MarketStore'
 import RnsDomainsStore from 'store/Market/rns/DomainsStore'
-import contractAdds from 'ui-config.json'
 import Logger from 'utils/Logger'
 import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
 import { UIError } from 'models/UIMessage'
 import { LoadingPayload } from 'store/App/appActions'
+import { rifTokenAddress, marketPlaceAddress } from 'contracts/config'
 
 const logger = Logger.getInstance()
-
-const NETWORK: string = process.env.REACT_APP_NETWORK || 'ganache'
-const rifTokenAddress = contractAdds[NETWORK].rif.toLowerCase()
-const marketPlaceAddress = contractAdds[NETWORK].marketplace.toLowerCase()
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   card: {

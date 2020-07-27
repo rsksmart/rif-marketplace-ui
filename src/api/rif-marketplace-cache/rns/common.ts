@@ -13,8 +13,8 @@ export type RnsAPIService = Modify<APIService, {
   fetch: (filters: RnsFilter) => Promise<RnsDomain[] | RnsDomainOffer[] | RnsSoldDomain[]>
 }>
 
-export const getAvailableTokens = Object.keys(network).reduce((acc, tokenSymbol) => {
-  const value = network[tokenSymbol].toLowerCase()
+export const getAvailableTokens = Object.keys(network.contractAddresses).reduce((acc, tokenSymbol) => {
+  const value = network.contractAddresses[tokenSymbol].toLowerCase()
   acc[value] = tokenSymbol
   return acc
 }, {})
