@@ -1,4 +1,4 @@
-import { SupportedFiat, tokenDisplayNames, XRService } from 'api/rif-marketplace-cache/rates/xr'
+import { SupportedFiat, tokenDisplayNames, XRService, XRItem } from 'api/rif-marketplace-cache/rates/xr'
 import React, {
   Dispatch, useContext, useEffect, useReducer, useState,
 } from 'react'
@@ -106,7 +106,7 @@ export const MarketStoreProvider = ({ children }) => {
     const { fetch } = api
 
     if (isInitialised) {
-      fetch({ fiatSymbol }).then((newRates: { [fiatSymbol: string]: number }[]) => {
+      fetch({ fiatSymbol }).then((newRates: XRItem[]) => {
         const payload = Object.keys(newRates).reduce((acc, i) => {
           const symbol = newRates[i].token
 
