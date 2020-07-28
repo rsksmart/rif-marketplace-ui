@@ -19,14 +19,14 @@ export type ListingActions = {
 
 export const listingActions: ListingActions = {
   ADD_ITEM: (state: ListingState, payload: AddItemPayload) => {
-    const { internalCounter } = state
+    const { internalCounter, availableMonths } = state
     const newPlan = {
       ...payload,
       internalId: internalCounter,
     }
     return {
       ...state,
-      availableMonths: state.availableMonths.filter(
+      availableMonths: availableMonths.filter(
         (option) => option !== payload.monthsDuration,
       ),
       internalCounter: internalCounter + 1,
@@ -45,7 +45,7 @@ export const listingActions: ListingActions = {
     const {
       internalId, monthsDuration, pricePerGb, currency,
     } = payload
-    const { planItems } = state
+    const { planItems, allMonthsOptions } = state
     const newPlanItems = planItems.map((planItem) => {
       if (planItem.internalId === internalId) {
         return {
@@ -57,7 +57,7 @@ export const listingActions: ListingActions = {
       }
       return planItem
     })
-    const newAvailableMonths = state.allMonthsOptions.filter(
+    const newAvailableMonths = allMonthsOptions.filter(
       (option) => !newPlanItems.find(
         (newPlanItem) => newPlanItem.monthsDuration === option,
       ),

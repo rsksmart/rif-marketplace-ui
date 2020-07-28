@@ -70,14 +70,18 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
     ? {
       tooltipTitle: 'Save plan',
       icon: <SaveIcon />,
-      disabled: pricePerGb <= 0 || [...availableMonths, planItem.monthsDuration].indexOf(selectedMonth) === -1,
-      onClick: handleOnSaveClick,
+      iconButtonProps: {
+        disabled: pricePerGb <= 0 || ![...availableMonths, planItem.monthsDuration].includes(selectedMonth),
+        onClick: handleOnSaveClick,
+      },
     }
     : {
       tooltipTitle: 'Add plan',
       icon: <AddIcon />,
-      disabled: pricePerGb <= 0 || availableMonths.indexOf(selectedMonth) === -1,
-      onClick: handleOnAddClick,
+      iconButtonProps: {
+        disabled: pricePerGb <= 0 || !availableMonths.includes(selectedMonth),
+        onClick: handleOnAddClick,
+      },
     }
 
   return (
@@ -85,9 +89,9 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
       {
         !planItem
         && (
-        <Grid item xs={12}>
-          <Typography gutterBottom color="secondary" variant="caption">Select the subscription period and the price and add a new storage plan to your list</Typography>
-        </Grid>
+          <Grid item xs={12}>
+            <Typography gutterBottom color="secondary" variant="caption">Select the subscription period and the price and add a new storage plan to your list</Typography>
+          </Grid>
         )
       }
       <PlanItemBaseFormTemplate
@@ -104,7 +108,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
           <TooltipIconButton
             tooltipTitle="The average price for a monthly suscription is 2020 RIF"
             icon={<InfoIcon color="secondary" />}
-            disabled
+            iconButtonProps={{ disabled: true }}
           />
         </Grid>
       </Grid>
