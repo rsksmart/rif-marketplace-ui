@@ -39,12 +39,8 @@ const StorageFilters: FC = () => {
   return (
     <>
       <SearchFilter
-<<<<<<< HEAD
         value={searchText}
         onChange={onSearchTextChange}
-=======
-        value=""
->>>>>>> feat: handles country and available size on the store
       />
       <RangeFilter
         title="Size"
@@ -87,7 +83,7 @@ const StorageFilters: FC = () => {
         <FilterCheckboxCard items={storageCurrencyFilters} />
       </Accordion>
       <Accordion
-        id="currencyFilters"
+        id="systemFilters"
         expanded
         title="Storage System"
       >

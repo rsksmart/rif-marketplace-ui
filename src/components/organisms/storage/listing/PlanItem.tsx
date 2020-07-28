@@ -106,8 +106,8 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
       </Grid>
       <Grid item xs={2}>
         <Grid container direction="row">
-          <TooltipIconButton icon={<EditIcon />} onClick={onEditClick} tooltipTitle="Edit item" />
-          <TooltipIconButton icon={<ClearIcon />} onClick={onItemRemoved} tooltipTitle="Remove item" />
+          <TooltipIconButton icon={<EditIcon />} iconButtonProps={{ onClick: onEditClick }} tooltipTitle="Edit item" />
+          <TooltipIconButton icon={<ClearIcon />} iconButtonProps={{ onClick: onItemRemoved }} tooltipTitle="Remove item" />
         </Grid>
       </Grid>
     </Grid>

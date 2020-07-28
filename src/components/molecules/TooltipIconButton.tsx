@@ -1,21 +1,26 @@
 import React, { FC } from 'react'
 import Tooltip from '@material-ui/core/Tooltip'
-import IconButton from '@material-ui/core/IconButton'
+import IconButton, { IconButtonProps } from '@material-ui/core/IconButton'
 
 export interface TooltipIconButtonProps {
   tooltipTitle: string
-  onClick?: () => void
-  disabled?: boolean
+  iconButtonProps: IconButtonProps
+  // onClick?: () => void
+  // disabled?: boolean
   icon: React.ReactNode
 }
 
 // TODO: move to rif-ui
 const TooltipIconButton: FC<TooltipIconButtonProps> = ({
-  tooltipTitle, onClick, disabled = false, icon,
+  tooltipTitle,
+  iconButtonProps,
+  // onClick, disabled = false,
+  icon,
 }) => (
   <Tooltip title={tooltipTitle}>
     <span>
-      <IconButton onClick={onClick} disabled={disabled} color="primary">
+      <IconButton color="primary" {...iconButtonProps}>
+        {/* <IconButton onClick={onClick} disabled={disabled} color="primary"> */}
         {icon}
       </IconButton>
     </span>
