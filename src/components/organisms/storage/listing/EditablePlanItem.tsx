@@ -28,6 +28,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
 
   const [pricePerGb, setPricePerGb] = useState(planItem?.pricePerGb || 1)
   const [selectedMonth, setSelectedMonth] = useState(planItem?.monthsDuration || availableMonths[0])
+  const editMode = !!planItem
 
   const handleOnAddClick = () => {
     const newPlanItem: StoragePlanItem = {
@@ -66,12 +67,12 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
     setSelectedMonth(value)
   }
 
-  const actionButtonProps: TooltipIconButtonProps = planItem
+  const actionButtonProps: TooltipIconButtonProps = editMode
     ? {
       tooltipTitle: 'Save plan',
       icon: <SaveIcon />,
       iconButtonProps: {
-        disabled: pricePerGb <= 0 || ![...availableMonths, planItem.monthsDuration].includes(selectedMonth),
+        disabled: pricePerGb <= 0 || ![...availableMonths, planItem?.monthsDuration].includes(selectedMonth),
         onClick: handleOnSaveClick,
       },
     }
@@ -87,7 +88,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
   return (
     <Grid alignItems="center" container spacing={2}>
       {
-        !planItem
+        !editMode
         && (
           <Grid item xs={12}>
             <Typography gutterBottom color="secondary" variant="caption">Select the subscription period and the price and add a new storage plan to your list</Typography>

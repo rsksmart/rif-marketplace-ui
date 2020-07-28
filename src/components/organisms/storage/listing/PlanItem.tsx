@@ -61,23 +61,19 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
                   </Box>
                 </Typography>
               </Grid>
-              <Grid item xs={8}>
-                <Grid container alignItems="center">
-                  <Grid item xs={6}>
-                    <Typography align="center" color="primary">
-                      {pricePerGb}
-                      {' '}
-                      RIF
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography align="center" color="secondary">
-                      {pricePerGb}
-                      {' '}
-                      USD
-                    </Typography>
-                  </Grid>
-                </Grid>
+              <Grid item xs={4}>
+                <Typography align="center" color="primary">
+                  {pricePerGb}
+                  {' '}
+                  RIF
+                </Typography>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography align="center" color="secondary">
+                  {pricePerGb}
+                  {' '}
+                  USD
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
