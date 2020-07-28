@@ -19,7 +19,8 @@ const Header = () => {
     },
     {
       title: 'Storage',
-      to: ROUTES.STORAGE.BUY,
+      to: ROUTES.STORAGE.BASE,
+      isActive: (_, { pathname }) => pathname.includes(ROUTES.STORAGE.BASE),
       icon: <StorageIcon />,
     },
     {
