@@ -4,6 +4,7 @@ import {
 } from 'react-router-dom'
 import ROUTES from 'routes'
 import networkConfig from 'config'
+import { StorageListingStoreProvider } from 'store/Market/storage/ListingStore'
 import { NotFound } from '..'
 import StorageLandingPage from './StorageLandingPage'
 import StorageOffersPage from './buy/StorageOffersPage'
@@ -19,7 +20,9 @@ const StorageRoutes = () => {
         <Redirect exact from={ROUTES.STORAGE.BASE} to={ROUTES.STORAGE.BUY} />
         <Route exact path={ROUTES.STORAGE.BASE} component={StorageLandingPage} />
         <Route exact path={ROUTES.STORAGE.BUY} component={StorageOffersPage} />
-        <Route exact path={ROUTES.STORAGE.SELL} component={StorageListingPage} />
+        <StorageListingStoreProvider>
+          <Route exact path={ROUTES.STORAGE.SELL} component={StorageListingPage} />
+        </StorageListingStoreProvider>
         <Route component={NotFound} />
       </Switch>
     )
