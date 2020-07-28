@@ -4,7 +4,7 @@ import SideImageTemplate from 'components/templates/SideImageTemplate'
 import Icon, { Icons } from 'components/atoms/Icon'
 
 const RnsLandingPage: FC<{}> = () => {
-  const domainsIcon = (<Icon src={Icons.DOMAINS} />)
+  const domainsIcon = <Icon src={Icons.DOMAINS} />
   const sideText = (
     <>
       <Typography variant="body1">
@@ -23,7 +23,7 @@ const RnsLandingPage: FC<{}> = () => {
       <br />
       <Typography variant="body1">
         You can now easily
-        <b>Buy and Sell RNS Domains</b>
+        <b> Buy and Sell RNS Domains</b>
         {' '}
         through the RIF Marketplace.
         <i>Sellers</i>
@@ -33,9 +33,9 @@ const RnsLandingPage: FC<{}> = () => {
         {' '}
         can browse the available Domains and purchase the one they prefer by paying the listed priced.
         To ensure transparency and provide security to all parties, the Marketplace acts as an
-        <b>escrow</b>
+        <b> escrow</b>
         , ensuring the Domain is released only when a
-        <b>valid payment</b>
+        <b> valid payment</b>
         {' '}
         is received. At no point in time the Marketplace owns or maintains your domain on hold. You will always have full control of your own Domains.
       </Typography>

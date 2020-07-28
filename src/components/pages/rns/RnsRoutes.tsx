@@ -1,9 +1,9 @@
-import React, { FC } from 'react'
+import React from 'react'
 import {
   Switch, Route, Redirect,
 } from 'react-router-dom'
 import ROUTES from 'routes'
-import uiConfig from 'ui-config.json'
+import networkConfig from 'config'
 import { NotFound } from '..'
 import {
   DomainOffersCheckoutPage, DomainOffersPage, DomainsCheckoutPage,
@@ -11,11 +11,9 @@ import {
 } from './index'
 import RnsLandingPage from './RnsLandingPage'
 
-const RnsRoutes: FC<{}> = () => {
-  const network: string = process.env.REACT_APP_NETWORK || 'ganache'
-  const { services } = uiConfig[network]
-
-  const rnsEnabled = services && (services as string[]).indexOf('rns') !== -1
+const RnsRoutes = () => {
+  const { services } = networkConfig
+  const rnsEnabled = services && (services as string[]).includes('rns')
 
   if (rnsEnabled) {
     return (

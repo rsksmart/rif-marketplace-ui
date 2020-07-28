@@ -5,10 +5,9 @@ import TxCompletePageTemplate from 'components/templates/TxCompletePageTemplate'
 import React, { FC } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import uiConfig from 'ui-config.json'
+import networkConfig from 'config'
 
-const network: string = process.env.REACT_APP_NETWORK || 'ganache'
-const { rnsManagerUrl } = uiConfig[network]
+const { rnsManagerUrl } = networkConfig
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   actions: {
