@@ -14,6 +14,8 @@ export interface PlanItemBaseFormTemplateProps {
   onPeriodChange: (value: number) => void
   price: number
   onPriceChange: (value: number) => void
+  fiatPrice: string
+  fiatSymbol: string
 }
 
 const useStyles = makeStyles(() => ({
@@ -23,9 +25,11 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = ({
-  monthsOptions, contractLength, onPeriodChange, price, onPriceChange,
-}) => {
+const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = (props) => {
+  const {
+    monthsOptions, contractLength, onPeriodChange, price, onPriceChange, fiatPrice, fiatSymbol,
+  } = props
+
   const classes = useStyles()
 
   const handleOnPeriodChange = ({ target: { value } }) => {
@@ -48,6 +52,9 @@ const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = ({
           id="subscription-period-select"
           value={contractLength}
           onChange={handleOnPeriodChange}
+          InputProps={{
+            style: { textAlign: 'center' },
+          }}
         >
           {
             monthsOptions.sort((a, b) => a - b).map((option) => (
@@ -72,6 +79,7 @@ const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = ({
               InputProps={{
                 inputProps: {
                   min: '0',
+                  style: { textAlign: 'center' },
                 },
                 endAdornment: (
                   <InputAdornment position="end">
@@ -88,11 +96,14 @@ const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = ({
               fullWidth
               label=" "
               id="price-gb-usd"
-              value="100"
+              value={fiatPrice}
               InputProps={{
+                inputProps: {
+                  style: { textAlign: 'center' },
+                },
                 endAdornment: (
                   <InputAdornment position="end">
-                    <Typography variant="caption" color="secondary">USD</Typography>
+                    <Typography variant="caption" color="secondary">{fiatSymbol}</Typography>
                   </InputAdornment>
                 ),
                 style: { color: colors.gray4 },

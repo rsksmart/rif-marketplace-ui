@@ -10,7 +10,6 @@ import { StoragePlanItem, StorageListingStoreProps } from 'store/Market/storage/
 import StorageListingStore from 'store/Market/storage/ListingStore'
 import { mayBePluralize } from 'utils/utils'
 import { RemoveItemPayload } from 'store/Market/storage/listingActions'
-import ShortenTextTooltip from 'components/molecules/ShortenTextTooltip'
 import TooltipIconButton from 'components/molecules/TooltipIconButton'
 import MarketStore from 'store/Market/MarketStore'
 import PriceItem from 'components/atoms/PriceItem'
@@ -79,12 +78,12 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <Box textAlign='center'>
-                  <PriceItem type='crypto' currency={criptoDisplayName} price={`${pricePerGb}`} />
+                <Box textAlign="center">
+                  <PriceItem type="crypto" currency={criptoDisplayName} price={`${pricePerGb}`} />
                 </Box>
               </Grid>
               <Grid item xs={4}>
-                <PriceItem currency={fiatDisplayName} type='fiat' price={`${pricePerGb * rate}`} />
+                <PriceItem currency={fiatDisplayName} type="fiat" price={`${pricePerGb * rate}`} />
               </Grid>
             </Grid>
           </Grid>
@@ -98,12 +97,12 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
               <Grid item xs={4}>
                 <Typography component="div">
                   <Box textAlign="center" color={`${colors.gray5}`}>
-                    <PriceItem currency={criptoDisplayName} type='crypto' price={`${pricePerGb / monthsDuration}`} />
+                    <PriceItem currency={criptoDisplayName} type="crypto" price={`${pricePerGb / monthsDuration}`} />
                   </Box>
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <PriceItem currency={fiatDisplayName} type='fiat' price={`${pricePerGb / monthsDuration * rate}`} />
+                <PriceItem currency={fiatDisplayName} type="fiat" price={`${(pricePerGb / monthsDuration) * rate}`} />
               </Grid>
             </Grid>
           </Grid>

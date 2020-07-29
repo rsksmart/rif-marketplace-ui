@@ -11,11 +11,11 @@ import PlanItemBaseFormTemplate from 'components/templates/storage/listing/PlanI
 import TooltipIconButton, { TooltipIconButtonProps } from 'components/molecules/TooltipIconButton'
 import AddIcon from '@material-ui/icons/Add'
 import SaveIcon from '@material-ui/icons/Save'
+import MarketStore from 'store/Market/MarketStore'
 
 export interface EditablePlanItemProps {
   onPlanAdded?: (planItem: StoragePlanItem) => void
   onPlanSaved?: () => void
-  // if there is a planItem, it's on edit mode. Otherwise we are just creating a new plan
   planItem?: StoragePlanItem
 }
 
@@ -25,6 +25,20 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
   onPlanSaved,
 }) => {
   const { state: { allMonthsOptions, availableMonths, currency }, dispatch } = useContext(StorageListingStore)
+
+  // TODO: send criptoDisplayName, fiatDisplayName and rate in the props
+  const {
+    state: {
+      exchangeRates: {
+        currentFiat,
+        crypto,
+      },
+    },
+  } = useContext(MarketStore)
+
+  const currencySimbol = currency.toLowerCase()
+  const { rate } = crypto[currencySimbol]
+  const { displayName: fiatDisplayName } = currentFiat
 
   const [pricePerGb, setPricePerGb] = useState(planItem?.pricePerGb || 1)
   const [selectedMonth, setSelectedMonth] = useState(planItem?.monthsDuration || availableMonths[0])
@@ -101,6 +115,8 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
         onPeriodChange={onSelectedMonthChange}
         onPriceChange={onPricePerGbChange}
         price={pricePerGb}
+        fiatPrice={`${pricePerGb * rate}`}
+        fiatSymbol={fiatDisplayName}
       />
 
       <Grid item xs={2} md={2}>
