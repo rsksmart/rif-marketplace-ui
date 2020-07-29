@@ -43,6 +43,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
   const [pricePerGb, setPricePerGb] = useState(planItem?.pricePerGb || 1)
   const [selectedMonth, setSelectedMonth] = useState(planItem?.monthsDuration || availableMonths[0])
   const editMode = !!planItem
+  const fiatPrice = (pricePerGb * rate).toFixed(4).toString()
 
   const handleOnAddClick = () => {
     const newPlanItem: StoragePlanItem = {
@@ -115,7 +116,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
         onPeriodChange={onSelectedMonthChange}
         onPriceChange={onPricePerGbChange}
         price={pricePerGb}
-        fiatPrice={`${pricePerGb * rate}`}
+        fiatPrice={fiatPrice}
         fiatSymbol={fiatDisplayName}
       />
 
