@@ -17,7 +17,7 @@ const CombinedPriceCell: FC<CombinedPriceCellProps> = ({
 
   return (
     <div className={(`priceCell ${className}`).trim()}>
-      <PriceItem key="hola" type="crypto" price={price} currency={currency} />
+      <PriceItem type="crypto" price={price} currency={currency} />
       {!!divider && divider}
       <PriceItem type="fiat" price={cappedDecimalsFiat} currency={currencyFiat} />
     </div>

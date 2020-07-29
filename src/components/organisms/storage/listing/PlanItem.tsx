@@ -51,6 +51,8 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
   const classes = useStyles()
 
   const { monthsDuration, pricePerGb } = planItem
+  const fiatPrice = (pricePerGb * rate).toFixed(4).toString()
+  const fiatMonthlyFee = ((pricePerGb / monthsDuration) * rate).toFixed(4).toString()
 
   const onItemRemoved = () => {
     dispatch({
@@ -83,7 +85,7 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
                 </Box>
               </Grid>
               <Grid item xs={4}>
-                <PriceItem currency={fiatDisplayName} type="fiat" price={`${pricePerGb * rate}`} />
+                <PriceItem currency={fiatDisplayName} type="fiat" price={fiatPrice} />
               </Grid>
             </Grid>
           </Grid>
@@ -102,7 +104,7 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <PriceItem currency={fiatDisplayName} type="fiat" price={`${(pricePerGb / monthsDuration) * rate}`} />
+                <PriceItem currency={fiatDisplayName} type="fiat" price={fiatMonthlyFee} />
               </Grid>
             </Grid>
           </Grid>
