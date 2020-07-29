@@ -12,6 +12,8 @@ import { mayBePluralize } from 'utils/utils'
 import { RemoveItemPayload } from 'store/Market/storage/listingActions'
 import ShortenTextTooltip from 'components/molecules/ShortenTextTooltip'
 import TooltipIconButton from 'components/molecules/TooltipIconButton'
+import MarketStore from 'store/Market/MarketStore'
+import PriceItem from 'components/atoms/PriceItem'
 
 export interface PlanItemProps {
   onEditClick: () => void
@@ -32,7 +34,21 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
-  const { dispatch } = useContext<StorageListingStoreProps>(StorageListingStore)
+  const { dispatch, state: { currency } } = useContext<StorageListingStoreProps>(StorageListingStore)
+  // TODO: send criptoDisplayName, fiatDisplayName and rate in the props
+  const {
+    state: {
+      exchangeRates: {
+        currentFiat,
+        crypto,
+      },
+    },
+  } = useContext(MarketStore)
+
+  const currencySimbol = currency.toLowerCase()
+  const { displayName: criptoDisplayName, rate } = crypto[currencySimbol]
+  const { displayName: fiatDisplayName } = currentFiat
+
   const classes = useStyles()
 
   const { monthsDuration, pricePerGb } = planItem
@@ -51,6 +67,7 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
           container
           alignItems="center"
           className={classes.innerContainer}
+          spacing={1}
         >
           <Grid item xs={12} sm={6} className={classes.leftContent}>
             <Grid container spacing={2} alignItems="center">
@@ -62,18 +79,12 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography align="center" color="primary">
-                  {pricePerGb}
-                  {' '}
-                  RIF
-                </Typography>
+                <Box textAlign='center'>
+                  <PriceItem type='crypto' currency={criptoDisplayName} price={`${pricePerGb}`} />
+                </Box>
               </Grid>
               <Grid item xs={4}>
-                <Typography align="center" color="secondary">
-                  {pricePerGb}
-                  {' '}
-                  USD
-                </Typography>
+                <PriceItem currency={fiatDisplayName} type='fiat' price={`${pricePerGb * rate}`} />
               </Grid>
             </Grid>
           </Grid>
@@ -87,14 +98,12 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
               <Grid item xs={4}>
                 <Typography component="div">
                   <Box textAlign="center" color={`${colors.gray5}`}>
-                    <ShortenTextTooltip value={(pricePerGb / monthsDuration).toString()} maxLength={5} />
-                    {' '}
-                    RIF
+                    <PriceItem currency={criptoDisplayName} type='crypto' price={`${pricePerGb / monthsDuration}`} />
                   </Box>
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography align="center" color="textSecondary">1234 USD</Typography>
+                <PriceItem currency={fiatDisplayName} type='fiat' price={`${pricePerGb / monthsDuration * rate}`} />
               </Grid>
             </Grid>
           </Grid>
