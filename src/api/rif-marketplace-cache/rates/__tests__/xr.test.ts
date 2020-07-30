@@ -19,7 +19,6 @@ const mockFeathersService = {
 } as any
 
 
-
 describe('Exchange rate service', () => {
 
     let xrService: XRService

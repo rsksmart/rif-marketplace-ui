@@ -40,6 +40,7 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
   abstract _fetch: (filters?: MarketFilterType | any) => Promise<any>
 
   fetch = async (filters?: MarketFilterType | any): Promise<any> => {
+    console.log('AbstractAPIService -> fetch -> this.errorReporter:', this.errorReporter)
     if (!this.service) {
       this.errorReporter({
         id: 'service-connection',
@@ -77,7 +78,7 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
     }
   }
 
-  authenticate = (ownerAddress: string) => client.authenticate({
+  authenticate = (ownerAddress: string): Promise<AuthenticationResult | void> => client.authenticate({
     strategy: 'anonymous',
     channels: [this._channel],
     ownerAddress,
