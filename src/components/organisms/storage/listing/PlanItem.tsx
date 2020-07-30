@@ -6,9 +6,8 @@ import Box from '@material-ui/core/Box'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditIcon from '@material-ui/icons/Edit'
 import { colors } from '@rsksmart/rif-ui'
-import { StoragePlanItem, StorageListingStoreProps } from 'store/Market/storage/interfaces'
+import { StoragePlanItem, StorageListingStoreProps, TimePeriodEnum } from 'store/Market/storage/interfaces'
 import StorageListingStore from 'store/Market/storage/ListingStore'
-import { mayBePluralize } from 'utils/utils'
 import { RemoveItemPayload } from 'store/Market/storage/listingActions'
 import TooltipIconButton from 'components/molecules/TooltipIconButton'
 import MarketStore from 'store/Market/MarketStore'
@@ -50,9 +49,10 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
 
   const classes = useStyles()
 
-  const { monthsDuration, pricePerGb } = planItem
+  const { timePeriod, pricePerGb } = planItem
   const fiatPrice = (pricePerGb * rate).toFixed(4).toString()
-  const fiatMonthlyFee = ((pricePerGb / monthsDuration) * rate).toFixed(4).toString()
+  const fiatMonthlyFee = ((pricePerGb / (timePeriod / 30)) * rate).toFixed(4).toString()
+  const criptoMonthlyFee = (pricePerGb / (timePeriod / 30)).toFixed(8).toString().replace(/[.,]00000000$/, '') // TODO: move to utils function
 
   const onItemRemoved = () => {
     dispatch({
@@ -75,7 +75,7 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
               <Grid item xs={4}>
                 <Typography component="div">
                   <Box fontWeight="fontWeightMedium" textAlign="center" color={`${colors.gray5}`}>
-                    {mayBePluralize(monthsDuration, 'month')}
+                    {TimePeriodEnum[timePeriod]}
                   </Box>
                 </Typography>
               </Grid>
@@ -99,7 +99,7 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
               <Grid item xs={4}>
                 <Typography component="div">
                   <Box textAlign="center" color={`${colors.gray5}`}>
-                    <PriceItem currency={criptoDisplayName} type="crypto" price={`${pricePerGb / monthsDuration}`} />
+                    <PriceItem currency={criptoDisplayName} type="crypto" price={criptoMonthlyFee} />
                   </Box>
                 </Typography>
               </Grid>

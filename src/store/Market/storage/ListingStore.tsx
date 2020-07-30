@@ -1,13 +1,14 @@
 import React, { useReducer } from 'react'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
-import { ListingState, StorageListingStoreProps } from './interfaces'
+import { ListingState, StorageListingStoreProps, TimePeriodEnum } from './interfaces'
 import { listingActions, ListingReducer } from './listingReducer'
 
 export type StoreName = 'storage_listing'
 
-// TODO: instead of months, extract to value and label so we can display any unit
-const monthsOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+const periodOptions: TimePeriodEnum[] = [TimePeriodEnum.Daily, TimePeriodEnum.Weekly, TimePeriodEnum.Monthly]
+// TODO: read all values of the enum
+
 export const initialState: ListingState = {
   storeID: 'storage_listing',
   system: 'IPFS',
@@ -16,8 +17,8 @@ export const initialState: ListingState = {
   currency: 'RIF',
   planItems: [],
   internalCounter: 1,
-  availableMonths: monthsOptions,
-  allMonthsOptions: monthsOptions,
+  availablePeriods: periodOptions,
+  allPeriods: periodOptions,
 }
 
 const StorageListingStore = React.createContext({} as StorageListingStoreProps | any)

@@ -6,16 +6,17 @@ import MenuItem from '@material-ui/core/MenuItem'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { colors, validatedNumber } from '@rsksmart/rif-ui'
 import { makeStyles } from '@material-ui/core'
-import { mayBePluralize } from 'utils/utils'
+import { TimePeriodEnum } from 'store/Market/storage/interfaces'
 
 export interface PlanItemBaseFormTemplateProps {
-  monthsOptions: number[]
-  contractLength: number
   onPeriodChange: (value: number) => void
   price: number
   onPriceChange: (value: number) => void
   fiatPrice: string
   fiatSymbol: string
+  periodOptions: TimePeriodEnum[]
+  availablePeriods: TimePeriodEnum[]
+  selectedPeriod: TimePeriodEnum
 }
 
 const useStyles = makeStyles(() => ({
@@ -27,13 +28,14 @@ const useStyles = makeStyles(() => ({
 
 const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = (props) => {
   const {
-    monthsOptions, contractLength, onPeriodChange, price, onPriceChange, fiatPrice, fiatSymbol,
+    onPeriodChange, price, onPriceChange, fiatPrice, fiatSymbol,
+    periodOptions, selectedPeriod,
   } = props
 
   const classes = useStyles()
 
   const handleOnPeriodChange = ({ target: { value } }) => {
-    onPeriodChange(Number(validatedNumber(value)))
+    onPeriodChange(value)
   }
 
   const handleOnPriceChange = ({ target: { value } }) => {
@@ -50,16 +52,17 @@ const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = (props) => {
           required
           label="Subscription Period"
           id="subscription-period-select"
-          value={contractLength}
+          value={selectedPeriod}
           onChange={handleOnPeriodChange}
           InputProps={{
             style: { textAlign: 'center' },
           }}
         >
           {
-            monthsOptions.sort((a, b) => a - b).map((option) => (
-              <MenuItem value={option} key={option}>{mayBePluralize(option, 'month')}</MenuItem>
-            ))
+            // TODO: make unavailable options disabled
+            periodOptions.sort((a, b) => a - b).map(
+              (option) => <MenuItem value={option} key={option}>{TimePeriodEnum[option]}</MenuItem>,
+            )
           }
         </TextField>
       </Grid>

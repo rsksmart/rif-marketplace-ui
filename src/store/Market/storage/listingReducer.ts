@@ -19,15 +19,16 @@ export type ListingActions = {
 
 export const listingActions: ListingActions = {
   ADD_ITEM: (state: ListingState, payload: AddItemPayload) => {
-    const { internalCounter, availableMonths } = state
+    const { internalCounter, availablePeriods } = state
     const newPlan = {
       ...payload,
       internalId: internalCounter,
     }
+    const { timePeriod } = payload
     return {
       ...state,
-      availableMonths: availableMonths.filter(
-        (option) => option !== payload.monthsDuration,
+      availablePeriods: availablePeriods.filter(
+        (option) => option !== timePeriod,
       ),
       internalCounter: internalCounter + 1,
       planItems: [...state.planItems, newPlan],
@@ -35,32 +36,30 @@ export const listingActions: ListingActions = {
   },
   REMOVE_ITEM: (
     state: ListingState,
-    { internalId, monthsDuration }: RemoveItemPayload,
+    { internalId, timePeriod }: RemoveItemPayload,
   ) => ({
     ...state,
-    availableMonths: [...state.availableMonths, monthsDuration],
+    availablePeriods: [...state.availablePeriods, timePeriod],
     planItems: state.planItems.filter((x) => x.internalId !== internalId),
   }),
   EDIT_ITEM: (state: ListingState, payload: EditItemPayload) => {
     const {
-      internalId, monthsDuration, pricePerGb, currency,
+      internalId, timePeriod, pricePerGb, currency,
     } = payload
-    const { planItems, allMonthsOptions } = state
+    const { planItems, allPeriods } = state
     const newPlanItems = planItems.map((planItem) => {
       if (planItem.internalId === internalId) {
         return {
           ...planItem,
-          monthsDuration,
+          timePeriod,
           pricePerGb,
           currency,
         }
       }
       return planItem
     })
-    const newAvailableMonths = allMonthsOptions.filter(
-      (option) => !newPlanItems.find(
-        (newPlanItem) => newPlanItem.monthsDuration === option,
-      ),
+    const newAvailableMonths = allPeriods.filter(
+      (option) => !newPlanItems.find((newPlanItem) => newPlanItem.timePeriod === option),
     )
     return {
       ...state,
