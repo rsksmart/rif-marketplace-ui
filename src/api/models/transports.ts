@@ -36,3 +36,5 @@ export interface SoldDomainTransport {
         buyerAddress: string
     }
 }
+
+export type RnsTransport = OfferTransport | DomainTransport | SoldDomainTransport

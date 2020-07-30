@@ -1,5 +1,6 @@
 import { Web3Store } from '@rsksmart/rif-ui'
-import { ConfirmationAPI, ConfirmationsItem, mapFromTransport } from 'api/rif-marketplace-cache/blockchain/confirmations'
+import { ConfirmationAPI, ConfirmationsItem } from 'api/rif-marketplace-cache/blockchain/confirmations'
+import utils from 'api/rif-marketplace-cache/blockchain/utils'
 import React, {
   createContext, Dispatch, useContext, useEffect, useReducer,
 } from 'react'
@@ -9,6 +10,8 @@ import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
 import { BlockchainAction } from './blockchainActions'
 import { blockchainActions, BlockchainReducer } from './blockchainReducer'
+
+const { mapFromTransport } = utils
 
 export type StoreName = 'blockchain'
 export interface BlockchainState extends StoreState {
