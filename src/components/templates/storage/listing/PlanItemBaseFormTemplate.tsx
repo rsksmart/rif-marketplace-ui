@@ -29,7 +29,7 @@ const useStyles = makeStyles(() => ({
 const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = (props) => {
   const {
     onPeriodChange, price, onPriceChange, fiatPrice, fiatSymbol,
-    periodOptions, selectedPeriod,
+    periodOptions, selectedPeriod, availablePeriods,
   } = props
 
   const classes = useStyles()
@@ -59,9 +59,15 @@ const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = (props) => {
           }}
         >
           {
-            // TODO: make unavailable options disabled
             periodOptions.sort((a, b) => a - b).map(
-              (option) => <MenuItem value={option} key={option}>{TimePeriodEnum[option]}</MenuItem>,
+              (option) => {
+                const isDisabled = !availablePeriods.includes(option)
+                return (
+                  <MenuItem value={option} key={option} disabled={isDisabled}>
+                    {TimePeriodEnum[option]}
+                  </MenuItem>
+                )
+              },
             )
           }
         </TextField>
