@@ -1,5 +1,5 @@
 import { StoreDispatcher } from 'store/storeUtils/interfaces'
-import { StoragePlanItem } from './interfaces'
+import { StoragePlanItem, TimePeriodEnum } from './interfaces'
 
 export type STORAGE_ACTIONS =
   | 'ADD_ITEM'
@@ -11,7 +11,7 @@ export type STORAGE_ACTIONS =
 export type AddItemPayload = StoragePlanItem
 
 export interface RemoveItemPayload {
-  monthsDuration: number
+  timePeriod: TimePeriodEnum
   internalId: number
 }
 

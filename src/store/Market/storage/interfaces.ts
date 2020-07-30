@@ -6,7 +6,7 @@ export interface StoragePlanItem {
   internalId?: number
   currency: string // for now we only support RIF but in the future we may need something like an enum
   pricePerGb: number
-  monthsDuration: number
+  timePeriod: TimePeriodEnum
 }
 
 export interface ListingState extends StoreState {
@@ -16,11 +16,17 @@ export interface ListingState extends StoreState {
   currency: string
   planItems: StoragePlanItem[]
   internalCounter: number
-  availableMonths: number[]
-  allMonthsOptions: number[]
+  allPeriods: TimePeriodEnum[]
+  availablePeriods: TimePeriodEnum[]
 }
 
 export interface StorageListingStoreProps {
   state: ListingState
   dispatch: Dispatch<StorageAction>
+}
+
+export enum TimePeriodEnum {
+  Daily = 1,
+  Weekly = 7,
+  Monthly = 30,
 }

@@ -24,7 +24,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
   planItem,
   onPlanSaved,
 }) => {
-  const { state: { allMonthsOptions, availableMonths, currency }, dispatch } = useContext(StorageListingStore)
+  const { state: { allPeriods, availablePeriods, currency }, dispatch } = useContext(StorageListingStore)
 
   // TODO: send criptoDisplayName, fiatDisplayName and rate in the props
   const {
@@ -41,15 +41,17 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
   const { displayName: fiatDisplayName } = currentFiat
 
   const [pricePerGb, setPricePerGb] = useState(planItem?.pricePerGb || 1)
-  const [selectedMonth, setSelectedMonth] = useState(planItem?.monthsDuration || availableMonths[0])
   const editMode = !!planItem
+
+  const [timePeriod, setTimePeriod] = useState(planItem?.timePeriod || availablePeriods[0])
+
   const fiatPrice = (pricePerGb * rate).toFixed(4).toString()
 
   const handleOnAddClick = () => {
     const newPlanItem: StoragePlanItem = {
       pricePerGb,
-      monthsDuration: selectedMonth,
       currency,
+      timePeriod,
     }
     dispatch({
       type: 'ADD_ITEM',
@@ -66,8 +68,8 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
       payload: {
         internalId,
         pricePerGb,
-        monthsDuration: selectedMonth,
         currency,
+        timePeriod,
       } as EditItemPayload,
     }))
 
@@ -78,8 +80,8 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
     setPricePerGb(value)
   }
 
-  const onSelectedMonthChange = (value: number) => {
-    setSelectedMonth(value)
+  const onSelectedPeriodChange = (value: number) => {
+    setTimePeriod(value)
   }
 
   const actionButtonProps: TooltipIconButtonProps = editMode
@@ -87,7 +89,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
       tooltipTitle: 'Save plan',
       icon: <SaveIcon />,
       iconButtonProps: {
-        disabled: pricePerGb <= 0 || ![...availableMonths, planItem?.monthsDuration].includes(selectedMonth),
+        disabled: pricePerGb <= 0 || ![...availablePeriods, planItem?.timePeriod].includes(timePeriod),
         onClick: handleOnSaveClick,
       },
     }
@@ -95,7 +97,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
       tooltipTitle: 'Add plan',
       icon: <AddIcon />,
       iconButtonProps: {
-        disabled: pricePerGb <= 0 || !availableMonths.includes(selectedMonth),
+        disabled: pricePerGb <= 0 || !availablePeriods.includes(timePeriod),
         onClick: handleOnAddClick,
       },
     }
@@ -111,13 +113,14 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
         )
       }
       <PlanItemBaseFormTemplate
-        monthsOptions={allMonthsOptions}
-        contractLength={selectedMonth}
-        onPeriodChange={onSelectedMonthChange}
+        onPeriodChange={onSelectedPeriodChange}
         onPriceChange={onPricePerGbChange}
         price={pricePerGb}
         fiatPrice={fiatPrice}
         fiatSymbol={fiatDisplayName}
+        periodOptions={allPeriods}
+        selectedPeriod={timePeriod}
+        availablePeriods={availablePeriods}
       />
 
       <Grid item xs={2} md={2}>
