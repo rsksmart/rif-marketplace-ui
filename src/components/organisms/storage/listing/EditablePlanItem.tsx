@@ -116,6 +116,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
         onPeriodChange={onSelectedPeriodChange}
         onPriceChange={onPricePerGbChange}
         price={pricePerGb}
+        currency={currency}
         fiatPrice={fiatPrice}
         fiatSymbol={fiatDisplayName}
         periodOptions={allPeriods}

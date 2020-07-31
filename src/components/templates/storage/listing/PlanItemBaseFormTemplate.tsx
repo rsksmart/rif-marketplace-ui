@@ -17,6 +17,7 @@ export interface PlanItemBaseFormTemplateProps {
   periodOptions: TimePeriodEnum[]
   availablePeriods: TimePeriodEnum[]
   selectedPeriod: TimePeriodEnum
+  currency: string
 }
 
 const useStyles = makeStyles(() => ({
@@ -27,9 +28,10 @@ const useStyles = makeStyles(() => ({
 }))
 
 const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = (props) => {
+  // TODO: rename everywhere currency when it's crypto, to something like cryptoCurrency
   const {
     onPeriodChange, price, onPriceChange, fiatPrice, fiatSymbol,
-    periodOptions, selectedPeriod, availablePeriods,
+    currency, periodOptions, selectedPeriod, availablePeriods,
   } = props
 
   const classes = useStyles()
@@ -92,7 +94,7 @@ const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = (props) => {
                 },
                 endAdornment: (
                   <InputAdornment position="end">
-                    <Typography variant="caption" color="primary">RIF</Typography>
+                    <Typography variant="caption" color="primary">{currency}</Typography>
                   </InputAdornment>
                 ),
                 style: { color: colors.primary },
