@@ -1,11 +1,16 @@
 import React, { useContext } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { Button as RUIButton } from '@rsksmart/rif-ui'
+import { Button as RUIButton, Web3Store } from '@rsksmart/rif-ui'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import PlanItemsList from 'components/organisms/storage/listing/PlanItemsList'
 import BaseSettings from 'components/organisms/storage/listing/BaseSettings'
 import StorageListingStore from 'store/Market/storage/ListingStore'
+import StorageContract from 'contracts/Storage'
+import Logger from 'utils/Logger'
+import { StoragePlanItem } from 'store/Market/storage/interfaces'
+
+const logger = Logger.getInstance()
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -40,10 +45,32 @@ const StorageListingPage = () => {
     },
   } = useContext(StorageListingStore)
 
+  const {
+    state: {
+      account,
+      web3,
+    },
+  } = useContext(Web3Store)
+
   const classes = useStyles()
 
-  const handleSubmit = () => {
-    // TODO: validate the plan and comunicate with the contract
+  const handleSubmit = async () => {
+    // TODO: remove logic from the view and call a service directly with the data
+    const storageContract = StorageContract.getInstance(web3)
+    const gasPrice = await web3.eth.getGasPrice()
+      .catch((error: Error) => {
+        logger.error(`error getting gas price ${error}`)
+      })
+
+    const timePeriods: number[] = planItems.map((plan: StoragePlanItem) => plan.timePeriod)
+    const billingPrices: number[] = planItems.map((plan: StoragePlanItem) => plan.pricePerGb)
+
+    const setOfferReceipt = await storageContract
+      .setOffer(availableSize, timePeriods, billingPrices, { from: account, gasPrice })
+      .catch((error) => {
+        logger.error(`Error setting the offer ${error}`)
+      })
+    logger.info('setOffer receipt: ', setOfferReceipt)
   }
 
   const isSubmitEnabled = planItems.length
