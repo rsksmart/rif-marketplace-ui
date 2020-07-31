@@ -4,11 +4,11 @@ import { Modify } from 'utils/typeUtils'
 export type XRServiceAddress = 'rates/v0'
 export const xrServiceAddress: XRServiceAddress = 'rates/v0'
 
-export type SupportedFiat = 'usd' | 'eur' | 'btc' | 'ars' | 'cny' | 'krw' | 'jpy';
-export type SupportedTokens = 'rif';
+export type SupportedFiat = 'usd' | 'eur' | 'btc' | 'ars' | 'cny' | 'krw' | 'jpy'
+export type SupportedTokens = 'rif' | 'rbtc'
 export const tokenDisplayNames: Record<SupportedTokens, string> = {
   rif: 'RIF',
-  // rbtc: 'RBTC',
+  rbtc: 'RBTC',
 }
 
 export type XRItem = { [fiatSymbol: string]: number }

@@ -56,6 +56,10 @@ export const initialState: MarketState = {
         displayName: 'RIF',
         rate: -1,
       },
+      rbtc: {
+        displayName: 'RBTC',
+        rate: -1
+      },
     },
   },
 }

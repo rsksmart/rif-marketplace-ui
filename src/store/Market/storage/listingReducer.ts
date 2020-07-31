@@ -7,6 +7,7 @@ import {
   EditItemPayload,
   SetAvailableSizePayload,
   SetCountryPayload,
+  SetCurrencyPayload,
 } from './listingActions'
 
 export interface ListingReducer {
@@ -77,5 +78,9 @@ export const listingActions: ListingActions = {
   SET_COUNTRY: (state: ListingState, { country }: SetCountryPayload) => ({
     ...state,
     country,
+  }),
+  SET_CURRENCY: (state: ListingState, { currency }: SetCurrencyPayload) => ({
+    ...state,
+    currency,
   }),
 }
