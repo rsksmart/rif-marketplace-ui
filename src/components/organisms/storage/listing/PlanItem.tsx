@@ -12,6 +12,7 @@ import { RemoveItemPayload } from 'store/Market/storage/listingActions'
 import TooltipIconButton from 'components/molecules/TooltipIconButton'
 import MarketStore from 'store/Market/MarketStore'
 import PriceItem from 'components/atoms/PriceItem'
+import { criptoDisplayPrice } from 'utils/utils'
 
 export interface PlanItemProps {
   onEditClick: () => void
@@ -31,9 +32,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
+// TODO: send criptoDisplayName, fiatDisplayName and rate in the props
 const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
   const { dispatch, state: { currency } } = useContext<StorageListingStoreProps>(StorageListingStore)
-  // TODO: send criptoDisplayName, fiatDisplayName and rate in the props
   const {
     state: {
       exchangeRates: {
@@ -52,7 +53,7 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
   const { timePeriod, pricePerGb } = planItem
   const fiatPrice = (pricePerGb * rate).toFixed(4).toString()
   const fiatMonthlyFee = ((pricePerGb / (timePeriod / 30)) * rate).toFixed(4).toString()
-  const criptoMonthlyFee = (pricePerGb / (timePeriod / 30)).toFixed(8).toString().replace(/[.,]00000000$/, '') // TODO: move to utils function
+  const criptoMonthlyFee = criptoDisplayPrice(pricePerGb / (timePeriod / 30))
 
   const onItemRemoved = () => {
     dispatch({
@@ -81,7 +82,7 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
               </Grid>
               <Grid item xs={4}>
                 <Box textAlign="center">
-                  <PriceItem type="crypto" currency={criptoDisplayName} price={`${pricePerGb}`} />
+                  <PriceItem type="crypto" currency={currency} price={`${pricePerGb}`} />
                 </Box>
               </Grid>
               <Grid item xs={4}>
