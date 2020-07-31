@@ -11,7 +11,7 @@ import CountrySelect from 'components/molecules/CountrySelect'
 import StorageListingStore from 'store/Market/storage/ListingStore'
 import { CountryType } from 'models/Country'
 import { StorageListingStoreProps } from 'store/Market/storage/interfaces'
-import { SetAvailableSizePayload, SetCountryPayload } from 'store/Market/storage/listingActions'
+import { SetAvailableSizePayload, SetCountryPayload, SetCurrencyPayload } from 'store/Market/storage/listingActions'
 
 const BaseSettings: FC<{}> = () => {
   const { state: { availableSize, system, currency }, dispatch } = useContext<StorageListingStoreProps>(StorageListingStore)
@@ -31,6 +31,15 @@ const BaseSettings: FC<{}> = () => {
       payload: {
         country: country?.name,
       } as SetCountryPayload,
+    } as any)
+  }
+
+  const onCurrencyChange = ({ target: { value } }) => {
+    dispatch({
+      type: 'SET_CURRENCY',
+      payload: {
+        currency: value,
+      } as SetCurrencyPayload,
     } as any)
   }
 
@@ -103,7 +112,9 @@ const BaseSettings: FC<{}> = () => {
           label="Currency"
           id="currency-select"
           value={currency}
+          onChange={onCurrencyChange}
         >
+          <MenuItem value="RBTC">RBTC</MenuItem>
           <MenuItem value="RIF">RIF</MenuItem>
         </TextField>
       </Grid>

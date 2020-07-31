@@ -7,6 +7,7 @@ export type STORAGE_ACTIONS =
   | 'EDIT_ITEM'
   | 'SET_COUNTRY'
   | 'SET_AVAILABLE_SIZE'
+  | 'SET_CURRENCY'
 
 export type AddItemPayload = StoragePlanItem
 
@@ -23,6 +24,10 @@ export interface SetAvailableSizePayload {
 
 export interface SetCountryPayload {
   country: string
+}
+
+export interface SetCurrencyPayload {
+  currency: string
 }
 
 export type StoragePayload = AddItemPayload &
