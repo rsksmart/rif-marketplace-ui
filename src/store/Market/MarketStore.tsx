@@ -5,8 +5,8 @@ import React, {
 import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
 import { StoreActions, StoreReducer, StoreState } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
-import { MarketAction } from './marketActions'
-import { marketActions, MarketReducer } from './marketReducer'
+import { MarketAction, MarketPayload } from './marketActions'
+import { marketActions, MarketReducer } from './marketActions'
 
 export type StoreName = 'market'
 
@@ -15,19 +15,23 @@ export enum TxType {
   SELL = 1
 }
 
+export type MarketFiat = {
+  displayName: string
+  symbol: SupportedFiat
+}
+
+export type MarketCrypto = {
+  displayName: string
+  rate: number
+}
+
+export type MarketCryptoRecord = Record<string, MarketCrypto>
+
 export interface MarketState extends StoreState {
   txType: TxType
   exchangeRates: {
-    currentFiat: {
-      symbol: SupportedFiat
-      displayName: string
-    }
-    crypto: {
-      rif: {
-        displayName: string
-        rate?: number
-      }
-    }
+    currentFiat: MarketFiat
+    crypto: MarketCryptoRecord
   }
 }
 
@@ -47,18 +51,19 @@ export const initialState: MarketState = {
     crypto: {
       rif: {
         displayName: 'RIF',
+        rate: -1
       },
     },
   },
 }
 
 const MarketStore = React.createContext({} as MarketStoreProps | any)
-const marketReducer: MarketReducer | StoreReducer = storeReducerFactory(initialState, marketActions as unknown as StoreActions)
+const marketReducer: MarketReducer<MarketPayload> | StoreReducer = storeReducerFactory(initialState, marketActions as unknown as StoreActions)
 
 export const MarketStoreProvider = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)
 
-  const [state, dispatch] = useReducer(marketReducer, initialState)
+  const [state, dispatch] = useReducer<MarketReducer<MarketPayload>>(marketReducer as any, initialState)
   const {
     exchangeRates: {
       currentFiat: {
@@ -69,26 +74,14 @@ export const MarketStoreProvider = ({ children }) => {
   } = state as MarketState
   const [supportedCrypto] = useState(Object.keys(crypto).filter((token) => tokenDisplayNames[token])) // prevents update to this list
 
-  const {
-    state: {
-      apis: {
-        'rates/v0': rates,
-      },
-    }, dispatch: appDispatch,
-  }: AppStoreProps = useContext(AppStore)
-  const api = rates as XRService
-
-  if (!api.service) {
-    api.connect(errorReporterFactory(appDispatch))
-  }
+  const { state: appState, dispatch: appDispatch }: AppStoreProps = useContext(AppStore)
+  const api = appState?.apis?.["rates/v0"] as XRService
 
   // Initialise
   useEffect(() => {
-    const {
-      service,
-    } = api
+    if (api && !isInitialised) {
+      api.connect(errorReporterFactory(appDispatch))
 
-    if (service && !isInitialised) {
       setIsInitialised(true)
       try {
         dispatch({
@@ -99,13 +92,13 @@ export const MarketStoreProvider = ({ children }) => {
         setIsInitialised(false)
       }
     }
-  }, [api, isInitialised])
+  }, [api, isInitialised, appDispatch])
 
   // fetch if is initialised
   useEffect(() => {
-    const { fetch } = api
-
     if (isInitialised) {
+      const { fetch } = api
+
       fetch({ fiatSymbol }).then((newRates: XRItem[]) => {
         const payload = Object.keys(newRates).reduce((acc, i) => {
           const symbol = newRates[i].token
@@ -121,7 +114,7 @@ export const MarketStoreProvider = ({ children }) => {
         dispatch({
           type: 'SET_EXCHANGE_RATE',
           payload,
-        })
+        } as any)
       })
     }
   }, [isInitialised, api, fiatSymbol, supportedCrypto])
