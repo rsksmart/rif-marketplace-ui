@@ -12,18 +12,14 @@ import { Modify } from 'utils/typeUtils'
 import {
   RnsListing, RnsOrder, RnsState, RnsStoreProps,
 } from './interfaces'
-import { rnsActions, RnsReducer } from './rnsReducer'
+import { rnsActions, RnsReducer, RnsPayload } from './rnsActions'
 import outdateTokenId from './utils'
 
 export type StoreName = 'rns_offers'
 
-export type Order = Modify<RnsOrder, {
-  item: RnsDomainOffer
-}>
+export type Order = RnsOrder<RnsDomainOffer>
 
-export type Listing = Modify<RnsListing, {
-  items: RnsDomainOffer[]
-}>
+export type Listing = RnsListing<RnsDomainOffer>
 
 export type OffersState = Modify<RnsState, {
   listing: Listing
@@ -58,7 +54,7 @@ export const initialState: OffersState = {
 }
 
 const RnsOffersStore = React.createContext({} as RnsOffersStoreProps | any)
-const offersReducer: RnsReducer | StoreReducer = storeReducerFactory(initialState, rnsActions as unknown as StoreActions)
+const offersReducer: RnsReducer<RnsPayload> | StoreReducer = storeReducerFactory(initialState, rnsActions as unknown as StoreActions)
 
 export const RnsOffersStoreProvider = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)

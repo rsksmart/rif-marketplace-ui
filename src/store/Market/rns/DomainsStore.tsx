@@ -13,18 +13,14 @@ import { ErrorMessagePayload, LoadingPayload } from 'store/App/appActions'
 import {
   RnsListing, RnsOrder, RnsState, RnsStoreProps,
 } from './interfaces'
-import { rnsActions, RnsReducer } from './rnsReducer'
+import { rnsActions, RnsReducer, RnsPayload } from './rnsActions'
 import outdateTokenId from './utils'
 import { RefreshPayload } from './rnsActions'
 
 export type StoreName = 'rns_domains'
-export type Order = Modify<RnsOrder, {
-  item: RnsDomain
-}>
+export type Order = RnsOrder<RnsDomain>
 
-export type Listing = Modify<RnsListing, {
-  items: RnsDomain[]
-}>
+export type Listing = RnsListing<RnsDomain>
 
 export type DomainsState = Modify<RnsState, {
   listing: Listing
@@ -49,7 +45,7 @@ export const initialState: DomainsState = {
 }
 
 const RnsDomainsStore = React.createContext({} as RnsDomainsStoreProps | any)
-const domainsReducer: RnsReducer | StoreReducer = storeReducerFactory(initialState, rnsActions as unknown as StoreActions)
+const domainsReducer: RnsReducer<RnsPayload> | StoreReducer = storeReducerFactory(initialState, rnsActions as unknown as StoreActions)
 
 export const RnsDomainsStoreProvider = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)
