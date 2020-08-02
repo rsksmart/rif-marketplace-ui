@@ -61,17 +61,9 @@ export const RnsOffersStoreProvider = ({ children }) => {
   const [isLimitsSet, setIsLimitsSet] = useState(false)
 
   const {
-    state: {
-      apis: {
-        'rns/v0/offers': offers,
-      },
-    }, dispatch: appDispatch,
+    state: appState, dispatch: appDispatch,
   }: AppStoreProps = useContext(AppStore)
-  const api = offers as unknown as OffersService
-
-  if (!api.service) {
-    api.connect(errorReporterFactory(appDispatch))
-  }
+  const api = appState?.apis?.["rns/v0/offers"] as OffersService
 
   const [state, dispatch] = useReducer(offersReducer, initialState)
   const {
@@ -82,14 +74,17 @@ export const RnsOffersStoreProvider = ({ children }) => {
 
   // Initialise
   useEffect(() => {
-    const {
-      service,
-      attachEvent,
-    } = api
 
-    if (service && !isInitialised && !needsRefresh) {
+    if (api && !isInitialised && !needsRefresh) {
+      const {
+        connect,
+        attachEvent,
+      } = api
+
       setIsInitialised(true)
       try {
+        connect(errorReporterFactory(appDispatch))
+
         attachEvent('updated', outdateTokenId(dispatch))
         attachEvent('patched', outdateTokenId(dispatch))
         attachEvent('created', outdateTokenId(dispatch))
@@ -103,12 +98,10 @@ export const RnsOffersStoreProvider = ({ children }) => {
         setIsInitialised(false)
       }
     }
-  }, [api, isInitialised, needsRefresh])
+  }, [api, isInitialised, needsRefresh, appDispatch])
 
   // (re)fetch limits upon refresh if initialised
   useEffect(() => {
-    const { fetchPriceLimits } = api
-
     if (isInitialised && needsRefresh && !isLimitsSet) {
       appDispatch({
         type: 'SET_IS_LOADING',
@@ -117,7 +110,7 @@ export const RnsOffersStoreProvider = ({ children }) => {
           id: 'filters',
         } as LoadingPayload,
       } as any)
-      fetchPriceLimits()
+      api.fetchPriceLimits()
         .then((price) => {
           dispatch({
             type: 'UPDATE_LIMITS',
@@ -160,8 +153,6 @@ export const RnsOffersStoreProvider = ({ children }) => {
   }, [needsRefresh])
 
   useEffect(() => {
-    const { fetch } = api
-
     if (isInitialised && isLimitsSet) {
       appDispatch({
         type: 'SET_IS_LOADING',
@@ -170,7 +161,7 @@ export const RnsOffersStoreProvider = ({ children }) => {
           id: 'data',
         } as LoadingPayload,
       } as any)
-      fetch(filters)
+      api.fetch(filters)
         .then((items) => {
           dispatch({
             type: 'SET_LISTING',

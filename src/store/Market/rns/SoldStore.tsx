@@ -1,4 +1,4 @@
-import { Web3Store } from '@rsksmart/rif-ui'
+import { Web3Store, Web3ProviderProps } from '@rsksmart/rif-ui'
 import { RnsFilter } from 'api/models/RnsFilter'
 import { RnsSoldDomain } from 'models/marketItems/DomainItem'
 import React, {
@@ -50,62 +50,57 @@ const soldDomainsReducer: RnsReducer<RnsPayload> | StoreReducer = storeReducerFa
 export const RnsSoldStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(soldDomainsReducer, initialState)
   const {
-    state: {
-      apis: {
-        'rns/v0/sold': sold,
-      },
-    }, dispatch: appDispatch,
+    state: appState, dispatch: appDispatch,
   }: AppStoreProps = useContext(AppStore)
-  const api = sold as SoldDomainsService
+  const api = appState?.apis?.["rns/v0/sold"] as SoldDomainsService
 
   const {
     filters,
     needsRefresh,
   } = state as RnsState
-  const { state: { account } } = useContext(Web3Store)
+  const { web3State }: Web3ProviderProps = useContext(Web3Store)
+  const account = web3State?.account
 
   const [isInitialised, setIsInitialised] = useState(false)
 
-  if (!api.service) {
-    api.connect(errorReporterFactory(appDispatch))
-  }
-
   // Initialise
   useEffect(() => {
-    const initialise = async () => {
-      const {
-        attachEvent,
-        authenticate,
-      } = api
+    if (api && !isInitialised && account) {
+      const initialise = async () => {
+        const {
+          attachEvent,
+          authenticate,
+        } = api
 
-      setIsInitialised(true)
-      try {
-        await authenticate(account)
+        setIsInitialised(true)
+        try {
+          api.connect(errorReporterFactory(appDispatch))
+          await authenticate(account)
 
-        attachEvent('updated', outdateTokenId(dispatch))
-        attachEvent('patched', outdateTokenId(dispatch))
-        attachEvent('created', outdateTokenId(dispatch))
-        attachEvent('removed', outdateTokenId(dispatch))
+          attachEvent('updated', outdateTokenId(dispatch))
+          attachEvent('patched', outdateTokenId(dispatch))
+          attachEvent('created', outdateTokenId(dispatch))
+          attachEvent('removed', outdateTokenId(dispatch))
 
-        dispatch({
-          type: 'REFRESH',
-          payload: { refresh: true } as RefreshPayload,
-        })
-      } catch (e) {
-        setIsInitialised(false)
+          dispatch({
+            type: 'REFRESH',
+            payload: { refresh: true } as RefreshPayload,
+          })
+        } catch (e) {
+          setIsInitialised(false)
+        }
       }
-    }
 
-    if (api.service && !isInitialised && account) {
       initialise()
     }
-  }, [api, isInitialised, account])
+  }, [api, isInitialised, account, appDispatch])
 
   // fetch if needs refresh and is initialised
   useEffect(() => {
-    const { fetch } = api
 
     if (isInitialised && needsRefresh) {
+      const { fetch } = api
+
       appDispatch({
         type: 'SET_IS_LOADING',
         payload: {

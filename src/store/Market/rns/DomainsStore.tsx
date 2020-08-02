@@ -56,9 +56,6 @@ export const RnsDomainsStoreProvider = ({ children }) => {
   } = useContext<AppStoreProps>(AppStore)
   const api = domains as DomainsService
 
-  if (!api.service) {
-    api.connect(errorReporterFactory(appDispatch))
-  }
 
   const [state, dispatch] = useReducer(domainsReducer, initialState)
   const { filters, needsRefresh } = state as DomainsState
@@ -66,34 +63,34 @@ export const RnsDomainsStoreProvider = ({ children }) => {
 
   // Initialise
   useEffect(() => {
-    const initialise = async () => {
-      const {
-        attachEvent,
-        authenticate,
-      } = api
+    if (api && !isInitialised && account) {
+      const initialise = async () => {
+        const {
+          attachEvent,
+          authenticate,
+        } = api
 
-      setIsInitialised(true)
-      try {
-        await authenticate(account)
+        setIsInitialised(true)
+        try {
+          api.connect(errorReporterFactory(appDispatch))
+          await authenticate(account)
 
-        attachEvent('updated', outdateTokenId(dispatch))
-        attachEvent('patched', outdateTokenId(dispatch))
-        attachEvent('created', outdateTokenId(dispatch))
-        attachEvent('removed', outdateTokenId(dispatch))
+          attachEvent('updated', outdateTokenId(dispatch))
+          attachEvent('patched', outdateTokenId(dispatch))
+          attachEvent('created', outdateTokenId(dispatch))
+          attachEvent('removed', outdateTokenId(dispatch))
 
-        dispatch({
-          type: 'REFRESH',
-          payload: { refresh: true } as RefreshPayload,
-        })
-      } catch (e) {
-        setIsInitialised(false)
+          dispatch({
+            type: 'REFRESH',
+            payload: { refresh: true } as RefreshPayload,
+          })
+        } catch (e) {
+          setIsInitialised(false)
+        }
       }
-    }
-
-    if (api.service && !isInitialised && account) {
       initialise()
     }
-  }, [api, isInitialised, account])
+  }, [api, isInitialised, account, appDispatch])
 
   useEffect(() => {
     dispatch({
@@ -104,9 +101,9 @@ export const RnsDomainsStoreProvider = ({ children }) => {
 
   // fetch if needs refresh and is initialised
   useEffect(() => {
-    const { fetch } = api
-
     if (isInitialised && needsRefresh) {
+      const { fetch } = api
+
       appDispatch({
         type: 'SET_IS_LOADING',
         payload: {
