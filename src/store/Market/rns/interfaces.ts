@@ -9,22 +9,22 @@ import { RnsAction } from './rnsActions'
 
 export type RnsStoreNames = DomainsStoreName | OffersStoreName | SoldStoreName
 
-export interface RnsOrder {
-  item: RnsItem
+export interface RnsOrder<T> {
+  item: T
   isProcessing: boolean
   isOutdated: boolean
 }
 
-export interface RnsListing {
-  items: RnsItem[]
+export interface RnsListing<T> {
+  items: T[]
   outdatedTokens: []
 }
 
 export interface RnsState extends StoreState {
-  listing: RnsListing
+  listing: RnsListing<RnsItem>
   filters: Partial<RnsFilter>
   limits?: Partial<RnsFilter>
-  order?: RnsOrder
+  order?: RnsOrder<RnsItem>
   needsRefresh: boolean
 }
 

@@ -10,22 +10,18 @@ import { Modify } from 'utils/typeUtils'
 import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
 import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
 import { LoadingPayload } from 'store/App/appActions'
-import { RefreshPayload } from 'store/Market/rns/rnsActions'
+import { RefreshPayload, RnsPayload } from 'store/Market/rns/rnsActions'
 import {
   RnsListing, RnsOrder, RnsState, RnsStoreProps,
 } from './interfaces'
-import { rnsActions, RnsReducer } from './rnsReducer'
+import { rnsActions, RnsReducer } from './rnsActions'
 import outdateTokenId from './utils'
 
 export type StoreName = 'rns_sold'
 
-export type RnsSoldOrder = Modify<RnsOrder, {
-  item: RnsSoldDomain
-}>
+export type RnsSoldOrder = RnsOrder<RnsSoldDomain>
 
-export type RnsSoldListing = Modify<RnsListing, {
-  items: RnsSoldDomain[]
-}>
+export type RnsSoldListing = RnsListing<RnsSoldDomain>
 
 export type RnsSoldState = Modify<RnsState, {
   listing: RnsSoldListing
@@ -49,7 +45,7 @@ export const initialState: RnsSoldState = {
 }
 
 const RnsSoldStore = React.createContext({} as RnsSoldStoreProps | any)
-const soldDomainsReducer: RnsReducer | StoreReducer = storeReducerFactory(initialState, rnsActions as unknown as StoreActions)
+const soldDomainsReducer: RnsReducer<RnsPayload> | StoreReducer = storeReducerFactory(initialState, rnsActions as unknown as StoreActions)
 
 export const RnsSoldStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(soldDomainsReducer, initialState)

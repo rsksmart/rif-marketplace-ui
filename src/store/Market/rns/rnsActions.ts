@@ -1,9 +1,9 @@
 import { RnsFilter } from 'api/models/RnsFilter'
 import { RnsItem } from 'models/marketItems/DomainItem'
 import { StorePayload, StoreDispatcher } from 'store/storeUtils/interfaces'
-import { RnsOrder } from './interfaces'
+import { RnsOrder, RnsState } from './interfaces'
 
-export type RNS_ACTIONS = 'NOOP' | 'FILTER' | 'SET_LISTING' | 'OUTDATE' | 'SET_ORDER' | 'REFRESH' | 'SET_PROGRESS' | 'CLEAR_ORDER' | 'UPDATE_LIMITS'
+export type RNS_ACTIONS = 'FILTER' | 'SET_LISTING' | 'OUTDATE' | 'SET_ORDER' | 'REFRESH' | 'SET_PROGRESS' | 'CLEAR_ORDER' | 'UPDATE_LIMITS'
 
 export type FilterPayload = Partial<RnsFilter>
 
@@ -19,21 +19,104 @@ export interface RefreshPayload {
   refresh: boolean
 }
 
-export type OrderPayload = RnsOrder
+export type OrderPayload = RnsOrder<RnsItem>
 
-export type ProgressPayload = Pick<RnsOrder, 'isProcessing'>
+export type ProgressPayload = Pick<RnsOrder<RnsItem>, 'isProcessing'>
 
-export type LimitsPayload = Partial<RnsFilter>
+export type LimitsPayload = Partial<Pick<RnsFilter, 'price'>>
 
-export type RnsPayload = StorePayload &
-  FilterPayload &
-  ListingPayload &
-  OutdatePayload &
-  OrderPayload &
-  ProgressPayload &
-  LimitsPayload &
+export type RnsPayload = StorePayload |
+  FilterPayload |
+  ListingPayload |
+  OutdatePayload |
+  OrderPayload |
+  ProgressPayload |
+  LimitsPayload |
   RefreshPayload
 
 export interface RnsAction extends StoreDispatcher<RnsPayload> {
   type: RNS_ACTIONS
+}
+
+export interface RnsReducer<P extends RnsPayload> {
+  (state: RnsState, payload: P): RnsState
+}
+
+export type RnsActions = {
+  FILTER: RnsReducer<FilterPayload>,
+  UPDATE_LIMITS: RnsReducer<LimitsPayload>,
+  SET_LISTING: RnsReducer<ListingPayload>,
+  OUTDATE: RnsReducer<OutdatePayload>,
+  REFRESH: RnsReducer<RefreshPayload>,
+  SET_ORDER: RnsReducer<OrderPayload>,
+  SET_PROGRESS: RnsReducer<ProgressPayload>,
+  CLEAR_ORDER: RnsReducer<{}>
+}
+
+export const rnsActions: RnsActions = {
+  FILTER: (state, payload) => ({
+    ...state,
+    filters: {
+      ...state.filters,
+      ...payload,
+    },
+  }),
+  UPDATE_LIMITS: (state, payload) => ({
+    ...state,
+    limits: {
+      ...state.limits,
+      ...payload,
+    },
+  }),
+  SET_LISTING: (state, payload) => {
+    const { items } = payload
+
+    return {
+      ...state,
+      listing: {
+        items,
+        outdatedTokens: [],
+      },
+    }
+  },
+  OUTDATE: (state, payload) => {
+    const { order, listing } = state
+    const { tokenId } = payload
+
+    if (order) {
+      const { item } = order
+      const { tokenId: itemTokenId } = item
+      order.isOutdated = itemTokenId === tokenId
+    }
+
+    const { outdatedTokens } = listing
+    const tokenSet = new Set([...outdatedTokens, tokenId])
+
+    return {
+      ...state,
+      order,
+      listing: {
+        ...listing,
+        outdatedTokens: Array.from(tokenSet) as [], // TS2322 Type 'number' is not assignable to type '0'
+      },
+    }
+  },
+  REFRESH: (state, { refresh }) => ({
+    ...state,
+    needsRefresh: refresh,
+  }),
+  SET_ORDER: (state, payload) => ({
+    ...state, order: payload,
+  }),
+  SET_PROGRESS: (state, { isProcessing }) => ({
+    ...state,
+    order: state.order && {
+      ...state.order,
+      isProcessing,
+    },
+  }),
+  CLEAR_ORDER: (state, _) => ({
+    ...state,
+    order: undefined,
+  }),
 }
