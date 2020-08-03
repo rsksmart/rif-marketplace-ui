@@ -16,7 +16,7 @@ const mapFromTransport = ({
     expiration: { date },
     name: domainName,
   },
-  offerId: id,
+  id,
   paymentToken,
   tokenId,
   ownerAddress,
