@@ -11,6 +11,7 @@ import Logger from 'utils/Logger'
 import { StoragePlanItem } from 'store/Market/storage/interfaces'
 import { convertGbsToBytes, convertDaysToSeconds } from 'utils/utils'
 import { UIError } from 'models/UIMessage'
+import Login from 'components/atoms/Login'
 
 const logger = Logger.getInstance()
 
@@ -103,6 +104,30 @@ const StorageListingPage = () => {
     && currency
     && system
 
+  const action = account
+    ? (
+      <>
+        <RUIButton
+          onClick={handleSubmit}
+          disabled={!isSubmitEnabled}
+          color="primary"
+          rounded
+          variant="contained"
+        >
+          List storage
+        </RUIButton>
+        {
+        !!isSubmitEnabled
+        && (
+          <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
+            Your wallet will open and you will be asked to confirm the transaction for listing your service.
+          </Typography>
+        )
+      }
+      </>
+    )
+    : <Login />
+
   return (
     <div className={classes.root}>
       <div className={`${classes.container}`}>
@@ -114,23 +139,7 @@ const StorageListingPage = () => {
           <BaseSettings />
           <PlanItemsList />
         </Grid>
-        <RUIButton
-          onClick={handleSubmit}
-          disabled={!isSubmitEnabled}
-          color="primary"
-          rounded
-          variant="contained"
-        >
-          List storage
-        </RUIButton>
-        {
-          !!isSubmitEnabled
-          && (
-            <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
-              Your wallet will open and you will be asked to confirm the transaction for listing your service.
-            </Typography>
-          )
-        }
+        {action}
       </div>
     </div>
   )
