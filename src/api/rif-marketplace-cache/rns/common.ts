@@ -23,7 +23,7 @@ export type RnsAPIService = Modify<
 >
 
 const { contractAddresses } = network
-export const getAvailableTokens = Object.keys(contractAddresses).reduce(
+export const availableTokens = Object.keys(contractAddresses).reduce(
   (acc, tokenSymbol) => {
     const value = contractAddresses[tokenSymbol].toLowerCase()
     acc[value] = tokenSymbol

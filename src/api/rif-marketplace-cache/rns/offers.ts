@@ -4,7 +4,7 @@ import { OfferTransport } from 'api/models/transports'
 import { RnsFilter, PriceFilter } from 'api/models/RnsFilter'
 import { parseToBigDecimal, convertToBigString, parseToInt } from 'utils/parsers'
 import {
-  getAvailableTokens, RnsAddresses, RnsAPIService, RnsChannels,
+  availableTokens, RnsAddresses, RnsAPIService, RnsChannels,
 } from './common'
 
 export const offersAddress: RnsAddresses = 'rns/v0/offers'
@@ -26,7 +26,7 @@ const mapFromTransport = ({
   domainName,
   price: parseToBigDecimal(priceString, 18),
   expirationDate: new Date(date),
-  paymentToken: getAvailableTokens[paymentToken.toLowerCase()],
+  paymentToken: availableTokens[paymentToken.toLowerCase()],
   tokenId,
 })
 

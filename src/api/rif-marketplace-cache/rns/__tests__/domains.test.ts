@@ -2,6 +2,7 @@ import { DomainTransport } from 'api/models/transports';
 import { DomainsService } from '../domains';
 import { RnsDomain } from 'models/marketItems/DomainItem';
 import { RnsAPIService } from '../common';
+import mockFeathersService from 'api/test-utils/feathers';
 
 const mockOwnerAddress = 'fake_owner_address'
 const expectedFindOptions = {
@@ -56,12 +57,6 @@ const expectedFindQuery = {
     }
 }
 
-const mockFeathersService = {
-    find: jest.fn(() => {
-        return Promise.resolve(MOCK_TRANSPORT)
-    })
-} as any
-
 
 
 let domainsAPI: RnsAPIService
@@ -71,7 +66,7 @@ describe('DomainsService', () => {
     })
     describe('_fetch via super.fetch', () => {
         beforeEach(() => {
-            domainsAPI.service = mockFeathersService
+            domainsAPI.service = mockFeathersService(MOCK_TRANSPORT)
         })
         test('should call service.find once', () => {
             const findSpy = jest.spyOn(domainsAPI.service, 'find')
