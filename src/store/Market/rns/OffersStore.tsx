@@ -63,7 +63,7 @@ export const RnsOffersStoreProvider = ({ children }) => {
   const {
     state: appState, dispatch: appDispatch,
   }: AppStoreProps = useContext(AppStore)
-  const api = appState?.apis?.["rns/v0/offers"] as OffersService
+  const api = appState?.apis?.['rns/v0/offers'] as OffersService
 
   const [state, dispatch] = useReducer(offersReducer, initialState)
   const {
@@ -74,7 +74,6 @@ export const RnsOffersStoreProvider = ({ children }) => {
 
   // Initialise
   useEffect(() => {
-
     if (api && !isInitialised && !needsRefresh) {
       const {
         connect,

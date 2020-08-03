@@ -1,62 +1,61 @@
-import React, { useContext, FC } from "react"
-import RnsSoldStore, { RnsSoldStoreProps, RnsSoldStoreProvider } from "../SoldStore"
+import React, { useContext, FC } from 'react'
+import { render } from '@testing-library/react'
+import RnsSoldStore, { RnsSoldStoreProps, RnsSoldStoreProvider } from '../SoldStore'
 
-
+const renderTest = (TestComponent: React.ElementType) => render(
+  <RnsSoldStoreProvider>
+    <TestComponent />
+  </RnsSoldStoreProvider>,
+)
 
 describe('RnsSoldStoreProvider', () => {
-    describe('initial state', () => {
+  describe('initial state', () => {
+    test('should contain empty array "listing"', () => {
+      const TestComponent: FC<{}> = () => {
+        const { state: { listing } } = useContext<RnsSoldStoreProps>(RnsSoldStore)
 
-        test('should contain empty array "listing"', () => {
-
-            const TestComponent: FC<{}> = () => {
-                const { state: { listing } } = useContext<RnsSoldStoreProps>(RnsSoldStore)
-
-                expect(listing).toBe([])
-                return <div></div>
-            }
-            <RnsSoldStoreProvider>
-                <TestComponent />
-            </RnsSoldStoreProvider>
-
+        expect(listing).toEqual({
+          items: [],
+          outdatedTokens: [],
         })
-        test('should contain an empty object "filters"', () => {
+        return <div />
+      }
 
-            const TestComponent: FC<{}> = () => {
-                const { state: { filters } } = useContext<RnsSoldStoreProps>(RnsSoldStore)
-
-                expect(filters).toBe({ status: 'owned' })
-                return <div></div>
-            }
-            <RnsSoldStoreProvider>
-                <TestComponent />
-            </RnsSoldStoreProvider>
-
-        })
-        test('should not contain object "order"', () => {
-
-            const TestComponent: FC<{}> = () => {
-                const { state: { order } } = useContext<RnsSoldStoreProps>(RnsSoldStore)
-
-                expect(order).toBeUndefined()
-                return <div></div>
-            }
-            <RnsSoldStoreProvider>
-                <TestComponent />
-            </RnsSoldStoreProvider>
-
-        })
-
-        test('should contain boolean "needsRefresh" set to false', () => {
-
-            const TestComponent: FC<{}> = () => {
-                const { state: { needsRefresh } } = useContext<RnsSoldStoreProps>(RnsSoldStore)
-
-                expect(needsRefresh).toBe(false)
-                return <div></div>
-            }
-            <RnsSoldStoreProvider>
-                <TestComponent />
-            </RnsSoldStoreProvider>
-        })
+      renderTest(TestComponent)
     })
+    test('should contain an empty object "filters"', () => {
+      const TestComponent: FC<{}> = () => {
+        const { state: { filters } } = useContext<RnsSoldStoreProps>(RnsSoldStore)
+
+        expect(filters).toEqual({})
+        return <div />
+      }
+
+      renderTest(TestComponent)
+    })
+    test('should not contain object "order"', () => {
+      const TestComponent: FC<{}> = () => {
+        const { state: { order } } = useContext<RnsSoldStoreProps>(RnsSoldStore)
+
+        expect(order).toBeUndefined()
+        return <div />
+      }
+
+      renderTest(TestComponent)
+    })
+
+    test('should contain boolean "needsRefresh" set to false', () => {
+      const TestComponent: FC<{}> = () => {
+        const { state } = useContext<RnsSoldStoreProps>(RnsSoldStore)
+
+        expect(state).toHaveProperty('needsRefresh')
+        const { needsRefresh } = state
+
+        expect(needsRefresh).toBe(false)
+        return <div />
+      }
+
+      renderTest(TestComponent)
+    })
+  })
 })
