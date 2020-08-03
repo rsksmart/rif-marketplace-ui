@@ -9,6 +9,7 @@ import { NotFound } from '..'
 import StorageLandingPage from './StorageLandingPage'
 import StorageOffersPage from './buy/StorageOffersPage'
 import StorageListingPage from './sell/StorageListingPage'
+import StorageOfferListed from './sell/StorageOfferListed'
 
 const StorageRoutes = () => {
   const { services } = networkConfig
@@ -20,6 +21,7 @@ const StorageRoutes = () => {
         <Redirect exact from={ROUTES.STORAGE.BASE} to={ROUTES.STORAGE.BUY} />
         <Route exact path={ROUTES.STORAGE.BASE} component={StorageLandingPage} />
         <Route exact path={ROUTES.STORAGE.BUY} component={StorageOffersPage} />
+        <Route exact path={ROUTES.STORAGE.DONE.SELL} component={StorageOfferListed} />
         <StorageListingStoreProvider>
           <Route exact path={ROUTES.STORAGE.SELL} component={StorageListingPage} />
         </StorageListingStoreProvider>

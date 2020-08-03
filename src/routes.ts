@@ -14,6 +14,7 @@ const DOMAIN_CANCEL_DONE = `${DOMAINS}/cancel/done`
 const STORAGE = '/storage'
 const STORAGE_BUY = `${STORAGE}/buy`
 const STORAGE_SELL = `${STORAGE}/sell`
+const STORAGE_SELL_DONE = `${STORAGE_SELL}/done`
 const FAQ = '/faq'
 const ABOUT = '/about'
 
@@ -41,6 +42,9 @@ const ROUTES = {
     BASE: STORAGE,
     BUY: STORAGE_BUY,
     SELL: STORAGE_SELL,
+    DONE: {
+      SELL: STORAGE_SELL_DONE,
+    },
   },
   FAQ,
   ABOUT,
