@@ -7,7 +7,6 @@ import { listingActions, ListingReducer } from './listingReducer'
 export type StoreName = 'storage_listing'
 
 const periodOptions: TimePeriodEnum[] = [TimePeriodEnum.Daily, TimePeriodEnum.Weekly, TimePeriodEnum.Monthly]
-// TODO: read all values of the enum
 
 export const initialState: ListingState = {
   storeID: 'storage_listing',

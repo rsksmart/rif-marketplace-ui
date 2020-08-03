@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
 import PriceItem from 'components/atoms/PriceItem'
+import { priceDisplay } from 'utils/utils'
 
 export interface CombinedPriceCellProps {
   className?: string
@@ -13,7 +14,7 @@ export interface CombinedPriceCellProps {
 const CombinedPriceCell: FC<CombinedPriceCellProps> = ({
   className = '', divider, price, currency, priceFiat, currencyFiat,
 }) => {
-  const cappedDecimalsFiat = parseFloat(priceFiat).toFixed(4).toString()
+  const cappedDecimalsFiat = priceDisplay(parseFloat(priceFiat), 4)
 
   return (
     <div className={(`priceCell ${className}`).trim()}>

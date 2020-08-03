@@ -76,6 +76,7 @@ const StorageOffersPage: FC = () => {
 
   // TODO: here we will reference to MarketPageTemplate and MarketFilters but for the
   // purpose of showing a preview version we are only adding styles with hardcoded data
+  // we will move to that once we start fethcing storage offers
   return (
     <Grid container direction="row" className={`${classes.root}`}>
       <>

@@ -9,15 +9,15 @@ import { makeStyles } from '@material-ui/core'
 import { TimePeriodEnum } from 'store/Market/storage/interfaces'
 
 export interface PlanItemBaseFormTemplateProps {
-  onPeriodChange: (value: number) => void
-  price: number
-  onPriceChange: (value: number) => void
-  fiatPrice: string
-  fiatSymbol: string
   periodOptions: TimePeriodEnum[]
   availablePeriods: TimePeriodEnum[]
   selectedPeriod: TimePeriodEnum
+  onPeriodChange: (value: number) => void
+  price: number
   currency: string
+  onPriceChange: (value: number) => void
+  fiatPrice: string
+  fiatDisplayName: string
 }
 
 const useStyles = makeStyles(() => ({
@@ -28,9 +28,8 @@ const useStyles = makeStyles(() => ({
 }))
 
 const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = (props) => {
-  // TODO: rename everywhere currency when it's crypto, to something like cryptoCurrency
   const {
-    onPeriodChange, price, onPriceChange, fiatPrice, fiatSymbol,
+    onPeriodChange, price, onPriceChange, fiatPrice, fiatDisplayName,
     currency, periodOptions, selectedPeriod, availablePeriods,
   } = props
 
@@ -114,7 +113,7 @@ const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = (props) => {
                 },
                 endAdornment: (
                   <InputAdornment position="end">
-                    <Typography variant="caption" color="secondary">{fiatSymbol}</Typography>
+                    <Typography variant="caption" color="secondary">{fiatDisplayName}</Typography>
                   </InputAdornment>
                 ),
                 style: { color: colors.gray4 },
