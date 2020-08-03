@@ -52,7 +52,7 @@ export const RnsSoldStoreProvider = ({ children }) => {
   const {
     state: appState, dispatch: appDispatch,
   }: AppStoreProps = useContext(AppStore)
-  const api = appState?.apis?.["rns/v0/sold"] as SoldDomainsService
+  const api = appState?.apis?.['rns/v0/sold'] as SoldDomainsService
 
   const {
     filters,
@@ -97,7 +97,6 @@ export const RnsSoldStoreProvider = ({ children }) => {
 
   // fetch if needs refresh and is initialised
   useEffect(() => {
-
     if (isInitialised && needsRefresh) {
       const { fetch } = api
 

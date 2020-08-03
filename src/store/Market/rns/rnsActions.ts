@@ -43,13 +43,13 @@ export interface RnsReducer<P extends RnsPayload> {
 }
 
 export type RnsActions = {
-  FILTER: RnsReducer<FilterPayload>,
-  UPDATE_LIMITS: RnsReducer<LimitsPayload>,
-  SET_LISTING: RnsReducer<ListingPayload>,
-  OUTDATE: RnsReducer<OutdatePayload>,
-  REFRESH: RnsReducer<RefreshPayload>,
-  SET_ORDER: RnsReducer<OrderPayload>,
-  SET_PROGRESS: RnsReducer<ProgressPayload>,
+  FILTER: RnsReducer<FilterPayload>
+  UPDATE_LIMITS: RnsReducer<LimitsPayload>
+  SET_LISTING: RnsReducer<ListingPayload>
+  OUTDATE: RnsReducer<OutdatePayload>
+  REFRESH: RnsReducer<RefreshPayload>
+  SET_ORDER: RnsReducer<OrderPayload>
+  SET_PROGRESS: RnsReducer<ProgressPayload>
   CLEAR_ORDER: RnsReducer<{}>
 }
 

@@ -26,7 +26,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --coverage",
+    "test": "react-scripts test --unhandled-rejections=strict",
+    "coverage": "react-scripts test --unhandled-rejections=strict --coverageProvider=v8 --coverage --watchAll=false",
     "lint": "npx tasegir lint && eslint 'src/**/*.ts*'"
   },
   "dependencies": {

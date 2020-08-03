@@ -13,9 +13,10 @@ import { ErrorMessagePayload, LoadingPayload } from 'store/App/appActions'
 import {
   RnsListing, RnsOrder, RnsState, RnsStoreProps,
 } from './interfaces'
-import { rnsActions, RnsReducer, RnsPayload } from './rnsActions'
+import {
+  rnsActions, RnsReducer, RnsPayload, RefreshPayload,
+} from './rnsActions'
 import outdateTokenId from './utils'
-import { RefreshPayload } from './rnsActions'
 
 export type StoreName = 'rns_domains'
 export type Order = RnsOrder<RnsDomain>
@@ -51,11 +52,10 @@ export const RnsDomainsStoreProvider = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)
 
   const {
-    state: { apis: { 'rns/v0/domains': domains } },
+    state: appState,
     dispatch: appDispatch,
   } = useContext<AppStoreProps>(AppStore)
-  const api = domains as DomainsService
-
+  const api = appState?.apis?.["rns/v0/domains"] as DomainsService
 
   const [state, dispatch] = useReducer(domainsReducer, initialState)
   const { filters, needsRefresh } = state as DomainsState
