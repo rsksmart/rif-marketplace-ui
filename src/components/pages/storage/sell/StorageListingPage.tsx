@@ -9,6 +9,8 @@ import StorageListingStore from 'store/Market/storage/ListingStore'
 import StorageContract from 'contracts/Storage'
 import Logger from 'utils/Logger'
 import { StoragePlanItem } from 'store/Market/storage/interfaces'
+import { convertGbsToBytes, convertDaysToSeconds } from 'utils/utils'
+import { UIError } from 'models/UIMessage'
 
 const logger = Logger.getInstance()
 
@@ -38,6 +40,28 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
+interface OfferContractData {
+  availableSizeBytes: number
+  periods: number[]
+  prices: number[]
+}
+
+const transformOfferDataForContract = (availableSizeGbs: number, planItems: StoragePlanItem[]): OfferContractData => {
+  const periods: number[] = []
+  const prices: number[] = []
+
+  planItems.forEach((planItem: StoragePlanItem) => {
+    periods.push(convertDaysToSeconds(planItem.timePeriod))
+    prices.push(planItem.pricePerGb)
+  })
+
+  return {
+    availableSizeBytes: convertGbsToBytes(availableSizeGbs),
+    periods,
+    prices,
+  }
+}
+
 const StorageListingPage = () => {
   const {
     state: {
@@ -55,20 +79,21 @@ const StorageListingPage = () => {
   const classes = useStyles()
 
   const handleSubmit = async () => {
-    // TODO: remove logic from the view and call a service directly with the data
     const storageContract = StorageContract.getInstance(web3)
-    const gasPrice = await web3.eth.getGasPrice()
-      .catch((error: Error) => {
-        logger.error(`error getting gas price ${error}`)
-      })
 
-    const timePeriods: number[] = planItems.map((plan: StoragePlanItem) => plan.timePeriod)
-    const billingPrices: number[] = planItems.map((plan: StoragePlanItem) => plan.pricePerGb)
+    const {
+      availableSizeBytes, periods, prices,
+    } = transformOfferDataForContract(availableSize, planItems)
 
     const setOfferReceipt = await storageContract
-      .setOffer(availableSize, timePeriods, billingPrices, { from: account, gasPrice })
+      .setOffer(availableSizeBytes, periods, prices, { from: account })
       .catch((error) => {
-        logger.error(`Error setting the offer ${error}`)
+        // TODO: display error properly
+        throw new UIError({
+          error,
+          id: 'contract-storage-set-offer',
+          text: 'Could not set the offer in the contract.',
+        })
       })
     logger.info('setOffer receipt: ', setOfferReceipt)
   }

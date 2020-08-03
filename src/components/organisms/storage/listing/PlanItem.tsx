@@ -10,13 +10,14 @@ import { StoragePlanItem, StorageListingStoreProps, TimePeriodEnum } from 'store
 import StorageListingStore from 'store/Market/storage/ListingStore'
 import { RemoveItemPayload } from 'store/Market/storage/listingActions'
 import TooltipIconButton from 'components/molecules/TooltipIconButton'
-import MarketStore from 'store/Market/MarketStore'
 import PriceItem from 'components/atoms/PriceItem'
-import { criptoDisplayPrice } from 'utils/utils'
+import { priceDisplay } from 'utils/utils'
 
 export interface PlanItemProps {
   onEditClick: () => void
   planItem: StoragePlanItem
+  fiatXR: number
+  fiatDisplayName: string
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -32,28 +33,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-// TODO: send criptoDisplayName, fiatDisplayName and rate in the props
-const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
+const PlanItem: FC<PlanItemProps> = ({
+  planItem, onEditClick, fiatXR, fiatDisplayName,
+}) => {
   const { dispatch, state: { currency } } = useContext<StorageListingStoreProps>(StorageListingStore)
-  const {
-    state: {
-      exchangeRates: {
-        currentFiat,
-        crypto,
-      },
-    },
-  } = useContext(MarketStore)
-
-  const currencySimbol = currency.toLowerCase()
-  const { displayName: criptoDisplayName, rate } = crypto[currencySimbol]
-  const { displayName: fiatDisplayName } = currentFiat
 
   const classes = useStyles()
 
   const { timePeriod, pricePerGb } = planItem
-  const fiatPrice = (pricePerGb * rate).toFixed(4).toString()
-  const fiatMonthlyFee = ((pricePerGb / (timePeriod / 30)) * rate).toFixed(4).toString()
-  const criptoMonthlyFee = criptoDisplayPrice(pricePerGb / (timePeriod / 30))
+  const fiatPrice = (pricePerGb * fiatXR)
+  const fiatPriceDisplay = priceDisplay(fiatPrice, 2)
+  const fiatMonthlyFee = priceDisplay(fiatPrice / (timePeriod / 30), 2)
+  const criptoMonthlyFee = priceDisplay(pricePerGb / (timePeriod / 30))
 
   const onItemRemoved = () => {
     dispatch({
@@ -86,7 +77,7 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
                 </Box>
               </Grid>
               <Grid item xs={4}>
-                <PriceItem currency={fiatDisplayName} type="fiat" price={fiatPrice} />
+                <PriceItem currency={fiatDisplayName} type="fiat" price={fiatPriceDisplay} />
               </Grid>
             </Grid>
           </Grid>
@@ -100,7 +91,7 @@ const PlanItem: FC<PlanItemProps> = ({ planItem, onEditClick }) => {
               <Grid item xs={4}>
                 <Typography component="div">
                   <Box textAlign="center" color={`${colors.gray5}`}>
-                    <PriceItem currency={criptoDisplayName} type="crypto" price={criptoMonthlyFee} />
+                    <PriceItem currency={currency} type="crypto" price={criptoMonthlyFee} />
                   </Box>
                 </Typography>
               </Grid>

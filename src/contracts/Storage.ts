@@ -3,8 +3,13 @@ import Web3 from 'web3'
 import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
+import Logger from 'utils/Logger'
 import waitForReceipt, { TransactionOptions } from './utils'
 import { storageAddress } from './config'
+
+const logger = Logger.getInstance()
+
+export type StorageContractErrorId = 'contract-storage-set-offer'
 
 class StorageContract {
   public static getInstance(web3: Web3): StorageContract {
@@ -29,40 +34,28 @@ class StorageContract {
   }
 
   public setOffer = async (
-    gbCapacity: number,
-    billingDaysPeriods: number[],
+    bytesCapacity: number,
+    billingPeriods: number[],
     billingRbtcPrices: number[],
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
-    // TODO: clean code
-    const { from, gasPrice } = txOptions
-    const bytesCapacity = gbCapacity * 10 ** 9
-    const billingPeriodsSeconds = billingDaysPeriods.map(
-      (days) => days * 24 * 60 * 60,
-    )
+    const { from } = txOptions
+
+    const gasPrice = await this.web3.eth.getGasPrice().catch((error: Error) => {
+      logger.error(`error getting gas price ${error}`)
+      throw error
+    })
+
+    // TODO: check how much gas we need to send
     const gas = 100000
     const message = []
-    const setOfferReceipt = await new Promise<TransactionReceipt>(
-      (resolve, reject) => {
-        this.contract.methods
-          .setOffer(
-            bytesCapacity,
-            billingPeriodsSeconds,
-            billingRbtcPrices,
-            message,
-          )
-          .send({ from, gas, gasPrice }, async (err, txHash) => {
-            if (err) return reject(err)
-            try {
-              const receipt = await waitForReceipt(txHash, this.web3)
-              return resolve(receipt)
-            } catch (e) {
-              return reject(e)
-            }
-          })
-      },
-    )
-    return setOfferReceipt
+
+    return this.contract.methods
+      .setOffer(bytesCapacity, billingPeriods, billingRbtcPrices, message)
+      .send({ from, gas, gasPrice }, (err, txHash) => {
+        if (err) throw err
+        return waitForReceipt(txHash, this.web3)
+      })
   }
 }
 

@@ -11,41 +11,30 @@ import PlanItemBaseFormTemplate from 'components/templates/storage/listing/PlanI
 import TooltipIconButton, { TooltipIconButtonProps } from 'components/molecules/TooltipIconButton'
 import AddIcon from '@material-ui/icons/Add'
 import SaveIcon from '@material-ui/icons/Save'
-import MarketStore from 'store/Market/MarketStore'
+import { priceDisplay } from 'utils/utils'
 
 export interface EditablePlanItemProps {
   onPlanAdded?: (planItem: StoragePlanItem) => void
   onPlanSaved?: () => void
   planItem?: StoragePlanItem
+  fiatXR: number
+  fiatDisplayName: string
 }
 
 const EditablePlanItem: FC<EditablePlanItemProps> = ({
   onPlanAdded,
   planItem,
   onPlanSaved,
+  fiatXR, fiatDisplayName,
 }) => {
   const { state: { allPeriods, availablePeriods, currency }, dispatch } = useContext(StorageListingStore)
-
-  // TODO: send criptoDisplayName, fiatDisplayName and rate in the props
-  const {
-    state: {
-      exchangeRates: {
-        currentFiat,
-        crypto,
-      },
-    },
-  } = useContext(MarketStore)
-
-  const currencySimbol = currency.toLowerCase()
-  const { rate } = crypto[currencySimbol]
-  const { displayName: fiatDisplayName } = currentFiat
 
   const [pricePerGb, setPricePerGb] = useState(planItem?.pricePerGb || 1)
   const editMode = !!planItem
 
   const [timePeriod, setTimePeriod] = useState(planItem?.timePeriod || availablePeriods[0])
 
-  const fiatPrice = (pricePerGb * rate).toFixed(4).toString()
+  const fiatPrice = priceDisplay(pricePerGb * fiatXR, 2)
 
   const handleOnAddClick = () => {
     const newPlanItem: StoragePlanItem = {
@@ -118,7 +107,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
         price={pricePerGb}
         currency={currency}
         fiatPrice={fiatPrice}
-        fiatSymbol={fiatDisplayName}
+        fiatDisplayName={fiatDisplayName}
         periodOptions={allPeriods}
         selectedPeriod={timePeriod}
         availablePeriods={availablePeriods}

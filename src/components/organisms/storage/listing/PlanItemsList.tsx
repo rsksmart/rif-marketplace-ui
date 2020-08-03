@@ -7,14 +7,27 @@ import EditablePlanItem from 'components/organisms/storage/listing/EditablePlanI
 import { StoragePlanItem } from 'store/Market/storage/interfaces'
 import PlanItemWithEdit from 'components/organisms/storage/listing/PlanItemWithEdit'
 import StorageListingStore from 'store/Market/storage/ListingStore'
+import MarketStore from 'store/Market/MarketStore'
 
 const PlanItemsList = () => {
   const {
     state: {
       planItems,
       availablePeriods,
+      currency,
     },
   } = useContext(StorageListingStore)
+
+  const {
+    state: {
+      exchangeRates: {
+        currentFiat: { displayName: fiatDisplayName },
+        crypto,
+      },
+    },
+  } = useContext(MarketStore)
+
+  const { rate: fiatXR } = crypto[currency.toLowerCase()]
 
   return (
     <>
@@ -24,7 +37,7 @@ const PlanItemsList = () => {
         && (
           <Grid item xs={12}>
             <Typography color="secondary" variant="subtitle1">SET PLAN PRICES</Typography>
-            <EditablePlanItem />
+            <EditablePlanItem fiatXR={fiatXR} fiatDisplayName={fiatDisplayName} />
           </Grid>
         )
       }
@@ -41,7 +54,7 @@ const PlanItemsList = () => {
                 ).map(
                   (planItem: StoragePlanItem) => (
                     <Grid item xs={12} key={planItem.internalId}>
-                      <PlanItemWithEdit planItem={planItem} />
+                      <PlanItemWithEdit fiatXR={fiatXR} fiatDisplayName={fiatDisplayName} planItem={planItem} />
                     </Grid>
                   ),
                 )

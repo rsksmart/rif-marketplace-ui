@@ -5,9 +5,11 @@ import PlanItem from './PlanItem'
 
 export interface PlanItemWithEditProps {
   planItem: StoragePlanItem
+  fiatXR: number
+  fiatDisplayName: string
 }
 
-const PlanItemWithEdit: FC<PlanItemWithEditProps> = ({ planItem }) => {
+const PlanItemWithEdit: FC<PlanItemWithEditProps> = ({ planItem, fiatXR, fiatDisplayName }) => {
   const [editMode, setEditMode] = useState(false)
 
   const handleOnEditClick = () => {
@@ -23,11 +25,20 @@ const PlanItemWithEdit: FC<PlanItemWithEditProps> = ({ planItem }) => {
       <EditablePlanItem
         planItem={planItem}
         onPlanSaved={handleOnSaveClick}
+        fiatXR={fiatXR}
+        fiatDisplayName={fiatDisplayName}
       />
     )
   }
 
-  return <PlanItem planItem={planItem} onEditClick={handleOnEditClick} />
+  return (
+    <PlanItem
+      planItem={planItem}
+      fiatXR={fiatXR}
+      fiatDisplayName={fiatDisplayName}
+      onEditClick={handleOnEditClick}
+    />
+  )
 }
 
 export default PlanItemWithEdit
