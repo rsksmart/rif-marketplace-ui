@@ -92,7 +92,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
     }
 
   return (
-    <Grid alignItems="center" container spacing={2}>
+    <Grid alignItems="center" container spacing={3}>
       {
         !editMode
         && (
