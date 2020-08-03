@@ -12,6 +12,8 @@ import { StoragePlanItem } from 'store/Market/storage/interfaces'
 import { convertGbsToBytes, convertDaysToSeconds } from 'utils/utils'
 import { UIError } from 'models/UIMessage'
 import Login from 'components/atoms/Login'
+import { useHistory } from 'react-router-dom'
+import ROUTES from 'routes'
 
 const logger = Logger.getInstance()
 
@@ -78,6 +80,7 @@ const StorageListingPage = () => {
   } = useContext(Web3Store)
 
   const classes = useStyles()
+  const history = useHistory()
 
   const handleSubmit = async () => {
     const storageContract = StorageContract.getInstance(web3)
@@ -97,6 +100,7 @@ const StorageListingPage = () => {
         })
       })
     logger.info('setOffer receipt: ', setOfferReceipt)
+    history.replace(ROUTES.STORAGE.DONE.SELL)
   }
 
   const isSubmitEnabled = planItems.length
@@ -117,13 +121,13 @@ const StorageListingPage = () => {
           List storage
         </RUIButton>
         {
-        !!isSubmitEnabled
-        && (
-          <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
-            Your wallet will open and you will be asked to confirm the transaction for listing your service.
-          </Typography>
-        )
-      }
+          !!isSubmitEnabled
+          && (
+            <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
+              Your wallet will open and you will be asked to confirm the transaction for listing your service.
+            </Typography>
+          )
+        }
       </>
     )
     : <Login />
