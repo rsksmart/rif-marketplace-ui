@@ -43,6 +43,7 @@ const BaseSettings = () => {
           label="System"
           id="system-select"
           value={system}
+          disabled
         >
           <MenuItem value="IPFS">IPFS</MenuItem>
         </TextField>
@@ -90,6 +91,7 @@ const BaseSettings = () => {
           id="currency-select"
           value={currency}
           onChange={onCurrencyChange}
+          disabled
         >
           <MenuItem value="RBTC">RBTC</MenuItem>
           <MenuItem disabled value="RIF">RIF</MenuItem>
