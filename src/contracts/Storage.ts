@@ -36,7 +36,7 @@ class StorageContract {
   public setOffer = async (
     bytesCapacity: number,
     billingPeriods: number[],
-    billingRbtcPrices: number[],
+    billingRbtcWeiPrices: string[],
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
@@ -51,7 +51,7 @@ class StorageContract {
     const message = []
 
     return this.contract.methods
-      .setOffer(bytesCapacity, billingPeriods, billingRbtcPrices, message)
+      .setOffer(bytesCapacity, billingPeriods, billingRbtcWeiPrices, message)
       .send({ from, gas, gasPrice }, (err, txHash) => {
         if (err) throw err
         return waitForReceipt(txHash, this.web3)

@@ -14,6 +14,11 @@ import { UIError } from 'models/UIMessage'
 import Login from 'components/atoms/Login'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
+import Big from 'big.js'
+import { parseToWei } from 'utils/parsers'
+
+// TODO: discuss about wrapping the library and export it with this change
+Big.NE = -30
 
 const logger = Logger.getInstance()
 
@@ -46,16 +51,18 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface OfferContractData {
   availableSizeBytes: number
   periods: number[]
-  prices: number[]
+  prices: string[]
 }
 
 const transformOfferDataForContract = (availableSizeGbs: number, planItems: StoragePlanItem[]): OfferContractData => {
   const periods: number[] = []
-  const prices: number[] = []
+  const prices: string[] = []
 
   planItems.forEach((planItem: StoragePlanItem) => {
     periods.push(convertDaysToSeconds(planItem.timePeriod))
-    prices.push(planItem.pricePerGb)
+    // we get the price/gb but need to send price/byte
+    const pricePerByte = new Big(planItem.pricePerGb).div(1024).div(1024).div(1024)
+    prices.push(parseToWei(pricePerByte))
   })
 
   return {
