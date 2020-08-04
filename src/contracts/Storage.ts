@@ -42,7 +42,7 @@ class StorageContract {
     const { from } = txOptions
 
     const gasPrice = await this.web3.eth.getGasPrice().catch((error: Error) => {
-      logger.error(`error getting gas price ${error}`)
+      logger.error('error getting gas price, error:', error)
       throw error
     })
 

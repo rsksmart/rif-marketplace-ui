@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useCallback } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button as RUIButton, Web3Store } from '@rsksmart/rif-ui'
 import Grid from '@material-ui/core/Grid'
@@ -16,6 +16,7 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import Big from 'big.js'
 import { parseToWei } from 'utils/parsers'
+import AppStore, { errorReporterFactory } from 'store/App/AppStore'
 
 // TODO: discuss about wrapping the library and export it with this change
 Big.NE = -30
@@ -86,6 +87,9 @@ const StorageListingPage = () => {
     },
   } = useContext(Web3Store)
 
+  const { dispatch: appDispatch } = useContext(AppStore)
+  const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
+
   const classes = useStyles()
   const history = useHistory()
 
@@ -99,15 +103,18 @@ const StorageListingPage = () => {
     const setOfferReceipt = await storageContract
       .setOffer(availableSizeBytes, periods, prices, { from: account })
       .catch((error) => {
-        // TODO: display error properly
-        throw new UIError({
+        reportError(new UIError({
           error,
           id: 'contract-storage-set-offer',
           text: 'Could not set the offer in the contract.',
-        })
+        }))
       })
-    logger.info('setOffer receipt: ', setOfferReceipt)
-    history.replace(ROUTES.STORAGE.DONE.SELL)
+
+    if (setOfferReceipt) {
+      // TODO: await for the confirmations
+      logger.info('setOffer receipt: ', setOfferReceipt)
+      history.replace(ROUTES.STORAGE.DONE.SELL)
+    }
   }
 
   const isSubmitEnabled = planItems.length
