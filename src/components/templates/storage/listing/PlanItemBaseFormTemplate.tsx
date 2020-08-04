@@ -40,7 +40,7 @@ const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = (props) => {
   }
 
   const handleOnPriceChange = ({ target: { value } }) => {
-    onPriceChange(Number(validatedNumber(value)))
+    onPriceChange(validatedNumber(value))
   }
 
   return (
