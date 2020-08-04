@@ -18,7 +18,7 @@ const BaseSettings = () => {
     dispatch({
       type: 'SET_AVAILABLE_SIZE',
       payload: {
-        availableSize: validatedNumber(Number(value)),
+        availableSize: validatedNumber(value),
       } as SetAvailableSizePayload,
     } as any)
   }
