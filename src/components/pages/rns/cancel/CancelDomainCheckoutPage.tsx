@@ -226,6 +226,15 @@ const CancelDomainCheckoutPage = () => {
     }
   }
 
+  const onProcessingComplete = () => {
+    dispatch({
+      type: 'SET_PROGRESS',
+      payload: {
+        isProcessing: false,
+      },
+    })
+  }
+
   const cancelingNameTitle = name
     ? shortenString(name, 30, 25)
     : shortenString(tokenId)
@@ -270,7 +279,7 @@ const CancelDomainCheckoutPage = () => {
             </CardActions>
           )}
       </Card>
-      {isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, dispatch }} text="Canceling the domain!" progMsg="The waiting period is required to securely cancel your domain listing. Please do not close this tab until the process has finished" />}
+      {isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, onProcessingComplete }} text="Canceling the domain!" progMsg="The waiting period is required to securely cancel your domain listing. Please do not close this tab until the process has finished" />}
     </CheckoutPageTemplate>
   )
 }
