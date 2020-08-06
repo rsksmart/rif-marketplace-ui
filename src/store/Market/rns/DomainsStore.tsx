@@ -55,7 +55,7 @@ export const RnsDomainsStoreProvider = ({ children }) => {
     state: appState,
     dispatch: appDispatch,
   } = useContext<AppStoreProps>(AppStore)
-  const api = appState?.apis?.["rns/v0/domains"] as DomainsService
+  const api = appState?.apis?.['rns/v0/domains'] as DomainsService
 
   const [state, dispatch] = useReducer(domainsReducer, initialState)
   const { filters, needsRefresh } = state as DomainsState

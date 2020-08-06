@@ -10,9 +10,9 @@ const expectedFindOptions = {
     ownerAddress: mockOwnerAddress,
   },
 }
-
+const MOCK_DATE = 'Wed Jul 29 2020 18:32:24 GMT+0100 (British Summer Time)'
 const MOCK_DOMAIN_TRANSPORT_ITEM_0: DomainTransport = {
-  expiration: { date: 'Wed Jul 29 2020 18:32:24 GMT+0100 (British Summer Time)' },
+  expiration: { date: MOCK_DATE },
   name: 'mock_name',
   owner: {
     address: 'mock_owner',
@@ -20,7 +20,7 @@ const MOCK_DOMAIN_TRANSPORT_ITEM_0: DomainTransport = {
   tokenId: 'mock_tokenId',
 }
 const MOCK_DOMAIN_TRANSPORT_ITEM_1: DomainTransport = {
-  expiration: { date: 'Wed Jul 29 2021 18:32:24 GMT+0100 (British Summer Time)' },
+  expiration: { date: MOCK_DATE },
   name: 'mock_name_1',
   owner: {
     address: 'mock_owner_1',
@@ -86,5 +86,3 @@ describe('DomainsService', () => {
     })
   })
 })
-
-export { }

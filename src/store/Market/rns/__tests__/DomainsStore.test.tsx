@@ -18,7 +18,6 @@ describe('RnsDomainsStoreProvider', () => {
     })
     test('should contain object "filters"', () => {
       expect(initialState.filters).toEqual({ status: 'owned' })
-
     })
     test('should not contain object "order"', () => {
       expect(initialState.order).toBeUndefined()
@@ -48,7 +47,6 @@ describe('RnsDomainsStoreProvider', () => {
       }
 
       renderTest(TestComponent)
-
     })
     test('should not contain "order"', () => {
       const TestComponent: FC<{}> = () => {
@@ -65,12 +63,12 @@ describe('RnsDomainsStoreProvider', () => {
       const TestComponent: FC<{}> = () => {
         const { state: { needsRefresh } } = useContext<RnsDomainsStoreProps>(RnsDomainsStore)
 
-        return <input data-testid='test-input' readOnly value={`${needsRefresh}`} />
+        return <input data-testid="test-input" readOnly value={`${needsRefresh}`} />
       }
 
       const { getByTestId } = renderTest(TestComponent)
       const { value: actualValue } = getByTestId('test-input') as HTMLInputElement
-      expect(actualValue).toEqual("true")
+      expect(actualValue).toEqual('true')
     })
   })
 })

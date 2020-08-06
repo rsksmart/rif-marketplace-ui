@@ -55,12 +55,13 @@ describe('MarketStoreProvider', () => {
       test('should initialise with currentFiat property containing { symbol: \'usd\', displayName: \'USD\' }', () => {
         const TestComponent = () => {
           const { state: { exchangeRates: { currentFiat } } } = useContext(MarketStore)
-
-          expect(currentFiat).not.toBeUndefined()
-          expect(currentFiat).toEqual({
+          const expectedCurrentFiat = {
             symbol: 'usd',
             displayName: 'USD',
-          })
+          }
+
+          expect(currentFiat).not.toBeUndefined()
+          expect(currentFiat).toEqual(expectedCurrentFiat)
           return null
         }
         render(
@@ -73,14 +74,15 @@ describe('MarketStoreProvider', () => {
       test('should initialise with crypto property set to { rif: { displayName: "RIF", rate: -1 } }', () => {
         const TestComponent = () => {
           const { state: { exchangeRates: { crypto } } } = useContext(MarketStore)
-
-          expect(crypto).not.toBeUndefined()
-          expect(crypto).toEqual({
+          const expectedCrypto = {
             rif: {
               displayName: 'RIF',
               rate: -1,
             },
-          })
+          }
+
+          expect(crypto).not.toBeUndefined()
+          expect(crypto).toEqual(expectedCrypto)
           return null
         }
         render(

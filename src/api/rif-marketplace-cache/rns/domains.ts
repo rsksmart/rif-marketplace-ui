@@ -4,10 +4,10 @@ import { DomainTransport } from 'api/models/transports'
 import { RnsDomain } from 'models/marketItems/DomainItem'
 import { parseToBigDecimal } from 'utils/parsers'
 import {
-  availableTokens, RnsAddresses, RnsAPIService, RnsChannels,
+  availableTokens, RnsServiceAddress, RnsAPIService, RnsChannels,
 } from './common'
 
-export const domainsAddress: RnsAddresses = 'rns/v0/domains'
+export const domainsAddress: RnsServiceAddress = 'rns/v0/domains'
 export const domainsChannel: RnsChannels = 'domains'
 
 const mapFromTransport = (item: DomainTransport): RnsDomain => {

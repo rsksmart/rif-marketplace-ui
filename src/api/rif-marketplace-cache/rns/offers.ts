@@ -4,10 +4,10 @@ import { OfferTransport } from 'api/models/transports'
 import { RnsFilter, PriceFilter } from 'api/models/RnsFilter'
 import { parseToBigDecimal, convertToBigString, parseToInt } from 'utils/parsers'
 import {
-  availableTokens, RnsAddresses, RnsAPIService, RnsChannels,
+  availableTokens, RnsServiceAddress, RnsAPIService, RnsChannels,
 } from './common'
 
-export const offersAddress: RnsAddresses = 'rns/v0/offers'
+export const offersAddress: RnsServiceAddress = 'rns/v0/offers'
 export const offersChannel: RnsChannels = 'offers'
 
 const mapFromTransport = ({
