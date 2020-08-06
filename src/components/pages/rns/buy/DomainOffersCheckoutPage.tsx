@@ -290,6 +290,15 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
     }
   }
 
+  const onProcessingComplete = () => {
+    dispatch({
+      type: 'SET_PROGRESS',
+      payload: {
+        isProcessing: false,
+      },
+    })
+  }
+
   const buyingNameTitle = domainName
     ? shortenString(domainName, 30, 25)
     : shortenString(tokenId)
@@ -338,7 +347,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
           )}
         {!account && <Login />}
       </Card>
-      {!!isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, dispatch }} text="Buying the domain!" progMsg="The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished." />}
+      {!!isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, onProcessingComplete }} text="Buying the domain!" progMsg="The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished." />}
     </CheckoutPageTemplate>
   )
 }

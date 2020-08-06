@@ -265,6 +265,15 @@ const DomainsCheckoutPage: FC<{}> = () => {
     ? shortenString(name, 30, 25)
     : shortenString(tokenId)
 
+  const onProcessingComplete = () => {
+    dispatch({
+      type: 'SET_PROGRESS',
+      payload: {
+        isProcessing: false,
+      },
+    })
+  }
+
   return (
     <CheckoutPageTemplate
       isProcessing={order.isProcessing}
@@ -365,7 +374,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
             </CardActions>
           )}
       </Card>
-      {isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, dispatch }} text="Listing the domain!" progMsg="The waiting period is required to securely list your domain. Please do not close this tab until the process has finished" />}
+      {isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, onProcessingComplete }} text="Listing the domain!" progMsg="The waiting period is required to securely list your domain. Please do not close this tab until the process has finished" />}
     </CheckoutPageTemplate>
   )
 }

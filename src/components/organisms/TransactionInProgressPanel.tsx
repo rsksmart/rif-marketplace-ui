@@ -3,16 +3,15 @@ import {
 } from '@material-ui/core'
 import { shortenString, Typography } from '@rsksmart/rif-ui'
 import React, {
-  Dispatch, FC, useContext, useEffect,
+  FC, useContext, useEffect,
 } from 'react'
 import BlockchainStore, { BlockchainStoreProps } from 'store/Blockchain/BlockchainStore'
-import { StoreDispatcher, StorePayload } from 'store/storeUtils/interfaces'
 
 export interface TransactionInProgressPanelProps {
   text: string
   progMsg: string
   isPendingConfirm?: boolean
-  dispatch: Dispatch<StoreDispatcher<StorePayload>>
+  onProcessingComplete: () => void
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -28,11 +27,15 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }))
 
 const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
-  progMsg, text, isPendingConfirm, dispatch,
+  progMsg, text, isPendingConfirm,
+  onProcessingComplete,
 }) => {
   const classes = useStyles()
 
-  const { state: { confirmations: { txHash, currentCount, targetCount } }, dispatch: bcDispatch }: BlockchainStoreProps = useContext(BlockchainStore)
+  const {
+    state: { confirmations: { txHash, currentCount, targetCount } },
+    dispatch: bcDispatch,
+  }: BlockchainStoreProps = useContext(BlockchainStore)
 
   useEffect(() => {
     if (currentCount && targetCount && currentCount >= targetCount) {
@@ -45,14 +48,9 @@ const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
 
   useEffect(() => {
     if (isPendingConfirm && !txHash) {
-      dispatch({
-        type: 'SET_PROGRESS',
-        payload: {
-          isProcessing: false,
-        },
-      })
+      onProcessingComplete()
     }
-  }, [txHash, isPendingConfirm, dispatch])
+  }, [txHash, isPendingConfirm, onProcessingComplete])
 
   return (
     <div className={classes.content}>
