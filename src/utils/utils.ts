@@ -5,9 +5,9 @@ export const priceDisplay = (value: number, maxDecimals = 8): string => value
   .toString()
   .replace(/[.,]00000000$/, '')
 
-export const convertGbsToBytes = (gbs: number): number => gbs * 1024 * 1024 * 1024
+export const convertGbsToBytes = (gbs: number): number => gbs * 1024 ** 3
 
-export const convertBytesToGbs = (bytes: number): number => bytes / 1024 / 1024 / 1024
+export const convertBytesToGbs = (bytes: number): number => bytes / convertBytesToGbs(1)
 
 export const convertDaysToSeconds = (days: number): number => days * 24 * 60 * 60
 

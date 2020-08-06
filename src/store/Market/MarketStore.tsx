@@ -58,7 +58,7 @@ export const initialState: MarketState = {
       },
       rbtc: {
         displayName: 'RBTC',
-        rate: -1
+        rate: -1,
       },
     },
   },
