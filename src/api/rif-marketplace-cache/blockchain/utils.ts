@@ -1,14 +1,13 @@
 import { ConfirmationsTransportItem, Confirmations } from './confirmations'
 
-/* eslint-disable no-param-reassign */
 const mapFromTransport = (data: ConfirmationsTransportItem[]): Confirmations => data.reduce((map, item: ConfirmationsTransportItem) => {
-  map[item.transactionHash] = {
+  const newMap = { ...map }
+  newMap[item.transactionHash] = {
     currentCount: item.confirmations,
     targetCount: item.targetConfirmation,
   }
-  return map
+  return newMap
 }, {})
-/* eslint-enable no-param-reassign */
 
 const utils = {
   mapFromTransport,

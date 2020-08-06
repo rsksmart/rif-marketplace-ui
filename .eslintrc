@@ -168,14 +168,10 @@
       "error",
       {
         "devDependencies": [
-          "**/*.test.ts",
-          "**/*.test.tsx",
-          "**/*.test.js",
-          "**/*.test.jsx",
-          "**/*.spec.ts",
-          "**/*.spec.tsx",
-          "**/*.spec.js",
-          "**/*.spec.jsx",
+          "**/*.test.[jt]s",
+          "**/*.test.[jt]sx",
+          "**/*.spec.[jt]sx",
+          "**/*.spec.[jt]sx",
           "src/globals.d.ts"
         ]
       }

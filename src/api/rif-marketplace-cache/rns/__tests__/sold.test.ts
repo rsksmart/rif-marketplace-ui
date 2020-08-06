@@ -12,10 +12,12 @@ const expectedFindOptions = {
   },
 }
 
+const MOCK_DATE = 'Wed Jul 29 2021'
+
 const MOCK_DOMAIN_TRANSPORT_ITEM_0: SoldDomainTransport = {
   domain: {
     expiration: {
-      date: 'Wed Jul 29 2021',
+      date: MOCK_DATE,
     },
     name: 'fake_name',
     owner: {
@@ -26,12 +28,14 @@ const MOCK_DOMAIN_TRANSPORT_ITEM_0: SoldDomainTransport = {
   id: 'fake_id',
   paymentToken: 'rif',
   priceString: '900000',
-  soldDate: 'Wed Jul 30 2020',
+  soldDate: MOCK_DATE,
   tokenId: 'fake_token_id',
   transfer: {
     buyerAddress: 'fake_addr',
     sellerAddress: 'fake_addr',
   },
+  transferId: 'mock_id',
+  txHash: 'mock_hash',
 }
 
 const MOCK_TRANSPORT = [MOCK_DOMAIN_TRANSPORT_ITEM_0]

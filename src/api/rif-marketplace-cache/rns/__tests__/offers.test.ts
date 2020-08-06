@@ -17,12 +17,13 @@ const MOCK_OFFER_0: OfferTransport = {
     },
     tokenId: 'fake_token_id',
   },
-  offerId: 'fake_id',
+  id: 'fake_id',
   paymentToken: 'mock',
   priceString: '19000000000',
   ownerAddress: 'string',
   ownerDomain: 'string',
   tokenId: 'string',
+  txHash: 'mock_hash',
 }
 
 const MOCK_TRANSPORT = [MOCK_OFFER_0]
@@ -39,7 +40,7 @@ const expectedDomains: RnsDomainOffer[] = [
   {
     domainName: MOCK_OFFER_0.domain.name,
     expirationDate: new Date(MOCK_OFFER_0.domain.expiration.date),
-    id: MOCK_OFFER_0.offerId,
+    id: MOCK_OFFER_0.id,
     ownerAddress: MOCK_OFFER_0.ownerAddress,
     paymentToken: availableTokens[MOCK_OFFER_0.paymentToken.toLowerCase()],
     price: parseToBigDecimal(MOCK_OFFER_0.priceString, 18),
