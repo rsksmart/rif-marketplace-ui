@@ -34,7 +34,7 @@ const MOCK_FILTERS: RnsFilter = {
   },
 }
 
-availableTokens['mock'] = 'mock'
+availableTokens.mock = 'mock'
 
 const expectedDomains: RnsDomainOffer[] = [
   {
