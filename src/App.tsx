@@ -12,9 +12,6 @@ import { BrowserRouter } from 'react-router-dom'
 import { AppStoreProvider } from 'store/App/AppStore'
 import { BlockchainStoreProvider } from 'store/Blockchain/BlockchainStore'
 import { MarketStoreProvider } from 'store/Market/MarketStore'
-import { RnsDomainsStoreProvider } from 'store/Market/rns/DomainsStore'
-import { RnsOffersStoreProvider } from 'store/Market/rns/OffersStore'
-import { RnsSoldStoreProvider } from 'store/Market/rns/SoldStore'
 
 const requiredNetworkId: number = Number(process.env.REACT_APP_REQUIRED_NETWORK_ID) || 8545
 
@@ -46,9 +43,6 @@ const App = () => {
   const orderedProviders = [
     BlockchainStoreProvider,
     MarketStoreProvider,
-    RnsDomainsStoreProvider,
-    RnsOffersStoreProvider,
-    RnsSoldStoreProvider,
   ]
   const content = (
     <BrowserRouter>
