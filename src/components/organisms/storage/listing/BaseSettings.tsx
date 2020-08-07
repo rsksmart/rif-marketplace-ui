@@ -20,7 +20,7 @@ const BaseSettings = () => {
       payload: {
         availableSize: validatedNumber(value),
       } as SetAvailableSizePayload,
-    } as any)
+    })
   }
 
   const onCurrencyChange = ({ target: { value } }) => {
@@ -29,7 +29,7 @@ const BaseSettings = () => {
       payload: {
         currency: value,
       } as SetCurrencyPayload,
-    } as any)
+    })
   }
 
   return (

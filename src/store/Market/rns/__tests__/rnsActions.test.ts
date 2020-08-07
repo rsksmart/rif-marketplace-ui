@@ -26,7 +26,7 @@ describe('RnsActions', () => {
       expect(actualState).toEqual(initialState)
     })
 
-    test('should return state with modified filers when filters defined', () => {
+    test('should return state with modified filters when filters defined', () => {
       const payload: FilterPayload = { name: 'fake_name' }
       const { filters } = rnsActions.FILTER(initialState as RnsState, payload)
       const expectedFilters = { ...initialState.filters, ...payload }

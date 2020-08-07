@@ -1,21 +1,17 @@
 import { ListingState } from './interfaces'
 import {
-  StoragePayload,
-  STORAGE_ACTIONS,
   AddItemPayload,
   RemoveItemPayload,
   EditItemPayload,
   SetAvailableSizePayload,
   SetCountryPayload,
   SetCurrencyPayload,
+  ListingActions,
+  ListingPayload,
 } from './listingActions'
 
-export interface ListingReducer {
-  (state: ListingState, payload: StoragePayload): ListingState
-}
-
-export type ListingActions = {
-  [key in STORAGE_ACTIONS]: ListingReducer
+export interface ListingReducer<P extends ListingPayload> {
+  (state: ListingState, payload: P): ListingState
 }
 
 export const listingActions: ListingActions = {
@@ -29,7 +25,7 @@ export const listingActions: ListingActions = {
     return {
       ...state,
       availablePeriods: availablePeriods.filter(
-        (option) => option !== timePeriod,
+        (option) => option !== timePeriod
       ),
       internalCounter: internalCounter + 1,
       planItems: [...state.planItems, newPlan],
@@ -37,16 +33,14 @@ export const listingActions: ListingActions = {
   },
   REMOVE_ITEM: (
     state: ListingState,
-    { internalId, timePeriod }: RemoveItemPayload,
+    { internalId, timePeriod }: RemoveItemPayload
   ) => ({
     ...state,
     availablePeriods: [...state.availablePeriods, timePeriod],
     planItems: state.planItems.filter((x) => x.internalId !== internalId),
   }),
   EDIT_ITEM: (state: ListingState, payload: EditItemPayload) => {
-    const {
-      internalId, timePeriod, pricePerGb, currency,
-    } = payload
+    const { internalId, timePeriod, pricePerGb, currency } = payload
     const { planItems, allPeriods } = state
     const newPlanItems = planItems.map((planItem) => {
       if (planItem.internalId === internalId) {
@@ -60,7 +54,8 @@ export const listingActions: ListingActions = {
       return planItem
     })
     const newAvailableMonths = allPeriods.filter(
-      (option) => !newPlanItems.find((newPlanItem) => newPlanItem.timePeriod === option),
+      (option) =>
+        !newPlanItems.find((newPlanItem) => newPlanItem.timePeriod === option)
     )
     return {
       ...state,
@@ -70,7 +65,7 @@ export const listingActions: ListingActions = {
   },
   SET_AVAILABLE_SIZE: (
     state: ListingState,
-    { availableSize }: SetAvailableSizePayload,
+    { availableSize }: SetAvailableSizePayload
   ) => ({
     ...state,
     availableSize,

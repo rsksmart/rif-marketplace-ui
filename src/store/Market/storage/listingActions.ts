@@ -1,13 +1,23 @@
-import { StoreDispatcher } from 'store/storeUtils/interfaces'
+import { StoreDispatcher, StorePayload } from 'store/storeUtils/interfaces'
 import { StoragePlanItem, TimePeriodEnum } from './interfaces'
+import { ListingReducer } from './listingReducer'
 
-export type STORAGE_ACTIONS =
+export type LISTING_ACTIONS =
   | 'ADD_ITEM'
   | 'REMOVE_ITEM'
   | 'EDIT_ITEM'
   | 'SET_COUNTRY'
   | 'SET_AVAILABLE_SIZE'
   | 'SET_CURRENCY'
+
+export type ListingActions = {
+  ADD_ITEM: ListingReducer<AddItemPayload>
+  REMOVE_ITEM: ListingReducer<RemoveItemPayload>
+  EDIT_ITEM: ListingReducer<EditItemPayload>
+  SET_COUNTRY: ListingReducer<SetCountryPayload>
+  SET_AVAILABLE_SIZE: ListingReducer<SetAvailableSizePayload>
+  SET_CURRENCY: ListingReducer<SetCurrencyPayload>
+}
 
 export type AddItemPayload = StoragePlanItem
 
@@ -30,12 +40,14 @@ export interface SetCurrencyPayload {
   currency: string
 }
 
-export type StoragePayload = AddItemPayload &
-  RemoveItemPayload &
-  EditItemPayload &
-  SetAvailableSizePayload &
-  SetCountryPayload
+export type ListingPayload = StorePayload
+  | AddItemPayload
+  | RemoveItemPayload
+  | EditItemPayload
+  | SetAvailableSizePayload
+  | SetCountryPayload
+  | SetCurrencyPayload
 
-export interface StorageAction extends StoreDispatcher<StoragePayload> {
-  type: STORAGE_ACTIONS
+export interface StorageAction extends StoreDispatcher<ListingPayload> {
+  type: LISTING_ACTIONS
 }
