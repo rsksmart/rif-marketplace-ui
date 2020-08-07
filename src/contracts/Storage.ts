@@ -53,7 +53,7 @@ class StorageContract {
     return this.contract.methods
       .setOffer(bytesCapacity, billingPeriods, billingRbtcWeiPrices, message)
       .send({ from, gas, gasPrice }, (err, txHash) => {
-        if (err) throw err
+        if (err) return Promise.reject(err)
         return waitForReceipt(txHash, this.web3)
       })
   }

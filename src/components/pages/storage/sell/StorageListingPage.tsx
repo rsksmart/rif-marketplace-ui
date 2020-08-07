@@ -1,4 +1,6 @@
-import React, { useContext, useCallback } from 'react'
+import React, {
+  useContext, useCallback, useState, useEffect,
+} from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button as RUIButton, Web3Store } from '@rsksmart/rif-ui'
 import Grid from '@material-ui/core/Grid'
@@ -17,6 +19,10 @@ import ROUTES from 'routes'
 import Big from 'big.js'
 import { parseToWei } from 'utils/parsers'
 import AppStore, { errorReporterFactory } from 'store/App/AppStore'
+import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
+import { AddTxPayload } from 'store/Blockchain/blockchainActions'
+import BlockchainStore from 'store/Blockchain/BlockchainStore'
+import { LoadingPayload } from 'store/App/appActions'
 
 // TODO: discuss about wrapping the library and export it with this change
 Big.NE = -30
@@ -42,10 +48,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('md')]: {
       maxWidth: theme.spacing(100),
     },
+    position: 'relative',
     width: '100%',
   },
   planGrid: {
     marginBottom: theme.spacing(3),
+  },
+  progressContainer: {
+    background: 'rgba(275, 275, 275, 0.8)',
+    display: 'flex',
+    height: '100%',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    position: 'absolute',
+    width: '100%',
   },
 }))
 
@@ -86,36 +102,72 @@ const StorageListingPage = () => {
       web3,
     },
   } = useContext(Web3Store)
+  const { dispatch: bcDispatch } = useContext(BlockchainStore)
 
   const { dispatch: appDispatch } = useContext(AppStore)
   const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
+
+  const [isPendingConfirm, setIsPendingConfirm] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const classes = useStyles()
   const history = useHistory()
 
   const handleSubmit = async () => {
-    const storageContract = StorageContract.getInstance(web3)
+    try {
+      appDispatch({
+        type: 'SET_IS_LOADING',
+        payload: {
+          isLoading: true,
+          id: 'contract',
+          message: 'Listing your offer...',
+        } as LoadingPayload,
+      } as any)
 
-    const {
-      availableSizeBytes, periods, prices,
-    } = transformOfferDataForContract(availableSize, planItems)
+      setIsProcessing(true)
+      const storageContract = StorageContract.getInstance(web3)
+      const {
+        availableSizeBytes, periods, prices,
+      } = transformOfferDataForContract(availableSize, planItems)
 
-    const setOfferReceipt = await storageContract
-      .setOffer(availableSizeBytes, periods, prices, { from: account })
-      .catch((error) => {
-        reportError(new UIError({
-          error,
-          id: 'contract-storage-set-offer',
-          text: 'Could not set the offer in the contract.',
-        }))
-      })
-
-    if (setOfferReceipt) {
-      // TODO: await for the confirmations
+      const setOfferReceipt = await storageContract.setOffer(availableSizeBytes, periods, prices, { from: account })
       logger.info('setOffer receipt: ', setOfferReceipt)
-      history.replace(ROUTES.STORAGE.DONE.SELL)
+
+      bcDispatch({
+        type: 'SET_TX_HASH',
+        payload: {
+          txHash: setOfferReceipt.transactionHash,
+        } as AddTxPayload,
+      })
+      setIsPendingConfirm(true)
+    } catch (error) {
+      reportError(new UIError({
+        error,
+        id: 'contract-storage-set-offer',
+        text: 'Could not set the offer in the contract.',
+      }))
+      setIsProcessing(false)
+    } finally {
+      appDispatch({
+        type: 'SET_IS_LOADING',
+        payload: {
+          isLoading: false,
+          id: 'contract',
+        } as LoadingPayload,
+      } as any)
     }
   }
+
+  const onProcessingComplete = () => {
+    setIsProcessing(false)
+  }
+
+  useEffect(() => {
+    if (isPendingConfirm && !isProcessing) {
+      // Post-confirmations handle
+      history.replace(ROUTES.STORAGE.DONE.SELL)
+    }
+  }, [isPendingConfirm, history, isProcessing])
 
   const isSubmitEnabled = planItems.length
     && availableSize
@@ -147,6 +199,7 @@ const StorageListingPage = () => {
     : <Login />
 
   return (
+    // TODO: once we have the new version with tabs, wrap this page in a new template
     <div className={classes.root}>
       <div className={`${classes.container}`}>
         <Typography gutterBottom variant="h5" color="primary">List storage service</Typography>
@@ -158,6 +211,19 @@ const StorageListingPage = () => {
           <PlanItemsList />
         </Grid>
         {action}
+        {
+          isProcessing
+          && (
+            <div className={classes.progressContainer}>
+              <TransactionInProgressPanel
+                {...{ isPendingConfirm, onProcessingComplete }}
+                text="Listing your offer!"
+                progMsg="The waiting period is required to securely list your offer.
+             Please do not close this tab until the process has finished."
+              />
+            </div>
+          )
+        }
       </div>
     </div>
   )
