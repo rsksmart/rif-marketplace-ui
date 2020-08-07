@@ -3,6 +3,17 @@ import { render, cleanup } from '@testing-library/react'
 import React, { FC, useContext } from 'react'
 import MarketStore, { MarketStoreProvider, TxType } from '../MarketStore'
 
+const expectedInitialCrypto = {
+  rif: {
+    displayName: 'RIF',
+    rate: -1,
+  },
+  rbtc: {
+    displayName: 'RBTC',
+    rate: -1,
+  },
+}
+
 describe('MarketStoreProvider', () => {
   afterEach(cleanup)
 
@@ -71,18 +82,12 @@ describe('MarketStoreProvider', () => {
         )
       })
 
-      test('should initialise with crypto property set to { rif: { displayName: "RIF", rate: -1 } }', () => {
+      test(`should initialise with crypto property set to ${JSON.stringify(expectedInitialCrypto)}`, () => {
         const TestComponent = () => {
           const { state: { exchangeRates: { crypto } } } = useContext(MarketStore)
-          const expectedCrypto = {
-            rif: {
-              displayName: 'RIF',
-              rate: -1,
-            },
-          }
 
           expect(crypto).not.toBeUndefined()
-          expect(crypto).toEqual(expectedCrypto)
+          expect(crypto).toEqual(expectedInitialCrypto)
           return null
         }
         render(
