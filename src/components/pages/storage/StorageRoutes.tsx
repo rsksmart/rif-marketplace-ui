@@ -9,7 +9,6 @@ import { NotFound } from '..'
 import StorageLandingPage from './StorageLandingPage'
 import StorageOffersPage from './buy/StorageOffersPage'
 import StorageListingPage from './sell/StorageListingPage'
-import StorageOfferListed from './sell/StorageOfferListed'
 
 const BuyingRoutes = () => (
   <Switch>
