@@ -167,7 +167,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   useEffect(() => {
     if (isPendingConfirm && order && !order.isProcessing) {
       // Post-confirmations handle
-      history.replace(ROUTES.DOMAINS.DONE.BUY, { domainName: order.item.domainName })
+      history.replace(ROUTES.DOMAINS.BUY.DONE, { domainName: order.item.domainName })
       dispatch({
         type: 'CLEAR_ORDER',
       } as never)
