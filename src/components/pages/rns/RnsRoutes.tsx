@@ -24,15 +24,22 @@ const OffersRoutes = () => (
   </Switch>
 )
 
+const SoldDomainsRoutes = () => (
+  <Switch>
+    <RnsSoldStoreProvider>
+      <Route exact path={ROUTES.DOMAINS.SELL.BASE} component={SellDomainsListPage} />
+    </RnsSoldStoreProvider>
+  </Switch>
+)
+
 const DomainsRoutes = () => (
   <Switch>
     <RnsDomainsStoreProvider>
-      <RnsSoldStoreProvider>
-        <Route exact path={ROUTES.DOMAINS.SELL.BASE} component={SellDomainsListPage} />
-      </RnsSoldStoreProvider>
+      <Route exact path={ROUTES.DOMAINS.SELL.CANCEL.DONE} component={DomainCanceled} />
       <Route exact path={ROUTES.DOMAINS.SELL.CANCEL.CHECKOUT} component={CancelDomainCheckoutPage} />
       <Route exact path={ROUTES.DOMAINS.SELL.CHECKOUT} component={DomainsCheckoutPage} />
       <Route exact path={ROUTES.DOMAINS.SELL.DONE} component={DomainListed} />
+      <Route path={ROUTES.DOMAINS.SELL.BASE} component={SoldDomainsRoutes} />
     </RnsDomainsStoreProvider>
   </Switch>
 )
@@ -42,17 +49,14 @@ const RnsRoutes = () => {
   const rnsEnabled = services && (services as string[]).includes('rns')
 
   if (rnsEnabled) {
-    // It is important to keep ROUTES.DOMAINS.SELL.CANCEL.DONE above ROUTES.DOMAINS.SELL.BASE
     return (
       <Switch>
         <Redirect exact from={ROUTES.DOMAINS.BASE} to={ROUTES.DOMAINS.BUY.BASE} />
         <Route path={ROUTES.DOMAINS.BUY.BASE} component={OffersRoutes} />
-        <Route exact path={ROUTES.DOMAINS.SELL.CANCEL.DONE} component={DomainCanceled} />
         <Route path={ROUTES.DOMAINS.SELL.BASE} component={DomainsRoutes} />
         <Route component={NotFound} />
       </Switch>
     )
-    // TODO: Once the views are in tabs the RnsSoldStoreProvider should also go in its own subroute
   }
   return (
     <Switch>
