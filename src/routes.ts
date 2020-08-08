@@ -42,10 +42,12 @@ const ROUTES = {
   },
   STORAGE: {
     BASE: STORAGE,
-    BUY: STORAGE_BUY,
-    SELL: STORAGE_SELL,
-    DONE: {
-      SELL: STORAGE_SELL_DONE,
+    BUY: {
+      BASE: STORAGE_BUY
+    },
+    SELL: {
+      BASE: STORAGE_SELL,
+      DONE: STORAGE_SELL_DONE
     },
   },
   FAQ,
