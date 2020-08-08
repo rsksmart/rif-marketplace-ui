@@ -50,10 +50,11 @@
     "react-scripts": "3.4.1",
     "socket.io-client": "^2.3.0",
     "typescript": "^3.9.7",
-    "web3": "^1.2.8",
-    "web3-eth": "^1.2.9",
-    "web3-eth-contract": "^1.2.8",
-    "web3-utils": "^1.2.8"
+    "web3": "^1.2.11",
+    "web3-eth": "^1.2.11",
+    "web3-eth-contract": "^1.2.11",
+    "web3-utils": "^1.2.11",
+    "webpack": "^4.42.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.1",
