@@ -43,11 +43,11 @@ const ROUTES = {
   STORAGE: {
     BASE: STORAGE,
     BUY: {
-      BASE: STORAGE_BUY
+      BASE: STORAGE_BUY,
     },
     SELL: {
       BASE: STORAGE_SELL,
-      DONE: STORAGE_SELL_DONE
+      DONE: STORAGE_SELL_DONE,
     },
   },
   FAQ,

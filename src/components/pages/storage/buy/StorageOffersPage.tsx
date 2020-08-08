@@ -67,11 +67,11 @@ const StorageOffersPage: FC = () => {
   const switchTxType = () => {
     if (!txType) {
       setTxType(1)
-      history.replace(ROUTES.STORAGE.SELL)
+      history.replace(ROUTES.STORAGE.SELL.BASE)
       return
     }
     setTxType(0)
-    history.replace(ROUTES.STORAGE.BUY)
+    history.replace(ROUTES.STORAGE.BUY.BASE)
   }
 
   // TODO: here we will reference to MarketPageTemplate and MarketFilters but for the

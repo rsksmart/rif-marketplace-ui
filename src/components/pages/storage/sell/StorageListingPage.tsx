@@ -165,7 +165,7 @@ const StorageListingPage = () => {
   useEffect(() => {
     if (isPendingConfirm && !isProcessing) {
       // Post-confirmations handle
-      history.replace(ROUTES.STORAGE.DONE.SELL)
+      history.replace(ROUTES.STORAGE.SELL.DONE)
     }
   }, [isPendingConfirm, history, isProcessing])
 
