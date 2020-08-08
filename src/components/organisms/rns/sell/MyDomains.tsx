@@ -74,7 +74,7 @@ const MyDomains: FC<{}> = () => {
                 item: domainItem,
               } as OrderPayload,
             })
-            history.push(ROUTES.DOMAINS.CHECKOUT.SELL)
+            history.push(ROUTES.DOMAINS.SELL.CHECKOUT)
           }}
         />,
         price: <></>,
