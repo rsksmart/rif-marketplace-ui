@@ -9,6 +9,7 @@ import { NotFound } from '..'
 import StorageLandingPage from './StorageLandingPage'
 import StorageOffersPage from './buy/StorageOffersPage'
 import StorageListingPage from './sell/StorageListingPage'
+import StorageOfferListed from './sell/StorageOfferListed'
 
 const BuyingRoutes = () => (
   <Switch>
@@ -18,10 +19,10 @@ const BuyingRoutes = () => (
 
 const SellingRoutes = () => (
   <Switch>
+    <Route exact path={ROUTES.STORAGE.SELL.DONE} component={StorageOfferListed} />
     <StorageListingStoreProvider>
       <Route exact path={ROUTES.STORAGE.SELL.BASE} component={StorageListingPage} />
     </StorageListingStoreProvider>
-    <Route exact path={ROUTES.STORAGE.SELL.DONE} component={StorageOffersPage} />
   </Switch>
 )
 
