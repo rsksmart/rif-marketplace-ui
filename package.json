@@ -31,7 +31,7 @@
     "lint": "npx tasegir lint && eslint 'src/**/*.ts*'"
   },
   "dependencies": {
-    "@feathersjs/authentication": "^4.5.6",
+    "@feathersjs/authentication": "^4.5.7",
     "@feathersjs/authentication-client": "^4.5.6",
     "@feathersjs/feathers": "^4.5.7",
     "@feathersjs/socketio-client": "^4.5.6",
