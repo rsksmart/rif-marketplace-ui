@@ -4,6 +4,7 @@ import { ListingReducer } from './listingReducer'
 
 export type LISTING_ACTIONS =
   | 'ADD_ITEM'
+  | 'CLEAN_UP'
   | 'REMOVE_ITEM'
   | 'EDIT_ITEM'
   | 'SET_COUNTRY'
@@ -12,6 +13,7 @@ export type LISTING_ACTIONS =
 
 export type ListingActions = {
   ADD_ITEM: ListingReducer<AddItemPayload>
+  CLEAN_UP: ListingReducer<{}>
   REMOVE_ITEM: ListingReducer<RemoveItemPayload>
   EDIT_ITEM: ListingReducer<EditItemPayload>
   SET_COUNTRY: ListingReducer<SetCountryPayload>
@@ -40,7 +42,8 @@ export interface SetCurrencyPayload {
   currency: string
 }
 
-export type ListingPayload = StorePayload
+export type ListingPayload =
+  | StorePayload
   | AddItemPayload
   | RemoveItemPayload
   | EditItemPayload

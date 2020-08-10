@@ -9,6 +9,7 @@ import {
   ListingActions,
   ListingPayload,
 } from './listingActions'
+import { initialState } from './ListingStore'
 
 export interface ListingReducer<P extends ListingPayload> {
   (state: ListingState, payload: P): ListingState
@@ -31,6 +32,7 @@ export const listingActions: ListingActions = {
       planItems: [...state.planItems, newPlan],
     }
   },
+  CLEAN_UP: (_, __) => initialState,
   REMOVE_ITEM: (
     state: ListingState,
     { internalId, timePeriod }: RemoveItemPayload,

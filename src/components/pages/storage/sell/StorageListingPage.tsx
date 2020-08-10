@@ -94,6 +94,7 @@ const StorageListingPage = () => {
     state: {
       planItems, availableSize, currency, system,
     },
+    dispatch,
   } = useContext(StorageListingStore)
 
   const {
@@ -168,6 +169,13 @@ const StorageListingPage = () => {
       history.replace(ROUTES.STORAGE.SELL.DONE)
     }
   }, [isPendingConfirm, history, isProcessing])
+
+  useEffect(() => () => {
+    dispatch({
+      type: 'CLEAN_UP',
+      payload: {},
+    })
+  }, [dispatch])
 
   const isSubmitEnabled = planItems.length
     && availableSize
