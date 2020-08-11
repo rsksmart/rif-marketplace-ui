@@ -1,33 +1,31 @@
 import React, { FC } from 'react'
-import Tabs from '@material-ui/core/Tabs'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import Tabs, { TabsProps } from '@material-ui/core/Tabs'
+import { makeStyles } from '@material-ui/core/styles'
 import { colors } from '@rsksmart/rif-ui'
 
 export interface StyledTabsProps {
-  value: number
-  onChange: (event: React.ChangeEvent<{}>, newValue: number) => void
+  value: string
+  onChange: (event: React.ChangeEvent<{}>, newValue: string) => void
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles({
   indicator: {
     display: 'flex',
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    '& > span': {
-      width: '100%',
-      backgroundColor: colors.gray5,
-      fontWeight: theme.typography.fontWeightBold,
-    },
   },
   root: {
     borderBottom: `1px solid ${colors.gray3}`,
   },
-}))
+})
 
-const StyledTabs: FC<StyledTabsProps> = (props: StyledTabsProps) => {
+const StyledTabs: FC<TabsProps> = (props: TabsProps) => {
+  const { children } = props
   const classes = useStyles()
   return (
-    <Tabs classes={classes} {...props} TabIndicatorProps={{ children: <span /> }} />
+    <Tabs classes={classes} {...props}>
+      {children}
+    </Tabs>
   )
 }
 
