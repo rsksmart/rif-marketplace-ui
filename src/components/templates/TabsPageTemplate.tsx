@@ -1,21 +1,16 @@
 import React, { FC } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
-import { Typography, Box } from '@material-ui/core'
-import StyledTab from 'components/atoms/StyledTab'
+import Typography from '@material-ui/core/Typography'
+import Box from '@material-ui/core/Box'
 import StyledTabs from 'components/molecules/StyledTabs'
-import { TabProps as MUITabProps } from '@material-ui/core/Tab'
 import { useHistory } from 'react-router-dom'
+import StyledNavTab, { StyledNavTabProps } from 'components/atoms/StyledNavTab'
 
 export interface TabsPageTemplateProps {
+  initialValue: string
+  tabs: StyledNavTabProps[]
   title: string
-  tabs: NavTabProps[]
-}
-
-export interface NavTabProps extends MUITabProps {
-  label: string
-  value: number
-  to: string
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -24,14 +19,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const TabsPageTemplate: FC<TabsPageTemplateProps> = ({ title, tabs, children }) => {
+const TabsPageTemplate: FC<TabsPageTemplateProps> = ({
+  title, tabs, children,
+}) => {
   const classes = useStyles()
-  const [value, setValue] = React.useState(0)
   const history = useHistory()
-
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setValue(newValue)
-  }
 
   return (
     <Grid className={classes.root} container alignContent="center" alignItems="center">
@@ -43,15 +35,9 @@ const TabsPageTemplate: FC<TabsPageTemplateProps> = ({ title, tabs, children }) 
         </Typography>
       </Grid>
       <Grid item>
-        <StyledTabs value={value} onChange={handleChange}>
+        <StyledTabs value={history.location.pathname}>
           {
-            tabs.map((tab) => (
-              <StyledTab
-                {...tab}
-                key={tab.value}
-                onClick={() => history.replace(tab.to)}
-              />
-            ))
+            tabs.map((tab) => <StyledNavTab key={tab.label} {...tab} />)
           }
         </StyledTabs>
       </Grid>

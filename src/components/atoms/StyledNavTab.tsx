@@ -1,7 +1,14 @@
 import React, { FC } from 'react'
 import { Theme, makeStyles } from '@material-ui/core/styles'
 import { colors } from '@rsksmart/rif-ui'
-import Tab, { TabProps } from '@material-ui/core/Tab'
+import Tab from '@material-ui/core/Tab'
+import { NavLink } from 'react-router-dom'
+
+export interface StyledNavTabProps {
+  label: string
+  to: string
+  value: string
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -16,12 +23,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   selected: {
     fontWeight: theme.typography.fontWeightMedium,
+    borderBottom: '2px solid #000000',
   },
 }))
 
-const StyledTab: FC<TabProps> = (props: TabProps) => {
+const StyledNavTab: FC<StyledNavTabProps> = (props: StyledNavTabProps) => {
   const classes = useStyles()
-  return <Tab classes={classes} disableRipple {...props} />
+  return <Tab classes={classes} component={NavLink} disableRipple {...props} />
 }
 
-export default StyledTab
+export default StyledNavTab

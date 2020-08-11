@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  Switch, Route, Redirect,
+  Switch, Route, Redirect
 } from 'react-router-dom'
 import ROUTES from 'routes'
 import networkConfig from 'config'
@@ -14,7 +14,6 @@ import StorageOfferListed from './sell/StorageOfferListed'
 const StorageRoutes = () => {
   const { services } = networkConfig
   const storageEnabled = services && (services as string[]).includes('storage')
-
   if (storageEnabled) {
     return (
       <Switch>
