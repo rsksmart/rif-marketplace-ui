@@ -18,8 +18,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1),
   },
   childrenContent: {
-    marginTop: theme.spacing(2)
-  }
+    marginTop: theme.spacing(3),
+  },
 }))
 
 const TabsPageTemplate: FC<TabsPageTemplateProps> = ({

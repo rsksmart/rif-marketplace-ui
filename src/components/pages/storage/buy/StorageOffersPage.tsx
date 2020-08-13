@@ -1,11 +1,9 @@
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
 import Grid from '@material-ui/core/Grid'
 import { Theme, makeStyles } from '@material-ui/core/styles'
 import Marketplace from 'components/templates/marketplace/Marketplace'
-import { colors, SwitchTabs, Typography } from '@rsksmart/rif-ui'
-import { useHistory } from 'react-router-dom'
+import { colors } from '@rsksmart/rif-ui'
 import StorageFilters from 'components/organisms/filters/storage/StorageFilters'
-import ROUTES from 'routes'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -36,20 +34,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       minHeight: theme.spacing(60),
     },
   },
-  formHeading: {
-    paddingBottom: theme.spacing(2),
-  },
-  switchContainer: {
-    alignSelf: 'center',
-    display: 'flex',
-    width: '100%',
-  },
   // END - MarketFilter classes
 }))
 
 const StorageOffersPage: FC = () => {
   const classes = useStyles()
-  const history = useHistory()
 
   const headers = {
     provider: 'Provider',
@@ -62,18 +51,6 @@ const StorageOffersPage: FC = () => {
   }
   const itemCollection = []
 
-  const [txType, setTxType] = useState(0)
-  // TODO: this will be removed soon as per the buy/sell restructure
-  const switchTxType = () => {
-    if (!txType) {
-      setTxType(1)
-      history.replace(ROUTES.STORAGE.SELL.BASE)
-      return
-    }
-    setTxType(0)
-    history.replace(ROUTES.STORAGE.BUY.BASE)
-  }
-
   // TODO: here we will reference to MarketPageTemplate and MarketFilters but for the
   // purpose of showing a preview version we are only adding styles with hardcoded data
   // we will move to that once we start fethcing storage offers
@@ -82,14 +59,6 @@ const StorageOffersPage: FC = () => {
       <>
         <Grid className={classes.filtersContainer} item sm={12} md={3}>
           <div className={classes.filter}>
-            <Grid className={classes.formHeading} container>
-              <Grid item xs={6}>
-                <Typography weight="lightBold" variant="h6" color="primary">Storage</Typography>
-              </Grid>
-              <Grid className={classes.switchContainer} item xs={6}>
-                <SwitchTabs label1="Buy" label2="Sell" value={txType} onChange={switchTxType} />
-              </Grid>
-            </Grid>
             <StorageFilters />
           </div>
         </Grid>
