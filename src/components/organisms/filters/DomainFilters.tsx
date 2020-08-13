@@ -56,6 +56,7 @@ const DomainFilters = () => {
             payload: { name: value },
           })
         }}
+        placeholder="Search your domain"
       />
       <RadioFilter
         title="Domain Status"
