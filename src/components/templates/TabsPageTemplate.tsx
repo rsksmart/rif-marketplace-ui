@@ -3,27 +3,29 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
-import StyledTabs from 'components/molecules/StyledTabs'
-import { useHistory } from 'react-router-dom'
-import StyledNavTab, { StyledNavTabProps } from 'components/atoms/StyledNavTab'
+import { StyledNavTab, StyledTabs } from '@rsksmart/rif-ui'
+/* eslint-disable-next-line import/no-unresolved */
+import { StyledNavTabProps } from '@rsksmart/rif-ui/dist/components/atoms/StyledNavTab'
 
 export interface TabsPageTemplateProps {
-  initialValue: string
   tabs: StyledNavTabProps[]
   title: string
+  value: string
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(1),
   },
+  childrenContent: {
+    marginTop: theme.spacing(2)
+  }
 }))
 
 const TabsPageTemplate: FC<TabsPageTemplateProps> = ({
-  title, tabs, children,
+  title, tabs, children, value,
 }) => {
   const classes = useStyles()
-  const history = useHistory()
 
   return (
     <Grid className={classes.root} container alignContent="center" alignItems="center">
@@ -35,13 +37,13 @@ const TabsPageTemplate: FC<TabsPageTemplateProps> = ({
         </Typography>
       </Grid>
       <Grid item>
-        <StyledTabs value={history.location.pathname}>
+        <StyledTabs value={value}>
           {
             tabs.map((tab) => <StyledNavTab key={tab.label} {...tab} />)
           }
         </StyledTabs>
       </Grid>
-      <Grid item xs={12}>
+      <Grid className={classes.childrenContent} container>
         {children}
       </Grid>
     </Grid>
