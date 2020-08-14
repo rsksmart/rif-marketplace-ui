@@ -5,7 +5,7 @@ import {
 import { MarketItem } from 'models/Market'
 import {
   colors, fonts,
-  WithSpinner
+  WithSpinner,
 } from '@rsksmart/rif-ui'
 // import WithSpinner from 'components/hoc/WithSpinner'
 
