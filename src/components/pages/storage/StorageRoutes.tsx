@@ -12,9 +12,9 @@ import StorageLandingPage from './StorageLandingPage'
 import StorageOffersPage from './buy/StorageOffersPage'
 import StorageListingPage from './sell/StorageListingPage'
 import StorageOfferListed from './sell/StorageOfferListed'
-import TabsPageTemplate from '../../templates/TabsPageTemplate'
+import TabsTemplate from '../../templates/TabsTemplate'
 
-const TabedRoutes = () => {
+const TabedPages = () => {
   const history = useHistory()
   // TODO: register routes and components for the new pages
   const tabs: StyledNavTabProps[] = [
@@ -39,11 +39,17 @@ const TabedRoutes = () => {
       value: '/storage/mypurchases',
     },
   ]
+
+  const getTabValueFromLocation = () => {
+    const { location: { pathname } } = history
+    const activeTab = tabs.find(tab => pathname.includes(tab.to))
+    return activeTab?.to || ROUTES.STORAGE.BUY.BASE
+  }
+
   return (
-    // TODO: define value at root level of every subpage, for example
-    // on storage/sell/done, the value should be storage/sell because
-    // there's no tab with value sell/done and the console will throw an error
-    <TabsPageTemplate title="Storage" value={history.location.pathname} tabs={tabs}>
+    <TabsTemplate title="Storage"
+      value={getTabValueFromLocation()}
+      tabs={tabs}>
       <Switch>
         <Route exact path={ROUTES.STORAGE.BUY.BASE} component={StorageOffersPage} />
         <Route exact path={ROUTES.STORAGE.SELL.BASE}>
@@ -54,7 +60,7 @@ const TabedRoutes = () => {
         <Route exact path={ROUTES.STORAGE.SELL.DONE} component={StorageOfferListed} />
         <Route component={NotFound} />
       </Switch>
-    </TabsPageTemplate>
+    </TabsTemplate>
   )
 }
 
@@ -66,7 +72,7 @@ const StorageRoutes = () => {
     return (
       <Switch>
         <Redirect exact from={ROUTES.STORAGE.BASE} to={ROUTES.STORAGE.BUY.BASE} />
-        <Route component={TabedRoutes} />
+        <Route component={TabedPages} />
       </Switch>
     )
   }

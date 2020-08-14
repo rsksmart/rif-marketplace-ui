@@ -7,7 +7,7 @@ import { StyledNavTab, StyledTabs } from '@rsksmart/rif-ui'
 /* eslint-disable-next-line import/no-unresolved */
 import { StyledNavTabProps } from '@rsksmart/rif-ui/dist/components/atoms/StyledNavTab'
 
-export interface TabsPageTemplateProps {
+export interface TabsTemplateProps {
   tabs: StyledNavTabProps[]
   title: string
   value: string
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const TabsPageTemplate: FC<TabsPageTemplateProps> = ({
+const TabsTemplate: FC<TabsTemplateProps> = ({
   title, tabs, children, value,
 }) => {
   const classes = useStyles()
@@ -50,4 +50,4 @@ const TabsPageTemplate: FC<TabsPageTemplateProps> = ({
   )
 }
 
-export default TabsPageTemplate
+export default TabsTemplate
