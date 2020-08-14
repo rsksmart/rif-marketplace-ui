@@ -1,7 +1,6 @@
 import Login from 'components/atoms/Login'
 import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
-import DomainNameItem from 'components/molecules/DomainNameItem'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import MarketplaceContract from 'contracts/Marketplace'
@@ -26,6 +25,7 @@ import {
 } from '@material-ui/core'
 import {
   Button, colors, shortenString, Typography, Web3Store,
+  ShortenTextTooltip,
 } from '@rsksmart/rif-ui'
 
 import { parseToBigDecimal } from 'utils/parsers'
@@ -202,7 +202,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   const PriceCell = <CombinedPriceCell {...priceCellProps} />
 
   const displayName = domainName
-    ? <DomainNameItem value={domainName} />
+    ? <ShortenTextTooltip value={domainName} maxLength={30} />
     : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
   const details = {

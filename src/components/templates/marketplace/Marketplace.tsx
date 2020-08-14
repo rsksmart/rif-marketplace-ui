@@ -7,7 +7,6 @@ import {
   colors, fonts,
   WithSpinner,
 } from '@rsksmart/rif-ui'
-// import WithSpinner from 'components/hoc/WithSpinner'
 
 export interface TableHeaders {
   [itemName: string]: string | React.ElementType
