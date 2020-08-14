@@ -1,12 +1,15 @@
 import React from 'react'
 import {
-  Switch, Route, Redirect,
+  Switch, Route, Redirect, useHistory,
 } from 'react-router-dom'
 import ROUTES from 'routes'
 import networkConfig from 'config'
 import { RnsDomainsStoreProvider } from 'store/Market/rns/DomainsStore'
 import { RnsOffersStoreProvider } from 'store/Market/rns/OffersStore'
 import { RnsSoldStoreProvider } from 'store/Market/rns/SoldStore'
+/* eslint-disable-next-line import/no-unresolved */
+import { StyledNavTabProps } from '@rsksmart/rif-ui/dist/components/atoms/StyledNavTab'
+import TabsTemplate from 'components/templates/TabsTemplate'
 import { NotFound } from '..'
 import {
   DomainOffersCheckoutPage, DomainOffersPage, DomainsCheckoutPage,
@@ -14,14 +17,34 @@ import {
 } from './index'
 import RnsLandingPage from './RnsLandingPage'
 
-const RnsRoutes = () => {
-  const { services } = networkConfig
-  const rnsEnabled = services && (services as string[]).includes('rns')
+const TabedPages = () => {
+  const history = useHistory()
+  const tabs: StyledNavTabProps[] = [
+    {
+      label: 'Buy',
+      to: ROUTES.DOMAINS.BUY.BASE,
+      value: ROUTES.DOMAINS.BUY.BASE,
+    },
+    {
+      label: 'Sell',
+      to: ROUTES.DOMAINS.SELL.BASE,
+      value: ROUTES.DOMAINS.SELL.BASE,
+    },
+  ]
 
-  if (rnsEnabled) {
-    return (
+  const getTabValueFromLocation = () => {
+    const { location: { pathname } } = history
+    const activeTab = tabs.find((tab) => pathname.includes(tab.to))
+    return activeTab?.to || ROUTES.DOMAINS.BUY.BASE
+  }
+
+  return (
+    <TabsTemplate
+      title="Domains"
+      value={getTabValueFromLocation()}
+      tabs={tabs}
+    >
       <Switch>
-        <Redirect exact from={ROUTES.DOMAINS.BASE} to={ROUTES.DOMAINS.BUY.BASE} />
         <Route path={ROUTES.DOMAINS.BUY.BASE}>
           <RnsOffersStoreProvider>
             <Switch>
@@ -50,6 +73,20 @@ const RnsRoutes = () => {
             </Switch>
           </RnsDomainsStoreProvider>
         </Route>
+      </Switch>
+    </TabsTemplate>
+  )
+}
+
+const RnsRoutes = () => {
+  const { services } = networkConfig
+  const rnsEnabled = services && (services as string[]).includes('rns')
+
+  if (rnsEnabled) {
+    return (
+      <Switch>
+        <Redirect exact from={ROUTES.DOMAINS.BASE} to={ROUTES.DOMAINS.BUY.BASE} />
+        <Route component={TabedPages} />
         <Route component={NotFound} />
       </Switch>
     )

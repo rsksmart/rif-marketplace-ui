@@ -36,6 +36,7 @@ const DomainOfferFilters: FC<{}> = () => {
             payload: { name: value },
           })
         }}
+        placeholder="Search your domain"
       />
       <RangeFilter
         title="Price"
