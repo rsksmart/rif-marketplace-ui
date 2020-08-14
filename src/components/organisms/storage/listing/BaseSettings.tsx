@@ -51,7 +51,6 @@ const BaseSettings = () => {
       <Grid item xs={12} md={4}>
         <Grid alignItems="center" container spacing={1}>
           <Grid item xs={10}>
-            {/* TODO: update UnitsInput component in rif-ui to something like this */}
             <TextField
               required
               fullWidth
