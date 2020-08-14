@@ -1,6 +1,5 @@
-import { Web3Store } from '@rsksmart/rif-ui'
+import { Web3Store, ShortenTextTooltip } from '@rsksmart/rif-ui'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
-import DomainNameItem from 'components/molecules/DomainNameItem'
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
@@ -84,7 +83,7 @@ const DomainOffersPage: FC = () => {
       const { rate, displayName } = crypto[paymentToken]
 
       const displayDomainName = domainName || pseudoResolvedName
-        ? <DomainNameItem value={domainName || pseudoResolvedName} />
+        ? <ShortenTextTooltip value={domainName || pseudoResolvedName} maxLength={30} />
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
       const displayItem = {

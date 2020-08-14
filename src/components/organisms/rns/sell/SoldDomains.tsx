@@ -1,11 +1,11 @@
 import { AddressItem, CombinedPriceCell } from 'components/molecules'
-import DomainNameItem from 'components/molecules/DomainNameItem'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsSoldDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext } from 'react'
 import MarketContext from 'context/Market/MarketContext'
 import RnsSoldContext, { RnsSoldContextProps } from 'context/Services/rns/SoldContext'
+import { ShortenTextTooltip } from '@rsksmart/rif-ui'
 
 const SoldDomains: FC<{}> = () => {
   const {
@@ -50,7 +50,7 @@ const SoldDomains: FC<{}> = () => {
 
       const pseudoResolvedName = name && `${name}.rsk`
       const displayDomainName = domainName || pseudoResolvedName
-        ? <DomainNameItem value={domainName || pseudoResolvedName as string} />
+        ? <ShortenTextTooltip value={domainName || pseudoResolvedName as string} maxLength={30} />
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
       const displayItem = {
