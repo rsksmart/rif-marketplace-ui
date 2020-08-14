@@ -23,6 +23,7 @@ import TransactionInProgressPanel from 'components/organisms/TransactionInProgre
 import { AddTxPayload } from 'store/Blockchain/blockchainActions'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
 import { LoadingPayload } from 'store/App/appActions'
+import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 
 // TODO: discuss about wrapping the library and export it with this change
 Big.NE = -30
@@ -30,27 +31,6 @@ Big.NE = -30
 const logger = Logger.getInstance()
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    marginTop: theme.spacing(10),
-    width: '100%',
-  },
-  container: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    marginTop: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: '90%',
-    },
-    [theme.breakpoints.up('md')]: {
-      maxWidth: theme.spacing(100),
-    },
-    position: 'relative',
-    width: '100%',
-  },
   planGrid: {
     marginBottom: theme.spacing(3),
   },
@@ -207,33 +187,29 @@ const StorageListingPage = () => {
     : <Login />
 
   return (
-    // TODO: once we have the new version with tabs, wrap this page in a new template
-    <div className={classes.root}>
-      <div className={`${classes.container}`}>
-        <Typography gutterBottom variant="h5" color="primary">List storage service</Typography>
-        <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
-          Fill out the form below to list your service. All information provided is meant to be true and correct.
-        </Typography>
-        <Grid className={classes.planGrid} container spacing={5}>
-          <BaseSettings />
-          <PlanItemsList />
-        </Grid>
-        {action}
-        {
-          isProcessing
-          && (
-            <div className={classes.progressContainer}>
-              <TransactionInProgressPanel
-                {...{ isPendingConfirm, onProcessingComplete }}
-                text="Listing your offer!"
-                progMsg="The waiting period is required to securely list your offer.
+    <CenteredPageTemplate
+      title="List storage service"
+      subtitle="Fill out the form below to list your service. All information provided is meant to be true and correct."
+    >
+      <Grid className={classes.planGrid} container spacing={5}>
+        <BaseSettings />
+        <PlanItemsList />
+      </Grid>
+      {action}
+      {
+        isProcessing
+        && (
+          <div className={classes.progressContainer}>
+            <TransactionInProgressPanel
+              {...{ isPendingConfirm, onProcessingComplete }}
+              text="Listing your offer!"
+              progMsg="The waiting period is required to securely list your offer.
              Please do not close this tab until the process has finished."
-              />
-            </div>
-          )
-        }
-      </div>
-    </div>
+            />
+          </div>
+        )
+      }
+    </CenteredPageTemplate>
   )
 }
 

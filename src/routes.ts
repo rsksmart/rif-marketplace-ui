@@ -15,6 +15,8 @@ const STORAGE = '/storage'
 const STORAGE_BUY = `${STORAGE}/buy`
 const STORAGE_SELL = `${STORAGE}/sell`
 const STORAGE_SELL_DONE = `${STORAGE_SELL}/done`
+const STORAGE_MYOFFERS = `${STORAGE}/myoffers`
+const STORAGE_MYPURCHASES = `${STORAGE}/mypurchases`
 const FAQ = '/faq'
 const ABOUT = '/about'
 
@@ -48,6 +50,12 @@ const ROUTES = {
     SELL: {
       BASE: STORAGE_SELL,
       DONE: STORAGE_SELL_DONE,
+    },
+    MYOFFERS: {
+      BASE: STORAGE_MYOFFERS,
+    },
+    MYPURCHASES: {
+      BASE: STORAGE_MYPURCHASES,
     },
   },
   FAQ,

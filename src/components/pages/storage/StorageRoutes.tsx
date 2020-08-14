@@ -16,7 +16,6 @@ import TabsTemplate from '../../templates/TabsTemplate'
 
 const TabedPages = () => {
   const history = useHistory()
-  // TODO: register routes and components for the new pages
   const tabs: StyledNavTabProps[] = [
     {
       label: 'Buy',
@@ -30,26 +29,28 @@ const TabedPages = () => {
     },
     {
       label: 'My offers',
-      to: '/storage/myoffers',
-      value: '/storage/myoffers',
+      to: ROUTES.STORAGE.MYOFFERS.BASE,
+      value: ROUTES.STORAGE.MYOFFERS.BASE,
     },
     {
       label: 'My purchases',
-      to: '/storage/mypurchases',
-      value: '/storage/mypurchases',
+      to: ROUTES.STORAGE.MYPURCHASES.BASE,
+      value: ROUTES.STORAGE.MYPURCHASES.BASE,
     },
   ]
 
   const getTabValueFromLocation = () => {
     const { location: { pathname } } = history
-    const activeTab = tabs.find(tab => pathname.includes(tab.to))
+    const activeTab = tabs.find((tab) => pathname.includes(tab.to))
     return activeTab?.to || ROUTES.STORAGE.BUY.BASE
   }
 
   return (
-    <TabsTemplate title="Storage"
+    <TabsTemplate
+      title="Storage"
       value={getTabValueFromLocation()}
-      tabs={tabs}>
+      tabs={tabs}
+    >
       <Switch>
         <Route exact path={ROUTES.STORAGE.BUY.BASE} component={StorageOffersPage} />
         <Route exact path={ROUTES.STORAGE.SELL.BASE}>
