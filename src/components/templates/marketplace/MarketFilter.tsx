@@ -1,13 +1,8 @@
 import {
   createStyles, makeStyles, Theme,
 } from '@material-ui/core'
-import React, {
-  FC,
-} from 'react'
-import {
-  colors,
-} from '@rsksmart/rif-ui'
-import WithSpinner from 'components/hoc/WithSpinner'
+import React, { FC } from 'react'
+import { colors, WithSpinner } from '@rsksmart/rif-ui'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   filter: {
