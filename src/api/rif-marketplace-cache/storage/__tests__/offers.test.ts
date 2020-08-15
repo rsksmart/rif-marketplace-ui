@@ -3,10 +3,10 @@ import { Big } from 'big.js'
 import { OfferTransport } from 'api/models/storage/transports'
 import { OffersService } from '../offers'
 import mockFeathersService from 'api/test-utils/feathers'
-import { StorageOffer, BillingPlan, subscriptionPeriods } from 'models/marketItems/StorageItem'
+import { StorageOffer, BillingPlan, subscriptionPeriods, TimeInSeconds } from 'models/marketItems/StorageItem'
 
 const FAKE_OFFER_0: OfferTransport = {
-    utilizedCapacity: '0',
+    utilizedCapacity: '1',
     availableCapacity: '1073741824',
     provider: "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
     totalCapacity: '1073741824',
@@ -48,8 +48,7 @@ describe('Storage OffersService', () => {
               plans
             } = FAKE_OFFER_0
             const expectedOffers: StorageOffer = {
-              id: 'I do not know', // FIXME: what is the ID and what is the address and why is it the same as offerID?
-              provider,
+              id: provider,
               location: 'UK',
               system: 'IPFS',
               availableSize: new Big(availableCapacity),
@@ -68,10 +67,10 @@ describe('Storage OffersService', () => {
                   return acc
                 } , new Big(0))
                 .div(plans.length)
-                .mul(new Big(3600 * 24))
+                .mul(new Big(TimeInSeconds.DAY))
             }
 
-            expect(actualReturnValue).toStrictEqual(expectedOffers)
+            expect(actualReturnValue[0]).toStrictEqual(expectedOffers)
         })
 
     })

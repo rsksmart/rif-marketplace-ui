@@ -1,13 +1,17 @@
 
 import { Big } from 'big.js'
 import { Item } from 'models/Market'
-import { BillingPlanTransport } from 'api/models/storage/transports'
 
+export enum TimeInSeconds {
+  DAY = 86400,
+  WEEK = 604800,
+  MONTH = 2620800
+}
 export type SubscriptionPeriod = Record<number, string>
 export const subscriptionPeriods: SubscriptionPeriod = {
-  86400: 'Day',
-  604800: 'Week',
-  2620800: 'Month'
+  [TimeInSeconds.DAY]: 'Day',
+  [TimeInSeconds.WEEK]: 'Week',
+  [TimeInSeconds.MONTH]: 'Month'
 }
 
 export type Currencies = 'RBTC'
@@ -19,7 +23,6 @@ export interface BillingPlan {
 }
 
 export interface StorageOffer extends Item {
-    provider: string
     location: string
     system: string
     availableSize: Big
