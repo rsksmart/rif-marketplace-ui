@@ -109,7 +109,7 @@ const DomainOffersPage: FC = () => {
                   item,
                 } as OrderPayload,
               })
-              history.push(ROUTES.DOMAINS.BUY.CHECKOUT)
+              history.push(ROUTES.RNS.BUY.CHECKOUT)
             }}
           />
         ),

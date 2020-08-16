@@ -80,7 +80,7 @@ const MyOffers: FC<{}> = () => {
                 item: domainItem,
               } as OrderPayload,
             })
-            history.push(ROUTES.DOMAINS.SELL.CHECKOUT)
+            history.push(ROUTES.RNS.SELL.CHECKOUT)
           }}
         />,
         price: <></>,
@@ -110,7 +110,7 @@ const MyOffers: FC<{}> = () => {
                   item: domainItem,
                 } as OrderPayload,
               })
-              history.push(ROUTES.DOMAINS.SELL.CANCEL.CHECKOUT)
+              history.push(ROUTES.RNS.SELL.CANCEL.CHECKOUT)
             }}
           >
             <ClearIcon />

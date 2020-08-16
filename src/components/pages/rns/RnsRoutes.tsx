@@ -21,28 +21,30 @@ const RnsRoutes = () => {
   if (rnsEnabled) {
     return (
       <Switch>
-        <Redirect exact from={ROUTES.DOMAINS.BASE} to={ROUTES.DOMAINS.BUY.BASE} />
-        <Route path={ROUTES.DOMAINS.BUY.BASE}>
+        <Redirect exact from={ROUTES.RNS.BASE} to={ROUTES.RNS.BUY.BASE} />
+        <Route path={ROUTES.RNS.BUY.BASE}>
           <RnsOffersStoreProvider>
             <Switch>
-              <Route exact path={ROUTES.DOMAINS.BUY.BASE} component={DomainOffersPage} />
-              <Route exact path={ROUTES.DOMAINS.BUY.CHECKOUT} component={DomainOffersCheckoutPage} />
-              <Route exact path={ROUTES.DOMAINS.BUY.DONE} component={DomainPurchased} />
+              <Redirect exact from={ROUTES.RNS.BUY.BASE} to={ROUTES.RNS.BUY.LISTING} />
+              <Route exact path={ROUTES.RNS.BUY.LISTING} component={DomainOffersPage} />
+              <Route exact path={ROUTES.RNS.BUY.CHECKOUT} component={DomainOffersCheckoutPage} />
+              <Route exact path={ROUTES.RNS.BUY.DONE} component={DomainPurchased} />
               <Route component={NotFound} />
             </Switch>
           </RnsOffersStoreProvider>
         </Route>
-        <Route path={ROUTES.DOMAINS.SELL.BASE}>
+        <Route path={ROUTES.RNS.SELL.BASE}>
           <RnsDomainsStoreProvider>
             <Switch>
-              <Route exact path={ROUTES.DOMAINS.SELL.CANCEL.DONE} component={DomainCanceled} />
-              <Route exact path={ROUTES.DOMAINS.SELL.CANCEL.CHECKOUT} component={CancelDomainCheckoutPage} />
-              <Route exact path={ROUTES.DOMAINS.SELL.CHECKOUT} component={DomainsCheckoutPage} />
-              <Route exact path={ROUTES.DOMAINS.SELL.DONE} component={DomainListed} />
-              <Route path={ROUTES.DOMAINS.SELL.BASE}>
+              <Redirect exact from={ROUTES.RNS.SELL.BASE} to={ROUTES.RNS.SELL.LISTING} />
+              <Route exact path={ROUTES.RNS.SELL.CANCEL.DONE} component={DomainCanceled} />
+              <Route exact path={ROUTES.RNS.SELL.CANCEL.CHECKOUT} component={CancelDomainCheckoutPage} />
+              <Route exact path={ROUTES.RNS.SELL.CHECKOUT} component={DomainsCheckoutPage} />
+              <Route exact path={ROUTES.RNS.SELL.DONE} component={DomainListed} />
+              <Route path={ROUTES.RNS.SELL.LISTING}>
                 <RnsSoldStoreProvider>
                   <Switch>
-                    <Route exact path={ROUTES.DOMAINS.SELL.BASE} component={SellDomainsListPage} />
+                    <Route exact path={ROUTES.RNS.SELL.LISTING} component={SellDomainsListPage} />
                     <Route component={NotFound} />
                   </Switch>
                 </RnsSoldStoreProvider>
@@ -56,8 +58,8 @@ const RnsRoutes = () => {
   }
   return (
     <Switch>
-      <Route exact path={ROUTES.DOMAINS.BASE} component={RnsLandingPage} />
-      <Redirect from="*" to={ROUTES.DOMAINS.BASE} />
+      <Route exact path={ROUTES.RNS.BASE} component={RnsLandingPage} />
+      <Redirect from="*" to={ROUTES.RNS.BASE} />
     </Switch>
   )
 }

@@ -118,7 +118,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
     if (isPendingConfirm && order && !order.isProcessing) {
       // Post-confirmations handle
       const { item: { name } } = order
-      history.replace(ROUTES.DOMAINS.SELL.DONE, { domainName: name })
+      history.replace(ROUTES.RNS.SELL.DONE, { domainName: name })
       dispatch({
         type: 'CLEAR_ORDER',
       } as never)

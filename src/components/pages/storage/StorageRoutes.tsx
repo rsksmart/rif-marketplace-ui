@@ -10,6 +10,7 @@ import StorageLandingPage from './StorageLandingPage'
 import StorageOffersPage from './buy/StorageOffersPage'
 import StorageListingPage from './sell/StorageListingPage'
 import StorageOfferListed from './sell/StorageOfferListed'
+import StorageOffersContext from 'store/Market/storage/OffersContext'
 
 const StorageRoutes = () => {
   const { services } = networkConfig
@@ -19,8 +20,13 @@ const StorageRoutes = () => {
     return (
       <Switch>
         <Redirect exact from={ROUTES.STORAGE.BASE} to={ROUTES.STORAGE.BUY.BASE} />
-        <Route exact path={ROUTES.STORAGE.BUY.BASE} component={StorageOffersPage} />
-
+        <Route exact path={ROUTES.STORAGE.BUY.BASE}>
+          <StorageOffersContext>
+            <Switch>
+              <Route exact path={ROUTES.STORAGE.BUY.BASE} component={StorageOffersPage} />
+            </Switch>
+          </StorageOffersContext>
+        </Route>
         <Route exact path={ROUTES.STORAGE.SELL.BASE}>
           <StorageListingStoreProvider>
             <StorageListingPage />

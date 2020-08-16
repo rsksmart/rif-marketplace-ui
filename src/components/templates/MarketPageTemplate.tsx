@@ -21,6 +21,7 @@ export interface MarketPageTemplateProps {
   requiresAccount?: boolean
   dispatch: Dispatch<RnsAction>
   outdatedCt: number
+  heading?: React.ElementType
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -48,6 +49,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   requiresAccount,
   dispatch,
   outdatedCt,
+  heading
 }) => {
   const classes = useStyles()
   const {
@@ -102,7 +104,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
             },
           }}
         />
-        <Marketplace items={itemCollection} headers={headers} isLoading={isLoadingItems} />
+        <Marketplace items={itemCollection} headers={headers} isLoading={isLoadingItems} Heading={heading} />
       </Grid>
     </Grid>
   )

@@ -29,7 +29,7 @@ const Routes = () => {
     <Switch>
       <Route exact path={ROUTES.LANDING} component={LandingPage} />
       <Route exact path={ROUTES.FAQ} component={FAQPage} />
-      <Route path={ROUTES.DOMAINS.BASE} component={RnsRoutes} />
+      <Route path={ROUTES.RNS.BASE} component={RnsRoutes} />
       <Route path={ROUTES.STORAGE.BASE} component={StorageRoutes} />
       <Route exact path={ROUTES.ABOUT} component={AboutPage} />
       <Route component={NotFound} />

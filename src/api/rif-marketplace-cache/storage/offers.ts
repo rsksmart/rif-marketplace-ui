@@ -44,7 +44,7 @@ export class OffersService extends AbstractAPIService implements StorageAPIServi
 
     _channel = offersWSChannel
 
-    _fetch = async (filters?: any): Promise<StorageItem[]> => {
+    _fetch = async (): Promise<StorageItem[]> => {
 
         const result = await this.service.find()
 

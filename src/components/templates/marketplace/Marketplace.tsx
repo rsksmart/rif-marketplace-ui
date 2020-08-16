@@ -15,6 +15,7 @@ export interface MarketplaceProps {
   className?: string
   items: MarketItem[]
   headers: TableHeaders
+  Heading?: React.ElementType
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -51,10 +52,12 @@ const Marketplace: FC<MarketplaceProps> = ({
   className = '',
   items,
   headers,
+  Heading
 }) => {
   const classes = useStyles()
   return (
     <div className={`${classes.root} ${className}`}>
+      {!!Heading && <Heading />}
       <div className={classes.content}>
         <Table>
           <TableHead>

@@ -55,7 +55,7 @@ const MarketFilter: FC = ({ children }) => {
         txType: txType === TxType.BUY ? TxType.SELL : TxType.BUY,
       },
     })
-    history.replace(txType === TxType.BUY ? ROUTES.DOMAINS.SELL.BASE : ROUTES.DOMAINS.BUY.BASE)
+    history.replace(txType === TxType.BUY ? ROUTES.RNS.SELL.BASE : ROUTES.RNS.BUY.BASE)
   }
 
   const SwitchTabsComponent = (props) => (<SwitchTabs label1="Buy" label2="Sell" value={txType} {...props} />)
