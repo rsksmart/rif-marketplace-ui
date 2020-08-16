@@ -13,6 +13,7 @@ import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
 import { AppAction, ErrorMessagePayload } from './appActions'
 import { appActions, AppReducer } from './appReducer'
+import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
 
 export type StoreName = 'app'
 
@@ -38,7 +39,7 @@ export const initialState: AppState = {
     'rns/v0/domains': new DomainsService(),
     'rns/v0/sold': new SoldDomainsService(),
     'rates/v0': new XRService(),
-    // "storage/v0/offers": new StorageOffersService()
+    'storage/v0/offers': new StorageOffersService()
   },
   messages: {},
   loaders: {

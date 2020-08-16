@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react'
 import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
-import { ListingState, StorageListingStoreProps, TimePeriodEnum } from './interfaces'
+import { ListingState, StorageStoreProps, TimePeriodEnum } from './interfaces'
 import { listingActions, ListingReducer } from './listingReducer'
 import { ListingPayload } from '../rns/rnsActions'
 
@@ -21,7 +21,7 @@ export const initialState: ListingState = {
   allPeriods: periodOptions,
 }
 
-const StorageListingStore = React.createContext({} as StorageListingStoreProps | any)
+const StorageListingStore = React.createContext({} as StorageStoreProps | any)
 const listingReducer: ListingReducer<ListingPayload> | StoreReducer = storeReducerFactory(initialState, listingActions as unknown as StoreActions)
 
 export const StorageListingStoreProvider = ({ children }) => {

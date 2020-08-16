@@ -8,11 +8,11 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import Tooltip from '@material-ui/core/Tooltip'
 import { colors, validatedNumber } from '@rsksmart/rif-ui'
 import StorageListingStore from 'store/Market/storage/ListingStore'
-import { StorageListingStoreProps } from 'store/Market/storage/interfaces'
+import { StorageStoreProps } from 'store/Market/storage/interfaces'
 import { SetAvailableSizePayload, SetCurrencyPayload } from 'store/Market/storage/listingActions'
 
 const BaseSettings = () => {
-  const { state: { availableSize, system, currency }, dispatch } = useContext<StorageListingStoreProps>(StorageListingStore)
+  const { state: { availableSize, system, currency }, dispatch } = useContext<StorageStoreProps>(StorageListingStore)
 
   const onSizeChange = ({ target: { value } }) => {
     dispatch({

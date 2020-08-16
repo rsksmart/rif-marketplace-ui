@@ -4,7 +4,7 @@ import { StorageItem, StorageOffer, subscriptionPeriods, BillingPlan, TimeInSeco
 import { OfferTransport } from "api/models/storage/transports";
 import { Big } from 'big.js'
 
-export const offersAddress: StorageServiceAddress = '/storage/v0/offers'
+export const offersAddress: StorageServiceAddress = 'storage/v0/offers'
 export const offersWSChannel: StorageWSChannel = 'offers'
 
 const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
@@ -39,7 +39,7 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
   return offer
 }
 
-export class OffersService extends AbstractAPIService implements StorageAPIService {
+export class StorageOffersService extends AbstractAPIService implements StorageAPIService {
     path = offersAddress
 
     _channel = offersWSChannel

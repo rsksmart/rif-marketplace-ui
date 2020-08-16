@@ -1,7 +1,7 @@
 // import offers from '../offers'
 import { Big } from 'big.js'
 import { OfferTransport } from 'api/models/storage/transports'
-import { OffersService } from '../offers'
+import { StorageOffersService } from '../offers'
 import mockFeathersService from 'api/test-utils/feathers'
 import { StorageOffer, BillingPlan, subscriptionPeriods, TimeInSeconds } from 'models/marketItems/StorageItem'
 
@@ -27,11 +27,11 @@ const FAKE_OFFER_0: OfferTransport = {
 
 const FAKE_TRANSPORT = [FAKE_OFFER_0]
 
-let offersService: OffersService
+let offersService: StorageOffersService
 
 describe('Storage OffersService', () => {
     beforeEach(() => {
-        offersService = new OffersService()
+        offersService = new StorageOffersService()
         offersService.errorReporter = jest.fn()
     })
 
