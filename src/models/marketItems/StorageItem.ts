@@ -1,4 +1,3 @@
-
 import { Big } from 'big.js'
 import { Item } from 'models/Market'
 
@@ -11,23 +10,23 @@ export type SubscriptionPeriod = Record<number, string>
 export const subscriptionPeriods: SubscriptionPeriod = {
   [TimeInSeconds.DAY]: 'Day',
   [TimeInSeconds.WEEK]: 'Week',
-  [TimeInSeconds.MONTH]: 'Month'
+  [TimeInSeconds.MONTH]: 'Month',
 }
 
 export type Currencies = 'RBTC'
 
 export interface BillingPlan {
-  period: SubscriptionPeriod,
+  period: string
   price: Big
   currency: Currencies
 }
 
 export interface StorageOffer extends Item {
-    location: string
-    system: string
-    availableSize: Big
-    subscriptionOptions: BillingPlan[]
-    pricePGBPDay: Big
+  location: string
+  system: string
+  availableSize: Big
+  subscriptionOptions: BillingPlan[]
+  pricePGBPDay: Big
 }
 
 export type StorageItem = StorageOffer

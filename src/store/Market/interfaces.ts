@@ -1,4 +1,4 @@
-import { StoreState } from "store/storeUtils/interfaces";
+import { StoreState } from 'store/storeUtils/interfaces'
 
 export interface ServiceStoreOrder<T> {
     item: T

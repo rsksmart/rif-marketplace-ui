@@ -43,7 +43,7 @@ const ROUTES = {
       BASE: STORAGE_BUY,
       LISTING: `${STORAGE_BUY}/${LISTING}`,
       CHECKOUT: `${STORAGE_BUY}/${CHECKOUT}`,
-      DONE: `${STORAGE_BUY}/${DONE}`
+      DONE: `${STORAGE_BUY}/${DONE}`,
     },
     SELL: {
       BASE: STORAGE_SELL,

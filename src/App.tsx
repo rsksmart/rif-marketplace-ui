@@ -55,7 +55,7 @@ const App = () => {
               {alertMessage}
             </Alert>
           </Collapse>
-            <Routes />
+          <Routes />
         </PageTemplate>
         <Footer />
       </div>

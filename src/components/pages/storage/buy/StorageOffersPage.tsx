@@ -1,23 +1,76 @@
-import React, { FC, useContext, useState } from 'react'
+import React, { FC, useContext } from 'react'
 import StorageFilters from 'components/organisms/filters/storage/StorageFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
-import StorageOffersContext from 'store/Market/storage/OffersContext'
+import StorageOffersContext, { StorageOffersCtxProps } from 'store/Market/storage/OffersContext'
+import { TableHeaders } from 'components/templates/marketplace/Marketplace'
+import { BillingPlan } from 'models/marketItems/StorageItem'
+import { CombinedPriceCell, SelectRowButton } from 'components/molecules'
+import MarketStore from 'store/Market/MarketStore'
+// import { useHistory } from 'react-router-dom'
+// import { OrderPayload } from 'store/Services/storage/storageActions'
+// import ROUTES from 'routes'
+
+const TABLE_HEADERS: TableHeaders = {
+  provider: 'Provider',
+  system: 'System',
+  availableSize: 'Available Size',
+  subscriptionOptions: 'Subscription Period',
+  pricePGBPDay: 'Price/GB/Day',
+  action1: '',
+}
 
 const StorageOffersPage: FC = () => {
+  const {
+    state: {
+      exchangeRates: {
+        currentFiat,
+        crypto,
+      },
+    },
+  } = useContext(MarketStore)
+  const {
+    state: {
+      listing: { items },
+    },
+    dispatch,
+  } = useContext<StorageOffersCtxProps>(StorageOffersContext)
+  // const history = useHistory()
 
-  const offersContext = useContext(StorageOffersContext)
-  const [state, setState] = useState(offersContext)
+  const itemCollection = items.map((item) => {
+    const {
+      id, system, availableSize, pricePGBPDay, subscriptionOptions,
+    } = item
 
-  const headers = {
-    provider: 'Provider',
-    location: 'Location',
-    system: 'System',
-    availableSize: 'Available Size',
-    subscriptionOptions: 'Subscription Options',
-    pricePerGb: 'Price/GB',
-    action1: '',
-  }
-  const itemCollection = []
+    const { rate, displayName } = crypto.rbtc // FIXME: remove hard-coded currency
+
+    return {
+      id,
+      provider: id,
+      system,
+      availableSize: availableSize.toString(),
+      subscriptionOptions: subscriptionOptions.map((plan: BillingPlan) => plan.period)
+        .reduce((lastWord, currentWord) => `${lastWord} - ${currentWord}`),
+      pricePGBPDay: <CombinedPriceCell
+        price={pricePGBPDay.toString()}
+        priceFiat={pricePGBPDay.times(rate).toString()}
+        currency={displayName}
+        currencyFiat={currentFiat.displayName}
+        divider=" "
+      />,
+      action1: <SelectRowButton
+        id={id}
+        handleSelect={() => {
+          // dispatch({
+          //   type: 'SET_ORDER',
+          //   payload: {
+          //     item,
+          //   } as OrderPayload,
+          // })
+          // history.push(ROUTES.STORAGE.BUY.CHECKOUT)
+        }}
+      />,
+    }
+  }) as any // FIXME: remove as any -> Change the itemCollection type
 
   // const heading = () => <Typography>Result</Typography>
 
@@ -26,10 +79,10 @@ const StorageOffersPage: FC = () => {
       className="Storage Offers"
       filterItems={<StorageFilters />}
       itemCollection={itemCollection}
-      headers={headers}
-      dispatch={() => { }}
+      headers={TABLE_HEADERS}
+      dispatch={dispatch as any} // FIXME: Change the type in the MarketPageTemplate
       outdatedCt={0}
-      // heading={heading}
+    // heading={heading}
     />
   )
 }

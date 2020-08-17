@@ -52,7 +52,7 @@ const Marketplace: FC<MarketplaceProps> = ({
   className = '',
   items,
   headers,
-  Heading
+  Heading,
 }) => {
   const classes = useStyles()
   return (

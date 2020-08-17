@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
-  Switch, Route, Redirect,
+  Switch, Route, Redirect, useHistory,
 } from 'react-router-dom'
 import ROUTES from 'routes'
 import networkConfig from 'config'
 import { RnsDomainsStoreProvider } from 'store/Market/rns/DomainsStore'
 import { RnsOffersStoreProvider } from 'store/Market/rns/OffersStore'
 import { RnsSoldStoreProvider } from 'store/Market/rns/SoldStore'
+import Logger from 'utils/Logger'
 import { NotFound } from '..'
 import {
   DomainOffersCheckoutPage, DomainOffersPage, DomainsCheckoutPage,
@@ -14,9 +15,22 @@ import {
 } from './index'
 import RnsLandingPage from './RnsLandingPage'
 
+const logger = Logger.getInstance()
+
 const RnsRoutes = () => {
   const { services } = networkConfig
   const rnsEnabled = services && (services as string[]).includes('rns')
+  const history = useHistory()
+
+  useEffect(() => {
+    const unlisten = history.listen((location, action) => {
+      logger.debug('RnsRoutes -> location', location)
+      logger.debug('RnsRoutes -> action', action)
+    })
+    return () => {
+      unlisten()
+    }
+  }, [history])
 
   if (rnsEnabled) {
     return (

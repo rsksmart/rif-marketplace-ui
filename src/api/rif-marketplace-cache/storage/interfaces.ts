@@ -1,9 +1,7 @@
-import { Modify } from "utils/typeUtils"
-import { APIService } from "api/models/apiService"
+import { Modify } from 'utils/typeUtils'
+import { APIService } from 'api/models/apiService'
 
-
-
-export type StorageServiceAddress = 'storage/v0/offers' //| 'storage/v0/agreements'
+export type StorageServiceAddress = 'storage/v0/offers' // | 'storage/v0/agreements'
 export type StorageWSChannel = 'offers' | 'agreements'
 
 export type StorageAPIService = Modify<

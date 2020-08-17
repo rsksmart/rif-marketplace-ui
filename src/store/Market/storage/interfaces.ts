@@ -1,8 +1,8 @@
 import { StoreState } from 'store/storeUtils/interfaces'
 import { Dispatch } from 'react'
+import { StorageItem } from 'models/marketItems/StorageItem'
 import { StorageAction } from './listingActions'
 import { ServiceStoreState } from '../interfaces'
-import { StorageItem } from 'models/marketItems/StorageItem'
 import { StoreName as OffersStoreName } from './OffersContext'
 import { StoreName as ListingStoreName } from './ListingStore'
 
@@ -25,8 +25,6 @@ export interface ListingState extends StoreState {
   allPeriods: TimePeriodEnum[]
   availablePeriods: TimePeriodEnum[]
 }
-
-
 
 export type StorageState = ServiceStoreState<StorageItem>
 

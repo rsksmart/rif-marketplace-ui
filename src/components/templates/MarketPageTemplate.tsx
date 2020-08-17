@@ -49,7 +49,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   requiresAccount,
   dispatch,
   outdatedCt,
-  heading
+  heading,
 }) => {
   const classes = useStyles()
   const {
