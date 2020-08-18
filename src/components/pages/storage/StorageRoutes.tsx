@@ -43,7 +43,7 @@ const StorageRoutes: FC = () => {
       <Switch>
         <Redirect exact from={ROUTES.STORAGE.BASE} to={ROUTES.STORAGE.BUY.BASE} />
         {
-          withTabs({ tabs: TABS, title: 'Storage' })(() => (
+          withTabs({ tabs: TABS, title: 'Storage', defaultRoute: ROUTES.STORAGE.BUY.BASE })(() => (
             <Switch>
               <Route exact path={ROUTES.STORAGE.BUY.BASE} component={StorageOffersPage} />
               <Route exact path={ROUTES.STORAGE.SELL.BASE}>
