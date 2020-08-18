@@ -1,71 +1,13 @@
-import React from 'react'
+import React, { FC } from 'react'
 import {
-  Switch, Route, Redirect, useHistory,
+  Switch, Route, Redirect,
 } from 'react-router-dom'
 import ROUTES from 'routes'
 import networkConfig from 'config'
-import { StorageListingStoreProvider } from 'store/Market/storage/ListingStore'
-/* eslint-disable-next-line import/no-unresolved */
-import { StyledNavTabProps } from '@rsksmart/rif-ui/dist/components/atoms/StyledNavTab'
-import { NotFound } from '..'
 import StorageLandingPage from './StorageLandingPage'
-import StorageOffersPage from './buy/StorageOffersPage'
-import StorageListingPage from './sell/StorageListingPage'
-import StorageOfferListed from './sell/StorageOfferListed'
-import TabsTemplate from '../../templates/TabsTemplate'
+import StorageTabedPages from './StorageTabedPages'
 
-const TabedPages = () => {
-  const history = useHistory()
-  const tabs: StyledNavTabProps[] = [
-    {
-      label: 'Buy',
-      to: ROUTES.STORAGE.BUY.BASE,
-      value: ROUTES.STORAGE.BUY.BASE,
-    },
-    {
-      label: 'Sell',
-      to: ROUTES.STORAGE.SELL.BASE,
-      value: ROUTES.STORAGE.SELL.BASE,
-    },
-    {
-      label: 'My offers',
-      to: ROUTES.STORAGE.MYOFFERS.BASE,
-      value: ROUTES.STORAGE.MYOFFERS.BASE,
-    },
-    {
-      label: 'My purchases',
-      to: ROUTES.STORAGE.MYPURCHASES.BASE,
-      value: ROUTES.STORAGE.MYPURCHASES.BASE,
-    },
-  ]
-
-  const getTabValueFromLocation = () => {
-    const { location: { pathname } } = history
-    const activeTab = tabs.find((tab) => pathname.includes(tab.to))
-    return activeTab?.to || ROUTES.STORAGE.BUY.BASE
-  }
-
-  return (
-    <TabsTemplate
-      title="Storage"
-      value={getTabValueFromLocation()}
-      tabs={tabs}
-    >
-      <Switch>
-        <Route exact path={ROUTES.STORAGE.BUY.BASE} component={StorageOffersPage} />
-        <Route exact path={ROUTES.STORAGE.SELL.BASE}>
-          <StorageListingStoreProvider>
-            <StorageListingPage />
-          </StorageListingStoreProvider>
-        </Route>
-        <Route exact path={ROUTES.STORAGE.SELL.DONE} component={StorageOfferListed} />
-        <Route component={NotFound} />
-      </Switch>
-    </TabsTemplate>
-  )
-}
-
-const StorageRoutes = () => {
+const StorageRoutes: FC = () => {
   const { services } = networkConfig
   const storageEnabled = services && (services as string[]).includes('storage')
 
@@ -73,7 +15,7 @@ const StorageRoutes = () => {
     return (
       <Switch>
         <Redirect exact from={ROUTES.STORAGE.BASE} to={ROUTES.STORAGE.BUY.BASE} />
-        <Route component={TabedPages} />
+        <Route component={StorageTabedPages} />
       </Switch>
     )
   }
