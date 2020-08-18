@@ -36,7 +36,7 @@ const RnsRoutes = () => {
       <Switch>
         <Redirect exact from={ROUTES.DOMAINS.BASE} to={ROUTES.DOMAINS.BUY.BASE} />
         {
-          withTabs({ tabs: TABS, title: 'Domains' })(() => (
+          withTabs({ tabs: TABS, title: 'Domains', defaultRoute: ROUTES.DOMAINS.BUY.BASE })(() => (
             <Switch>
               <Route path={ROUTES.DOMAINS.BUY.BASE}>
                 <RnsOffersStoreProvider>
