@@ -2,7 +2,7 @@ import {
   AppPayload, ErrorMessagePayload, LoadingPayload, MessagePayload, RemoveMessagePayload,
 } from 'store/App/appActions'
 
-import { APP_ACTIONS } from './appActions'
+import { APP_ACTION } from './appActions'
 import { AppState } from './AppStore'
 
 export interface AppReducer {
@@ -10,7 +10,7 @@ export interface AppReducer {
 }
 
 export type AppActions = {
-  [key in APP_ACTIONS]: AppReducer
+  [key in APP_ACTION]: AppReducer
 }
 
 const LOADING_MSG_ID = 'loading'

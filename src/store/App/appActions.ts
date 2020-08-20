@@ -3,7 +3,7 @@ import { Modify } from 'utils/typeUtils'
 import { Message, MessageId, ErrorMessage } from 'models/UIMessage'
 import { LoaderId } from '../../models/UIMessage'
 
-export type APP_ACTIONS = 'NOOP' | 'SET_IS_LOADING' | 'SET_MESSAGE' | 'REMOVE_MESSAGE'
+export type APP_ACTION = 'NOOP' | 'SET_IS_LOADING' | 'SET_MESSAGE' | 'REMOVE_MESSAGE'
 
 export interface LoadingPayload {
   readonly id: LoaderId
@@ -23,6 +23,4 @@ export type RemoveMessagePayload = {
 
 export type AppPayload = LoadingPayload & (MessagePayload | ErrorMessagePayload) & RemoveMessagePayload
 
-export interface AppAction extends StoreDispatcher<AppPayload> {
-  type: APP_ACTIONS
-}
+export type AppAction = StoreDispatcher<APP_ACTION, AppPayload>

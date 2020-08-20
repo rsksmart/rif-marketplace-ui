@@ -1,7 +1,7 @@
 import { StoreDispatcher } from 'store/storeUtils/interfaces'
 import { MarketCryptoRecord, MarketState, TxType } from './MarketStore'
 
-export type MARKET_ACTIONS = 'TOGGLE_TX_TYPE' | 'SET_EXCHANGE_RATE'
+export type MARKET_ACTION = 'TOGGLE_TX_TYPE' | 'SET_EXCHANGE_RATE'
 
 export type ExchangeRatePayload = MarketCryptoRecord
 
@@ -11,9 +11,7 @@ export interface TxTypeChangePayload {
 
 export type MarketPayload = TxTypeChangePayload | ExchangeRatePayload
 
-export interface MarketAction extends StoreDispatcher<MarketPayload> {
-  type: MARKET_ACTIONS
-}
+export type MarketAction = StoreDispatcher<MARKET_ACTION, MarketPayload>
 
 export interface MarketReducer<P extends MarketPayload> {
   (state: MarketState, payload: P): MarketState

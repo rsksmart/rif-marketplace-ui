@@ -3,7 +3,7 @@ import { RnsItem } from 'models/marketItems/DomainItem'
 import { StorePayload, StoreDispatcher } from 'store/storeUtils/interfaces'
 import { RnsOrder, RnsState } from './interfaces'
 
-export type RNS_ACTIONS = 'FILTER' | 'SET_LISTING' | 'OUTDATE' | 'SET_ORDER' | 'REFRESH' | 'SET_PROGRESS' | 'CLEAR_ORDER' | 'UPDATE_LIMITS'
+export type RNS_ACTION = 'FILTER' | 'SET_LISTING' | 'OUTDATE' | 'SET_ORDER' | 'REFRESH' | 'SET_PROGRESS' | 'CLEAR_ORDER' | 'UPDATE_LIMITS'
 
 export type FilterPayload = Partial<RnsFilter>
 
@@ -34,9 +34,7 @@ export type RnsPayload = StorePayload |
   LimitsPayload |
   RefreshPayload
 
-export interface RnsAction extends StoreDispatcher<RnsPayload> {
-  type: RNS_ACTIONS
-}
+export type RnsAction = StoreDispatcher<RNS_ACTION, RnsPayload>
 
 export interface RnsReducer<P extends RnsPayload> {
   (state: RnsState, payload: P): RnsState

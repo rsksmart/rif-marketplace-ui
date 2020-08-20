@@ -1,6 +1,6 @@
 import Logger from 'utils/Logger'
 import {
-  StoreDispatcher, StorePayload, StoreState, StoreActions, StoreAction, StoreReducer,
+  StoreDispatcher, StorePayload, StoreState, StoreActions, StoreAction, StoreReducer, StoreActionType,
 } from './interfaces'
 
 const logger = Logger.getInstance()
@@ -11,7 +11,7 @@ const storeReducerFactory = (
   errorHandle?: Function,
 ): StoreReducer => (
   state = initialState,
-  dispatcher: StoreDispatcher<StorePayload>,
+  dispatcher: StoreDispatcher<StoreActionType, StorePayload>,
 ) => {
   const { type, payload } = dispatcher
   const action: StoreAction = actions[type]

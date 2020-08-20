@@ -51,6 +51,4 @@ export type ListingPayload =
   | SetCountryPayload
   | SetCurrencyPayload
 
-export interface StorageAction extends StoreDispatcher<ListingPayload> {
-  type: LISTING_ACTIONS
-}
+export type StorageAction = StoreDispatcher<LISTING_ACTIONS, ListingPayload>

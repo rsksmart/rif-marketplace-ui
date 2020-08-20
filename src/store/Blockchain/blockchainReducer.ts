@@ -1,6 +1,6 @@
 import { initialState } from 'store/Blockchain/BlockchainStore'
 import {
-  AddTxPayload, BlockchainPayload, BLOCKCHAIN_ACTIONS, ConfirmationsPayload,
+  AddTxPayload, BlockchainPayload, BLOCKCHAIN_ACTION, ConfirmationsPayload,
 } from './blockchainActions'
 import { BlockchainState } from './BlockchainStore'
 
@@ -9,7 +9,7 @@ export interface BlockchainReducer {
 }
 
 type IBlockchainActions = {
-  [key in BLOCKCHAIN_ACTIONS]: BlockchainReducer
+  [key in BLOCKCHAIN_ACTION]: BlockchainReducer
 }
 
 export const blockchainActions: IBlockchainActions = {
