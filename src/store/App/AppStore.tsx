@@ -11,8 +11,8 @@ import React, { Dispatch, useReducer } from 'react'
 import { StoreActions, StoreReducer, StoreState } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
-import { AppAction, ErrorMessagePayload } from './appActions'
-import { appActions, AppReducer } from './appReducer'
+import { AppAction, ErrorMessagePayload, AppPayload } from './appActions'
+import { appActions, AppReducer } from './appActions'
 
 export type StoreName = 'app'
 
@@ -50,7 +50,7 @@ export const initialState: AppState = {
 }
 
 const AppStore = React.createContext({} as AppStoreProps | any)
-const appReducer: AppReducer | StoreReducer = storeReducerFactory(initialState, appActions as unknown as StoreActions)
+const appReducer: AppReducer<AppPayload> | StoreReducer = storeReducerFactory(initialState, appActions as unknown as StoreActions)
 
 export type ErrorReporterError = Modify<Omit<ErrorMessagePayload, 'type'>, {
   id: ErrorId
@@ -69,7 +69,7 @@ export const errorReporterFactory: ErrorReporterFactory = (dispatch: Dispatch<Ap
       ...error,
       type: 'error',
     } as ErrorMessagePayload,
-  } as any)
+  })
 }
 export const AppStoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState)

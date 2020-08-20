@@ -8,7 +8,7 @@ import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
-import RnsOffersStore from 'store/Services/rns/OffersStore'
+import RnsOffersStore, { RnsOffersStoreProps } from 'store/Services/rns/OffersStore'
 import { OrderPayload, RefreshPayload } from 'store/Services/rns/rnsActions'
 
 const DomainOffersPage: FC = () => {
@@ -30,7 +30,7 @@ const DomainOffersPage: FC = () => {
       filters,
     },
     dispatch,
-  } = useContext(RnsOffersStore)
+  } = useContext<RnsOffersStoreProps>(RnsOffersStore)
   const history = useHistory()
   const routeState = history.location.state as { refresh?: boolean }
 
@@ -80,7 +80,7 @@ const DomainOffersPage: FC = () => {
         tokenId,
       } = item
 
-      const pseudoResolvedName = filters.name && (`${filters.name}.rsk`)
+      const pseudoResolvedName: string = filters.name as string && (`${filters.name}.rsk`)
       const { rate, displayName } = crypto[paymentToken]
 
       const displayDomainName = domainName || pseudoResolvedName

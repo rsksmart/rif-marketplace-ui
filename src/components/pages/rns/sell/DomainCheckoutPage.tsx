@@ -168,7 +168,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
             id: 'contract',
             message: 'Approving domain placement...',
           } as LoadingPayload,
-        } as any)
+        })
 
         // Send approval transaction
         const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId, { from: account, gasPrice })
