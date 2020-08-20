@@ -1,8 +1,8 @@
-import { RnsStoreNames } from 'store/Market/rns/interfaces'
+import { RnsStoreNames } from 'store/Services/rns/interfaces'
 import { StoreName as BlockchainStoreName } from 'store/Blockchain/BlockchainStore'
 import { StoreName as MarketStoreName } from 'store/Market/MarketStore'
 import { StoreName as AppStoreName } from 'store/App/AppStore'
-import { StoreName as StorageListingStoreName } from 'store/Market/storage/ListingStore'
+import { StoreName as StorageListingStoreName } from 'store/Services/storage/ListingStore'
 
 export type AvailableStores =
   | RnsStoreNames

@@ -5,13 +5,13 @@ import networkConfig from 'config'
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import ROUTES from 'routes'
-import { RnsDomainsStoreProvider } from 'store/Market/rns/DomainsStore'
-import { RnsOffersStoreProvider } from 'store/Market/rns/OffersStore'
-import { RnsSoldStoreProvider } from 'store/Market/rns/SoldStore'
+import { RnsDomainsStoreProvider } from 'store/Services/rns/DomainsStore'
+import { RnsOffersStoreProvider } from 'store/Services/rns/OffersStore'
+import { RnsSoldStoreProvider } from 'store/Services/rns/SoldStore'
 import {
   CancelDomainCheckoutPage, DomainCanceled, DomainListed, DomainOffersCheckoutPage,
   DomainOffersPage, DomainPurchased, DomainsCheckoutPage, NotFound, SellDomainsListPage,
-} from '..'
+} from '../'
 import RnsLandingPage from './RnsLandingPage'
 
 const TABS: StyledNavTabProps[] = [

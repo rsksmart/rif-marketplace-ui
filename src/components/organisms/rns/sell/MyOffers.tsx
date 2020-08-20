@@ -9,8 +9,8 @@ import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import MarketStore from 'store/Market/MarketStore'
-import RnsDomainsStore from 'store/Market/rns/DomainsStore'
-import { OrderPayload } from 'store/Market/rns/rnsActions'
+import RnsDomainsStore from 'store/Services/rns/DomainsStore'
+import { OrderPayload } from 'store/Services/rns/rnsActions'
 
 const MyOffers: FC<{}> = () => {
   const {

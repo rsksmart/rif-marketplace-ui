@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { colors, validatedNumber } from '@rsksmart/rif-ui'
 import { makeStyles } from '@material-ui/core'
-import { TimePeriodEnum } from 'store/Market/storage/interfaces'
+import { TimePeriodEnum } from 'store/Services/storage/interfaces'
 
 export interface PlanItemBaseFormTemplateProps {
   periodOptions: TimePeriodEnum[]

@@ -17,7 +17,7 @@ import AppStore, { errorReporterFactory } from 'store/App/AppStore'
 import { AddTxPayload } from 'store/Blockchain/blockchainActions'
 import BlockchainStore from 'store/Blockchain/BlockchainStore'
 import MarketStore from 'store/Market/MarketStore'
-import RnsOffersStore from 'store/Market/rns/OffersStore'
+import RnsOffersStore from 'store/Services/rns/OffersStore'
 import Logger from 'utils/Logger'
 
 import {

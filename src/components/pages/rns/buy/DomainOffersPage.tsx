@@ -8,8 +8,8 @@ import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import MarketStore, { TxType } from 'store/Market/MarketStore'
-import RnsOffersStore from 'store/Market/rns/OffersStore'
-import { OrderPayload, RefreshPayload } from 'store/Market/rns/rnsActions'
+import RnsOffersStore from 'store/Services/rns/OffersStore'
+import { OrderPayload, RefreshPayload } from 'store/Services/rns/rnsActions'
 
 const DomainOffersPage: FC = () => {
   const {

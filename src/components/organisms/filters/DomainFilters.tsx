@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import RnsDomainsStore from 'store/Market/rns/DomainsStore'
+import RnsDomainsStore from 'store/Services/rns/DomainsStore'
 import { DomainsSaleStatus } from 'api/models/RnsFilter'
 import RadioFilter from './RadioFilter'
 import SearchFilter from './SearchFilter'

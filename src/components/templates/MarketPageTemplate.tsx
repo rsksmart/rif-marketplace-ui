@@ -7,7 +7,7 @@ import { MarketItem } from 'models/Market'
 import React, {
   Dispatch, FC, useContext, useEffect,
 } from 'react'
-import { RnsAction } from 'store/Market/rns/rnsActions'
+import { RnsAction } from 'store/Services/rns/rnsActions'
 import AppStore from 'store/App/AppStore'
 import { MessagePayload } from 'store/App/appActions'
 import Marketplace, { TableHeaders } from './marketplace/Marketplace'

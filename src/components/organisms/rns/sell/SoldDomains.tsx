@@ -5,7 +5,7 @@ import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsSoldDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext } from 'react'
 import MarketStore from 'store/Market/MarketStore'
-import RnsSoldStore, { RnsSoldStoreProps } from 'store/Market/rns/SoldStore'
+import RnsSoldStore, { RnsSoldStoreProps } from 'store/Services/rns/SoldStore'
 
 const SoldDomains: FC<{}> = () => {
   const {

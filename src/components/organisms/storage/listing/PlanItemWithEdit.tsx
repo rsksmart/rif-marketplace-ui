@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { StoragePlanItem } from 'store/Market/storage/interfaces'
+import { StoragePlanItem } from 'store/Services/storage/interfaces'
 import EditablePlanItem from './EditablePlanItem'
 import PlanItem from './PlanItem'
 

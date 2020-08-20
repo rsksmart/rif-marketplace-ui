@@ -1,6 +1,6 @@
 import { PriceFilter } from 'api/models/RnsFilter'
 import React, { FC, useContext } from 'react'
-import RnsOffersStore from 'store/Market/rns/OffersStore'
+import RnsOffersStore from 'store/Services/rns/OffersStore'
 import RangeFilter from './RangeFilter'
 import SearchFilter from './SearchFilter'
 

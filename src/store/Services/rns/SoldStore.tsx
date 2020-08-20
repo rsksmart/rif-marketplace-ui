@@ -10,7 +10,7 @@ import { Modify } from 'utils/typeUtils'
 import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
 import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
 import { LoadingPayload } from 'store/App/appActions'
-import { RefreshPayload, RnsPayload } from 'store/Market/rns/rnsActions'
+import { RefreshPayload, RnsPayload } from 'store/Services/rns/rnsActions'
 import {
   RnsListing, RnsOrder, RnsState, RnsStoreProps,
 } from './interfaces'

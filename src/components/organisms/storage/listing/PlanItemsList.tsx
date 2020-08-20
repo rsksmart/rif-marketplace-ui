@@ -4,9 +4,9 @@ import React, {
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import EditablePlanItem from 'components/organisms/storage/listing/EditablePlanItem'
-import { StoragePlanItem } from 'store/Market/storage/interfaces'
+import { StoragePlanItem } from 'store/Services/storage/interfaces'
 import PlanItemWithEdit from 'components/organisms/storage/listing/PlanItemWithEdit'
-import StorageListingStore from 'store/Market/storage/ListingStore'
+import StorageListingStore from 'store/Services/storage/ListingStore'
 import MarketStore from 'store/Market/MarketStore'
 
 const PlanItemsList = () => {
