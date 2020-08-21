@@ -5,13 +5,13 @@ import networkConfig from 'config'
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import ROUTES from 'routes'
-import { RnsDomainsStoreProvider } from 'store/Services/rns/DomainsStore'
-import { RnsOffersStoreProvider } from 'store/Services/rns/OffersStore'
-import { RnsSoldStoreProvider } from 'store/Services/rns/SoldStore'
+import { RnsDomainsContextProvider } from 'context/Services/rns/DomainsContext'
+import { RnsOffersContextProvider } from 'context/Services/rns/OffersContext'
+import { RnsSoldContextProvider } from 'context/Services/rns/SoldContext'
 import {
   CancelDomainCheckoutPage, DomainCanceled, DomainListed, DomainOffersCheckoutPage,
   DomainOffersPage, DomainPurchased, DomainsCheckoutPage, NotFound, SellDomainsListPage,
-} from '../'
+} from '..'
 import RnsLandingPage from './RnsLandingPage'
 
 const TABS: StyledNavTabProps[] = [
@@ -39,32 +39,32 @@ const RnsRoutes = () => {
           withTabs({ tabs: TABS, title: 'Domains', defaultRoute: ROUTES.DOMAINS.BUY.BASE })(() => (
             <Switch>
               <Route path={ROUTES.DOMAINS.BUY.BASE}>
-                <RnsOffersStoreProvider>
+                <RnsOffersContextProvider>
                   <Switch>
                     <Route exact path={ROUTES.DOMAINS.BUY.BASE} component={DomainOffersPage} />
                     <Route exact path={ROUTES.DOMAINS.BUY.CHECKOUT} component={DomainOffersCheckoutPage} />
                     <Route exact path={ROUTES.DOMAINS.BUY.DONE} component={DomainPurchased} />
                     <Route component={NotFound} />
                   </Switch>
-                </RnsOffersStoreProvider>
+                </RnsOffersContextProvider>
               </Route>
               <Route path={ROUTES.DOMAINS.SELL.BASE}>
-                <RnsDomainsStoreProvider>
+                <RnsDomainsContextProvider>
                   <Switch>
                     <Route exact path={ROUTES.DOMAINS.SELL.CANCEL.DONE} component={DomainCanceled} />
                     <Route exact path={ROUTES.DOMAINS.SELL.CANCEL.CHECKOUT} component={CancelDomainCheckoutPage} />
                     <Route exact path={ROUTES.DOMAINS.SELL.CHECKOUT} component={DomainsCheckoutPage} />
                     <Route exact path={ROUTES.DOMAINS.SELL.DONE} component={DomainListed} />
                     <Route path={ROUTES.DOMAINS.SELL.BASE}>
-                      <RnsSoldStoreProvider>
+                      <RnsSoldContextProvider>
                         <Switch>
                           <Route exact path={ROUTES.DOMAINS.SELL.BASE} component={SellDomainsListPage} />
                           <Route component={NotFound} />
                         </Switch>
-                      </RnsSoldStoreProvider>
+                      </RnsSoldContextProvider>
                     </Route>
                   </Switch>
-                </RnsDomainsStoreProvider>
+                </RnsDomainsContextProvider>
               </Route>
               <Route component={NotFound} />
             </Switch>

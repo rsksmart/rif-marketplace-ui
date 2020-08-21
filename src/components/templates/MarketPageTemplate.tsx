@@ -7,11 +7,11 @@ import { MarketItem } from 'models/Market'
 import React, {
   Dispatch, FC, useContext, useEffect,
 } from 'react'
-import { RnsAction } from 'store/Services/rns/rnsActions'
-import AppStore from 'store/App/AppStore'
-import { MessagePayload } from 'store/App/appActions'
+import { RnsAction } from 'context/Services/rns/rnsActions'
+import AppContext from 'context/App/AppContext'
+import { MessagePayload } from 'context/App/appActions'
 import Marketplace, { TableHeaders } from './marketplace/Marketplace'
-import { AppStoreProps } from '../../store/App/AppStore'
+import { AppContextProps } from '../../context/App/AppContext'
 
 export interface MarketPageTemplateProps {
   className?: string
@@ -58,7 +58,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
       loaders,
     },
     dispatch: appDispatch,
-  } = useContext<AppStoreProps>(AppStore)
+  } = useContext<AppContextProps>(AppContext)
 
   const isLoadingFilters = loaders.filters
   const isLoadingItems = loaders.data

@@ -5,7 +5,7 @@ import { shortenString, Typography } from '@rsksmart/rif-ui'
 import React, {
   FC, useContext, useEffect,
 } from 'react'
-import BlockchainStore, { BlockchainStoreProps } from 'store/Blockchain/BlockchainStore'
+import BlockchainContext, { BlockchainContextProps } from 'context/Blockchain/BlockchainContext'
 
 export interface TransactionInProgressPanelProps {
   text: string
@@ -35,7 +35,7 @@ const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
   const {
     state: { confirmations: { txHash, currentCount, targetCount } },
     dispatch: bcDispatch,
-  }: BlockchainStoreProps = useContext(BlockchainStore)
+  }: BlockchainContextProps = useContext(BlockchainContext)
 
   useEffect(() => {
     if (currentCount && targetCount && currentCount >= targetCount) {

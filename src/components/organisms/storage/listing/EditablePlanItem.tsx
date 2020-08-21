@@ -4,9 +4,9 @@ import React, {
 import InfoIcon from '@material-ui/icons/Info'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import { StoragePlanItem } from 'store/Services/storage/interfaces'
-import StorageListingStore from 'store/Services/storage/ListingStore'
-import { EditItemPayload, AddItemPayload } from 'store/Services/storage/listingActions'
+import { StoragePlanItem } from 'context/Services/storage/interfaces'
+import StorageListingContext from 'context/Services/storage/ListingContext'
+import { EditItemPayload, AddItemPayload } from 'context/Services/storage/listingActions'
 import PlanItemBaseFormTemplate from 'components/templates/storage/listing/PlanItemBaseFormTemplate'
 import TooltipIconButton, { TooltipIconButtonProps } from 'components/molecules/TooltipIconButton'
 import AddIcon from '@material-ui/icons/Add'
@@ -27,7 +27,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
   onPlanSaved,
   fiatXR, fiatDisplayName,
 }) => {
-  const { state: { allPeriods, availablePeriods, currency }, dispatch } = useContext(StorageListingStore)
+  const { state: { allPeriods, availablePeriods, currency }, dispatch } = useContext(StorageListingContext)
 
   const [pricePerGb, setPricePerGb] = useState(planItem?.pricePerGb || 1)
   const editMode = !!planItem

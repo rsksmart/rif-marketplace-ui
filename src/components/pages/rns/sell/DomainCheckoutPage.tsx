@@ -17,14 +17,14 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import { AddTxPayload } from 'store/Blockchain/blockchainActions'
-import BlockchainStore from 'store/Blockchain/BlockchainStore'
-import MarketStore from 'store/Market/MarketStore'
-import RnsDomainsStore from 'store/Services/rns/DomainsStore'
+import { AddTxPayload } from 'context/Blockchain/blockchainActions'
+import BlockchainContext from 'context/Blockchain/BlockchainContext'
+import MarketContext from 'context/Market/MarketContext'
+import RnsDomainsContext from 'context/Services/rns/DomainsContext'
 import Logger from 'utils/Logger'
-import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { UIError } from 'models/UIMessage'
-import { LoadingPayload } from 'store/App/appActions'
+import { LoadingPayload } from 'context/App/appActions'
 import { rifTokenAddress, marketPlaceAddress } from 'contracts/config'
 
 const logger = Logger.getInstance()
@@ -85,7 +85,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
     state: {
       order,
     }, dispatch,
-  } = useContext(RnsDomainsStore)
+  } = useContext(RnsDomainsContext)
 
   const {
     state: {
@@ -94,7 +94,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
         crypto,
       },
     },
-  } = useContext(MarketStore)
+  } = useContext(MarketContext)
   const classes = useStyles()
   const {
     state: {
@@ -102,9 +102,9 @@ const DomainsCheckoutPage: FC<{}> = () => {
       web3,
     },
   } = useContext(Web3Store)
-  const { dispatch: bcDispatch } = useContext(BlockchainStore)
+  const { dispatch: bcDispatch } = useContext(BlockchainContext)
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
-  const { dispatch: appDispatch } = useContext<AppStoreProps>(AppStore)
+  const { dispatch: appDispatch } = useContext<AppContextProps>(AppContext)
   const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
   const currencySymbols = Object.keys(crypto)

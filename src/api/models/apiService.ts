@@ -2,7 +2,7 @@ import { Application, Service } from '@feathersjs/feathers'
 import { AuthenticationResult } from '@feathersjs/authentication'
 import client from 'api/rif-marketplace-cache/client'
 import { MarketFilterType } from 'models/Market'
-import { ErrorReporterError } from 'store/App/AppStore'
+import { ErrorReporterError } from 'context/App/AppContext'
 import { ServiceAddress } from './serviceAddresses'
 
 export type APIErrorId = 'service-connection' | 'service-event-attach' | 'service-fetch'

@@ -8,9 +8,9 @@ import { RnsDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import MarketStore from 'store/Market/MarketStore'
-import RnsDomainsStore from 'store/Services/rns/DomainsStore'
-import { OrderPayload } from 'store/Services/rns/rnsActions'
+import MarketContext from 'context/Market/MarketContext'
+import RnsDomainsContext from 'context/Services/rns/DomainsContext'
+import { OrderPayload } from 'context/Services/rns/rnsActions'
 
 const MyOffers: FC<{}> = () => {
   const {
@@ -20,7 +20,7 @@ const MyOffers: FC<{}> = () => {
         crypto,
       },
     },
-  } = useContext(MarketStore)
+  } = useContext(MarketContext)
 
   const {
     state: {
@@ -31,7 +31,7 @@ const MyOffers: FC<{}> = () => {
       filters,
     },
     dispatch,
-  } = useContext(RnsDomainsStore)
+  } = useContext(RnsDomainsContext)
 
   useEffect(() => {
     dispatch({

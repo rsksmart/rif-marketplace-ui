@@ -7,10 +7,10 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import PlanItemsList from 'components/organisms/storage/listing/PlanItemsList'
 import BaseSettings from 'components/organisms/storage/listing/BaseSettings'
-import StorageListingStore from 'store/Services/storage/ListingStore'
+import StorageListingContext from 'context/Services/storage/ListingContext'
 import StorageContract from 'contracts/Storage'
 import Logger from 'utils/Logger'
-import { StoragePlanItem } from 'store/Services/storage/interfaces'
+import { StoragePlanItem } from 'context/Services/storage/interfaces'
 import { convertGbsToBytes, convertDaysToSeconds } from 'utils/utils'
 import { UIError } from 'models/UIMessage'
 import Login from 'components/atoms/Login'
@@ -18,11 +18,11 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import Big from 'big.js'
 import { parseToWei } from 'utils/parsers'
-import AppStore, { errorReporterFactory } from 'store/App/AppStore'
+import AppContext, { errorReporterFactory } from 'context/App/AppContext'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
-import { AddTxPayload } from 'store/Blockchain/blockchainActions'
-import BlockchainStore from 'store/Blockchain/BlockchainStore'
-import { LoadingPayload } from 'store/App/appActions'
+import { AddTxPayload } from 'context/Blockchain/blockchainActions'
+import BlockchainContext from 'context/Blockchain/BlockchainContext'
+import { LoadingPayload } from 'context/App/appActions'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 
 // TODO: discuss about wrapping the library and export it with this change
@@ -75,7 +75,7 @@ const StorageListingPage = () => {
       planItems, availableSize, currency, system,
     },
     dispatch,
-  } = useContext(StorageListingStore)
+  } = useContext(StorageListingContext)
 
   const {
     state: {
@@ -83,9 +83,9 @@ const StorageListingPage = () => {
       web3,
     },
   } = useContext(Web3Store)
-  const { dispatch: bcDispatch } = useContext(BlockchainStore)
+  const { dispatch: bcDispatch } = useContext(BlockchainContext)
 
-  const { dispatch: appDispatch } = useContext(AppStore)
+  const { dispatch: appDispatch } = useContext(AppContext)
   const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)

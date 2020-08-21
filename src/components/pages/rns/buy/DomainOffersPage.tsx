@@ -7,9 +7,9 @@ import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import MarketStore, { TxType } from 'store/Market/MarketStore'
-import RnsOffersStore, { RnsOffersStoreProps } from 'store/Services/rns/OffersStore'
-import { OrderPayload, RefreshPayload } from 'store/Services/rns/rnsActions'
+import MarketContext, { TxType } from 'context/Market/MarketContext'
+import RnsOffersContext, { RnsOffersContextProps } from 'context/Services/rns/OffersContext'
+import { OrderPayload, RefreshPayload } from 'context/Services/rns/rnsActions'
 
 const DomainOffersPage: FC = () => {
   const {
@@ -20,7 +20,7 @@ const DomainOffersPage: FC = () => {
       },
     },
     dispatch: mDispatch,
-  } = useContext(MarketStore)
+  } = useContext(MarketContext)
   const {
     state: {
       listing: {
@@ -30,7 +30,7 @@ const DomainOffersPage: FC = () => {
       filters,
     },
     dispatch,
-  } = useContext<RnsOffersStoreProps>(RnsOffersStore)
+  } = useContext<RnsOffersContextProps>(RnsOffersContext)
   const history = useHistory()
   const routeState = history.location.state as { refresh?: boolean }
 
