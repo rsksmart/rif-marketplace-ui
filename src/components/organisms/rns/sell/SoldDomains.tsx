@@ -4,8 +4,8 @@ import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsSoldDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext } from 'react'
-import MarketStore from 'store/Market/MarketStore'
-import RnsSoldStore, { RnsSoldStoreProps } from 'store/Market/rns/SoldStore'
+import MarketContext from 'context/Market/MarketContext'
+import RnsSoldContext, { RnsSoldContextProps } from 'context/Services/rns/SoldContext'
 
 const SoldDomains: FC<{}> = () => {
   const {
@@ -15,14 +15,14 @@ const SoldDomains: FC<{}> = () => {
         crypto,
       },
     },
-  } = useContext(MarketStore)
+  } = useContext(MarketContext)
   const {
     state: {
       listing,
       filters,
     },
     dispatch,
-  } = useContext<RnsSoldStoreProps>(RnsSoldStore)
+  } = useContext<RnsSoldContextProps>(RnsSoldContext)
 
   const { items, outdatedTokens } = listing
   const { name } = filters

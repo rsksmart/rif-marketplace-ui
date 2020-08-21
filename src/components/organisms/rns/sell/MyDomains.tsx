@@ -6,8 +6,8 @@ import { RnsDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import RnsDomainsStore from 'store/Market/rns/DomainsStore'
-import { OrderPayload, RefreshPayload } from 'store/Market/rns/rnsActions'
+import RnsDomainsContext from 'context/Services/rns/DomainsContext'
+import { OrderPayload, RefreshPayload } from 'context/Services/rns/rnsActions'
 
 const MyDomains: FC<{}> = () => {
   const {
@@ -16,7 +16,7 @@ const MyDomains: FC<{}> = () => {
       filters,
     },
     dispatch,
-  } = useContext(RnsDomainsStore)
+  } = useContext(RnsDomainsContext)
   const history = useHistory()
   const routeState = history.location.state as { refresh?: boolean }
 

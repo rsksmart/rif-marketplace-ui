@@ -5,7 +5,7 @@ import networkConfig from 'config'
 import React, { FC } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import ROUTES from 'routes'
-import { StorageListingStoreProvider } from 'store/Market/storage/ListingStore'
+import { StorageListingContextProvider } from 'context/Services/storage/ListingContext'
 import { StorageListingPage, StorageOffersPage } from '.'
 import { NotFound } from '..'
 import StorageOfferListed from './sell/StorageOfferListed'
@@ -47,9 +47,9 @@ const StorageRoutes: FC = () => {
             <Switch>
               <Route exact path={ROUTES.STORAGE.BUY.BASE} component={StorageOffersPage} />
               <Route exact path={ROUTES.STORAGE.SELL.BASE}>
-                <StorageListingStoreProvider>
+                <StorageListingContextProvider>
                   <StorageListingPage />
-                </StorageListingStoreProvider>
+                </StorageListingContextProvider>
               </Route>
               <Route exact path={ROUTES.STORAGE.SELL.DONE} component={StorageOfferListed} />
               <Route component={NotFound} />

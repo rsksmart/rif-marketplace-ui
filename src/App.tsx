@@ -9,9 +9,9 @@ import Header from 'components/organisms/Header'
 import Routes from 'components/Routes'
 import React, { useState } from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import { AppStoreProvider } from 'store/App/AppStore'
-import { BlockchainStoreProvider } from 'store/Blockchain/BlockchainStore'
-import { MarketStoreProvider } from 'store/Market/MarketStore'
+import { AppContextProvider } from 'context/App/AppContext'
+import { BlockchainContextProvider } from 'context/Blockchain/BlockchainContext'
+import { MarketContextProvider } from 'context/Market/MarketContext'
 
 const requiredNetworkId: number = Number(process.env.REACT_APP_REQUIRED_NETWORK_ID) || 8545
 
@@ -41,8 +41,8 @@ const App = () => {
   }
 
   const orderedProviders = [
-    BlockchainStoreProvider,
-    MarketStoreProvider,
+    BlockchainContextProvider,
+    MarketContextProvider,
   ]
   const content = (
     <BrowserRouter>
@@ -63,7 +63,7 @@ const App = () => {
   )
 
   return (
-    <AppStoreProvider>
+    <AppContextProvider>
       <ThemeProvider theme={theme}>
         <Web3Provider.Provider
           requiredNetworkId={requiredNetworkId}
@@ -77,7 +77,7 @@ const App = () => {
           }
         </Web3Provider.Provider>
       </ThemeProvider>
-    </AppStoreProvider>
+    </AppContextProvider>
   )
 }
 

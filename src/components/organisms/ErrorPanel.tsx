@@ -1,7 +1,7 @@
 import InfoBar from 'components/molecules/InfoBar'
 import React, { useContext } from 'react'
-import { RemoveMessagePayload } from 'store/App/appActions'
-import AppStore from 'store/App/AppStore'
+import { RemoveMessagePayload } from 'context/App/appActions'
+import AppContext from 'context/App/AppContext'
 import Logger from 'utils/Logger'
 import { MessageId, Message, ErrorMessage } from 'models/UIMessage'
 
@@ -12,7 +12,7 @@ const ErrorPanel = () => {
     state: {
       messages,
     }, dispatch,
-  } = useContext(AppStore)
+  } = useContext(AppContext)
 
   return (
     <>

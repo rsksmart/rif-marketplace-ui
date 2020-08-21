@@ -4,10 +4,10 @@ import React, {
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import EditablePlanItem from 'components/organisms/storage/listing/EditablePlanItem'
-import { StoragePlanItem } from 'store/Market/storage/interfaces'
+import { StoragePlanItem } from 'context/Services/storage/interfaces'
 import PlanItemWithEdit from 'components/organisms/storage/listing/PlanItemWithEdit'
-import StorageListingStore from 'store/Market/storage/ListingStore'
-import MarketStore from 'store/Market/MarketStore'
+import StorageListingContext from 'context/Services/storage/ListingContext'
+import MarketContext from 'context/Market/MarketContext'
 
 const PlanItemsList = () => {
   const {
@@ -16,7 +16,7 @@ const PlanItemsList = () => {
       availablePeriods,
       currency,
     },
-  } = useContext(StorageListingStore)
+  } = useContext(StorageListingContext)
 
   const {
     state: {
@@ -25,7 +25,7 @@ const PlanItemsList = () => {
         crypto,
       },
     },
-  } = useContext(MarketStore)
+  } = useContext(MarketContext)
 
   const { rate: fiatXR } = crypto[currency.toLowerCase()]
 
