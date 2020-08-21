@@ -34,7 +34,7 @@ const StorageLandingPage: FC = () => {
         {' '}
         <i>Consumers</i>
         {' '}
-        can browse the available offers and rent the desired space to state the required content, having the option to upload it directly or simply replicate it among different
+        can browse the available offers and rent the desired space to store the required content, having the option to upload it directly or simply replicate it among different
         {' '}
         <i>Providers</i>
         , if required.
