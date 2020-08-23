@@ -7,10 +7,14 @@ import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
 import { ContextActions, ContextReducer, ContextState } from 'context/storeUtils/interfaces'
 import storeReducerFactory from 'context/storeUtils/reducer'
-import { ErrorId, ErrorMessage, LoaderId, Message, MessageId } from 'models/UIMessage'
+import {
+  ErrorId, ErrorMessage, LoaderId, Message, MessageId,
+} from 'models/UIMessage'
 import React, { Dispatch, useReducer } from 'react'
 import { Modify } from 'utils/typeUtils'
-import { AppAction, appActions, AppPayload, AppReducer, ErrorMessagePayload } from './appActions'
+import {
+  AppAction, appActions, AppPayload, AppReducer, ErrorMessagePayload,
+} from './appActions'
 
 export type ContextName = 'app'
 

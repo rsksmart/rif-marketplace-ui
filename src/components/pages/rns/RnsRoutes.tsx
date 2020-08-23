@@ -1,7 +1,9 @@
 /* eslint-disable-next-line import/no-unresolved */
 import { StyledNavTabProps } from '@rsksmart/rif-ui/dist/components/atoms/StyledNavTab'
 import React, { useEffect } from 'react'
-import { Redirect, Route, Switch, useHistory } from 'react-router-dom'
+import {
+  Redirect, Route, Switch, useHistory,
+} from 'react-router-dom'
 import withTabs from 'components/hoc/withTabs'
 import networkConfig from 'config'
 import { RnsDomainsContextProvider } from 'context/Services/rns/DomainsContext'
@@ -11,10 +13,9 @@ import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import {
   CancelDomainCheckoutPage, DomainCanceled, DomainListed, DomainOffersCheckoutPage,
-  DomainOffersPage, DomainPurchased, DomainsCheckoutPage, NotFound, SellDomainsListPage
+  DomainOffersPage, DomainPurchased, DomainsCheckoutPage, NotFound, SellDomainsListPage,
 } from '..'
 import RnsLandingPage from './RnsLandingPage'
-
 
 const logger = Logger.getInstance()
 const TABS: StyledNavTabProps[] = [
