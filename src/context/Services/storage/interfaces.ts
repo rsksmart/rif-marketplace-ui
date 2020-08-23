@@ -1,10 +1,10 @@
 import { ContextState } from 'context/storeUtils/interfaces'
 import { Dispatch } from 'react'
+import { StorageItem } from 'models/marketItems/StorageItem'
 import { StorageAction } from './listingActions'
 import { ServiceState } from '../interfaces'
 import { ContextName as ListingContextName } from './ListingContext'
 import { ContextName as OffersContextName } from './OffersContext'
-import { StorageItem } from 'models/marketItems/StorageItem'
 
 export type StorageContextNames = OffersContextName | ListingContextName
 

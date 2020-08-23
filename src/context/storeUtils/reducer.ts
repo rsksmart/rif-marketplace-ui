@@ -12,27 +12,27 @@ const storeReducerFactory = (
 ): ContextReducer => (
   state = initialState,
   dispatcher: ContextDispatch<ContextActionType, ContextPayload>,
-  ) => {
-    const { type, payload } = dispatcher
-    const action: ContextAction = actions[type]
+) => {
+  const { type, payload } = dispatcher
+  const action: ContextAction = actions[type]
 
-    logger.debug(`${initialState.contextID} action:`, type)
-    logger.debug(`${initialState.contextID} payload:`, payload)
-    try {
-      const newState = (!!action && action(state, payload)) || state
+  logger.debug(`${initialState.contextID} action:`, type)
+  logger.debug(`${initialState.contextID} payload:`, payload)
+  try {
+    const newState = (!!action && action(state, payload)) || state
 
-      if (state !== newState) {
-        logger.debug('Prev state:', state)
-        logger.debug('Next state:', newState)
-      } else {
-        logger.debug('No change:', newState)
-      }
-
-      return newState
-    } catch (e) {
-      if (errorHandle) { errorHandle(e) }
-      return state
+    if (state !== newState) {
+      logger.debug('Prev state:', state)
+      logger.debug('Next state:', newState)
+    } else {
+      logger.debug('No change:', newState)
     }
+
+    return newState
+  } catch (e) {
+    if (errorHandle) { errorHandle(e) }
+    return state
   }
+}
 
 export default storeReducerFactory

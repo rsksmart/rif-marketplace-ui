@@ -1,7 +1,9 @@
 /* eslint-disable-next-line import/no-unresolved */
 import { StyledNavTabProps } from '@rsksmart/rif-ui/dist/components/atoms/StyledNavTab'
 import React, { useEffect } from 'react'
-import { Redirect, Route, Switch, useHistory } from 'react-router-dom'
+import {
+  Redirect, Route, Switch, useHistory,
+} from 'react-router-dom'
 
 import withTabs from 'components/hoc/withTabs'
 import networkConfig from 'config'

@@ -1,7 +1,7 @@
-import { ContextState } from "context/storeUtils/interfaces";
-import { LISTING_ACTION } from "./storage/listingActions";
-import { STORAGE_ACTION } from "./storage/storageActions";
-import { RNS_ACTION } from "./rns/rnsActions";
+import { ContextState } from 'context/storeUtils/interfaces'
+import { LISTING_ACTION } from './storage/listingActions'
+import { STORAGE_ACTION } from './storage/storageActions'
+import { RNS_ACTION } from './rns/rnsActions'
 
 export type SERVICE_ACTION = LISTING_ACTION | STORAGE_ACTION | RNS_ACTION
 
