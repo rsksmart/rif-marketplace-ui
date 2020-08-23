@@ -1,14 +1,11 @@
 import React, { FC, useContext } from 'react'
 import StorageFilters from 'components/organisms/filters/storage/StorageFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
-import StorageOffersContext, { StorageOffersCtxProps } from 'store/Market/storage/OffersContext'
 import { TableHeaders } from 'components/templates/marketplace/Marketplace'
 import { BillingPlan } from 'models/marketItems/StorageItem'
 import { CombinedPriceCell, SelectRowButton } from 'components/molecules'
-import MarketStore from 'store/Market/MarketStore'
-// import { useHistory } from 'react-router-dom'
-// import { OrderPayload } from 'store/Services/storage/storageActions'
-// import ROUTES from 'routes'
+import MarketContext from 'context/Market/MarketContext'
+import StorageOffersContext, { StorageOffersCtxProps } from 'context/Services/storage/OffersContext'
 
 const TABLE_HEADERS: TableHeaders = {
   provider: 'Provider',
@@ -27,7 +24,7 @@ const StorageOffersPage: FC = () => {
         crypto,
       },
     },
-  } = useContext(MarketStore)
+  } = useContext(MarketContext)
   const {
     state: {
       listing: { items },

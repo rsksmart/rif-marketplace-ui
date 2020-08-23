@@ -12,7 +12,8 @@ const RNS_CANCEL = `${RNS_SELL}/cancel`
 const STORAGE = '/storage'
 const STORAGE_BUY = `${STORAGE}/buy`
 const STORAGE_SELL = `${STORAGE}/sell`
-
+const STORAGE_MYOFFERS = `${STORAGE}/myoffers`
+const STORAGE_MYPURCHASES = `${STORAGE}/mypurchases`
 const FAQ = '/faq'
 const ABOUT = '/about'
 
@@ -49,6 +50,12 @@ const ROUTES = {
       BASE: STORAGE_SELL,
       LISTING: `${STORAGE_SELL}/${LISTING}`,
       DONE: `${STORAGE_SELL}/${DONE}`,
+    },
+    MYOFFERS: {
+      BASE: STORAGE_MYOFFERS,
+    },
+    MYPURCHASES: {
+      BASE: STORAGE_MYPURCHASES,
     },
   },
   FAQ,

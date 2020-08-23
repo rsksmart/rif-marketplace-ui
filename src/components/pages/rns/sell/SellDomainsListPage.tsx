@@ -3,8 +3,8 @@ import MyDomains from 'components/organisms/rns/sell/MyDomains'
 import MyOffers from 'components/organisms/rns/sell/MyOffers'
 import SoldDomains from 'components/organisms/rns/sell/SoldDomains'
 import React, { FC, useContext, useEffect } from 'react'
-import RnsDomainsStore from 'store/Market/rns/DomainsStore'
-import MarketStore, { TxType } from 'store/Market/MarketStore'
+import RnsDomainsContext from 'context/Services/rns/DomainsContext'
+import MarketContext, { TxType } from 'context/Market/MarketContext'
 
 type PerStatusComponents = {
   [key in DomainsSaleStatus]: React.ReactNode
@@ -17,10 +17,10 @@ const SellDomainsListPage: FC<{}> = () => {
         status: statusFilter,
       },
     },
-  } = useContext(RnsDomainsStore)
+  } = useContext(RnsDomainsContext)
   const {
     dispatch: mDispatch,
-  } = useContext(MarketStore)
+  } = useContext(MarketContext)
 
   useEffect(() => {
     mDispatch({

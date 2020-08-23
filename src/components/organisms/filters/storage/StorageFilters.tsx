@@ -41,6 +41,7 @@ const StorageFilters: FC = () => {
       <SearchFilter
         value={searchText}
         onChange={onSearchTextChange}
+        placeholder="Search provider"
       />
       <RangeFilter
         title="Size"

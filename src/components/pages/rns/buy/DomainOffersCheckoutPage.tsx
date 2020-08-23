@@ -12,12 +12,12 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import { LoadingPayload } from 'store/App/appActions'
-import AppStore, { errorReporterFactory } from 'store/App/AppStore'
-import { AddTxPayload } from 'store/Blockchain/blockchainActions'
-import BlockchainStore from 'store/Blockchain/BlockchainStore'
-import MarketStore from 'store/Market/MarketStore'
-import RnsOffersStore from 'store/Market/rns/OffersStore'
+import { LoadingPayload } from 'context/App/appActions'
+import AppContext, { errorReporterFactory } from 'context/App/AppContext'
+import { AddTxPayload } from 'context/Blockchain/blockchainActions'
+import BlockchainContext from 'context/Blockchain/BlockchainContext'
+import MarketContext from 'context/Market/MarketContext'
+import RnsOffersContext from 'context/Services/rns/OffersContext'
 import Logger from 'utils/Logger'
 
 import {
@@ -79,7 +79,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   const classes = useStyles()
   const history = useHistory()
 
-  const { dispatch: appDispatch } = useContext(AppStore)
+  const { dispatch: appDispatch } = useContext(AppContext)
   const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
   const {
@@ -89,20 +89,20 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
         crypto,
       },
     },
-  } = useContext(MarketStore)
+  } = useContext(MarketContext)
 
   const {
     state: {
       order,
     }, dispatch,
-  } = useContext(RnsOffersStore)
+  } = useContext(RnsOffersContext)
   const {
     state: {
       account,
       web3,
     },
   } = useContext(Web3Store)
-  const { dispatch: bcDispatch } = useContext(BlockchainStore)
+  const { dispatch: bcDispatch } = useContext(BlockchainContext)
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
 
   const [hasFunds, setHasFunds] = useState(false)

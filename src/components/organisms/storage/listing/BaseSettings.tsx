@@ -7,12 +7,12 @@ import MenuItem from '@material-ui/core/MenuItem'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import Tooltip from '@material-ui/core/Tooltip'
 import { colors, validatedNumber } from '@rsksmart/rif-ui'
-import StorageListingStore from 'store/Market/storage/ListingStore'
-import { StorageStoreProps } from 'store/Market/storage/interfaces'
-import { SetAvailableSizePayload, SetCurrencyPayload } from 'store/Market/storage/listingActions'
+import StorageListingContext from 'context/Services/storage/ListingContext'
+import { StorageListingContextProps } from 'context/Services/storage/interfaces'
+import { SetAvailableSizePayload, SetCurrencyPayload } from 'context/Services/storage/listingActions'
 
 const BaseSettings = () => {
-  const { state: { availableSize, system, currency }, dispatch } = useContext<StorageStoreProps>(StorageListingStore)
+  const { state: { availableSize, system, currency }, dispatch } = useContext<StorageListingContextProps>(StorageListingContext)
 
   const onSizeChange = ({ target: { value } }) => {
     dispatch({

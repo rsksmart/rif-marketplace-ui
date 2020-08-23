@@ -16,14 +16,14 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import { AddTxPayload } from 'store/Blockchain/blockchainActions'
-import BlockchainStore from 'store/Blockchain/BlockchainStore'
-import MarketStore from 'store/Market/MarketStore'
-import RnsDomainsStore from 'store/Market/rns/DomainsStore'
+import { AddTxPayload } from 'context/Blockchain/blockchainActions'
+import BlockchainContext from 'context/Blockchain/BlockchainContext'
+import MarketContext from 'context/Market/MarketContext'
+import RnsDomainsContext from 'context/Services/rns/DomainsContext'
 import Logger from 'utils/Logger'
-import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { UIError } from 'models/UIMessage'
-import { LoadingPayload } from 'store/App/appActions'
+import { LoadingPayload } from 'context/App/appActions'
 
 const logger = Logger.getInstance()
 
@@ -78,12 +78,12 @@ const CancelDomainCheckoutPage = () => {
         crypto,
       },
     },
-  } = useContext(MarketStore)
+  } = useContext(MarketContext)
   const {
     state: {
       order,
     }, dispatch,
-  } = useContext(RnsDomainsStore)
+  } = useContext(RnsDomainsContext)
   const classes = useStyles()
   const {
     state: {
@@ -91,10 +91,10 @@ const CancelDomainCheckoutPage = () => {
       web3,
     },
   } = useContext(Web3Store)
-  const { dispatch: bcDispatch } = useContext(BlockchainStore)
+  const { dispatch: bcDispatch } = useContext(BlockchainContext)
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
 
-  const { dispatch: appDispatch } = useContext<AppStoreProps>(AppStore)
+  const { dispatch: appDispatch } = useContext<AppContextProps>(AppContext)
   const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
   useEffect(() => {

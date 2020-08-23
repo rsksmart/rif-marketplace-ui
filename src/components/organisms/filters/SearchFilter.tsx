@@ -75,7 +75,6 @@ const SearchFilter: FC<SearchFilterProps> = (props) => {
       name="search"
       onBlur={handleOnBlur}
       {...props}
-      placeholder="Search your domain"
       variant="outlined"
     />
   )

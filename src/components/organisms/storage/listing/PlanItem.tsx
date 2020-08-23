@@ -6,9 +6,9 @@ import Box from '@material-ui/core/Box'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditIcon from '@material-ui/icons/Edit'
 import { colors } from '@rsksmart/rif-ui'
-import { StoragePlanItem, StorageStoreProps, TimePeriodEnum } from 'store/Market/storage/interfaces'
-import StorageListingStore from 'store/Market/storage/ListingStore'
-import { RemoveItemPayload } from 'store/Market/storage/listingActions'
+import { StoragePlanItem, StorageListingContextProps, TimePeriodEnum } from 'context/Services/storage/interfaces'
+import StorageListingContext from 'context/Services/storage/ListingContext'
+import { RemoveItemPayload } from 'context/Services/storage/listingActions'
 import TooltipIconButton from 'components/molecules/TooltipIconButton'
 import PriceItem from 'components/atoms/PriceItem'
 import { priceDisplay } from 'utils/utils'
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const PlanItem: FC<PlanItemProps> = ({
   planItem, onEditClick, fiatXR, fiatDisplayName,
 }) => {
-  const { dispatch, state: { currency } } = useContext<StorageStoreProps>(StorageListingStore)
+  const { dispatch, state: { currency } } = useContext<StorageListingContextProps>(StorageListingContext)
 
   const classes = useStyles()
 
