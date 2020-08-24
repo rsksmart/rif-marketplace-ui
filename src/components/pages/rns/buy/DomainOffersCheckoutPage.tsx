@@ -263,7 +263,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
 
         if (!isApproved) {
           throw new UIError({
-            error: new Error(),
+            error: new Error('Domain not approved to transfer.'),
             id: 'contract-rns-notApproved',
             text: `Domain ${domainName} not approved to transfer.`,
           })
