@@ -95,6 +95,8 @@ const StorageListingPage = () => {
   const history = useHistory()
 
   const handleSubmit = async () => {
+    // without a web3 instance the submit action would be disabled
+    if (!web3) return
     try {
       appDispatch({
         type: 'SET_IS_LOADING',

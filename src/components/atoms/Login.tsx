@@ -2,7 +2,7 @@ import React from 'react'
 import { Account, Web3Provider } from '@rsksmart/rif-ui'
 
 const requiredNetworkId: number = Number(process.env.REACT_APP_REQUIRED_NETWORK_ID) || 8545
-const requiredNetworkName = process.env.REACT_APP_REQUIRED_NETWORK_NAME
+const requiredNetworkName = process.env.REACT_APP_REQUIRED_NETWORK_NAME || 'Localhost 8545'
 
 const Login = () => {
   const onNetworkMismatchMessage = 'You are on the wrong network.'
@@ -16,7 +16,8 @@ const Login = () => {
           account={account}
           setProvider={setProvider}
           requiredNetworkId={requiredNetworkId}
-          currentNetworkId={networkInfo?.networkId}
+          networkInfo={networkInfo}
+          requiredNetworkName={requiredNetworkName}
           onNetworkMismatchMessage={
             requiredNetworkName
               ? `${onNetworkMismatchMessage} Please, connect to ${requiredNetworkName}.`

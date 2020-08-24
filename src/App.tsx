@@ -1,7 +1,9 @@
 import Collapse from '@material-ui/core/Collapse'
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import Alert from '@material-ui/lab/Alert'
-import { PageTemplate, theme, Web3Provider } from '@rsksmart/rif-ui'
+import {
+  PageTemplate, theme, Web3Provider, defaultWeb3State,
+} from '@rsksmart/rif-ui'
 import '@rsksmart/rif-ui/dist/index.css'
 import ErrorPanel from 'components/organisms/ErrorPanel'
 import Footer from 'components/organisms/Footer'
@@ -71,6 +73,7 @@ const App = () => {
             onConnectedAccountChange,
             onConnectedNetworkChange,
           }}
+          state={defaultWeb3State}
         >
           {
             orderedProviders.reverse().reduce((Wrapper: any, Provider: any) => <Provider>{Wrapper}</Provider>, content)

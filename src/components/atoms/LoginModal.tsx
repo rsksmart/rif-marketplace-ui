@@ -3,7 +3,7 @@ import { AccountModal, Web3Provider } from '@rsksmart/rif-ui'
 
 export interface LoginModalProps {
   open: boolean
-  onProviderSet?: (account: string) => void
+  onProviderSet?: (account?: string) => void
   handleOnClose: () => void
 }
 
@@ -15,18 +15,18 @@ const LoginModal: FC<LoginModalProps> = ({
   <Web3Provider.Consumer>
     {
         ({
-          state: { web3, networkName },
+          state: { web3, networkInfo },
           actions: { setProvider },
           availableProviders,
         }) => (
           <AccountModal
             web3={web3}
-            networkName={networkName}
+            networkInfo={networkInfo}
             open={open}
             onProviderSet={onProviderSet}
             setProvider={setProvider}
             availableProviders={availableProviders}
-            handleClose={handleOnClose}
+            onClose={handleOnClose}
           />
         )
       }

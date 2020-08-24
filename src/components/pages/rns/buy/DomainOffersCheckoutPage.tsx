@@ -112,7 +112,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
 
   // check funds
   useEffect(() => {
-    if (account && tokenId && !isFundsConfirmed) {
+    if (web3 && account && tokenId && !isFundsConfirmed) {
       const checkFunds = async () => {
         appDispatch({
           type: 'SET_IS_LOADING',
@@ -143,9 +143,9 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
           })
 
         const price = tokenPlacement[1]
-        const { utils: { BN } } = web3
+        const { utils: { toBN } } = web3
 
-        setHasFunds(new BN(myBalance).gte(new BN(price)))
+        setHasFunds(toBN(myBalance).gte(toBN(price)))
         setIsFundsConfirmed(true)
       }
       checkFunds()
