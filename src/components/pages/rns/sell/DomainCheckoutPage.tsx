@@ -1,10 +1,9 @@
 import {
-  Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, MenuItem, Select, Table, TableBody, TableCell, TableRow, Theme, Typography,
+  Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, MenuItem, Select, Table, TableBody, TableCell, TableRow, Theme,
 } from '@material-ui/core'
 import {
   Button, colors, shortenString, UnitsInput, validatedNumber, Web3Store,
 } from '@rsksmart/rif-ui'
-import Box from '@material-ui/core/Box'
 import PriceItem from 'components/atoms/PriceItem'
 import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
@@ -356,12 +355,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
         {!isProcessing
           && (
             <CardActions className={classes.footer}>
-              <Typography>
-                Your wallet will open and you will be asked to confirm
-                <Box display="inline" fontWeight="fontWeightMedium" color={`${colors.primary}`}> two transactions</Box>
-                {' '}
-                to list the domain.
-              </Typography>
+              <p>Your wallet will open and you will be asked to confirm the transaction for listing the domain.</p>
               <Button
                 color="primary"
                 variant="contained"

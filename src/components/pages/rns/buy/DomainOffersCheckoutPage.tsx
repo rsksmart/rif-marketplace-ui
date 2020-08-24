@@ -6,7 +6,6 @@ import TransactionInProgressPanel from 'components/organisms/TransactionInProgre
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import MarketplaceContract from 'contracts/Marketplace'
 import RIFContract from 'contracts/Rif'
-import RNSContract from 'contracts/Rns'
 import { UIError } from 'models/UIMessage'
 import React, {
   FC, useCallback, useContext, useEffect, useState,
@@ -235,7 +234,6 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
       try {
         const rifContract = RIFContract.getInstance(web3)
         const marketPlaceContract = MarketplaceContract.getInstance(web3)
-        const rnsContract = RNSContract.getInstance(web3)
 
         const tokenPlacement = await marketPlaceContract.getPlacement(tokenId, { from: account })
           .catch((error) => {
@@ -248,27 +246,6 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
 
         const tokenPrice = tokenPlacement[1]
 
-        // Check approval
-        const tokenApproval = await rnsContract.getApproved(tokenId, { from: account })
-          .catch((error) => {
-            throw new UIError({
-              error,
-              id: 'contract-rns-getApproved',
-              text: `Could not retrieve approval for ${domainName} from contract.`,
-            })
-          })
-
-        // Check if domain is approved
-        const isApproved = tokenApproval[1]?.toLowerCase() === marketPlaceAddress
-
-        if (!isApproved) {
-          throw new UIError({
-            error: new Error(),
-            id: 'contract-rns-notApproved',
-            text: `Domain ${domainName} not approved to transfer.`,
-          })
-        }
-
         // Get gas price
         const gasPrice = await web3.eth.getGasPrice()
 
@@ -280,6 +257,9 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
               error,
               id: 'contract-rif-transferAndCall',
               text: `Transfer of ${adjustedPrice} ${currency.displayName} failed. Check your funds and try again.`,
+              // customAction: () => {
+
+              // }
             })
           })
         logger.info('transferReceipt:', transferReceipt)

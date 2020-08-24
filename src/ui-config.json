@@ -2,7 +2,7 @@
     "ganache": {
         "rif": "0x67B5656d60a809915323Bf2C40A8bEF15A152e3e",
         "rnsDotRskOwner": "0x4bf749ec68270027C5910220CEAB30Cc284c7BA2",
-        "marketplace": "0x12ae8689c3E889A0fC81f4E2ba9D6C5Bf358F392",
+        "marketplace": "0xA29740dB2594af3786bc437Fc742Ae93e3Ec5B97",
         "rnsManagerUrl": "http://localhost:3001"
     },
     "rsktestnet": {
