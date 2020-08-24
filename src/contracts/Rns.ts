@@ -6,7 +6,7 @@ import { TransactionReceipt } from 'web3-eth'
 import { rnsAddress } from './config'
 import waitForReceipt, { TransactionOptions } from './utils'
 
-export type RnsContractErrorId = 'contract-rns-approve' | 'contract-rns-unapprove'
+export type RnsContractErrorId = 'contract-rns-approve' | 'contract-rns-unapprove' | 'contract-rns-getApproved' | 'contract-rns-notApproved'
 
 class RNSContract {
   public static getInstance(web3: Web3): RNSContract {
@@ -50,6 +50,12 @@ class RNSContract {
   public unapprove = (tokenId: string, txOptions: TransactionOptions): Promise<TransactionReceipt> => {
     const contractAddress = '0x0000000000000000000000000000000000000000'
     return this.approve(contractAddress, tokenId, txOptions)
+  }
+
+  public getApproved = (tokenId: string, txOptions: TransactionOptions): Promise<Array<string>> => {
+    const { from } = txOptions
+    const approved = this.contract.methods.getApproved(tokenId).call({ from })
+    return approved
   }
 }
 
