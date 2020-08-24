@@ -1,6 +1,7 @@
 export interface OfferTransport {
     creationDate?: string
-    offerId: string
+    id: string
+    txHash: string
     paymentToken: string
     priceString: string
     ownerAddress: string
@@ -23,7 +24,9 @@ export interface DomainTransport {
 
 export interface SoldDomainTransport {
     id: string
+    txHash: string
     tokenId: string
+    transferId: string
     paymentToken: string
     priceString: string
     soldDate: string
