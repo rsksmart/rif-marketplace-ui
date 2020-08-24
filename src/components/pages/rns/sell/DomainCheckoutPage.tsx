@@ -228,9 +228,9 @@ const DomainsCheckoutPage: FC<{}> = () => {
   }
 
   const handlePriceChange = ({ target: { value } }) => {
-    // validatedNumber function gives as the closest value within limits
+    // validatedNumber function gives us the closest value within limits
     const newValue = validatedNumber(value)
-    setPrice(newValue)
+    setPrice(newValue.toString())
     // we convert to number after setting the newValue because we need to allow '0.' and Number('0.') is 0
     const priceNumber = Number(newValue)
 

@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { Accordion, FilterCheckboxCard } from '@rsksmart/rif-ui'
+import { Accordion, LabeledCheckbox } from '@rsksmart/rif-ui'
 import SearchFilter from '../SearchFilter'
 import RangeFilter from '../RangeFilter'
 import AutoCompleteCheckbox from '../AutoCompleteCheckbox'
@@ -81,14 +81,30 @@ const StorageFilters: FC = () => {
         expanded
         title="Currency"
       >
-        <FilterCheckboxCard items={storageCurrencyFilters} />
+        <div>
+          {
+            storageCurrencyFilters.map((currencyFilter) => (
+              <LabeledCheckbox
+                key={`labeledCheckbox-${currencyFilter.id}`}
+                labelText={currencyFilter.labelText}
+              />
+            ))
+          }
+        </div>
       </Accordion>
       <Accordion
         id="systemFilters"
         expanded
         title="Storage System"
       >
-        <FilterCheckboxCard items={storageSystemFilters} />
+        {
+          storageSystemFilters.map((systemFilter) => (
+            <LabeledCheckbox
+              key={`labeledCheckbox-${systemFilter.id}`}
+              labelText={systemFilter.labelText}
+            />
+          ))
+        }
       </Accordion>
     </>
   )

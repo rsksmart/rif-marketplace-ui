@@ -1,4 +1,4 @@
-import { Web3Store, Web3ProviderProps } from '@rsksmart/rif-ui'
+import { Web3Store } from '@rsksmart/rif-ui'
 import { RnsFilter } from 'api/models/RnsFilter'
 import { RnsSoldDomain } from 'models/marketItems/DomainItem'
 import React, {
@@ -58,7 +58,7 @@ export const RnsSoldContextProvider = ({ children }) => {
     filters,
     needsRefresh,
   } = state as RnsState
-  const { web3State }: Web3ProviderProps = useContext(Web3Store)
+  const { state: web3State } = useContext(Web3Store)
   const account = web3State?.account
 
   const [isInitialised, setIsInitialised] = useState(false)
