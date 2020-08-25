@@ -8,7 +8,7 @@
     "rsktestnet": {
         "rif": "0x19f64674D8a5b4e652319F5e239EFd3bc969a1FE",
         "rnsDotRskOwner": "0xca0a477e19bac7e0e172ccfd2e3c28a7200bdb71",
-        "marketplace": "0xA5c1afA6A7928aa017E800fB6B89f11219836C58",
+        "marketplace": "0xFa5ade767a422C66cAFd94c3710f5b92467fB85e",
         "rnsManagerUrl": "https://testnet.manager.rns.rifos.org"
     }
 }
