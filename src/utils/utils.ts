@@ -14,3 +14,8 @@ export const convertDaysToSeconds = (days: number): number => days * 24 * 60 * 6
 export default {
   mayBePluralize,
 }
+
+export const getTabValueFromLocation = (tabs: { label: string, to: string, value: string }[], defaultRoute: string) => (currentPath: string) => {
+  const activeTab = tabs.find((tab) => currentPath.includes(tab.to))
+  return activeTab?.to || defaultRoute
+}
