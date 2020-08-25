@@ -26,7 +26,7 @@ const DomainOffersPage: FC = () => {
         items,
         outdatedTokens,
       },
-      filters
+      filters,
     },
     dispatch,
   } = useContext<RnsOffersContextProps>(RnsOffersContext)

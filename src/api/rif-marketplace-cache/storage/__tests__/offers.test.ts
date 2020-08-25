@@ -5,8 +5,8 @@ import mockFeathersService from 'api/test-utils/feathers'
 import {
   StorageOffer, BillingPlan, PeriodInSeconds,
 } from 'models/marketItems/StorageItem'
-import { StorageOffersService } from '../offers'
 import { parseToBigDecimal } from 'utils/parsers'
+import { StorageOffersService } from '../offers'
 
 const FAKE_OFFER_0: OfferTransport = {
   utilizedCapacity: '1',

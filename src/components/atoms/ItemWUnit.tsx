@@ -27,5 +27,4 @@ const ItemWUnit: FC<ItemWUnitProps> = ({
   type, value, unit, classes,
 }) => <span className={`price_item ${classes[type]}`}>{`${value} ${unit}`}</span>
 
-
 export default withStyles(styles)(ItemWUnit)

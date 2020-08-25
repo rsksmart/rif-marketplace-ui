@@ -347,7 +347,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
                     <TableRow>
                       <TableCell className={classes.detailKey}>USD PRICE</TableCell>
                       <TableCell className={classes.detailValue}>
-                        <ItemWUnit type='normalGrey' value={`${priceFiat}`} unit={currentFiat.displayName} />
+                        <ItemWUnit type="normalGrey" value={`${priceFiat}`} unit={currentFiat.displayName} />
                       </TableCell>
                     </TableRow>
                   </>

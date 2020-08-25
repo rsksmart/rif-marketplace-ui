@@ -18,9 +18,9 @@ const CombinedPriceCell: FC<CombinedPriceCellProps> = ({
 
   return (
     <div className={(`priceCell ${className}`).trim()}>
-      <ItemWUnit type='mediumPrimary' value={price} unit={currency} />
+      <ItemWUnit type="mediumPrimary" value={price} unit={currency} />
       {!!divider && divider}
-      <ItemWUnit type='normalGrey' value={cappedDecimalsFiat} unit={currencyFiat} />
+      <ItemWUnit type="normalGrey" value={cappedDecimalsFiat} unit={currencyFiat} />
     </div>
   )
 }

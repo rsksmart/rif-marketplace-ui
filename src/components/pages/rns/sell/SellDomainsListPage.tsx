@@ -2,9 +2,8 @@ import { DomainsSaleStatus } from 'api/models/RnsFilter'
 import MyDomains from 'components/organisms/rns/sell/MyDomains'
 import MyOffers from 'components/organisms/rns/sell/MyOffers'
 import SoldDomains from 'components/organisms/rns/sell/SoldDomains'
-import React, { FC, useContext, useEffect } from 'react'
+import React, { FC, useContext } from 'react'
 import RnsDomainsContext from 'context/Services/rns/DomainsContext'
-import MarketContext from 'context/Market/MarketContext'
 
 type PerStatusComponents = {
   [key in DomainsSaleStatus]: React.ReactNode

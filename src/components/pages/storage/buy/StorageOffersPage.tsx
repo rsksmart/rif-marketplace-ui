@@ -45,7 +45,7 @@ const StorageOffersPage: FC = () => {
       id,
       provider: <AddressItem value={id} />,
       system,
-      availableSize: <ItemWUnit type='mediumPrimary' unit='GB' value={availableSize.toString()} />,
+      availableSize: <ItemWUnit type="mediumPrimary" unit="GB" value={availableSize.toString()} />,
       subscriptionOptions: subscriptionOptions
         .map((plan: BillingPlan) => plan.period)
         .reduce((lastWord, currentWord) => `${lastWord} - ${currentWord}`),

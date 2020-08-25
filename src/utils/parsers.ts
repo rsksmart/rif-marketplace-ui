@@ -2,7 +2,7 @@ import { Big, BigSource } from 'big.js'
 
 export const parseToBigDecimal = (
   src: BigSource,
-  decimalPlaces: number = 18,
+  decimalPlaces = 18,
 ): Big => {
   const big = new Big(src)
   return big.div(10 ** decimalPlaces)

@@ -1,7 +1,9 @@
 /* eslint-disable-next-line import/no-unresolved */
-import React, { useEffect } from 'react'
-import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import { StyledNavTabProps } from '@rsksmart/rif-ui/dist/components/atoms/StyledNavTab'
+import React, { useEffect } from 'react'
+import {
+  Redirect, Route, Switch, useHistory, useLocation,
+} from 'react-router-dom'
 
 import TabsTemplate from 'components/templates/TabsTemplate'
 import networkConfig from 'config'
@@ -14,8 +16,6 @@ import { StorageListingPage, StorageOffersPage } from '.'
 import { NotFound } from '..'
 import StorageOfferListed from './sell/StorageOfferListed'
 import StorageLandingPage from './StorageLandingPage'
-
-
 
 const TABS: StyledNavTabProps[] = [
   {

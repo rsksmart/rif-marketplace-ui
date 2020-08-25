@@ -4,8 +4,8 @@ import {
 } from 'models/marketItems/StorageItem'
 import { OfferTransport } from 'api/models/storage/transports'
 import { Big } from 'big.js'
-import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
 import { parseToBigDecimal } from 'utils/parsers'
+import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
 
 export const offersAddress: StorageServiceAddress = 'storage/v0/offers'
 export const offersWSChannel: StorageWSChannel = 'offers'

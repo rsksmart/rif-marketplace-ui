@@ -73,11 +73,11 @@ const PlanItem: FC<PlanItemProps> = ({
               </Grid>
               <Grid item xs={4}>
                 <Box textAlign="center">
-                  <ItemWUnit type='mediumPrimary' unit={currency} value={`${pricePerGb}`} />
+                  <ItemWUnit type="mediumPrimary" unit={currency} value={`${pricePerGb}`} />
                 </Box>
               </Grid>
               <Grid item xs={4}>
-                <ItemWUnit unit={fiatDisplayName} type='normalGrey' value={fiatPriceDisplay} />
+                <ItemWUnit unit={fiatDisplayName} type="normalGrey" value={fiatPriceDisplay} />
               </Grid>
             </Grid>
           </Grid>
@@ -91,12 +91,12 @@ const PlanItem: FC<PlanItemProps> = ({
               <Grid item xs={4}>
                 <Typography component="div">
                   <Box textAlign="center" color={`${colors.gray5}`}>
-                    <ItemWUnit unit={currency} type='mediumPrimary' value={criptoMonthlyFee} />
+                    <ItemWUnit unit={currency} type="mediumPrimary" value={criptoMonthlyFee} />
                   </Box>
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <ItemWUnit unit={fiatDisplayName} type='normalGrey' value={fiatMonthlyFee} />
+                <ItemWUnit unit={fiatDisplayName} type="normalGrey" value={fiatMonthlyFee} />
               </Grid>
             </Grid>
           </Grid>
