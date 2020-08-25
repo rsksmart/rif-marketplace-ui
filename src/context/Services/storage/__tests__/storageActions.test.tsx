@@ -1,5 +1,5 @@
 import {
-  StorageOffer, BillingPlan, subscriptionPeriods, TimeInSeconds,
+  StorageOffer, BillingPlan, PeriodInSeconds,
 } from 'models/marketItems/StorageItem'
 import { Big } from 'big.js'
 import { storageActions, ListingPayload } from '../storageActions'
@@ -9,7 +9,7 @@ import { StorageState } from '../interfaces'
 const FAKE_BILLING_PLAN: BillingPlan[] = [
   {
     currency: 'RBTC',
-    period: subscriptionPeriods[TimeInSeconds.DAY],
+    period: PeriodInSeconds[PeriodInSeconds.Daily],
     price: Big(10).pow(18),
   },
 ]

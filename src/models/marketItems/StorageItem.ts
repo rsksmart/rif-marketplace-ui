@@ -1,16 +1,10 @@
 import { Big } from 'big.js'
 import { Item } from 'models/Market'
 
-export enum TimeInSeconds {
-  DAY = 86400,
-  WEEK = 604800,
-  MONTH = 2620800
-}
-export type SubscriptionPeriod = Record<number, string>
-export const subscriptionPeriods: SubscriptionPeriod = {
-  [TimeInSeconds.DAY]: 'Day',
-  [TimeInSeconds.WEEK]: 'Week',
-  [TimeInSeconds.MONTH]: 'Month',
+export enum PeriodInSeconds {
+  Daily = 86400,
+  Weekly = 604800,
+  Monthly = 2620800
 }
 
 export type Currencies = 'RBTC'

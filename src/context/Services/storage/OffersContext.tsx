@@ -44,7 +44,8 @@ export const StorageOffersContextProvider = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)
 
   const {
-    state: appState, dispatch: appDispatch,
+    state: appState,
+    dispatch: appDispatch,
   }: AppContextProps = useContext(AppContext)
   const api = appState?.apis?.['storage/v0/offers'] as StorageOffersService
 

@@ -4,7 +4,7 @@ import {
 import {
   Button, colors, shortenString, UnitsInput, validatedNumber, Web3Store,
 } from '@rsksmart/rif-ui'
-import PriceItem from 'components/atoms/PriceItem'
+import ItemWUnit from 'components/atoms/ItemWUnit'
 import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
 import DomainNameItem from 'components/molecules/DomainNameItem'
@@ -347,7 +347,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
                     <TableRow>
                       <TableCell className={classes.detailKey}>USD PRICE</TableCell>
                       <TableCell className={classes.detailValue}>
-                        <PriceItem type="fiat" price={`${priceFiat}`} currency={currentFiat.displayName} />
+                        <ItemWUnit type='normalGrey' value={`${priceFiat}`} unit={currentFiat.displayName} />
                       </TableCell>
                     </TableRow>
                   </>

@@ -3,9 +3,10 @@ import StorageFilters from 'components/organisms/filters/storage/StorageFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { TableHeaders } from 'components/templates/marketplace/Marketplace'
 import { BillingPlan } from 'models/marketItems/StorageItem'
-import { CombinedPriceCell, SelectRowButton } from 'components/molecules'
+import { CombinedPriceCell, SelectRowButton, AddressItem } from 'components/molecules'
 import MarketContext from 'context/Market/MarketContext'
 import StorageOffersContext, { StorageOffersCtxProps } from 'context/Services/storage/OffersContext'
+import ItemWUnit from 'components/atoms/ItemWUnit'
 
 const TABLE_HEADERS: TableHeaders = {
   provider: 'Provider',
@@ -42,10 +43,11 @@ const StorageOffersPage: FC = () => {
 
     return {
       id,
-      provider: id,
+      provider: <AddressItem value={id} />,
       system,
-      availableSize: availableSize.toString(),
-      subscriptionOptions: subscriptionOptions.map((plan: BillingPlan) => plan.period)
+      availableSize: <ItemWUnit type='mediumPrimary' unit='GB' value={availableSize.toString()} />,
+      subscriptionOptions: subscriptionOptions
+        .map((plan: BillingPlan) => plan.period)
         .reduce((lastWord, currentWord) => `${lastWord} - ${currentWord}`),
       pricePGBPDay: <CombinedPriceCell
         price={pricePGBPDay.toString()}

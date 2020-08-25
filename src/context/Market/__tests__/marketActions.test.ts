@@ -1,19 +1,7 @@
-import { marketActions, TxTypeChangePayload, ExchangeRatePayload } from '../marketActions'
-import { initialState, TxType, MarketState } from '../MarketContext'
+import { ExchangeRatePayload, marketActions } from '../marketActions'
+import { initialState, MarketState } from '../MarketContext'
 
 describe('MarketActions', () => {
-  describe('TOGGLE_TX_TYPE', () => {
-    test('should return state with txType property set to given value', () => {
-      const expectedValue = TxType.SELL
-      const payload: TxTypeChangePayload = {
-        txType: expectedValue,
-      }
-      initialState.txType = TxType.BUY
-      const { txType } = marketActions.TOGGLE_TX_TYPE(initialState, payload)
-
-      expect(txType).toEqual(expectedValue)
-    })
-  })
 
   describe('SET_EXCHANGE_RATE', () => {
     test('should return state with property exchangeRates.crypto containing given property', () => {

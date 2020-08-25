@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import PriceItem from 'components/atoms/PriceItem'
+import ItemWUnit from 'components/atoms/ItemWUnit'
 import { priceDisplay } from 'utils/utils'
 
 export interface CombinedPriceCellProps {
@@ -18,9 +18,9 @@ const CombinedPriceCell: FC<CombinedPriceCellProps> = ({
 
   return (
     <div className={(`priceCell ${className}`).trim()}>
-      <PriceItem type="crypto" price={price} currency={currency} />
+      <ItemWUnit type='mediumPrimary' value={price} unit={currency} />
       {!!divider && divider}
-      <PriceItem type="fiat" price={cappedDecimalsFiat} currency={currencyFiat} />
+      <ItemWUnit type='normalGrey' value={cappedDecimalsFiat} unit={currencyFiat} />
     </div>
   )
 }

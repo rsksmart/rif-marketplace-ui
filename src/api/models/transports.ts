@@ -1,6 +1,6 @@
 export interface OfferTransport {
     creationDate?: string
-    id: string
+    offerId: string
     txHash: string
     paymentToken: string
     priceString: string

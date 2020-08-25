@@ -7,7 +7,7 @@ import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import MarketContext, { TxType } from 'context/Market/MarketContext'
+import MarketContext from 'context/Market/MarketContext'
 import RnsOffersContext, { RnsOffersContextProps } from 'context/Services/rns/OffersContext'
 import { OrderPayload, RefreshPayload } from 'context/Services/rns/rnsActions'
 
@@ -19,7 +19,6 @@ const DomainOffersPage: FC = () => {
         crypto,
       },
     },
-    dispatch: mDispatch,
   } = useContext(MarketContext)
   const {
     state: {
@@ -28,6 +27,7 @@ const DomainOffersPage: FC = () => {
         outdatedTokens,
       },
       filters,
+      order
     },
     dispatch,
   } = useContext<RnsOffersContextProps>(RnsOffersContext)
@@ -50,13 +50,11 @@ const DomainOffersPage: FC = () => {
   } = useContext(Web3Store)
 
   useEffect(() => {
-    mDispatch({
-      type: 'TOGGLE_TX_TYPE',
-      payload: {
-        txType: TxType.BUY,
-      },
-    })
-  }, [mDispatch])
+    if (order) {
+      debugger
+      history.push(ROUTES.RNS.BUY.CHECKOUT)
+    }
+  }, [order])
 
   let collection = []
 
@@ -109,7 +107,6 @@ const DomainOffersPage: FC = () => {
                   item,
                 } as OrderPayload,
               })
-              history.push(ROUTES.RNS.BUY.CHECKOUT)
             }}
           />
         ),

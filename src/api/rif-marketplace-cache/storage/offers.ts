@@ -1,10 +1,11 @@
 import { AbstractAPIService } from 'api/models/apiService'
 import {
-  StorageItem, StorageOffer, subscriptionPeriods, BillingPlan, TimeInSeconds,
+  StorageItem, StorageOffer, BillingPlan, PeriodInSeconds,
 } from 'models/marketItems/StorageItem'
 import { OfferTransport } from 'api/models/storage/transports'
 import { Big } from 'big.js'
 import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
+import { parseToBigDecimal } from 'utils/parsers'
 
 export const offersAddress: StorageServiceAddress = 'storage/v0/offers'
 export const offersWSChannel: StorageWSChannel = 'offers'
@@ -22,21 +23,21 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     system: 'IPFS',
     availableSize: new Big(availableCapacity),
     subscriptionOptions: plans
-      .filter((plan) => !!subscriptionPeriods[plan.period])
+      .filter((plan) => !!PeriodInSeconds[plan.period])
       .map<BillingPlan>((plan) => ({
-        period: subscriptionPeriods[plan.period],
-        price: new Big(plan.price),
+        period: PeriodInSeconds[plan.period],
+        price: parseToBigDecimal(plan.price, 18),
         currency: 'RBTC',
       })),
     pricePGBPDay: plans
       .reduce<Big>((acc, plan) => {
         const period = new Big(plan.period)
-        const price = new Big(plan.price)
+        const price = parseToBigDecimal(plan.price, 18)
         const combinedPrice = acc.add(price.div(period))
         return combinedPrice
       }, new Big(0))
       .div(plans.length)
-      .mul(new Big(TimeInSeconds.DAY)),
+      .mul(new Big(PeriodInSeconds.Daily)),
   }
   return offer
 }

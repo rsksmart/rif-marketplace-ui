@@ -13,11 +13,6 @@ import {
 
 export type ContextName = 'market'
 
-export enum TxType {
-  BUY = 0,
-  SELL = 1
-}
-
 export type MarketFiat = {
   displayName: string
   symbol: SupportedFiat
@@ -31,7 +26,6 @@ export type MarketCrypto = {
 export type MarketCryptoRecord = Record<string, MarketCrypto>
 
 export interface MarketState extends ContextState {
-  txType: TxType
   exchangeRates: {
     currentFiat: MarketFiat
     crypto: MarketCryptoRecord
@@ -45,7 +39,6 @@ interface MarketContextProps {
 
 export const initialState: MarketState = {
   contextID: 'market',
-  txType: TxType.BUY,
   exchangeRates: {
     currentFiat: {
       symbol: 'usd',

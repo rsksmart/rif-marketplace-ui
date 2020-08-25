@@ -3,9 +3,10 @@ import { Big } from 'big.js'
 import { OfferTransport } from 'api/models/storage/transports'
 import mockFeathersService from 'api/test-utils/feathers'
 import {
-  StorageOffer, BillingPlan, subscriptionPeriods, TimeInSeconds,
+  StorageOffer, BillingPlan, PeriodInSeconds,
 } from 'models/marketItems/StorageItem'
 import { StorageOffersService } from '../offers'
+import { parseToBigDecimal } from 'utils/parsers'
 
 const FAKE_OFFER_0: OfferTransport = {
   utilizedCapacity: '1',
@@ -55,21 +56,21 @@ describe('Storage OffersService', () => {
         system: 'IPFS',
         availableSize: new Big(availableCapacity),
         subscriptionOptions: plans
-          .filter((plan) => !!subscriptionPeriods[plan.period])
+          .filter((plan) => !!PeriodInSeconds[plan.period])
           .map<BillingPlan>((plan) => ({
-            period: subscriptionPeriods[plan.period],
-            price: new Big(plan.price),
+            period: PeriodInSeconds[plan.period],
+            price: parseToBigDecimal(plan.price),
             currency: 'RBTC',
           })),
         pricePGBPDay: plans
           .reduce<Big>((acc, plan) => {
             const period = new Big(plan.period)
-            const price = new Big(plan.price)
+            const price = parseToBigDecimal(plan.price)
             const combinedPrice = acc.add(price.div(period))
             return combinedPrice
           }, new Big(0))
           .div(plans.length)
-          .mul(new Big(TimeInSeconds.DAY)),
+          .mul(new Big(PeriodInSeconds.Daily)),
       }
 
       expect(actualReturnValue[0]).toStrictEqual(expectedOffers)

@@ -10,7 +10,7 @@ import { StoragePlanItem, StorageListingContextProps, TimePeriodEnum } from 'con
 import StorageListingContext from 'context/Services/storage/ListingContext'
 import { RemoveItemPayload } from 'context/Services/storage/listingActions'
 import TooltipIconButton from 'components/molecules/TooltipIconButton'
-import PriceItem from 'components/atoms/PriceItem'
+import ItemWUnit from 'components/atoms/ItemWUnit'
 import { priceDisplay } from 'utils/utils'
 
 export interface PlanItemProps {
@@ -73,11 +73,11 @@ const PlanItem: FC<PlanItemProps> = ({
               </Grid>
               <Grid item xs={4}>
                 <Box textAlign="center">
-                  <PriceItem type="crypto" currency={currency} price={`${pricePerGb}`} />
+                  <ItemWUnit type='mediumPrimary' unit={currency} value={`${pricePerGb}`} />
                 </Box>
               </Grid>
               <Grid item xs={4}>
-                <PriceItem currency={fiatDisplayName} type="fiat" price={fiatPriceDisplay} />
+                <ItemWUnit unit={fiatDisplayName} type='normalGrey' value={fiatPriceDisplay} />
               </Grid>
             </Grid>
           </Grid>
@@ -91,12 +91,12 @@ const PlanItem: FC<PlanItemProps> = ({
               <Grid item xs={4}>
                 <Typography component="div">
                   <Box textAlign="center" color={`${colors.gray5}`}>
-                    <PriceItem currency={currency} type="crypto" price={criptoMonthlyFee} />
+                    <ItemWUnit unit={currency} type='mediumPrimary' value={criptoMonthlyFee} />
                   </Box>
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <PriceItem currency={fiatDisplayName} type="fiat" price={fiatMonthlyFee} />
+                <ItemWUnit unit={fiatDisplayName} type='normalGrey' value={fiatMonthlyFee} />
               </Grid>
             </Grid>
           </Grid>
