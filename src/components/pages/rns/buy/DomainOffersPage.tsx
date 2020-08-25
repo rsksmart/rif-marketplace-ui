@@ -4,7 +4,7 @@ import DomainNameItem from 'components/molecules/DomainNameItem'
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
-import React, { FC, useContext, useEffect } from 'react'
+import React, { FC, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import MarketContext from 'context/Market/MarketContext'
@@ -26,8 +26,7 @@ const DomainOffersPage: FC = () => {
         items,
         outdatedTokens,
       },
-      filters,
-      order
+      filters
     },
     dispatch,
   } = useContext<RnsOffersContextProps>(RnsOffersContext)
@@ -48,13 +47,6 @@ const DomainOffersPage: FC = () => {
       account,
     },
   } = useContext(Web3Store)
-
-  useEffect(() => {
-    if (order) {
-      debugger
-      history.push(ROUTES.RNS.BUY.CHECKOUT)
-    }
-  }, [order])
 
   let collection = []
 
@@ -107,6 +99,7 @@ const DomainOffersPage: FC = () => {
                   item,
                 } as OrderPayload,
               })
+              history.push(ROUTES.RNS.BUY.CHECKOUT)
             }}
           />
         ),
