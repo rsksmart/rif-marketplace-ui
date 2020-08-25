@@ -259,7 +259,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
           })
 
         // Check if domain is approved
-        const isApproved = tokenApproval[1]?.toLowerCase() === marketPlaceAddress
+        const isApproved = tokenApproval.toString().toLowerCase() === marketPlaceAddress
 
         if (!isApproved) {
           throw new UIError({
