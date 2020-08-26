@@ -1,9 +1,12 @@
-import { ContextState } from 'context/storeUtils/interfaces'
 import { Dispatch } from 'react'
-import { StorageAction, LISTING_ACTION } from './listingActions'
+
+import { ContextState } from 'context/storeUtils/interfaces'
+import { StorageItem } from 'models/marketItems/StorageItem'
+import { ServiceState } from '../interfaces'
+import { LISTING_ACTION, StorageAction } from './listingActions'
+import { OFFERS_ACTION } from './offersActions'
 import { ContextName as ListingContextName } from './ListingContext'
 import { ContextName as OffersContextName } from './OffersContext'
-import { OFFERS_ACTION } from './offersActions'
 
 export type StorageContextNames = OffersContextName | ListingContextName
 
@@ -27,6 +30,13 @@ export interface ListingState extends ContextState {
 
 export interface StorageListingContextProps {
   state: ListingState
+  dispatch: Dispatch<StorageAction>
+}
+
+export type StorageState = ServiceState<StorageItem>
+
+export interface StorageCtxProps {
+  state: StorageState
   dispatch: Dispatch<StorageAction>
 }
 
