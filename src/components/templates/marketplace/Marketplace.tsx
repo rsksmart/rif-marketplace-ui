@@ -2,18 +2,19 @@ import React, { FC } from 'react'
 import {
   makeStyles, Table, TableHead, TableRow, TableCell, TableBody, Theme,
 } from '@material-ui/core'
-import { MarketItem } from 'models/Market'
 import {
   colors, fonts,
   WithSpinner,
 } from '@rsksmart/rif-ui'
+
+export type MarketplaceItem = { id: string, [key: string]: any }
 
 export interface TableHeaders {
   [itemName: string]: string | React.ElementType
 }
 export interface MarketplaceProps {
   className?: string
-  items: MarketItem[]
+  items: MarketplaceItem[]
   headers: TableHeaders
   Heading?: React.ElementType
 }
