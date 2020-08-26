@@ -12,10 +12,11 @@ import { StorageOffersContextProvider } from 'context/Services/storage/OffersCon
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { getTabValueFromLocation } from 'utils/utils'
-import { StorageListingPage, StorageOffersPage } from '.'
+import {
+  StorageListingPage, StorageOffersPage, StorageMyOffersPage, StorageLandingPage,
+} from '.'
 import { NotFound } from '..'
 import StorageOfferListed from './sell/StorageOfferListed'
-import StorageLandingPage from './StorageLandingPage'
 
 const TABS: StyledNavTabProps[] = [
   {
@@ -82,6 +83,7 @@ const StorageRoutes = () => {
               </StorageListingContextProvider>
             </Route>
             <Route exact path={ROUTES.STORAGE.SELL.DONE} component={StorageOfferListed} />
+            <Route exact path={ROUTES.STORAGE.MYOFFERS.BASE} component={StorageMyOffersPage} />
             <Route component={NotFound} />
           </Switch>
         </TabsTemplate>
