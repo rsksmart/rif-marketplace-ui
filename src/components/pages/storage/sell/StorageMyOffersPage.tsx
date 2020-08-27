@@ -5,6 +5,7 @@ import { Button, colors } from '@rsksmart/rif-ui'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
+import handProvidingFunds from 'assets/images/handProvidingFunds.svg'
 
 const useStyles = makeStyles((theme: Theme) => ({
   stakingRoot: {
@@ -18,7 +19,7 @@ const StorageMyOffersPage: FC = () => {
   const classes = useStyles()
   return (
     <CenteredPageTemplate title="">
-      {/* TODO: replace styles with clases and move to organisms/molecules */}
+      {/* STAKING CARD - TODO: move to classes and create new organism/molecule */}
       <Grid className={classes.stakingRoot} container>
         <Grid
           container
@@ -59,21 +60,32 @@ const StorageMyOffersPage: FC = () => {
             <Typography color="primary">2048 RIF</Typography>
           </Grid>
           <Grid
-            xs={3}
+            xs={6}
             style={{
               display: 'flex',
-              alignContent: 'center',
+              justifyContent: 'space-around',
             }}
           >
             <Button variant="outlined" rounded color="primary">Add funds</Button>
-          </Grid>
-          <Grid xs={3} alignItems="center">
             <Button variant="outlined" rounded color="primary">Withdraw funds</Button>
           </Grid>
         </Grid>
       </Grid>
-      {/* TODO: Add icon */}
-      <Typography gutterBottom variant="h5" color="primary">You are providing the following storage space to your customers</Typography>
+      {/* END - STAKING CARD */}
+      {/* TITLE with Icon */}
+      <Grid container alignItems="center">
+        {/* <Grid item> */}
+        <img src={handProvidingFunds} alt="hand providing funds" />
+        {/* </Grid>
+        <Grid item> */}
+        <Typography gutterBottom variant="h5" color="primary">
+          You are providing the following storage space to your customers
+        </Typography>
+        {/* </Grid> */}
+      </Grid>
+      <Grid>
+        {/* OFFERS */}
+      </Grid>
 
     </CenteredPageTemplate>
   )
