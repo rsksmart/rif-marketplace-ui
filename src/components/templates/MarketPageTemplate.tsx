@@ -6,7 +6,6 @@ import MarketFilter from 'components/templates/marketplace/MarketFilter'
 import React, {
   Dispatch, FC, useContext, useEffect,
 } from 'react'
-import { RnsAction } from 'context/Services/rns/rnsActions'
 import AppContext from 'context/App/AppContext'
 import { MessagePayload } from 'context/App/appActions'
 import Marketplace, { MarketplaceProps } from './marketplace/Marketplace'
@@ -16,7 +15,7 @@ export interface MarketPageTemplateProps extends MarketplaceProps {
   className?: string
   filterItems: React.ReactNode
   requiresAccount?: boolean
-  dispatch: Dispatch<RnsAction>
+  dispatch: Dispatch<any>
   outdatedCt: number
 }
 
