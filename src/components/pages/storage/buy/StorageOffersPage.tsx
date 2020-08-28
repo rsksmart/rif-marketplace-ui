@@ -71,8 +71,6 @@ const StorageOffersPage: FC = () => {
     }
   }) as any // FIXME: remove as any -> Change the itemCollection type
 
-  // const heading = () => <Typography>Result</Typography>
-
   return (
     <MarketPageTemplate
       className="Storage Offers"
@@ -81,7 +79,6 @@ const StorageOffersPage: FC = () => {
       headers={TABLE_HEADERS}
       dispatch={dispatch as any} // FIXME: Change the type in the MarketPageTemplate
       outdatedCt={0}
-    // heading={heading}
     />
   )
 }
