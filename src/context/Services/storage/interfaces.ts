@@ -1,10 +1,9 @@
 import { ContextState } from 'context/storeUtils/interfaces'
 import { Dispatch } from 'react'
-import { StorageItem } from 'models/marketItems/StorageItem'
-import { StorageAction } from './listingActions'
-import { ServiceState } from '../interfaces'
+import { StorageAction, LISTING_ACTION } from './listingActions'
 import { ContextName as ListingContextName } from './ListingContext'
 import { ContextName as OffersContextName } from './OffersContext'
+import { OFFERS_ACTION } from './offersActions'
 
 export type StorageContextNames = OffersContextName | ListingContextName
 
@@ -31,15 +30,10 @@ export interface StorageListingContextProps {
   dispatch: Dispatch<StorageAction>
 }
 
-export type StorageState = ServiceState<StorageItem>
-
-export interface StorageCtxProps {
-  state: StorageState
-  dispatch: Dispatch<StorageAction>
-}
-
 export enum TimePeriodEnum {
   Daily = 1,
   Weekly = 7,
   Monthly = 30,
 }
+
+export type STORAGE_ACTION = LISTING_ACTION | OFFERS_ACTION

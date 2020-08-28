@@ -7,38 +7,37 @@ import { LoadingPayload } from 'context/App/appActions'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { ContextReducer, ContextActions } from 'context/storeUtils/interfaces'
 import storeReducerFactory from 'context/storeUtils/reducer'
-import { StorageOffer } from 'models/marketItems/StorageItem'
+import { StorageItem } from 'models/marketItems/StorageItem'
 import { Modify } from 'utils/typeUtils'
-import { ServiceListing, ServiceOrder } from '../interfaces'
-import { StorageCtxProps, StorageState } from './interfaces'
+import { ServiceState, ServiceOrder } from '../interfaces'
 import { StorageAction } from './listingActions'
-import { storageActions, StoragePayload, StorageReducer } from './storageActions'
+import { storageOffersActions, StorageOffersPayload, StorageOffersReducer } from './offersActions'
 
 export type ContextName = 'storage_offers'
 
-export type OffersListing = ServiceListing<StorageOffer>
-export type OffersOrder = ServiceOrder<StorageOffer>
+export type OffersListing = {
+  items: StorageItem[]
+}
 
-export type StorageOffersState = Modify<StorageState, {
+export type StorageOffersState = Modify<ServiceState<StorageItem>, {
   listing: OffersListing
-  order?: OffersOrder
+  order?: ServiceOrder<StorageItem>
 }>
 
-export type StorageOffersCtxProps = Modify<StorageCtxProps, {
+export type StorageOffersCtxProps = {
   state: StorageOffersState
   dispatch: Dispatch<StorageAction>
-}>
+}
 
 export const initialState: StorageOffersState = {
   contextID: 'storage_offers',
   listing: {
     items: [],
-    outdatedTokens: [],
   },
 }
 
-const StorageOffersContext = React.createContext({} as StorageOffersCtxProps | any)
-const reducer: StorageReducer<StoragePayload> | ContextReducer = storeReducerFactory(initialState, storageActions as unknown as ContextActions)
+const StorageOffersContext = React.createContext({} as StorageOffersState as any)
+const reducer: StorageOffersReducer<StorageOffersPayload> | ContextReducer = storeReducerFactory(initialState, storageOffersActions as unknown as ContextActions)
 
 export const StorageOffersContextProvider = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)

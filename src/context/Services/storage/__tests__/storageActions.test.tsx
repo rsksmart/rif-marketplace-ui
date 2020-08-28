@@ -2,9 +2,8 @@ import {
   StorageOffer, BillingPlan, PeriodInSeconds,
 } from 'models/marketItems/StorageItem'
 import { Big } from 'big.js'
-import { storageActions, ListingPayload } from '../storageActions'
+import { storageOffersActions, ListingPayload } from '../offersActions'
 import { initialState, StorageOffersState } from '../OffersContext'
-import { StorageState } from '../interfaces'
 
 const FAKE_BILLING_PLAN: BillingPlan[] = [
   {
@@ -24,25 +23,16 @@ const FAKE_LISTING: StorageOffer[] = [
   },
 ]
 
-describe('StorageActions', () => {
-  describe('NOOP', () => {
-    test('should return unchanged state', () => {
-      const actualState = storageActions.NOOP(initialState as StorageState, {})
-
-      expect(actualState).toEqual(initialState)
-    })
-  })
-
+describe('OffersActions', () => {
   describe('SET_LISTING', () => {
     test('should return state with new listing property containing FAKE_LISTING', () => {
       const payload: ListingPayload = {
         items: FAKE_LISTING,
       }
-      const actualState = storageActions.SET_LISTING(initialState as StorageState, payload)
+      const actualState = storageOffersActions.SET_LISTING(initialState as StorageOffersState, payload)
       const expectState: StorageOffersState = {
         ...initialState,
         listing: {
-          ...initialState.listing,
           items: FAKE_LISTING,
         },
       }
