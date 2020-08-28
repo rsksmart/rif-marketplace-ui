@@ -1,10 +1,28 @@
-import React, { FC, useState } from 'react'
+import React, { useContext } from 'react'
 import { Accordion, LabeledCheckbox } from '@rsksmart/rif-ui'
-import SearchFilter from '../SearchFilter'
-import RangeFilter from '../RangeFilter'
-import AutoCompleteCheckbox from '../AutoCompleteCheckbox'
 
-const StorageFilters: FC = () => {
+import StorageOffersContext from 'context/Services/storage/OffersContext'
+import { MinMaxFilter } from 'models/Filters'
+import AutoCompleteCheckbox from '../AutoCompleteCheckbox'
+import RangeFilter from '../RangeFilter'
+import SearchFilter from '../SearchFilter'
+
+const StorageFilters = () => {
+  const {
+    state: {
+      filters: {
+        name,
+        price: priceFilter,
+        size: sizeFilter,
+      },
+      limits: {
+        price: priceLimits,
+        size: sizeLimits,
+      },
+    },
+    dispatch,
+  } = useContext(StorageOffersContext)
+
   const storageCurrencyFilters = [
     { labelText: 'RIF', id: 'RIF' },
     { labelText: 'R-BTC', id: 'R-BTC' },
@@ -26,54 +44,53 @@ const StorageFilters: FC = () => {
     { labelText: 'Spain', id: 'ES' },
   ]
 
-  const [minPrice, setMinPrice] = useState(10)
-  const [maxPrice, setMaxPrice] = useState(90)
-  const [minSize, setMinSize] = useState(5)
-  const [maxSize, setMaxSize] = useState(95)
-  const [searchText, setSearchText] = useState('')
-
-  const onSearchTextChange = ({ target: { value } }) => {
-    setSearchText(value)
+  const onSearch = ({ currentTarget: { value } }) => {
+    dispatch({
+      type: 'FILTER',
+      payload: { name: value.trim() },
+    })
   }
+
+  const onSizeChange = ((size: MinMaxFilter) => {
+    dispatch({
+      type: 'FILTER',
+      payload: { size },
+    })
+  })
+
+  const onPriceChange = ((price: MinMaxFilter) => {
+    dispatch({
+      type: 'FILTER',
+      payload: { price },
+    })
+  })
 
   return (
     <>
       <SearchFilter
-        value={searchText}
-        onChange={onSearchTextChange}
+        value={name}
+        onChange={onSearch}
         placeholder="Search provider"
       />
       <RangeFilter
         title="Size"
         values={{
-          start: minSize,
-          end: maxSize,
+          start: sizeFilter.min,
+          end: sizeFilter.max,
         }}
-        edgeValues={{
-          min: 0,
-          max: 100,
-        }}
+        edgeValues={sizeLimits}
         unit="GB"
-        handleChange={({ min, max }) => {
-          setMinSize(min)
-          setMaxSize(max)
-        }}
+        handleChange={onSizeChange}
       />
       <RangeFilter
         title="Price"
         values={{
-          start: minPrice,
-          end: maxPrice,
+          start: priceFilter.min,
+          end: priceFilter.max,
         }}
-        edgeValues={{
-          min: 0,
-          max: 100,
-        }}
+        edgeValues={priceLimits}
         unit="RIF"
-        handleChange={({ min, max }) => {
-          setMinPrice(min)
-          setMaxPrice(max)
-        }}
+        handleChange={onPriceChange}
       />
       <AutoCompleteCheckbox options={countryOptions} />
       <Accordion

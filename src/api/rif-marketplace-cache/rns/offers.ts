@@ -1,8 +1,9 @@
 import { AbstractAPIService } from 'api/models/apiService'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import { OfferTransport } from 'api/models/transports'
-import { RnsFilter, PriceFilter } from 'api/models/RnsFilter'
+import { RnsFilter } from 'api/models/RnsFilter'
 import { parseToBigDecimal, convertToBigString, parseToInt } from 'utils/parsers'
+import { MinMaxFilter } from 'models/Filters'
 import {
   availableTokens, RnsServiceAddress, RnsAPIService, RnsChannels,
 } from './common'
@@ -80,7 +81,7 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
     return results.map(mapFromTransport)
   }
 
-  fetchPriceLimits = async (): Promise<PriceFilter> => {
+  fetchPriceLimits = async (): Promise<MinMaxFilter> => {
     const min = await fetchPriceLimit(this.service, LimitType.min)
     const max = await fetchPriceLimit(this.service, LimitType.max)
     return { min, max }

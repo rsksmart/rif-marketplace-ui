@@ -3,15 +3,18 @@ import React, {
 } from 'react'
 
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
-import { LoadingPayload } from 'context/App/appActions'
+import { LoadingPayload, ErrorMessagePayload } from 'context/App/appActions'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { ContextReducer, ContextActions } from 'context/storeUtils/interfaces'
 import storeReducerFactory from 'context/storeUtils/reducer'
 import { StorageItem } from 'models/marketItems/StorageItem'
 import { Modify } from 'utils/typeUtils'
-import { ServiceState, ServiceOrder } from '../interfaces'
+import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
+import { MinMaxFilter } from 'models/Filters'
+import { UIError } from 'models/UIMessage'
 import { StorageAction } from './listingActions'
 import { storageOffersActions, StorageOffersPayload, StorageOffersReducer } from './offersActions'
+import { ServiceState, ServiceOrder } from '../interfaces'
 
 export type ContextName = 'storage_offers'
 
@@ -22,6 +25,8 @@ export type OffersListing = {
 export type StorageOffersState = Modify<ServiceState<StorageItem>, {
   listing: OffersListing
   order?: ServiceOrder<StorageItem>
+  filters: StorageOffersFilters
+  limits: Pick<StorageOffersFilters, 'price' | 'size'>
 }>
 
 export type StorageOffersCtxProps = {
@@ -31,9 +36,30 @@ export type StorageOffersCtxProps = {
 
 export const initialState: StorageOffersState = {
   contextID: 'storage_offers',
+  filters: {
+    size: {
+      min: 0,
+      max: 0,
+    },
+    price: {
+      min: 0,
+      max: 0,
+    },
+  },
+  limits: {
+    size: {
+      min: 0,
+      max: 0,
+    },
+    price: {
+      min: 0,
+      max: 0,
+    },
+  },
   listing: {
     items: [],
   },
+  needsRefresh: false,
 }
 
 const StorageOffersContext = React.createContext({} as StorageOffersState as any)
@@ -41,6 +67,7 @@ const reducer: StorageOffersReducer<StorageOffersPayload> | ContextReducer = sto
 
 export const StorageOffersContextProvider = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)
+  const [isLimitsSet, setIsLimitsSet] = useState(false)
 
   const {
     state: appState,
@@ -51,6 +78,7 @@ export const StorageOffersContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
   const {
     needsRefresh,
+    filters,
   } = state as StorageOffersState
 
   if (api && !api.service) {
@@ -59,10 +87,6 @@ export const StorageOffersContextProvider = ({ children }) => {
   // Initialise
   useEffect(() => {
     if (api?.service && !isInitialised && !needsRefresh) {
-      // const {
-      //   attachEvent,
-      // } = api
-
       setIsInitialised(true)
       try {
         // attachEvent('updated', outdateTokenId(dispatch))
@@ -80,8 +104,88 @@ export const StorageOffersContextProvider = ({ children }) => {
     }
   }, [api, isInitialised, needsRefresh, appDispatch])
 
+  // (re)fetch limits upon refresh if initialised
   useEffect(() => {
-    if (isInitialised) {
+    if (isInitialised && needsRefresh && !isLimitsSet) {
+      appDispatch({
+        type: 'SET_IS_LOADING',
+        payload: {
+          isLoading: true,
+          id: 'filters',
+        } as LoadingPayload,
+      } as any)
+      try {
+        api.fetchSizeLimits()
+          .then((size: MinMaxFilter) => {
+            dispatch({
+              type: 'UPDATE_LIMITS',
+              payload: { size },
+            })
+            dispatch({
+              type: 'FILTER',
+              payload: { size },
+            })
+          })
+          .catch((error) => {
+            throw new UIError({
+              error,
+              id: 'service-fetch',
+              text: 'Error while fetching filters. ',
+            })
+          })
+
+        api.fetchPriceLimits()
+          .then((price: MinMaxFilter) => {
+            dispatch({
+              type: 'UPDATE_LIMITS',
+              payload: { price },
+            })
+            dispatch({
+              type: 'FILTER',
+              payload: { price },
+            })
+          })
+          .catch((error) => {
+            throw new UIError({
+              error,
+              id: 'service-fetch',
+              text: 'Error while fetching filters. ',
+            })
+          })
+
+        setIsLimitsSet(true)
+      } catch (error) {
+        appDispatch({
+          type: 'SET_MESSAGE',
+          payload: {
+            id: 'service-fetch',
+            text: 'Error while fetching filters.',
+            type: 'error',
+            error,
+          } as ErrorMessagePayload,
+        } as any)
+      } finally {
+        appDispatch({
+          type: 'SET_IS_LOADING',
+          payload: {
+            isLoading: false,
+            id: 'filters',
+          } as LoadingPayload,
+        } as any)
+      }
+    }
+  }, [api, isInitialised, needsRefresh, isLimitsSet, appDispatch])
+
+  // Pre-fetch limits
+  useEffect(() => {
+    if (needsRefresh) {
+      setIsLimitsSet(false)
+    }
+  }, [needsRefresh])
+
+  // Fetch data
+  useEffect(() => {
+    if (isInitialised && isLimitsSet) {
       appDispatch({
         type: 'SET_IS_LOADING',
         payload: {
@@ -89,7 +193,7 @@ export const StorageOffersContextProvider = ({ children }) => {
           id: 'data',
         } as LoadingPayload,
       } as any)
-      api.fetch()
+      api.fetch(filters)
         .then((items) => {
           dispatch({
             type: 'SET_LISTING',
@@ -112,7 +216,7 @@ export const StorageOffersContextProvider = ({ children }) => {
           } as any)
         })
     }
-  }, [isInitialised, api, appDispatch])
+  }, [isInitialised, isLimitsSet, api, appDispatch, filters])
 
   const value = { state, dispatch }
   return <StorageOffersContext.Provider value={value}>{children}</StorageOffersContext.Provider>

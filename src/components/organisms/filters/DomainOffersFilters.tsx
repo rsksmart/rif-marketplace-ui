@@ -1,6 +1,6 @@
-import { PriceFilter } from 'api/models/RnsFilter'
 import React, { FC, useContext } from 'react'
 import RnsOffersContext from 'context/Services/rns/OffersContext'
+import { MinMaxFilter } from 'models/Filters'
 import RangeFilter from './RangeFilter'
 import SearchFilter from './SearchFilter'
 
@@ -49,7 +49,7 @@ const DomainOfferFilters: FC<{}> = () => {
           max: absMaxPrice,
         }}
         unit="RIF"
-        handleChange={(price: PriceFilter) => {
+        handleChange={(price: MinMaxFilter) => {
           dispatch({
             type: 'FILTER',
             payload: { price },

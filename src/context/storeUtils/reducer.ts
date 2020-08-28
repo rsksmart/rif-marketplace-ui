@@ -15,9 +15,15 @@ const storeReducerFactory = (
 ) => {
   const { type, payload } = dispatcher
   const action: ContextAction = actions[type]
+  const { contextID } = initialState
 
-  logger.debug(`${initialState.contextID} action:`, type)
-  logger.debug(`${initialState.contextID} payload:`, payload)
+  if (!action) {
+    logger.error(`Action ${type} does not exist in ${contextID} actions.`)
+    return state
+  }
+
+  logger.debug(`${contextID} action:`, type)
+  logger.debug(`${contextID} payload:`, payload)
   try {
     const newState = (!!action && action(state, payload)) || state
 
