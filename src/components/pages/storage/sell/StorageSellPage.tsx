@@ -42,6 +42,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     position: 'absolute',
     width: '100%',
+    top: 0,
+    left: 0,
   },
 }))
 
@@ -195,7 +197,7 @@ const StorageSellPage = () => {
         <BaseSettings />
         <PlanItemsList />
       </Grid>
-      <Grid container alignItems='center' direction='column'>
+      <Grid container alignItems="center" direction="column">
         {action}
       </Grid>
       {
