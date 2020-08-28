@@ -1,10 +1,10 @@
-import StorageListingPage from './sell/StorageListingPage'
+import StorageSellPage from './sell/StorageSellPage'
 import StorageOffersPage from './buy/StorageOffersPage'
 import StorageLandingPage from './StorageLandingPage'
 import StorageMyOffersPage from './sell/StorageMyOffersPage'
 
 export {
-  StorageListingPage,
+  StorageSellPage,
   StorageLandingPage,
   StorageOffersPage,
   StorageMyOffersPage,
