@@ -46,9 +46,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-// TODO:
-// - generate random unique ids so we can get rid of the id prop
-// - extract functionality into Accordion component of rif-ui (rif-ui component needs to be more customizable)
 const FAQSection: FC<FAQSectionProps> = ({
   className = '', initiallyExpanded, question, answer, id,
 }) => {

@@ -35,7 +35,6 @@ const BaseSettings = () => {
   return (
     <>
       <Grid item xs={12} md={4}>
-        {/* TODO: create new molecule component in rif-ui "SelectInput" */}
         <TextField
           select
           fullWidth
@@ -51,7 +50,6 @@ const BaseSettings = () => {
       <Grid item xs={12} md={4}>
         <Grid alignItems="center" container spacing={1}>
           <Grid item xs={10}>
-            {/* TODO: update UnitsInput component in rif-ui to something like this */}
             <TextField
               required
               fullWidth
@@ -83,7 +81,6 @@ const BaseSettings = () => {
         </Grid>
       </Grid>
       <Grid item xs={12} md={4}>
-        {/* TODO: use again SelectInput from rif-ui */}
         <TextField
           select
           fullWidth

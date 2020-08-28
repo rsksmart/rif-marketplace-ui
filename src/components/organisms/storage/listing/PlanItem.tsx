@@ -5,13 +5,12 @@ import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditIcon from '@material-ui/icons/Edit'
-import { colors } from '@rsksmart/rif-ui'
+import { colors, TooltipIconButton } from '@rsksmart/rif-ui'
 import { StoragePlanItem, StorageListingContextProps, TimePeriodEnum } from 'context/Services/storage/interfaces'
 import StorageListingContext from 'context/Services/storage/ListingContext'
 import { RemoveItemPayload } from 'context/Services/storage/listingActions'
-import TooltipIconButton from 'components/molecules/TooltipIconButton'
-import ItemWUnit from 'components/atoms/ItemWUnit'
 import { priceDisplay } from 'utils/utils'
+import ItemWUnit from 'components/atoms/ItemWUnit'
 
 export interface PlanItemProps {
   onEditClick: () => void

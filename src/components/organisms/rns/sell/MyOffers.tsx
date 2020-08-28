@@ -1,7 +1,6 @@
 import { IconButton } from '@material-ui/core'
 import ClearIcon from '@material-ui/icons/Clear'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
-import DomainNameItem from 'components/molecules/DomainNameItem'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsDomain } from 'models/marketItems/DomainItem'
@@ -11,6 +10,7 @@ import ROUTES from 'routes'
 import MarketContext from 'context/Market/MarketContext'
 import RnsDomainsContext from 'context/Services/rns/DomainsContext'
 import { OrderPayload } from 'context/Services/rns/rnsActions'
+import { ShortenTextTooltip } from '@rsksmart/rif-ui'
 
 const MyOffers: FC<{}> = () => {
   const {
@@ -64,7 +64,7 @@ const MyOffers: FC<{}> = () => {
       const pseudoResolvedName = filters.name && (`${filters.name}.rsk`)
 
       const displayDomainName = name || pseudoResolvedName
-        ? <DomainNameItem value={name || pseudoResolvedName} />
+        ? <ShortenTextTooltip value={name || pseudoResolvedName} maxLength={30} />
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
       const displayItem = {
