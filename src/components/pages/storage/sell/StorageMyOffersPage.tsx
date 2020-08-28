@@ -11,6 +11,9 @@ import AccordionSummary from '@material-ui/core/AccordionSummary'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Hidden from '@material-ui/core/Hidden'
 import Divider from '@material-ui/core/Divider'
+import {
+  TableContainer, Table, TableHead, TableRow, TableCell, TableBody,
+} from '@material-ui/core'
 
 const useStyles = makeStyles((theme: Theme) => ({
   stakingRoot: {
@@ -19,6 +22,110 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: theme.spacing(100),
   },
 }))
+
+const ActiveContracts = () => (
+  <TableContainer>
+    <Table
+      aria-labelledby="table of active contracts"
+      size="small"
+      aria-label="enhanced table"
+    >
+      <TableHead>
+        <TableRow>
+          <TableCell>Customer</TableCell>
+          <TableCell>Content Size</TableCell>
+          <TableCell>Renewal Date</TableCell>
+          <TableCell>Subscription Type</TableCell>
+          <TableCell>Monthly Fee</TableCell>
+          <TableCell>Available Funds</TableCell>
+          <TableCell />
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        <TableRow>
+          <TableCell>
+            <Typography component="div"><Box color={colors.gray5}>juan.rsk</Box></Typography>
+          </TableCell>
+          <TableCell>
+            <Typography color="primary">74 GB</Typography>
+          </TableCell>
+          <TableCell>24 May 2021</TableCell>
+          <TableCell>Monthly</TableCell>
+          <TableCell>
+            <Typography color="primary">3245 RIF</Typography>
+          </TableCell>
+          <TableCell>
+            <Typography color="primary">3245 RIF</Typography>
+          </TableCell>
+          <TableCell style={{ display: 'flex' }}>
+            <Button style={{ marginRight: 4 }} color="primary" rounded variant="outlined">Withdraw</Button>
+            <Button color="primary" rounded variant="outlined">View</Button>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>
+            <Typography component="div"><Box color={colors.gray5}>juan.rsk</Box></Typography>
+          </TableCell>
+          <TableCell>
+            <Typography color="primary">74 GB</Typography>
+          </TableCell>
+          <TableCell>24 May 2021</TableCell>
+          <TableCell>Monthly</TableCell>
+          <TableCell>
+            <Typography color="primary">3245 RIF</Typography>
+          </TableCell>
+          <TableCell>
+            <Typography color="primary">3245 RIF</Typography>
+          </TableCell>
+          <TableCell style={{ display: 'flex' }}>
+            <Button style={{ marginRight: 4 }} color="primary" rounded variant="outlined">Withdraw</Button>
+            <Button color="primary" rounded variant="outlined">View</Button>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>
+            <Typography component="div"><Box color={colors.gray5}>juan.rsk</Box></Typography>
+          </TableCell>
+          <TableCell>
+            <Typography color="primary">74 GB</Typography>
+          </TableCell>
+          <TableCell>24 May 2021</TableCell>
+          <TableCell>Monthly</TableCell>
+          <TableCell>
+            <Typography color="primary">3245 RIF</Typography>
+          </TableCell>
+          <TableCell>
+            <Typography color="primary">3245 RIF</Typography>
+          </TableCell>
+          <TableCell style={{ display: 'flex' }}>
+            <Button style={{ marginRight: 4 }} color="primary" rounded variant="outlined">Withdraw</Button>
+            <Button color="primary" rounded variant="outlined">View</Button>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>
+            <Typography component="div"><Box color={colors.gray5}>juan.rsk</Box></Typography>
+          </TableCell>
+          <TableCell>
+            <Typography color="primary">74 GB</Typography>
+          </TableCell>
+          <TableCell>24 May 2021</TableCell>
+          <TableCell>Monthly</TableCell>
+          <TableCell>
+            <Typography color="primary">3245 RIF</Typography>
+          </TableCell>
+          <TableCell>
+            <Typography color="primary">3245 RIF</Typography>
+          </TableCell>
+          <TableCell style={{ display: 'flex' }}>
+            <Button style={{ marginRight: 4 }} color="primary" rounded variant="outlined">Withdraw</Button>
+            <Button color="primary" rounded variant="outlined">View</Button>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </TableContainer>
+)
 
 const ExpandableOffer = ({ offerName }) => {
   const [isExpanded, setIsExpanded] = useState(true)
@@ -109,8 +216,8 @@ const ExpandableOffer = ({ offerName }) => {
           </Grid>
           <Divider />
           <Grid container style={{ marginTop: 12 }}>
-            <Typography color="primary" variant="subtitle1">Active contracts</Typography>
-            <Grid item xs={12} />
+            <Typography gutterBottom color="primary" variant="subtitle1">Active contracts</Typography>
+            <ActiveContracts />
           </Grid>
         </Grid>
       </AccordionDetails>
