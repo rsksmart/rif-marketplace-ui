@@ -3,25 +3,21 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Web3Store } from '@rsksmart/rif-ui'
 import InfoBar from 'components/molecules/InfoBar'
 import MarketFilter from 'components/templates/marketplace/MarketFilter'
-import { MarketItem } from 'models/Market'
 import React, {
   Dispatch, FC, useContext, useEffect,
 } from 'react'
 import { RnsAction } from 'context/Services/rns/rnsActions'
 import AppContext from 'context/App/AppContext'
 import { MessagePayload } from 'context/App/appActions'
-import Marketplace, { TableHeaders } from './marketplace/Marketplace'
+import Marketplace, { MarketplaceProps } from './marketplace/Marketplace'
 import { AppContextProps } from '../../context/App/AppContext'
 
-export interface MarketPageTemplateProps {
+export interface MarketPageTemplateProps extends MarketplaceProps {
   className?: string
   filterItems: React.ReactNode
-  headers: TableHeaders
-  itemCollection: MarketItem[]
   requiresAccount?: boolean
   dispatch: Dispatch<RnsAction>
   outdatedCt: number
-  heading?: React.ElementType
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -44,12 +40,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   className = '',
   filterItems,
-  itemCollection,
-  headers,
   requiresAccount,
   dispatch,
   outdatedCt,
-  heading,
+  ...props
 }) => {
   const classes = useStyles()
   const {
@@ -104,7 +98,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
             },
           }}
         />
-        <Marketplace items={itemCollection} headers={headers} isLoading={isLoadingItems} Heading={heading} />
+        <Marketplace isLoading={isLoadingItems} {...props} />
       </Grid>
     </Grid>
   )

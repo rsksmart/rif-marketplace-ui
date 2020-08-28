@@ -124,7 +124,7 @@ const MyOffers: FC<{}> = () => {
   return (
     <MarketPageTemplate
       filterItems={<DomainFilters />}
-      itemCollection={collection}
+      items={collection}
       headers={headers}
       requiresAccount
       dispatch={dispatch}

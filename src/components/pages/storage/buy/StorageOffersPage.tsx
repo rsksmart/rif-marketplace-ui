@@ -75,7 +75,7 @@ const StorageOffersPage: FC = () => {
     <MarketPageTemplate
       className="Storage Offers"
       filterItems={<StorageFilters />}
-      itemCollection={itemCollection}
+      items={itemCollection}
       headers={TABLE_HEADERS}
       dispatch={dispatch as any} // FIXME: Change the type in the MarketPageTemplate
       outdatedCt={0}
