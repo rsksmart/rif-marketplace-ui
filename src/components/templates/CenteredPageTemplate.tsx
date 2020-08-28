@@ -3,6 +3,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Typography, Grid } from '@material-ui/core'
 
 export interface CenteredPageTemplateProps {
+  className?: string
   title?: string
   subtitle?: string
 }
@@ -24,14 +25,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const CenteredPageTemplate: FC<CenteredPageTemplateProps> = ({ title, subtitle, children }) => {
+const CenteredPageTemplate: FC<CenteredPageTemplateProps> = ({
+  className = '', title, subtitle, children,
+}) => {
   const classes = useStyles()
   return (
-    <Grid container justify='center'>
+    <Grid className={className} container justify="center">
       <div className={classes.container}>
         {
           !!title && (
-            <Typography gutterBottom align='center' variant="h5" color="primary">{title}</Typography>
+            <Typography gutterBottom align="center" variant="h5" color="primary">{title}</Typography>
           )
         }
         {
