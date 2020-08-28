@@ -3,10 +3,10 @@ import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/mole
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
-import React, { FC, useContext, useEffect } from 'react'
+import React, { FC, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import MarketContext, { TxType } from 'context/Market/MarketContext'
+import MarketContext from 'context/Market/MarketContext'
 import RnsOffersContext, { RnsOffersContextProps } from 'context/Services/rns/OffersContext'
 import { OrderPayload, RefreshPayload } from 'context/Services/rns/rnsActions'
 
@@ -18,7 +18,6 @@ const DomainOffersPage: FC = () => {
         crypto,
       },
     },
-    dispatch: mDispatch,
   } = useContext(MarketContext)
   const {
     state: {
@@ -47,15 +46,6 @@ const DomainOffersPage: FC = () => {
       account,
     },
   } = useContext(Web3Store)
-
-  useEffect(() => {
-    mDispatch({
-      type: 'TOGGLE_TX_TYPE',
-      payload: {
-        txType: TxType.BUY,
-      },
-    })
-  }, [mDispatch])
 
   let collection = []
 
@@ -108,7 +98,7 @@ const DomainOffersPage: FC = () => {
                   item,
                 } as OrderPayload,
               })
-              history.push(ROUTES.DOMAINS.BUY.CHECKOUT)
+              history.push(ROUTES.RNS.BUY.CHECKOUT)
             }}
           />
         ),
@@ -121,7 +111,7 @@ const DomainOffersPage: FC = () => {
     <MarketPageTemplate
       className="Domain Offers"
       filterItems={<DomainOfferFilters />}
-      itemCollection={collection}
+      items={collection}
       headers={headers}
       dispatch={dispatch}
       outdatedCt={outdatedTokens.length}

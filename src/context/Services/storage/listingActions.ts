@@ -1,8 +1,8 @@
-import { ContextDispatcher, ContextPayload } from 'context/storeUtils/interfaces'
+import { ContextDispatch, ContextPayload } from 'context/storeUtils/interfaces'
 import { StoragePlanItem, TimePeriodEnum } from './interfaces'
 import { ListingReducer } from './listingReducer'
 
-export type LISTING_ACTIONS =
+export type LISTING_ACTION =
   | 'ADD_ITEM'
   | 'CLEAN_UP'
   | 'REMOVE_ITEM'
@@ -51,4 +51,4 @@ export type ListingPayload =
   | SetCountryPayload
   | SetCurrencyPayload
 
-export type StorageAction = ContextDispatcher<LISTING_ACTIONS, ListingPayload>
+export type StorageAction = ContextDispatch<LISTING_ACTION, ListingPayload>

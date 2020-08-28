@@ -1,72 +1,85 @@
-import React, { FC } from 'react'
-import Grid from '@material-ui/core/Grid'
-import { Theme, makeStyles } from '@material-ui/core/styles'
-import Marketplace from 'components/templates/marketplace/Marketplace'
-import { colors } from '@rsksmart/rif-ui'
+import React, { FC, useContext } from 'react'
 import StorageFilters from 'components/organisms/filters/storage/StorageFilters'
+import MarketPageTemplate from 'components/templates/MarketPageTemplate'
+import { TableHeaders } from 'components/templates/marketplace/Marketplace'
+import { BillingPlan } from 'models/marketItems/StorageItem'
+import { CombinedPriceCell, SelectRowButton, AddressItem } from 'components/molecules'
+import MarketContext from 'context/Market/MarketContext'
+import StorageOffersContext, { StorageOffersCtxProps } from 'context/Services/storage/OffersContext'
+import ItemWUnit from 'components/atoms/ItemWUnit'
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: 'flex',
-    flexDirection: 'row',
-    flex: 1,
-  },
-  resultsContainer: {
-    overflow: 'auto',
-    [theme.breakpoints.down('md')]: {
-      marginTop: theme.spacing(3),
-    },
-  },
-  filtersContainer: {
-    width: '100%',
-  },
-  // START - MarketFilter classes
-  filter: {
-    background: colors.white,
-    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-    flex: '1 1 auto',
-    padding: theme.spacing(3, 3, 0, 3),
-    [theme.breakpoints.down('sm')]: {
-      maxHeight: '100%',
-    },
-    [theme.breakpoints.up('md')]: {
-      height: '100%',
-      minHeight: theme.spacing(60),
-    },
-  },
-  // END - MarketFilter classes
-}))
+const TABLE_HEADERS: TableHeaders = {
+  provider: 'Provider',
+  system: 'System',
+  availableSize: 'Available Size',
+  subscriptionOptions: 'Subscription Period',
+  pricePGBPDay: 'Price/GB/Day',
+  action1: '',
+}
 
 const StorageOffersPage: FC = () => {
-  const classes = useStyles()
+  const {
+    state: {
+      exchangeRates: {
+        currentFiat,
+        crypto,
+      },
+    },
+  } = useContext(MarketContext)
+  const {
+    state: {
+      listing: { items },
+    },
+    dispatch,
+  } = useContext<StorageOffersCtxProps>(StorageOffersContext)
+  // const history = useHistory()
 
-  const headers = {
-    provider: 'Provider',
-    location: 'Location',
-    system: 'System',
-    availableSize: 'Available Size',
-    subscriptionOptions: 'Subscription Options',
-    pricePerGb: 'Price/GB',
-    action1: '',
-  }
-  const itemCollection = []
+  const itemCollection = items.map((item) => {
+    const {
+      id, system, availableSize, pricePGBPDay, subscriptionOptions,
+    } = item
 
-  // TODO: here we will reference to MarketPageTemplate and MarketFilters but for the
-  // purpose of showing a preview version we are only adding styles with hardcoded data
-  // we will move to that once we start fethcing storage offers
+    const { rate, displayName } = crypto.rbtc // FIXME: remove hard-coded currency
+
+    return {
+      id,
+      provider: <AddressItem value={id} />,
+      system,
+      availableSize: <ItemWUnit type="mediumPrimary" unit="GB" value={availableSize.toString()} />,
+      subscriptionOptions: subscriptionOptions
+        .map((plan: BillingPlan) => plan.period)
+        .reduce((lastWord, currentWord) => `${lastWord} - ${currentWord}`),
+      pricePGBPDay: <CombinedPriceCell
+        price={pricePGBPDay.toString()}
+        priceFiat={pricePGBPDay.times(rate).toString()}
+        currency={displayName}
+        currencyFiat={currentFiat.displayName}
+        divider=" "
+      />,
+      action1: <SelectRowButton
+        id={id}
+        handleSelect={() => {
+          // dispatch({
+          //   type: 'SET_ORDER',
+          //   payload: {
+          //     item,
+          //   } as OrderPayload,
+          // })
+          // history.push(ROUTES.STORAGE.BUY.CHECKOUT)
+        }}
+      />,
+    }
+  }) as any // FIXME: remove as any -> Change the itemCollection type
+
   return (
-    <Grid container direction="row" className={`${classes.root}`}>
-      <>
-        <Grid className={classes.filtersContainer} item sm={12} md={3}>
-          <div className={classes.filter}>
-            <StorageFilters />
-          </div>
-        </Grid>
-        <Grid className={classes.resultsContainer} item sm={12} md={9}>
-          <Marketplace items={itemCollection} headers={headers} isLoading={false} />
-        </Grid>
-      </>
-    </Grid>
+    <MarketPageTemplate
+      className="Storage Offers"
+      filterItems={<StorageFilters />}
+      items={itemCollection}
+      headers={TABLE_HEADERS}
+      dispatch={dispatch as any} // FIXME: Change the type in the MarketPageTemplate
+      outdatedCt={0}
+    />
   )
 }
 

@@ -1,4 +1,4 @@
-import { ContextDispatcher } from 'context/storeUtils/interfaces'
+import { ContextDispatch } from 'context/storeUtils/interfaces'
 import { Modify } from 'utils/typeUtils'
 import { Message, MessageId, ErrorMessage } from 'models/UIMessage'
 import { LoaderId } from '../../models/UIMessage'
@@ -27,7 +27,7 @@ export type AppPayload = LoadingPayload |
   ErrorMessagePayload |
   RemoveMessagePayload
 
-export type AppAction = ContextDispatcher<APP_ACTION, AppPayload>
+export type AppAction = ContextDispatch<APP_ACTION, AppPayload>
 
 export interface AppReducer<P extends AppPayload> {
   (state: AppState, payload: P): AppState

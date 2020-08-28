@@ -9,8 +9,8 @@ import { colors, TooltipIconButton } from '@rsksmart/rif-ui'
 import { StoragePlanItem, StorageListingContextProps, TimePeriodEnum } from 'context/Services/storage/interfaces'
 import StorageListingContext from 'context/Services/storage/ListingContext'
 import { RemoveItemPayload } from 'context/Services/storage/listingActions'
-import PriceItem from 'components/atoms/PriceItem'
 import { priceDisplay } from 'utils/utils'
+import ItemWUnit from 'components/atoms/ItemWUnit'
 
 export interface PlanItemProps {
   onEditClick: () => void
@@ -72,11 +72,11 @@ const PlanItem: FC<PlanItemProps> = ({
               </Grid>
               <Grid item xs={4}>
                 <Box textAlign="center">
-                  <PriceItem type="crypto" currency={currency} price={`${pricePerGb}`} />
+                  <ItemWUnit type="mediumPrimary" unit={currency} value={`${pricePerGb}`} />
                 </Box>
               </Grid>
               <Grid item xs={4}>
-                <PriceItem currency={fiatDisplayName} type="fiat" price={fiatPriceDisplay} />
+                <ItemWUnit unit={fiatDisplayName} type="normalGrey" value={fiatPriceDisplay} />
               </Grid>
             </Grid>
           </Grid>
@@ -90,12 +90,12 @@ const PlanItem: FC<PlanItemProps> = ({
               <Grid item xs={4}>
                 <Typography component="div">
                   <Box textAlign="center" color={`${colors.gray5}`}>
-                    <PriceItem currency={currency} type="crypto" price={criptoMonthlyFee} />
+                    <ItemWUnit unit={currency} type="mediumPrimary" value={criptoMonthlyFee} />
                   </Box>
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <PriceItem currency={fiatDisplayName} type="fiat" price={fiatMonthlyFee} />
+                <ItemWUnit unit={fiatDisplayName} type="normalGrey" value={fiatMonthlyFee} />
               </Grid>
             </Grid>
           </Grid>

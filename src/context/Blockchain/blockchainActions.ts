@@ -1,5 +1,5 @@
 import { ConfirmationsItem } from 'api/rif-marketplace-cache/blockchain/confirmations'
-import { ContextDispatcher } from 'context/storeUtils/interfaces'
+import { ContextDispatch } from 'context/storeUtils/interfaces'
 
 export type BLOCKCHAIN_ACTION = 'NOOP' | 'SET_CONFIRMATIONS' | 'SET_TX_HASH' | 'CLEAR_CONFIRMATIONS'
 
@@ -11,4 +11,4 @@ export type ConfirmationsPayload = ConfirmationsItem
 
 export type BlockchainPayload = ConfirmationsPayload & AddTxPayload
 
-export type BlockchainAction = ContextDispatcher<BLOCKCHAIN_ACTION, BlockchainPayload>
+export type BlockchainAction = ContextDispatch<BLOCKCHAIN_ACTION, BlockchainPayload>

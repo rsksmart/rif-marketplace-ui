@@ -10,7 +10,7 @@ export type ContextName = 'storage_listing'
 const periodOptions: TimePeriodEnum[] = [TimePeriodEnum.Daily, TimePeriodEnum.Weekly, TimePeriodEnum.Monthly]
 
 export const initialState: ListingState = {
-  storeID: 'storage_listing',
+  contextID: 'storage_listing',
   system: 'IPFS',
   availableSize: 1,
   country: '',

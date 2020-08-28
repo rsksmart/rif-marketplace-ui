@@ -101,7 +101,7 @@ const CancelDomainCheckoutPage = () => {
     if (isPendingConfirm && order && !order.isProcessing) {
       // Post-confirmations handle
       const { item: { domainName } } = order
-      history.replace(ROUTES.DOMAINS.SELL.CANCEL.DONE, { domainName })
+      history.replace(ROUTES.RNS.SELL.CANCEL.DONE, { domainName })
       dispatch({
         type: 'CLEAR_ORDER',
       } as never)

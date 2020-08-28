@@ -1,7 +1,7 @@
 import { render, cleanup } from '@testing-library/react'
 
 import React, { FC, useContext } from 'react'
-import MarketContext, { MarketContextProvider, TxType } from '../MarketContext'
+import MarketContext, { MarketContextProvider } from '../MarketContext'
 
 const expectedInitialCrypto = {
   rif: {
@@ -18,29 +18,14 @@ describe('MarketContextProvider', () => {
   afterEach(cleanup)
 
   describe('initial state', () => {
-    test('should contain storeID with value "market"', () => {
+    test('should contain contextID with value "market"', () => {
       const TestComponent: FC<{}> = () => {
-        const { state: { storeID } } = useContext(MarketContext)
+        const { state: { contextID } } = useContext(MarketContext)
 
-        expect(storeID).toEqual('market')
+        expect(contextID).toEqual('market')
         return null
       }
 
-      render(
-        <MarketContextProvider>
-          <TestComponent />
-        </MarketContextProvider>,
-      )
-    })
-
-    test(`should initialise with txType property set to ${TxType.BUY}`, () => {
-      const expectedValue = TxType.BUY
-      const TestComponent = () => {
-        const { state: { txType } } = useContext(MarketContext)
-
-        expect(txType).toEqual(expectedValue)
-        return null
-      }
       render(
         <MarketContextProvider>
           <TestComponent />

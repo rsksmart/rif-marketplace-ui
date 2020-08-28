@@ -15,6 +15,7 @@ export interface MarketplaceProps {
   className?: string
   items: MarketItem[]
   headers: TableHeaders
+  Heading?: React.ElementType
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -51,31 +52,37 @@ const Marketplace: FC<MarketplaceProps> = ({
   className = '',
   items,
   headers,
+  Heading,
 }) => {
   const classes = useStyles()
   return (
     <div className={`${classes.root} ${className}`}>
+      {!!Heading && <Heading />}
       <div className={classes.content}>
         <Table>
           <TableHead>
             <TableRow>
-              {Object.keys(headers).map((itemName: string) => (
-                <TableCell className={classes.th} key={`th-${itemName}`}>{headers[itemName]}</TableCell>
-              ))}
+              {
+                Object.keys(headers).map((itemName: string) => (
+                  <TableCell className={classes.th} key={`th-${itemName}`}>{headers[itemName]}</TableCell>
+                ))
+              }
             </TableRow>
           </TableHead>
           <TableBody>
-            {items.map((item, index) => (
-              <TableRow className={index % 2 ? classes.coloredRow : ''} key={item.id}>
-                {
-                  Object.keys(headers).map((itemName: string) => (
-                    <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={itemName}>
-                      {item[itemName]}
-                    </TableCell>
-                  ))
-                }
-              </TableRow>
-            ))}
+            {
+              items.map((item, index) => (
+                <TableRow className={index % 2 ? classes.coloredRow : ''} key={item.id}>
+                  {
+                    Object.keys(headers).map((itemName: string) => (
+                      <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={itemName}>
+                        {item[itemName]}
+                      </TableCell>
+                    ))
+                  }
+                </TableRow>
+              ))
+            }
           </TableBody>
         </Table>
       </div>

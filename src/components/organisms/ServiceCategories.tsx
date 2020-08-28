@@ -27,7 +27,7 @@ const ServiceCategories: FC<ServiceCategoriesProps> = () => {
 
   const availableServices: IconedItemProps[] = [
     {
-      to: ROUTES.DOMAINS.BUY.BASE,
+      to: ROUTES.RNS.BUY.BASE,
       text: 'Name Services',
       iconProps: { src: Icons.DOMAINS, alt: 'Name Services icon' },
       description: 'Buy/Sell RNS Domains through the RIF Marketplace!',

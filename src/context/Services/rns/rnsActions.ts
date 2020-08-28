@@ -1,6 +1,6 @@
 import { RnsFilter } from 'api/models/RnsFilter'
 import { RnsItem } from 'models/marketItems/DomainItem'
-import { ContextPayload, ContextDispatcher } from 'context/storeUtils/interfaces'
+import { ContextPayload, ContextDispatch } from 'context/storeUtils/interfaces'
 import { RnsOrder, RnsState } from './interfaces'
 
 export type RNS_ACTION = 'FILTER' | 'SET_LISTING' | 'OUTDATE' | 'SET_ORDER' | 'REFRESH' | 'SET_PROGRESS' | 'CLEAR_ORDER' | 'UPDATE_LIMITS'
@@ -34,7 +34,7 @@ export type RnsPayload = ContextPayload |
   LimitsPayload |
   RefreshPayload
 
-export type RnsAction = ContextDispatcher<RNS_ACTION, RnsPayload>
+export type RnsAction = ContextDispatch<RNS_ACTION, RnsPayload>
 
 export interface RnsReducer<P extends RnsPayload> {
   (state: RnsState, payload: P): RnsState

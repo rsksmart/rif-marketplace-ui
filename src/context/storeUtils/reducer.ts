@@ -1,6 +1,6 @@
 import Logger from 'utils/Logger'
 import {
-  ContextDispatcher, ContextPayload, ContextState, ContextActions, ContextAction, ContextReducer, ContextActionType,
+  ContextDispatch, ContextPayload, ContextState, ContextActions, ContextAction, ContextReducer, ContextActionType,
 } from './interfaces'
 
 const logger = Logger.getInstance()
@@ -11,13 +11,13 @@ const storeReducerFactory = (
   errorHandle?: Function,
 ): ContextReducer => (
   state = initialState,
-  dispatcher: ContextDispatcher<ContextActionType, ContextPayload>,
+  dispatcher: ContextDispatch<ContextActionType, ContextPayload>,
 ) => {
   const { type, payload } = dispatcher
   const action: ContextAction = actions[type]
 
-  logger.debug(`${initialState.storeID} action:`, type)
-  logger.debug(`${initialState.storeID} payload:`, payload)
+  logger.debug(`${initialState.contextID} action:`, type)
+  logger.debug(`${initialState.contextID} payload:`, payload)
   try {
     const newState = (!!action && action(state, payload)) || state
 

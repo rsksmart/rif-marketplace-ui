@@ -5,7 +5,7 @@ import {
   Button, colors, shortenString, UnitsInput, validatedNumber, Web3Store,
   ShortenTextTooltip,
 } from '@rsksmart/rif-ui'
-import PriceItem from 'components/atoms/PriceItem'
+import ItemWUnit from 'components/atoms/ItemWUnit'
 import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
@@ -118,7 +118,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
     if (isPendingConfirm && order && !order.isProcessing) {
       // Post-confirmations handle
       const { item: { name } } = order
-      history.replace(ROUTES.DOMAINS.SELL.DONE, { domainName: name })
+      history.replace(ROUTES.RNS.SELL.DONE, { domainName: name })
       dispatch({
         type: 'CLEAR_ORDER',
       } as never)
@@ -347,7 +347,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
                     <TableRow>
                       <TableCell className={classes.detailKey}>USD PRICE</TableCell>
                       <TableCell className={classes.detailValue}>
-                        <PriceItem type="fiat" price={`${priceFiat}`} currency={currentFiat.displayName} />
+                        <ItemWUnit type="normalGrey" value={`${priceFiat}`} unit={currentFiat.displayName} />
                       </TableCell>
                     </TableRow>
                   </>

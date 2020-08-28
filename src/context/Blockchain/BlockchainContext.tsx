@@ -26,7 +26,7 @@ export interface BlockchainContextProps {
 }
 
 export const initialState: BlockchainState = {
-  storeID: 'blockchain',
+  contextID: 'blockchain',
   confirmations: {},
 }
 

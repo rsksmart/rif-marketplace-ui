@@ -34,7 +34,7 @@ export type RnsDomainsContextProps = Modify<RnsContextProps, {
 }>
 
 export const initialState: DomainsState = {
-  storeID: 'rns_domains',
+  contextID: 'rns_domains',
   listing: {
     items: [],
     outdatedTokens: [],

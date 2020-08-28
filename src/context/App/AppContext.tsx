@@ -4,15 +4,16 @@ import { XRService } from 'api/rif-marketplace-cache/rates/xr'
 import { DomainsService } from 'api/rif-marketplace-cache/rns/domains'
 import { OffersService } from 'api/rif-marketplace-cache/rns/offers'
 import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
-import {
-  ErrorId, ErrorMessage, Message, MessageId, LoaderId,
-} from 'models/UIMessage'
-import React, { Dispatch, useReducer } from 'react'
+import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
 import { ContextActions, ContextReducer, ContextState } from 'context/storeUtils/interfaces'
 import storeReducerFactory from 'context/storeUtils/reducer'
+import {
+  ErrorId, ErrorMessage, LoaderId, Message, MessageId,
+} from 'models/UIMessage'
+import React, { Dispatch, useReducer } from 'react'
 import { Modify } from 'utils/typeUtils'
 import {
-  AppAction, ErrorMessagePayload, AppPayload, appActions, AppReducer,
+  AppAction, appActions, AppPayload, AppReducer, ErrorMessagePayload,
 } from './appActions'
 
 export type ContextName = 'app'
@@ -32,14 +33,14 @@ export interface AppContextProps {
 }
 
 export const initialState: AppState = {
-  storeID: 'app',
+  contextID: 'app',
   apis: {
     confirmations: new ConfirmationsService(),
     'rns/v0/offers': new OffersService(),
     'rns/v0/domains': new DomainsService(),
     'rns/v0/sold': new SoldDomainsService(),
     'rates/v0': new XRService(),
-    // "storage/v0/offers": new StorageOffersService()
+    'storage/v0/offers': new StorageOffersService(),
   },
   messages: {},
   loaders: {
