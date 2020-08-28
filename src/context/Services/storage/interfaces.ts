@@ -2,6 +2,7 @@ import { Dispatch } from 'react'
 
 import { ContextState } from 'context/storeUtils/interfaces'
 import { StorageItem } from 'models/marketItems/StorageItem'
+import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { ServiceState } from '../interfaces'
 import { LISTING_ACTION, StorageAction } from './listingActions'
 import { OFFERS_ACTION } from './offersActions'
@@ -33,7 +34,10 @@ export interface StorageListingContextProps {
   dispatch: Dispatch<StorageAction>
 }
 
-export type StorageState = ServiceState<StorageItem>
+export type StorageState = ServiceState<StorageItem> & {
+  filters: StorageOffersFilters
+  limits: Pick<StorageOffersFilters, 'price' | 'size'>
+}
 
 export interface StorageCtxProps {
   state: StorageState
