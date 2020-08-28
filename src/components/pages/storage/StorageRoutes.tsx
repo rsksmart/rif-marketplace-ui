@@ -13,10 +13,10 @@ import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { getTabValueFromLocation } from 'utils/utils'
 import {
-  StorageListingPage, StorageOffersPage, StorageMyOffersPage, StorageLandingPage,
+  StorageSellPage, StorageOffersPage, StorageMyOffersPage, StorageLandingPage,
 } from '.'
 import { NotFound } from '..'
-import StorageOfferListed from './sell/StorageOfferListed'
+import StorageSellDone from './sell/StorageSellDone'
 
 const TABS: StyledNavTabProps[] = [
   {
@@ -79,10 +79,10 @@ const StorageRoutes = () => {
             </Route>
             <Route exact path={ROUTES.STORAGE.SELL.BASE}>
               <StorageListingContextProvider>
-                <StorageListingPage />
+                <StorageSellPage />
               </StorageListingContextProvider>
             </Route>
-            <Route exact path={ROUTES.STORAGE.SELL.DONE} component={StorageOfferListed} />
+            <Route exact path={ROUTES.STORAGE.SELL.DONE} component={StorageSellDone} />
             <Route exact path={ROUTES.STORAGE.MYOFFERS.BASE} component={StorageMyOffersPage} />
             <Route component={NotFound} />
           </Switch>
