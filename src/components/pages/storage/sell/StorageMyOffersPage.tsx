@@ -14,6 +14,7 @@ import Divider from '@material-ui/core/Divider'
 import {
   TableContainer, Table, TableHead, TableRow, TableCell, TableBody,
 } from '@material-ui/core'
+import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 
 const useStyles = makeStyles((theme: Theme) => ({
   stakingRoot: {
@@ -57,7 +58,7 @@ const ActiveContracts = () => (
           <TableCell>
             <Typography color="primary">3245 RIF</Typography>
           </TableCell>
-          <TableCell style={{ display: 'flex' }}>
+          <TableCell>
             <Button style={{ marginRight: 4 }} color="primary" rounded variant="outlined">Withdraw</Button>
             <Button color="primary" rounded variant="outlined">View</Button>
           </TableCell>
@@ -77,7 +78,7 @@ const ActiveContracts = () => (
           <TableCell>
             <Typography color="primary">3245 RIF</Typography>
           </TableCell>
-          <TableCell style={{ display: 'flex' }}>
+          <TableCell>
             <Button style={{ marginRight: 4 }} color="primary" rounded variant="outlined">Withdraw</Button>
             <Button color="primary" rounded variant="outlined">View</Button>
           </TableCell>
@@ -97,7 +98,7 @@ const ActiveContracts = () => (
           <TableCell>
             <Typography color="primary">3245 RIF</Typography>
           </TableCell>
-          <TableCell style={{ display: 'flex' }}>
+          <TableCell>
             <Button style={{ marginRight: 4 }} color="primary" rounded variant="outlined">Withdraw</Button>
             <Button color="primary" rounded variant="outlined">View</Button>
           </TableCell>
@@ -117,7 +118,7 @@ const ActiveContracts = () => (
           <TableCell>
             <Typography color="primary">3245 RIF</Typography>
           </TableCell>
-          <TableCell style={{ display: 'flex' }}>
+          <TableCell>
             <Button style={{ marginRight: 4 }} color="primary" rounded variant="outlined">Withdraw</Button>
             <Button color="primary" rounded variant="outlined">View</Button>
           </TableCell>
@@ -228,85 +229,82 @@ const ExpandableOffer = ({ offerName }) => {
 const StorageMyOffersPage: FC = () => {
   const classes = useStyles()
   return (
-    // TODO: move the page wrapper to a template put higher maxWidth on mobile
-    <Grid container justify="center">
-      <div style={{ maxWidth: '80%' }}>
-        {/* STAKING CARD - TODO: move to classes and create new organism/molecule */}
-        <Grid className={classes.stakingRoot} container>
-          <Grid
-            container
-            style={{ padding: 15 }}
-            alignItems="center"
-          >
-            <Grid item xs={4} md={3}>
-              <Typography color="primary" align="center">
-                Staking
-              </Typography>
-            </Grid>
-            <Grid item xs={8} md={9}>
-              <Typography component="div" color="secondary">
-                The amount of RIF staked in the marketplace helps to
-                {' '}
-                <Box display="inline" fontWeight="fontWeightMedium">enhance your reputation</Box>
-                {' '}
-                and
-                {' '}
-                <Box display="inline" fontWeight="fontWeightMedium">position your offers</Box>
-                {' '}
-                at the top when selling storage.
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            style={{
-              padding: 15,
-              borderTop: `1px solid ${colors.primary}`,
-            }}
-            alignItems="center"
-          >
-            <Grid item xs={3}>
-              <Typography align="center">BALANCE</Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Typography color="primary">2048 RIF</Typography>
-            </Grid>
-            <Grid
-              item
-              xs={6}
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-              }}
-            >
-              <Button style={{ marginRight: 4 }} variant="outlined" rounded color="primary">Add funds</Button>
-              <Button variant="outlined" rounded color="primary">Withdraw funds</Button>
-            </Grid>
-          </Grid>
-        </Grid>
-        {/* END - STAKING CARD */}
-        {/* TITLE with Icon */}
+    <CenteredPageTemplate>
+      {/* STAKING CARD - TODO: move to classes and create new organism/molecule */}
+      <Grid className={classes.stakingRoot} container>
         <Grid
           container
+          style={{ padding: 15 }}
           alignItems="center"
-          style={{ marginTop: 12 }}
         >
-          <Grid item xs="auto">
-            <img src={handProvidingFunds} alt="hand providing funds" />
+          <Grid item xs={4} md={3}>
+            <Typography color="primary" align="center">
+              Staking
+              </Typography>
           </Grid>
-          <Grid item xs={10} md="auto">
-            <Typography gutterBottom variant="h5" color="primary">
-              You are providing the following storage space to your customers
+          <Grid item xs={8} md={9}>
+            <Typography component="div" color="secondary">
+              The amount of RIF staked in the marketplace helps to
+                {' '}
+              <Box display="inline" fontWeight="fontWeightMedium">enhance your reputation</Box>
+              {' '}
+                and
+                {' '}
+              <Box display="inline" fontWeight="fontWeightMedium">position your offers</Box>
+              {' '}
+                at the top when selling storage.
+              </Typography>
+          </Grid>
+        </Grid>
+        <Grid
+          container
+          style={{
+            padding: 15,
+            borderTop: `1px solid ${colors.primary}`,
+          }}
+          alignItems="center"
+        >
+          <Grid item xs={3}>
+            <Typography align="center">BALANCE</Typography>
+          </Grid>
+          <Grid item xs={3}>
+            <Typography color="primary">2048 RIF</Typography>
+          </Grid>
+          <Grid
+            item
+            xs={6}
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <Button style={{ marginRight: 4 }} variant="outlined" rounded color="primary">Add funds</Button>
+            <Button variant="outlined" rounded color="primary">Withdraw funds</Button>
+          </Grid>
+        </Grid>
+      </Grid>
+      {/* END - STAKING CARD */}
+      {/* TITLE with Icon */}
+      <Grid
+        container
+        alignItems="center"
+        style={{ marginTop: 12 }}
+      >
+        <Grid item xs="auto">
+          <img src={handProvidingFunds} alt="hand providing funds" />
+        </Grid>
+        <Grid item xs={10} md="auto">
+          <Typography gutterBottom variant="h5" color="primary">
+            You are providing the following storage space to your customers
             </Typography>
-          </Grid>
         </Grid>
-        {/* OFFERS */}
-        <Grid container>
-          <ExpandableOffer offerName="Offer 1" />
-          <ExpandableOffer offerName="Offer 2" />
-        </Grid>
-      </div>
-    </Grid>
+      </Grid>
+      {/* OFFERS */}
+      <Grid container>
+        <ExpandableOffer offerName="Offer 1" />
+        <ExpandableOffer offerName="Offer 2" />
+      </Grid>
+    </CenteredPageTemplate>
   )
 }
 

@@ -1,30 +1,23 @@
 import React, { FC } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { Typography } from '@material-ui/core'
+import { Typography, Grid } from '@material-ui/core'
 
 export interface CenteredPageTemplateProps {
-  title: string
+  title?: string
   subtitle?: string
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    marginTop: theme.spacing(10),
-    width: '100%',
-  },
   container: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'column',
     marginTop: theme.spacing(2),
     [theme.breakpoints.down('sm')]: {
       maxWidth: '90%',
     },
     [theme.breakpoints.up('md')]: {
-      maxWidth: theme.spacing(100),
+      maxWidth: '80%',
+    },
+    [theme.breakpoints.up('lg')]: {
+      maxWidth: '70%',
     },
     position: 'relative',
     width: '100%',
@@ -34,9 +27,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 const CenteredPageTemplate: FC<CenteredPageTemplateProps> = ({ title, subtitle, children }) => {
   const classes = useStyles()
   return (
-    <div className={classes.root}>
-      <div className={`${classes.container}`}>
-        <Typography gutterBottom variant="h5" color="primary">{title}</Typography>
+    <Grid container justify='center'>
+      <div className={classes.container}>
+        {
+          !!title && (
+            <Typography gutterBottom align='center' variant="h5" color="primary">{title}</Typography>
+          )
+        }
         {
           !!subtitle && (
             <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
@@ -46,7 +43,7 @@ const CenteredPageTemplate: FC<CenteredPageTemplateProps> = ({ title, subtitle, 
         }
         {children}
       </div>
-    </div>
+    </Grid>
   )
 }
 
