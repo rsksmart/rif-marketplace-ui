@@ -5,8 +5,8 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button as RUIButton, Web3Store } from '@rsksmart/rif-ui'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import PlanItemsList from 'components/organisms/storage/listing/PlanItemsList'
-import BaseSettings from 'components/organisms/storage/listing/BaseSettings'
+import PlanItemsList from 'components/organisms/storage/sell/PlanItemsList'
+import BaseSettings from 'components/organisms/storage/sell/BaseSettings'
 import StorageListingContext from 'context/Services/storage/ListingContext'
 import StorageContract from 'contracts/Storage'
 import Logger from 'utils/Logger'
@@ -74,7 +74,7 @@ const transformOfferDataForContract = (
   }
 }
 
-const StorageListingPage = () => {
+const StorageSellPage = () => {
   const {
     state: {
       planItems, availableSize, currency, system,
@@ -220,4 +220,4 @@ const StorageListingPage = () => {
   )
 }
 
-export default StorageListingPage
+export default StorageSellPage
