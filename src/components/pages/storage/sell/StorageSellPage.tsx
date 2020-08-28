@@ -202,7 +202,9 @@ const StorageSellPage = () => {
         <BaseSettings />
         <PlanItemsList />
       </Grid>
-      {action}
+      <Grid container alignItems='center' direction='column'>
+        {action}
+      </Grid>
       {
         isProcessing
         && (
