@@ -9,7 +9,9 @@ import AccordionSummary from '@material-ui/core/AccordionSummary'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Divider from '@material-ui/core/Divider'
 import LabelWithValue from 'components/atoms/LabelWithValue'
+import Logger from 'utils/Logger'
 import ActiveContracts from './ActiveContracts'
+import CancelOfferDialogue from './CancelOfferDialogue'
 
 export interface ExpandableOfferProps {
   offerName: string
@@ -31,11 +33,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
+const logger = Logger.getInstance()
+
 const ExpandableOffer: FC<ExpandableOfferProps> = ({ offerName }) => {
   const classes = useStyles()
   const [isExpanded, setIsExpanded] = useState(true)
-
+  const [cancelOfferOpen, setCancelOfferOpen] = useState(false)
   const handleChange = () => setIsExpanded(!isExpanded)
+  const handleCancelOpen = () => setCancelOfferOpen(true)
+  const handleCancelClose = () => setCancelOfferOpen(false)
+  const handleCancelation = () => logger.info('todo: handle offers cancelation')
+
   return (
     <Accordion
       className={classes.root}
@@ -88,7 +96,8 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({ offerName }) => {
               >
                 Edit offer
               </Button>
-              <Button variant="outlined" rounded color="primary">Cancel offer</Button>
+              <Button variant="outlined" rounded color="primary" onClick={handleCancelOpen}>Cancel offer</Button>
+              <CancelOfferDialogue open={cancelOfferOpen} onClose={handleCancelClose} onConfirmCancel={handleCancelation} />
             </Grid>
           </Grid>
           <Divider />
