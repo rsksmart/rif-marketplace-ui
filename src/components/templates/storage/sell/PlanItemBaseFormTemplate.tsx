@@ -7,6 +7,7 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import { colors, validatedNumber } from '@rsksmart/rif-ui'
 import { makeStyles } from '@material-ui/core'
 import { TimePeriodEnum } from 'context/Services/storage/interfaces'
+import LabelWithValue from 'components/atoms/LabelWithValue'
 
 export interface PlanItemBaseFormTemplateProps {
   periodOptions: TimePeriodEnum[]
@@ -22,8 +23,9 @@ export interface PlanItemBaseFormTemplateProps {
 
 const useStyles = makeStyles(() => ({
   subscriptionCreatorPrice: {
-    backgroundColor: colors.gray1,
-    borderRadius: '5px',
+    // .ito
+    // backgroundColor: colors.gray1,
+    // borderRadius: '5px',
   },
 }))
 
@@ -46,7 +48,7 @@ const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = (props) => {
   return (
     <>
       {/* available months */}
-      <Grid item xs={12} md={5}>
+      <Grid item xs={12} md={3}>
         <TextField
           select
           fullWidth
@@ -74,8 +76,29 @@ const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = (props) => {
         </TextField>
       </Grid>
       {/* price */}
-      <Grid item xs={10} md={5}>
-        <Grid className={classes.subscriptionCreatorPrice} container spacing={1}>
+      <Grid item xs={10} md={3}>
+        <TextField
+          select
+          fullWidth
+          label="Currency"
+          id="currency-select"
+          value={currency}
+          InputProps={{
+            style: { textAlign: 'center' },
+          }}
+        // onChange={onCurrencyChange}
+        >
+          <MenuItem value="RBTC">RBTC</MenuItem>
+          <MenuItem value="RIF">RIF</MenuItem>
+        </TextField>
+      </Grid>
+      <Grid item xs={10} md={3}>
+        <Grid
+          className={classes.subscriptionCreatorPrice}
+          container
+          spacing={1}
+          alignItems="flex-end"
+        >
           <Grid item xs={6}>
             <TextField
               fullWidth
@@ -93,7 +116,7 @@ const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = (props) => {
                 },
                 endAdornment: (
                   <InputAdornment position="end">
-                    <Typography variant="caption" color="primary">{currency}</Typography>
+                    <Typography variant="caption" color="secondary">{currency}</Typography>
                   </InputAdornment>
                 ),
                 style: { color: colors.primary },
@@ -101,7 +124,8 @@ const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = (props) => {
             />
           </Grid>
           <Grid item xs={6}>
-            <TextField
+            <LabelWithValue label={fiatPrice} value={fiatDisplayName} />
+            {/* <TextField
               disabled
               fullWidth
               label=" "
@@ -118,7 +142,7 @@ const PlanItemBaseFormTemplate: FC<PlanItemBaseFormTemplateProps> = (props) => {
                 ),
                 style: { color: colors.gray4 },
               }}
-            />
+            /> */}
           </Grid>
         </Grid>
       </Grid>
