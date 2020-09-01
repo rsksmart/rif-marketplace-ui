@@ -26,12 +26,14 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
   onPlanSaved,
   fiatXR, fiatDisplayName,
 }) => {
-  const { state: { allPeriods, availablePeriods, currency }, dispatch } = useContext(StorageListingContext)
+  const { state: { allPeriods, availablePeriods }, dispatch } = useContext(StorageListingContext)
 
   const [pricePerGb, setPricePerGb] = useState(planItem?.pricePerGb || 1)
   const editMode = !!planItem
 
   const [timePeriod, setTimePeriod] = useState(planItem?.timePeriod || availablePeriods[0])
+  // TODO: handle multicurrency options
+  const [currency, setCurrency] = useState('RBTC')
 
   const fiatPrice = priceDisplay(pricePerGb * fiatXR, 2)
 
