@@ -5,8 +5,6 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button as RUIButton, Web3Store } from '@rsksmart/rif-ui'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import PlanItemsList from 'components/organisms/storage/sell/PlanItemsList'
-import BaseSettings from 'components/organisms/storage/sell/BaseSettings'
 import StorageListingContext from 'context/Services/storage/ListingContext'
 import StorageContract from 'contracts/Storage'
 import Logger from 'utils/Logger'
@@ -24,6 +22,8 @@ import { AddTxPayload } from 'context/Blockchain/blockchainActions'
 import BlockchainContext from 'context/Blockchain/BlockchainContext'
 import { LoadingPayload } from 'context/App/appActions'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
+import StakingCard from 'components/organisms/storage/myoffers/StakingCard'
+import SellStepper from 'components/organisms/storage/sell/SellStepper'
 
 // TODO: discuss about wrapping the library and export it with this change
 Big.NE = -30
@@ -31,8 +31,11 @@ Big.NE = -30
 const logger = Logger.getInstance()
 
 const useStyles = makeStyles((theme: Theme) => ({
+  staking: {
+    marginBottom: theme.spacing(2),
+  },
   planGrid: {
-    marginBottom: theme.spacing(3),
+    margin: theme.spacing(3, 0),
   },
   progressContainer: {
     background: 'rgba(275, 275, 275, 0.8)',
@@ -189,13 +192,17 @@ const StorageSellPage = () => {
     : <Login />
 
   return (
-    <CenteredPageTemplate
-      title="List storage service"
-      subtitle="Fill out the form below to list your service. All information provided is meant to be true and correct."
-    >
+    <CenteredPageTemplate>
+      <StakingCard className={classes.staking} balance="2048 RIF" onWithdrawFunds={() => { }} onAddFunds={() => { }} />
+      <Typography gutterBottom variant="h5" color="primary">List your storage service</Typography>
+      <Typography gutterBottom color="secondary" variant="subtitle1">
+        Fill out the fields below to list your storage service. All information provided is meant to be true and correct.
+      </Typography>
       <Grid className={classes.planGrid} container spacing={5}>
-        <BaseSettings />
-        <PlanItemsList />
+        <SellStepper />
+
+        {/* <BaseSettings />
+        <PlanItemsList /> */}
       </Grid>
       <Grid container alignItems="center" direction="column">
         {action}
