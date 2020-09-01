@@ -49,7 +49,6 @@ const fetchMinMaxLimit = async (
   filedName: string,
   options?: {
     selectField?: string
-    isWei?: true
   },
 ): Promise<number> => {
   const select = options?.selectField || filedName
@@ -62,13 +61,10 @@ const fetchMinMaxLimit = async (
   }
   const result = await service.find({ query })
 
-  // Gets the result parses it io the correct decimal and ensures that the limits are always 1bigger/smaller than the actual largest/smallest price
   return result.reduce(
     (_, item): number => {
-      if (options?.isWei) {
-        return Math.round(parseToInt(item[select], 18)) - minMax
-      }
-      return Math.round(parseInt(item[select], 10)) - minMax
+      const round = minMax === MinMax.min ? Math.floor : Math.ceil
+      return round(parseInt(item[select], 10))
     },
     0,
   )
