@@ -28,26 +28,39 @@ class RNSContract {
   }
 
   // approve: Token transfer approval
-  public approve = async (contractAddress: string, tokenId: string, txOptions: TransactionOptions): Promise<TransactionReceipt> => {
+  public approve = async (
+    contractAddress: string,
+    tokenId: string,
+    txOptions: TransactionOptions,
+  ): Promise<TransactionReceipt> => {
     const { from, gasPrice } = txOptions
-    const gas = 100000
-    const approveReceipt = await new Promise<TransactionReceipt>((resolve, reject) => {
-      this.contract.methods.approve(contractAddress, tokenId).send({ from, gas, gasPrice },
-        async (err, txHash) => {
-          if (err) return reject(err)
-          try {
-            const receipt = await waitForReceipt(txHash, this.web3)
-            return resolve(receipt)
-          } catch (e) {
-            return reject(e)
-          }
-        })
+    const gas = await this.web3.eth.estimateGas({
+      from, gasPrice,
     })
+    const approveReceipt = await new Promise<TransactionReceipt>(
+      (resolve, reject) => {
+        this.contract.methods.approve(
+          contractAddress, tokenId,
+        ).send({ from, gas, gasPrice },
+          async (err, txHash) => {
+            if (err) return reject(err)
+            try {
+              const receipt = await waitForReceipt(txHash, this.web3)
+              return resolve(receipt)
+            } catch (e) {
+              return reject(e)
+            }
+          })
+      },
+    )
     return approveReceipt
   }
 
   // unapprove: Token transfer unapproval
-  public unapprove = (tokenId: string, txOptions: TransactionOptions): Promise<TransactionReceipt> => {
+  public unapprove = (
+    tokenId: string,
+    txOptions: TransactionOptions,
+  ): Promise<TransactionReceipt> => {
     const contractAddress = '0x0000000000000000000000000000000000000000'
     return this.approve(contractAddress, tokenId, txOptions)
   }
