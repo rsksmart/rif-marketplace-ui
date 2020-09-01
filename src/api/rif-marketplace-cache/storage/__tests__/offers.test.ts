@@ -7,6 +7,7 @@ import {
 } from 'models/marketItems/StorageItem'
 import { parseToBigDecimal } from 'utils/parsers'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
+import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { StorageOffersService } from '../offers'
 import { StorageAPIService } from '../interfaces'
 
@@ -69,7 +70,7 @@ describe('Storage OffersService', () => {
         id: provider,
         location: 'UK',
         system: 'IPFS',
-        availableSize: new Big(availableCapacity),
+        availableSizeGB: new Big(availableCapacity).div(UNIT_PREFIX_POW2.KILO),
         subscriptionOptions: plans
           .filter((plan) => !!PeriodInSeconds[plan.period])
           .map<BillingPlan>((plan) => ({

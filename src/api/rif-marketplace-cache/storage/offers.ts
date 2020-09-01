@@ -4,10 +4,11 @@ import {
 } from 'models/marketItems/StorageItem'
 import { OfferTransport } from 'api/models/storage/transports'
 import { Big } from 'big.js'
-import { parseToBigDecimal, parseToInt } from 'utils/parsers'
+import { parseToBigDecimal } from 'utils/parsers'
 import { MinMaxFilter } from 'models/Filters'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { mapToTransport } from 'api/models/storage/StorageFilter'
+import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
 
 export const offersAddress: StorageServiceAddress = 'storage/v0/offers'
@@ -16,7 +17,7 @@ export const offersWSChannel: StorageWSChannel = 'offers'
 const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
   const {
     provider,
-    availableCapacity,
+    availableCapacity: availableCapacityMB,
     plans,
     averagePrice,
   } = offerTransport
@@ -25,7 +26,7 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     id: provider,
     location: 'UK',
     system: 'IPFS',
-    availableSize: new Big(availableCapacity),
+    availableSizeGB: new Big(availableCapacityMB).div(UNIT_PREFIX_POW2.KILO),
     subscriptionOptions: plans
       .filter((plan) => !!PeriodInSeconds[plan.period])
       .map<BillingPlan>((plan) => ({
@@ -64,7 +65,7 @@ const fetchMinMaxLimit = async (
   return result.reduce(
     (_, item): number => {
       const round = minMax === MinMax.min ? Math.floor : Math.ceil
-      return round(parseInt(item[select], 10))
+      return round(parseFloat(item[select]))
     },
     0,
   )
@@ -84,9 +85,12 @@ export class StorageOffersService
   }
 
   fetchSizeLimits = async (): Promise<MinMaxFilter> => {
-    const min = await fetchMinMaxLimit(this.service, MinMax.min, 'totalCapacity')
-    const max = await fetchMinMaxLimit(this.service, MinMax.max, 'totalCapacity')
-    return { min, max }
+    const minMB = await fetchMinMaxLimit(this.service, MinMax.min, 'totalCapacity')
+    const maxMB = await fetchMinMaxLimit(this.service, MinMax.max, 'totalCapacity')
+    return {
+      min: minMB / UNIT_PREFIX_POW2.KILO,
+      max: maxMB / UNIT_PREFIX_POW2.KILO,
+    }
   }
 
   fetchPriceLimits = async (): Promise<MinMaxFilter> => {

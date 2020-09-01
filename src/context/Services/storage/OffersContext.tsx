@@ -80,6 +80,7 @@ export const StorageOffersContextProvider = ({ children }) => {
   const {
     needsRefresh,
     filters,
+    limits,
   } = state as StorageOffersState
 
   if (api && !api.service) {
@@ -87,27 +88,29 @@ export const StorageOffersContextProvider = ({ children }) => {
   }
   // Initialise
   useEffect(() => {
-    if (api?.service && !isInitialised && !needsRefresh) {
-      setIsInitialised(true)
+    if (api?.service && !isInitialised) {
       try {
         // attachEvent('updated', outdateTokenId(dispatch))
         // attachEvent('patched', outdateTokenId(dispatch))
         // attachEvent('created', outdateTokenId(dispatch))
         // attachEvent('removed', outdateTokenId(dispatch))
 
-        dispatch({
-          type: 'REFRESH',
-          payload: { refresh: true },
-        } as any)
+        // dispatch({
+        //   type: 'REFRESH',
+        //   payload: { refresh: true },
+        // } as any)
+        // setTimeout(() =>
+        setIsInitialised(true)
+        // , 0)
       } catch (e) {
         setIsInitialised(false)
       }
     }
-  }, [api, isInitialised, needsRefresh, appDispatch])
+  }, [api, isInitialised, appDispatch])
 
   // (re)fetch limits upon refresh if initialised
   useEffect(() => {
-    if (isInitialised && needsRefresh && !isLimitsSet) {
+    if (isInitialised && !isLimitsSet) {
       appDispatch({
         type: 'SET_IS_LOADING',
         payload: {
@@ -116,45 +119,46 @@ export const StorageOffersContextProvider = ({ children }) => {
         } as LoadingPayload,
       } as any)
       try {
-        api.fetchSizeLimits()
-          .then((size: MinMaxFilter) => {
-            dispatch({
-              type: 'UPDATE_LIMITS',
-              payload: { size },
+        Promise.all([
+          api.fetchSizeLimits()
+            .then((size: MinMaxFilter) => {
+              dispatch({
+                type: 'UPDATE_LIMITS',
+                payload: { size },
+              })
+              dispatch({
+                type: 'FILTER',
+                payload: { size },
+              })
             })
-            dispatch({
-              type: 'FILTER',
-              payload: { size },
+            .catch((error) => {
+              throw new UIError({
+                error,
+                id: 'service-fetch',
+                text: 'Error while fetching filters. ',
+              })
+            }),
+          api.fetchPriceLimits()
+            .then((price: MinMaxFilter) => {
+              dispatch({
+                type: 'UPDATE_LIMITS',
+                payload: { price },
+              })
+              dispatch({
+                type: 'FILTER',
+                payload: { price },
+              })
             })
-          })
-          .catch((error) => {
-            throw new UIError({
-              error,
-              id: 'service-fetch',
-              text: 'Error while fetching filters. ',
-            })
-          })
-
-        api.fetchPriceLimits()
-          .then((price: MinMaxFilter) => {
-            dispatch({
-              type: 'UPDATE_LIMITS',
-              payload: { price },
-            })
-            dispatch({
-              type: 'FILTER',
-              payload: { price },
-            })
-          })
-          .catch((error) => {
-            throw new UIError({
-              error,
-              id: 'service-fetch',
-              text: 'Error while fetching filters. ',
-            })
-          })
-
-        setIsLimitsSet(true)
+            .catch((error) => {
+              throw new UIError({
+                error,
+                id: 'service-fetch',
+                text: 'Error while fetching filters. ',
+              })
+            }),
+        ]).then(() => {
+          setIsLimitsSet(true)
+        })
       } catch (error) {
         appDispatch({
           type: 'SET_MESSAGE',
@@ -217,7 +221,7 @@ export const StorageOffersContextProvider = ({ children }) => {
           } as any)
         })
     }
-  }, [isInitialised, isLimitsSet, api, appDispatch, filters])
+  }, [isLimitsSet, isInitialised, filters, limits, api, appDispatch])
 
   const value = { state, dispatch }
   return <StorageOffersContext.Provider value={value}>{children}</StorageOffersContext.Provider>
