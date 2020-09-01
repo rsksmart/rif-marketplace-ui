@@ -4,7 +4,7 @@
             "rif": "0x67B5656d60a809915323Bf2C40A8bEF15A152e3e",
             "rnsDotRskOwner": "0x4bf749ec68270027C5910220CEAB30Cc284c7BA2",
             "marketplace": "0xA29740dB2594af3786bc437Fc742Ae93e3Ec5B97",
-            "storageManager": "0xDd37b2eB92F97dd09cEd1f1d20A73aA340b2311A"
+            "storageManager": "0x5b1869D9A4C187F2EAa108f3062412ecf0526b24"
         },
         "rnsManagerUrl": "http://localhost:3001",
         "services": [
