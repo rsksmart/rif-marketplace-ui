@@ -8,10 +8,7 @@ import { StoragePlanItem } from 'context/Services/storage/interfaces'
 import StorageListingContext from 'context/Services/storage/ListingContext'
 import { EditItemPayload, AddItemPayload } from 'context/Services/storage/listingActions'
 import PlanItemBaseFormTemplate from 'components/templates/storage/sell/PlanItemBaseFormTemplate'
-import { TooltipIconButton } from '@rsksmart/rif-ui'
-/* eslint-disable-next-line import/no-unresolved */
-import { TooltipIconButtonProps } from '@rsksmart/rif-ui/dist/components/molecules/TooltipIconButton'
-import AddIcon from '@material-ui/icons/Add'
+import { Button, TooltipIconButton } from '@rsksmart/rif-ui'
 import SaveIcon from '@material-ui/icons/Save'
 import { priceDisplay } from 'utils/utils'
 
@@ -75,23 +72,27 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
     setTimePeriod(value)
   }
 
-  const actionButtonProps: TooltipIconButtonProps = editMode
-    ? {
-      tooltipTitle: 'Save plan',
-      icon: <SaveIcon />,
-      iconButtonProps: {
-        disabled: pricePerGb <= 0 || ![...availablePeriods, planItem?.timePeriod].includes(timePeriod),
-        onClick: handleOnSaveClick,
-      },
-    }
-    : {
-      tooltipTitle: 'Add plan',
-      icon: <AddIcon />,
-      iconButtonProps: {
-        disabled: pricePerGb <= 0 || !availablePeriods.includes(timePeriod),
-        onClick: handleOnAddClick,
-      },
-    }
+  const ActionButton = () => (editMode
+    ? (
+      <TooltipIconButton
+        tooltipTitle="Save plan"
+        icon={<SaveIcon />}
+        disabled={pricePerGb <= 0 || ![...availablePeriods, planItem?.timePeriod].includes(timePeriod)}
+        onClick={handleOnSaveClick}
+      />
+    )
+    : (
+      <Button
+        color="primary"
+        variant="outlined"
+        rounded
+        onClick={handleOnAddClick}
+        disabled={pricePerGb <= 0 || !availablePeriods.includes(timePeriod)}
+      >
+        {' '}
+        Add storage plan
+      </Button>
+    ))
 
   return (
     <Grid alignItems="center" container spacing={3}>
@@ -114,15 +115,14 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
         selectedPeriod={timePeriod}
         availablePeriods={availablePeriods}
       />
-
-      <Grid item xs={2} md={2}>
+      <Grid item xs={2} md={3}>
         <Grid container direction="row">
-          <TooltipIconButton {...actionButtonProps} />
           <TooltipIconButton
             tooltipTitle="The average price for a monthly suscription is 2020 RIF"
             icon={<InfoIcon color="secondary" />}
             iconButtonProps={{ disabled: true }}
           />
+          <ActionButton />
         </Grid>
       </Grid>
     </Grid>
