@@ -14,7 +14,7 @@ const FAKE_BILLING_PLAN: BillingPlan[] = [
 ]
 const FAKE_LISTING: StorageOffer[] = [
   {
-    availableSize: Big(3000),
+    availableSizeGB: Big(3000),
     id: 'fake_id',
     location: 'fake_location',
     averagePrice: 5,

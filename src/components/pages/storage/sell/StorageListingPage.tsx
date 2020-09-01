@@ -11,7 +11,7 @@ import StorageListingContext from 'context/Services/storage/ListingContext'
 import StorageContract from 'contracts/Storage'
 import Logger from 'utils/Logger'
 import { StoragePlanItem } from 'context/Services/storage/interfaces'
-import { convertGbsToBytes, convertDaysToSeconds } from 'utils/utils'
+import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { UIError } from 'models/UIMessage'
 import Login from 'components/atoms/Login'
 import { useHistory } from 'react-router-dom'
@@ -24,6 +24,7 @@ import { AddTxPayload } from 'context/Blockchain/blockchainActions'
 import BlockchainContext from 'context/Blockchain/BlockchainContext'
 import { LoadingPayload } from 'context/App/appActions'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
+import { PeriodInSeconds } from 'models/marketItems/StorageItem'
 
 // TODO: discuss about wrapping the library and export it with this change
 Big.NE = -30
@@ -46,24 +47,28 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 interface OfferContractData {
-  availableSizeBytes: number
+  availableSizeMB: string
   periods: number[]
   prices: string[]
 }
 
-const transformOfferDataForContract = (availableSizeGbs: number, planItems: StoragePlanItem[]): OfferContractData => {
+const transformOfferDataForContract = (
+  availableSizeGB: number,
+  planItems: StoragePlanItem[],
+): OfferContractData => {
   const periods: number[] = []
   const prices: string[] = []
 
   planItems.forEach((planItem: StoragePlanItem) => {
-    periods.push(convertDaysToSeconds(planItem.timePeriod))
+    periods.push(planItem.timePeriod * PeriodInSeconds.Daily)
     // we get the price/gb but need to send price/byte
-    const pricePerByte = new Big(planItem.pricePerGb).div(1024).div(1024).div(1024)
+    const pricePerByte = new Big(planItem.pricePerGb).div(UNIT_PREFIX_POW2.GIGA)
     prices.push(parseToWei(pricePerByte))
   })
 
   return {
-    availableSizeBytes: convertGbsToBytes(availableSizeGbs),
+    availableSizeMB: new Big(availableSizeGB)
+      .mul(UNIT_PREFIX_POW2.KILO).toString(),
     periods,
     prices,
   }
@@ -110,7 +115,7 @@ const StorageListingPage = () => {
       setIsProcessing(true)
       const storageContract = StorageContract.getInstance(web3)
       const {
-        availableSizeBytes, periods, prices,
+        availableSizeMB: availableSizeBytes, periods, prices,
       } = transformOfferDataForContract(availableSize, planItems)
 
       const setOfferReceipt = await storageContract.setOffer(availableSizeBytes, periods, prices, { from: account })

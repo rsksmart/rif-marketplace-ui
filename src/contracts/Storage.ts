@@ -34,7 +34,7 @@ class StorageContract {
   }
 
   public setOffer = async (
-    bytesCapacity: number,
+    bytesCapacity: string,
     billingPeriods: number[],
     billingRbtcWeiPrices: string[],
     txOptions: TransactionOptions,

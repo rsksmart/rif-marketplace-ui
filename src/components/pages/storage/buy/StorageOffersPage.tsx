@@ -37,7 +37,7 @@ const StorageOffersPage: FC = () => {
   const collection = items
     .map<MarketplaceItem>((item) => {
       const {
-        id, system, availableSize, averagePrice, subscriptionOptions,
+        id, system, availableSizeGB, averagePrice, subscriptionOptions,
       } = item
 
       const { rate, displayName } = crypto.rbtc // FIXME: remove hard-coded currency
@@ -46,7 +46,7 @@ const StorageOffersPage: FC = () => {
         id,
         provider: <AddressItem value={id} />,
         system,
-        availableSize: <ItemWUnit type="mediumPrimary" unit="GB" value={availableSize.toString()} />,
+        availableSize: <ItemWUnit type="mediumPrimary" unit="GB" value={availableSizeGB.toString()} />,
         subscriptionOptions: subscriptionOptions
           .map((plan: BillingPlan) => plan.period)
           .reduce((lastWord, currentWord) => `${lastWord} - ${currentWord}`),

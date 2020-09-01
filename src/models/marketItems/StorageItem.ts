@@ -19,7 +19,7 @@ export interface BillingPlan {
 export interface StorageOffer extends Item {
   location: string
   system: string
-  availableSize: Big
+  availableSizeGB: Big
   subscriptionOptions: BillingPlan[]
   averagePrice: number
 }
