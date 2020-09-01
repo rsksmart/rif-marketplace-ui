@@ -17,7 +17,7 @@ const FAKE_LISTING: StorageOffer[] = [
     availableSize: Big(3000),
     id: 'fake_id',
     location: 'fake_location',
-    pricePGBPDay: Big(10).pow(18),
+    averagePrice: 5,
     system: 'fake_system',
     subscriptionOptions: FAKE_BILLING_PLAN,
   },

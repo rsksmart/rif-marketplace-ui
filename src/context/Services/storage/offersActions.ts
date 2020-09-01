@@ -39,7 +39,6 @@ export const storageOffersActions: Actions = {
     ...state,
     listing: {
       items: payload.items,
-      outdatedTokens: [],
     },
   }),
   REFRESH: (state, { refresh }) => ({

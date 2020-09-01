@@ -10,9 +10,7 @@ export interface Item {
 export type MarketItem = RnsItem & StorageItem
 
 export interface MarketFilter {
-    [filterFieldName: string]: {
-        [filterType: string]: string | number | boolean
-    } | string | number | undefined | boolean
+    [filterFieldName: string]: unknown
 }
 
 export type MarketFilterType = RnsFilter & XRFilter
