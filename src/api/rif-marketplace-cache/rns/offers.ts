@@ -45,9 +45,12 @@ const fetchPriceLimit = async (service, limitType: LimitType): Promise<number> =
   }
   const results = await service.find({ query })
 
-  // Gets the result parses it io the correct decimal and ensures that the limits are always 1bigger/smaller than the actual largest/smallest price
+  // Gets the result parses it to the correct decimal and rounds it: up for max, down for min
   return results.reduce(
-    (_, item: { priceString: string }): number => Math.round(parseToInt(item.priceString, 18)) - limitType,
+    (_, item: { priceString: string }): number => {
+      const round = limitType === LimitType.min ? Math.floor : Math.ceil
+      return round(parseToInt(item.priceString, 18))
+    },
     0,
   )
 }
