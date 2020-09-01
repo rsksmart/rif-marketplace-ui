@@ -7,6 +7,7 @@ import Box from '@material-ui/core/Box'
 import RoundedCard from 'components/atoms/RoundedCard'
 
 export interface StakingCardProps {
+  className?: string
   onAddFunds: () => void
   onWithdrawFunds: () => void
   balance: string
@@ -32,11 +33,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const StakingCard: FC<StakingCardProps> = ({ balance, onAddFunds, onWithdrawFunds }) => {
+const StakingCard: FC<StakingCardProps> = ({
+  className = '', balance, onAddFunds, onWithdrawFunds,
+}) => {
   const classes = useStyles()
 
   return (
-    <RoundedCard color="primary" className={classes.root}>
+    <RoundedCard color="primary" className={`${classes.root} ${className}`}>
       <Grid
         container
         className={classes.stakingWrapper}
