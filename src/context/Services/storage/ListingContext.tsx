@@ -14,7 +14,6 @@ export const initialState: ListingState = {
   system: 'IPFS',
   availableSize: 1,
   country: '',
-  currency: 'RBTC',
   planItems: [],
   internalCounter: 1,
   availablePeriods: periodOptions,

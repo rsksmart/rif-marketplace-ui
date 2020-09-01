@@ -44,7 +44,7 @@ function getStepContent(step: number) {
 
 const SellStepper = () => {
   const classes = useStyles()
-  // .ito - set back to 1
+  // .ito - set back to 0
   const [activeStep, setActiveStep] = useState(1)
   const steps = getSteps()
 
