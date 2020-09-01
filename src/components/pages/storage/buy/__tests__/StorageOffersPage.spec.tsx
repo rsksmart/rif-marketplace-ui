@@ -10,7 +10,7 @@
 //   availableSize: Big(3000),
 //   id: 'fake_id',
 //   location: 'fake_location',
-//   pricePGBPDay: Big(10 ** 18),
+//   averagePrice: Big(10 ** 18),
 //   system: 'fake_system',
 //   subscriptionOptions: FAKE_BILLING_PLAN,
 // }
@@ -25,7 +25,7 @@
 //   system: string
 //   availableSize: 'Available Size'
 //   subscriptionOptions: 'Subscription Period'
-//   pricePGBPDay: 'Price/GB/Day'
+//   averagePrice: 'Price/GB/Day'
 //   action1: ''
 // }
 // const tableHeaders: Headers = {
@@ -33,7 +33,7 @@
 //   system: 'System',
 //   availableSize: 'Available Size',
 //   subscriptionOptions: 'Subscription Period',
-//   pricePGBPDay: 'Price/GB/Day',
+//   averagePrice: 'Price/GB/Day',
 //   action1: '',
 // }
 
@@ -43,7 +43,7 @@
 //   system: string
 //   availableSize: string
 //   subscriptionOptions: string
-//   pricePGBPDay: React.ReactElement<CombinedPriceCellProps>
+//   averagePrice: React.ReactElement<CombinedPriceCellProps>
 //   action1: 'your offer' | React.ReactElement<SelectRowButtonProps>
 // }>
 
@@ -114,7 +114,7 @@ describe('StorageOffersPage', () => {
 
   // expect(mockedInnerComp).not.toBeUndefined()
   // const {
-  //   id, system, availableSize, subscriptionOptions, pricePGBPDay,
+  //   id, system, availableSize, subscriptionOptions, averagePrice,
   // } = FAKE_OFFER_0
   // const expectedValue = JSON.stringify([
   //   {
@@ -124,9 +124,9 @@ describe('StorageOffersPage', () => {
   //     availableSize: availableSize.toString(),
   //     subscriptionOptions: subscriptionOptions.map((plan: BillingPlan) => plan.period)
   //       .reduce((lastWord, currentWord) => `${lastWord} - ${currentWord}`),
-  //     pricePGBPDay: <CombinedPriceCell
-  //       price={pricePGBPDay.toString()}
-  //       priceFiat={pricePGBPDay.times(FAKE_RATE).toString()}
+  //     averagePrice: <CombinedPriceCell
+  //       price={averagePrice.toString()}
+  //       priceFiat={averagePrice.times(FAKE_RATE).toString()}
   //       currency={subscriptionOptions[0].currency}
   //       currencyFiat={FAKE_CURRENCY}
   //       divider="\n"

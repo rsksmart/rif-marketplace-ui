@@ -13,7 +13,7 @@ const headers: TableHeaders = {
   system: 'System',
   availableSize: 'Available Size',
   subscriptionOptions: 'Subscription Period',
-  pricePGBPDay: 'Price/GB/Day',
+  averagePrice: 'Price/GB/Day',
   action1: '',
 }
 
@@ -37,7 +37,7 @@ const StorageOffersPage: FC = () => {
   const collection = items
     .map<MarketplaceItem>((item) => {
       const {
-        id, system, availableSize, pricePGBPDay, subscriptionOptions,
+        id, system, availableSize, averagePrice, subscriptionOptions,
       } = item
 
       const { rate, displayName } = crypto.rbtc // FIXME: remove hard-coded currency
@@ -50,9 +50,9 @@ const StorageOffersPage: FC = () => {
         subscriptionOptions: subscriptionOptions
           .map((plan: BillingPlan) => plan.period)
           .reduce((lastWord, currentWord) => `${lastWord} - ${currentWord}`),
-        pricePGBPDay: <CombinedPriceCell
-          price={pricePGBPDay.toString()}
-          priceFiat={pricePGBPDay.times(rate).toString()}
+        averagePrice: <CombinedPriceCell
+          price={averagePrice.toString()}
+          priceFiat={(averagePrice * rate).toString()}
           currency={displayName}
           currencyFiat={currentFiat.displayName}
           divider=" "

@@ -18,6 +18,7 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     provider,
     availableCapacity,
     plans,
+    averagePrice,
   } = offerTransport
 
   const offer: StorageOffer = {
@@ -32,22 +33,14 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
         price: parseToBigDecimal(plan.price, 18),
         currency: 'RBTC',
       })),
-    pricePGBPDay: plans
-      .reduce<Big>((acc, plan) => {
-        const period = new Big(plan.period)
-        const price = parseToBigDecimal(plan.price, 18)
-        const combinedPrice = acc.add(price.div(period))
-        return combinedPrice
-      }, new Big(0))
-      .div(plans.length)
-      .mul(new Big(PeriodInSeconds.Daily)),
+    averagePrice,
   }
   return offer
 }
 
 enum MinMax {
   min = 1,
-  max = -1.0
+  max = -1
 }
 
 const fetchMinMaxLimit = async (
@@ -81,13 +74,14 @@ const fetchMinMaxLimit = async (
   )
 }
 
-export class StorageOffersService extends AbstractAPIService implements StorageAPIService {
+export class StorageOffersService
+  extends AbstractAPIService implements StorageAPIService {
   path = offersAddress
 
   _channel = offersWSChannel
 
   _fetch = async (filters: StorageOffersFilters): Promise<StorageItem[]> => {
-    const query = mapToTransport(filters)
+    const query = filters && mapToTransport(filters)
     const result = await this.service.find({ query })
 
     return result.map(mapFromTransport)

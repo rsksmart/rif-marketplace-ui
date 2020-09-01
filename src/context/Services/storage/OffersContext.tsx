@@ -45,6 +45,7 @@ export const initialState: StorageOffersState = {
       min: 0,
       max: 0,
     },
+    periods: [],
   },
   limits: {
     size: {

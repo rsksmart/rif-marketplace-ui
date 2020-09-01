@@ -1,7 +1,7 @@
 import { Big } from 'big.js'
 import { Item } from 'models/Market'
 
-export type SubscriptionPeriods = 'Daily' | 'Weekly' | 'Monthly'
+export type SubscriptionPeriod = 'Daily' | 'Weekly' | 'Monthly'
 export enum PeriodInSeconds {
   Daily = 86400,
   Weekly = 604800,
@@ -21,7 +21,7 @@ export interface StorageOffer extends Item {
   system: string
   availableSize: Big
   subscriptionOptions: BillingPlan[]
-  pricePGBPDay: Big
+  averagePrice: number
 }
 
 export type StorageItem = StorageOffer
