@@ -14,7 +14,7 @@ const Footer = () => {
   const classes = useStyles()
 
   const footerProps: FooterProps = {
-    copyrightText: 'Copyright © 2020 IOV Labs. All rights reserved. v0.3.0',
+    copyrightText: 'Copyright © 2020 IOV Labs. All rights reserved. v1.0.0-rc.1',
     linksColumns: [
       {
         title: 'RIF',
