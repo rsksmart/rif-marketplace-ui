@@ -46,8 +46,9 @@ class StorageContract {
       throw error
     })
 
-    // TODO: check how much gas we need to send
-    const gas = 100000
+    const gas = await this.web3.eth.estimateGas({
+      from, gasPrice,
+    })
     const message = []
 
     return this.contract.methods
