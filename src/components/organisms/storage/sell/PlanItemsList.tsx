@@ -14,7 +14,6 @@ const PlanItemsList = () => {
     state: {
       planItems,
       availablePeriods,
-      currency,
     },
   } = useContext(StorageListingContext)
 
@@ -27,6 +26,8 @@ const PlanItemsList = () => {
     },
   } = useContext(MarketContext)
 
+  // TODO: handle multicurrency options
+  const currency = 'RBTC'
   const { rate: fiatXR } = crypto[currency.toLowerCase()]
 
   return (

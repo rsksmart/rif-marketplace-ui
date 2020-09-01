@@ -18,7 +18,6 @@ export interface ListingState extends ContextState {
   system: string
   availableSize: number
   country: string
-  currency: string
   planItems: StoragePlanItem[]
   internalCounter: number
   allPeriods: TimePeriodEnum[]
