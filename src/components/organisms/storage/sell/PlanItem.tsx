@@ -35,11 +35,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 const PlanItem: FC<PlanItemProps> = ({
   planItem, onEditClick, fiatXR, fiatDisplayName,
 }) => {
-  const { dispatch, state: { currency } } = useContext<StorageListingContextProps>(StorageListingContext)
+  const { dispatch } = useContext<StorageListingContextProps>(StorageListingContext)
 
   const classes = useStyles()
 
-  const { timePeriod, pricePerGb } = planItem
+  const { timePeriod, pricePerGb, currency } = planItem
   const fiatPrice = (pricePerGb * fiatXR)
   const fiatPriceDisplay = priceDisplay(fiatPrice, 2)
   const fiatMonthlyFee = priceDisplay(fiatPrice / (timePeriod / 30), 2)
