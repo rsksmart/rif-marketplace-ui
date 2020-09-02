@@ -39,7 +39,7 @@ export type StorageState = ServiceState<StorageItem> & {
   limits: Pick<StorageOffersFilters, 'price' | 'size'>
 }
 
-export interface StorageCtxProps {
+export interface StorageContextProps {
   state: StorageState
   dispatch: Dispatch<StorageAction>
 }

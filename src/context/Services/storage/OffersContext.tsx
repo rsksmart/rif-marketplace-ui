@@ -22,14 +22,17 @@ export type OffersListing = {
   items: StorageItem[]
 }
 
+export type ContextFilters = Pick<StorageOffersFilters, 'price' | 'size' | 'periods'>
+export type ContextLimits = Pick<StorageOffersFilters, 'price' | 'size'>
+
 export type StorageOffersState = Modify<ServiceState<StorageItem>, {
   listing: OffersListing
   order?: ServiceOrder<StorageItem>
-  filters: StorageOffersFilters
-  limits: Pick<StorageOffersFilters, 'price' | 'size'>
+  filters: ContextFilters
+  limits: ContextLimits
 }>
 
-export type StorageOffersCtxProps = {
+export type StorageOffersContextProps = {
   state: StorageOffersState
   dispatch: Dispatch<StorageAction>
 }

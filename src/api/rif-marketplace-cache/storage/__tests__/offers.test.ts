@@ -1,9 +1,8 @@
-// import offers from '../offers'
 import { Big } from 'big.js'
 import { OfferTransport } from 'api/models/storage/transports'
 import mockFeathersService from 'api/test-utils/feathers'
 import {
-  StorageOffer, BillingPlan, PeriodInSeconds,
+  StorageOffer, BillingPlan, PeriodInSeconds, SubscriptionPeriod,
 } from 'models/marketItems/StorageItem'
 import { parseToBigDecimal } from 'utils/parsers'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
@@ -48,7 +47,7 @@ describe('Storage OffersService', () => {
     })
 
     test('should return StorageOffer[] on success', async () => {
-      const filters: StorageOffersFilters = {
+      const filters: Partial<StorageOffersFilters> = {
         price: {
           min: 4,
           max: 6,
@@ -57,7 +56,7 @@ describe('Storage OffersService', () => {
           min: 0,
           max: 1000,
         },
-        periods: ['Daily'],
+        periods: new Set<SubscriptionPeriod>(['Daily']),
       }
       const actualReturnValue: StorageOffer[] = await offersService.fetch(filters)
       const {

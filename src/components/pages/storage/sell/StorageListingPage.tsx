@@ -115,10 +115,10 @@ const StorageListingPage = () => {
       setIsProcessing(true)
       const storageContract = StorageContract.getInstance(web3)
       const {
-        availableSizeMB: availableSizeBytes, periods, prices,
+        availableSizeMB, periods, prices,
       } = transformOfferDataForContract(availableSize, planItems)
 
-      const setOfferReceipt = await storageContract.setOffer(availableSizeBytes, periods, prices, { from: account })
+      const setOfferReceipt = await storageContract.setOffer(availableSizeMB, periods, prices, { from: account })
       logger.info('setOffer receipt: ', setOfferReceipt)
 
       bcDispatch({

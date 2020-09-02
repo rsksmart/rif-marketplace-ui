@@ -11,7 +11,7 @@ export enum PeriodInSeconds {
 export type Currencies = 'RBTC'
 
 export interface BillingPlan {
-  period: string
+  period: SubscriptionPeriod
   price: Big
   currency: Currencies
 }
