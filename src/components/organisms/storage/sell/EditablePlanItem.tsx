@@ -98,14 +98,6 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
 
   return (
     <Grid alignItems="center" container spacing={3}>
-      {
-        !editMode
-        && (
-          <Grid item xs={12}>
-            <Typography gutterBottom color="secondary" variant="caption">Select the subscription period and the price and add a new storage plan to your list</Typography>
-          </Grid>
-        )
-      }
       <PlanItemBaseFormTemplate
         onPeriodChange={onSelectedPeriodChange}
         onPriceChange={onPricePerGbChange}
@@ -118,14 +110,14 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
         availablePeriods={availablePeriods}
       />
       <Grid item xs={2} md={3}>
-        <Grid container direction="row">
+        <div>
           <TooltipIconButton
             tooltipTitle="The average price for a monthly suscription is 2020 RIF"
             icon={<InfoIcon color="secondary" />}
             iconButtonProps={{ disabled: true }}
           />
           <ActionButton />
-        </Grid>
+        </div>
       </Grid>
     </Grid>
   )
