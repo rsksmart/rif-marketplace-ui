@@ -4,12 +4,12 @@ import Stepper from '@material-ui/core/Stepper'
 import Step from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
 import StepContent from '@material-ui/core/StepContent'
-import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import RoundedCard from 'components/atoms/RoundedCard'
 import BaseSettings from './BaseSettings'
 import PlanItemsList from './PlanItemsList'
+import { Button } from '@rsksmart/rif-ui'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     marginRight: theme.spacing(1),
   },
   actionsContainer: {
-    marginBottom: theme.spacing(2),
+    margin: theme.spacing(2, 0),
   },
   resetContainer: {
     padding: theme.spacing(3),
@@ -44,8 +44,7 @@ function getStepContent(step: number) {
 
 const SellStepper = () => {
   const classes = useStyles()
-  // .ito - set back to 0
-  const [activeStep, setActiveStep] = useState(1)
+  const [activeStep, setActiveStep] = useState(0)
   const steps = getSteps()
 
   const handleNext = () => {
@@ -78,6 +77,7 @@ const SellStepper = () => {
                     disabled={activeStep === 0}
                     onClick={handleBack}
                     className={classes.button}
+                    rounded
                   >
                     Back
                   </Button>
@@ -86,6 +86,7 @@ const SellStepper = () => {
                     color="primary"
                     onClick={handleNext}
                     className={classes.button}
+                    rounded
                   >
                     {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                   </Button>
@@ -97,8 +98,8 @@ const SellStepper = () => {
       </Stepper>
       {activeStep === steps.length && (
         <Paper square elevation={0} className={classes.resetContainer}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleReset} className={classes.button}>
+          <Typography>All steps completed - you&apos;re ready to list your offer</Typography>
+          <Button rounded onClick={handleReset} className={classes.button}>
             Reset
           </Button>
         </Paper>
