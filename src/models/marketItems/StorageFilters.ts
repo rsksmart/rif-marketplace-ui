@@ -5,5 +5,5 @@ import { SubscriptionPeriod } from './StorageItem'
 export interface StorageOffersFilters extends MarketFilter {
     price: MinMaxFilter
     size: MinMaxFilter // total capacity. NOT available capacity!
-    periods: SubscriptionPeriod[]
+    periods: Set<SubscriptionPeriod>
 }
