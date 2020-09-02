@@ -7,9 +7,9 @@ import StepContent from '@material-ui/core/StepContent'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import RoundedCard from 'components/atoms/RoundedCard'
+import { Button } from '@rsksmart/rif-ui'
 import BaseSettings from './BaseSettings'
 import PlanItemsList from './PlanItemsList'
-import { Button } from '@rsksmart/rif-ui'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
@@ -44,7 +44,7 @@ function getStepContent(step: number) {
 
 const SellStepper = () => {
   const classes = useStyles()
-  const [activeStep, setActiveStep] = useState(0)
+  const [activeStep, setActiveStep] = useState(1)
   const steps = getSteps()
 
   const handleNext = () => {
@@ -55,10 +55,6 @@ const SellStepper = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1)
   }
 
-  const handleStep = (step: number) => {
-    setActiveStep(step)
-  }
-
   const handleReset = () => {
     setActiveStep(0)
   }
@@ -67,8 +63,8 @@ const SellStepper = () => {
     <RoundedCard className={classes.root} color="primary">
       <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map((label, index) => (
-          <Step key={label} completed={false}>
-            <StepLabel onClick={() => handleStep(index)}>{label}</StepLabel>
+          <Step key={label}>
+            <StepLabel>{label}</StepLabel>
             <StepContent>
               <div>{getStepContent(index)}</div>
               <div className={classes.actionsContainer}>

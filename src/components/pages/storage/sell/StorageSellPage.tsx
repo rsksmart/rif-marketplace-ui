@@ -193,7 +193,7 @@ const StorageSellPage = () => {
 
   return (
     <CenteredPageTemplate>
-      <StakingCard className={classes.staking} balance="2048 RIF" onWithdrawFunds={() => { }} onAddFunds={() => { }} />
+      <StakingCard className={classes.staking} balance="2048 RIF" onWithdrawFunds={() => { logger.info('withdraw action') }} onAddFunds={() => { logger.info('add funds action') }} />
       <Typography gutterBottom variant="h5" color="primary">List your storage service</Typography>
       <Typography gutterBottom color="secondary" variant="subtitle1">
         Fill out the fields below to list your storage service. All information provided is meant to be true and correct.
