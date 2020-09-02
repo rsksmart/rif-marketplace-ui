@@ -1,11 +1,13 @@
 import React, { useContext } from 'react'
-import { Accordion, LabeledCheckbox } from '@rsksmart/rif-ui'
+import { Accordion, FilterCheckboxCard } from '@rsksmart/rif-ui'
 
 import StorageOffersContext from 'context/Services/storage/OffersContext'
 import { MinMaxFilter } from 'models/Filters'
-import AutoCompleteCheckbox from '../AutoCompleteCheckbox'
-import RangeFilter from '../RangeFilter'
+import { SubscriptionPeriod } from 'models/marketItems/StorageItem'
+import { CheckboxProps } from '@material-ui/core'
+import { Modify } from 'utils/typeUtils'
 import SearchFilter from '../SearchFilter'
+import RangeFilter from '../RangeFilter'
 
 const StorageFilters = () => {
   const {
@@ -14,6 +16,7 @@ const StorageFilters = () => {
         name,
         price: priceFilter,
         size: sizeFilter,
+        periods: planPeriodFilter,
       },
       limits: {
         price: priceLimits,
@@ -23,47 +26,72 @@ const StorageFilters = () => {
     dispatch,
   } = useContext(StorageOffersContext)
 
-  const storageCurrencyFilters = [
-    { labelText: 'RIF', id: 'RIF' },
-    { labelText: 'R-BTC', id: 'R-BTC' },
-    { labelText: 'DOC (Dollar on Chain)', id: 'DOC (Dollar on Chain)' },
-  ]
+  // const storageCurrencyFilters = [
+  //   { labelText: 'RIF', id: 'RIF' },
+  //   { labelText: 'R-BTC', id: 'R-BTC' },
+  //   { labelText: 'DOC (Dollar on Chain)', id: 'DOC (Dollar on Chain)' },
+  // ]
 
-  const storageSystemFilters = [
-    { labelText: 'Swarm', id: 'Swarm' },
-    { labelText: 'IPFS', id: 'IPFS' },
-    { labelText: 'SIA', id: 'SIA' },
-  ]
+  // const storageSystemFilters = [
+  //   { labelText: 'Swarm', id: 'Swarm' },
+  //   { labelText: 'IPFS', id: 'IPFS' },
+  //   { labelText: 'SIA', id: 'SIA' },
+  // ]
 
-  const countryOptions = [
-    { labelText: 'Ukraine', id: 'UA' },
-    { labelText: 'Czech Republic', id: 'CZ' },
-    { labelText: 'Slovakia', id: 'SK' },
-    { labelText: 'Uruguay', id: 'UY' },
-    { labelText: 'Argentina', id: 'AR' },
-    { labelText: 'Spain', id: 'ES' },
-  ]
+  // const countryOptions = [
+  //   { labelText: 'Ukraine', id: 'UA' },
+  //   { labelText: 'Czech Republic', id: 'CZ' },
+  //   { labelText: 'Slovakia', id: 'SK' },
+  //   { labelText: 'Uruguay', id: 'UY' },
+  //   { labelText: 'Argentina', id: 'AR' },
+  //   { labelText: 'Spain', id: 'ES' },
+  // ]
 
-  const onSearch = ({ currentTarget: { value } }) => {
+  const onSearch = ({ currentTarget: { value } }): void => {
     dispatch({
       type: 'FILTER',
       payload: { name: value.trim() },
     })
   }
 
-  const onSizeChange = ((size: MinMaxFilter) => {
+  const onSizeChange = ((size: MinMaxFilter): void => {
     dispatch({
       type: 'FILTER',
       payload: { size },
     })
   })
 
-  const onPriceChange = ((price: MinMaxFilter) => {
+  const onPriceChange = ((price: MinMaxFilter): void => {
     dispatch({
       type: 'FILTER',
       payload: { price },
     })
   })
+
+  const onPlanChange = (
+    plan: SubscriptionPeriod,
+  ) => (_: unknown, checked: boolean): void => {
+    const curPeriods: Set<SubscriptionPeriod> = new Set(planPeriodFilter)
+
+    if (checked) curPeriods.add(plan)
+    else curPeriods.delete(plan)
+
+    dispatch({
+      type: 'FILTER',
+      payload: {
+        periods: curPeriods,
+      },
+    })
+  }
+
+  const planPeriodOptions: Modify<CheckboxProps, {
+    labelText: SubscriptionPeriod
+    id: SubscriptionPeriod
+  }>[] = [
+    { labelText: 'Daily', id: 'Daily', onChange: onPlanChange('Daily') },
+    { labelText: 'Weekly', id: 'Weekly', onChange: onPlanChange('Weekly') },
+    { labelText: 'Monthly', id: 'Monthly', onChange: onPlanChange('Monthly') },
+  ]
 
   return (
     <>
@@ -92,7 +120,14 @@ const StorageFilters = () => {
         unit="RIF"
         handleChange={onPriceChange}
       />
-      <AutoCompleteCheckbox options={countryOptions} />
+      <Accordion
+        id="periodsFilter"
+        expanded
+        title="Subscription period"
+      >
+        <FilterCheckboxCard items={planPeriodOptions} />
+      </Accordion>
+      {/* <AutoCompleteCheckbox options={countryOptions} />
       <Accordion
         id="currencyFilters"
         expanded
@@ -114,15 +149,8 @@ const StorageFilters = () => {
         expanded
         title="Storage System"
       >
-        {
-          storageSystemFilters.map((systemFilter) => (
-            <LabeledCheckbox
-              key={`labeledCheckbox-${systemFilter.id}`}
-              labelText={systemFilter.labelText}
-            />
-          ))
-        }
-      </Accordion>
+        <FilterCheckboxCard items={storageSystemFilters} />
+      </Accordion> */}
     </>
   )
 }

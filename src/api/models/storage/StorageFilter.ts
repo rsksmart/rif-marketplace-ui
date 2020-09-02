@@ -13,7 +13,8 @@ export interface StorageFiltersTransport extends MarketFilter {
 export const mapToTransport = ({
   periods, price, size: sizeGB,
 }: StorageOffersFilters): StorageFiltersTransport => ({
-  periods: periods.map((p: SubscriptionPeriod) => PeriodInSeconds[p]),
+  periods: Array.from(periods)
+    .map((p: SubscriptionPeriod) => PeriodInSeconds[p]),
   averagePrice: price,
   totalCapacity: {
     min: sizeGB.min * UNIT_PREFIX_POW2.KILO,
