@@ -17,7 +17,7 @@ import Login from 'components/atoms/Login'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import Big from 'big.js'
-import { parseToWei } from 'utils/parsers'
+import { convertToWeiString } from 'utils/parsers'
 import AppContext, { errorReporterFactory } from 'context/App/AppContext'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import { AddTxPayload } from 'context/Blockchain/blockchainActions'
@@ -63,7 +63,7 @@ const transformOfferDataForContract = (
     periods.push(planItem.timePeriod * PeriodInSeconds.Daily)
     // we get the price/gb but need to send price/byte
     const pricePerByte = new Big(planItem.pricePerGb).div(UNIT_PREFIX_POW2.GIGA)
-    prices.push(parseToWei(pricePerByte))
+    prices.push(convertToWeiString(pricePerByte))
   })
 
   return {
