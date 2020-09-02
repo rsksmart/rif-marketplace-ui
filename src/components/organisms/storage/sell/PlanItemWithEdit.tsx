@@ -2,6 +2,7 @@ import React, { FC, useState } from 'react'
 import { StoragePlanItem } from 'context/Services/storage/interfaces'
 import EditablePlanItem from './EditablePlanItem'
 import PlanItem from './PlanItem'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
 export interface PlanItemWithEditProps {
   planItem: StoragePlanItem
@@ -9,7 +10,19 @@ export interface PlanItemWithEditProps {
   fiatDisplayName: string
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+  planItem: {
+    [theme.breakpoints.up('md')]: {
+      width: '70%',
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '100%'
+    }
+  },
+}))
+
 const PlanItemWithEdit: FC<PlanItemWithEditProps> = ({ planItem, fiatXR, fiatDisplayName }) => {
+  const classes = useStyles()
   const [editMode, setEditMode] = useState(false)
 
   const handleOnEditClick = () => {
@@ -33,6 +46,7 @@ const PlanItemWithEdit: FC<PlanItemWithEditProps> = ({ planItem, fiatXR, fiatDis
 
   return (
     <PlanItem
+      className={classes.planItem}
       planItem={planItem}
       fiatXR={fiatXR}
       fiatDisplayName={fiatDisplayName}
