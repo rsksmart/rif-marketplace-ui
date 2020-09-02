@@ -12,8 +12,11 @@ import { Theme, makeStyles } from '@material-ui/core/styles'
 import { colors, fonts } from '@rsksmart/rif-ui'
 
 const useStyles = makeStyles((theme: Theme) => ({
+  editablePlanContainer: {
+    marginBottom: theme.spacing(4)
+  },
   plansList: {
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(2),
     borderTop: `1px solid ${colors.gray3}`,
     padding: theme.spacing(3, 0)
   },
@@ -56,7 +59,7 @@ const PlanItemsList = () => {
       {
         !!availablePeriods.length
         && (
-          <Grid item xs={12}>
+          <Grid className={classes.editablePlanContainer} item xs={12}>
             <EditablePlanItem fiatXR={fiatXR} fiatDisplayName={fiatDisplayName} />
           </Grid>
         )
