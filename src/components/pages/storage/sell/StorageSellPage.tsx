@@ -77,7 +77,7 @@ const transformOfferDataForContract = (availableSizeGbs: number, planItems: Stor
 const StorageSellPage = () => {
   const {
     state: {
-      planItems, availableSize, currency, system,
+      planItems, availableSize, peerId, system,
     },
     dispatch,
   } = useContext(StorageListingContext)
@@ -164,8 +164,8 @@ const StorageSellPage = () => {
 
   const isSubmitEnabled = planItems.length
     && availableSize
-    && currency
     && system
+    && peerId
 
   const action = account
     ? (
@@ -200,9 +200,6 @@ const StorageSellPage = () => {
       </Typography>
       <Grid className={classes.planGrid} container spacing={5}>
         <SellStepper />
-
-        {/* <BaseSettings />
-        <PlanItemsList /> */}
       </Grid>
       <Grid container alignItems="center" direction="column">
         {action}
