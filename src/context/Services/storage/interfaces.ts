@@ -26,6 +26,7 @@ export interface ListingState extends ContextState {
   internalCounter: number
   allPeriods: TimePeriodEnum[]
   availablePeriods: TimePeriodEnum[]
+  peerId: string
 }
 
 export interface StorageListingContextProps {
