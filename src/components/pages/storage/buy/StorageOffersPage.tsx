@@ -5,7 +5,7 @@ import { TableHeaders, MarketplaceItem } from 'components/templates/marketplace/
 import { BillingPlan } from 'models/marketItems/StorageItem'
 import { CombinedPriceCell, SelectRowButton, AddressItem } from 'components/molecules'
 import MarketContext from 'context/Market/MarketContext'
-import StorageOffersContext, { StorageOffersCtxProps } from 'context/Services/storage/OffersContext'
+import StorageOffersContext, { StorageOffersContextProps } from 'context/Services/storage/OffersContext'
 import ItemWUnit from 'components/atoms/ItemWUnit'
 
 const headers: TableHeaders = {
@@ -31,7 +31,7 @@ const StorageOffersPage: FC = () => {
       listing: { items },
     },
     dispatch,
-  } = useContext<StorageOffersCtxProps>(StorageOffersContext)
+  } = useContext<StorageOffersContextProps>(StorageOffersContext)
   // const history = useHistory()
 
   const collection = items
@@ -48,7 +48,8 @@ const StorageOffersPage: FC = () => {
         system,
         availableSize: <ItemWUnit type="mediumPrimary" unit="GB" value={availableSizeGB.toString()} />,
         subscriptionOptions: subscriptionOptions
-          .map((plan: BillingPlan) => plan.period)
+          .map((plan: BillingPlan) => plan.period as string)
+          .reverse()
           .reduce((lastWord, currentWord) => `${lastWord} - ${currentWord}`),
         averagePrice: <CombinedPriceCell
           price={averagePrice.toString()}

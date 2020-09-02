@@ -12,7 +12,7 @@ export type StorageAPIService = Modify<
         path: StorageServiceAddress
         _channel: StorageWSChannel
         fetch: (
-            filters: StorageOffersFilters
+            filters: Partial<StorageOffersFilters>
         ) => Promise<StorageItem[]>
     }
 >

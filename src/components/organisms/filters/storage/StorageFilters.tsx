@@ -26,27 +26,6 @@ const StorageFilters = () => {
     dispatch,
   } = useContext(StorageOffersContext)
 
-  // const storageCurrencyFilters = [
-  //   { labelText: 'RIF', id: 'RIF' },
-  //   { labelText: 'R-BTC', id: 'R-BTC' },
-  //   { labelText: 'DOC (Dollar on Chain)', id: 'DOC (Dollar on Chain)' },
-  // ]
-
-  // const storageSystemFilters = [
-  //   { labelText: 'Swarm', id: 'Swarm' },
-  //   { labelText: 'IPFS', id: 'IPFS' },
-  //   { labelText: 'SIA', id: 'SIA' },
-  // ]
-
-  // const countryOptions = [
-  //   { labelText: 'Ukraine', id: 'UA' },
-  //   { labelText: 'Czech Republic', id: 'CZ' },
-  //   { labelText: 'Slovakia', id: 'SK' },
-  //   { labelText: 'Uruguay', id: 'UY' },
-  //   { labelText: 'Argentina', id: 'AR' },
-  //   { labelText: 'Spain', id: 'ES' },
-  // ]
-
   const onSearch = ({ currentTarget: { value } }): void => {
     dispatch({
       type: 'FILTER',
@@ -127,30 +106,6 @@ const StorageFilters = () => {
       >
         <FilterCheckboxCard items={planPeriodOptions} />
       </Accordion>
-      {/* <AutoCompleteCheckbox options={countryOptions} />
-      <Accordion
-        id="currencyFilters"
-        expanded
-        title="Currency"
-      >
-        <div>
-          {
-            storageCurrencyFilters.map((currencyFilter) => (
-              <LabeledCheckbox
-                key={`labeledCheckbox-${currencyFilter.id}`}
-                labelText={currencyFilter.labelText}
-              />
-            ))
-          }
-        </div>
-      </Accordion>
-      <Accordion
-        id="systemFilters"
-        expanded
-        title="Storage System"
-      >
-        <FilterCheckboxCard items={storageSystemFilters} />
-      </Accordion> */}
     </>
   )
 }

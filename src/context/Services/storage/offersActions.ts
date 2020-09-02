@@ -19,7 +19,8 @@ export type StorageOffersPayload =
   LimitsPayload |
   FiltersLimits
 
-export interface StorageOffersAction extends ContextDispatch<OFFERS_ACTION, StorageOffersPayload> {
+export interface StorageOffersAction extends
+  ContextDispatch<OFFERS_ACTION, StorageOffersPayload> {
   type: OFFERS_ACTION
 }
 
