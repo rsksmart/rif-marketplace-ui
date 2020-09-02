@@ -3,7 +3,6 @@ import React, {
 } from 'react'
 import InfoIcon from '@material-ui/icons/Info'
 import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
 import { StoragePlanItem } from 'context/Services/storage/interfaces'
 import StorageListingContext from 'context/Services/storage/ListingContext'
 import { EditItemPayload, AddItemPayload } from 'context/Services/storage/listingActions'
@@ -33,7 +32,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
 
   const [timePeriod, setTimePeriod] = useState(planItem?.timePeriod || availablePeriods[0])
   // TODO: handle multicurrency options
-  const [currency, setCurrency] = useState('RBTC')
+  const currency = 'RBTC'
 
   const fiatPrice = priceDisplay(pricePerGb * fiatXR, 2)
 
@@ -97,18 +96,20 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
     ))
 
   return (
-    <Grid alignItems="center" container spacing={3}>
-      <PlanItemBaseFormTemplate
-        onPeriodChange={onSelectedPeriodChange}
-        onPriceChange={onPricePerGbChange}
-        price={pricePerGb}
-        currency={currency}
-        fiatPrice={fiatPrice}
-        fiatDisplayName={fiatDisplayName}
-        periodOptions={allPeriods}
-        selectedPeriod={timePeriod}
-        availablePeriods={availablePeriods}
-      />
+    <Grid alignItems="center" container spacing={1}>
+      <Grid item xs={10} md={9}>
+        <PlanItemBaseFormTemplate
+          onPeriodChange={onSelectedPeriodChange}
+          onPriceChange={onPricePerGbChange}
+          price={pricePerGb}
+          currency={currency}
+          fiatPrice={fiatPrice}
+          fiatDisplayName={fiatDisplayName}
+          periodOptions={allPeriods}
+          selectedPeriod={timePeriod}
+          availablePeriods={availablePeriods}
+        />
+      </Grid>
       <Grid item xs={2} md={3}>
         <div>
           <TooltipIconButton

@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditIcon from '@material-ui/icons/Edit'
-import { colors, TooltipIconButton, shortenString } from '@rsksmart/rif-ui'
+import { colors, TooltipIconButton } from '@rsksmart/rif-ui'
 import { StoragePlanItem, StorageListingContextProps, TimePeriodEnum } from 'context/Services/storage/interfaces'
 import StorageListingContext from 'context/Services/storage/ListingContext'
 import { RemoveItemPayload } from 'context/Services/storage/listingActions'
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const PlanItem: FC<PlanItemProps> = ({
   className = '', planItem, onEditClick, fiatXR, fiatDisplayName,
 }) => {
-  const { dispatch, state: { peerId } } = useContext<StorageListingContextProps>(StorageListingContext)
+  const { dispatch } = useContext<StorageListingContextProps>(StorageListingContext)
 
   const classes = useStyles()
 
@@ -69,7 +69,6 @@ const PlanItem: FC<PlanItemProps> = ({
           </Grid>
           <Grid xs={6} item style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
             <ItemWUnit type="mediumPrimary" unit={currency} value={pricePerGb.toString()} />
-            <Typography color='secondary'>|</Typography>
             <ItemWUnit unit={fiatDisplayName} type="normalGrey" value={fiatPriceDisplay} />
           </Grid>
         </Grid>
