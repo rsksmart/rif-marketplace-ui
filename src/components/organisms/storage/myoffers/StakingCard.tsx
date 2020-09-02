@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: theme.spacing(100),
   },
   stakingWrapper: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(1.5),
   },
   balanceWrapper: {
     borderTop: `1px solid ${colors.primary}`,
@@ -46,7 +46,7 @@ const StakingCard: FC<StakingCardProps> = ({
         alignItems="center"
       >
         <Grid item xs={3}>
-          <Typography color="primary" align="center">
+          <Typography color="primary" align="center" variant="h6">
             Staking
           </Typography>
         </Grid>
@@ -70,10 +70,10 @@ const StakingCard: FC<StakingCardProps> = ({
         alignItems="center"
       >
         <Grid item xs={3}>
-          <Typography align="center">BALANCE</Typography>
+          <Typography align="center" color="textPrimary">BALANCE</Typography>
         </Grid>
         <Grid item xs={3}>
-          <Typography color="primary">{balance}</Typography>
+          <Typography color="primary" variant="h6">{balance}</Typography>
         </Grid>
         <Grid
           item
@@ -92,7 +92,6 @@ const StakingCard: FC<StakingCardProps> = ({
           <Button
             variant="outlined"
             rounded
-            color="primary"
             onClick={onWithdrawFunds}
           >
             Withdraw funds

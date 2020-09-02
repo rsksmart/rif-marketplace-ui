@@ -1,8 +1,8 @@
 import React, { FC, useState } from 'react'
 import { StoragePlanItem } from 'context/Services/storage/interfaces'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import EditablePlanItem from './EditablePlanItem'
 import PlanItem from './PlanItem'
-import { makeStyles, Theme } from '@material-ui/core/styles'
 
 export interface PlanItemWithEditProps {
   planItem: StoragePlanItem
@@ -16,8 +16,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '70%',
     },
     [theme.breakpoints.down('md')]: {
-      width: '100%'
-    }
+      width: '100%',
+    },
   },
 }))
 
