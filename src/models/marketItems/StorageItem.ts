@@ -5,7 +5,7 @@ export type SubscriptionPeriod = 'Daily' | 'Weekly' | 'Monthly'
 export enum PeriodInSeconds {
   Daily = 86400,
   Weekly = 604800,
-  Monthly = 2620800
+  Monthly = 2592000
 }
 
 export type Currencies = 'RBTC'
