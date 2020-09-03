@@ -9,7 +9,7 @@ import StepContent from '@material-ui/core/StepContent'
 import { Button } from '@rsksmart/rif-ui'
 import { StorageListingContextProps } from 'context/Services/storage/interfaces'
 import StorageListingContext from 'context/Services/storage/ListingContext'
-import BaseSettings from './BaseSettings'
+import GeneralFeatures from './GeneralFeatures'
 import PlanItemsList from './PlanItemsList'
 
 export interface SellStepperProps {
@@ -45,7 +45,7 @@ const SellStepper: FC<SellStepperProps> = ({ finalAction }) => {
         <StepLabel>General features</StepLabel>
         <StepContent>
           <div>
-            <BaseSettings />
+            <GeneralFeatures />
           </div>
           <div className={classes.actionsContainer}>
             <Button
