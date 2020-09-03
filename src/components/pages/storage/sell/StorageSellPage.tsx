@@ -3,7 +3,6 @@ import React, {
 } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button as RUIButton, Web3Store } from '@rsksmart/rif-ui'
-import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import StorageListingContext from 'context/Services/storage/ListingContext'
 import StorageContract from 'contracts/Storage'
@@ -25,6 +24,7 @@ import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import { PeriodInSeconds } from 'models/marketItems/StorageItem'
 import StakingCard from 'components/organisms/storage/myoffers/StakingCard'
 import SellStepper from 'components/organisms/storage/sell/SellStepper'
+import RoundedCard from 'components/atoms/RoundedCard'
 
 // TODO: discuss about wrapping the library and export it with this change
 Big.NE = -30
@@ -35,8 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   staking: {
     marginBottom: theme.spacing(2),
   },
-  planGrid: {
+  stepperContainer: {
     margin: theme.spacing(3, 0),
+    width: '100%',
   },
   progressContainer: {
     background: 'rgba(275, 275, 275, 0.8)',
@@ -174,7 +175,7 @@ const StorageSellPage = () => {
     && system
     && peerId
 
-  const action = account
+  const finalAction = account
     ? (
       <>
         <RUIButton
@@ -205,12 +206,9 @@ const StorageSellPage = () => {
       <Typography gutterBottom color="secondary" variant="subtitle1">
         Fill out the fields below to list your storage service. All information provided is meant to be true and correct.
       </Typography>
-      <Grid className={classes.planGrid} container spacing={5}>
-        <SellStepper />
-      </Grid>
-      <Grid container alignItems="center" direction="column">
-        {action}
-      </Grid>
+      <RoundedCard color="primary" className={classes.stepperContainer}>
+        <SellStepper finalAction={finalAction} />
+      </RoundedCard>
       {
         isProcessing
         && (
