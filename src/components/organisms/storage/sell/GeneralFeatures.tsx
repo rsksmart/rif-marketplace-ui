@@ -14,8 +14,7 @@ import { StorageListingContextProps } from 'context/Services/storage/interfaces'
 import { SetAvailableSizePayload } from 'context/Services/storage/listingActions'
 import { Box } from '@material-ui/core'
 
-// TODO: rename to general features
-const BaseSettings = () => {
+const GeneralFeatures = () => {
   const { state: { availableSize, system }, dispatch } = useContext<StorageListingContextProps>(StorageListingContext)
   // TODO: move to context
   const [peerId, setPeerId] = useState('')
@@ -145,4 +144,4 @@ const BaseSettings = () => {
   )
 }
 
-export default BaseSettings
+export default GeneralFeatures
