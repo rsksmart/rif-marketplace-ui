@@ -7,18 +7,21 @@ import MenuItem from '@material-ui/core/MenuItem'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import Tooltip from '@material-ui/core/Tooltip'
 import {
-  Button, colors, ModalDialogue, validatedNumber,
+  Button, colors, validatedNumber,
 } from '@rsksmart/rif-ui'
 import StorageListingContext from 'context/Services/storage/ListingContext'
 import { StorageListingContextProps } from 'context/Services/storage/interfaces'
 import { SetAvailableSizePayload } from 'context/Services/storage/listingActions'
-import { Box } from '@material-ui/core'
+import GetPeerIdModal from 'components/organisms/storage/sell/GetPeerIdModal'
 
 const GeneralFeatures = () => {
   const { state: { availableSize, system }, dispatch } = useContext<StorageListingContextProps>(StorageListingContext)
   // TODO: move to context
   const [peerId, setPeerId] = useState('')
   const [modalPeerIdOpened, setModalPeerIdOpened] = useState(false)
+
+  const handleModalOpen = () => setModalPeerIdOpened(true)
+  const handleModalClose = () => setModalPeerIdOpened(false)
 
   const onSizeChange = ({ target: { value } }) => {
     dispatch({
@@ -30,6 +33,7 @@ const GeneralFeatures = () => {
   }
 
   const onPeerIdChange = ({ target: { value } }) => {
+    // TODO: dispatch
     setPeerId(value)
   }
 
@@ -98,47 +102,8 @@ const GeneralFeatures = () => {
         />
       </Grid>
       <Grid item xs={4} md={2}>
-        <Button onClick={() => setModalPeerIdOpened(true)} color="primary" rounded>Get Peer ID</Button>
-        <ModalDialogue title="Install and initialize the pinning service" open={modalPeerIdOpened} onClose={() => setModalPeerIdOpened(false)}>
-          <Grid container justify="center">
-            <Typography color="secondary">To get your Peer ID, please first run the following commands in your terminal</Typography>
-            <Grid
-              container
-              style={{
-                padding: 15, border: `1px solid ${colors.gray3}`, marginTop: 15, marginBottom: 15,
-              }}
-            >
-              <Grid item xs={12}>
-                <Typography align="center" color="secondary">$ npm install -g @rsksmart/rif-storage-pinner</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography align="center" component="div" color="secondary">
-                  {'$ rif-pinner init --offerId <'}
-                  <Box
-                    display="inline"
-                    style={{ color: colors.primary }}
-                  >
-                    {' '}
-                    add here your account address
-                  </Box>
-                  {'>'}
-                </Typography>
-              </Grid>
-            </Grid>
-            <Typography gutterBottom component="div" color="secondary">
-              Your
-              <Box display="inline" fontWeight="fontWeightMedium">Peer ID</Box>
-              {' '}
-              will be generated in your terminal with the following format:
-              {' '}
-            </Typography>
-            <Typography gutterBottom component="div" color="secondary">
-              E.g.
-              <Box display="inline" fontWeight="fontWeightMedium">QmYyQSo1c1Ym7orWxLYvCrM2EmxFTANf8wXmmE7DWjhx5N</Box>
-            </Typography>
-            <Typography gutterBottom color="secondary">Please copy it from the terminal and paste it in the Peer ID field of the form</Typography>
-          </Grid>
-        </ModalDialogue>
+        <Button onClick={handleModalOpen} color="primary" rounded>Get Peer ID</Button>
+        <GetPeerIdModal open={modalPeerIdOpened} onClose={handleModalClose} />
       </Grid>
     </Grid>
   )
