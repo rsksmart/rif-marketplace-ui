@@ -11,13 +11,12 @@ import {
 } from '@rsksmart/rif-ui'
 import StorageListingContext from 'context/Services/storage/ListingContext'
 import { StorageListingContextProps } from 'context/Services/storage/interfaces'
-import { SetAvailableSizePayload } from 'context/Services/storage/listingActions'
+import { SetAvailableSizePayload, SetPeerIdPayload } from 'context/Services/storage/listingActions'
 import GetPeerIdModal from 'components/organisms/storage/sell/GetPeerIdModal'
 
 const GeneralFeatures = () => {
-  const { state: { availableSize, system }, dispatch } = useContext<StorageListingContextProps>(StorageListingContext)
+  const { state: { availableSize, system, peerId }, dispatch } = useContext<StorageListingContextProps>(StorageListingContext)
   // TODO: move to context
-  const [peerId, setPeerId] = useState('')
   const [modalPeerIdOpened, setModalPeerIdOpened] = useState(false)
 
   const handleModalOpen = () => setModalPeerIdOpened(true)
@@ -33,8 +32,12 @@ const GeneralFeatures = () => {
   }
 
   const onPeerIdChange = ({ target: { value } }) => {
-    // TODO: dispatch
-    setPeerId(value)
+    dispatch({
+      type: 'SET_PEER_ID',
+      payload: {
+        peerId: value,
+      } as SetPeerIdPayload,
+    })
   }
 
   return (
