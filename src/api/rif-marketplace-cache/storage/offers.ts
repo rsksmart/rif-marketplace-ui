@@ -34,7 +34,7 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
         price: parseToBigDecimal(plan.price, 18),
         currency: 'RBTC',
       })),
-    averagePrice,
+    averagePrice: averagePrice / 10 ** 18,
   }
   return offer
 }

@@ -62,8 +62,8 @@ const transformOfferDataForContract = (
   planItems.forEach((planItem: StoragePlanItem) => {
     periods.push(planItem.timePeriod * PeriodInSeconds.Daily)
     // we get the price/gb but need to send price/byte
-    const pricePerByte = new Big(planItem.pricePerGb).div(UNIT_PREFIX_POW2.GIGA)
-    prices.push(convertToWeiString(pricePerByte))
+    const pricePerMB = new Big(planItem.pricePerGb).div(UNIT_PREFIX_POW2.KILO)
+    prices.push(convertToWeiString(pricePerMB))
   })
 
   return {
