@@ -10,5 +10,11 @@
         "rnsDotRskOwner": "0xca0a477e19bac7e0e172ccfd2e3c28a7200bdb71",
         "marketplace": "0xFa5ade767a422C66cAFd94c3710f5b92467fB85e",
         "rnsManagerUrl": "https://testnet.manager.rns.rifos.org"
+    },
+    "rskmainnet": {
+        "rif": "0x2acc95758f8b5f583470ba265eb685a8f45fc9d5",
+        "rnsDotRskOwner": "0x45d3e4fb311982a06ba52359d44cb4f5980e0ef1",
+        "marketplace": "0xa966Be39A13723d991dFA92B2B0CF6b0c7416eE5",
+        "rnsManagerUrl": "https://manager.rns.rifos.org"
     }
 }
