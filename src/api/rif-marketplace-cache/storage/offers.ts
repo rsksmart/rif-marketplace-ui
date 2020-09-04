@@ -96,6 +96,9 @@ export class StorageOffersService
   fetchPriceLimits = async (): Promise<MinMaxFilter> => {
     const min = await fetchMinMaxLimit(this.service, MinMax.min, 'averagePrice')
     const max = await fetchMinMaxLimit(this.service, MinMax.max, 'averagePrice')
-    return { min, max }
+    return {
+      min: min / 10 ** 18,
+      max: max / 10 ** 18,
+    }
   }
 }
