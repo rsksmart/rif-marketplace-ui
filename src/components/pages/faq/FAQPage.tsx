@@ -50,14 +50,9 @@ const faqProps: FAQPageProps = {
     {
       id: 'q6',
       question: 'What is the Roadmap for the RIF Marketplace in the short term?',
-      answer: `We are releasing the first version of the RIF Marketplace to the RSK Testnet in May 2020.  
-
-    This version is accessible via web and includes two main service categories:
-    RNS Domains (Buying and selling of RNS domains among users)
-    Storage Pinning Services (Renting decentralized storage)
-    
-    The next step is to add additional services (Oracles coming soon!) and also to incorporate the staking, slashing, SLA, reputation and dispute resolution mechanisms to ensure all parties have a positive and reliable experience.`,
-
+      answer: `We released the first version of the RIF Marketplace which allows users to Buy/Sell 
+      RNS Domains (Name Services). The next step is to add Storage Services (renting decentralized storage) 
+      and Data Services (Oracles and external data sources). We also plan to incorporate soon the staking, slashing, SLA, reputation and dispute resolution mechanisms.`,
     },
     {
       id: 'q7',
