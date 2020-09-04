@@ -8,6 +8,7 @@ import {
   SetCurrencyPayload,
   ListingActions,
   ListingPayload,
+  SetPeerIdPayload,
 } from './listingActions'
 import { initialState } from './ListingContext'
 
@@ -80,5 +81,9 @@ export const listingActions: ListingActions = {
   SET_CURRENCY: (state: ListingState, { currency }: SetCurrencyPayload) => ({
     ...state,
     currency,
+  }),
+  SET_PEER_ID: (state: ListingState, { peerId }: SetPeerIdPayload) => ({
+    ...state,
+    peerId,
   }),
 }
