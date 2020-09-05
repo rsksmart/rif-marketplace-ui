@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react'
 import { StoragePlanItem } from 'context/Services/storage/interfaces'
 import { makeStyles, Theme } from '@material-ui/core/styles'
+import { MarketCryptoRecord } from 'context/Market/MarketContext'
 import EditablePlanItem from './EditablePlanItem'
 import PlanItem from './PlanItem'
 
@@ -8,6 +9,7 @@ export interface PlanItemWithEditProps {
   planItem: StoragePlanItem
   fiatXR: number
   fiatDisplayName: string
+  cryptoXRs: MarketCryptoRecord
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -21,24 +23,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const PlanItemWithEdit: FC<PlanItemWithEditProps> = ({ planItem, fiatXR, fiatDisplayName }) => {
+const PlanItemWithEdit: FC<PlanItemWithEditProps> = ({
+  planItem, fiatXR, fiatDisplayName, cryptoXRs,
+}) => {
   const classes = useStyles()
   const [editMode, setEditMode] = useState(false)
 
-  const handleOnEditClick = () => {
-    setEditMode(true)
-  }
+  const handleOnEditClick = () => setEditMode(true)
 
-  const handleOnSaveClick = () => {
-    setEditMode(false)
-  }
+  const handleOnSaveClick = () => setEditMode(false)
 
   if (editMode) {
     return (
       <EditablePlanItem
         planItem={planItem}
         onPlanSaved={handleOnSaveClick}
-        fiatXR={fiatXR}
+        cryptoXRs={cryptoXRs}
         fiatDisplayName={fiatDisplayName}
       />
     )
