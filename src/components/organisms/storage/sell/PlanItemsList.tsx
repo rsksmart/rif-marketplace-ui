@@ -3,13 +3,13 @@ import React, {
 } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import EditablePlanItem from 'components/organisms/storage/sell/EditablePlanItem'
 import { StoragePlanItem } from 'context/Services/storage/interfaces'
 import PlanItemWithEdit from 'components/organisms/storage/sell/PlanItemWithEdit'
 import StorageListingContext from 'context/Services/storage/ListingContext'
 import MarketContext from 'context/Market/MarketContext'
 import { Theme, makeStyles } from '@material-ui/core/styles'
 import { colors, fonts } from '@rsksmart/rif-ui'
+import EditablePlanItem from './EditablePlanItem'
 
 const useStyles = makeStyles((theme: Theme) => ({
   editablePlanContainer: {
@@ -42,14 +42,14 @@ const PlanItemsList = () => {
     state: {
       exchangeRates: {
         currentFiat: { displayName: fiatDisplayName },
-        crypto,
+        crypto: cryptoXRs,
       },
     },
   } = useContext(MarketContext)
 
   // TODO: handle multicurrency options
   const currency = 'RBTC'
-  const { rate: fiatXR } = crypto[currency.toLowerCase()]
+  const { rate: fiatXR } = cryptoXRs[currency.toLowerCase()]
 
   return (
     <>
@@ -58,7 +58,7 @@ const PlanItemsList = () => {
         !!availablePeriods.length
         && (
           <Grid className={classes.editablePlanContainer} item xs={12}>
-            <EditablePlanItem fiatXR={fiatXR} fiatDisplayName={fiatDisplayName} />
+            <EditablePlanItem cryptoXRs={cryptoXRs} fiatDisplayName={fiatDisplayName} />
           </Grid>
         )
       }
@@ -78,7 +78,12 @@ const PlanItemsList = () => {
                 ).map(
                   (planItem: StoragePlanItem) => (
                     <Grid item xs={12} key={planItem.internalId}>
-                      <PlanItemWithEdit fiatXR={fiatXR} fiatDisplayName={fiatDisplayName} planItem={planItem} />
+                      <PlanItemWithEdit
+                        cryptoXRs={cryptoXRs}
+                        fiatXR={fiatXR}
+                        fiatDisplayName={fiatDisplayName}
+                        planItem={planItem}
+                      />
                     </Grid>
                   ),
                 )
