@@ -3,19 +3,20 @@ import React, {
 } from 'react'
 import InfoIcon from '@material-ui/icons/Info'
 import Grid from '@material-ui/core/Grid'
-import { StoragePlanItem } from 'context/Services/storage/interfaces'
+import { StoragePlanItem, TimePeriodEnum } from 'context/Services/storage/interfaces'
 import StorageListingContext from 'context/Services/storage/ListingContext'
 import { EditItemPayload, AddItemPayload } from 'context/Services/storage/listingActions'
-import PlanItemBaseFormTemplate from 'components/templates/storage/sell/PlanItemBaseFormTemplate'
 import { Button, TooltipIconButton } from '@rsksmart/rif-ui'
 import SaveIcon from '@material-ui/icons/Save'
-import { priceDisplay } from 'utils/utils'
+import { MarketCryptoRecord } from 'context/Market/MarketContext'
+import CryptoPriceConverter from 'components/molecules/CryptoPriceConverter'
+import { TextField, MenuItem } from '@material-ui/core'
 
 export interface EditablePlanItemProps {
   onPlanAdded?: (planItem: StoragePlanItem) => void
   onPlanSaved?: () => void
   planItem?: StoragePlanItem
-  fiatXR: number
+  cryptoXRs: MarketCryptoRecord
   fiatDisplayName: string
 }
 
@@ -23,18 +24,20 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
   onPlanAdded,
   planItem,
   onPlanSaved,
-  fiatXR, fiatDisplayName,
+  cryptoXRs,
+  fiatDisplayName,
 }) => {
   const { state: { allPeriods, availablePeriods }, dispatch } = useContext(StorageListingContext)
 
-  const [pricePerGb, setPricePerGb] = useState(planItem?.pricePerGb || 1)
   const editMode = !!planItem
-
-  const [timePeriod, setTimePeriod] = useState(planItem?.timePeriod || availablePeriods[0])
   // TODO: handle multicurrency options
-  const currency = 'RBTC'
+  const [currency, setCurrency] = useState('RBTC')
+  const [pricePerGb, setPricePerGb] = useState(planItem?.pricePerGb || 1)
+  const [timePeriod, setTimePeriod] = useState(planItem?.timePeriod || availablePeriods[0])
 
-  const fiatPrice = priceDisplay(pricePerGb * fiatXR, 2)
+  const onPriceChange = ({ target: { value } }) => setPricePerGb(value)
+  const onCurrencyChange = ({ target: { value } }) => setCurrency(value)
+  const onSelectedPeriodChange = ({ target: { value } }) => setTimePeriod(value)
 
   const handleOnAddClick = () => {
     const newPlanItem: StoragePlanItem = {
@@ -65,14 +68,6 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
     if (onPlanSaved) onPlanSaved()
   }
 
-  const onPricePerGbChange = (value: number) => {
-    setPricePerGb(value)
-  }
-
-  const onSelectedPeriodChange = (value: number) => {
-    setTimePeriod(value)
-  }
-
   const ActionButton = () => (editMode
     ? (
       <TooltipIconButton
@@ -96,31 +91,56 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
     ))
 
   return (
-    <Grid alignItems="center" container spacing={1}>
-      <Grid item xs={10} md={9}>
-        <PlanItemBaseFormTemplate
-          onPeriodChange={onSelectedPeriodChange}
-          onPriceChange={onPricePerGbChange}
-          price={pricePerGb}
-          currency={currency}
-          fiatPrice={fiatPrice}
-          fiatDisplayName={fiatDisplayName}
-          periodOptions={allPeriods}
-          selectedPeriod={timePeriod}
-          availablePeriods={availablePeriods}
-        />
-      </Grid>
-      <Grid item xs={2} md={3}>
-        <div>
+    <>
+      <Grid container alignItems="center" spacing={1}>
+        <Grid item xs={12} md={2}>
+          <TextField
+            select
+            fullWidth
+            required
+            label="Period"
+            id="subscription-period-select"
+            value={timePeriod}
+            onChange={onSelectedPeriodChange}
+            InputProps={{
+              style: { textAlign: 'center' },
+            }}
+          >
+            {
+              allPeriods.sort((a, b) => a - b).map(
+                (option) => {
+                  const isDisabled = !availablePeriods.includes(option)
+                  return (
+                    <MenuItem value={option} key={option} disabled={isDisabled}>
+                      {TimePeriodEnum[option]}
+                    </MenuItem>
+                  )
+                },
+              )
+            }
+          </TextField>
+        </Grid>
+        <Grid item xs={12} md={7}>
+          <CryptoPriceConverter
+            fiatDisplayName={fiatDisplayName}
+            cryptoXRs={cryptoXRs}
+            priceLabel="Price/GB"
+            price={pricePerGb}
+            onPriceChange={onPriceChange}
+            currency={currency}
+            onCurrencyChange={onCurrencyChange}
+          />
+        </Grid>
+        <Grid item xs={12} md={3}>
           <TooltipIconButton
             tooltipTitle="The average price for a monthly suscription is 2020 RIF"
             icon={<InfoIcon color="secondary" />}
             iconButtonProps={{ disabled: true }}
           />
           <ActionButton />
-        </div>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   )
 }
 
