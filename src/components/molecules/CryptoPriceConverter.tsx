@@ -4,8 +4,7 @@ import {
 } from '@material-ui/core'
 import LabelWithValue from 'components/atoms/LabelWithValue'
 import { colors } from '@rsksmart/rif-ui'
-// TODO: move MarketCryptoRecord to models folder
-import { MarketCryptoRecord } from 'context/Market/MarketContext'
+import { MarketCryptoRecord } from 'models/Market'
 
 export interface CryptoPriceConverterProps {
   cryptoXRs: MarketCryptoRecord

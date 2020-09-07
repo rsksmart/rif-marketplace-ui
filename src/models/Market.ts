@@ -16,3 +16,10 @@ export interface MarketFilter {
 }
 
 export type MarketFilterType = RnsFilter & XRFilter
+
+export type MarketCrypto = {
+    displayName: string
+    rate: number
+  }
+
+export type MarketCryptoRecord = Record<string, MarketCrypto>

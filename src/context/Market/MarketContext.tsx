@@ -7,6 +7,7 @@ import React, {
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { ContextActions, ContextReducer, ContextState } from 'context/storeUtils/interfaces'
 import storeReducerFactory from 'context/storeUtils/reducer'
+import { MarketCryptoRecord } from 'models/Market'
 import {
   MarketAction, MarketPayload, marketActions, MarketReducer,
 } from './marketActions'
@@ -17,13 +18,6 @@ export type MarketFiat = {
   displayName: string
   symbol: SupportedFiat
 }
-
-export type MarketCrypto = {
-  displayName: string
-  rate: number
-}
-
-export type MarketCryptoRecord = Record<string, MarketCrypto>
 
 export interface MarketState extends ContextState {
   exchangeRates: {
