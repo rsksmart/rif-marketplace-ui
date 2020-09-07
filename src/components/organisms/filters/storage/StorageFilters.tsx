@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-function */ // FIXME: make onClick non-required prop for FilterCheckboxCard
+/* eslint-disable @typescript-eslint/explicit-function-return-type */ // FIXME: make onClick non-required prop for FilterCheckboxCard
 import React, { useContext } from 'react'
 import { Accordion, FilterCheckboxCard } from '@rsksmart/rif-ui'
 
@@ -104,7 +106,7 @@ const StorageFilters = () => {
         expanded
         title="Subscription period"
       >
-        <FilterCheckboxCard items={planPeriodOptions} />
+        <FilterCheckboxCard items={planPeriodOptions} onClick={() => {}} />
       </Accordion>
     </>
   )
