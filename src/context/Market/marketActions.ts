@@ -1,5 +1,6 @@
 import { ContextDispatch } from 'context/storeUtils/interfaces'
-import { MarketCryptoRecord, MarketState } from './MarketContext'
+import { MarketCryptoRecord } from 'models/Market'
+import { MarketState } from './MarketContext'
 
 export type MARKET_ACTION = 'TOGGLE_TX_TYPE' | 'SET_EXCHANGE_RATE'
 

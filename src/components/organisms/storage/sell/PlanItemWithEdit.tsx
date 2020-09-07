@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 import { StoragePlanItem } from 'context/Services/storage/interfaces'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { MarketCryptoRecord } from 'context/Market/MarketContext'
+import { MarketCryptoRecord } from 'models/Market'
 import EditablePlanItem from './EditablePlanItem'
 import PlanItem from './PlanItem'
 

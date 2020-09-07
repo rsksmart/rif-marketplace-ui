@@ -8,9 +8,9 @@ import StorageListingContext from 'context/Services/storage/ListingContext'
 import { EditItemPayload, AddItemPayload } from 'context/Services/storage/listingActions'
 import { Button, TooltipIconButton } from '@rsksmart/rif-ui'
 import SaveIcon from '@material-ui/icons/Save'
-import { MarketCryptoRecord } from 'context/Market/MarketContext'
 import CryptoPriceConverter from 'components/molecules/CryptoPriceConverter'
 import { TextField, MenuItem } from '@material-ui/core'
+import { MarketCryptoRecord } from 'models/Market'
 
 export interface EditablePlanItemProps {
   onPlanAdded?: (planItem: StoragePlanItem) => void
