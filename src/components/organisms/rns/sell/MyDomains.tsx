@@ -5,9 +5,10 @@ import { RnsDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import RnsDomainsContext from 'context/Services/rns/DomainsContext'
+import RnsDomainsContext, { RnsDomainsContextProps } from 'context/Services/rns/DomainsContext'
 import { OrderPayload, RefreshPayload } from 'context/Services/rns/rnsActions'
 import { ShortenTextTooltip } from '@rsksmart/rif-ui'
+import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 
 const MyDomains: FC<{}> = () => {
   const {
@@ -16,7 +17,7 @@ const MyDomains: FC<{}> = () => {
       filters,
     },
     dispatch,
-  } = useContext(RnsDomainsContext)
+  } = useContext<RnsDomainsContextProps>(RnsDomainsContext)
   const history = useHistory()
   const routeState = history.location.state as { refresh?: boolean }
 
@@ -48,7 +49,7 @@ const MyDomains: FC<{}> = () => {
   }
 
   const collection = items
-    .map((domainItem: RnsDomain) => {
+    .map<MarketplaceItem>((domainItem: RnsDomain) => {
       const {
         id,
         name,
@@ -56,7 +57,7 @@ const MyDomains: FC<{}> = () => {
         tokenId,
       } = domainItem
 
-      const pseudoResolvedName = filters.name && (`${filters.name}.rsk`)
+      const pseudoResolvedName = filters.name as string && (`${filters.name}.rsk`)
       const displayDomainName = name || pseudoResolvedName
         ? <ShortenTextTooltip value={name || pseudoResolvedName} maxLength={30} />
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />
@@ -77,8 +78,6 @@ const MyDomains: FC<{}> = () => {
             history.push(ROUTES.RNS.SELL.CHECKOUT)
           }}
         />,
-        price: <></>,
-        action2: <></>,
       }
       return displayItem
     })

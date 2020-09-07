@@ -8,9 +8,10 @@ import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import MarketContext from 'context/Market/MarketContext'
-import RnsDomainsContext from 'context/Services/rns/DomainsContext'
+import RnsDomainsContext, { RnsDomainsContextProps } from 'context/Services/rns/DomainsContext'
 import { OrderPayload } from 'context/Services/rns/rnsActions'
 import { ShortenTextTooltip } from '@rsksmart/rif-ui'
+import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 
 const MyOffers: FC<{}> = () => {
   const {
@@ -31,7 +32,7 @@ const MyOffers: FC<{}> = () => {
       filters,
     },
     dispatch,
-  } = useContext(RnsDomainsContext)
+  } = useContext<RnsDomainsContextProps>(RnsDomainsContext)
 
   useEffect(() => {
     dispatch({
@@ -53,7 +54,7 @@ const MyOffers: FC<{}> = () => {
   }
 
   const collection = items
-    .map((domainItem: RnsDomain) => {
+    .map<MarketplaceItem>((domainItem: RnsDomain) => {
       const {
         id,
         name,
@@ -61,7 +62,7 @@ const MyOffers: FC<{}> = () => {
         expirationDate,
         tokenId,
       } = domainItem
-      const pseudoResolvedName = filters.name && (`${filters.name}.rsk`)
+      const pseudoResolvedName = filters.name as string && (`${filters.name}.rsk`)
 
       const displayDomainName = name || pseudoResolvedName
         ? <ShortenTextTooltip value={name || pseudoResolvedName} maxLength={30} />

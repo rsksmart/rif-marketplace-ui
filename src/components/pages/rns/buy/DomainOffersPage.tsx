@@ -9,6 +9,7 @@ import ROUTES from 'routes'
 import MarketContext from 'context/Market/MarketContext'
 import RnsOffersContext, { RnsOffersContextProps } from 'context/Services/rns/OffersContext'
 import { OrderPayload, RefreshPayload } from 'context/Services/rns/rnsActions'
+import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 
 const DomainOffersPage: FC = () => {
   const {
@@ -47,8 +48,6 @@ const DomainOffersPage: FC = () => {
     },
   } = useContext(Web3Store)
 
-  let collection = []
-
   const headers = {
     domainName: 'Name',
     ownerAddress: 'Owner',
@@ -57,8 +56,8 @@ const DomainOffersPage: FC = () => {
     action1: '',
   }
 
-  collection = items
-    .map((item: RnsDomainOffer) => {
+  const collection = items
+    .map<MarketplaceItem>((item: RnsDomainOffer) => {
       const {
         id,
         price,
@@ -105,7 +104,7 @@ const DomainOffersPage: FC = () => {
       }
 
       return displayItem
-    }) as any // TODO: remove as any
+    })
 
   return (
     <MarketPageTemplate

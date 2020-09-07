@@ -6,6 +6,7 @@ import React, { FC, useContext } from 'react'
 import MarketContext from 'context/Market/MarketContext'
 import RnsSoldContext, { RnsSoldContextProps } from 'context/Services/rns/SoldContext'
 import { ShortenTextTooltip } from '@rsksmart/rif-ui'
+import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 
 const SoldDomains: FC<{}> = () => {
   const {
@@ -36,7 +37,7 @@ const SoldDomains: FC<{}> = () => {
   }
 
   const collection = items
-    .map((domainItem: RnsSoldDomain) => {
+    .map<MarketplaceItem>((domainItem: RnsSoldDomain) => {
       const {
         id,
         domainName,
