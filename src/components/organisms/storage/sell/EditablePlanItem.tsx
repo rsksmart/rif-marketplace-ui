@@ -73,8 +73,10 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
       <TooltipIconButton
         tooltipTitle="Save plan"
         icon={<SaveIcon />}
-        disabled={pricePerGb <= 0 || ![...availablePeriods, planItem?.timePeriod].includes(timePeriod)}
-        onClick={handleOnSaveClick}
+        iconButtonProps={{
+          disabled: pricePerGb <= 0 || ![...availablePeriods, planItem?.timePeriod].includes(timePeriod),
+          onClick: handleOnSaveClick,
+        }}
       />
     )
     : (
