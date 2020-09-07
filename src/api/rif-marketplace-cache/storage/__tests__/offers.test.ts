@@ -16,7 +16,7 @@ const FAKE_OFFER_0: OfferTransport = {
   provider: '0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1',
   totalCapacity: '1073741824',
   peerId: null,
-  averagePrice: 5,
+  averagePrice: 5 * 10 ** 18,
   createdAt: '2020-08-10T14:11:32.648Z',
   updatedAt: '2020-08-10T14:11:32.740Z',
   plans: [
@@ -77,7 +77,7 @@ describe('Storage OffersService', () => {
             price: parseToBigDecimal(plan.price),
             currency: 'RBTC',
           })),
-        averagePrice,
+        averagePrice: averagePrice / 10 ** 18,
       }
 
       expect(actualReturnValue[0]).toStrictEqual(expectedOffers)
