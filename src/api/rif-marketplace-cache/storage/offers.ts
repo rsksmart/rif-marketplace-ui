@@ -19,7 +19,7 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     provider,
     availableCapacity: availableCapacityMB,
     plans,
-    averagePrice,
+    averagePrice: averagePriceTransport,
   } = offerTransport
 
   const offer: StorageOffer = {
@@ -34,7 +34,7 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
         price: parseToBigDecimal(plan.price, 18),
         currency: 'RBTC',
       })),
-    averagePrice: averagePrice / 10 ** 18,
+    averagePrice: averagePriceTransport / 10 ** 18,
   }
   return offer
 }
@@ -94,11 +94,11 @@ export class StorageOffersService
   }
 
   fetchPriceLimits = async (): Promise<MinMaxFilter> => {
-    const min = await fetchMinMaxLimit(this.service, MinMax.min, 'averagePrice')
-    const max = await fetchMinMaxLimit(this.service, MinMax.max, 'averagePrice')
+    const minPriceWei = await fetchMinMaxLimit(this.service, MinMax.min, 'averagePrice')
+    const maxPriceWei = await fetchMinMaxLimit(this.service, MinMax.max, 'averagePrice')
     return {
-      min: min / 10 ** 18,
-      max: max / 10 ** 18,
+      min: minPriceWei / 10 ** 18,
+      max: maxPriceWei / 10 ** 18,
     }
   }
 }
