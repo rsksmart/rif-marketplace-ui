@@ -27,11 +27,11 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
   cryptoXRs,
   fiatDisplayName,
 }) => {
-  const { state: { allPeriods, availablePeriods }, dispatch } = useContext(StorageListingContext)
+  const { state: { allPeriods, availablePeriods, usedPeriodsPerCurrency }, dispatch } = useContext(StorageListingContext)
 
   const editMode = !!planItem
-  // TODO: handle multicurrency options
-  const [currency, setCurrency] = useState('RBTC')
+  // TODO: remove hard-coded currency by default
+  const [currency, setCurrency] = useState(planItem?.currency || 'RBTC')
   const [pricePerGb, setPricePerGb] = useState(planItem?.pricePerGb || 1)
   const [timePeriod, setTimePeriod] = useState(planItem?.timePeriod || availablePeriods[0])
 
@@ -74,7 +74,13 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
         tooltipTitle="Save plan"
         icon={<SaveIcon />}
         iconButtonProps={{
-          disabled: pricePerGb <= 0 || ![...availablePeriods, planItem?.timePeriod].includes(timePeriod),
+          disabled: pricePerGb <= 0 || (
+            (
+              // the period or currency have changed and the selected option is in use
+              planItem?.timePeriod !== timePeriod || planItem?.currency !== currency
+            )
+            && usedPeriodsPerCurrency[currency].includes(timePeriod)
+          ),
           onClick: handleOnSaveClick,
         }}
       />
@@ -85,7 +91,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
         variant="outlined"
         rounded
         onClick={handleOnAddClick}
-        disabled={pricePerGb <= 0 || !availablePeriods.includes(timePeriod)}
+        disabled={pricePerGb <= 0 || usedPeriodsPerCurrency[currency]?.includes(timePeriod)}
       >
         {' '}
         Add storage plan
@@ -111,7 +117,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
             {
               allPeriods.sort((a, b) => a - b).map(
                 (option) => {
-                  const isDisabled = !availablePeriods.includes(option)
+                  const isDisabled = usedPeriodsPerCurrency[currency]?.includes(option) && option !== planItem?.timePeriod
                   return (
                     <MenuItem value={option} key={option} disabled={isDisabled}>
                       {TimePeriodEnum[option]}
