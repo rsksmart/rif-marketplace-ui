@@ -50,4 +50,4 @@ export type ListingPayload =
   | SetCountryPayload
   | SetPeerIdPayload
 
-export type StorageAction = ContextDispatch<LISTING_ACTION, ListingPayload>
+export type ListingAction = ContextDispatch<LISTING_ACTION, ListingPayload>

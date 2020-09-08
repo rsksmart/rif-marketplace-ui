@@ -1,8 +1,10 @@
 import { ContextDispatch } from 'context/storeUtils/interfaces'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
+import { StorageItem } from 'models/marketItems/StorageItem'
 import { OffersListing, StorageOffersState } from './OffersContext'
+import { ServiceOrder } from '../interfaces'
 
-export type OFFERS_ACTION = 'FILTER' | 'SET_LISTING' | 'REFRESH' | 'UPDATE_LIMITS'
+export type OFFERS_ACTION = 'FILTER' | 'SET_LISTING' | 'REFRESH' | 'UPDATE_LIMITS' | 'SET_ORDER'
 
 export type ListingPayload = Pick<OffersListing, 'items'>
 
@@ -13,11 +15,14 @@ export interface RefreshPayload {
 export type FiltersLimits = Partial<StorageOffersFilters>
 export type LimitsPayload = Pick<StorageOffersFilters, 'price' | 'size'>
 
+export type OrderPayload = ServiceOrder<StorageItem>
+
 export type StorageOffersPayload =
   ListingPayload |
   RefreshPayload |
   LimitsPayload |
-  FiltersLimits
+  FiltersLimits |
+  OrderPayload
 
 export interface StorageOffersAction extends
   ContextDispatch<OFFERS_ACTION, StorageOffersPayload> {
@@ -33,6 +38,7 @@ export type Actions = {
   REFRESH: StorageOffersReducer<RefreshPayload>
   FILTER: StorageOffersReducer<FiltersLimits>
   UPDATE_LIMITS: StorageOffersReducer<LimitsPayload>
+  SET_ORDER: StorageOffersReducer<OrderPayload>
 }
 
 export const storageOffersActions: Actions = {
@@ -59,5 +65,8 @@ export const storageOffersActions: Actions = {
       ...state.limits,
       ...payload,
     },
+  }),
+  SET_ORDER: (state, payload) => ({
+    ...state, order: payload,
   }),
 }

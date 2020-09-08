@@ -4,7 +4,7 @@ import { ContextState } from 'context/storeUtils/interfaces'
 import { StorageItem } from 'models/marketItems/StorageItem'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { ServiceState } from '../interfaces'
-import { LISTING_ACTION, StorageAction } from './listingActions'
+import { LISTING_ACTION, ListingAction } from './listingActions'
 import { OFFERS_ACTION } from './offersActions'
 import { ContextName as ListingContextName } from './ListingContext'
 import { ContextName as OffersContextName } from './OffersContext'
@@ -31,17 +31,12 @@ export interface ListingState extends ContextState {
 
 export interface StorageListingContextProps {
   state: ListingState
-  dispatch: Dispatch<StorageAction>
+  dispatch: Dispatch<ListingAction>
 }
 
 export type StorageState = ServiceState<StorageItem> & {
   filters: StorageOffersFilters
   limits: Pick<StorageOffersFilters, 'price' | 'size'>
-}
-
-export interface StorageContextProps {
-  state: StorageState
-  dispatch: Dispatch<StorageAction>
 }
 
 export enum TimePeriodEnum {

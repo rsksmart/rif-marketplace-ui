@@ -12,8 +12,10 @@ import { Modify } from 'utils/typeUtils'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { MinMaxFilter } from 'models/Filters'
 import { UIError } from 'models/UIMessage'
-import { StorageAction } from './listingActions'
-import { storageOffersActions, StorageOffersPayload, StorageOffersReducer } from './offersActions'
+import {
+  storageOffersActions, StorageOffersPayload,
+  StorageOffersReducer, StorageOffersAction,
+} from './offersActions'
 import { ServiceState, ServiceOrder } from '../interfaces'
 
 export type ContextName = 'storage_offers'
@@ -34,7 +36,7 @@ export type StorageOffersState = Modify<ServiceState<StorageItem>, {
 
 export type StorageOffersContextProps = {
   state: StorageOffersState
-  dispatch: Dispatch<StorageAction>
+  dispatch: Dispatch<StorageOffersAction>
 }
 
 export const initialState: StorageOffersState = {
