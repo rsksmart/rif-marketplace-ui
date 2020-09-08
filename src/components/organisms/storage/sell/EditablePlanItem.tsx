@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import { StoragePlanItem } from 'context/Services/storage/interfaces'
 import StorageListingContext from 'context/Services/storage/ListingContext'
 import { EditItemPayload, AddItemPayload } from 'context/Services/storage/listingActions'
-import PlanItemBaseFormTemplate from 'components/templates/storage/listing/PlanItemBaseFormTemplate'
+import PlanItemBaseFormTemplate from 'components/templates/storage/sell/PlanItemBaseFormTemplate'
 import { TooltipIconButton } from '@rsksmart/rif-ui'
 /* eslint-disable-next-line import/no-unresolved */
 import { TooltipIconButtonProps } from '@rsksmart/rif-ui/dist/components/molecules/TooltipIconButton'
