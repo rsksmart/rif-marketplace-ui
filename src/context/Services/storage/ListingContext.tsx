@@ -19,6 +19,7 @@ export const initialState: ListingState = {
   availablePeriods: periodOptions,
   allPeriods: periodOptions,
   peerId: '',
+  usedPeriodsPerCurrency: {},
 }
 
 const StorageListingContext = React.createContext({} as StorageListingContextProps | any)

@@ -1,5 +1,5 @@
 import { ContextDispatch, ContextPayload } from 'context/storeUtils/interfaces'
-import { StoragePlanItem, TimePeriodEnum } from './interfaces'
+import { StoragePlanItem } from './interfaces'
 import { ListingReducer } from './listingReducer'
 
 export type LISTING_ACTION =
@@ -26,7 +26,6 @@ export type ListingActions = {
 export type AddItemPayload = StoragePlanItem
 
 export interface RemoveItemPayload {
-  timePeriod: TimePeriodEnum
   internalId: number
 }
 

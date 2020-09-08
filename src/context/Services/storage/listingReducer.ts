@@ -1,4 +1,4 @@
-import { ListingState } from './interfaces'
+import { ListingState, StoragePlanItem } from './interfaces'
 import {
   AddItemPayload,
   RemoveItemPayload,
@@ -16,37 +16,50 @@ export interface ListingReducer<P extends ListingPayload> {
   (state: ListingState, payload: P): ListingState
 }
 
+const calculateUsedPeriodsPerCurrency = (
+  planItems: StoragePlanItem[],
+): Record<string, []> => {
+  const usedPeriodsPerCurrency = {}
+  planItems.forEach((planItem) => {
+    usedPeriodsPerCurrency[planItem.currency] = [
+      ...(usedPeriodsPerCurrency[planItem.currency] || []),
+      planItem.timePeriod,
+    ]
+  })
+  return usedPeriodsPerCurrency
+}
+
 export const listingActions: ListingActions = {
   ADD_ITEM: (state: ListingState, payload: AddItemPayload) => {
-    const { internalCounter, availablePeriods } = state
+    const { internalCounter, planItems } = state
     const newPlan = {
       ...payload,
       internalId: internalCounter,
     }
-    const { timePeriod } = payload
+    const newPlanItems = [...planItems, newPlan]
+
     return {
       ...state,
-      availablePeriods: availablePeriods.filter(
-        (option) => option !== timePeriod,
-      ),
+      planItems: newPlanItems,
+      usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newPlanItems),
       internalCounter: internalCounter + 1,
-      planItems: [...state.planItems, newPlan],
     }
   },
   CLEAN_UP: (_, __) => initialState,
-  REMOVE_ITEM: (
-    state: ListingState,
-    { internalId, timePeriod }: RemoveItemPayload,
-  ) => ({
-    ...state,
-    availablePeriods: [...state.availablePeriods, timePeriod],
-    planItems: state.planItems.filter((x) => x.internalId !== internalId),
-  }),
+  REMOVE_ITEM: (state: ListingState, { internalId }: RemoveItemPayload) => {
+    const { planItems } = state
+    const newPlanItems = planItems.filter((x) => x.internalId !== internalId)
+    return {
+      ...state,
+      planItems: newPlanItems,
+      usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newPlanItems),
+    }
+  },
   EDIT_ITEM: (state: ListingState, payload: EditItemPayload) => {
     const {
       internalId, timePeriod, pricePerGb, currency,
     } = payload
-    const { planItems, allPeriods } = state
+    const { planItems } = state
     const newPlanItems = planItems.map((planItem) => {
       if (planItem.internalId === internalId) {
         return {
@@ -58,13 +71,10 @@ export const listingActions: ListingActions = {
       }
       return planItem
     })
-    const newAvailableMonths = allPeriods.filter(
-      (option) => !newPlanItems.find((newPlanItem) => newPlanItem.timePeriod === option),
-    )
     return {
       ...state,
       planItems: newPlanItems,
-      availableMonths: newAvailableMonths,
+      usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newPlanItems),
     }
   },
   SET_AVAILABLE_SIZE: (
