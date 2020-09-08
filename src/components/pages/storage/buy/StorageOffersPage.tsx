@@ -1,4 +1,5 @@
 import React, { FC, useContext, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import StorageFilters from 'components/organisms/filters/storage/StorageFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { TableHeaders, MarketplaceItem } from 'components/templates/marketplace/Marketplace'
@@ -6,6 +7,8 @@ import { BillingPlan } from 'models/marketItems/StorageItem'
 import { SelectRowButton, AddressItem } from 'components/molecules'
 import StorageOffersContext, { StorageOffersContextProps } from 'context/Services/storage/OffersContext'
 import ItemWUnit from 'components/atoms/ItemWUnit'
+import ROUTES from 'routes'
+import { OrderPayload } from 'context/Services/storage/offersActions'
 
 const headers: TableHeaders = {
   provider: 'Provider',
@@ -18,6 +21,7 @@ const headers: TableHeaders = {
 }
 
 const StorageOffersPage: FC = () => {
+  const history = useHistory()
   const {
     state: {
       listing: { items },
@@ -51,13 +55,13 @@ const StorageOffersPage: FC = () => {
         action1: <SelectRowButton
           id={id}
           handleSelect={() => {
-            // dispatch({
-            //   type: 'SET_ORDER',
-            //   payload: {
-            //     item,
-            //   } as OrderPayload,
-            // })
-            // history.push(ROUTES.STORAGE.BUY.CHECKOUT)
+            dispatch({
+              type: 'SET_ORDER',
+              payload: {
+                item,
+              } as OrderPayload,
+            })
+            history.push(ROUTES.STORAGE.BUY.CHECKOUT)
           }}
         />,
       }
