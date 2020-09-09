@@ -37,6 +37,7 @@ class StorageContract {
     capacityMB: string,
     billingPeriods: number[],
     billingRbtcWeiPrices: string[],
+    peerId: string,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
@@ -47,16 +48,21 @@ class StorageContract {
     })
 
     const gas = await this.web3.eth.estimateGas({
-      from, gasPrice,
+      from,
+      gasPrice,
     })
-    const message = []
 
-    return this.contract.methods
-      .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, message)
-      .send({ from, gas, gasPrice }, (err, txHash) => {
-        if (err) return Promise.reject(err)
-        return waitForReceipt(txHash, this.web3)
-      })
+    const { asciiToHex, padRight } = this.web3.utils
+    const message = [padRight(asciiToHex(peerId), 64)]
+
+    return (
+      this.contract.methods
+        .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, message)
+        .send({ from, gas, gasPrice }, (err, txHash) => {
+          if (err) return Promise.reject(err)
+          return waitForReceipt(txHash, this.web3)
+        })
+    )
   }
 }
 
