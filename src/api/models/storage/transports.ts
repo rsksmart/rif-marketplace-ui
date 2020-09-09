@@ -19,3 +19,10 @@ export interface OfferTransport {
     updatedAt: string
     acceptedCurrencies: string[]
 }
+
+export interface StakeTransport {
+    token: string
+    account: string
+    total: string
+    amount: string
+}

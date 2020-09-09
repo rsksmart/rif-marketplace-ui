@@ -84,7 +84,7 @@ class StakingContract {
         })
 
         return this.contract.methods
-            .unstake(amount, token, ZERO_ADDRESS)
+            .unstake(amount, token, ZERO_BYTES)
             .send({ from, gas, gasPrice }, (err, txHash) => {
                 if (err) return Promise.reject(err)
                 return waitForReceipt(txHash, this.web3)
