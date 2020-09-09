@@ -9,7 +9,6 @@ export type LISTING_ACTION =
   | 'EDIT_ITEM'
   | 'SET_COUNTRY'
   | 'SET_AVAILABLE_SIZE'
-  | 'SET_CURRENCY'
   | 'SET_PEER_ID'
 
 export type ListingActions = {
@@ -19,7 +18,6 @@ export type ListingActions = {
   EDIT_ITEM: ListingReducer<EditItemPayload>
   SET_COUNTRY: ListingReducer<SetCountryPayload>
   SET_AVAILABLE_SIZE: ListingReducer<SetAvailableSizePayload>
-  SET_CURRENCY: ListingReducer<SetCurrencyPayload>
   SET_PEER_ID: ListingReducer<SetPeerIdPayload>
 }
 
@@ -39,10 +37,6 @@ export interface SetCountryPayload {
   country: string
 }
 
-export interface SetCurrencyPayload {
-  currency: string
-}
-
 export interface SetPeerIdPayload {
   peerId: string
 }
@@ -54,7 +48,6 @@ export type ListingPayload =
   | EditItemPayload
   | SetAvailableSizePayload
   | SetCountryPayload
-  | SetCurrencyPayload
   | SetPeerIdPayload
 
 export type StorageAction = ContextDispatch<LISTING_ACTION, ListingPayload>
