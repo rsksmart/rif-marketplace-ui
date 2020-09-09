@@ -38,7 +38,7 @@ class StakingContract {
     public stake = async (
         amount: string | number,
         token: string = ZERO_ADDRESS, // native token
-        data: string = ZERO_BYTES,
+        // data: string = ZERO_BYTES,
         txOptions: TransactionOptions,
     ): Promise<TransactionReceipt> => {
         const { from } = txOptions
@@ -56,7 +56,7 @@ class StakingContract {
         })
 
         return this.contract.methods
-            .stake(isNativeToken(token) ? 0 : amount, token, data)
+            .stake(isNativeToken(token) ? 0 : amount, token, ZERO_BYTES)
             .send({ from, gas, gasPrice, value: isNativeToken(token) ? amount : 0 }, (err, txHash) => {
                 if (err) return Promise.reject(err)
                 return waitForReceipt(txHash, this.web3)
@@ -66,7 +66,7 @@ class StakingContract {
     public unstake = async (
         amount: string | number,
         token: string = ZERO_ADDRESS, // native token
-        data: string = ZERO_BYTES,
+        // data: string = ZERO_BYTES,
         txOptions: TransactionOptions,
     ): Promise<TransactionReceipt> => {
         const { from } = txOptions
@@ -84,7 +84,7 @@ class StakingContract {
         })
 
         return this.contract.methods
-            .unstake(amount, token, data)
+            .unstake(amount, token, ZERO_ADDRESS)
             .send({ from, gas, gasPrice }, (err, txHash) => {
                 if (err) return Promise.reject(err)
                 return waitForReceipt(txHash, this.web3)

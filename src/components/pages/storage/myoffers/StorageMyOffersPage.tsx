@@ -25,6 +25,9 @@ import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 import { SetOfferPayload } from 'context/Market/storage/offerEditActions'
 import { StorageOffer } from 'models/marketItems/StorageItem'
+import StakingContract from '../../../../contracts/Staking'
+import StakingStakeDialogue from '../../../organisms/storage/myoffers/StakingStakeDialogue'
+
 
 const logger = Logger.getInstance()
 
@@ -63,6 +66,38 @@ const StorageMyOffersPage: FC = () => {
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
 
+  const [stakeTotal, setStakeTotal] = useState<number>(0)
+  const [depositOpened, setDepositOpened] = useState<boolean>(false)
+  const [withdrawalOpened, setWithdrawalOpened] = useState<boolean>(false)
+
+
+  const fetchStakeTotal = async () => {
+    // TODO fetch current stake
+    setStakeTotal(100)
+  }
+
+  const onDepositHandler = async (amount: number, token: string) => {
+    // TODO call contract and make stake
+    setDepositOpened(false)
+    if (web3) {
+      const stakeContract = StakingContract.getInstance(web3)
+      await stakeContract.stake(amount, token, { from: account })
+      await fetchStakeTotal()
+    }
+  }
+
+  const onWithdrawHandler = async (amount: number, token: string) => {
+    // TODO call contract and make un-stake
+    setWithdrawalOpened(false)
+    if (web3) {
+      const stakeContract = StakingContract.getInstance(web3)
+      await stakeContract.unstake(amount, token, { from: account })
+      await fetchStakeTotal()
+    }
+  }
+  useEffect(() => {
+    fetchStakeTotal().catch(e => logger.error('Fetch Stake total error: ' + e.message))
+  }, [])
   useEffect(() => {
     if (account) {
       dispatch({
@@ -143,10 +178,11 @@ const StorageMyOffersPage: FC = () => {
 
   return (
     <CenteredPageTemplate>
+
       <StakingCard
-        balance="2048 RIF"
-        onAddFunds={(): void => logger.info('Add funds clicked')}
-        onWithdrawFunds={(): void => logger.info('withdraw funds clicked')}
+        balance={stakeTotal + ' RIF'}
+        onAddFunds={() => setDepositOpened(true)}
+        onWithdrawFunds={() => setWithdrawalOpened(true)}
       />
       <Grid
         container
@@ -168,6 +204,16 @@ const StorageMyOffersPage: FC = () => {
         onCancelOffer={handleOfferCancel}
         onEditOffer={handleEditOffer}
       />
+      <StakingStakeDialogue
+        onDeposit={onDepositHandler}
+        open={depositOpened}
+        onClose={() => setDepositOpened(false)}
+      />
+      {/*<StakingWithdrawDialogue*/}
+      {/*    onDeposit={onWithdrawHandler}*/}
+      {/*    open={withdrawalOpened}*/}
+      {/*    onClose={() => setWithdrawalOpened(false)}*/}
+      {/*/>*/}
       {
         isProcessing
         && (
