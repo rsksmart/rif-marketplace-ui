@@ -38,3 +38,10 @@ export type AgreementTransport = {
     tokenAddress: string
     expiresIn: string
 }
+
+export interface StakeTransport {
+    token: string
+    account: string
+    total: string
+    amount: string
+}

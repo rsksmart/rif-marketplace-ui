@@ -7,6 +7,7 @@ import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
 import { StorageAgreementService } from 'api/rif-marketplace-cache/storage/agreements'
 import { AvgBillingPriceService } from 'api/rif-marketplace-cache/storage/avg-billing-plan-price'
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
+import { StakesService } from 'api/rif-marketplace-cache/storage/stakes'
 import { ContextActions, ContextReducer, ContextState } from 'context/storeUtils/interfaces'
 import storeReducerFactory from 'context/storeUtils/reducer'
 import {
@@ -45,6 +46,7 @@ export const initialState: AppState = {
     'storage/v0/offers': new StorageOffersService(),
     'storage/v0/avgBillingPrice': new AvgBillingPriceService(),
     'storage/v0/agreements': new StorageAgreementService(),
+    'storage/v0/stakes': new StakesService(),
   },
   messages: {},
   loaders: {
