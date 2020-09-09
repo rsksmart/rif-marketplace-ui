@@ -19,9 +19,6 @@ describe('StorageListingContext', () => {
     test('should have empty plan items', () => {
       expect(initialState.planItems).toEqual([])
     })
-    test('available periods should be all periods', () => {
-      expect(initialState.availablePeriods).toEqual(initialState.allPeriods)
-    })
   })
   describe('listingActions', () => {
     describe('ADD_ITEM', () => {

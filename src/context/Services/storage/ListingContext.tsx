@@ -16,7 +16,6 @@ export const initialState: ListingState = {
   country: '',
   planItems: [],
   internalCounter: 1,
-  availablePeriods: periodOptions,
   allPeriods: periodOptions,
   peerId: '',
   usedPeriodsPerCurrency: {},

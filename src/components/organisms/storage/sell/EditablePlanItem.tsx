@@ -27,13 +27,13 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
   cryptoXRs,
   fiatDisplayName,
 }) => {
-  const { state: { allPeriods, availablePeriods, usedPeriodsPerCurrency }, dispatch } = useContext(StorageListingContext)
+  const { state: { allPeriods, usedPeriodsPerCurrency }, dispatch } = useContext(StorageListingContext)
 
   const editMode = !!planItem
   // TODO: remove hard-coded currency by default
   const [currency, setCurrency] = useState(planItem?.currency || 'RBTC')
   const [pricePerGb, setPricePerGb] = useState(planItem?.pricePerGb || 1)
-  const [timePeriod, setTimePeriod] = useState(planItem?.timePeriod || availablePeriods[0])
+  const [timePeriod, setTimePeriod] = useState(planItem?.timePeriod || allPeriods[0])
 
   const onPriceChange = ({ target: { value } }) => setPricePerGb(value)
   const onCurrencyChange = ({ target: { value } }) => setCurrency(value)
@@ -116,7 +116,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
           >
             {
               allPeriods.sort((a, b) => a - b).map(
-                (option) => {
+                (option: TimePeriodEnum) => {
                   const isDisabled = usedPeriodsPerCurrency[currency]?.includes(option) && option !== planItem?.timePeriod
                   return (
                     <MenuItem value={option} key={option} disabled={isDisabled}>
