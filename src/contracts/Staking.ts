@@ -11,6 +11,7 @@ const logger = Logger.getInstance()
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const ZERO_BYTES = '0x0000000000000000000000000000000000000000000000000000000000000000'
+const isNativeToken = (token: string) => token === ZERO_ADDRESS
 
 class StakingContract {
     public static getInstance(web3: Web3): StakingContract {
@@ -55,8 +56,8 @@ class StakingContract {
         })
 
         return this.contract.methods
-            .stake(token === ZERO_ADDRESS ? 0 : amount, token, data)
-            .send({ from, gas, gasPrice, value: token === ZERO_ADDRESS ? amount : 0 }, (err, txHash) => {
+            .stake(isNativeToken(token) ? 0 : amount, token, data)
+            .send({ from, gas, gasPrice, value: isNativeToken(token) ? amount : 0 }, (err, txHash) => {
                 if (err) return Promise.reject(err)
                 return waitForReceipt(txHash, this.web3)
             })
