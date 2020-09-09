@@ -90,6 +90,18 @@ class StakingContract {
                 return waitForReceipt(txHash, this.web3)
             })
     }
+
+    public totalStakedFor = async (
+        account: string,
+        token: string = ZERO_ADDRESS, // native token
+        txOptions: TransactionOptions,
+    ): Promise<TransactionReceipt> => {
+        const { from } = txOptions
+
+        return this.contract.methods
+            .totalStakedFor(account, token)
+            .call({ from })
+    }
 }
 
 export default StakingContract
