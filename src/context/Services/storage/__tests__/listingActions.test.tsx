@@ -4,7 +4,7 @@ import {
 } from '../interfaces'
 import { listingActions } from '../listingReducer'
 import {
-  AddItemPayload, SetCountryPayload, SetAvailableSizePayload, SetCurrencyPayload,
+  AddItemPayload, SetCountryPayload, SetAvailableSizePayload,
 } from '../listingActions'
 
 const mockedPlanItem: StoragePlanItem = {
@@ -58,14 +58,6 @@ describe('StorageListingContext', () => {
       }
       const { availableSize } = listingActions.SET_AVAILABLE_SIZE(initialState, payload)
       expect(availableSize).toBe(expectedSize)
-    })
-    describe('SET_CURRENCY', () => {
-      const expectedCurrency = 'RIF'
-      const payload: SetCurrencyPayload = {
-        currency: expectedCurrency,
-      }
-      const { currency } = listingActions.SET_CURRENCY(initialState, payload)
-      expect(currency).toBe(expectedCurrency)
     })
   })
 })

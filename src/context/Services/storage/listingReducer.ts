@@ -5,7 +5,6 @@ import {
   EditItemPayload,
   SetAvailableSizePayload,
   SetCountryPayload,
-  SetCurrencyPayload,
   ListingActions,
   ListingPayload,
   SetPeerIdPayload,
@@ -87,10 +86,6 @@ export const listingActions: ListingActions = {
   SET_COUNTRY: (state: ListingState, { country }: SetCountryPayload) => ({
     ...state,
     country,
-  }),
-  SET_CURRENCY: (state: ListingState, { currency }: SetCurrencyPayload) => ({
-    ...state,
-    currency,
   }),
   SET_PEER_ID: (state: ListingState, { peerId }: SetPeerIdPayload) => ({
     ...state,
