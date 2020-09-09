@@ -51,7 +51,7 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({ offerName }) => {
       onChange={handleChange}
     >
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon color={isExpanded ? 'secondary' : 'primary'} />}
+        expandIcon={<ExpandMoreIcon color="primary" />}
         aria-controls={`offer-${offerName}-content`}
       >
         {/* TODO: consider extracting to new molecule "MyOfferSummary" */}
@@ -72,7 +72,11 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({ offerName }) => {
             <LabelWithValue label="Listed Size" value="392 GB" />
           </Grid>
           <Grid item sm={2}>
-            <Typography align="right" color={isExpanded ? 'secondary' : 'primary'}>View active contracts</Typography>
+            <Typography align="right" color="primary">
+              {isExpanded ? 'Hide ' : 'View '}
+              {' '}
+              active contracts
+            </Typography>
           </Grid>
         </Grid>
       </AccordionSummary>
