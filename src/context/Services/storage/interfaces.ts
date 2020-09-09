@@ -25,7 +25,6 @@ export interface ListingState extends ContextState {
   planItems: StoragePlanItem[]
   internalCounter: number
   allPeriods: TimePeriodEnum[]
-  availablePeriods: TimePeriodEnum[]
   peerId: string
   usedPeriodsPerCurrency: Record<string, TimePeriodEnum[]> // dictionary to easily know the timePeriods already used by a given currency
 }

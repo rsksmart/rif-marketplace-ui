@@ -34,7 +34,6 @@ const PlanItemsList = () => {
   const {
     state: {
       planItems,
-      availablePeriods,
     },
   } = useContext(StorageListingContext)
 
@@ -53,15 +52,9 @@ const PlanItemsList = () => {
 
   return (
     <>
-      {/* SET PLAN PRICES */}
-      {
-        !!availablePeriods.length
-        && (
-          <Grid className={classes.editablePlanContainer} item xs={12}>
-            <EditablePlanItem cryptoXRs={cryptoXRs} fiatDisplayName={fiatDisplayName} />
-          </Grid>
-        )
-      }
+      <Grid className={classes.editablePlanContainer} item xs={12}>
+        <EditablePlanItem cryptoXRs={cryptoXRs} fiatDisplayName={fiatDisplayName} />
+      </Grid>
       {/* STORAGE PLANS */}
       {
         !!planItems.length
