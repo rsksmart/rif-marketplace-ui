@@ -124,7 +124,7 @@ const StorageSellPage = () => {
         availableSizeMB, periods, prices,
       } = transformOfferDataForContract(availableSize, planItems)
 
-      const setOfferReceipt = await storageContract.setOffer(availableSizeMB, periods, prices, { from: account })
+      const setOfferReceipt = await storageContract.setOffer(availableSizeMB, periods, prices, peerId, { from: account })
       logger.info('setOffer receipt: ', setOfferReceipt)
 
       bcDispatch({
