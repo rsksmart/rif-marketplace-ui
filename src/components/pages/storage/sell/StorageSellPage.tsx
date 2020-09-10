@@ -4,7 +4,7 @@ import React, {
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button as RUIButton, Web3Store } from '@rsksmart/rif-ui'
 import Typography from '@material-ui/core/Typography'
-import StorageListingContext from 'context/Services/storage/ListingContext'
+import StorageSellContext from 'context/Services/storage/StorageSellContext'
 import StorageContract from 'contracts/Storage'
 import Logger from 'utils/Logger'
 import { StoragePlanItem } from 'context/Services/storage/interfaces'
@@ -86,7 +86,7 @@ const StorageSellPage = () => {
       planItems, availableSize, peerId, system,
     },
     dispatch,
-  } = useContext(StorageListingContext)
+  } = useContext(StorageSellContext)
 
   const {
     state: {

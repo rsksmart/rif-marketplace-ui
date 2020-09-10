@@ -1,8 +1,8 @@
 import { ContextDispatch, ContextPayload } from 'context/storeUtils/interfaces'
-import { StoragePlanItem } from './interfaces'
-import { ListingReducer } from './listingReducer'
+import { StoragePlanItem, TimePeriodEnum } from './interfaces'
+import { StorageSellReducer } from './storageSellReducer'
 
-export type LISTING_ACTION =
+export type STORAGE_SELL_ACTION =
   | 'ADD_ITEM'
   | 'CLEAN_UP'
   | 'REMOVE_ITEM'
@@ -11,14 +11,14 @@ export type LISTING_ACTION =
   | 'SET_AVAILABLE_SIZE'
   | 'SET_PEER_ID'
 
-export type ListingActions = {
-  ADD_ITEM: ListingReducer<AddItemPayload>
-  CLEAN_UP: ListingReducer<{}>
-  REMOVE_ITEM: ListingReducer<RemoveItemPayload>
-  EDIT_ITEM: ListingReducer<EditItemPayload>
-  SET_COUNTRY: ListingReducer<SetCountryPayload>
-  SET_AVAILABLE_SIZE: ListingReducer<SetAvailableSizePayload>
-  SET_PEER_ID: ListingReducer<SetPeerIdPayload>
+export type StorageSellActions = {
+  ADD_ITEM: StorageSellReducer<AddItemPayload>
+  CLEAN_UP: StorageSellReducer<{}>
+  REMOVE_ITEM: StorageSellReducer<RemoveItemPayload>
+  EDIT_ITEM: StorageSellReducer<EditItemPayload>
+  SET_COUNTRY: StorageSellReducer<SetCountryPayload>
+  SET_AVAILABLE_SIZE: StorageSellReducer<SetAvailableSizePayload>
+  SET_PEER_ID: StorageSellReducer<SetPeerIdPayload>
 }
 
 export type AddItemPayload = StoragePlanItem
@@ -41,7 +41,7 @@ export interface SetPeerIdPayload {
   peerId: string
 }
 
-export type ListingPayload =
+export type StorageSellPayload =
   | ContextPayload
   | AddItemPayload
   | RemoveItemPayload
@@ -50,4 +50,4 @@ export type ListingPayload =
   | SetCountryPayload
   | SetPeerIdPayload
 
-export type StorageAction = ContextDispatch<LISTING_ACTION, ListingPayload>
+export type StorageSellAction = ContextDispatch<STORAGE_SELL_ACTION, StorageSellPayload>
