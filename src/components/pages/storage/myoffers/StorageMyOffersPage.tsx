@@ -25,8 +25,10 @@ import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 import { SetOfferPayload } from 'context/Market/storage/offerEditActions'
 import { StorageOffer } from 'models/marketItems/StorageItem'
-import StakingContract from '../../../../contracts/Staking'
+import { StakesService } from '../../../../api/rif-marketplace-cache/storage/stakes'
+import StakingContract, { ZERO_ADDRESS } from '../../../../contracts/Staking'
 import StakingStakeDialogue from '../../../organisms/storage/myoffers/StakingStakeDialogue'
+import Web3 from 'web3'
 
 
 const logger = Logger.getInstance()
@@ -46,6 +48,7 @@ const StorageMyOffersPage: FC = () => {
   const {
     state: {
       loaders: { data: isLoadingItems },
+      apis
     },
     dispatch: appDispatch,
   } = useContext<AppContextProps>(AppContext)
@@ -69,35 +72,51 @@ const StorageMyOffersPage: FC = () => {
   const [stakeTotal, setStakeTotal] = useState<number>(0)
   const [depositOpened, setDepositOpened] = useState<boolean>(false)
   const [withdrawalOpened, setWithdrawalOpened] = useState<boolean>(false)
+  const requireWeb3 = () => !!web3
 
+  const stakeApi = apis?.['storage/v0/stakes'] as StakesService
 
-  const fetchStakeTotal = async () => {
-    // TODO fetch current stake
-    setStakeTotal(100)
-  }
-
-  const onDepositHandler = async (amount: number, token: string) => {
-    // TODO call contract and make stake
-    setDepositOpened(false)
-    if (web3) {
-      const stakeContract = StakingContract.getInstance(web3)
-      await stakeContract.stake(amount, token, { from: account })
-      await fetchStakeTotal()
-    }
-  }
-
-  const onWithdrawHandler = async (amount: number, token: string) => {
-    // TODO call contract and make un-stake
-    setWithdrawalOpened(false)
-    if (web3) {
-      const stakeContract = StakingContract.getInstance(web3)
-      await stakeContract.unstake(amount, token, { from: account })
-      await fetchStakeTotal()
-    }
-  }
   useEffect(() => {
     fetchStakeTotal().catch(e => logger.error('Fetch Stake total error: ' + e.message))
   }, [])
+
+  const fetchStakeTotal = async () => {
+    const [stakeRBTC] = await stakeApi._fetch({ account: account as string, token: ZERO_ADDRESS })
+    setStakeTotal(stakeRBTC.total)
+  }
+
+  const onDepositHandler = async (amount: number, token: string) => {
+    if (!requireWeb3()) {
+      logger.debug('Please connect to your wallet')
+      // TODO show notification
+      return
+    }
+
+    const stakeContract = StakingContract.getInstance(web3 as Web3)
+    logger.debug(await stakeContract.stake(amount, token, { from: account }))
+    await fetchStakeTotal()
+
+    setDepositOpened(false)
+  }
+
+  const onWithdrawHandler = async (amount: number, token: string) => {
+    if (!requireWeb3()) {
+      logger.debug('Please connect to your wallet')
+      // TODO show notification
+      return
+    }
+
+    const stakeContract = StakingContract.getInstance(web3 as Web3)
+    logger.debug(await stakeContract.unstake(amount, token, { from: account }))
+    await fetchStakeTotal()
+
+    setWithdrawalOpened(false)
+  }
+
+  useEffect(() => {
+    fetchStakeTotal().catch(e => logger.error('Fetch Stake total error: ' + e.message))
+  }, [])
+
   useEffect(() => {
     if (account) {
       dispatch({

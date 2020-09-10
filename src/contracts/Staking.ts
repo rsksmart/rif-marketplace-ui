@@ -9,7 +9,7 @@ import { stakingAddress } from './config'
 
 const logger = Logger.getInstance()
 
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const ZERO_BYTES = '0x0000000000000000000000000000000000000000000000000000000000000000'
 const isNativeToken = (token: string) => token === ZERO_ADDRESS
 
