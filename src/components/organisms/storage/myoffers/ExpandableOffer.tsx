@@ -14,6 +14,7 @@ import ActiveContracts from './ActiveContracts'
 import CancelOfferDialogue from './CancelOfferDialogue'
 
 export interface ExpandableOfferProps {
+  className?: string
   offerName: string
 }
 
@@ -23,6 +24,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: `1px solid ${colors.gray3}`,
     borderRadius: 15,
     boxShadow: 'none',
+    '&:before': {
+      display: 'none',
+    },
+    '&:last-child': {
+      borderRadius: 15,
+    },
+    '&:first-child': {
+      borderRadius: 15,
+    },
   },
   activeContracts: {
     marginTop: theme.spacing(3),
@@ -35,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const logger = Logger.getInstance()
 
-const ExpandableOffer: FC<ExpandableOfferProps> = ({ offerName }) => {
+const ExpandableOffer: FC<ExpandableOfferProps> = ({ className = '', offerName }) => {
   const classes = useStyles()
   const [isExpanded, setIsExpanded] = useState(true)
   const [cancelOfferOpen, setCancelOfferOpen] = useState(false)
@@ -46,7 +56,7 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({ offerName }) => {
 
   return (
     <Accordion
-      className={classes.root}
+      className={`${classes.root} ${className}`}
       expanded={isExpanded}
       onChange={handleChange}
     >
@@ -54,7 +64,6 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({ offerName }) => {
         expandIcon={<ExpandMoreIcon color="primary" />}
         aria-controls={`offer-${offerName}-content`}
       >
-        {/* TODO: consider extracting to new molecule "MyOfferSummary" */}
         <Grid container alignItems="center">
           <Grid item sm={1}>
             <Typography align="center" color="primary" variant="subtitle1">{offerName}</Typography>
