@@ -17,6 +17,7 @@ import {
 } from '.'
 import { NotFound } from '..'
 import StorageSellDone from './sell/StorageSellDone'
+import StorageOffersCheckoutPage from './buy/StorageOffersCheckoutPage'
 
 const TABS: StyledNavTabProps[] = [
   {
@@ -70,10 +71,13 @@ const StorageRoutes = () => {
           tabs={TABS}
         >
           <Switch>
-            <Route exact path={ROUTES.STORAGE.BUY.BASE}>
+            <Route path={ROUTES.STORAGE.BUY.BASE}>
               <StorageOffersContextProvider>
                 <Switch>
-                  <Route exact path={ROUTES.STORAGE.BUY.BASE} component={StorageOffersPage} />
+                  <Redirect exact from={ROUTES.STORAGE.BUY.BASE} to={ROUTES.STORAGE.BUY.LISTING} />
+                  <Route exact path={ROUTES.STORAGE.BUY.LISTING} component={StorageOffersPage} />
+                  <Route exact path={ROUTES.STORAGE.BUY.CHECKOUT} component={StorageOffersCheckoutPage} />
+                  <Route component={NotFound} />
                 </Switch>
               </StorageOffersContextProvider>
             </Route>

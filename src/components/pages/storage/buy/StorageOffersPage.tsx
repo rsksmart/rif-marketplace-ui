@@ -36,7 +36,6 @@ const StorageOffersPage: FC = () => {
     },
     dispatch,
   } = useContext<StorageOffersContextProps>(StorageOffersContext)
-  // const history = useHistory()
 
   const collection = items
     .map<MarketplaceItem>((item) => {
