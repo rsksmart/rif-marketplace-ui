@@ -75,6 +75,7 @@ const StorageMyOffersPage: FC = () => {
   const requireWeb3 = () => !!web3
 
   const stakeApi = apis?.['storage/v0/stakes'] as StakesService
+  stakeApi.connect(errorReporterFactory(appDispatch))
 
   useEffect(() => {
     fetchStakeTotal().catch(e => logger.error('Fetch Stake total error: ' + e.message))
