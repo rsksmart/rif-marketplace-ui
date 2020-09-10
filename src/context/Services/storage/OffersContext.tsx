@@ -12,7 +12,9 @@ import { Modify } from 'utils/typeUtils'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { MinMaxFilter } from 'models/Filters'
 import { UIError } from 'models/UIMessage'
-import { storageOffersActions, StorageOffersPayload, StorageOffersReducer, StorageOffersAction } from './offersActions'
+import {
+  storageOffersActions, StorageOffersPayload, StorageOffersReducer, StorageOffersAction,
+} from './offersActions'
 import { ServiceState, ServiceOrder } from '../interfaces'
 
 export type ContextName = 'storage_offers'

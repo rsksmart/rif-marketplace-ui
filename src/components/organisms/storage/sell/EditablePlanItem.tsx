@@ -3,9 +3,9 @@ import React, {
 } from 'react'
 import InfoIcon from '@material-ui/icons/Info'
 import Grid from '@material-ui/core/Grid'
+import StorageSellContext from 'context/Services/storage/StorageSellContext'
+import { EditItemPayload, AddItemPayload } from 'context/Services/storage/storageSellActions'
 import { StoragePlanItem, TimePeriodEnum } from 'context/Services/storage/interfaces'
-import StorageListingContext from 'context/Services/storage/ListingContext'
-import { EditItemPayload, AddItemPayload } from 'context/Services/storage/listingActions'
 import { Button, TooltipIconButton } from '@rsksmart/rif-ui'
 import SaveIcon from '@material-ui/icons/Save'
 import CryptoPriceConverter from 'components/molecules/CryptoPriceConverter'
@@ -27,7 +27,7 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
   cryptoXRs,
   fiatDisplayName,
 }) => {
-  const { state: { allPeriods, usedPeriodsPerCurrency }, dispatch } = useContext(StorageListingContext)
+  const { state: { allPeriods, usedPeriodsPerCurrency }, dispatch } = useContext(StorageSellContext)
 
   const editMode = !!planItem
   // TODO: remove hard-coded currency by default

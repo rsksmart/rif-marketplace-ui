@@ -1,18 +1,18 @@
-import { ListingState, StoragePlanItem } from './interfaces'
+import { StoragePlanItem, StorageSellState } from './interfaces'
 import {
   AddItemPayload,
   RemoveItemPayload,
   EditItemPayload,
   SetAvailableSizePayload,
   SetCountryPayload,
-  ListingActions,
-  ListingPayload,
   SetPeerIdPayload,
-} from './listingActions'
-import { initialState } from './ListingContext'
+  StorageSellActions,
+  StorageSellPayload,
+} from './storageSellActions'
+import { initialState } from './StorageSellContext'
 
-export interface ListingReducer<P extends ListingPayload> {
-  (state: ListingState, payload: P): ListingState
+export interface StorageSellReducer<P extends StorageSellPayload> {
+  (state: StorageSellState, payload: P): StorageSellState
 }
 
 const calculateUsedPeriodsPerCurrency = (
@@ -22,8 +22,8 @@ const calculateUsedPeriodsPerCurrency = (
   return acc
 }, {})
 
-export const listingActions: ListingActions = {
-  ADD_ITEM: (state: ListingState, payload: AddItemPayload) => {
+export const storageSellActions: StorageSellActions = {
+  ADD_ITEM: (state: StorageSellState, payload: AddItemPayload) => {
     const { internalCounter, planItems } = state
     const newPlan = {
       ...payload,
@@ -39,7 +39,10 @@ export const listingActions: ListingActions = {
     }
   },
   CLEAN_UP: (_, __) => initialState,
-  REMOVE_ITEM: (state: ListingState, { internalId }: RemoveItemPayload) => {
+  REMOVE_ITEM: (
+    state: StorageSellState,
+    { internalId }: RemoveItemPayload,
+  ) => {
     const { planItems } = state
     const newPlanItems = planItems.filter((x) => x.internalId !== internalId)
     return {
@@ -48,7 +51,7 @@ export const listingActions: ListingActions = {
       usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newPlanItems),
     }
   },
-  EDIT_ITEM: (state: ListingState, payload: EditItemPayload) => {
+  EDIT_ITEM: (state: StorageSellState, payload: EditItemPayload) => {
     const {
       internalId, timePeriod, pricePerGb, currency,
     } = payload
@@ -71,17 +74,17 @@ export const listingActions: ListingActions = {
     }
   },
   SET_AVAILABLE_SIZE: (
-    state: ListingState,
+    state: StorageSellState,
     { availableSize }: SetAvailableSizePayload,
   ) => ({
     ...state,
     availableSize,
   }),
-  SET_COUNTRY: (state: ListingState, { country }: SetCountryPayload) => ({
+  SET_COUNTRY: (state: StorageSellState, { country }: SetCountryPayload) => ({
     ...state,
     country,
   }),
-  SET_PEER_ID: (state: ListingState, { peerId }: SetPeerIdPayload) => ({
+  SET_PEER_ID: (state: StorageSellState, { peerId }: SetPeerIdPayload) => ({
     ...state,
     peerId,
   }),

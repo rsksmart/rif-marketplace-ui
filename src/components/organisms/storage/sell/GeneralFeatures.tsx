@@ -9,20 +9,20 @@ import Tooltip from '@material-ui/core/Tooltip'
 import {
   Button, colors, validatedNumber,
 } from '@rsksmart/rif-ui'
-import StorageListingContext from 'context/Services/storage/ListingContext'
-import { StorageListingContextProps } from 'context/Services/storage/interfaces'
-import { SetAvailableSizePayload, SetPeerIdPayload } from 'context/Services/storage/listingActions'
 import PinnerInstructionsModal from 'components/organisms/storage/sell/PinnerInstructionsModal'
+import StorageSellContext from 'context/Services/storage/StorageSellContext'
+import { StorageSellContextProps } from 'context/Services/storage/interfaces'
+import { SetAvailableSizePayload, SetPeerIdPayload } from 'context/Services/storage/storageSellActions'
 
 const GeneralFeatures = () => {
-  const {
-    state: { availableSize, system, peerId },
-    dispatch,
-  } = useContext<StorageListingContextProps>(StorageListingContext)
+  const { state: {
+    availableSize, system, peerId
+  }, dispatch } = useContext<StorageSellContextProps>(StorageSellContext)
 
   const [modalPeerIdOpened, setModalPeerIdOpened] = useState(false)
   const handleModalOpen = () => setModalPeerIdOpened(true)
   const handleModalClose = () => setModalPeerIdOpened(false)
+
 
   const onSizeChange = ({ target: { value } }) => {
     dispatch({

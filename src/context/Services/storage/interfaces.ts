@@ -4,12 +4,12 @@ import { ContextState } from 'context/storeUtils/interfaces'
 import { StorageItem } from 'models/marketItems/StorageItem'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { ServiceState } from '../interfaces'
-import { LISTING_ACTION, StorageAction } from './listingActions'
+import { STORAGE_SELL_ACTION, StorageSellAction } from './storageSellActions'
 import { OFFERS_ACTION } from './offersActions'
-import { ContextName as ListingContextName } from './ListingContext'
+import { ContextName as SellContextName } from './StorageSellContext'
 import { ContextName as OffersContextName } from './OffersContext'
 
-export type StorageContextNames = OffersContextName | ListingContextName
+export type StorageContextNames = OffersContextName | SellContextName
 
 export interface StoragePlanItem {
   internalId?: number
@@ -18,7 +18,7 @@ export interface StoragePlanItem {
   timePeriod: TimePeriodEnum
 }
 
-export interface ListingState extends ContextState {
+export interface StorageSellState extends ContextState {
   system: string
   availableSize: number
   country: string
@@ -29,9 +29,9 @@ export interface ListingState extends ContextState {
   usedPeriodsPerCurrency: Record<string, TimePeriodEnum[]> // dictionary to easily know the timePeriods already used by a given currency
 }
 
-export interface StorageListingContextProps {
-  state: ListingState
-  dispatch: Dispatch<StorageAction>
+export interface StorageSellContextProps {
+  state: StorageSellState
+  dispatch: Dispatch<StorageSellAction>
 }
 
 export type StorageState = ServiceState<StorageItem> & {
@@ -41,7 +41,7 @@ export type StorageState = ServiceState<StorageItem> & {
 
 export interface StorageContextProps {
   state: StorageState
-  dispatch: Dispatch<StorageAction>
+  dispatch: Dispatch<StorageSellAction>
 }
 
 export enum TimePeriodEnum {
@@ -50,4 +50,4 @@ export enum TimePeriodEnum {
   Monthly = 30,
 }
 
-export type STORAGE_ACTION = LISTING_ACTION | OFFERS_ACTION
+export type STORAGE_ACTION = STORAGE_SELL_ACTION | OFFERS_ACTION
