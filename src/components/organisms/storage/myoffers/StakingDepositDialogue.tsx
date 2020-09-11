@@ -15,20 +15,20 @@ const StakingStakeDialogue: FC<CancelOfferDialogueProps> = ({ open, onClose, onD
     const token = ZERO_ADDRESS
     const actions = (
         <Grid justify="flex-end">
-            <Button style={{ marginRight: 8 }} color="primary" rounded variant="outlined" onClick={onClose}>Close</Button>
-            <Button color="primary" rounded variant="contained" onClick={() => onDeposit(amount, token)}>Deposit</Button>
+            <Button color="primary" rounded variant="contained" onClick={() => onDeposit(amount, token)}>Stake Funds</Button>
         </Grid>
     )
     return (
         <ModalDialogue
             open={open}
             onClose={onClose}
-            title="Deposit stake"
+            title="Stacking"
             footer={actions}
         >
             <Grid justify="center">
                 <Typography align="center" color="secondary">
-                    Deposit
+                    The amount of RIF staked in RIF Marketplace helps to enhance your
+                    reputation and position your offers at the top when selling storage.
                 </Typography>
             </Grid>
         </ModalDialogue>
