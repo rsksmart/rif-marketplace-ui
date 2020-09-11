@@ -30,7 +30,7 @@ class StorageContract {
   private constructor(web3: Web3) {
     this.contract = new web3.eth.Contract(
       StorageManager.abi as AbiItem[],
-      storageAddress,
+      storageAddress
     )
     this.web3 = web3
   }
@@ -44,30 +44,23 @@ class StorageContract {
       token: string
       amount: string
     },
-    txOptions: TransactionOptions,
+    txOptions: TransactionOptions
   ): Promise<TransactionReceipt> => {
-    const {
-      fileHash,
-      provider,
-      size,
-      billingPeriod,
-      amount,
-    } = details
+    const { fileHash, provider, size, billingPeriod, amount } = details
     const { from } = txOptions
     const dataReference = encodeHash(fileHash)
 
-    const newAgreementTask = this.contract.methods
-      .newAgreement(
-        dataReference,
-        provider,
-        size,
-        billingPeriod,
-        zeroAddress,
-        0,
-        [],
-        [],
-        zeroAddress,
-      )
+    const newAgreementTask = this.contract.methods.newAgreement(
+      dataReference,
+      provider,
+      size,
+      billingPeriod,
+      zeroAddress,
+      0,
+      [],
+      [],
+      zeroAddress
+    )
 
     const gasPrice = await this.web3.eth.getGasPrice().catch((error: Error) => {
       logger.error('error getting gas price, error:', error)
@@ -79,12 +72,18 @@ class StorageContract {
       gasPrice,
       value: amount,
     })
-    const txHash = await newAgreementTask.send({
-      from, gas, gasPrice, value: amount,
-    }, (err, response) => {
-      if (err) return Promise.reject(err)
-      return waitForReceipt(response, this.web3)
-    })
+    const txHash = await newAgreementTask.send(
+      {
+        from,
+        gas,
+        gasPrice,
+        value: amount,
+      },
+      (err, response) => {
+        if (err) return Promise.reject(err)
+        return waitForReceipt(response, this.web3)
+      }
+    )
 
     return txHash
   }
@@ -95,13 +94,13 @@ class StorageContract {
     billingRbtcWeiPrices: string[][],
     tokens: string[],
     peerId: string,
-    txOptions: TransactionOptions,
+    txOptions: TransactionOptions
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
 
     const encodedPeerId = encodeHash(peerId).map((el) => el.replace('0x', ''))
     const prefixedMsg = prefixArray(encodedPeerId, '01', 64).map(
-      (el) => `0x${el}`,
+      (el) => `0x${el}`
     )
 
     const gasPrice = await this.web3.eth.getGasPrice().catch((error: Error) => {
@@ -114,7 +113,7 @@ class StorageContract {
       billingPeriods,
       billingRbtcWeiPrices,
       tokens,
-      prefixedMsg,
+      prefixedMsg
     )
 
     return setOffer.send(
@@ -122,15 +121,16 @@ class StorageContract {
         from,
         gas: Math.floor((await setOffer.estimateGas({ from, gasPrice })) * 1.1),
         gasPrice,
-      }, (err: Error, txHash: string) => {
+      },
+      (err: Error, txHash: string) => {
         if (err) return Promise.reject(err)
         return waitForReceipt(txHash, this.web3)
-      },
+      }
     )
   }
 
   public terminateOffer = async (
-    txOptions: TransactionOptions,
+    txOptions: TransactionOptions
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
 
@@ -146,11 +146,31 @@ class StorageContract {
 
     return this.contract.methods
       .terminateOffer()
-      .send({ from, gas, gasPrice },
-        (err: Error, txHash: string) => {
-          if (err) return Promise.reject(err)
-          return waitForReceipt(txHash, this.web3)
-        })
+      .send({ from, gas, gasPrice }, (err: Error, txHash: string) => {
+        if (err) return Promise.reject(err)
+        return waitForReceipt(txHash, this.web3)
+      })
+  }
+
+  public hasUtilizedCapacity = async (
+    account: string,
+    txOptions: TransactionOptions
+  ): Promise<TransactionReceipt> => {
+    const { from } = txOptions
+
+    const gasPrice = await this.web3.eth.getGasPrice().catch((error: Error) => {
+      logger.error('error getting gas price, error:', error)
+      throw error
+    })
+
+    const gas = await this.web3.eth.estimateGas({
+      from,
+      gasPrice,
+    })
+
+    return this.contract.methods
+      .hasUtilizedCapacity(account)
+      .call({ from, gas, gasPrice })
   }
 }
 
