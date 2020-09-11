@@ -1,150 +1,19 @@
 import {
-  Card, CardContent, CardProps, Grid, GridProps,
-
-  makeStyles, Step, StepLabel, Stepper,
-
+  Step, StepLabel, Stepper,
   Tab, Tabs,
-
-  TextField, Theme,
+  TextField,
+  Typography, Box,
 } from '@material-ui/core'
-import { Button, Typography } from '@rsksmart/rif-ui'
+import GridRow from 'components/molecules/storage/buy/GridRow'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
-import React, { FC } from 'react'
-import { Modify } from 'utils/typeUtils'
-
-const GridRow: FC<Omit<GridProps, 'direction' | 'container' | 'item'>> = ({ children, ...props }) => (
-  <Grid
-    container
-    alignItems="baseline"
-    justify="flex-start"
-    direction="row"
-    wrap="nowrap"
-    style={{
-      paddingBlockEnd: '1.5em',
-    }}
-    spacing={5}
-    {...props}
-  >
-    {React.Children.map(children, (child) => <Grid item>{child}</Grid>)}
-  </Grid>
-)
-
-const GridColumn: FC<Omit<GridProps, 'direction' | 'container' | 'item'>> = ({ children, ...props }) => (
-  <Grid
-    container
-    direction="column"
-    {...props}
-  >
-    {children}
-  </Grid>
-)
-
-const GridItem: FC<Omit<GridProps, 'direction' | 'container' | 'item'>> = ({ children, ...props }) => <Grid item {...props}>{children}</Grid>
-
-const ItemValuePair: FC<Modify<Partial<GridProps>, { item: string, value: string }>> = ({ item, value, ...props }) => (
-  <GridRow
-    alignItems="baseline"
-    wrap="nowrap"
-    spacing={2}
-    {...props}
-  >
-    <GridItem>
-      <Typography
-        color="primary"
-        align="center"
-      >
-        {`${item}:`}
-      </Typography>
-    </GridItem>
-    <GridItem>
-      <Typography
-        color="secondary"
-        align="center"
-        style={{
-          fontSize: '1.2rem',
-        }}
-      >
-        {value}
-      </Typography>
-    </GridItem>
-  </GridRow>
-)
-
-const useStylesDropZone = makeStyles((theme: Theme) => ({
-  root: {
-    borderRadius: '10px',
-    border: '1px dashed #CFD3DA',
-    boxSizing: 'border-box',
-
-    width: '296px',
-    height: '118px',
-    left: '563px',
-    top: '623px',
-  },
-}))
-const DropZone: FC = () => {
-  const classes = useStylesDropZone()
-  return (
-    <GridColumn
-      alignItems="center"
-      justify="center"
-      className={classes.root}
-    >
-      <GridItem>Drag & Drop files here</GridItem>
-      <GridItem>or</GridItem>
-      <GridItem>
-        <Button onClick={() => { console.log('Add files button clicked') }}>
-          + Add files
-        </Button>
-      </GridItem>
-    </GridColumn>
-  )
-}
-
-const useStylesRifCard = makeStyles((theme: Theme) => ({
-  card: {
-    background: '#F8F7F7',
-    borderRadius: '20px',
-    minWidth: '--webkit-fill-available',
-  },
-  contentContainer: {
-    margin: '50px',
-    marginTop: '10px',
-    background: '#FFF',
-  },
-}))
-const RifCard: FC<Modify<CardProps, { Header?: React.ElementType }>> = ({ children, Header, ...props }) => {
-  const classes = useStylesRifCard()
-  return (
-    <Card className={classes.card} {...props}>
-      <GridColumn
-        alignContent="center"
-      >
-        {!!Header && (<Grid item><Header /></Grid>)}
-        <GridItem>
-          <CardContent className={classes.contentContainer}>
-            {children}
-          </CardContent>
-        </GridItem>
-      </GridColumn>
-    </Card>
-  )
-}
-
-const HashTab = () => (
-  <Tabs
-    value={0}
-    onChange={() => { console.log('Changed tab') }}
-    classes={{
-
-    }}
-    indicatorColor="primary"
-    textColor="primary"
-  >
-    <Tab label="Upload file" />
-    <Tab label="Pin by hash" />
-  </Tabs>
-)
+import React from 'react'
+import GridItem from 'components/atoms/GridItem'
+import GridColumn from 'components/atoms/GridColumn'
+import LabelWithValue from 'components/molecules/storage/buy/LabelWithValue'
+import DropZone from 'components/molecules/DropZone'
+import RifCard from 'components/organisms/RifCard'
+import StoragePinTabs from 'components/organisms/storage/buy/StoragePinTabs'
+import { Button, colors } from '@rsksmart/rif-ui'
 
 const StorageOffersCheckoutPage = () => (
   <CheckoutPageTemplate
@@ -156,20 +25,29 @@ const StorageOffersCheckoutPage = () => (
     <GridColumn
       className="rootContainer"
     >
+      {/* DESCRIPTION */}
       <GridRow>
-        <ItemValuePair
-          item="Selected storage provider"
-          value="Provider.RSK"
-        />
-        <ItemValuePair
-          item="System"
-          value="IPFS"
-        />
+        <GridItem>
+          <LabelWithValue
+            label="Selected storage provider"
+            value="Provider.RSK"
+          />
+        </GridItem>
+        <GridItem>
+          <LabelWithValue
+            label="System"
+            value="IPFS"
+          />
+        </GridItem>
       </GridRow>
       <GridRow>
-        <Typography color="textPrimary" weight="lightBold">
-          The size of your storage plan is calculated by the content that you upload/persist in this first step.
-        </Typography>
+        <GridItem>
+          <Typography color="textPrimary" component="div">
+            <Box display="inline" fontWeight="fontWeightMedium">
+              The size of your storage plan is calculated by the content that you upload/persist in this first step.
+            </Box>
+          </Typography>
+        </GridItem>
       </GridRow>
       {/* STEPPER */}
       <Stepper
@@ -184,22 +62,51 @@ const StorageOffersCheckoutPage = () => (
       </Stepper>
       {/* CONTENT */}
       <GridColumn alignContent="center">
-        <RifCard Header={HashTab}>
-          <GridColumn>
-            <GridItem>
-              <GridRow>
-                <GridItem>
-                  <TextField id="contentName" label="Content name" variant="outlined" />
-                </GridItem>
-              </GridRow>
-            </GridItem>
-            <GridItem>
-              <GridRow>
-                <DropZone />
-              </GridRow>
-            </GridItem>
-          </GridColumn>
-        </RifCard>
+        <GridItem>
+          <RifCard
+            Header={() => (
+              <StoragePinTabs
+                onChange={() => { console.log('Changed tab') }}
+              />
+            )}
+            Actions={() => (
+              <Button
+                style={{
+                  background: colors.primary,
+                  color: colors.gray1,
+                }}
+              >
+                Upload
+              </Button>
+            )}
+          >
+            <GridColumn
+              justify="space-evenly"
+            >
+              <GridItem xs={12}>
+                <GridRow
+                  justify="space-evenly"
+                >
+                  <GridItem>
+                    <TextField
+                      id="contentName"
+                      label="Content name"
+                      variant="outlined"
+                      required
+                    />
+                  </GridItem>
+                </GridRow>
+              </GridItem>
+              <GridItem>
+                <GridRow>
+                  <GridItem>
+                    <DropZone />
+                  </GridItem>
+                </GridRow>
+              </GridItem>
+            </GridColumn>
+          </RifCard>
+        </GridItem>
       </GridColumn>
     </GridColumn>
   </CheckoutPageTemplate>
