@@ -42,6 +42,7 @@ class StakingContract {
         txOptions: TransactionOptions,
     ): Promise<TransactionReceipt> => {
         const { from } = txOptions
+
         if (amount < 0) {
             throw new Error('amount should greater then 0')
         }
@@ -51,9 +52,7 @@ class StakingContract {
             throw error
         })
 
-        const gas = await this.web3.eth.estimateGas({
-            from, gasPrice,
-        })
+        const gas = await this.web3.eth.estimateGas({ from, gasPrice })
 
         return this.contract.methods
             .stake(isNativeToken(token) ? 0 : amount, token, ZERO_BYTES)
@@ -70,6 +69,7 @@ class StakingContract {
         txOptions: TransactionOptions,
     ): Promise<TransactionReceipt> => {
         const { from } = txOptions
+
         if (amount < 0) {
             throw new Error('amount should greater then 0')
         }
@@ -79,9 +79,7 @@ class StakingContract {
             throw error
         })
 
-        const gas = await this.web3.eth.estimateGas({
-            from, gasPrice,
-        })
+        const gas = await this.web3.eth.estimateGas({ from, gasPrice })
 
         return this.contract.methods
             .unstake(amount, token, ZERO_BYTES)
