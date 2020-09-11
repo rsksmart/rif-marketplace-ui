@@ -26,7 +26,6 @@ import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 import { SetOfferPayload } from 'context/Market/storage/offerEditActions'
 import { StorageOffer } from 'models/marketItems/StorageItem'
-import ExpandableOffer from 'components/organisms/storage/myoffers/ExpandableOffer'
 import StakingDepositDialogue from '../../../organisms/storage/myoffers/StakingDepositDialogue'
 import StakingWithdrawDialogue from '../../../organisms/storage/myoffers/StakingWithdrawDialogue'
 import { StakesService } from '../../../../api/rif-marketplace-cache/storage/stakes'
@@ -75,20 +74,41 @@ const StorageMyOffersPage: FC = () => {
   const [stakeTotal, setStakeTotal] = useState<number>(0)
   const [depositOpened, setDepositOpened] = useState<boolean>(false)
   const [withdrawalOpened, setWithdrawalOpened] = useState<boolean>(false)
+  const [canWithdraw, setCanWithdraw] = useState<boolean>(false)
+
   const requireWeb3 = () => !!web3
 
   const stakeApi = apis?.['storage/v0/stakes'] as StakesService
   stakeApi.connect(errorReporterFactory(appDispatch))
 
-  useEffect(() => {
-    fetchStakeTotal().catch(e => logger.error('Fetch Stake total error: ' + e.message))
-  }, [])
-
-
   // TODO add multicurrency support
   const fetchStakeTotal = async () => {
     const [stakeRBTC] = await stakeApi.fetch({ account: account as string, token: ZERO_ADDRESS })
     setStakeTotal(stakeRBTC?.total || 0)
+  }
+
+  const openWithdraw = async () => {
+    if (!requireWeb3()) {
+      console.log('Please connect to your wallet')
+      // TODO show notification
+      return
+    }
+
+    const storageContract = StorageContract.getInstance(web3 as Web3)
+    // Check if we can make unstake
+    const canWithdraw = await storageContract.hasUtilizedCapacity(account as string, { from: account })
+    setCanWithdraw(Boolean(canWithdraw))
+    setWithdrawalOpened(true)
+  }
+
+  const openStaking = () => {
+    if (!requireWeb3()) {
+      console.log('Please connect to your wallet')
+      // TODO show notification
+      return
+    }
+
+    setDepositOpened(true)
   }
 
   const onDepositHandler = async (amount: number, token: string) => {
@@ -121,7 +141,7 @@ const StorageMyOffersPage: FC = () => {
 
   useEffect(() => {
     fetchStakeTotal().catch(e => logger.error('Fetch Stake total error: ' + e.message))
-  }, [])
+  })
 
   useEffect(() => {
     if (account) {
@@ -204,9 +224,9 @@ const StorageMyOffersPage: FC = () => {
   return (
     <CenteredPageTemplate>
       <StakingCard
-        balance={stakeTotal + ' RIF'}
-        onAddFunds={() => setDepositOpened(true)}
-        onWithdrawFunds={() => setWithdrawalOpened(true)}
+        balance={`${stakeTotal} RIF`}
+        onAddFunds={openStaking}
+        onWithdrawFunds={openWithdraw}
       />
       <Grid
         container
@@ -234,6 +254,7 @@ const StorageMyOffersPage: FC = () => {
         onClose={() => setDepositOpened(false)}
       />
       <StakingWithdrawDialogue
+        canWithdraw={canWithdraw}
         onWithdraw={onWithdrawHandler}
         open={withdrawalOpened}
         onClose={() => setWithdrawalOpened(false)}
