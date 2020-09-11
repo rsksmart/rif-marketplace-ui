@@ -10,12 +10,15 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Divider from '@material-ui/core/Divider'
 import LabelWithValue from 'components/atoms/LabelWithValue'
 import Logger from 'utils/Logger'
+import { StorageOffer } from 'models/marketItems/StorageItem'
 import ActiveContracts from './ActiveContracts'
 import CancelOfferDialogue from './CancelOfferDialogue'
 
 export interface ExpandableOfferProps {
   className?: string
   offerName: string
+  storageOffer: StorageOffer
+  initiallyExpanded?: boolean
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -37,23 +40,35 @@ const useStyles = makeStyles((theme: Theme) => ({
   activeContracts: {
     marginTop: theme.spacing(3),
   },
-  offerActions: {
+  editOffer: {
+    marginRight: theme.spacing(1),
+  },
+  detailsHeaderContainer: {
     display: 'flex',
     justifyContent: 'flex-end',
+    marginBottom: theme.spacing(2),
   },
 }))
 
 const logger = Logger.getInstance()
 
-const ExpandableOffer: FC<ExpandableOfferProps> = ({ className = '', offerName }) => {
+const ExpandableOffer: FC<ExpandableOfferProps> = ({
+  className = '', offerName, storageOffer, initiallyExpanded = false,
+}) => {
   const classes = useStyles()
-  const [isExpanded, setIsExpanded] = useState(true)
+  const [isExpanded, setIsExpanded] = useState(initiallyExpanded)
   const [cancelOfferOpen, setCancelOfferOpen] = useState(false)
   const handleChange = () => setIsExpanded(!isExpanded)
   const handleCancelOpen = () => setCancelOfferOpen(true)
   const handleCancelClose = () => setCancelOfferOpen(false)
-  const handleCancelation = () => logger.info('todo: handle offers cancelation')
+  // TODO: handle cancellation
+  const handleCancelation = () => logger.info('todo: handle offers cancellation')
+  // TODO: handle edit
+  const handleEditOffer = () => logger.info('todo: handle edit offer')
 
+  const { system, availableSizeGB } = storageOffer
+  // TODO: once we get the agreements, calculate the remaining size
+  const remainingSize = availableSizeGB
   return (
     <Accordion
       className={`${classes.root} ${className}`}
@@ -69,16 +84,13 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({ className = '', offerName }
             <Typography align="center" color="primary" variant="subtitle1">{offerName}</Typography>
           </Grid>
           <Grid item sm={3}>
-            <LabelWithValue label="Date" value="20.08.2020" />
-          </Grid>
-          <Grid
-            item
-            sm={3}
-          >
-            <LabelWithValue label="System" value="IPFS" />
+            <LabelWithValue label="Remaining size" value={`${remainingSize} GB`} />
           </Grid>
           <Grid item sm={3}>
-            <LabelWithValue label="Listed Size" value="392 GB" />
+            <LabelWithValue label="System" value={system} />
+          </Grid>
+          <Grid item sm={3}>
+            <LabelWithValue label="Listed Size" value={`${availableSizeGB} GB`} />
           </Grid>
           <Grid item sm={2}>
             <Typography align="right" color="primary">
@@ -91,27 +103,18 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({ className = '', offerName }
       </AccordionSummary>
       <AccordionDetails>
         <Grid container direction="column">
-          <Grid container style={{ marginBottom: 12 }}>
-            <Grid item sm={1} />
-            <Grid item sm={3}>
-              <LabelWithValue label="Remaining size" value="50 GB" />
-            </Grid>
-            <Grid
-              item
-              sm={8}
-              className={classes.offerActions}
+          <Grid container className={classes.detailsHeaderContainer}>
+            <Button
+              className={classes.editOffer}
+              variant="outlined"
+              color="primary"
+              rounded
+              onClick={handleEditOffer}
             >
-              <Button
-                style={{ marginRight: 4 }}
-                variant="outlined"
-                rounded
-                color="primary"
-              >
-                Edit offer
-              </Button>
-              <Button variant="outlined" rounded color="primary" onClick={handleCancelOpen}>Cancel offer</Button>
-              <CancelOfferDialogue open={cancelOfferOpen} onClose={handleCancelClose} onConfirmCancel={handleCancelation} />
-            </Grid>
+              Edit offer
+            </Button>
+            <Button variant="outlined" rounded color="primary" onClick={handleCancelOpen}>Cancel offer</Button>
+            <CancelOfferDialogue open={cancelOfferOpen} onClose={handleCancelClose} onConfirmCancel={handleCancelation} />
           </Grid>
           <Divider />
           <ActiveContracts className={classes.activeContracts} />
