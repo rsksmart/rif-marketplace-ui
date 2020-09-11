@@ -1,7 +1,6 @@
 import React, {
   Dispatch, useContext, useEffect, useReducer, useState,
 } from 'react'
-
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
 import { LoadingPayload, ErrorMessagePayload } from 'context/App/appActions'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
@@ -23,7 +22,7 @@ export type OffersListing = {
   items: StorageItem[]
 }
 
-export type ContextFilters = Pick<StorageOffersFilters, 'price' | 'size' | 'periods'>
+export type ContextFilters = Pick<StorageOffersFilters, 'price' | 'size' | 'periods' | 'provider'>
 export type ContextLimits = Pick<StorageOffersFilters, 'price' | 'size'>
 
 export type StorageOffersState = Modify<ServiceState<StorageItem>, {
@@ -50,6 +49,7 @@ export const initialState: StorageOffersState = {
       max: 0,
     },
     periods: new Set(),
+    provider: undefined,
   },
   limits: {
     size: {
