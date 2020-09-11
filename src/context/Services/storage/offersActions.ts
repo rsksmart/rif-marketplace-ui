@@ -2,7 +2,11 @@ import { ContextDispatch } from 'context/storeUtils/interfaces'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { OffersListing, StorageOffersState } from './OffersContext'
 
-export type OFFERS_ACTION = 'FILTER' | 'SET_LISTING' | 'REFRESH' | 'UPDATE_LIMITS'
+export type OFFERS_ACTION =
+  | 'FILTER'
+  | 'SET_LISTING'
+  | 'REFRESH'
+  | 'UPDATE_LIMITS'
 
 export type ListingPayload = Pick<OffersListing, 'items'>
 
@@ -14,15 +18,15 @@ export type FiltersLimits = Partial<StorageOffersFilters>
 export type LimitsPayload = Pick<StorageOffersFilters, 'price' | 'size'>
 
 export type StorageOffersPayload =
-  ListingPayload |
-  RefreshPayload |
-  LimitsPayload |
-  FiltersLimits
+  | ListingPayload
+  | RefreshPayload
+  | LimitsPayload
+  | FiltersLimits
 
-export interface StorageOffersAction extends
-  ContextDispatch<OFFERS_ACTION, StorageOffersPayload> {
-  type: OFFERS_ACTION
-}
+export type StorageOffersAction = ContextDispatch<
+  OFFERS_ACTION,
+  StorageOffersPayload
+>
 
 export interface StorageOffersReducer<P extends StorageOffersPayload> {
   (state: StorageOffersState, payload: P): StorageOffersState
