@@ -4,11 +4,12 @@ import React, {
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
+import { Web3Store } from '@rsksmart/rif-ui'
+
 import handProvidingFunds from 'assets/images/handProvidingFunds.svg'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import StakingCard from 'components/organisms/storage/myoffers/StakingCard'
 import Logger from 'utils/Logger'
-import { Web3Store } from '@rsksmart/rif-ui'
 import StorageOffersContext, { StorageOffersContextProps } from 'context/Services/storage/OffersContext'
 import OffersList from 'components/organisms/storage/myoffers/OffersList'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
@@ -25,9 +26,11 @@ import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 import { SetOfferPayload } from 'context/Market/storage/offerEditActions'
 import { StorageOffer } from 'models/marketItems/StorageItem'
+import ExpandableOffer from 'components/organisms/storage/myoffers/ExpandableOffer'
+import StakingDepositDialogue from '../../../organisms/storage/myoffers/StakingDepositDialogue'
+import StakingWithdrawDialogue from '../../../organisms/storage/myoffers/StakingWithdrawDialogue'
 import { StakesService } from '../../../../api/rif-marketplace-cache/storage/stakes'
 import StakingContract, { ZERO_ADDRESS } from '../../../../contracts/Staking'
-import StakingStakeDialogue from '../../../organisms/storage/myoffers/StakingStakeDialogue'
 import Web3 from 'web3'
 
 
@@ -81,9 +84,11 @@ const StorageMyOffersPage: FC = () => {
     fetchStakeTotal().catch(e => logger.error('Fetch Stake total error: ' + e.message))
   }, [])
 
+
+  // TODO add multicurrency support
   const fetchStakeTotal = async () => {
-    const [stakeRBTC] = await stakeApi._fetch({ account: account as string, token: ZERO_ADDRESS })
-    setStakeTotal(stakeRBTC.total)
+    const [stakeRBTC] = await stakeApi.fetch({ account: account as string, token: ZERO_ADDRESS })
+    setStakeTotal(stakeRBTC?.total || 0)
   }
 
   const onDepositHandler = async (amount: number, token: string) => {
@@ -198,7 +203,6 @@ const StorageMyOffersPage: FC = () => {
 
   return (
     <CenteredPageTemplate>
-
       <StakingCard
         balance={stakeTotal + ' RIF'}
         onAddFunds={() => setDepositOpened(true)}
@@ -224,16 +228,16 @@ const StorageMyOffersPage: FC = () => {
         onCancelOffer={handleOfferCancel}
         onEditOffer={handleEditOffer}
       />
-      <StakingStakeDialogue
+      <StakingDepositDialogue
         onDeposit={onDepositHandler}
         open={depositOpened}
         onClose={() => setDepositOpened(false)}
       />
-      {/*<StakingWithdrawDialogue*/}
-      {/*    onDeposit={onWithdrawHandler}*/}
-      {/*    open={withdrawalOpened}*/}
-      {/*    onClose={() => setWithdrawalOpened(false)}*/}
-      {/*/>*/}
+      <StakingWithdrawDialogue
+        onWithdraw={onWithdrawHandler}
+        open={withdrawalOpened}
+        onClose={() => setWithdrawalOpened(false)}
+      />
       {
         isProcessing
         && (
