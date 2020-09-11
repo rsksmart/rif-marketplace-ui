@@ -100,6 +100,17 @@ class StakingContract {
             .totalStakedFor(account, token)
             .call({ from })
     }
+
+    public totalStaked = async (
+        token: string = ZERO_ADDRESS, // native token
+        txOptions: TransactionOptions,
+    ): Promise<TransactionReceipt> => {
+        const { from } = txOptions
+
+        return this.contract.methods
+            .totalStaked(token)
+            .call({ from })
+    }
 }
 
 export default StakingContract
