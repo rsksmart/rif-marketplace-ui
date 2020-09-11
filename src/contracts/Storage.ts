@@ -52,17 +52,16 @@ class StorageContract {
       gasPrice,
     })
 
-    const { asciiToHex, padRight } = this.web3.utils
-    const message = [padRight(asciiToHex(peerId), 64)]
+    // TODO: send the PeerId in the message
+    logger.debug({ peerId })
+    const message = []
 
-    return (
-      this.contract.methods
-        .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, message)
-        .send({ from, gas, gasPrice }, (err, txHash) => {
-          if (err) return Promise.reject(err)
-          return waitForReceipt(txHash, this.web3)
-        })
-    )
+    return this.contract.methods
+      .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, message)
+      .send({ from, gas, gasPrice }, (err, txHash) => {
+        if (err) return Promise.reject(err)
+        return waitForReceipt(txHash, this.web3)
+      })
   }
 }
 
