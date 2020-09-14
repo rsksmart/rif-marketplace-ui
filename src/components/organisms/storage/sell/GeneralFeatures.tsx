@@ -12,13 +12,15 @@ import {
 import StorageListingContext from 'context/Services/storage/ListingContext'
 import { StorageListingContextProps } from 'context/Services/storage/interfaces'
 import { SetAvailableSizePayload, SetPeerIdPayload } from 'context/Services/storage/listingActions'
-import GetPeerIdModal from 'components/organisms/storage/sell/GetPeerIdModal'
+import PinnerInstructionsModal from 'components/organisms/storage/sell/PinnerInstructionsModal'
 
 const GeneralFeatures = () => {
-  const { state: { availableSize, system, peerId }, dispatch } = useContext<StorageListingContextProps>(StorageListingContext)
-  // TODO: move to context
-  const [modalPeerIdOpened, setModalPeerIdOpened] = useState(false)
+  const {
+    state: { availableSize, system, peerId },
+    dispatch,
+  } = useContext<StorageListingContextProps>(StorageListingContext)
 
+  const [modalPeerIdOpened, setModalPeerIdOpened] = useState(false)
   const handleModalOpen = () => setModalPeerIdOpened(true)
   const handleModalClose = () => setModalPeerIdOpened(false)
 
@@ -106,7 +108,7 @@ const GeneralFeatures = () => {
       </Grid>
       <Grid item xs={4} md={2}>
         <Button onClick={handleModalOpen} color="primary" rounded>Get Peer ID</Button>
-        <GetPeerIdModal open={modalPeerIdOpened} onClose={handleModalClose} />
+        <PinnerInstructionsModal open={modalPeerIdOpened} onClose={handleModalClose} />
       </Grid>
     </Grid>
   )

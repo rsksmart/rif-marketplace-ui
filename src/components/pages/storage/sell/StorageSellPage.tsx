@@ -124,7 +124,13 @@ const StorageSellPage = () => {
         availableSizeMB, periods, prices,
       } = transformOfferDataForContract(availableSize, planItems)
 
-      const setOfferReceipt = await storageContract.setOffer(availableSizeMB, periods, prices, peerId, { from: account })
+      const setOfferReceipt = await storageContract.setOffer(
+        availableSizeMB,
+        periods,
+        prices,
+        peerId,
+        { from: account },
+      )
       logger.info('setOffer receipt: ', setOfferReceipt)
 
       bcDispatch({
@@ -175,7 +181,7 @@ const StorageSellPage = () => {
     && system
     && peerId
 
-  const finalAction = account
+  const endHandler = account
     ? (
       <>
         <RUIButton
@@ -201,13 +207,18 @@ const StorageSellPage = () => {
 
   return (
     <CenteredPageTemplate>
-      <StakingCard className={classes.staking} balance="2048 RIF" onWithdrawFunds={() => { logger.info('withdraw action') }} onAddFunds={() => { logger.info('add funds action') }} />
+      <StakingCard
+        className={classes.staking}
+        balance="2048 RIF"
+        onWithdrawFunds={() => { logger.info('withdraw action') }}
+        onAddFunds={() => { logger.info('add funds action') }}
+      />
       <Typography gutterBottom variant="h5" color="primary">List your storage service</Typography>
       <Typography gutterBottom color="secondary" variant="subtitle1">
         Fill out the fields below to list your storage service. All information provided is meant to be true and correct.
       </Typography>
       <RoundedCard color="primary" className={classes.stepperContainer}>
-        <SellStepper finalAction={finalAction} />
+        <SellStepper endHandler={endHandler} />
       </RoundedCard>
       {
         isProcessing

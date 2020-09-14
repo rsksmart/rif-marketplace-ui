@@ -13,7 +13,7 @@ import GeneralFeatures from './GeneralFeatures'
 import PlanItemsList from './PlanItemsList'
 
 export interface SellStepperProps {
-  finalAction: ReactElement
+  endHandler: ReactElement
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -26,18 +26,15 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }))
 
-const SellStepper: FC<SellStepperProps> = ({ finalAction }) => {
+const SellStepper: FC<SellStepperProps> = ({ endHandler }) => {
   const classes = useStyles()
   const [activeStep, setActiveStep] = useState(0)
-  const { state: { availableSize, system, peerId } } = useContext<StorageListingContextProps>(StorageListingContext)
+  const {
+    state: { availableSize, system, peerId },
+  } = useContext<StorageListingContextProps>(StorageListingContext)
 
-  const handleNext = () => {
-    setActiveStep(1)
-  }
-
-  const handleBack = () => {
-    setActiveStep(0)
-  }
+  const handleNext = () => setActiveStep(1)
+  const handleBack = () => setActiveStep(0)
 
   return (
     <Stepper activeStep={activeStep} orientation="vertical">
@@ -74,7 +71,7 @@ const SellStepper: FC<SellStepperProps> = ({ finalAction }) => {
               >
                 Back
               </Button>
-              {finalAction}
+              {endHandler}
             </div>
           </div>
         </StepContent>
