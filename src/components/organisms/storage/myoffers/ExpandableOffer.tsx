@@ -9,7 +9,6 @@ import AccordionSummary from '@material-ui/core/AccordionSummary'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Divider from '@material-ui/core/Divider'
 import LabelWithValue from 'components/atoms/LabelWithValue'
-import Logger from 'utils/Logger'
 import { StorageOffer } from 'models/marketItems/StorageItem'
 // import ActiveContracts from './ActiveContracts'
 import CancelOfferDialogue from './CancelOfferDialogue'
@@ -19,6 +18,8 @@ export interface ExpandableOfferProps {
   offerName: string
   storageOffer: StorageOffer
   initiallyExpanded?: boolean
+  onCancelOffer: (offerId: string) => void
+  onEditOffer: (offerId: string) => void
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -50,23 +51,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const logger = Logger.getInstance()
-
 const ExpandableOffer: FC<ExpandableOfferProps> = ({
-  className = '', offerName, storageOffer, initiallyExpanded = false,
+  className = '', offerName, storageOffer, initiallyExpanded = false, onCancelOffer, onEditOffer,
 }) => {
   const classes = useStyles()
+  const { system, availableSizeGB, id: offerId } = storageOffer
   const [isExpanded, setIsExpanded] = useState(initiallyExpanded)
   const [cancelOfferOpen, setCancelOfferOpen] = useState(false)
   const handleChange = () => setIsExpanded(!isExpanded)
   const handleCancelOpen = () => setCancelOfferOpen(true)
   const handleCancelClose = () => setCancelOfferOpen(false)
-  // TODO: handle cancellation
-  const handleCancelation = () => logger.info('todo: handle offers cancellation')
-  // TODO: handle edit
-  const handleEditOffer = () => logger.info('todo: handle edit offer')
 
-  const { system, availableSizeGB } = storageOffer
+  const handleCancelation = () => onCancelOffer(offerId)
+
+  // TODO: handle edit
+  const handleEditOffer = () => onEditOffer(offerId)
+
   // TODO: once we get the agreements, calculate the remaining size
   const remainingSize = availableSizeGB
   return (
@@ -114,7 +114,11 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
               Edit offer
             </Button>
             <Button variant="outlined" rounded color="primary" onClick={handleCancelOpen}>Cancel offer</Button>
-            <CancelOfferDialogue open={cancelOfferOpen} onClose={handleCancelClose} onConfirmCancel={handleCancelation} />
+            <CancelOfferDialogue
+              open={cancelOfferOpen}
+              onClose={handleCancelClose}
+              onConfirmCancel={handleCancelation}
+            />
           </Grid>
           <Divider />
           <Grid container className={classes.activeContractsContainer}>

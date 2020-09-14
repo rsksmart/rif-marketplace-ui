@@ -63,6 +63,29 @@ class StorageContract {
         return waitForReceipt(txHash, this.web3)
       })
   }
+
+  public terminateOffer = async (
+    txOptions: TransactionOptions,
+  ): Promise<TransactionReceipt> => {
+    const { from } = txOptions
+
+    const gasPrice = await this.web3.eth.getGasPrice().catch((error: Error) => {
+      logger.error('error getting gas price, error:', error)
+      throw error
+    })
+
+    const gas = await this.web3.eth.estimateGas({
+      from,
+      gasPrice,
+    })
+
+    return this.contract.methods
+      .terminateOffer()
+      .send({ from, gas, gasPrice }, (err, txHash) => {
+        if (err) return Promise.reject(err)
+        return waitForReceipt(txHash, this.web3)
+      })
+  }
 }
 
 export default StorageContract
