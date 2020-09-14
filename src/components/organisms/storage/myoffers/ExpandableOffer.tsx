@@ -11,7 +11,7 @@ import Divider from '@material-ui/core/Divider'
 import LabelWithValue from 'components/atoms/LabelWithValue'
 import Logger from 'utils/Logger'
 import { StorageOffer } from 'models/marketItems/StorageItem'
-import ActiveContracts from './ActiveContracts'
+// import ActiveContracts from './ActiveContracts'
 import CancelOfferDialogue from './CancelOfferDialogue'
 
 export interface ExpandableOfferProps {
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderRadius: 15,
     },
   },
-  activeContracts: {
+  activeContractsContainer: {
     marginTop: theme.spacing(3),
   },
   editOffer: {
@@ -93,7 +93,7 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
             <LabelWithValue label="Listed Size" value={`${availableSizeGB} GB`} />
           </Grid>
           <Grid item sm={2}>
-            <Typography align="right" color="primary">
+            <Typography align="right" color="primary" variant="body2">
               {isExpanded ? 'Hide ' : 'View '}
               {' '}
               active contracts
@@ -117,7 +117,11 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
             <CancelOfferDialogue open={cancelOfferOpen} onClose={handleCancelClose} onConfirmCancel={handleCancelation} />
           </Grid>
           <Divider />
-          <ActiveContracts className={classes.activeContracts} />
+          <Grid container className={classes.activeContractsContainer}>
+            <Typography align="center" color="secondary">No active contracts yet</Typography>
+            {/* TODO: get active contracts of the offer */}
+            {/* <ActiveContracts /> */}
+          </Grid>
         </Grid>
       </AccordionDetails>
     </Accordion>
