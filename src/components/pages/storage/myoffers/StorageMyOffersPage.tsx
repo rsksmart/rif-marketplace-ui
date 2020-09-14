@@ -8,8 +8,8 @@ import StakingCard from 'components/organisms/storage/myoffers/StakingCard'
 import Logger from 'utils/Logger'
 import { Web3Store } from '@rsksmart/rif-ui'
 import StorageOffersContext, { StorageOffersContextProps } from 'context/Services/storage/OffersContext'
-// import { StorageOffer } from 'models/marketItems/StorageItem'
-// import Big from 'big.js'
+import { StorageOffer } from 'models/marketItems/StorageItem'
+import Big from 'big.js'
 import OffersList from 'components/organisms/storage/myoffers/OffersList'
 
 const logger = Logger.getInstance()
@@ -27,9 +27,10 @@ const StorageMyOffersPage: FC = () => {
   } = useContext(Web3Store)
 
   const {
-    state: {
-      listing: { items },
-    },
+    // TODO: use items when no need to mock data anymore
+    // state: {
+    //   listing: { items },
+    // },
     dispatch,
   } = useContext<StorageOffersContextProps>(StorageOffersContext)
 
@@ -45,23 +46,23 @@ const StorageMyOffersPage: FC = () => {
   }, [account, dispatch])
 
   // TODO: remove temporal mocked data
-  // const mockedOffers: StorageOffer[] = [
-  //   {
-  //     id: '1',
-  //     availableSizeGB: new Big(50),
-  //     averagePrice: 100,
-  //     location: 'Uruguay',
-  //     subscriptionOptions: [],
-  //     system: 'IPFS'
-  //   }, {
-  //     id: '2',
-  //     availableSizeGB: new Big(70),
-  //     averagePrice: 100,
-  //     location: 'Uruguay',
-  //     subscriptionOptions: [],
-  //     system: 'IPFS'
-  //   }
-  // ]
+  const mockedOffers: StorageOffer[] = [
+    {
+      id: '1',
+      availableSizeGB: new Big(50),
+      averagePrice: 100,
+      location: 'Uruguay',
+      subscriptionOptions: [],
+      system: 'IPFS',
+    }, {
+      id: '2',
+      availableSizeGB: new Big(70),
+      averagePrice: 100,
+      location: 'Uruguay',
+      subscriptionOptions: [],
+      system: 'IPFS',
+    },
+  ]
 
   return (
     <CenteredPageTemplate>
@@ -84,7 +85,7 @@ const StorageMyOffersPage: FC = () => {
           </Typography>
         </Grid>
       </Grid>
-      <OffersList items={items} />
+      <OffersList items={mockedOffers} />
     </CenteredPageTemplate>
   )
 }
