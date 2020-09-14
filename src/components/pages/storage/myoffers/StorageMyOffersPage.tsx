@@ -12,6 +12,7 @@ import { StorageOffer } from 'models/marketItems/StorageItem'
 import Big from 'big.js'
 import OffersList from 'components/organisms/storage/myoffers/OffersList'
 import AppContext, { AppContextProps } from 'context/App/AppContext'
+import StorageContract from 'contracts/Storage'
 
 const logger = Logger.getInstance()
 
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const StorageMyOffersPage: FC = () => {
   const classes = useStyles()
   const {
-    state: { account },
+    state: { account, web3 },
   } = useContext(Web3Store)
 
   const {
@@ -52,6 +53,25 @@ const StorageMyOffersPage: FC = () => {
     },
   } = useContext<AppContextProps>(AppContext)
 
+  const handleOfferCancel = async (offerId: string) => {
+    // without web3 or account, the user wouldn't be able to perform this action
+    if (!web3 || !account) return
+    const storageContract = StorageContract.getInstance(web3)
+    const terminateOfferRecepipt = await storageContract.terminateOffer({ from: account })
+    logger.debug({ terminateOfferRecepipt })
+    logger.debug({ offerId })
+    // TODO: set tx hash and wait for confirmations
+    //   bcDispatch({
+    //     type: 'SET_TX_HASH',
+    //     payload: {
+    //       txHash: setOfferReceipt.transactionHash,
+    //     } as AddTxPayload,
+    //   })
+    // }
+  }
+
+  // TODO: handle edit offer
+  const handleEditOffer = (offerId: string) => logger.debug(`todo: handle edit offer ${offerId}`)
 
   // TODO: remove temporal mocked data
   const mockedOffers: StorageOffer[] = [
@@ -93,7 +113,12 @@ const StorageMyOffersPage: FC = () => {
           </Typography>
         </Grid>
       </Grid>
-      <OffersList items={mockedOffers} isLoading={isLoadingItems} />
+      <OffersList
+        items={mockedOffers}
+        isLoading={isLoadingItems}
+        onCancelOffer={handleOfferCancel}
+        onEditOffer={handleEditOffer}
+      />
     </CenteredPageTemplate>
   )
 }
