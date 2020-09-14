@@ -68,35 +68,37 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
     if (onPlanSaved) onPlanSaved()
   }
 
-  const ActionButton = () => (editMode
-    ? (
+  const ActionButton = () => {
+    if (!editMode) {
+      return (
+        <Button
+          color="primary"
+          variant="outlined"
+          rounded
+          onClick={handleOnAddClick}
+          disabled={pricePerGb <= 0 || usedPeriodsPerCurrency[currency]?.includes(timePeriod)}
+        >
+          {' '}
+          Add storage plan
+        </Button>
+      )
+    }
+    const hasChanged = planItem?.timePeriod !== timePeriod || planItem?.currency !== currency
+    const currencyAndPeriodInUse = usedPeriodsPerCurrency[currency].includes(timePeriod)
+    // the period or currency have changed and the selected option is in use
+    const isDisabled = pricePerGb <= 0 || (hasChanged && currencyAndPeriodInUse)
+
+    return (
       <TooltipIconButton
         tooltipTitle="Save plan"
         icon={<SaveIcon />}
         iconButtonProps={{
-          disabled: pricePerGb <= 0 || (
-            (
-              // the period or currency have changed and the selected option is in use
-              planItem?.timePeriod !== timePeriod || planItem?.currency !== currency
-            )
-            && usedPeriodsPerCurrency[currency].includes(timePeriod)
-          ),
+          disabled: isDisabled,
           onClick: handleOnSaveClick,
         }}
       />
     )
-    : (
-      <Button
-        color="primary"
-        variant="outlined"
-        rounded
-        onClick={handleOnAddClick}
-        disabled={pricePerGb <= 0 || usedPeriodsPerCurrency[currency]?.includes(timePeriod)}
-      >
-        {' '}
-        Add storage plan
-      </Button>
-    ))
+  }
 
   return (
     <>

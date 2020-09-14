@@ -17,16 +17,10 @@ export interface ListingReducer<P extends ListingPayload> {
 
 const calculateUsedPeriodsPerCurrency = (
   planItems: StoragePlanItem[],
-): Record<string, []> => {
-  const usedPeriodsPerCurrency = {}
-  planItems.forEach((planItem) => {
-    usedPeriodsPerCurrency[planItem.currency] = [
-      ...(usedPeriodsPerCurrency[planItem.currency] || []),
-      planItem.timePeriod,
-    ]
-  })
-  return usedPeriodsPerCurrency
-}
+): Record<string, []> => planItems.reduce((acc, item) => {
+  acc[item.currency] = [...(acc[item.currency] || []), item.timePeriod]
+  return acc
+}, {})
 
 export const listingActions: ListingActions = {
   ADD_ITEM: (state: ListingState, payload: AddItemPayload) => {
