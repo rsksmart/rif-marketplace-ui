@@ -11,6 +11,7 @@ import StorageOffersContext, { StorageOffersContextProps } from 'context/Service
 import { StorageOffer } from 'models/marketItems/StorageItem'
 import Big from 'big.js'
 import OffersList from 'components/organisms/storage/myoffers/OffersList'
+import AppContext, { AppContextProps } from 'context/App/AppContext'
 
 const logger = Logger.getInstance()
 
@@ -44,6 +45,13 @@ const StorageMyOffersPage: FC = () => {
       })
     }
   }, [account, dispatch])
+
+  const {
+    state: {
+      loaders: { data: isLoadingItems },
+    },
+  } = useContext<AppContextProps>(AppContext)
+
 
   // TODO: remove temporal mocked data
   const mockedOffers: StorageOffer[] = [
@@ -85,7 +93,7 @@ const StorageMyOffersPage: FC = () => {
           </Typography>
         </Grid>
       </Grid>
-      <OffersList items={mockedOffers} />
+      <OffersList items={mockedOffers} isLoading={isLoadingItems} />
     </CenteredPageTemplate>
   )
 }
