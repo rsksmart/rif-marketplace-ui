@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react'
+import React, { FC, useContext, useEffect } from 'react'
 import StorageFilters from 'components/organisms/filters/storage/StorageFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { TableHeaders, MarketplaceItem } from 'components/templates/marketplace/Marketplace'
@@ -33,6 +33,13 @@ const StorageOffersPage: FC = () => {
     dispatch,
   } = useContext<StorageOffersContextProps>(StorageOffersContext)
   // const history = useHistory()
+
+  useEffect(() => () => {
+    dispatch({
+      type: 'CLEAN_UP',
+      payload: {},
+    })
+  }, [dispatch])
 
   const collection = items
     .map<MarketplaceItem>((item) => {

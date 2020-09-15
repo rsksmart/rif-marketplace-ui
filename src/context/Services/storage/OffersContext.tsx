@@ -64,7 +64,7 @@ export const initialState: StorageOffersState = {
   listing: {
     items: [],
   },
-  needsRefresh: false,
+  needsRefresh: true,
 }
 
 const StorageOffersContext = React.createContext({} as StorageOffersState as any)
