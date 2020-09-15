@@ -8,8 +8,6 @@ import StakingCard from 'components/organisms/storage/myoffers/StakingCard'
 import Logger from 'utils/Logger'
 import { Web3Store } from '@rsksmart/rif-ui'
 import StorageOffersContext, { StorageOffersContextProps } from 'context/Services/storage/OffersContext'
-import { StorageOffer } from 'models/marketItems/StorageItem'
-import Big from 'big.js'
 import OffersList from 'components/organisms/storage/myoffers/OffersList'
 import AppContext, { AppContextProps } from 'context/App/AppContext'
 import StorageContract from 'contracts/Storage'
@@ -29,29 +27,34 @@ const StorageMyOffersPage: FC = () => {
   } = useContext(Web3Store)
 
   const {
+    state: {
+      loaders: { data: isLoadingItems },
+    },
+  } = useContext<AppContextProps>(AppContext)
+  const {
     // TODO: use items when no need to mock data anymore
-    // state: {
-    //   listing: { items },
-    // },
+    state: {
+      listing: { items },
+    },
     dispatch,
   } = useContext<StorageOffersContextProps>(StorageOffersContext)
 
   useEffect(() => {
     // TODO: handle no account - create a reusable HOC?
-    // TODO: handle is loading
     if (account) {
       dispatch({
         type: 'FILTER',
-        payload: { provider: account },
+        payload: { name: account },
       })
     }
   }, [account, dispatch])
 
-  const {
-    state: {
-      loaders: { data: isLoadingItems },
-    },
-  } = useContext<AppContextProps>(AppContext)
+  useEffect(() => () => {
+    dispatch({
+      type: 'CLEAN_UP',
+      payload: {},
+    })
+  }, [dispatch])
 
   const handleOfferCancel = async (offerId: string) => {
     // without web3 or account, the user wouldn't be able to perform this action
@@ -72,25 +75,6 @@ const StorageMyOffersPage: FC = () => {
 
   // TODO: handle edit offer
   const handleEditOffer = (offerId: string) => logger.debug(`todo: handle edit offer ${offerId}`)
-
-  // TODO: remove temporal mocked data
-  const mockedOffers: StorageOffer[] = [
-    {
-      id: '1',
-      availableSizeGB: new Big(50),
-      averagePrice: 100,
-      location: 'Uruguay',
-      subscriptionOptions: [],
-      system: 'IPFS',
-    }, {
-      id: '2',
-      availableSizeGB: new Big(70),
-      averagePrice: 100,
-      location: 'Uruguay',
-      subscriptionOptions: [],
-      system: 'IPFS',
-    },
-  ]
 
   return (
     <CenteredPageTemplate>
@@ -113,12 +97,25 @@ const StorageMyOffersPage: FC = () => {
           </Typography>
         </Grid>
       </Grid>
-      <OffersList
-        items={mockedOffers}
-        isLoading={isLoadingItems}
-        onCancelOffer={handleOfferCancel}
-        onEditOffer={handleEditOffer}
-      />
+      {/* TODO: create generic component to show when no account */}
+      {
+        !!account
+        && (
+        <OffersList
+          items={items}
+          isLoading={isLoadingItems}
+          onCancelOffer={handleOfferCancel}
+          onEditOffer={handleEditOffer}
+        />
+        )
+      }
+      {
+        !account && (
+        <Grid container>
+          <Typography color="secondary">Please, connect your wallet to see your offers</Typography>
+        </Grid>
+        )
+      }
     </CenteredPageTemplate>
   )
 }
