@@ -1,12 +1,17 @@
 import { ContextDispatch } from 'context/storeUtils/interfaces'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
-import { OffersListing, StorageOffersState } from './OffersContext'
+import {
+  initialState,
+  OffersListing,
+  StorageOffersState,
+} from './OffersContext'
 
 export type OFFERS_ACTION =
   | 'FILTER'
   | 'SET_LISTING'
   | 'REFRESH'
   | 'UPDATE_LIMITS'
+  | 'CLEAN_UP'
 
 export type ListingPayload = Pick<OffersListing, 'items'>
 
@@ -37,6 +42,7 @@ export type Actions = {
   REFRESH: StorageOffersReducer<RefreshPayload>
   FILTER: StorageOffersReducer<FiltersLimits>
   UPDATE_LIMITS: StorageOffersReducer<LimitsPayload>
+  CLEAN_UP: StorageOffersReducer<{}>
 }
 
 export const storageOffersActions: Actions = {
@@ -64,4 +70,5 @@ export const storageOffersActions: Actions = {
       ...payload,
     },
   }),
+  CLEAN_UP: (_, __) => initialState,
 }
