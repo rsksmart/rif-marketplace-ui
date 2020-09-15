@@ -57,27 +57,19 @@ const useTabItemStyles = makeStyles((
 }))
 
 export type StoragePinTabsProps = Modify<TabsProps, {
+  value: number
   onChange: (event: React.ChangeEvent<{}>, value: any) => void
 }>
 
-const StoragePinTabs: FC<StoragePinTabsProps> = ({ onChange, ...props }) => {
+const StoragePinTabs: FC<StoragePinTabsProps> = ({ ...props }) => {
   const tabsStylesClasses = useTabsStyles()
   const tabItemStylesClasses = useTabItemStyles()
 
-  const [value, setValue] = useState(0)
-
-  const onChangeHandle = (event: React.ChangeEvent<{}>, newValue: any): void => {
-    setValue(newValue)
-    onChange(event, newValue)
-  }
-
   return (
     <Tabs
-      value={value}
       classes={tabsStylesClasses}
       indicatorColor="primary"
       textColor="primary"
-      onChange={onChangeHandle}
       {...props}
     >
       <Tab classes={tabItemStylesClasses} label="Upload file" />

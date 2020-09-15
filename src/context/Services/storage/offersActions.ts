@@ -16,7 +16,11 @@ export interface RefreshPayload {
 export type FiltersLimits = Partial<StorageOffersFilters>
 export type LimitsPayload = Pick<StorageOffersFilters, 'price' | 'size'>
 
-export type OrderPayload = ServiceOrder<StorageItem>
+export type OrderPayload = Pick<ServiceOrder<StorageItem>, 'item'> & {
+  contentName?: string
+  contentSize?: string
+  contentHash?: string
+}
 
 export type StorageOffersPayload =
   ListingPayload |
@@ -70,6 +74,6 @@ export const storageOffersActions: Actions = {
   }),
   CLEAN_UP: (_, __) => initialState,
   SET_ORDER: (state, payload) => ({
-    ...state, order: payload,
+    ...state, order: { ...payload, isOutdated: false, isProcessing: false },
   }),
 }
