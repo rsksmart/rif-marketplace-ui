@@ -15,6 +15,8 @@ const useStylesRifCard = makeStyles((theme: Theme) => ({
     width: '100%',
   },
   contentContainer: {
+    width: '395px',
+    height: '276px',
     margin: '50px',
     marginTop: '10px',
     background: '#FFF',
