@@ -15,14 +15,15 @@ import { StorageSellContextProps } from 'context/Services/storage/interfaces'
 import { SetAvailableSizePayload, SetPeerIdPayload } from 'context/Services/storage/storageSellActions'
 
 const GeneralFeatures = () => {
-  const { state: {
-    availableSize, system, peerId
-  }, dispatch } = useContext<StorageSellContextProps>(StorageSellContext)
+  const {
+    state: {
+      availableSize, system, peerId,
+    }, dispatch,
+  } = useContext<StorageSellContextProps>(StorageSellContext)
 
   const [modalPeerIdOpened, setModalPeerIdOpened] = useState(false)
   const handleModalOpen = () => setModalPeerIdOpened(true)
   const handleModalClose = () => setModalPeerIdOpened(false)
-
 
   const onSizeChange = ({ target: { value } }) => {
     dispatch({

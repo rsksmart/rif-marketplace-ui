@@ -1,5 +1,5 @@
 import { ContextDispatch, ContextPayload } from 'context/storeUtils/interfaces'
-import { StoragePlanItem, TimePeriodEnum } from './interfaces'
+import { StoragePlanItem } from './interfaces'
 import { StorageSellReducer } from './storageSellReducer'
 
 export type STORAGE_SELL_ACTION =
