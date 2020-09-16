@@ -42,19 +42,19 @@ class StorageContract {
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
 
+    // TODO: send the PeerId in the message
+    logger.debug({ peerId })
+    const message = []
+
     const gasPrice = await this.web3.eth.getGasPrice().catch((error: Error) => {
       logger.error('error getting gas price, error:', error)
       throw error
     })
 
-    const gas = await this.web3.eth.estimateGas({
-      from,
-      gasPrice,
-    })
-
-    // TODO: send the PeerId in the message
-    logger.debug({ peerId })
-    const message = []
+    const estimatedGas = await this.contract.methods
+      .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, message)
+      .estimateGas({ from, gasPrice })
+    const gas = Math.floor(estimatedGas * 1.1)
 
     return this.contract.methods
       .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, message)
@@ -74,10 +74,10 @@ class StorageContract {
       throw error
     })
 
-    const gas = await this.web3.eth.estimateGas({
-      from,
-      gasPrice,
-    })
+    const estimatedGas = await this.contract.methods
+      .terminateOffer()
+      .estimateGas({ from, gasPrice })
+    const gas = Math.floor(estimatedGas * 1.1)
 
     return this.contract.methods
       .terminateOffer()
