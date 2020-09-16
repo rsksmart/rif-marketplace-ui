@@ -4,7 +4,11 @@ import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
-import waitForReceipt, { TransactionOptions } from './utils'
+import waitForReceipt, {
+  encodeHash,
+  prefixArray,
+  TransactionOptions,
+} from './utils'
 import { storageAddress } from './config'
 
 const logger = Logger.getInstance()
@@ -42,9 +46,10 @@ class StorageContract {
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
 
-    // TODO: send the PeerId in the message
-    logger.debug({ peerId })
-    const message = []
+    const encodedPeerId = encodeHash(peerId).map((el) => el.replace('0x', ''))
+    const prefixedMsg = prefixArray(encodedPeerId, '01', 64).map(
+      (el) => `0x${el}`,
+    )
 
     const gasPrice = await this.web3.eth.getGasPrice().catch((error: Error) => {
       logger.error('error getting gas price, error:', error)
@@ -52,12 +57,12 @@ class StorageContract {
     })
 
     const estimatedGas = await this.contract.methods
-      .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, message)
+      .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, prefixedMsg)
       .estimateGas({ from, gasPrice })
     const gas = Math.floor(estimatedGas * 1.1)
 
     return this.contract.methods
-      .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, message)
+      .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, prefixedMsg)
       .send({ from, gas, gasPrice }, (err, txHash) => {
         if (err) return Promise.reject(err)
         return waitForReceipt(txHash, this.web3)
