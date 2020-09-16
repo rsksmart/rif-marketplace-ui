@@ -1,8 +1,7 @@
 import { ContextDispatch } from 'context/storeUtils/interfaces'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
-import { StorageItem } from 'models/marketItems/StorageItem'
+import { StorageOrder } from './interfaces'
 import { initialState, OffersListing, StorageOffersState } from './OffersContext'
-import { ServiceOrder } from '../interfaces'
 
 export type OFFERS_ACTION = 'FILTER' | 'SET_LISTING' | 'REFRESH' | 'UPDATE_LIMITS' | 'SET_ORDER'
   | 'CLEAN_UP'
@@ -16,11 +15,7 @@ export interface RefreshPayload {
 export type FiltersLimits = Partial<StorageOffersFilters>
 export type LimitsPayload = Pick<StorageOffersFilters, 'price' | 'size'>
 
-export type OrderPayload = Pick<ServiceOrder<StorageItem>, 'item'> & {
-  contentName?: string
-  contentSize?: string
-  contentHash?: string
-}
+export type OrderPayload = Omit<StorageOrder, 'isProcessing'>
 
 export type StorageOffersPayload =
   ListingPayload |

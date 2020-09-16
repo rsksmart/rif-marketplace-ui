@@ -1,15 +1,15 @@
-import { Dispatch } from 'react'
 import networkConfig from 'config'
-
 import { ContextState } from 'context/storeUtils/interfaces'
-import { StorageItem } from 'models/marketItems/StorageItem'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
+import { BillingPlan, StorageItem, StorageOffer } from 'models/marketItems/StorageItem'
+import { Dispatch } from 'react'
+import { Modify } from 'utils/typeUtils'
 import { tokenDisplayNames } from '../../../api/rif-marketplace-cache/rates/xr'
-import { ServiceState } from '../interfaces'
-import { STORAGE_SELL_ACTION, StorageSellAction } from './storageSellActions'
+import { ServiceOrder, ServiceState } from '../interfaces'
 import { OFFERS_ACTION } from './offersActions'
-import { ContextName as SellContextName } from './StorageSellContext'
 import { ContextName as OffersContextName } from './OffersContext'
+import { StorageSellAction, STORAGE_SELL_ACTION } from './storageSellActions'
+import { ContextName as SellContextName } from './StorageSellContext'
 
 export type StorageContextNames = OffersContextName | SellContextName
 
@@ -60,3 +60,14 @@ export const TokenAddressees = {
   [tokenDisplayNames.rbtc]: ZeroAddress, // we are using zero address for native token is Storage Manager SC
   [tokenDisplayNames.rif]: networkConfig.contractAddresses.rif,
 }
+export type PinnedContent = {
+  contentName: string
+  contentSize: string
+  contentHash: string
+}
+
+type OrderItem = Modify<Omit<StorageOffer, 'subscriptionOptions'>, {
+  plan?: BillingPlan
+}>
+
+export type StorageOrder = Omit<ServiceOrder<OrderItem>, 'isOutdated'> & Partial<PinnedContent>
