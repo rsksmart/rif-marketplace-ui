@@ -1,9 +1,10 @@
 import { Dispatch } from 'react'
 
 import { ContextState } from 'context/storeUtils/interfaces'
-import { StorageItem } from 'models/marketItems/StorageItem'
+import { BillingPlan, StorageItem, StorageOffer } from 'models/marketItems/StorageItem'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
-import { ServiceState } from '../interfaces'
+import { Modify } from 'utils/typeUtils'
+import { ServiceOrder, ServiceState } from '../interfaces'
 import { LISTING_ACTION, ListingAction } from './listingActions'
 import { OFFERS_ACTION } from './offersActions'
 import { ContextName as ListingContextName } from './ListingContext'
@@ -44,5 +45,17 @@ export enum TimePeriodEnum {
   Weekly = 7,
   Monthly = 30,
 }
+
+export type PinnedContent = {
+  contentName: string
+  contentSize: string
+  contentHash: string
+}
+
+type OrderItem = Modify<Omit<StorageOffer, 'subscriptionOptions'>, {
+  plan?: BillingPlan
+}>
+
+export type StorageOrder = Omit<ServiceOrder<OrderItem>, 'isOutdated'> & Partial<PinnedContent>
 
 export type STORAGE_ACTION = LISTING_ACTION | OFFERS_ACTION

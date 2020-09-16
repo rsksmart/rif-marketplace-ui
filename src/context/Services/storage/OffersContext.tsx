@@ -16,7 +16,8 @@ import {
   storageOffersActions, StorageOffersPayload,
   StorageOffersReducer, StorageOffersAction,
 } from './offersActions'
-import { ServiceState, ServiceOrder } from '../interfaces'
+import { ServiceState } from '../interfaces'
+import { StorageOrder } from './interfaces'
 
 export type ContextName = 'storage_offers'
 
@@ -29,7 +30,7 @@ export type ContextLimits = Pick<StorageOffersFilters, 'price' | 'size'>
 
 export type StorageOffersState = Modify<ServiceState<StorageItem>, {
   listing: OffersListing
-  order?: ServiceOrder<StorageItem>
+  order?: StorageOrder
   filters: ContextFilters
   limits: ContextLimits
 }>
