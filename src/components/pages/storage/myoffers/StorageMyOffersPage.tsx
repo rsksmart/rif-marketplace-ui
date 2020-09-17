@@ -20,6 +20,7 @@ import ROUTES from 'routes'
 import { useHistory } from 'react-router-dom'
 import { LoadingPayload } from 'context/App/appActions'
 import { UIError } from 'models/UIMessage'
+import LoginCard from 'components/hoc/LoginCard'
 
 const logger = Logger.getInstance()
 
@@ -140,6 +141,9 @@ const StorageMyOffersPage: FC = () => {
 
   return (
     <CenteredPageTemplate>
+
+      <LoginCard />
+
       <StakingCard
         balance="2048 RIF"
         onAddFunds={() => logger.info('Add funds clicked')}
