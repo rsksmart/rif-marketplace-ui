@@ -9,8 +9,8 @@ import { WithSpinner } from '@rsksmart/rif-ui'
 
 export interface OffersListProps {
   items: StorageOffer[]
-  onCancelOffer: (offerId: string) => void
-  onEditOffer: (offerId: string) => void
+  onCancelOffer: () => void
+  onEditOffer: () => void
 }
 
 const useStyles = makeStyles((theme: Theme) => ({

@@ -136,7 +136,7 @@ const StorageMyOffersPage: FC = () => {
   }
 
   // TODO: handle edit offer
-  const handleEditOffer = (offerId: string) => logger.debug(`todo: handle edit offer ${offerId}`)
+  const handleEditOffer = () => logger.debug('todo: handle edit offer')
 
   return (
     <CenteredPageTemplate>
