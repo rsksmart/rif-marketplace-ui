@@ -81,10 +81,8 @@ const StorageMyOffersPage: FC = () => {
   }, [account, dispatch])
 
   useEffect(() => {
-    if (isPendingConfirm && !isProcessing) {
-      // Post-confirmations handle
-      // TODO: create new route and page for my offers cancel
-      history.replace(ROUTES.STORAGE.MYOFFERS.BASE)
+    if (isPendingConfirm && !isProcessing) { // Post-confirmations handle
+      history.replace(ROUTES.STORAGE.MYOFFERS.CANCEL.DONE)
     }
   }, [isPendingConfirm, history, isProcessing])
 
