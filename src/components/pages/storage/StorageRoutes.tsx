@@ -17,6 +17,7 @@ import {
 } from '.'
 import { NotFound } from '..'
 import StorageSellDone from './sell/StorageSellDone'
+import StorageMyOffersCancelled from './myoffers/StorageMyOffersCancelled'
 
 const TABS: StyledNavTabProps[] = [
   {
@@ -91,6 +92,7 @@ const StorageRoutes = () => {
                 </Switch>
               </StorageOffersContextProvider>
             </Route>
+            <Route exact path={ROUTES.STORAGE.MYOFFERS.CANCEL.DONE} component={StorageMyOffersCancelled} />
             <Route component={NotFound} />
           </Switch>
         </TabsTemplate>
