@@ -18,8 +18,8 @@ export interface ExpandableOfferProps {
   offerName: string
   storageOffer: StorageOffer
   initiallyExpanded?: boolean
-  onCancelOffer: (offerId: string) => void
-  onEditOffer: (offerId: string) => void
+  onCancelOffer: () => void
+  onEditOffer: () => void
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -55,7 +55,7 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
   className = '', offerName, storageOffer, initiallyExpanded = false, onCancelOffer, onEditOffer,
 }) => {
   const classes = useStyles()
-  const { system, availableSizeGB, id: offerId } = storageOffer
+  const { system, availableSizeGB } = storageOffer
   const [isExpanded, setIsExpanded] = useState(initiallyExpanded)
   const [cancelOfferOpen, setCancelOfferOpen] = useState(false)
   const handleChange = () => setIsExpanded(!isExpanded)
@@ -64,11 +64,11 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
 
   const handleCancelation = () => {
     setCancelOfferOpen(false)
-    onCancelOffer(offerId)
+    onCancelOffer()
   }
 
   // TODO: handle edit
-  const handleEditOffer = () => onEditOffer(offerId)
+  const handleEditOffer = () => onEditOffer()
 
   // TODO: once we get the agreements, calculate the remaining size
   const remainingSize = availableSizeGB
