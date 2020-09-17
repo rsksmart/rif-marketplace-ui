@@ -62,7 +62,10 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
   const handleCancelOpen = () => setCancelOfferOpen(true)
   const handleCancelClose = () => setCancelOfferOpen(false)
 
-  const handleCancelation = () => onCancelOffer(offerId)
+  const handleCancelation = () => {
+    setCancelOfferOpen(false)
+    onCancelOffer(offerId)
+  }
 
   // TODO: handle edit
   const handleEditOffer = () => onEditOffer(offerId)
