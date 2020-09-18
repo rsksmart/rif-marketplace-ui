@@ -26,7 +26,7 @@ export interface MarketState extends ContextState {
   }
 }
 
-interface MarketContextProps {
+export interface MarketContextProps {
   state: MarketState
   dispatch: Dispatch<MarketAction>
 }
