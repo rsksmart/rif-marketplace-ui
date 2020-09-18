@@ -1,3 +1,4 @@
+import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
 import { Big } from 'big.js'
 import { Item } from 'models/Market'
 
@@ -8,12 +9,10 @@ export enum PeriodInSeconds {
   Monthly = 2592000
 }
 
-export type Currencies = 'RBTC'
-
 export interface BillingPlan {
   period: SubscriptionPeriod
   price: Big
-  currency: Currencies
+  currency: SupportedTokens
 }
 
 export interface StorageOffer extends Item {

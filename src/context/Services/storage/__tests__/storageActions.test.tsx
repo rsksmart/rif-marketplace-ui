@@ -7,7 +7,7 @@ import { initialState, StorageOffersState } from '../OffersContext'
 
 const FAKE_BILLING_PLAN: BillingPlan[] = [
   {
-    currency: 'RBTC',
+    currency: 'rbtc',
     period: PeriodInSeconds[PeriodInSeconds.Daily],
     price: Big(10).pow(18),
   },
