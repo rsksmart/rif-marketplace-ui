@@ -8,8 +8,8 @@ import {
   TextFieldProps, Typography,
 } from '@material-ui/core'
 import { Button, colors } from '@rsksmart/rif-ui'
+import { Big } from 'big.js'
 import { SupportedTokens, tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
-import Big from 'big.js'
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
 import RoundedCard from 'components/atoms/RoundedCard'
@@ -28,6 +28,8 @@ import { BillingPlan, PeriodInSeconds, StorageOffer } from 'models/marketItems/S
 import React, {
   ChangeEvent, useContext, useEffect, useState,
 } from 'react'
+import { useHistory } from 'react-router-dom'
+import ROUTES from 'routes'
 
 const pinTabUploader = (
   <>
@@ -130,7 +132,6 @@ const RifSelector = ({
   <Select
     labelId={`${id}-select`}
     id={`${id}-select`}
-    // disabled={options.length <= 1}
     {...props}
   >
     {options.map((option, i) => (
@@ -148,7 +149,13 @@ const PlanOption = ({ plan, xr }: {plan: BillingPlan, xr: { fiat: string, rate: 
   const { currency, period, price } = plan
   const { fiat, rate } = xr
   return (
-    <GridRow wrap="nowrap" key={currency + period + price}>
+    <GridRow
+      wrap="nowrap"
+      key={currency + period + price}
+      style={{
+        paddingBlockEnd: '0em',
+      }}
+    >
       <GridItem>
         <Typography variant="subtitle2">{period}</Typography>
       </GridItem>
@@ -167,11 +174,12 @@ const PlanOption = ({ plan, xr }: {plan: BillingPlan, xr: { fiat: string, rate: 
 
 const StorageOffersCheckoutPage = () => {
   const classes = useStyles()
+  const history = useHistory()
   const {
-    state: {
-      // order,
-      // listing
-    },
+    // state: {
+    //   order,
+    //   listing,
+    // },
     dispatch,
   } = useContext(StorageOffersContext)
   const {
@@ -245,7 +253,7 @@ const StorageOffersCheckoutPage = () => {
   const [currentEndDate, setCurrentEndDate] = useState('')
 
   const currentToken = availableTokens[currentCurrencyOption]
-  const currentRate = crypto[currentToken].rate
+  const currentRate = crypto[currentToken]?.rate
 
   const changeCurrencyHandle = (_: unknown, { props: { value } }): void => {
     setCurrentCurrencyOption(value)
@@ -275,12 +283,13 @@ const StorageOffersCheckoutPage = () => {
   })
 
   const details = order && {
-    'CONTENT SIZE': order.contentSize?.replace(/\w/, ''),
+    'CONTENT SIZE': order.contentSize?.replace(/[a-zA-Z]+/g, ''),
     'CURRENCY TO PAY': <RifSelector
       id="currency"
       value={currentCurrencyOption}
       options={availableTokens.map((symbol: SupportedTokens) => tokenDisplayNames[symbol])}
       onChange={changeCurrencyHandle}
+      disabled={availableTokens.length <= 1}
     />,
     'SUBSCRIPTION PERIOD': <RifSelector
       id="plan"
@@ -309,9 +318,9 @@ const StorageOffersCheckoutPage = () => {
   }
 
   const [pinType, setPinType] = useState(0)
-  const [contentName, setContentName] = useState('TESST')
-  const [contentSize, setContentSize] = useState('1')
-  const [contentHash, setContentHash] = useState('0xFACE0FF')
+  const [contentName, setContentName] = useState('')
+  const [contentSize, setContentSize] = useState('')
+  const [contentHash, setContentHash] = useState('')
 
   const handlePinTypeChange = (
     _: React.ChangeEvent<{}>, value: number,
@@ -341,6 +350,11 @@ const StorageOffersCheckoutPage = () => {
     currentPlanOption,
     currentPeriodsCount,
   ])
+
+  if (!order) {
+    history.replace(ROUTES.STORAGE.BUY.BASE)
+    return null
+  }
 
   return (
     <CheckoutPageTemplate
@@ -481,7 +495,7 @@ const StorageOffersCheckoutPage = () => {
                         <TableBody>
                           {Object.keys(details).map((key) => (
                             <TableRow key={key}>
-                              <TableCell className={classes.detailKey}><Typography variant="subtitle2">{key}</Typography></TableCell>
+                              <TableCell className={classes.detailKey}><Typography variant="body2">{key}</Typography></TableCell>
                               <TableCell className={classes.detailValue}>{details[key]}</TableCell>
                             </TableRow>
                           ))}
