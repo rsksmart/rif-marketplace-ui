@@ -46,7 +46,7 @@ const LoginCard: FC<LoginCardProps> = (props) => {
             <Typography color="secondary" align="center">{contentText}</Typography>
           </Grid>
           <Grid container justify="center">
-            <Login />
+            <Login modalInitiallyOpened />
           </Grid>
         </Grid>
       </RoundedCard>
