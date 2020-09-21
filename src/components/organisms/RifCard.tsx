@@ -1,10 +1,9 @@
-import {
-  makeStyles, Theme, CardProps, Card, Grid, CardContent, CardActions, CardActionArea,
-} from '@material-ui/core'
 import React, { FC } from 'react'
+import {
+  Card, CardActions, CardContent, CardProps, makeStyles, Theme,
+} from '@material-ui/core'
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
-import { Button } from '@rsksmart/rif-ui'
 
 const useStylesRifCard = makeStyles((theme: Theme) => ({
   card: {

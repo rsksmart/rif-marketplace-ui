@@ -1,5 +1,5 @@
 import {
-  Box, makeStyles, MenuItem, Select, Step, StepLabel, Stepper,
+  Box, makeStyles, Step, StepLabel, Stepper,
   Table,
   TableBody,
   TableCell,
@@ -8,7 +8,10 @@ import {
   TextFieldProps, Typography,
 } from '@material-ui/core'
 import { Button, colors } from '@rsksmart/rif-ui'
-import { Big } from 'big.js'
+import React, {
+  ChangeEvent, useContext, useEffect, useState,
+} from 'react'
+import { useHistory } from 'react-router-dom'
 import { SupportedTokens, tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
@@ -17,18 +20,15 @@ import { CombinedPriceCell } from 'components/molecules'
 import DropZone from 'components/molecules/DropZone'
 import GridRow from 'components/molecules/storage/buy/GridRow'
 import LabelWithValue from 'components/molecules/storage/buy/LabelWithValue'
+import PlanOption from 'components/molecules/storage/buy/PlanOption'
+import RifSelect from 'components/molecules/storage/buy/RifSelect'
 import RifCard from 'components/organisms/RifCard'
 import StoragePinTabs from 'components/organisms/storage/buy/StoragePinTabs'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
-import { StorageOrder } from 'context/Services/storage/interfaces'
 import { OrderPayload } from 'context/Services/storage/offersActions'
-import StorageOffersContext, { OffersListing } from 'context/Services/storage/OffersContext'
-import { BillingPlan, PeriodInSeconds, StorageOffer } from 'models/marketItems/StorageItem'
-import React, {
-  ChangeEvent, useContext, useEffect, useState,
-} from 'react'
-import { useHistory } from 'react-router-dom'
+import StorageOffersContext from 'context/Services/storage/OffersContext'
+import { PeriodInSeconds, StorageOffer } from 'models/marketItems/StorageItem'
 import ROUTES from 'routes'
 
 const pinTabUploader = (
@@ -126,60 +126,14 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const RifSelector = ({
-  id, options, ...props
-}) => (
-  <Select
-    labelId={`${id}-select`}
-    id={`${id}-select`}
-    {...props}
-  >
-    {options.map((option, i) => (
-      <MenuItem
-        key={typeof option === 'string' ? option : (option.key || option.id)}
-        value={i}
-      >
-        {option}
-      </MenuItem>
-    ))}
-  </Select>
-)
-
-const PlanOption = ({ plan, xr }: {plan: BillingPlan, xr: { fiat: string, rate: number}}) => {
-  const { currency, period, price } = plan
-  const { fiat, rate } = xr
-  return (
-    <GridRow
-      wrap="nowrap"
-      key={currency + period + price}
-      style={{
-        paddingBlockEnd: '0em',
-      }}
-    >
-      <GridItem>
-        <Typography variant="subtitle2">{period}</Typography>
-      </GridItem>
-      <GridItem>
-        <CombinedPriceCell
-          currency={tokenDisplayNames[currency]}
-          currencyFiat={fiat}
-          price={price.toString()}
-          priceFiat={price.mul(rate).toString()}
-          divider=" "
-        />
-      </GridItem>
-    </GridRow>
-  )
-}
-
 const StorageOffersCheckoutPage = () => {
   const classes = useStyles()
   const history = useHistory()
   const {
-    // state: {
-    //   order,
-    //   listing,
-    // },
+    state: {
+      order,
+      listing,
+    },
     dispatch,
   } = useContext(StorageOffersContext)
   const {
@@ -193,47 +147,47 @@ const StorageOffersCheckoutPage = () => {
     },
   } = useContext<MarketContextProps>(MarketContext)
 
-  const listing: OffersListing = {
-    items: [
-      {
-        id: '0x01',
-        location: 'UK',
-        system: 'IPFS',
-        availableSizeGB: new Big(10),
-        averagePrice: 1,
-        subscriptionOptions: [
-          {
-            period: 'Daily',
-            price: new Big(1),
-            currency: 'rbtc',
-          },
-          {
-            period: 'Monthly',
-            price: new Big(30),
-            currency: 'rbtc',
-          },
-          {
-            period: 'Daily',
-            price: new Big(1),
-            currency: 'rif',
-          },
-        ],
-      },
-    ],
-  }
-  const order: StorageOrder = {
-    item: {
-      id: '0x01',
-      location: 'UK',
-      system: 'IPFS',
-      availableSizeGB: new Big(10),
-      averagePrice: 1,
-    },
-    contentHash: '0xFACEOFF',
-    contentName: 'TEST NAME',
-    contentSize: '19MB',
-    isProcessing: false,
-  }
+  // const listing: OffersListing = {
+  //   items: [
+  //     {
+  //       id: '0x01',
+  //       location: 'UK',
+  //       system: 'IPFS',
+  //       availableSizeGB: new Big(10),
+  //       averagePrice: 1,
+  //       subscriptionOptions: [
+  //         {
+  //           period: 'Daily',
+  //           price: new Big(1),
+  //           currency: 'rbtc',
+  //         },
+  //         {
+  //           period: 'Monthly',
+  //           price: new Big(30),
+  //           currency: 'rbtc',
+  //         },
+  //         {
+  //           period: 'Daily',
+  //           price: new Big(1),
+  //           currency: 'rif',
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // }
+  // const order: StorageOrder = {
+  //   item: {
+  //     id: '0x01',
+  //     location: 'UK',
+  //     system: 'IPFS',
+  //     availableSizeGB: new Big(10),
+  //     averagePrice: 1,
+  //   },
+  //   contentHash: '0xFACEOFF',
+  //   contentName: 'TEST NAME',
+  //   contentSize: '19MB',
+  //   isProcessing: false,
+  // }
 
   const currentOffer: StorageOffer | undefined = listing.items.find((offer: StorageOffer) => offer.id === order?.item.id)
 
@@ -255,43 +209,49 @@ const StorageOffersCheckoutPage = () => {
   const currentToken = availableTokens[currentCurrencyOption]
   const currentRate = crypto[currentToken]?.rate
 
-  const changeCurrencyHandle = (_: unknown, { props: { value } }): void => {
-    setCurrentCurrencyOption(value)
+  const changeCurrencyHandle = ({
+    target: { value },
+  }: React.ChangeEvent<{ name?: string, value: unknown }>): void => {
+    setCurrentCurrencyOption(value as number)
     setCurrentPlanOption(0)
     setCurrentPeriodsCount(0)
   }
-  const changePlanHandle = (_: unknown, { props: { value } }): void => setCurrentPlanOption(value)
-  const changePeriodCountHandle = ({ currentTarget: { value } }: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+  const changePlanHandle = ({
+    target: { value },
+  }: React.ChangeEvent<{
+    name?: string
+    value: unknown
+  }>): void => setCurrentPlanOption(value as number)
+  const changePeriodCountHandle = ({
+    currentTarget: { value },
+  }: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
     const periodCount = parseInt(value, 10)
     setCurrentPeriodsCount(periodCount || 0)
   }
 
   const planOptions = currentOffer?.subscriptionOptions
-  .filter((plan) => plan.currency === currentToken)
-  .map((plan) => {
-    const { currency, period, price } = plan
-    return (
+    .filter((plan) => plan.currency === currentToken)
+    .map((plan) => (
       <PlanOption
-        key={currency + period + price}
+        key={Object.entries(plan).toLocaleString()}
         plan={plan}
         xr={{
           fiat: fiatName,
           rate: currentRate,
         }}
       />
-    )
-  })
+    ))
 
   const details = order && {
     'CONTENT SIZE': order.contentSize?.replace(/[a-zA-Z]+/g, ''),
-    'CURRENCY TO PAY': <RifSelector
+    'CURRENCY TO PAY': <RifSelect<string>
       id="currency"
       value={currentCurrencyOption}
       options={availableTokens.map((symbol: SupportedTokens) => tokenDisplayNames[symbol])}
       onChange={changeCurrencyHandle}
       disabled={availableTokens.length <= 1}
     />,
-    'SUBSCRIPTION PERIOD': <RifSelector
+    'SUBSCRIPTION PERIOD': <RifSelect<JSX.Element>
       id="plan"
       value={currentPlanOption}
       options={planOptions}
@@ -326,11 +286,11 @@ const StorageOffersCheckoutPage = () => {
     _: React.ChangeEvent<{}>, value: number,
   ): void => setPinType(value)
 
-  const planConfiguration = () => (
-    <GridColumn alignContent="center">
-      <Typography variant="caption">To buy your storage you have to select the currency, suscription and payment details to get the final price of your storage plan.</Typography>
-    </GridColumn>
-  )
+  // const planConfiguration = () => (
+  //   <GridColumn alignContent="center">
+  //     <Typography variant="caption">To buy your storage you have to select the currency, suscription and payment details to get the final price of your storage plan.</Typography>
+  //   </GridColumn>
+  // )
 
   useEffect(() => {
     const currentPlan = currentOffer?.subscriptionOptions[currentPlanOption]
@@ -349,6 +309,8 @@ const StorageOffersCheckoutPage = () => {
   }, [
     currentPlanOption,
     currentPeriodsCount,
+    currentOffer,
+    currentRate,
   ])
 
   if (!order) {
