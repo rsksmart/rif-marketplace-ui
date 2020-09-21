@@ -60,7 +60,7 @@ class StorageContract {
     const estimatedGas = await this.contract.methods
       .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, tokens, prefixedMsg)
       .estimateGas({ from, gasPrice })
-    const gas = Math.floor(estimatedGas * 2)
+    const gas = Math.floor(estimatedGas * 1.1)
 
     return this.contract.methods
       .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, tokens, prefixedMsg)
