@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
 import {
   Theme, Tabs, Tab, makeStyles, Divider, TabsProps,
 } from '@material-ui/core'
