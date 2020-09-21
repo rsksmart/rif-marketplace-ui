@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import StorageSellContext from 'context/Services/storage/StorageSellContext'
 import StorageContract from 'contracts/Storage'
 import Logger from 'utils/Logger'
-import { StoragePlanItem } from 'context/Services/storage/interfaces'
+import { StoragePlanItem, TOKENS_ADDRESSES } from 'context/Services/storage/interfaces'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { UIError } from 'models/UIMessage'
 import Login from 'components/atoms/Login'
@@ -54,31 +54,36 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface OfferContractData {
   availableSizeMB: string
-  periods: number[]
-  prices: string[]
+  periods: number[][]
+  prices: string[][],
+  tokens: string[]
 }
 
 const transformOfferDataForContract = (
   availableSizeGB: number,
   planItems: StoragePlanItem[],
-): OfferContractData => {
-  const periods: number[] = []
-  const prices: string[] = []
+): OfferContractData => ({
+    availableSizeMB: new Big(availableSizeGB).mul(UNIT_PREFIX_POW2.KILO).toString(),
+    ...planItems.reduce(
+        (acc, { timePeriod, pricePerGb, currency }) => {
+          const tokenIndex = acc.tokens.findIndex((t => t === currency))
+          const weiPrice = convertToWeiString(new Big(pricePerGb).div(UNIT_PREFIX_POW2.KILO))
 
-  planItems.forEach((planItem: StoragePlanItem) => {
-    periods.push(planItem.timePeriod * PeriodInSeconds.Daily)
-    // we get the price/gb but need to send price/byte
-    const pricePerMB = new Big(planItem.pricePerGb).div(UNIT_PREFIX_POW2.KILO)
-    prices.push(convertToWeiString(pricePerMB))
-  })
+          if (tokenIndex !== -1) {
+            acc.periods[tokenIndex].push(timePeriod * PeriodInSeconds.Daily)
+            acc.prices[tokenIndex].push(weiPrice)
+            return acc
+          }
 
-  return {
-    availableSizeMB: new Big(availableSizeGB)
-      .mul(UNIT_PREFIX_POW2.KILO).toString(),
-    periods,
-    prices,
-  }
-}
+          return {
+            prices: [...acc.prices, [weiPrice]],
+            periods: [...acc.periods, [timePeriod * PeriodInSeconds.Daily]],
+            tokens: [...acc.tokens, TOKENS_ADDRESSES[currency]]
+          }
+        },
+        { prices: [], periods: [], tokens: [] } as any
+    )
+})
 
 const StorageSellPage = () => {
   const {
@@ -121,13 +126,14 @@ const StorageSellPage = () => {
       setIsProcessing(true)
       const storageContract = StorageContract.getInstance(web3)
       const {
-        availableSizeMB, periods, prices,
+        availableSizeMB, periods, prices, tokens
       } = transformOfferDataForContract(availableSize, planItems)
 
       const setOfferReceipt = await storageContract.setOffer(
         availableSizeMB,
         periods,
         prices,
+        tokens,
         peerId,
         { from: account },
       )

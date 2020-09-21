@@ -1,14 +1,15 @@
 import { Dispatch } from 'react'
+import network from '../../../blockchain/config'
 
 import { ContextState } from 'context/storeUtils/interfaces'
 import { StorageItem } from 'models/marketItems/StorageItem'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
+import { tokenDisplayNames } from '../../../api/rif-marketplace-cache/rates/xr'
 import { ServiceState } from '../interfaces'
 import { STORAGE_SELL_ACTION, StorageSellAction } from './storageSellActions'
 import { OFFERS_ACTION } from './offersActions'
 import { ContextName as SellContextName } from './StorageSellContext'
 import { ContextName as OffersContextName } from './OffersContext'
-
 export type StorageContextNames = OffersContextName | SellContextName
 
 export interface StoragePlanItem {
@@ -51,3 +52,10 @@ export enum TimePeriodEnum {
 }
 
 export type STORAGE_ACTION = STORAGE_SELL_ACTION | OFFERS_ACTION
+
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+
+export const TOKENS_ADDRESSES = {
+  [tokenDisplayNames.rbtc]: ZERO_ADDRESS, // we are using zero address for native token is Storage Manager SC
+  [tokenDisplayNames.rif]: network.contractAddresses.rif
+}
