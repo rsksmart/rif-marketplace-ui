@@ -84,7 +84,6 @@ const StorageRoutes = () => {
               </StorageSellContextProvider>
             </Route>
             <Route exact path={ROUTES.STORAGE.SELL.DONE} component={StorageSellDone} />
-            {/* TODO: define a way to handle routing of 2 diff routes and components under the same context */}
             <Route exact path={ROUTES.STORAGE.MYOFFERS.BASE}>
               <StorageOffersContextProvider>
                 <Switch>

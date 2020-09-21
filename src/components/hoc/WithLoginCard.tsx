@@ -10,9 +10,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   roundedCard: {
     maxWidth: theme.spacing(70),
     [theme.breakpoints.down('sm')]: {
-      maxWidth: '90%'
-    }
-  }
+      maxWidth: '90%',
+    },
+  },
 }))
 
 const WithLoginCard = ({
@@ -44,7 +44,7 @@ const WithLoginCard = ({
             </Grid>
           </>
         </TitledRoundedCard>
-      </Grid >
+      </Grid>
     )
   }
 

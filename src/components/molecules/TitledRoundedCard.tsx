@@ -25,7 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 // TODO: extract to rif-ui
-const TitledRoundedCard: FC<TitledRoundedCardProps> = ({ roundedCardProps, title, titleProps, children }) => {
+const TitledRoundedCard: FC<TitledRoundedCardProps> = ({
+  roundedCardProps, title, titleProps, children,
+}) => {
   const classes = useStyles()
   return (
     <RoundedCard className={classes.root} {...roundedCardProps}>

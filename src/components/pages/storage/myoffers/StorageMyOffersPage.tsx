@@ -72,7 +72,6 @@ const StorageMyOffersPage: FC = () => {
       payload: {},
     })
 
-    // TODO: handle no account - create a reusable HOC?
     if (account) {
       dispatch({
         type: 'FILTER',
