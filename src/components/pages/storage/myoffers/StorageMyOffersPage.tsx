@@ -20,7 +20,7 @@ import ROUTES from 'routes'
 import { useHistory } from 'react-router-dom'
 import { LoadingPayload } from 'context/App/appActions'
 import { UIError } from 'models/UIMessage'
-import LoginCard from 'components/hoc/LoginCard'
+import WithLoginCard from 'components/hoc/WithLoginCard'
 
 const logger = Logger.getInstance()
 
@@ -142,8 +142,6 @@ const StorageMyOffersPage: FC = () => {
   return (
     <CenteredPageTemplate>
 
-      <LoginCard />
-
       <StakingCard
         balance="2048 RIF"
         onAddFunds={() => logger.info('Add funds clicked')}
@@ -163,25 +161,12 @@ const StorageMyOffersPage: FC = () => {
           </Typography>
         </Grid>
       </Grid>
-      {/* TODO: create generic component to show when no account */}
-      {
-        !!account
-        && (
-          <OffersList
-            items={items}
-            isLoading={isLoadingItems}
-            onCancelOffer={handleOfferCancel}
-            onEditOffer={handleEditOffer}
-          />
-        )
-      }
-      {
-        !account && (
-          <Grid container>
-            <Typography color="secondary">Please, connect your wallet to see your offers</Typography>
-          </Grid>
-        )
-      }
+      <OffersList
+        items={items}
+        isLoading={isLoadingItems}
+        onCancelOffer={handleOfferCancel}
+        onEditOffer={handleEditOffer}
+      />
       {
         isProcessing
         && (
@@ -199,4 +184,8 @@ const StorageMyOffersPage: FC = () => {
   )
 }
 
-export default StorageMyOffersPage
+export default WithLoginCard({
+  WrappedComponent: StorageMyOffersPage,
+  title: 'Connect your wallet to see your offers',
+  contentText: 'Connect your wallet to get detailed information about your offers',
+})
