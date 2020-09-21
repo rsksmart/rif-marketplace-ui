@@ -39,8 +39,9 @@ class StorageContract {
 
   public setOffer = async (
     capacityMB: string,
-    billingPeriods: number[],
-    billingRbtcWeiPrices: string[],
+    billingPeriods: number[][],
+    billingRbtcWeiPrices: string[][],
+    tokens: string[],
     peerId: string,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
@@ -57,12 +58,12 @@ class StorageContract {
     })
 
     const estimatedGas = await this.contract.methods
-      .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, prefixedMsg)
+      .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, tokens, prefixedMsg)
       .estimateGas({ from, gasPrice })
-    const gas = Math.floor(estimatedGas * 1.1)
+    const gas = Math.floor(estimatedGas * 2)
 
     return this.contract.methods
-      .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, prefixedMsg)
+      .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, tokens, prefixedMsg)
       .send({ from, gas, gasPrice }, (err, txHash) => {
         if (err) return Promise.reject(err)
         return waitForReceipt(txHash, this.web3)
