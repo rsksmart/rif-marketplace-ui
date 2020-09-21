@@ -2,21 +2,17 @@ import React, { useContext } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import { colors, Web3Store } from '@rsksmart/rif-ui'
+import { Web3Store } from '@rsksmart/rif-ui'
 import Login from 'components/atoms/Login'
-import RoundedCard from 'components/atoms/RoundedCard'
+import TitledRoundedCard from 'components/molecules/TitledRoundedCard'
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
+  roundedCard: {
     maxWidth: theme.spacing(70),
-  },
-  titleContainer: {
-    padding: theme.spacing(3),
-    borderBottom: `1px solid ${colors.gray3}`,
-  },
-  contentContainer: {
-    padding: theme.spacing(3),
-  },
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: '90%'
+    }
+  }
 }))
 
 const WithLoginCard = ({
@@ -34,21 +30,21 @@ const WithLoginCard = ({
     if (account) return <WrappedComponent {...props} />
     return (
       <Grid container justify="center">
-        <RoundedCard className={classes.root} color="secondary">
-          {/* TODO: extract molecule */}
-          <Grid container className={classes.titleContainer} justify="center">
-            <Typography variant="h6" color="primary">{title}</Typography>
-          </Grid>
-          <Grid container className={classes.contentContainer} justify="center" spacing={2}>
+        <TitledRoundedCard
+          title={title}
+          titleProps={{ variant: 'h6', color: 'primary' }}
+          roundedCardProps={{ color: 'secondary', className: classes.roundedCard }}
+        >
+          <>
             <Grid item xs={12}>
               <Typography color="secondary" align="center">{contentText}</Typography>
             </Grid>
             <Grid container justify="center">
               <Login modalInitiallyOpened />
             </Grid>
-          </Grid>
-        </RoundedCard>
-      </Grid>
+          </>
+        </TitledRoundedCard>
+      </Grid >
     )
   }
 
