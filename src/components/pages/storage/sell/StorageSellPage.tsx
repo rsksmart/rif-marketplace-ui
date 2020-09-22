@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import StorageSellContext from 'context/Services/storage/StorageSellContext'
 import StorageContract from 'contracts/Storage'
 import Logger from 'utils/Logger'
-import { StoragePlanItem, TOKENS_ADDRESSES } from 'context/Services/storage/interfaces'
+import { StoragePlanItem, TokenAddressees } from 'context/Services/storage/interfaces'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { UIError } from 'models/UIMessage'
 import Login from 'components/atoms/Login'
@@ -78,7 +78,7 @@ const transformOfferDataForContract = (
       return {
         prices: [...acc.prices, [weiPrice]],
         periods: [...acc.periods, [timePeriod * PeriodInSeconds.Daily]],
-        tokens: [...acc.tokens, TOKENS_ADDRESSES[currency]],
+        tokens: [...acc.tokens, TokenAddressees[currency]],
       }
     },
         { prices: [], periods: [], tokens: [] } as any,
