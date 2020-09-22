@@ -57,14 +57,19 @@ class StorageContract {
       throw error
     })
 
-    const estimatedGas = await this.contract.methods
-      .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, tokens, prefixedMsg)
-      .estimateGas({ from, gasPrice })
-    const gas = Math.floor(estimatedGas * 1.1)
+    const setOffer = await this.contract.methods
+      .setOffer(capacityMB,
+        billingPeriods,
+        billingRbtcWeiPrices,
+        tokens,
+        prefixedMsg)
 
-    return this.contract.methods
-      .setOffer(capacityMB, billingPeriods, billingRbtcWeiPrices, tokens, prefixedMsg)
-      .send({ from, gas, gasPrice }, (err, txHash) => {
+    return setOffer
+      .send({
+        from,
+        gas: Math.floor(await setOffer.estimateGas({ from, gasPrice }) * 1.1),
+        gasPrice,
+      }, (err, txHash) => {
         if (err) return Promise.reject(err)
         return waitForReceipt(txHash, this.web3)
       })
