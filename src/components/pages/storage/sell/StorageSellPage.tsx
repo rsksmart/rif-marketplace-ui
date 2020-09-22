@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface OfferContractData {
   availableSizeMB: string
   periods: number[][]
-  prices: string[][],
+  prices: string[][]
   tokens: string[]
 }
 
@@ -63,26 +63,26 @@ const transformOfferDataForContract = (
   availableSizeGB: number,
   planItems: StoragePlanItem[],
 ): OfferContractData => ({
-    availableSizeMB: new Big(availableSizeGB).mul(UNIT_PREFIX_POW2.KILO).toString(),
-    ...planItems.reduce(
-        (acc, { timePeriod, pricePerGb, currency }) => {
-          const tokenIndex = acc.tokens.findIndex((t => t === currency))
-          const weiPrice = convertToWeiString(new Big(pricePerGb).div(UNIT_PREFIX_POW2.KILO))
+  availableSizeMB: new Big(availableSizeGB).mul(UNIT_PREFIX_POW2.KILO).toString(),
+  ...planItems.reduce(
+    (acc, { timePeriod, pricePerGb, currency }) => {
+      const tokenIndex = acc.tokens.findIndex(((t) => t === currency))
+      const weiPrice = convertToWeiString(new Big(pricePerGb).div(UNIT_PREFIX_POW2.KILO))
 
-          if (tokenIndex !== -1) {
-            acc.periods[tokenIndex].push(timePeriod * PeriodInSeconds.Daily)
-            acc.prices[tokenIndex].push(weiPrice)
-            return acc
-          }
+      if (tokenIndex !== -1) {
+        acc.periods[tokenIndex].push(timePeriod * PeriodInSeconds.Daily)
+        acc.prices[tokenIndex].push(weiPrice)
+        return acc
+      }
 
-          return {
-            prices: [...acc.prices, [weiPrice]],
-            periods: [...acc.periods, [timePeriod * PeriodInSeconds.Daily]],
-            tokens: [...acc.tokens, TOKENS_ADDRESSES[currency]]
-          }
-        },
-        { prices: [], periods: [], tokens: [] } as any
-    )
+      return {
+        prices: [...acc.prices, [weiPrice]],
+        periods: [...acc.periods, [timePeriod * PeriodInSeconds.Daily]],
+        tokens: [...acc.tokens, TOKENS_ADDRESSES[currency]],
+      }
+    },
+        { prices: [], periods: [], tokens: [] } as any,
+  ),
 })
 
 const StorageSellPage = () => {
@@ -126,7 +126,7 @@ const StorageSellPage = () => {
       setIsProcessing(true)
       const storageContract = StorageContract.getInstance(web3)
       const {
-        availableSizeMB, periods, prices, tokens
+        availableSizeMB, periods, prices, tokens,
       } = transformOfferDataForContract(availableSize, planItems)
 
       const setOfferReceipt = await storageContract.setOffer(

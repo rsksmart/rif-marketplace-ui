@@ -10,6 +10,7 @@ import { STORAGE_SELL_ACTION, StorageSellAction } from './storageSellActions'
 import { OFFERS_ACTION } from './offersActions'
 import { ContextName as SellContextName } from './StorageSellContext'
 import { ContextName as OffersContextName } from './OffersContext'
+
 export type StorageContextNames = OffersContextName | SellContextName
 
 export interface StoragePlanItem {
@@ -57,5 +58,5 @@ const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export const TOKENS_ADDRESSES = {
   [tokenDisplayNames.rbtc]: ZERO_ADDRESS, // we are using zero address for native token is Storage Manager SC
-  [tokenDisplayNames.rif]: networkConfig.contractAddresses.rif
+  [tokenDisplayNames.rif]: networkConfig.contractAddresses.rif,
 }
