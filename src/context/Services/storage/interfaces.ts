@@ -56,7 +56,7 @@ export type STORAGE_ACTION = STORAGE_SELL_ACTION | OFFERS_ACTION
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-export const TOKENS_ADDRESSES = {
+export const TokenAddressees = {
   [tokenDisplayNames.rbtc]: ZERO_ADDRESS, // we are using zero address for native token is Storage Manager SC
   [tokenDisplayNames.rif]: networkConfig.contractAddresses.rif,
 }
