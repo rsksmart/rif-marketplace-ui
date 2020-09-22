@@ -10,16 +10,16 @@ import {
   Button, colors, validatedNumber,
 } from '@rsksmart/rif-ui'
 import PinnerInstructionsModal from 'components/organisms/storage/sell/PinnerInstructionsModal'
-import StorageSellContext from 'context/Services/storage/StorageSellContext'
-import { StorageSellContextProps } from 'context/Services/storage/interfaces'
-import { SetAvailableSizePayload, SetPeerIdPayload } from 'context/Services/storage/storageSellActions'
+import OfferEditContext from 'context/Market/storage/OfferEditContext'
+import { OfferEditContextProps } from 'context/Market/storage/interfaces'
+import { SetAvailableSizePayload, SetPeerIdPayload } from 'context/Market/storage/offerEditActions'
 
 const GeneralFeatures = () => {
   const {
     state: {
       availableSize, system, peerId,
     }, dispatch,
-  } = useContext<StorageSellContextProps>(StorageSellContext)
+  } = useContext<OfferEditContextProps>(OfferEditContext)
 
   const [modalPeerIdOpened, setModalPeerIdOpened] = useState(false)
   const handleModalOpen = () => setModalPeerIdOpened(true)

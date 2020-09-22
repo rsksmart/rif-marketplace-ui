@@ -3,9 +3,9 @@ import React, {
 } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import { StoragePlanItem } from 'context/Services/storage/interfaces'
+import { StoragePlanItem } from 'context/Market/storage/interfaces'
 import PlanItemWithEdit from 'components/organisms/storage/sell/PlanItemWithEdit'
-import StorageSellContext from 'context/Services/storage/StorageSellContext'
+import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import MarketContext from 'context/Market/MarketContext'
 import { Theme, makeStyles } from '@material-ui/core/styles'
 import { colors, fonts } from '@rsksmart/rif-ui'
@@ -35,7 +35,7 @@ const PlanItemsList = () => {
     state: {
       planItems,
     },
-  } = useContext(StorageSellContext)
+  } = useContext(OfferEditContext)
 
   const {
     state: {

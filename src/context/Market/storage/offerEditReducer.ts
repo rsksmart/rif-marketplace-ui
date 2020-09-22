@@ -1,4 +1,4 @@
-import { StoragePlanItem, StorageSellState } from './interfaces'
+import { StoragePlanItem, OfferEditState } from './interfaces'
 import {
   AddItemPayload,
   RemoveItemPayload,
@@ -6,13 +6,13 @@ import {
   SetAvailableSizePayload,
   SetCountryPayload,
   SetPeerIdPayload,
-  StorageSellActions,
-  StorageSellPayload,
-} from './storageSellActions'
-import { initialState } from './StorageSellContext'
+  OfferEditActions,
+  OfferEditPayload,
+} from './offerEditActions'
+import { initialState } from './OfferEditContext'
 
-export interface StorageSellReducer<P extends StorageSellPayload> {
-  (state: StorageSellState, payload: P): StorageSellState
+export interface OfferEditReducer<P extends OfferEditPayload> {
+  (state: OfferEditState, payload: P): OfferEditState
 }
 
 const calculateUsedPeriodsPerCurrency = (
@@ -22,8 +22,8 @@ const calculateUsedPeriodsPerCurrency = (
   return acc
 }, {})
 
-export const storageSellActions: StorageSellActions = {
-  ADD_ITEM: (state: StorageSellState, payload: AddItemPayload) => {
+export const offerEditActions: OfferEditActions = {
+  ADD_ITEM: (state: OfferEditState, payload: AddItemPayload) => {
     const { internalCounter, planItems } = state
     const newPlan = {
       ...payload,
@@ -39,10 +39,7 @@ export const storageSellActions: StorageSellActions = {
     }
   },
   CLEAN_UP: (_, __) => initialState,
-  REMOVE_ITEM: (
-    state: StorageSellState,
-    { internalId }: RemoveItemPayload,
-  ) => {
+  REMOVE_ITEM: (state: OfferEditState, { internalId }: RemoveItemPayload) => {
     const { planItems } = state
     const newPlanItems = planItems.filter((x) => x.internalId !== internalId)
     return {
@@ -51,7 +48,7 @@ export const storageSellActions: StorageSellActions = {
       usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newPlanItems),
     }
   },
-  EDIT_ITEM: (state: StorageSellState, payload: EditItemPayload) => {
+  EDIT_ITEM: (state: OfferEditState, payload: EditItemPayload) => {
     const {
       internalId, timePeriod, pricePerGb, currency,
     } = payload
@@ -74,17 +71,17 @@ export const storageSellActions: StorageSellActions = {
     }
   },
   SET_AVAILABLE_SIZE: (
-    state: StorageSellState,
+    state: OfferEditState,
     { availableSize }: SetAvailableSizePayload,
   ) => ({
     ...state,
     availableSize,
   }),
-  SET_COUNTRY: (state: StorageSellState, { country }: SetCountryPayload) => ({
+  SET_COUNTRY: (state: OfferEditState, { country }: SetCountryPayload) => ({
     ...state,
     country,
   }),
-  SET_PEER_ID: (state: StorageSellState, { peerId }: SetPeerIdPayload) => ({
+  SET_PEER_ID: (state: OfferEditState, { peerId }: SetPeerIdPayload) => ({
     ...state,
     peerId,
   }),

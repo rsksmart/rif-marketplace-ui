@@ -7,8 +7,8 @@ import Step from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
 import StepContent from '@material-ui/core/StepContent'
 import { Button } from '@rsksmart/rif-ui'
-import { StorageSellContextProps } from 'context/Services/storage/interfaces'
-import StorageSellContext from 'context/Services/storage/StorageSellContext'
+import { OfferEditContextProps } from 'context/Market/storage/interfaces'
+import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import GeneralFeatures from './GeneralFeatures'
 import PlanItemsList from './PlanItemsList'
 
@@ -31,7 +31,7 @@ const SellStepper: FC<SellStepperProps> = ({ endHandler }) => {
   const [activeStep, setActiveStep] = useState(0)
   const {
     state: { availableSize, system, peerId },
-  } = useContext<StorageSellContextProps>(StorageSellContext)
+  } = useContext<OfferEditContextProps>(OfferEditContext)
 
   const handleNext = () => setActiveStep(1)
   const handleBack = () => setActiveStep(0)

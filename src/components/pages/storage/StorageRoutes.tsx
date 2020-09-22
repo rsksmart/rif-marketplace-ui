@@ -7,7 +7,7 @@ import {
 
 import TabsTemplate from 'components/templates/TabsTemplate'
 import networkConfig from 'config'
-import { StorageSellContextProvider } from 'context/Services/storage/StorageSellContext'
+import { OfferEditContextProvider } from 'context/Market/storage/OfferEditContext'
 import { StorageOffersContextProvider } from 'context/Services/storage/OffersContext'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
@@ -102,9 +102,9 @@ const StorageRoutes: FC = () => {
               </StorageOffersContextProvider>
             </Route>
             <Route exact path={ROUTES.STORAGE.SELL.BASE}>
-              <StorageSellContextProvider>
+              <OfferEditContextProvider>
                 <StorageSellPage />
-              </StorageSellContextProvider>
+              </OfferEditContextProvider>
             </Route>
             <Route
               exact
