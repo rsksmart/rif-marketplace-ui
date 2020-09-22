@@ -1,5 +1,5 @@
 import { Dispatch } from 'react'
-import network from '../../../blockchain/config'
+import networkConfig from 'config'
 
 import { ContextState } from 'context/storeUtils/interfaces'
 import { StorageItem } from 'models/marketItems/StorageItem'
@@ -57,5 +57,5 @@ const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export const TOKENS_ADDRESSES = {
   [tokenDisplayNames.rbtc]: ZERO_ADDRESS, // we are using zero address for native token is Storage Manager SC
-  [tokenDisplayNames.rif]: network.contractAddresses.rif
+  [tokenDisplayNames.rif]: networkConfig.contractAddresses.rif
 }
