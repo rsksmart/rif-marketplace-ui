@@ -41,7 +41,7 @@
     "@rsksmart/erc677": "^1.0.2",
     "@rsksmart/erc721": "^1.0.0",
     "@rsksmart/rif-marketplace-nfts": "0.1.2",
-    "@rsksmart/rif-marketplace-storage": "0.1.0-dev.1",
+    "@rsksmart/rif-marketplace-storage": "0.1.0-dev.2",
     "@rsksmart/rif-ui": "^0.2.2",
     "big.js": "^5.2.2",
     "react": "^16.13.1",
