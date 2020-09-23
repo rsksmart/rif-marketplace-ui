@@ -20,12 +20,18 @@ const LabelWithValue: FC<LabelWithValueProps> = ({
 }) => (
   <GridRow
     spacing={2}
+    style={{
+      paddingBottom: '0px',
+    }}
     {...props}
   >
     <GridItem>
       <Typography
-        color="primary"
+        color="secondary"
         align="center"
+        style={{
+          fontSize: fonts.size.subtitleSmall,
+        }}
         {...labelProps}
       >
         {label}
@@ -36,7 +42,7 @@ const LabelWithValue: FC<LabelWithValueProps> = ({
         color="secondary"
         align="center"
         style={{
-          fontSize: fonts.size.subtitleSmall,
+          fontSize: fonts.size.subtitleBig,
         }}
         {...valueProps}
       >

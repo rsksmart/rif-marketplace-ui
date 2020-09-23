@@ -4,11 +4,12 @@ import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { BillingPlan, StorageItem, StorageOffer } from 'models/marketItems/StorageItem'
 import { Dispatch } from 'react'
 import { Modify } from 'utils/typeUtils'
+
 import { tokenDisplayNames } from '../../../api/rif-marketplace-cache/rates/xr'
 import { ServiceOrder, ServiceState } from '../interfaces'
 import { OFFERS_ACTION } from './offersActions'
 import { ContextName as OffersContextName } from './OffersContext'
-import { StorageSellAction, STORAGE_SELL_ACTION } from './storageSellActions'
+import { STORAGE_SELL_ACTION, StorageSellAction } from './storageSellActions'
 import { ContextName as SellContextName } from './StorageSellContext'
 
 export type StorageContextNames = OffersContextName | SellContextName
