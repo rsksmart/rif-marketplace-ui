@@ -19,6 +19,7 @@ import { NotFound } from '..'
 import StorageSellDone from './sell/StorageSellDone'
 import StorageMyOffersCancelled from './myoffers/StorageMyOffersCancelled'
 import StorageOffersCheckoutPage from './buy/StorageOffersCheckoutPage'
+import StorageEditOfferPage from './myoffers/StorageEditOfferPage'
 
 const TABS: StyledNavTabProps[] = [
   {
@@ -106,22 +107,12 @@ const StorageRoutes: FC = () => {
                 <StorageSellPage />
               </OfferEditContextProvider>
             </Route>
-            <Route
-              exact
-              path={ROUTES.STORAGE.SELL.DONE}
-              component={StorageSellDone}
-            />
-            <Route
-              exact
-              path={ROUTES.STORAGE.MYOFFERS.BASE}
-            >
+            <Route exact path={ROUTES.STORAGE.SELL.DONE} component={StorageSellDone} />
+            <Route path={ROUTES.STORAGE.MYOFFERS.BASE}>
               <StorageOffersContextProvider>
                 <Switch>
-                  <Route
-                    exact
-                    path={ROUTES.STORAGE.MYOFFERS.BASE}
-                    component={StorageMyOffersPage}
-                  />
+                  <Route exact path={ROUTES.STORAGE.MYOFFERS.BASE} component={StorageMyOffersPage} />
+                  <Route exact path={ROUTES.STORAGE.MYOFFERS.EDIT.BASE} component={StorageEditOfferPage} />
                 </Switch>
               </StorageOffersContextProvider>
             </Route>

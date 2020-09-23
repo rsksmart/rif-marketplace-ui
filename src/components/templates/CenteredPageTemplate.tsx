@@ -1,11 +1,12 @@
 import React, { FC } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { Typography, Grid } from '@material-ui/core'
+import { Typography, Grid, PropTypes } from '@material-ui/core'
 
 export interface CenteredPageTemplateProps {
   className?: string
   title?: string
   subtitle?: string
+  titlesAlignment?: PropTypes.Alignment
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -27,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const CenteredPageTemplate: FC<CenteredPageTemplateProps> = ({
   className = '', title, subtitle, children,
+  titlesAlignment = 'inherit',
 }) => {
   const classes = useStyles()
   return (
@@ -34,12 +36,12 @@ const CenteredPageTemplate: FC<CenteredPageTemplateProps> = ({
       <div className={classes.container}>
         {
           !!title && (
-            <Typography gutterBottom align="center" variant="h5" color="primary">{title}</Typography>
+            <Typography gutterBottom align={titlesAlignment} variant="h5" color="primary">{title}</Typography>
           )
         }
         {
           !!subtitle && (
-            <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
+            <Typography gutterBottom color="secondary" variant="subtitle1" align={titlesAlignment}>
               {subtitle}
             </Typography>
           )

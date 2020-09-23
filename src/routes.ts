@@ -1,6 +1,7 @@
 const LISTING = 'listing'
 const CHECKOUT = 'checkout'
 const DONE = 'done'
+const EDIT = 'edit'
 
 const LANDING = '/'
 
@@ -56,6 +57,10 @@ const ROUTES = {
       BASE: STORAGE_MYOFFERS,
       CANCEL: {
         DONE: `${STORAGE_MYOFFERS_CANCEL}/${DONE}`,
+      },
+      EDIT: {
+        BASE: `${STORAGE_MYOFFERS}/${EDIT}`,
+        DONE: `${STORAGE_MYOFFERS}/${EDIT}/${DONE}`,
       },
     },
     MYPURCHASES: {
