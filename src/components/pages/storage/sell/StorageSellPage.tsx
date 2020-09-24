@@ -23,7 +23,7 @@ import { LoadingPayload } from 'context/App/appActions'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import { PeriodInSeconds } from 'models/marketItems/StorageItem'
 import StakingCard from 'components/organisms/storage/myoffers/StakingCard'
-import SellStepper from 'components/organisms/storage/sell/SellStepper'
+import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper'
 import RoundedCard from 'components/atoms/RoundedCard'
 import { rifTokenAddress } from 'contracts/config'
 
@@ -231,7 +231,7 @@ const StorageSellPage: FC = () => {
         Fill out the fields below to list your storage service. All information provided is meant to be true and correct.
       </Typography>
       <RoundedCard color="primary" className={classes.stepperContainer}>
-        <SellStepper endHandler={endHandler} />
+        <EditOfferStepper endHandler={endHandler} />
       </RoundedCard>
       {
         isProcessing

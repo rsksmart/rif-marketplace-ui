@@ -12,7 +12,7 @@ import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import GeneralFeatures from './GeneralFeatures'
 import PlanItemsList from './PlanItemsList'
 
-export interface SellStepperProps {
+export interface EditOfferStepperProps {
   endHandler: ReactElement
 }
 
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }))
 
-const SellStepper: FC<SellStepperProps> = ({ endHandler }) => {
+const EditOfferStepper: FC<EditOfferStepperProps> = ({ endHandler }) => {
   const classes = useStyles()
   const [activeStep, setActiveStep] = useState(0)
   const {
@@ -80,4 +80,4 @@ const SellStepper: FC<SellStepperProps> = ({ endHandler }) => {
   )
 }
 
-export default SellStepper
+export default EditOfferStepper
