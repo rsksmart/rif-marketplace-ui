@@ -117,12 +117,8 @@ const StorageRoutes: FC = () => {
                   </Switch>
                 </OfferEditContextProvider>
               </StorageOffersContextProvider>
+              <Route exact path={ROUTES.STORAGE.MYOFFERS.CANCEL.DONE} component={StorageMyOffersCancelled} />
             </Route>
-            <Route
-              exact
-              path={ROUTES.STORAGE.MYOFFERS.CANCEL.DONE}
-              component={StorageMyOffersCancelled}
-            />
             <Route component={NotFound} />
           </Switch>
         </TabsTemplate>
