@@ -116,7 +116,7 @@ export const StorageOffersContextProvider = ({ children }) => {
         setIsInitialised(false)
       }
     }
-  }, [api, isInitialised, appDispatch])
+  }, [api, apiAvgBillingPrice, isInitialised, appDispatch])
 
   // (re)fetch limits upon refresh if initialised
   useEffect(() => {
