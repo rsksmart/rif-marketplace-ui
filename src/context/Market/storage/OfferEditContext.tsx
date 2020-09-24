@@ -22,10 +22,10 @@ export const initialState: OfferEditState = {
 }
 
 const OfferEditContext = React.createContext({} as OfferEditContextProps | any)
-const listingReducer: OfferEditReducer<OfferEditPayload> | ContextReducer = storeReducerFactory(initialState, offerEditActions as unknown as ContextActions)
+const offerEditReducer: OfferEditReducer<OfferEditPayload> | ContextReducer = storeReducerFactory(initialState, offerEditActions as unknown as ContextActions)
 
 export const OfferEditContextProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(listingReducer, initialState)
+  const [state, dispatch] = useReducer(offerEditReducer, initialState)
 
   const value = { state, dispatch }
 

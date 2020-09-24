@@ -16,7 +16,7 @@ export interface OfferEditState extends ContextState {
   availableSize: number
   country: string
   planItems: StoragePlanItem[]
-  internalCounter: number
+  internalCounter: number // counter to assign unique ids to planItems, this counter only sums up
   allPeriods: TimePeriodEnum[]
   peerId: string
   usedPeriodsPerCurrency: Record<string, TimePeriodEnum[]> // dictionary to easily know the timePeriods already used by a given currency

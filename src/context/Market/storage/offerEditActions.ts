@@ -10,6 +10,7 @@ export type OFFER_EDIT_ACTION =
   | 'SET_COUNTRY'
   | 'SET_AVAILABLE_SIZE'
   | 'SET_PEER_ID'
+  | 'SET_OFFER'
 
 export type OfferEditActions = {
   ADD_ITEM: OfferEditReducer<AddItemPayload>
@@ -19,6 +20,7 @@ export type OfferEditActions = {
   SET_COUNTRY: OfferEditReducer<SetCountryPayload>
   SET_AVAILABLE_SIZE: OfferEditReducer<SetAvailableSizePayload>
   SET_PEER_ID: OfferEditReducer<SetPeerIdPayload>
+  SET_OFFER: OfferEditReducer<SetOfferPayload>
 }
 
 export type AddItemPayload = StoragePlanItem
@@ -41,6 +43,14 @@ export interface SetPeerIdPayload {
   peerId: string
 }
 
+export interface SetOfferPayload {
+  availableSize: number
+  country: string
+  peerId: string
+  planItems: StoragePlanItem[]
+  system: string
+}
+
 export type OfferEditPayload =
   | ContextPayload
   | AddItemPayload
@@ -49,5 +59,9 @@ export type OfferEditPayload =
   | SetAvailableSizePayload
   | SetCountryPayload
   | SetPeerIdPayload
+  | SetOfferPayload
 
-export type OfferEditAction = ContextDispatch<OFFER_EDIT_ACTION, OfferEditPayload>
+export type OfferEditAction = ContextDispatch<
+  OFFER_EDIT_ACTION,
+  OfferEditPayload
+>

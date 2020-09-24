@@ -8,6 +8,7 @@ import {
   SetPeerIdPayload,
   OfferEditActions,
   OfferEditPayload,
+  SetOfferPayload,
 } from './offerEditActions'
 import { initialState } from './OfferEditContext'
 
@@ -85,4 +86,28 @@ export const offerEditActions: OfferEditActions = {
     ...state,
     peerId,
   }),
+  SET_OFFER: (
+    state: OfferEditState,
+    {
+      availableSize, country, peerId, planItems, system,
+    }: SetOfferPayload,
+  ) => {
+    // every plan item needs a unique id to handle the edition
+    const newPlanItems: StoragePlanItem[] = planItems.map(
+      (plan: StoragePlanItem, index: number) => ({
+        ...plan,
+        internalId: index + 1,
+      }),
+    )
+    return {
+      ...state,
+      availableSize,
+      country,
+      peerId,
+      newPlanItems,
+      system,
+      usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newPlanItems),
+      internalCounter: newPlanItems.length + 1,
+    }
+  },
 }
