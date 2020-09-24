@@ -20,6 +20,8 @@ const useStylesRifCard = makeStyles((theme: Theme) => ({
     marginTop: '10px',
     background: '#FFF',
     borderRadius: '20px',
+    display: 'grid',
+    alignContent: 'space-between',
   },
   classActions: {
     display: 'flex',
