@@ -20,7 +20,7 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     availableCapacity: availableCapacityMB,
     plans,
     avgBillingPrice: averagePriceTransport,
-    acceptedCurrencies
+    acceptedCurrencies,
   } = offerTransport
 
   const offer: StorageOffer = {
