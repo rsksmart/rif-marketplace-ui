@@ -16,9 +16,10 @@ const FAKE_OFFER_0: OfferTransport = {
   provider: '0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1',
   totalCapacity: '1073741824',
   peerId: null,
-  averagePrice: 5 * 10 ** 18,
+  avgBillingPrice: 5,
   createdAt: '2020-08-10T14:11:32.648Z',
   updatedAt: '2020-08-10T14:11:32.740Z',
+  acceptedCurrencies: ['rif'],
   plans: [
     {
       id: 1,
@@ -35,7 +36,7 @@ const FAKE_TRANSPORT = [FAKE_OFFER_0]
 
 let offersService: StorageAPIService
 
-describe('Storage OffersService', () => {
+describe.only('Storage OffersService', () => {
   beforeEach(() => {
     offersService = new StorageOffersService()
     offersService.errorReporter = jest.fn()
@@ -62,12 +63,14 @@ describe('Storage OffersService', () => {
       const {
         provider,
         availableCapacity,
-        averagePrice,
+        avgBillingPrice,
         plans,
+        acceptedCurrencies,
       } = FAKE_OFFER_0
       const expectedOffers: StorageOffer = {
         id: provider,
         location: 'UK',
+        acceptedCurrencies,
         system: 'IPFS',
         availableSizeGB: new Big(availableCapacity).div(UNIT_PREFIX_POW2.KILO),
         subscriptionOptions: plans
@@ -77,7 +80,7 @@ describe('Storage OffersService', () => {
             price: parseToBigDecimal(plan.price),
             currency: 'RBTC',
           })),
-        averagePrice: averagePrice / 10 ** 18,
+        averagePrice: avgBillingPrice,
       }
 
       expect(actualReturnValue[0]).toStrictEqual(expectedOffers)
