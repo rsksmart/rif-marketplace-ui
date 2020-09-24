@@ -5,6 +5,7 @@ import GridRow from 'components/atoms/GridRow'
 import LabelWithValue from 'components/atoms/LabelWithValue'
 import { Order, PinnedContent } from 'components/pages/storage/buy/CheckoutContext'
 import React, { FC } from 'react'
+import { UNIT_PREFIX_POW2 } from 'utils/utils'
 
 type Props = Order & PinnedContent
 
@@ -12,6 +13,7 @@ const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
   const {
     name: contentName,
     size: contentSize,
+    unit: contentSizeUnit,
     hash: contentHash,
     id,
     system,
@@ -67,7 +69,7 @@ const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
             <GridItem>
               <LabelWithValue
                 label="Size:"
-                value={contentSize}
+                value={`${contentSize} ${UNIT_PREFIX_POW2[contentSizeUnit][0]}B`}
               />
             </GridItem>
           </GridRow>
