@@ -21,6 +21,10 @@ import { useHistory } from 'react-router-dom'
 import { LoadingPayload } from 'context/App/appActions'
 import { UIError } from 'models/UIMessage'
 import WithLoginCard from 'components/hoc/WithLoginCard'
+import OfferEditContext from 'context/Market/storage/OfferEditContext'
+import { OfferEditContextProps, StoragePlanItem } from 'context/Market/storage/interfaces'
+import { SetOfferPayload } from 'context/Market/storage/offerEditActions'
+import { StorageOffer } from 'models/marketItems/StorageItem'
 
 const logger = Logger.getInstance()
 
@@ -60,6 +64,9 @@ const StorageMyOffersPage: FC = () => {
     },
     dispatch,
   } = useContext<StorageOffersContextProps>(StorageOffersContext)
+  const {
+    dispatch: editOfferDispatch,
+  } = useContext<OfferEditContextProps>(OfferEditContext)
   const { dispatch: bcDispatch } = useContext(BlockchainContext)
   const reportError = useCallback((
     e: UIError,
@@ -139,11 +146,27 @@ const StorageMyOffersPage: FC = () => {
   }
 
   // TODO: handle edit offer
-  const handleEditOffer = (): void => logger.debug('todo: handle edit offer')
+  const handleEditOffer = (offer: StorageOffer) => {
+    const {
+      availableSizeGB, location, peerId, system, subscriptionOptions,
+    } = offer
+    editOfferDispatch({
+      type: 'SET_OFFER',
+      payload: {
+        // TODO: rename props and edit types to match StorageOffer
+        availableSize: Number(availableSizeGB),
+        country: location,
+        peerId,
+        system,
+        // TODO: adapt to use the same type
+        planItems: subscriptionOptions as unknown as StoragePlanItem[],
+      } as SetOfferPayload,
+    })
+    history.push(ROUTES.STORAGE.MYOFFERS.EDIT.BASE)
+  }
 
   return (
     <CenteredPageTemplate>
-
       <StakingCard
         balance="2048 RIF"
         onAddFunds={(): void => logger.info('Add funds clicked')}

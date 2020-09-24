@@ -97,6 +97,8 @@ const StorageSellPage: FC = () => {
     dispatch,
   } = useContext(OfferEditContext)
 
+  // TODO: dispatch CLEAN_UP function
+
   const {
     state: {
       account,
