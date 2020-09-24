@@ -22,6 +22,7 @@ export interface StorageOffer extends Item {
   availableSizeGB: Big
   subscriptionOptions: BillingPlan[]
   averagePrice: number
+  acceptedCurrencies: string[]
 }
 
 export type StorageItem = StorageOffer
