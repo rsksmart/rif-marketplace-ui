@@ -36,7 +36,7 @@ const FAKE_TRANSPORT = [FAKE_OFFER_0]
 
 let offersService: StorageAPIService
 
-describe.only('Storage OffersService', () => {
+describe('Storage OffersService', () => {
   beforeEach(() => {
     offersService = new StorageOffersService()
     offersService.errorReporter = jest.fn()
