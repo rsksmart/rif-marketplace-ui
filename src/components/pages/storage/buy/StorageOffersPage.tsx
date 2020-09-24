@@ -3,7 +3,7 @@ import StorageFilters from 'components/organisms/filters/storage/StorageFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { TableHeaders, MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import { BillingPlan } from 'models/marketItems/StorageItem'
-import { CombinedPriceCell, SelectRowButton, AddressItem } from 'components/molecules'
+import { SelectRowButton, AddressItem } from 'components/molecules'
 import MarketContext from 'context/Market/MarketContext'
 import StorageOffersContext, { StorageOffersContextProps } from 'context/Services/storage/OffersContext'
 import ItemWUnit from 'components/atoms/ItemWUnit'
@@ -47,7 +47,7 @@ const StorageOffersPage: FC = () => {
         id, system, availableSizeGB, averagePrice, subscriptionOptions,
       } = item
 
-      const { rate, displayName } = crypto.rbtc // FIXME: remove hard-coded currency
+      // const { rate, displayName } = crypto.rbtc // FIXME: remove hard-coded currency
 
       return {
         id,
@@ -58,13 +58,14 @@ const StorageOffersPage: FC = () => {
           .map((plan: BillingPlan) => plan.period as string)
           .reverse()
           .reduce((lastWord, currentWord) => `${lastWord} - ${currentWord}`),
-        averagePrice: <CombinedPriceCell
-          price={averagePrice.toString()}
-          priceFiat={(averagePrice * rate).toString()}
-          currency={displayName}
-          currencyFiat={currentFiat.displayName}
-          divider=" "
-        />,
+        averagePrice: <ItemWUnit type="mediumPrimary" value={averagePrice.toString()} unit="USD" />,
+        // averagePrice: <CombinedPriceCell
+        //   price={averagePrice.toString()}
+        //   priceFiat={(averagePrice * rate).toString()}
+        //   currency="USD"
+        //   currencyFiat={currentFiat.displayName}
+        //   divider=" "
+        // />,
         action1: <SelectRowButton
           id={id}
           handleSelect={() => {
