@@ -1,21 +1,28 @@
-import { TextFieldProps, Typography, TextField } from '@material-ui/core'
+import {
+  TextFieldProps, Typography, TextField, InputAdornment, MenuItem, SelectProps, Select,
+} from '@material-ui/core'
 import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
 import React, { FC } from 'react'
+import { UNIT_PREFIX_POW2 } from 'utils/utils'
 
 type Props = {
     name: TextFieldProps
     size: TextFieldProps
     hash: TextFieldProps
+    unit: SelectProps
 }
 
-const PinEnterInfoTab: FC<Props> = ({ name, size, hash }) => (
+const PinEnterInfoTab: FC<Props> = ({
+  name, size, unit, hash,
+}) => (
   <>
     <Typography variant="body2">
       To ensure that your file persists in IPFS is necessary to pin it using its hash
     </Typography>
     <GridRow
       justify="space-evenly"
+      wrap="nowrap"
     >
       <GridItem>
         <TextField
@@ -29,6 +36,17 @@ const PinEnterInfoTab: FC<Props> = ({ name, size, hash }) => (
       </GridItem>
       <GridItem>
         <TextField
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Select
+                  {...unit}
+                >
+                  {Object.keys(UNIT_PREFIX_POW2).filter((k) => !parseInt(k, 10)).map((k) => <MenuItem key={k} value={UNIT_PREFIX_POW2[k]}>{`${k[0]}B`}</MenuItem>)}
+                </Select>
+              </InputAdornment>
+            ),
+          }}
           type="number"
           id="contentSize"
           label="Content size"

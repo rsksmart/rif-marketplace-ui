@@ -5,23 +5,27 @@ import PinUploaderTab from 'components/molecules/storage/buy/PinUploaderTab'
 import RifCard from 'components/organisms/RifCard'
 import { PurchaseStorageAction } from 'components/pages/storage/buy/CheckoutContext'
 import React, { Dispatch, FC, useState } from 'react'
+import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import StoragePinTabs from './StoragePinTabs'
 
 type Props = {
     dispatch: Dispatch<PurchaseStorageAction>
 }
 
-const setInfoHandle = (
-  setterFn: React.Dispatch<React.SetStateAction<string>>,
-) => ({
-  target: { value },
-}): void => setterFn(value as string)
+function setInfoHandle<T>(
+  setterFn: React.Dispatch<React.SetStateAction<T>>,
+) {
+  return function ({ target: { value } }) {
+    return setterFn(value as T)
+  }
+}
 
 const PinningCard: FC<Props> = ({ dispatch }) => {
   const [isUpladed, setIsUploaded] = useState(false)
   const [name, setName] = useState('')
   const [size, setSize] = useState('')
   const [hash, setHash] = useState('')
+  const [unit, setUnit] = useState<UNIT_PREFIX_POW2 | 0>(0)
   const [files, setFiles] = useState<File[]>([])
 
   const handlePinning = async (): Promise<void> => {
@@ -30,7 +34,9 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     // Update context
     dispatch({
       type: 'SET_PINNED',
-      payload: { name, size, hash },
+      payload: {
+        name, size, unit: unit || undefined, hash,
+      },
     })
   }
 
@@ -71,6 +77,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
             name={{ value: name, onChange: setInfoHandle(setName) }}
             size={{ value: size, onChange: setInfoHandle(setSize) }}
             hash={{ value: hash, onChange: setInfoHandle(setHash) }}
+            unit={{ value: unit, onChange: setInfoHandle(setUnit) }}
           />
         ) : <PinUploaderTab onChange={setFiles} />}
     </RifCard>

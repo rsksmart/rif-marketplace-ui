@@ -8,6 +8,7 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
+import { UNIT_PREFIX_POW2 } from 'utils/utils'
 
 type AuxiliaryState = {
   planOptions: BillingPlan[]
@@ -28,6 +29,7 @@ export type Order = Pick<StorageOffer, 'id' | 'system' | 'location'> & {
 export type PinnedContent = {
   name: string
   size: string
+  unit: UNIT_PREFIX_POW2
   hash: string
 }
 

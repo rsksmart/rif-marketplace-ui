@@ -1,5 +1,6 @@
 import { TextField } from '@material-ui/core'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
+import { fonts } from '@rsksmart/rif-ui'
 import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
 import { DropzoneArea, DropzoneAreaProps } from 'material-ui-dropzone'
@@ -8,9 +9,14 @@ import React, { FC } from 'react'
 const useStyles = makeStyles(() => createStyles({
   root: {
     width: '100%',
+    minWidth: '350px',
     minHeight: '100px',
     height: '150px',
     borderRadius: '10px',
+  },
+  text: {
+    fontFamily: fonts.family,
+    fontSize: fonts.size.normal,
   },
   columnItem: {
     paddingBottom: '10px',
