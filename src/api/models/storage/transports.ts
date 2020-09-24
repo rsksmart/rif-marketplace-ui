@@ -17,4 +17,5 @@ export interface OfferTransport {
     avgBillingPrice: number
     createdAt: string
     updatedAt: string
+    acceptedCurrencies: string[]
 }
