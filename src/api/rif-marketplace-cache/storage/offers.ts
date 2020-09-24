@@ -1,3 +1,4 @@
+// eslint-disable-next-line max-classes-per-file
 import { AbstractAPIService } from 'api/models/apiService'
 import {
   StorageItem, StorageOffer, BillingPlan, PeriodInSeconds,
@@ -12,6 +13,7 @@ import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
 
 export const offersAddress: StorageServiceAddress = 'storage/v0/offers'
+export const avgBillingPlanAddress: StorageServiceAddress = 'storage/v0/avgBillingPrice'
 export const offersWSChannel: StorageWSChannel = 'offers'
 
 const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
@@ -19,7 +21,7 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     provider,
     availableCapacity: availableCapacityMB,
     plans,
-    averagePrice: averagePriceTransport,
+    avgBillingPrice: averagePriceTransport,
   } = offerTransport
 
   const offer: StorageOffer = {
@@ -34,7 +36,7 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
         price: parseToBigDecimal(plan.price, 18),
         currency: 'RBTC',
       })),
-    averagePrice: averagePriceTransport / 10 ** 18,
+    averagePrice: averagePriceTransport,
   }
   return offer
 }
@@ -92,13 +94,22 @@ export class StorageOffersService
       max: maxMB / UNIT_PREFIX_POW2.KILO,
     }
   }
+}
+
+export class AvgBillingPriceService
+  extends AbstractAPIService implements StorageAPIService {
+  path = avgBillingPlanAddress
+
+  _channel = offersWSChannel
+
+  _fetch = (): Promise<[number, number]> => this.service.find()
 
   fetchPriceLimits = async (): Promise<MinMaxFilter> => {
-    const minPriceWei = await fetchMinMaxLimit(this.service, MinMax.min, 'averagePrice')
-    const maxPriceWei = await fetchMinMaxLimit(this.service, MinMax.max, 'averagePrice')
+    const min = await this.service.get(MinMax.min)
+    const max = await this.service.get(MinMax.max)
     return {
-      min: minPriceWei / 10 ** 18,
-      max: maxPriceWei / 10 ** 18,
+      min,
+      max,
     }
   }
 }

@@ -14,7 +14,7 @@ export interface OfferTransport {
     availableCapacity: string
     utilizedCapacity: string
     plans: BillingPlanTransport[]
-    averagePrice: number
+    avgBillingPrice: number
     createdAt: string
     updatedAt: string
 }
