@@ -66,12 +66,6 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
           type: 'warning',
           text: 'Please, connect your wallet.',
           id: 'wallet',
-          // customAction: {
-          //   name: 'Connect',
-          //   action: () => {
-          //     return <Login /> //TODO: dispatch web3dispatch action 'CONNECT' that would trigger the wallet connection modal to open
-          //   }
-          // }
         } as MessagePayload,
       } as any)
     }

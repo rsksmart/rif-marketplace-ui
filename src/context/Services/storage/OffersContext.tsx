@@ -1,7 +1,7 @@
 import React, {
   Dispatch, useContext, useEffect, useReducer, useState,
 } from 'react'
-import { AvgBillingPriceService, StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
+import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
 import { LoadingPayload, ErrorMessagePayload } from 'context/App/appActions'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { ContextReducer, ContextActions } from 'context/storeUtils/interfaces'
@@ -11,6 +11,7 @@ import { Modify } from 'utils/typeUtils'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { MinMaxFilter } from 'models/Filters'
 import { UIError } from 'models/UIMessage'
+import { AvgBillingPriceService } from 'api/rif-marketplace-cache/storage/avg-billing-plan-price'
 import {
   storageOffersActions, StorageOffersPayload, StorageOffersReducer, StorageOffersAction,
 } from './offersActions'
