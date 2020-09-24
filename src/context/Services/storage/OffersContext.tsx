@@ -189,7 +189,7 @@ export const StorageOffersContextProvider = ({ children }) => {
         } as any)
       }
     }
-  }, [api, isInitialised, needsRefresh, isLimitsSet, appDispatch])
+  }, [api, apiAvgBillingPrice, isInitialised, needsRefresh, isLimitsSet, appDispatch])
 
   // Pre-fetch limits
   useEffect(() => {
