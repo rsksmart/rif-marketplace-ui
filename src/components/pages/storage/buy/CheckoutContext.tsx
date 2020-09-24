@@ -14,7 +14,6 @@ type AuxiliaryState = {
   currencyOptions: SupportedTokens[]
   currentToken?: SupportedTokens
   currentRate: number
-  requiresUpload: boolean
   selectedCurrency: number
   selectedPlan: number
   periodsCount: number
@@ -35,7 +34,7 @@ export type PinnedContent = {
 type State = {
   order: Order
   auxiliary: AuxiliaryState
-  pinned: PinnedContent
+  pinned?: PinnedContent
 }
 
 type ActionType = (
@@ -48,7 +47,7 @@ type ActionType = (
 
 type InitialisePayload = Pick<AuxiliaryState, 'currencyOptions'> & Pick<Order, 'id' | 'system' | 'location'>
 
-type Action = (
+export type PurchaseStorageAction = (
   | {
     type: 'CHANGE_CURRENCY'
     payload: { index: number }
@@ -78,7 +77,7 @@ interface Actions {
   ) => State
   SET_AUXILIARY: (state: State, payload: Partial<AuxiliaryState>) => State
   SET_ORDER: (state: State, payload: Partial<Order>) => State
-  SET_PINNED: (state: State, payload: Partial<PinnedContent>) => State
+  SET_PINNED: (state: State, payload: PinnedContent) => State
   INITIALISE: (state: State, payload: InitialisePayload) => State
 }
 
@@ -109,7 +108,7 @@ const actions: Actions = {
       ...payload,
     },
   }),
-  SET_PINNED: (state: State, payload: Partial<PinnedContent>): State => ({
+  SET_PINNED: (state: State, payload: PinnedContent): State => ({
     ...state,
     pinned: {
       ...state.pinned,
@@ -133,10 +132,10 @@ const actions: Actions = {
 
 export type Props = {
     state: State
-    dispatch: Dispatch<Action>
+    dispatch: Dispatch<PurchaseStorageAction>
 }
 
-const reducer = (state: State, action: Action): State => {
+const reducer = (state: State, action: PurchaseStorageAction): State => {
   const { type, payload } = action
   return actions[type](state, payload as never)
 }
@@ -154,15 +153,9 @@ const initialState: State = {
     currencyOptions: [],
     currentRate: 0,
     planOptions: [],
-    requiresUpload: false,
     selectedCurrency: 0,
     selectedPlan: 0,
     periodsCount: 0,
-  },
-  pinned: {
-    name: '',
-    hash: '',
-    size: '',
   },
 }
 

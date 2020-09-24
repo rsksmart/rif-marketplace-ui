@@ -5,6 +5,7 @@ import React, { FC } from 'react'
 import GridColumn from 'components/atoms/GridColumn'
 import { colors } from '@rsksmart/rif-ui'
 import GridItem from 'components/atoms/GridItem'
+import { DropzoneArea, DropzoneAreaProps } from 'material-ui-dropzone'
 
 const useStylesDropZone = makeStyles((theme: Theme) => ({
   root: {
@@ -25,27 +26,16 @@ const useStylesDropZone = makeStyles((theme: Theme) => ({
   },
 }))
 
-export type DropZoneProps = Pick<ButtonBaseProps, 'onClick'>
-
-const DropZone: FC<DropZoneProps> = ({ ...props }) => {
+const DropZone: FC<DropzoneAreaProps> = (props) => {
   const classes = useStylesDropZone()
+
   return (
     <GridColumn
       alignItems="center"
       justify="center"
       className={classes.root}
     >
-      <GridItem>
-        <Typography color="textSecondary">Drag & Drop files here</Typography>
-      </GridItem>
-      <GridItem>
-        <Typography color="textSecondary">or</Typography>
-      </GridItem>
-      <GridItem>
-        <Button className={classes.button} {...props}>
-          + Add files
-        </Button>
-      </GridItem>
+      <DropzoneArea {...props} />
     </GridColumn>
   )
 }

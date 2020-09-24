@@ -57,7 +57,7 @@ const useTabItemStyles = makeStyles((
 }))
 
 export type StoragePinTabsProps = Modify<TabsProps, {
-  value: number
+  value: boolean
   onChange: (event: React.ChangeEvent<{}>, value: any) => void
 }>
 
@@ -72,9 +72,9 @@ const StoragePinTabs: FC<StoragePinTabsProps> = ({ ...props }) => {
       textColor="primary"
       {...props}
     >
-      <Tab classes={tabItemStylesClasses} label="Upload file" />
+      <Tab classes={tabItemStylesClasses} label="Upload file" value={false} />
       <Divider orientation="vertical" flexItem style={{ height: '29px', width: '2px', alignSelf: 'center' }} />
-      <Tab classes={tabItemStylesClasses} label="Pin by hash" />
+      <Tab classes={tabItemStylesClasses} label="Pin by hash" value />
     </Tabs>
   )
 }
