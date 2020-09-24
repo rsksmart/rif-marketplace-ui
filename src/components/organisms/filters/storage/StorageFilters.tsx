@@ -98,7 +98,7 @@ const StorageFilters = () => {
           end: priceFilter.max,
         }}
         edgeValues={priceLimits}
-        unit="RIF"
+        unit="USD"
         handleChange={onPriceChange}
       />
       <Accordion

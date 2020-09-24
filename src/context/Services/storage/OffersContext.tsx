@@ -1,7 +1,7 @@
 import React, {
   Dispatch, useContext, useEffect, useReducer, useState,
 } from 'react'
-import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
+import { AvgBillingPriceService, StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
 import { LoadingPayload, ErrorMessagePayload } from 'context/App/appActions'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { ContextReducer, ContextActions } from 'context/storeUtils/interfaces'
@@ -79,6 +79,7 @@ export const StorageOffersContextProvider = ({ children }) => {
     dispatch: appDispatch,
   }: AppContextProps = useContext(AppContext)
   const api = appState?.apis?.['storage/v0/offers'] as StorageOffersService
+  const apiAvgBillingPrice = appState?.apis?.['storage/v0/avgBillingPrice'] as AvgBillingPriceService
 
   const [state, dispatch] = useReducer(reducer, initialState)
   const {
@@ -89,6 +90,10 @@ export const StorageOffersContextProvider = ({ children }) => {
 
   if (api && !api.service) {
     api.connect(errorReporterFactory(appDispatch))
+  }
+
+  if (apiAvgBillingPrice && !apiAvgBillingPrice.service) {
+    apiAvgBillingPrice.connect(errorReporterFactory(appDispatch))
   }
   // Initialise
   useEffect(() => {
@@ -142,7 +147,7 @@ export const StorageOffersContextProvider = ({ children }) => {
                 text: 'Error while fetching filters. ',
               })
             }),
-          api.fetchPriceLimits()
+          apiAvgBillingPrice.fetchPriceLimits()
             .then((price: MinMaxFilter) => {
               dispatch({
                 type: 'UPDATE_LIMITS',

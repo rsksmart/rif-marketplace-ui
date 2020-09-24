@@ -16,8 +16,8 @@ export const mapToTransport = ({
   periods: Array.from(periods)
     .map((p: SubscriptionPeriod) => PeriodInSeconds[p]),
   averagePrice: {
-    min: price.min * 10 ** 18,
-    max: price.max * 10 ** 18,
+    min: price.min,
+    max: price.max,
   },
   totalCapacity: {
     min: sizeGB.min * UNIT_PREFIX_POW2.KILO,
