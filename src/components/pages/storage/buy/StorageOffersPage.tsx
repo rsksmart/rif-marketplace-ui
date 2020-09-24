@@ -4,7 +4,6 @@ import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { TableHeaders, MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import { BillingPlan } from 'models/marketItems/StorageItem'
 import { SelectRowButton, AddressItem } from 'components/molecules'
-import MarketContext from 'context/Market/MarketContext'
 import StorageOffersContext, { StorageOffersContextProps } from 'context/Services/storage/OffersContext'
 import ItemWUnit from 'components/atoms/ItemWUnit'
 
@@ -18,14 +17,6 @@ const headers: TableHeaders = {
 }
 
 const StorageOffersPage: FC = () => {
-  const {
-    state: {
-      exchangeRates: {
-        currentFiat,
-        crypto,
-      },
-    },
-  } = useContext(MarketContext)
   const {
     state: {
       listing: { items },
@@ -47,8 +38,6 @@ const StorageOffersPage: FC = () => {
         id, system, availableSizeGB, averagePrice, subscriptionOptions,
       } = item
 
-      // const { rate, displayName } = crypto.rbtc // FIXME: remove hard-coded currency
-
       return {
         id,
         provider: <AddressItem value={id} />,
@@ -59,13 +48,6 @@ const StorageOffersPage: FC = () => {
           .reverse()
           .reduce((lastWord, currentWord) => `${lastWord} - ${currentWord}`),
         averagePrice: <ItemWUnit type="mediumPrimary" value={averagePrice.toString()} unit="USD" />,
-        // averagePrice: <CombinedPriceCell
-        //   price={averagePrice.toString()}
-        //   priceFiat={(averagePrice * rate).toString()}
-        //   currency="USD"
-        //   currencyFiat={currentFiat.displayName}
-        //   divider=" "
-        // />,
         action1: <SelectRowButton
           id={id}
           handleSelect={() => {

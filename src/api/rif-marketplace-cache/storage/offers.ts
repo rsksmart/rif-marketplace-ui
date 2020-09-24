@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-classes-per-file
 import { AbstractAPIService } from 'api/models/apiService'
 import {
   StorageItem, StorageOffer, BillingPlan, PeriodInSeconds,
@@ -13,7 +12,6 @@ import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
 
 export const offersAddress: StorageServiceAddress = 'storage/v0/offers'
-export const avgBillingPlanAddress: StorageServiceAddress = 'storage/v0/avgBillingPrice'
 export const offersWSChannel: StorageWSChannel = 'offers'
 
 const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
@@ -41,7 +39,7 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
   return offer
 }
 
-enum MinMax {
+export enum MinMax {
   min = 1,
   max = -1
 }
@@ -92,24 +90,6 @@ export class StorageOffersService
     return {
       min: minMB / UNIT_PREFIX_POW2.KILO,
       max: maxMB / UNIT_PREFIX_POW2.KILO,
-    }
-  }
-}
-
-export class AvgBillingPriceService
-  extends AbstractAPIService implements StorageAPIService {
-  path = avgBillingPlanAddress
-
-  _channel = offersWSChannel
-
-  _fetch = (): Promise<[number, number]> => this.service.find()
-
-  fetchPriceLimits = async (): Promise<MinMaxFilter> => {
-    const min = await this.service.get(MinMax.min)
-    const max = await this.service.get(MinMax.max)
-    return {
-      min,
-      max,
     }
   }
 }
