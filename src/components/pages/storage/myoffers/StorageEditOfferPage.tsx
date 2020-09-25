@@ -1,13 +1,27 @@
-import { Button } from '@rsksmart/rif-ui'
+import { Button, Web3Store } from '@rsksmart/rif-ui'
 import RoundedCard from 'components/atoms/RoundedCard'
 import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
-import React, { FC } from 'react'
+import { OfferEditContextProps } from 'context/Market/storage/interfaces'
+import OfferEditContext from 'context/Market/storage/OfferEditContext'
+import React, { FC, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
+import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 
 const logger = Logger.getInstance()
 const StorageEditOfferPage: FC<{}> = () => {
-  // TODO: if no account or no offer selected (!editing) -> redirect to MyOffers page
+  const history = useHistory()
+  const {
+    state: { account },
+  } = useContext(Web3Store)
+  const {
+    state: { offerId },
+  } = useContext<OfferEditContextProps>(OfferEditContext)
+
+  if (!offerId || !account) {
+    history.replace(ROUTES.STORAGE.MYOFFERS.BASE)
+  }
   // TODO: onClick editOffer define end handler to submit the edition
 
   const handleEditOffer = () => {

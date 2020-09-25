@@ -165,7 +165,7 @@ const StorageMyOffersPage: FC = () => {
         const plan: StoragePlanItem = {
           currency: s.currency,
           pricePerGb: Number(s.price) * 1024,
-          timePeriod: TimePeriodEnum.Daily, // FIXME: remove hardcoded period
+          timePeriod: TimePeriodEnum.Daily,
         }
         return plan
       }),
