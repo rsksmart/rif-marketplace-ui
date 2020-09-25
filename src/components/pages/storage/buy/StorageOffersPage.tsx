@@ -11,6 +11,7 @@ const headers: TableHeaders = {
   provider: 'Provider',
   system: 'System',
   availableSize: 'Available Size',
+  availableCurrencies: 'Currency',
   subscriptionOptions: 'Subscription Period',
   averagePrice: 'Price/GB/Day',
   action1: '',
@@ -35,18 +36,17 @@ const StorageOffersPage: FC = () => {
   const collection = items
     .map<MarketplaceItem>((item) => {
       const {
-        id, system, availableSizeGB, averagePrice, subscriptionOptions,
+        id, system, availableSizeGB, averagePrice, subscriptionOptions, acceptedCurrencies,
       } = item
-
       return {
         id,
         provider: <AddressItem value={id} />,
         system,
         availableSize: <ItemWUnit type="mediumPrimary" unit="GB" value={availableSizeGB.toString()} />,
-        subscriptionOptions: subscriptionOptions
-          .map((plan: BillingPlan) => plan.period as string)
-          .reverse()
-          .reduce((lastWord, currentWord) => `${lastWord} - ${currentWord}`),
+        subscriptionOptions: Array.from(new Set(
+          subscriptionOptions.map((plan: BillingPlan) => plan.period as string),
+        )).join(' - '),
+        availableCurrencies: acceptedCurrencies.sort().join(' - ').toUpperCase(),
         averagePrice: <ItemWUnit type="mediumPrimary" value={averagePrice.toString()} unit="USD" />,
         action1: <SelectRowButton
           id={id}
