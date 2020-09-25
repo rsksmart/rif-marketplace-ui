@@ -1,15 +1,19 @@
-import Login from 'components/atoms/Login'
+import { Button } from '@rsksmart/rif-ui'
 import RoundedCard from 'components/atoms/RoundedCard'
 import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import React, { FC } from 'react'
+import Logger from 'utils/Logger'
 
+const logger = Logger.getInstance()
 const StorageEditOfferPage: FC<{}> = () => {
-  // TODO: if no account or no offer selected -> redirect to MyOffers page
-  // TODO: define end handler to submit the edition
-  // TODO: dispatch CLEAN_UP function
+  // TODO: if no account or no offer selected (!editing) -> redirect to MyOffers page
+  // TODO: onClick editOffer define end handler to submit the edition
 
-  const endHandler = <Login />
+  const handleEditOffer = () => {
+    logger.debug('TODO: send transaction to edit offer')
+  }
+  const endHandler = <Button color="primary" variant="contained" rounded onClick={handleEditOffer}>Edit offer</Button>
   return (
     <CenteredPageTemplate
       title="Edit your storage offer"

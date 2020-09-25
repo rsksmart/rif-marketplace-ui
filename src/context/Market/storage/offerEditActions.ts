@@ -49,6 +49,7 @@ export interface SetOfferPayload {
   peerId: string
   planItems: StoragePlanItem[]
   system: string
+  offerId?: string
 }
 
 export type OfferEditPayload =

@@ -19,6 +19,7 @@ export const initialState: OfferEditState = {
   allPeriods: periodOptions,
   peerId: '',
   usedPeriodsPerCurrency: {},
+  offerId: undefined,
 }
 
 const OfferEditContext = React.createContext({} as OfferEditContextProps | any)

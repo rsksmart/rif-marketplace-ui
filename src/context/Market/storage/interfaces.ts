@@ -20,6 +20,7 @@ export interface OfferEditState extends ContextState {
   allPeriods: TimePeriodEnum[]
   peerId: string
   usedPeriodsPerCurrency: Record<string, TimePeriodEnum[]> // dictionary to easily know the timePeriods already used by a given currency
+  offerId?: string
 }
 
 export interface OfferEditContextProps {

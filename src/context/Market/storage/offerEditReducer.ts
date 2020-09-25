@@ -89,7 +89,12 @@ export const offerEditActions: OfferEditActions = {
   SET_OFFER: (
     state: OfferEditState,
     {
-      availableSize, country, peerId, planItems, system,
+      availableSize,
+      country,
+      peerId,
+      planItems,
+      system,
+      offerId,
     }: SetOfferPayload,
   ) => {
     // every plan item needs a unique id to handle the edition
@@ -104,10 +109,11 @@ export const offerEditActions: OfferEditActions = {
       availableSize,
       country,
       peerId,
-      newPlanItems,
+      planItems: newPlanItems,
       system,
       usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newPlanItems),
       internalCounter: newPlanItems.length + 1,
+      offerId,
     }
   },
 }

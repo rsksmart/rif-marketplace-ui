@@ -17,7 +17,7 @@ import { SetAvailableSizePayload, SetPeerIdPayload } from 'context/Market/storag
 const GeneralFeatures = () => {
   const {
     state: {
-      availableSize, system, peerId,
+      availableSize, system, peerId, offerId,
     }, dispatch,
   } = useContext<OfferEditContextProps>(OfferEditContext)
 
@@ -105,6 +105,7 @@ const GeneralFeatures = () => {
           onChange={onPeerIdChange}
           placeholder="Paste here your Peer ID"
           inputProps={{ style: { textAlign: 'center' } }}
+          disabled={!!offerId}
         />
       </Grid>
       <Grid item xs={4} md={2}>
