@@ -2,7 +2,7 @@ import { AbstractAPIService } from 'api/models/apiService'
 import {
   StorageItem, StorageOffer, BillingPlan, PeriodInSeconds,
 } from 'models/marketItems/StorageItem'
-import { OfferTransport } from 'api/models/storage/transports'
+import { BillingPlanTransport, OfferTransport } from 'api/models/storage/transports'
 import { Big } from 'big.js'
 import { parseToBigDecimal } from 'utils/parsers'
 import { MinMaxFilter } from 'models/Filters'
@@ -23,12 +23,16 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     acceptedCurrencies,
   } = offerTransport
 
+  const sortPeriods = (a: BillingPlanTransport, b: BillingPlanTransport) => (a.period === b.period
+    ? 0
+    : a.period > b.period ? -1 : 1)
   const offer: StorageOffer = {
     id: provider,
     location: 'UK',
     system: 'IPFS',
     availableSizeGB: new Big(availableCapacityMB).div(UNIT_PREFIX_POW2.KILO),
     subscriptionOptions: plans
+      .sort(sortPeriods)
       .filter((plan) => !!PeriodInSeconds[plan.period])
       .map<BillingPlan>((plan) => ({
         period: PeriodInSeconds[plan.period],
