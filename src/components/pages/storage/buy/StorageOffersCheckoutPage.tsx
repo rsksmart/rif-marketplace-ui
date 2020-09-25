@@ -18,7 +18,7 @@ import StorageOrderDescription from 'components/organisms/storage/buy/StorageOff
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
 import React, {
-  ChangeEvent, useContext,
+  ChangeEvent, FC, useContext,
 } from 'react'
 import withCheckoutContext, { CheckoutContext } from './CheckoutContext'
 
@@ -29,7 +29,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const StorageOffersCheckoutPage = () => {
+const StorageOffersCheckoutPage: FC = () => {
   const classes = useStyles()
   const {
     state: {
@@ -172,7 +172,6 @@ const StorageOffersCheckoutPage = () => {
           </GridRow>
         </GridItem>
         {/* CONTENT */}
-        {/* { Number(Boolean(order?.contentHash)) ? planConfiguration() : pinnedContentSelector()} */}
         <GridItem style={{ alignSelf: 'center' }}>
           <Typography variant="caption">To buy your storage you have to select the currency, suscription and payment details to get the final price of your storage plan.</Typography>
         </GridItem>
