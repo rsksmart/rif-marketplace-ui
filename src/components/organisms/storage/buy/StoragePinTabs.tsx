@@ -9,7 +9,6 @@ const useTabsStyles = makeStyles(() => ({
   root: {
     boxShadow: 'unset',
     overflow: 'visible',
-    marginTop: '20px',
   },
   fixed: {
     overflow: 'visible !important',

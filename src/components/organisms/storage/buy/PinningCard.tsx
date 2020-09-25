@@ -45,14 +45,17 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     // Update context
     dispatch({
       type: 'SET_PINNED',
-      payload: { name, size, hash },
+      payload: {
+        name, size, hash, unit,
+      },
     })
   }
 
-  const action: Pick<ButtonProps, 'children' | 'onClick'> = isUpladed
+  const action: Pick<ButtonProps, 'children' | 'onClick' | 'disabled'> = isUpladed
     ? {
       children: 'Pin',
       onClick: handlePinning,
+      // disabled: name && size && hash && Boolean(unit),
     }
     : {
       children: 'Upload',
