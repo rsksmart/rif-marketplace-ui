@@ -46,7 +46,7 @@ const StorageOffersPage: FC = () => {
         subscriptionOptions: Array.from(new Set(
           subscriptionOptions.map((plan: BillingPlan) => plan.period as string),
         )).join(' - '),
-        availableCurrencies: acceptedCurrencies.sort().join(' - ').toUpperCase(),
+        availableCurrencies: acceptedCurrencies.join(' - ').toUpperCase(),
         averagePrice: <ItemWUnit type="mediumPrimary" value={averagePrice.toString()} unit="USD" />,
         action1: <SelectRowButton
           id={id}
