@@ -23,16 +23,13 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     acceptedCurrencies,
   } = offerTransport
 
-  const sortPeriods = (a: BillingPlanTransport, b: BillingPlanTransport) => (a.period === b.period
-    ? 0
-    : a.period > b.period ? -1 : 1)
   const offer: StorageOffer = {
     id: provider,
     location: 'UK',
     system: 'IPFS',
     availableSizeGB: new Big(availableCapacityMB).div(UNIT_PREFIX_POW2.KILO),
     subscriptionOptions: plans
-      .sort(sortPeriods)
+      .sort((a: BillingPlanTransport, b: BillingPlanTransport) => parseInt(a.period, 10) - parseInt(b.period, 10))
       .filter((plan) => !!PeriodInSeconds[plan.period])
       .map<BillingPlan>((plan) => ({
         period: PeriodInSeconds[plan.period],
