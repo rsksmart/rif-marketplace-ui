@@ -2,7 +2,10 @@ import { Big } from 'big.js'
 import { OfferTransport } from 'api/models/storage/transports'
 import mockFeathersService from 'api/test-utils/feathers'
 import {
-  StorageOffer, BillingPlan, PeriodInSeconds, SubscriptionPeriod,
+  StorageOffer,
+  BillingPlan,
+  PeriodInSeconds,
+  SubscriptionPeriod,
 } from 'models/marketItems/StorageItem'
 import { parseToBigDecimal } from 'utils/parsers'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
@@ -15,7 +18,7 @@ const FAKE_OFFER_0: OfferTransport = {
   availableCapacity: '1073741824',
   provider: '0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1',
   totalCapacity: '1073741824',
-  peerId: null,
+  peerId: 'QmYyQSo1c1Ym7orWxLYvCrM2EmxFTANf8wXmmE7DWjhx5N',
   avgBillingPrice: 5,
   createdAt: '2020-08-10T14:11:32.648Z',
   updatedAt: '2020-08-10T14:11:32.740Z',
@@ -59,7 +62,9 @@ describe('Storage OffersService', () => {
         },
         periods: new Set<SubscriptionPeriod>(['Daily']),
       }
-      const actualReturnValue: StorageOffer[] = await offersService.fetch(filters)
+      const actualReturnValue: StorageOffer[] = await offersService.fetch(
+        filters,
+      )
       const {
         provider,
         availableCapacity,
@@ -81,6 +86,7 @@ describe('Storage OffersService', () => {
             currency: 'rbtc',
           })),
         averagePrice: avgBillingPrice,
+        peerId: 'QmYyQSo1c1Ym7orWxLYvCrM2EmxFTANf8wXmmE7DWjhx5N',
       }
 
       expect(actualReturnValue[0]).toStrictEqual(expectedOffers)
