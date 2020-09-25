@@ -33,16 +33,16 @@ const ConfigPurchaseCard: FC<Props> = ({ details }) => {
 
   return (
     <RifCard
-      Header={() => (
+      Header={(): JSX.Element => (
         <Typography variant="h6" color="primary">Configuring storage plan</Typography>
       )}
-      Actions={() => (
+      Actions={(): JSX.Element => (
         <Button
           style={{
             background: colors.primary,
             color: colors.gray1,
           }}
-          onClick={(event) => {
+          onClick={(): void => {
             // Validate input
 
             // Submit
@@ -58,8 +58,14 @@ const ConfigPurchaseCard: FC<Props> = ({ details }) => {
           <TableBody>
             {Object.keys(details).map((key) => (
               <TableRow key={key}>
-                <TableCell className={classes.detailKey}><Typography variant="body2">{key}</Typography></TableCell>
-                <TableCell className={classes.detailValue}>{details[key]}</TableCell>
+                <TableCell className={classes.detailKey}>
+                  <Typography variant="body2">
+                    {key}
+                  </Typography>
+                </TableCell>
+                <TableCell className={classes.detailValue}>
+                  {details[key]}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

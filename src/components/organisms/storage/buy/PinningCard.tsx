@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core'
+import { Button, ButtonProps } from '@material-ui/core'
 import { colors } from '@rsksmart/rif-ui'
 import PinEnterInfoTab from 'components/molecules/storage/buy/PinEnterInfoTab'
 import PinUploaderTab from 'components/molecules/storage/buy/PinUploaderTab'
@@ -15,13 +15,12 @@ type Props = {
 function setInfoHandle<T>(
   setterFn: React.Dispatch<React.SetStateAction<T>>,
 ) {
-  return function ({ target: { value } }) {
-    return setterFn(value as T)
-  }
+  return ({ target: { value } }): void => setterFn(value as T)
 }
 
 const PinningCard: FC<Props> = ({ dispatch }) => {
   const [isUpladed, setIsUploaded] = useState(false)
+  // const [isPinned, setIsPinned] = useState(false)
   const [name, setName] = useState('')
   const [size, setSize] = useState('')
   const [hash, setHash] = useState('')
@@ -30,7 +29,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
 
   const handlePinning = async (): Promise<void> => {
     // Pin
-
+    await Promise.resolve()
     // Update context
     dispatch({
       type: 'SET_PINNED',
@@ -42,7 +41,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
 
   const handleUpload = async (): Promise<void> => {
     // Upload files
-
+    await Promise.resolve(files)
     // Update context
     dispatch({
       type: 'SET_PINNED',
@@ -50,25 +49,32 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     })
   }
 
+  const action: Pick<ButtonProps, 'children' | 'onClick'> = isUpladed
+    ? {
+      children: 'Pin',
+      onClick: handlePinning,
+    }
+    : {
+      children: 'Upload',
+      onClick: handleUpload,
+    }
+
   return (
     <RifCard
-      Header={() => (
+      Header={(): JSX.Element => (
         <StoragePinTabs
-          onChange={(_, value): void => setIsUploaded(value)}
+          onChange={(_, value): void => setIsUploaded(value as boolean)}
           value={isUpladed}
         />
       )}
-      Actions={() => (
+      Actions={(): JSX.Element => (
         <Button
           style={{
             background: colors.primary,
             color: colors.gray1,
           }}
-          onClick={isUpladed ? handlePinning : handleUpload}
-        >
-          {isUpladed ? 'Pin' : 'Upload'}
-
-        </Button>
+          {...action}
+        />
       )}
     >
       {isUpladed

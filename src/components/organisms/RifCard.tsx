@@ -1,11 +1,11 @@
 import React, { FC } from 'react'
 import {
-  Card, CardActions, CardContent, CardProps, makeStyles, Theme,
+  Card, CardActions, CardContent, CardProps, makeStyles,
 } from '@material-ui/core'
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
 
-const useStylesRifCard = makeStyles((theme: Theme) => ({
+const useStylesRifCard = makeStyles(() => ({
   card: {
     background: '#F8F7F7',
     borderRadius: '20px',

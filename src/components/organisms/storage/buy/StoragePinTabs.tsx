@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import {
-  Theme, Tabs, Tab, makeStyles, Divider, TabsProps,
+  Tabs, Tab, makeStyles, Divider, TabsProps,
 } from '@material-ui/core'
 import { Modify } from 'utils/typeUtils'
 
@@ -19,9 +19,9 @@ const useTabsStyles = makeStyles(() => ({
   },
 }))
 const useTabItemStyles = makeStyles((
-  {
-    breakpoints,
-  }: Pick<Theme, 'breakpoints'>,
+  // {
+  //   breakpoints,
+  // }: Pick<Theme, 'breakpoints'>,
 ): unknown => ({
 //   root: {
 //     lineHeight: 'inherit',
@@ -58,7 +58,7 @@ const useTabItemStyles = makeStyles((
 
 export type StoragePinTabsProps = Modify<TabsProps, {
   value: boolean
-  onChange: (event: React.ChangeEvent<{}>, value: any) => void
+  onChange: (event: React.ChangeEvent<{}>, value: unknown) => void
 }>
 
 const StoragePinTabs: FC<StoragePinTabsProps> = ({ ...props }) => {

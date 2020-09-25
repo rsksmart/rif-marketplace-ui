@@ -254,7 +254,8 @@ const Provider: FC = ({ children }) => {
 
   // Recalculates total amounts and subscription end date
   useEffect(() => {
-    const currentPlan: BillingPlan | undefined = listedItem?.subscriptionOptions[selectedPlan]
+    const currentPlan: BillingPlan
+    | undefined = listedItem?.subscriptionOptions[selectedPlan]
 
     if (isInitialised && currentPlan) {
       const currentTotal = currentPlan.price.mul(periodsCount)

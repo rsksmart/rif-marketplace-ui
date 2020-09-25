@@ -1,11 +1,10 @@
-import {
-  makeStyles, Theme, Typography, Button, ButtonBaseProps,
-} from '@material-ui/core'
 import React, { FC } from 'react'
-import GridColumn from 'components/atoms/GridColumn'
-import { colors } from '@rsksmart/rif-ui'
-import GridItem from 'components/atoms/GridItem'
 import { DropzoneArea, DropzoneAreaProps } from 'material-ui-dropzone'
+import {
+  makeStyles, Theme,
+} from '@material-ui/core'
+import { colors } from '@rsksmart/rif-ui'
+import GridColumn from 'components/atoms/GridColumn'
 
 const useStylesDropZone = makeStyles((theme: Theme) => ({
   root: {
