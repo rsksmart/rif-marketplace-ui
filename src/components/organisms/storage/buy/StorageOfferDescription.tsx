@@ -1,4 +1,4 @@
-import { Box, Typography } from '@material-ui/core'
+import { Box, makeStyles, Typography } from '@material-ui/core'
 import { shortenString } from '@rsksmart/rif-ui'
 import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
@@ -9,7 +9,16 @@ import { UNIT_PREFIX_POW2 } from 'utils/utils'
 
 type Props = Order & PinnedContent
 
+const useStyles = makeStyles(() => ({
+  items: {
+    display: 'flex',
+    justifyContent: 'start',
+  },
+}))
+
 const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
+  const classes = useStyles()
+
   const {
     name: contentName,
     size: contentSize,
@@ -20,63 +29,74 @@ const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
   } = order
 
   return (
-    <GridItem>
-      <GridRow>
-        <GridItem>
+    <>
+      <GridRow spacing={3}>
+        <GridItem xs={3}>
           <Typography
             variant="subtitle1"
             color="primary"
+            align="right"
           >
             Selected storage provider
           </Typography>
         </GridItem>
-        <GridItem>
-          <LabelWithValue
-            label=""
-            value={shortenString(id)}
-          />
-        </GridItem>
-        <GridItem>
-          <LabelWithValue
-            label="System"
-            value={system}
-          />
+        <GridItem xs={9}>
+          <GridRow spacing={3}>
+            <GridItem xs={4} className={classes.items}>
+              <LabelWithValue
+                label="Name:"
+                value={shortenString(id)}
+              />
+            </GridItem>
+            <GridItem xs={4} className={classes.items}>
+              <LabelWithValue
+                label="System:"
+                value={system}
+              />
+            </GridItem>
+          </GridRow>
         </GridItem>
       </GridRow>
-      {contentHash && contentSize && contentName
+      {contentHash && contentSize && contentName && contentSizeUnit
         ? (
-          <GridRow>
-            <GridItem>
+          <GridRow spacing={3}>
+            <GridItem xs={3}>
               <Typography
                 variant="subtitle1"
                 color="primary"
+                align="right"
               >
                 Uploaded content
               </Typography>
             </GridItem>
-            <GridItem>
-              <LabelWithValue
-                label="Name:"
-                value={contentName}
-              />
-            </GridItem>
-            <GridItem>
-              <LabelWithValue
-                label="Hash:"
-                value={shortenString(contentHash)}
-              />
-            </GridItem>
-            <GridItem>
-              <LabelWithValue
-                label="Size:"
-                value={`${contentSize} ${UNIT_PREFIX_POW2[contentSizeUnit][0]}B`}
-              />
+            <GridItem xs={9}>
+              <GridRow spacing={3}>
+                <GridItem xs={4} className={classes.items}>
+                  <LabelWithValue
+                    label="Name:"
+                    value={contentName}
+                  />
+                </GridItem>
+                <GridItem xs={4} className={classes.items}>
+
+                  <LabelWithValue
+                    label="Hash:"
+                    value={shortenString(contentHash)}
+                  />
+                </GridItem>
+                <GridItem xs={4} className={classes.items}>
+                  <LabelWithValue
+                    label="Size:"
+                    value={`${contentSize} ${UNIT_PREFIX_POW2[contentSizeUnit][0]}B`}
+                  />
+                </GridItem>
+              </GridRow>
             </GridItem>
           </GridRow>
         )
         : (
           <GridRow>
-            <GridItem>
+            <GridItem xs={12}>
               <Typography color="textPrimary" component="div">
                 <Box display="inline" fontWeight="fontWeightMedium">
                   The size of your storage plan is calculated by the content that you upload/persist in this first step.
@@ -85,7 +105,7 @@ const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
             </GridItem>
           </GridRow>
         )}
-    </GridItem>
+    </>
   )
 }
 

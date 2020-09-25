@@ -1,6 +1,6 @@
 import {
   makeStyles, Step, StepLabel, Stepper,
-
+  Theme,
   TextField,
   Typography,
 } from '@material-ui/core'
@@ -22,10 +22,14 @@ import React, {
 } from 'react'
 import withCheckoutContext, { CheckoutContext } from './CheckoutContext'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   stepperCard: {
     display: 'flex',
     justifyContent: 'center',
+  },
+  disclaimer: {
+    alignSelf: 'center',
+    marginBottom: theme.spacing(3),
   },
 }))
 
@@ -143,11 +147,10 @@ const StorageOffersCheckoutPage: FC = () => {
         backTo: 'offers',
       }}
     >
-      <GridColumn
-        className="rootContainer"
-      >
-        {order && pinned && <StorageOrderDescription order={{ ...order, ...pinned }} />}
-
+      <GridColumn>
+        <GridItem>
+          {order && pinned && <StorageOrderDescription order={{ ...order, ...pinned }} />}
+        </GridItem>
         {/* STEPPER */}
         <GridItem>
           <GridRow justify="center">
@@ -172,8 +175,8 @@ const StorageOffersCheckoutPage: FC = () => {
           </GridRow>
         </GridItem>
         {/* CONTENT */}
-        <GridItem style={{ alignSelf: 'center' }}>
-          <Typography variant="caption">To buy your storage you have to select the currency, suscription and payment details to get the final price of your storage plan.</Typography>
+        <GridItem className={classes.disclaimer}>
+          <Typography variant="caption" color="secondary">To buy your storage you have to select the currency, suscription and payment details to get the final price of your storage plan.</Typography>
         </GridItem>
         <GridItem>
           <GridColumn alignContent="center">

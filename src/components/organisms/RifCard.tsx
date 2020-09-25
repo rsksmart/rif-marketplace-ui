@@ -1,17 +1,20 @@
 import React, { FC } from 'react'
 import {
-  Card, CardActions, CardContent, CardProps, makeStyles,
+  Card, CardActions, CardContent, CardProps, makeStyles, Theme,
 } from '@material-ui/core'
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
 
-const useStylesRifCard = makeStyles(() => ({
+const useStylesRifCard = makeStyles((theme: Theme) => ({
   card: {
     background: '#F8F7F7',
     borderRadius: '20px',
     minWidth: '--webkit-fill-available',
     border: '0px',
     width: '100%',
+  },
+  titleContainer: {
+    padding: theme.spacing(3),
   },
   contentContainer: {
     width: '395px',
@@ -43,8 +46,16 @@ const RifCard: FC<RifCardProps> = ({
       <GridColumn
         alignContent="center"
         justify="center"
+        className={classes.titleContainer}
       >
-        {!!Header && (<GridItem style={{ alignSelf: 'center' }}><Header /></GridItem>)}
+        {!!Header && (
+        <GridItem style={{
+          alignSelf: 'center',
+        }}
+        >
+          <Header />
+        </GridItem>
+        )}
         <GridItem>
           <CardContent className={classes.contentContainer}>
             {children}
