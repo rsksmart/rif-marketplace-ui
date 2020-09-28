@@ -1,5 +1,5 @@
 import { ContextDispatch, ContextPayload } from 'context/storeUtils/interfaces'
-import { StoragePlanItem } from './interfaces'
+import { StorageBillingPlan } from './interfaces'
 import { OfferEditReducer } from './offerEditReducer'
 
 export type OFFER_EDIT_ACTION =
@@ -23,7 +23,7 @@ export type OfferEditActions = {
   SET_OFFER: OfferEditReducer<SetOfferPayload>
 }
 
-export type AddItemPayload = StoragePlanItem
+export type AddItemPayload = StorageBillingPlan
 
 export interface RemoveItemPayload {
   internalId: number
@@ -47,7 +47,7 @@ export interface SetOfferPayload {
   availableSize: number
   country: string
   peerId: string
-  planItems: StoragePlanItem[]
+  billingPlans: StorageBillingPlan[]
   system: string
   offerId?: string
 }

@@ -1,31 +1,30 @@
+import { Big } from 'big.js'
 import { initialState } from '../OfferEditContext'
-import {
-  StoragePlanItem, TimePeriodEnum,
-} from '../interfaces'
+import { StorageBillingPlan } from '../interfaces'
 import { offerEditActions } from '../offerEditReducer'
 import {
   AddItemPayload, SetCountryPayload, SetAvailableSizePayload,
 } from '../offerEditActions'
 
-const mockedPlanItem: StoragePlanItem = {
+const mockedPlanItem: StorageBillingPlan = {
   currency: 'RBTC',
   internalId: 1,
-  pricePerGb: 0.001,
-  timePeriod: TimePeriodEnum.Daily,
+  price: new Big(0.001),
+  period: 'Daily',
 }
 
 describe('StorageOfferEditContext', () => {
   describe('initial state', () => {
     test('should have empty plan items', () => {
-      expect(initialState.planItems).toEqual([])
+      expect(initialState.billingPlans).toEqual([])
     })
   })
   describe('offerEditActions', () => {
     describe('ADD_ITEM', () => {
       test('should add a planItem to the state', () => {
         const payload: AddItemPayload = mockedPlanItem
-        const { planItems } = offerEditActions.ADD_ITEM(initialState, payload)
-        expect(planItems).toEqual([mockedPlanItem])
+        const { billingPlans } = offerEditActions.ADD_ITEM(initialState, payload)
+        expect(billingPlans).toEqual([mockedPlanItem])
       })
       test('should increment the internalCounter', () => {
         const payload: AddItemPayload = mockedPlanItem

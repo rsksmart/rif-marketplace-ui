@@ -6,16 +6,16 @@ import Box from '@material-ui/core/Box'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditIcon from '@material-ui/icons/Edit'
 import { colors, TooltipIconButton } from '@rsksmart/rif-ui'
-import { StoragePlanItem, OfferEditContextProps, TimePeriodEnum } from 'context/Market/storage/interfaces'
+import { StorageBillingPlan, OfferEditContextProps } from 'context/Market/storage/interfaces'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { RemoveItemPayload } from 'context/Market/storage/offerEditActions'
 import { priceDisplay } from 'utils/utils'
 import ItemWUnit from 'components/atoms/ItemWUnit'
 
-export interface PlanItemProps {
+export interface BillingPlanProps {
   className?: string
   onEditClick: () => void
-  planItem: StoragePlanItem
+  billingPlan: StorageBillingPlan
   fiatXR: number
   fiatDisplayName: string
 }
@@ -33,21 +33,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const PlanItem: FC<PlanItemProps> = ({
-  className = '', planItem, onEditClick, fiatXR, fiatDisplayName,
+const BillingPlan: FC<BillingPlanProps> = ({
+  className = '', billingPlan, onEditClick, fiatXR, fiatDisplayName,
 }) => {
   const { dispatch } = useContext<OfferEditContextProps>(OfferEditContext)
 
   const classes = useStyles()
 
-  const { timePeriod, pricePerGb, currency } = planItem
-  const fiatPrice = (pricePerGb * fiatXR)
-  const fiatPriceDisplay = priceDisplay(fiatPrice, 2)
+  const { period, price, currency } = billingPlan
+  const fiatPrice = (price.mul(fiatXR))
+  // FIXME: priceDisplay fn should be able to receive Big type
+  const fiatPriceDisplay = priceDisplay(Number(fiatPrice), 2)
 
   const onItemRemoved = () => {
     dispatch({
       type: 'REMOVE_ITEM',
-      payload: planItem as RemoveItemPayload,
+      payload: billingPlan as RemoveItemPayload,
     } as any)
   }
 
@@ -63,12 +64,12 @@ const PlanItem: FC<PlanItemProps> = ({
           <Grid xs={6} item>
             <Typography component="div">
               <Box fontWeight="fontWeightMedium" textAlign="center" color={colors.gray5}>
-                {TimePeriodEnum[timePeriod]}
+                {period}
               </Box>
             </Typography>
           </Grid>
           <Grid xs={6} item style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-            <ItemWUnit type="mediumPrimary" unit={currency} value={pricePerGb.toString()} />
+            <ItemWUnit type="mediumPrimary" unit={currency} value={price.toString()} />
             <ItemWUnit unit={fiatDisplayName} type="normalGrey" value={fiatPriceDisplay} />
           </Grid>
         </Grid>
@@ -83,4 +84,4 @@ const PlanItem: FC<PlanItemProps> = ({
   )
 }
 
-export default PlanItem
+export default BillingPlan

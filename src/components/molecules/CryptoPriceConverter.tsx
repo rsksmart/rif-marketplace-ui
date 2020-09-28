@@ -5,12 +5,13 @@ import {
 import LabelWithValue from 'components/atoms/LabelWithValue'
 import { colors } from '@rsksmart/rif-ui'
 import { MarketCryptoRecord } from 'models/Market'
+import Big from 'big.js'
 
 export interface CryptoPriceConverterProps {
   cryptoXRs: MarketCryptoRecord
   priceLabel?: string
   fiatDisplayName: string
-  price: number
+  price: Big
   onPriceChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   currency: string
   onCurrencyChange: (event: React.ChangeEvent<HTMLInputElement>) => void
@@ -41,8 +42,8 @@ const CryptoPriceConverter: FC<CryptoPriceConverterProps> = (props) => {
               const { displayName: cryptoDisplayName } = cryptoXRs[xrName]
               return (
                 <MenuItem
-                  key={cryptoDisplayName}
-                  value={cryptoDisplayName}
+                  key={xrName}
+                  value={xrName}
                 >
                   {cryptoDisplayName}
                 </MenuItem>
@@ -60,7 +61,7 @@ const CryptoPriceConverter: FC<CryptoPriceConverterProps> = (props) => {
           type="number"
           value={price.toString()}
           onChange={onPriceChange}
-          error={price <= 0}
+          error={Number(price) <= 0}
           InputProps={{
             inputProps: {
               min: '0',
@@ -68,7 +69,7 @@ const CryptoPriceConverter: FC<CryptoPriceConverterProps> = (props) => {
             },
             endAdornment: (
               <InputAdornment position="end">
-                <Typography variant="caption" color="secondary">{currency}</Typography>
+                <Typography variant="caption" color="secondary">{currency.toUpperCase()}</Typography>
               </InputAdornment>
             ),
             style: { color: colors.primary },
@@ -76,7 +77,7 @@ const CryptoPriceConverter: FC<CryptoPriceConverterProps> = (props) => {
         />
       </Grid>
       <Grid item xs={6} md={4}>
-        <LabelWithValue label={(rate * price).toString()} value={fiatDisplayName} />
+        <LabelWithValue label={(price.mul(rate)).toString()} value={fiatDisplayName} />
       </Grid>
     </Grid>
   )

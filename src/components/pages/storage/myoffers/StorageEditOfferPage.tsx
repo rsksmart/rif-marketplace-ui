@@ -33,7 +33,6 @@ const StorageEditOfferPage: FC<{}> = () => {
       title="Edit your storage offer"
       subtitle="Fill out the fields below to edit your storage offer. All information provided is meant to be true and correct."
     >
-      {/* TODO: add className */}
       <RoundedCard color="primary">
         <EditOfferStepper endHandler={endHandler} />
       </RoundedCard>

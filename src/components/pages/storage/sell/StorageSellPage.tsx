@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import StorageContract from 'contracts/Storage'
 import Logger from 'utils/Logger'
-import { StoragePlanItem, TokenAddressees } from 'context/Market/storage/interfaces'
+import { StorageBillingPlan, TokenAddressees } from 'context/Market/storage/interfaces'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { UIError } from 'models/UIMessage'
 import Login from 'components/atoms/Login'
@@ -62,37 +62,34 @@ interface OfferContractData {
 
 const transformOfferDataForContract = (
   availableSizeGB: number,
-  planItems: StoragePlanItem[],
+  billingPlans: StorageBillingPlan[],
 ): OfferContractData => ({
-  availableSizeMB: new Big(availableSizeGB)
-    .mul(UNIT_PREFIX_POW2.KILO)
-    .toString(),
-  ...planItems.reduce(
-    (acc, { timePeriod, pricePerGb, currency }) => {
+  availableSizeMB: new Big(availableSizeGB).mul(UNIT_PREFIX_POW2.KILO).toString(),
+  ...billingPlans.reduce(
+    (acc, { period, price, currency }) => {
       const tokenIndex = acc.tokens.findIndex(((t) => t === currency))
-      const weiPrice = convertToWeiString(new Big(pricePerGb)
-        .div(UNIT_PREFIX_POW2.KILO))
+      const weiPrice = convertToWeiString(new Big(price).div(UNIT_PREFIX_POW2.KILO))
 
       if (tokenIndex !== -1) {
-        acc.periods[tokenIndex].push(timePeriod * PeriodInSeconds.Daily)
+        acc.periods[tokenIndex].push(PeriodInSeconds[period])
         acc.prices[tokenIndex].push(weiPrice)
         return acc
       }
 
       return {
         prices: [...acc.prices, [weiPrice]],
-        periods: [...acc.periods, [timePeriod * PeriodInSeconds.Daily]],
+        periods: [...acc.periods, [PeriodInSeconds[period]]],
         tokens: [...acc.tokens, TokenAddressees[currency]],
       }
     },
-        { prices: [], periods: [], tokens: [] } as any,
+    { prices: [], periods: [], tokens: [] } as any,
   ),
 })
 
 const StorageSellPage: FC = () => {
   const {
     state: {
-      planItems, availableSize, peerId, system,
+      billingPlans, availableSize, peerId, system,
     },
     dispatch,
   } = useContext(OfferEditContext)
@@ -133,7 +130,7 @@ const StorageSellPage: FC = () => {
       const storageContract = StorageContract.getInstance(web3)
       const {
         availableSizeMB, periods, prices, tokens,
-      } = transformOfferDataForContract(availableSize, planItems)
+      } = transformOfferDataForContract(availableSize, billingPlans)
 
       const setOfferReceipt = await storageContract.setOffer(
         availableSizeMB,
@@ -189,7 +186,7 @@ const StorageSellPage: FC = () => {
     })
   }, [dispatch])
 
-  const isSubmitEnabled = planItems.length
+  const isSubmitEnabled = billingPlans.length
     && availableSize
     && system
     && peerId

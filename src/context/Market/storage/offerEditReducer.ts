@@ -1,4 +1,5 @@
-import { StoragePlanItem, OfferEditState } from './interfaces'
+import { UNIT_PREFIX_POW2 } from 'utils/utils'
+import { StorageBillingPlan, OfferEditState } from './interfaces'
 import {
   AddItemPayload,
   RemoveItemPayload,
@@ -17,58 +18,60 @@ export interface OfferEditReducer<P extends OfferEditPayload> {
 }
 
 const calculateUsedPeriodsPerCurrency = (
-  planItems: StoragePlanItem[],
-): Record<string, []> => planItems.reduce((acc, item) => {
-  acc[item.currency] = [...(acc[item.currency] || []), item.timePeriod]
+  billingPlans: StorageBillingPlan[],
+): Record<string, []> => billingPlans.reduce((acc, item) => {
+  acc[item.currency] = [...(acc[item.currency] || []), item.period]
   return acc
 }, {})
 
 export const offerEditActions: OfferEditActions = {
   ADD_ITEM: (state: OfferEditState, payload: AddItemPayload) => {
-    const { internalCounter, planItems } = state
+    const { internalCounter, billingPlans } = state
     const newPlan = {
       ...payload,
       internalId: internalCounter,
     }
-    const newPlanItems = [...planItems, newPlan]
+    const newBillingPlans = [...billingPlans, newPlan]
 
     return {
       ...state,
-      planItems: newPlanItems,
-      usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newPlanItems),
+      billingPlans: newBillingPlans,
+      usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newBillingPlans),
       internalCounter: internalCounter + 1,
     }
   },
   CLEAN_UP: (_, __) => initialState,
   REMOVE_ITEM: (state: OfferEditState, { internalId }: RemoveItemPayload) => {
-    const { planItems } = state
-    const newPlanItems = planItems.filter((x) => x.internalId !== internalId)
+    const { billingPlans } = state
+    const newBillingPlans = billingPlans.filter(
+      (x) => x.internalId !== internalId,
+    )
     return {
       ...state,
-      planItems: newPlanItems,
-      usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newPlanItems),
+      billingPlans: newBillingPlans,
+      usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newBillingPlans),
     }
   },
   EDIT_ITEM: (state: OfferEditState, payload: EditItemPayload) => {
     const {
-      internalId, timePeriod, pricePerGb, currency,
+      internalId, period, price, currency,
     } = payload
-    const { planItems } = state
-    const newPlanItems = planItems.map((planItem) => {
-      if (planItem.internalId === internalId) {
+    const { billingPlans } = state
+    const newBillingPlans = billingPlans.map((billingPlan) => {
+      if (billingPlan.internalId === internalId) {
         return {
-          ...planItem,
-          timePeriod,
-          pricePerGb,
+          ...billingPlan,
+          period,
+          price,
           currency,
         }
       }
-      return planItem
+      return billingPlan
     })
     return {
       ...state,
-      planItems: newPlanItems,
-      usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newPlanItems),
+      billingPlans: newBillingPlans,
+      usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newBillingPlans),
     }
   },
   SET_AVAILABLE_SIZE: (
@@ -92,15 +95,16 @@ export const offerEditActions: OfferEditActions = {
       availableSize,
       country,
       peerId,
-      planItems,
+      billingPlans,
       system,
       offerId,
     }: SetOfferPayload,
   ) => {
     // every plan item needs a unique id to handle the edition
-    const newPlanItems: StoragePlanItem[] = planItems.map(
-      (plan: StoragePlanItem, index: number) => ({
+    const newBillingPlans: StorageBillingPlan[] = billingPlans.map(
+      (plan: StorageBillingPlan, index: number) => ({
         ...plan,
+        price: plan.price.mul(UNIT_PREFIX_POW2.KILO),
         internalId: index + 1,
       }),
     )
@@ -109,10 +113,10 @@ export const offerEditActions: OfferEditActions = {
       availableSize,
       country,
       peerId,
-      planItems: newPlanItems,
+      billingPlans: newBillingPlans,
       system,
-      usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newPlanItems),
-      internalCounter: newPlanItems.length + 1,
+      usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newBillingPlans),
+      internalCounter: newBillingPlans.length + 1,
       offerId,
     }
   },

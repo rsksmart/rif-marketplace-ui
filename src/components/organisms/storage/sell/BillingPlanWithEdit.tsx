@@ -1,19 +1,19 @@
 import React, { FC, useState } from 'react'
-import { StoragePlanItem } from 'context/Market/storage/interfaces'
+import { StorageBillingPlan } from 'context/Market/storage/interfaces'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { MarketCryptoRecord } from 'models/Market'
-import EditablePlanItem from './EditablePlanItem'
-import PlanItem from './PlanItem'
+import EditableBillingPlan from './EditableBillingPlan'
+import BillingPlan from './BillingPlan'
 
-export interface PlanItemWithEditProps {
-  planItem: StoragePlanItem
+export interface BillingPlanWithEditProps {
+  billingPlan: StorageBillingPlan
   fiatXR: number
   fiatDisplayName: string
   cryptoXRs: MarketCryptoRecord
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  planItem: {
+  billingPlan: {
     [theme.breakpoints.up('md')]: {
       width: '70%',
     },
@@ -23,8 +23,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const PlanItemWithEdit: FC<PlanItemWithEditProps> = ({
-  planItem, fiatXR, fiatDisplayName, cryptoXRs,
+const BillingPlanWithEdit: FC<BillingPlanWithEditProps> = ({
+  billingPlan, fiatXR, fiatDisplayName, cryptoXRs,
 }) => {
   const classes = useStyles()
   const [editMode, setEditMode] = useState(false)
@@ -35,8 +35,8 @@ const PlanItemWithEdit: FC<PlanItemWithEditProps> = ({
 
   if (editMode) {
     return (
-      <EditablePlanItem
-        planItem={planItem}
+      <EditableBillingPlan
+        billingPlan={billingPlan}
         onPlanSaved={handleOnSaveClick}
         cryptoXRs={cryptoXRs}
         fiatDisplayName={fiatDisplayName}
@@ -45,9 +45,9 @@ const PlanItemWithEdit: FC<PlanItemWithEditProps> = ({
   }
 
   return (
-    <PlanItem
-      className={classes.planItem}
-      planItem={planItem}
+    <BillingPlan
+      className={classes.billingPlan}
+      billingPlan={billingPlan}
       fiatXR={fiatXR}
       fiatDisplayName={fiatDisplayName}
       onEditClick={handleOnEditClick}
@@ -55,4 +55,4 @@ const PlanItemWithEdit: FC<PlanItemWithEditProps> = ({
   )
 }
 
-export default PlanItemWithEdit
+export default BillingPlanWithEdit

@@ -22,7 +22,7 @@ import { LoadingPayload } from 'context/App/appActions'
 import { UIError } from 'models/UIMessage'
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
-import { OfferEditContextProps, StoragePlanItem, TimePeriodEnum } from 'context/Market/storage/interfaces'
+import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 import { SetOfferPayload } from 'context/Market/storage/offerEditActions'
 import { StorageOffer } from 'models/marketItems/StorageItem'
 
@@ -145,30 +145,17 @@ const StorageMyOffersPage: FC = () => {
     }
   }
 
-  // TODO: handle edit offer
   const handleEditOffer = (offer: StorageOffer) => {
     const {
       availableSizeGB, location, peerId, system, subscriptionOptions, id,
     } = offer
 
     const payload = {
-      // TODO: rename props and edit types to match StorageOffer
       availableSize: Number(availableSizeGB),
       country: location,
       peerId,
       system,
-      // FIXME: - .ito
-      // - use same types in subscription period and StoragePlanItem so we don't need this conversion
-      // - remove harcoded period
-      // - we may need to multiply by 1024 all plans also on buy screen, as we show them on gb but are stored on mb
-      planItems: subscriptionOptions.map((s) => {
-        const plan: StoragePlanItem = {
-          currency: s.currency,
-          pricePerGb: Number(s.price) * 1024,
-          timePeriod: TimePeriodEnum.Daily,
-        }
-        return plan
-      }),
+      billingPlans: subscriptionOptions,
       offerId: id,
     } as SetOfferPayload
 

@@ -10,7 +10,7 @@ import { Button } from '@rsksmart/rif-ui'
 import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import GeneralFeatures from './GeneralFeatures'
-import PlanItemsList from './PlanItemsList'
+import BillingPlansList from './BillingPlansList'
 
 export interface EditOfferStepperProps {
   endHandler: ReactElement
@@ -61,7 +61,7 @@ const EditOfferStepper: FC<EditOfferStepperProps> = ({ endHandler }) => {
       <Step>
         <StepLabel>Define plans</StepLabel>
         <StepContent>
-          <div><PlanItemsList /></div>
+          <div><BillingPlansList /></div>
           <div className={classes.actionsContainer}>
             <div>
               <Button

@@ -2,36 +2,28 @@ import { Dispatch } from 'react'
 import { ContextState } from 'context/storeUtils/interfaces'
 import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import networkConfig from 'config'
+import { BillingPlan, SubscriptionPeriod } from 'models/marketItems/StorageItem'
 import { OfferEditAction } from './offerEditActions'
 
-export interface StoragePlanItem {
+export interface StorageBillingPlan extends BillingPlan {
   internalId?: number
-  currency: string // for now we only support RIF but in the future we may need something like an enum
-  pricePerGb: number
-  timePeriod: TimePeriodEnum
 }
 
 export interface OfferEditState extends ContextState {
   system: string
   availableSize: number
   country: string
-  planItems: StoragePlanItem[]
-  internalCounter: number // counter to assign unique ids to planItems, this counter only sums up
-  allPeriods: TimePeriodEnum[]
+  billingPlans: StorageBillingPlan[]
+  internalCounter: number // counter to assign unique ids to billingPlans, this counter only sums up
+  allBillingPeriods: SubscriptionPeriod[]
   peerId: string
-  usedPeriodsPerCurrency: Record<string, TimePeriodEnum[]> // dictionary to easily know the timePeriods already used by a given currency
   offerId?: string
+  usedPeriodsPerCurrency: Record<string, SubscriptionPeriod[]> // dictionary to easily know the timePeriods already used by a given currency
 }
 
 export interface OfferEditContextProps {
   state: OfferEditState
   dispatch: Dispatch<OfferEditAction>
-}
-
-export enum TimePeriodEnum {
-  Daily = 1,
-  Weekly = 7,
-  Monthly = 30,
 }
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
