@@ -11,7 +11,7 @@ export interface CryptoPriceConverterProps {
   cryptoXRs: MarketCryptoRecord
   priceLabel?: string
   fiatDisplayName: string
-  price: Big
+  price?: string
   onPriceChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   currency: string
   onCurrencyChange: (event: React.ChangeEvent<HTMLInputElement>) => void
@@ -23,6 +23,7 @@ const CryptoPriceConverter: FC<CryptoPriceConverterProps> = (props) => {
   } = props
   const { rate } = cryptoXRs[currency.toLowerCase()]
 
+  const fiatPrice = price ? (new Big(price)).mul(rate).toString() : ''
   return (
     <Grid container spacing={2} alignItems="center">
       <Grid item xs={12} md={4}>
@@ -59,9 +60,9 @@ const CryptoPriceConverter: FC<CryptoPriceConverterProps> = (props) => {
           label={priceLabel}
           id="price-gb"
           type="number"
-          value={price.toString()}
+          value={price?.toString()}
           onChange={onPriceChange}
-          error={Number(price) <= 0}
+          error={!price || Number(price) <= 0}
           InputProps={{
             inputProps: {
               min: '0',
@@ -77,7 +78,7 @@ const CryptoPriceConverter: FC<CryptoPriceConverterProps> = (props) => {
         />
       </Grid>
       <Grid item xs={6} md={4}>
-        <LabelWithValue label={(price.mul(rate)).toString()} value={fiatDisplayName} />
+        <LabelWithValue label={fiatPrice} value={fiatDisplayName} />
       </Grid>
     </Grid>
   )

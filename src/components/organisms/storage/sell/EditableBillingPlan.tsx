@@ -34,7 +34,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
   const editMode = !!billingPlan
   // TODO: remove hard-coded currency by default
   const [currency, setCurrency] = useState(billingPlan?.currency || 'rbtc')
-  const [pricePerGb, setPricePerGb] = useState(billingPlan?.price || new Big(1))
+  const [pricePerGb, setPricePerGb] = useState(billingPlan?.price.toString())
   const [period, setPeriod] = useState(billingPlan?.period || allBillingPeriods[0])
 
   const onPriceChange = ({ target: { value } }) => setPricePerGb(value)
@@ -42,6 +42,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
   const onSelectedPeriodChange = ({ target: { value } }) => setPeriod(value)
 
   const handleOnAddClick = () => {
+    if (!pricePerGb) return
     const newBillingPlan: StorageBillingPlan = {
       price: new Big(pricePerGb),
       currency,
@@ -56,6 +57,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
   }
 
   const handleOnSaveClick = () => {
+    if (!pricePerGb) return
     const internalId = billingPlan?.internalId
     dispatch(({
       type: 'EDIT_ITEM',

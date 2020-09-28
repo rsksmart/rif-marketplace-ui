@@ -47,11 +47,6 @@ const BillingPlansList = () => {
     },
   } = useContext(MarketContext)
 
-  // TODO: handle multicurrency options
-  // FIXME: unnecesary
-  const currency = 'RBTC'
-  const { rate: fiatXR } = cryptoXRs[currency.toLowerCase()]
-
   return (
     <>
       <Grid className={classes.editablePlanContainer} item xs={12}>
@@ -75,7 +70,6 @@ const BillingPlansList = () => {
                     <Grid item xs={12} key={billingPlan.internalId}>
                       <BillingPlanWithEdit
                         cryptoXRs={cryptoXRs}
-                        fiatXR={fiatXR}
                         fiatDisplayName={fiatDisplayName}
                         billingPlan={billingPlan}
                       />

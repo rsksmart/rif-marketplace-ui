@@ -11,12 +11,13 @@ import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { RemoveItemPayload } from 'context/Market/storage/offerEditActions'
 import { priceDisplay } from 'utils/utils'
 import ItemWUnit from 'components/atoms/ItemWUnit'
+import { MarketCryptoRecord } from 'models/Market'
 
 export interface BillingPlanProps {
   className?: string
   onEditClick: () => void
   billingPlan: StorageBillingPlan
-  fiatXR: number
+  cryptoXRs: MarketCryptoRecord
   fiatDisplayName: string
 }
 
@@ -34,14 +35,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const BillingPlan: FC<BillingPlanProps> = ({
-  className = '', billingPlan, onEditClick, fiatXR, fiatDisplayName,
+  className = '', billingPlan, onEditClick, cryptoXRs, fiatDisplayName,
 }) => {
   const { dispatch } = useContext<OfferEditContextProps>(OfferEditContext)
 
   const classes = useStyles()
 
   const { period, price, currency } = billingPlan
-  const fiatPrice = (price.mul(fiatXR))
+  const { rate } = cryptoXRs[currency.toLowerCase()]
+  const fiatPrice = (price.mul(rate))
+
   // FIXME: priceDisplay fn should be able to receive Big type
   const fiatPriceDisplay = priceDisplay(Number(fiatPrice), 2)
 

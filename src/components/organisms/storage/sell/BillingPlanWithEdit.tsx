@@ -7,7 +7,6 @@ import BillingPlan from './BillingPlan'
 
 export interface BillingPlanWithEditProps {
   billingPlan: StorageBillingPlan
-  fiatXR: number
   fiatDisplayName: string
   cryptoXRs: MarketCryptoRecord
 }
@@ -24,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const BillingPlanWithEdit: FC<BillingPlanWithEditProps> = ({
-  billingPlan, fiatXR, fiatDisplayName, cryptoXRs,
+  billingPlan, fiatDisplayName, cryptoXRs,
 }) => {
   const classes = useStyles()
   const [editMode, setEditMode] = useState(false)
@@ -48,7 +47,7 @@ const BillingPlanWithEdit: FC<BillingPlanWithEditProps> = ({
     <BillingPlan
       className={classes.billingPlan}
       billingPlan={billingPlan}
-      fiatXR={fiatXR}
+      cryptoXRs={cryptoXRs}
       fiatDisplayName={fiatDisplayName}
       onEditClick={handleOnEditClick}
     />
