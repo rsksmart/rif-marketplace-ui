@@ -20,6 +20,7 @@ import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
 import React, {
   ChangeEvent, FC, useContext,
 } from 'react'
+import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import withCheckoutContext, { CheckoutContext } from './CheckoutContext'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -105,7 +106,7 @@ const StorageOffersCheckoutPage: FC = () => {
   ))
 
   const orderConfigTB = pinned && {
-    'CONTENT SIZE': pinned.size?.replace(/[a-zA-Z]+/g, ''),
+    'CONTENT SIZE': `${pinned.size?.replace(/[a-zA-Z]+/g, '')} ${UNIT_PREFIX_POW2[pinned.unit][0]}B`,
     'CURRENCY TO PAY': <RifSelect<string>
       id="currency"
       value={selectedCurrency}

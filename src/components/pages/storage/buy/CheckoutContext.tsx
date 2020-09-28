@@ -1,3 +1,4 @@
+import { Web3Store } from '@rsksmart/rif-ui'
 import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
 import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
 import StorageOffersContext from 'context/Services/storage/OffersContext'
@@ -8,7 +9,9 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
+import Logger from 'utils/Logger'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
+import Web3 from 'web3'
 
 type AuxiliaryState = {
   planOptions: BillingPlan[]
@@ -26,6 +29,19 @@ export type Order = Pick<StorageOffer, 'id' | 'system' | 'location'> & {
   endDate: string
 }
 
+type Agreement = {
+    provider
+    amount
+    size
+    billingPeriod
+    hash
+    token
+  }
+
+type ContractActions = {
+  createAgreement: (newAgreement: Agreement) => Promise<void>
+}
+
 export type PinnedContent = {
   name: string
   size: string
@@ -37,15 +53,9 @@ type State = {
   order: Order
   auxiliary: AuxiliaryState
   pinned?: PinnedContent
+  contract: ContractActions
+  agreement?: Agreement
 }
-
-type ActionType = (
-  | 'CHANGE_CURRENCY'
-  | 'SET_AUXILIARY'
-  | 'SET_ORDER'
-  | 'SET_PINNED'
-  | 'INITIALISE'
-)
 
 type InitialisePayload = Pick<AuxiliaryState, 'currencyOptions'> & Pick<Order, 'id' | 'system' | 'location'>
 
@@ -70,6 +80,10 @@ export type PurchaseStorageAction = (
     type: 'INITIALISE'
     payload: InitialisePayload
   }
+  | {
+    type: 'SET_ACTION'
+    payload: Partial<ContractActions>
+  }
 )
 
 interface Actions {
@@ -81,6 +95,7 @@ interface Actions {
   SET_ORDER: (state: State, payload: Partial<Order>) => State
   SET_PINNED: (state: State, payload: PinnedContent) => State
   INITIALISE: (state: State, payload: InitialisePayload) => State
+  SET_ACTION: (state: State, payload: Partial<ContractActions>) => State
 }
 
 const actions: Actions = {
@@ -130,6 +145,16 @@ const actions: Actions = {
       ...{ id, location, system },
     },
   }),
+  SET_ACTION: (
+    state: State,
+    payload: Partial<ContractActions>,
+  ): State => ({
+    ...state,
+    contract: {
+      ...state.contract,
+      ...payload,
+    },
+  }),
 }
 
 export type Props = {
@@ -139,7 +164,14 @@ export type Props = {
 
 const reducer = (state: State, action: PurchaseStorageAction): State => {
   const { type, payload } = action
-  return actions[type](state, payload as never)
+  const actionFunction = actions[type]
+
+  if (actionFunction) {
+    return actionFunction(state, payload as never)
+  }
+
+  Logger.getInstance().warn('Storage Checkout Context:', type, 'action is not defined!')
+  return state
 }
 
 const initialState: State = {
@@ -159,6 +191,39 @@ const initialState: State = {
     selectedPlan: 0,
     periodsCount: 0,
   },
+  contract: {
+    createAgreement: (): Promise<void> => Promise.resolve(),
+  },
+}
+
+const newAgreement = (web3: Web3, account: string) => async ({
+  provider,
+  amount,
+  size,
+  billingPeriod,
+  hash,
+  token,
+}: Agreement): Promise<void> => {
+  const storageContract = (await import('contracts/Storage')).default.getInstance(web3)
+  console.log('agreement:', {
+    provider,
+    amount,
+    size,
+    billingPeriod,
+    hash,
+    token,
+  })
+  const receipt = await storageContract.newAgreement(
+    {
+      amount,
+      billingPeriod,
+      fileHash: hash,
+      provider,
+      size,
+      token,
+    }, { from: account },
+  )
+  Logger.getInstance().info('Agreement created:', receipt)
 }
 
 const Context = createContext<Props>({
@@ -177,6 +242,12 @@ const Provider: FC = ({ children }) => {
       },
     },
   } = useContext<MarketContextProps>(MarketContext)
+  const {
+    state: {
+      web3,
+      account,
+    },
+  } = useContext(Web3Store)
 
   const {
     state: {
@@ -199,6 +270,7 @@ const Provider: FC = ({ children }) => {
     },
   } = state
 
+  // Initialise context
   useEffect(() => {
     if (!isInitialised && listedItem) {
       const {
@@ -225,6 +297,23 @@ const Provider: FC = ({ children }) => {
       })
     }
   }, [listedItem, isInitialised])
+
+  // Prepare new agreement action
+  useEffect(() => {
+    console.log(': ----------------------------------------------')
+    console.log('Provider:FC -> web3', web3)
+    console.log('Provider:FC -> account', account)
+    console.log(': ----------------------------------------------')
+
+    if (web3 && account) {
+      dispatch({
+        type: 'SET_ACTION',
+        payload: {
+          createAgreement: newAgreement(web3, account),
+        },
+      })
+    }
+  }, [web3, account])
 
   // Sets currency related states
   useEffect(() => {

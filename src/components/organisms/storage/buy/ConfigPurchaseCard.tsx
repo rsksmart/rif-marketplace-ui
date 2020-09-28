@@ -4,7 +4,8 @@ import {
 import { colors } from '@rsksmart/rif-ui'
 import GridColumn from 'components/atoms/GridColumn'
 import RifCard from 'components/organisms/RifCard'
-import React, { FC } from 'react'
+import { CheckoutContext } from 'components/pages/storage/buy/CheckoutContext'
+import React, { FC, useContext } from 'react'
 
 type Props = {
     details: {[name: string]: string | JSX.Element}
@@ -31,6 +32,15 @@ const useStyles = makeStyles(() => ({
 const ConfigPurchaseCard: FC<Props> = ({ details }) => {
   const classes = useStyles()
 
+  const {
+    state: {
+      agreement,
+      contract: {
+        createAgreement,
+      },
+    },
+  } = useContext(CheckoutContext)
+
   return (
     <RifCard
       Header={(): JSX.Element => (
@@ -46,6 +56,10 @@ const ConfigPurchaseCard: FC<Props> = ({ details }) => {
             // Validate input
 
             // Submit
+            if (agreement) createAgreement(agreement)
+            console.log(': -------------------')
+            console.log('agreement', agreement)
+            console.log(': -------------------')
           }}
         >
           Buy

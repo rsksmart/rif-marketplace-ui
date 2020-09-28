@@ -1,7 +1,7 @@
 import StorageManager from '@rsksmart/rif-marketplace-storage/build/contracts/StorageManager.json'
 import Web3 from 'web3'
 import { Contract } from 'web3-eth-contract'
-import { AbiItem } from 'web3-utils'
+import { AbiItem, asciiToHex } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
 import waitForReceipt, {
@@ -14,6 +14,14 @@ import { storageAddress } from './config'
 const logger = Logger.getInstance()
 
 export type StorageContractErrorId = 'contract-storage-set-offer'
+
+const encodeHash = (hash: string): string[] => {
+  if (hash.length <= 32) {
+    return [asciiToHex(hash)]
+  }
+
+  return [asciiToHex(hash.slice(0, 32)), ...encodeHash(hash.slice(32))]
+}
 
 class StorageContract {
   public static getInstance(web3: Web3): StorageContract {
@@ -35,6 +43,54 @@ class StorageContract {
       storageAddress,
     )
     this.web3 = web3
+  }
+
+  public newAgreement = async (
+    details: {
+      fileHash: string
+      provider: string
+      size: string
+      billingPeriod: number
+      token: string
+      amount: string
+    },
+    txOptions: TransactionOptions,
+  ): Promise<TransactionReceipt> => {
+    const {
+      fileHash,
+      provider,
+      size,
+      billingPeriod,
+      amount,
+    } = details
+    const { from } = txOptions
+    const dataReference = encodeHash(fileHash)
+
+    const newAgreementTask = this.contract.methods
+      .newAgreement(
+        dataReference,
+        provider,
+        size,
+        billingPeriod,
+        [],
+      )
+
+    const gasPrice = await this.web3.eth.getGasPrice().catch((error: Error) => {
+      logger.error('error getting gas price, error:', error)
+      throw error
+    })
+
+    const gas = await newAgreementTask.estimateGas({
+      from,
+      gasPrice,
+      value: amount,
+    })
+
+    const txHash = await newAgreementTask.send({
+      from, gas, gasPrice, value: amount,
+    }).catch((err) => Promise.reject(err))
+
+    return waitForReceipt(txHash, this.web3)
   }
 
   public setOffer = async (
