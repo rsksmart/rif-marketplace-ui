@@ -15,7 +15,7 @@ const StorageFilters = () => {
   const {
     state: {
       filters: {
-        name,
+        provider,
         price: priceFilter,
         size: sizeFilter,
         periods: planPeriodFilter,
@@ -31,7 +31,7 @@ const StorageFilters = () => {
   const onSearch = ({ currentTarget: { value } }): void => {
     dispatch({
       type: 'FILTER',
-      payload: { name: value.trim() },
+      payload: { provider: value.trim() },
     })
   }
 
@@ -77,7 +77,7 @@ const StorageFilters = () => {
   return (
     <>
       <SearchFilter
-        value={name}
+        value={provider}
         onChange={onSearch}
         placeholder="Search provider"
       />
