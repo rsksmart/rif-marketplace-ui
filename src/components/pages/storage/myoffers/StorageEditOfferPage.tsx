@@ -163,12 +163,18 @@ const StorageEditOfferPage: FC<{}> = () => {
     }
   }, [isPendingConfirm, history, isProcessing])
 
+  const isSubmitEnabled = !!(billingPlans.length && availableSize)
   const endHandler = (
     <>
-      <Button color="primary" variant="contained" rounded onClick={handleEditOffer}>Edit offer</Button>
-      <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
-        Your wallet will open and you will be asked to confirm the transaction for listing your service.
-      </Typography>
+      <Button disabled={!isSubmitEnabled} color="primary" variant="contained" rounded onClick={handleEditOffer}>Edit offer</Button>
+      {
+        isSubmitEnabled
+        && (
+        <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
+          Your wallet will open and you will be asked to confirm the transaction for listing your service.
+        </Typography>
+        )
+      }
     </>
   )
 
