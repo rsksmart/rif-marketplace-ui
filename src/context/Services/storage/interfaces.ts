@@ -1,10 +1,9 @@
 import { Dispatch } from 'react'
+import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import networkConfig from 'config'
 import { ContextState } from 'context/storeUtils/interfaces'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
-import { BillingPlan, StorageItem, StorageOffer } from 'models/marketItems/StorageItem'
-import { Modify } from 'utils/typeUtils'
-import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
+import { StorageItem, StorageOffer } from 'models/marketItems/StorageItem'
 import { ServiceOrder, ServiceState } from '../interfaces'
 import { OFFERS_ACTION } from './offersActions'
 import { ContextName as OffersContextName } from './OffersContext'
@@ -61,8 +60,4 @@ export type PinnedContent = {
   contentHash: string
 }
 
-type OrderItem = Modify<Omit<StorageOffer, 'subscriptionOptions'>, {
-  plan?: BillingPlan
-}>
-
-export type StorageOrder = Omit<ServiceOrder<OrderItem>, 'isOutdated'> & Partial<PinnedContent>
+export type StorageOrder = Omit<ServiceOrder<StorageOffer>, 'isOutdated'>

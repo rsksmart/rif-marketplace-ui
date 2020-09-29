@@ -167,7 +167,15 @@ const reducer = (state: State, action: PurchaseStorageAction): State => {
   const actionFunction = actions[type]
 
   if (actionFunction) {
-    return actionFunction(state, payload as never)
+    const newState: State = actionFunction(state, payload as never)
+
+    if (state === newState) {
+      Logger.getInstance().debug('Checkout Context Action', type, 'no change in state:', state)
+    } else {
+      Logger.getInstance().debug('Checkout Context Action', type, 'old state:', state)
+      Logger.getInstance().debug('Checkout Context Action', type, 'new state:', newState)
+    }
+    return newState
   }
 
   Logger.getInstance().warn('Storage Checkout Context:', type, 'action is not defined!')

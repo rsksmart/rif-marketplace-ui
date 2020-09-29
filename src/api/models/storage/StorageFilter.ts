@@ -15,10 +15,10 @@ export const mapToTransport = ({
 }: StorageOffersFilters): StorageFiltersTransport => ({
   periods: Array.from(periods)
     .map((p: SubscriptionPeriod) => PeriodInSeconds[p]),
-  averagePrice: {
-    min: price.min - 1,
-    max: price.max + 1,
-  },
+  // averagePrice: {
+  //   min: price.min - 1,
+  //   max: price.max + 1,
+  // },
   totalCapacity: {
     min: sizeGB.min * UNIT_PREFIX_POW2.KILO,
     max: sizeGB.max * UNIT_PREFIX_POW2.KILO,

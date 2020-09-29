@@ -1,7 +1,7 @@
 import StorageManager from '@rsksmart/rif-marketplace-storage/build/contracts/StorageManager.json'
 import Web3 from 'web3'
 import { Contract } from 'web3-eth-contract'
-import { AbiItem, asciiToHex } from 'web3-utils'
+import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
 import waitForReceipt, {
@@ -14,14 +14,6 @@ import { storageAddress } from './config'
 const logger = Logger.getInstance()
 
 export type StorageContractErrorId = 'contract-storage-set-offer'
-
-const encodeHash = (hash: string): string[] => {
-  if (hash.length <= 32) {
-    return [asciiToHex(hash)]
-  }
-
-  return [asciiToHex(hash.slice(0, 32)), ...encodeHash(hash.slice(32))]
-}
 
 class StorageContract {
   public static getInstance(web3: Web3): StorageContract {
