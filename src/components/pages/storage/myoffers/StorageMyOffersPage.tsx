@@ -32,18 +32,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   resultsContainer: {
     marginTop: theme.spacing(2),
   },
-  // TODO: extract reusable component with the container
-  txInProgressContainer: {
-    background: 'rgba(275, 275, 275, 0.8)',
-    display: 'flex',
-    height: '100%',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    position: 'absolute',
-    width: '100%',
-    top: 0,
-    left: 0,
-  },
 }))
 
 const StorageMyOffersPage: FC = () => {
@@ -196,14 +184,13 @@ const StorageMyOffersPage: FC = () => {
       {
         isProcessing
         && (
-          <div className={classes.txInProgressContainer}>
-            <TransactionInProgressPanel
-              {...{ isPendingConfirm, onProcessingComplete }}
-              text="canceling your offer"
-              progMsg="The waiting period is required to securely cancel your offer.
+          <TransactionInProgressPanel
+            {...{ isPendingConfirm, onProcessingComplete }}
+            text="Canceling your offer"
+            progMsg="The waiting period is required to securely cancel your offer.
              Please do not close this tab until the process has finished."
-            />
-          </div>
+            overlayed
+          />
         )
       }
     </CenteredPageTemplate>

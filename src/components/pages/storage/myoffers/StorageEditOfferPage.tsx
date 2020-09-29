@@ -1,4 +1,3 @@
-import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import { Button, Web3Store } from '@rsksmart/rif-ui'
 import RoundedCard from 'components/atoms/RoundedCard'
@@ -25,20 +24,6 @@ import { Big } from 'big.js'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 
 const logger = Logger.getInstance()
-
-const useStyles = makeStyles(({
-  progressContainer: {
-    background: 'rgba(275, 275, 275, 0.8)',
-    display: 'flex',
-    height: '100%',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    position: 'absolute',
-    width: '100%',
-    top: 0,
-    left: 0,
-  },
-}))
 
 interface OfferContractData {
   availableSizeMB: string
@@ -86,7 +71,6 @@ const StorageEditOfferPage: FC<{}> = () => {
       offerId, billingPlans, availableSize, peerId,
     },
   } = useContext<OfferEditContextProps>(OfferEditContext)
-  const classes = useStyles()
 
   if (!offerId || !account) {
     history.replace(ROUTES.STORAGE.MYOFFERS.BASE)
@@ -97,7 +81,6 @@ const StorageEditOfferPage: FC<{}> = () => {
 
   // TODO: optimize to check what was edited and so send txs only to edit that info to save gas
   // this code is repeated in sell page but will change with the optimiization
-
   const handleEditOffer = async () => {
     // without a web3 instance the submit action would be disabled
     if (!web3) return
@@ -170,9 +153,9 @@ const StorageEditOfferPage: FC<{}> = () => {
       {
         isSubmitEnabled
         && (
-        <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
-          Your wallet will open and you will be asked to confirm the transaction for listing your service.
-        </Typography>
+          <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
+            Your wallet will open and you will be asked to confirm the transaction for listing your service.
+          </Typography>
         )
       }
     </>
@@ -189,14 +172,13 @@ const StorageEditOfferPage: FC<{}> = () => {
       {
         isProcessing
         && (
-          <div className={classes.progressContainer}>
-            <TransactionInProgressPanel
-              {...{ isPendingConfirm, onProcessingComplete }}
-              text="Editing your offer!"
-              progMsg="The waiting period is required to securely list your offer.
+          <TransactionInProgressPanel
+            {...{ isPendingConfirm, onProcessingComplete }}
+            text="Editing your offer!"
+            progMsg="The waiting period is required to securely list your offer.
              Please do not close this tab until the process has finished."
-            />
-          </div>
+            overlayed
+          />
         )
       }
     </CenteredPageTemplate>

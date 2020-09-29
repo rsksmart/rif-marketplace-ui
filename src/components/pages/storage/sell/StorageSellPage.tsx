@@ -40,17 +40,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: theme.spacing(3, 0),
     width: '100%',
   },
-  progressContainer: {
-    background: 'rgba(275, 275, 275, 0.8)',
-    display: 'flex',
-    height: '100%',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    position: 'absolute',
-    width: '100%',
-    top: 0,
-    left: 0,
-  },
 }))
 
 interface OfferContractData {
@@ -233,14 +222,13 @@ const StorageSellPage: FC = () => {
       {
         isProcessing
         && (
-          <div className={classes.progressContainer}>
-            <TransactionInProgressPanel
-              {...{ isPendingConfirm, onProcessingComplete }}
-              text="Listing your offer!"
-              progMsg="The waiting period is required to securely list your offer.
+          <TransactionInProgressPanel
+            {...{ isPendingConfirm, onProcessingComplete }}
+            text="Listing your offer!"
+            progMsg="The waiting period is required to securely list your offer.
              Please do not close this tab until the process has finished."
-            />
-          </div>
+            overlayed
+          />
         )
       }
     </CenteredPageTemplate>
