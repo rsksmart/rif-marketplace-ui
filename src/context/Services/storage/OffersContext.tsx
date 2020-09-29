@@ -13,7 +13,8 @@ import { MinMaxFilter } from 'models/Filters'
 import { UIError } from 'models/UIMessage'
 import { AvgBillingPriceService } from 'api/rif-marketplace-cache/storage/avg-billing-plan-price'
 import {
-  storageOffersActions, StorageOffersPayload, StorageOffersReducer, StorageOffersAction,
+  storageOffersActions, StorageOffersPayload,
+  StorageOffersReducer, StorageOffersAction,
 } from './offersActions'
 import { ServiceState } from '../interfaces'
 import { StorageOrder } from './interfaces'

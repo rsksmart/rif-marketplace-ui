@@ -1,15 +1,14 @@
+import { Dispatch } from 'react'
 import networkConfig from 'config'
 import { ContextState } from 'context/storeUtils/interfaces'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { BillingPlan, StorageItem, StorageOffer } from 'models/marketItems/StorageItem'
-import { Dispatch } from 'react'
 import { Modify } from 'utils/typeUtils'
-
-import { tokenDisplayNames } from '../../../api/rif-marketplace-cache/rates/xr'
+import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import { ServiceOrder, ServiceState } from '../interfaces'
 import { OFFERS_ACTION } from './offersActions'
 import { ContextName as OffersContextName } from './OffersContext'
-import { STORAGE_SELL_ACTION, StorageSellAction } from './storageSellActions'
+import { StorageSellAction, STORAGE_SELL_ACTION } from './storageSellActions'
 import { ContextName as SellContextName } from './StorageSellContext'
 
 export type StorageContextNames = OffersContextName | SellContextName
@@ -40,11 +39,6 @@ export interface StorageSellContextProps {
 export type StorageState = ServiceState<StorageItem> & {
   filters: StorageOffersFilters
   limits: Pick<StorageOffersFilters, 'price' | 'size'>
-}
-
-export interface StorageContextProps {
-  state: StorageState
-  dispatch: Dispatch<StorageSellAction>
 }
 
 export enum TimePeriodEnum {
