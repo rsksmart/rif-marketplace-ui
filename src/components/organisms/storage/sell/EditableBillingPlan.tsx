@@ -88,7 +88,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
       )
     }
     const hasChanged = billingPlan?.period !== period || billingPlan?.currency !== currency
-    const currencyAndPeriodInUse = usedPeriodsPerCurrency[currency].includes(period)
+    const currencyAndPeriodInUse = usedPeriodsPerCurrency[currency]?.includes(period)
     // the period or currency have changed and the selected option is in use
     const isDisabled = Number(pricePerGb) <= 0 || (hasChanged && currencyAndPeriodInUse)
 
