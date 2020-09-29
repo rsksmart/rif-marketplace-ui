@@ -25,6 +25,7 @@ import { PeriodInSeconds } from 'models/marketItems/StorageItem'
 import StakingCard from 'components/organisms/storage/myoffers/StakingCard'
 import SellStepper from 'components/organisms/storage/sell/SellStepper'
 import RoundedCard from 'components/atoms/RoundedCard'
+import { rifTokenAddress } from 'contracts/config'
 
 // TODO: discuss about wrapping the library and export it with this change
 Big.NE = -30
@@ -135,6 +136,7 @@ const StorageSellPage = () => {
         prices,
         tokens,
         peerId,
+        rifTokenAddress,
         { from: account },
       )
       logger.info('setOffer receipt: ', setOfferReceipt)

@@ -55,8 +55,9 @@ const StorageOffersCheckoutPage: FC = () => {
         selectedPlan,
         currencyOptions,
         currentRate,
-        currentToken,
         planOptions,
+        totalFiat,
+        endDate,
       },
       pinned,
     },
@@ -64,9 +65,8 @@ const StorageOffersCheckoutPage: FC = () => {
   } = useContext(CheckoutContext)
 
   const {
+    token,
     total,
-    totalFiat,
-    endDate,
   } = order
 
   const changeCurrencyHandle = ({
@@ -131,7 +131,7 @@ const StorageOffersCheckoutPage: FC = () => {
     />,
     'TOTAL PRICE': total && totalFiat ? (
       <CombinedPriceCell
-        currency={currentToken || ''}
+        currency={token || ''}
         currencyFiat={fiatName}
         price={total}
         priceFiat={totalFiat}

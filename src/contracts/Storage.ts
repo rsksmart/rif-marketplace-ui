@@ -4,6 +4,7 @@ import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
+import { zeroAddress } from 'context/Services/storage/interfaces'
 import waitForReceipt, {
   encodeHash,
   prefixArray,
@@ -55,6 +56,9 @@ class StorageContract {
       billingPeriod,
       amount,
     } = details
+    console.log(': ----------------------------------')
+    console.log('StorageContract -> details', details)
+    console.log(': ----------------------------------')
     const { from } = txOptions
     const dataReference = encodeHash(fileHash)
 
@@ -64,7 +68,11 @@ class StorageContract {
         provider,
         size,
         billingPeriod,
+        zeroAddress,
+        0,
         [],
+        [],
+        zeroAddress,
       )
 
     const gasPrice = await this.web3.eth.getGasPrice().catch((error: Error) => {
@@ -77,7 +85,7 @@ class StorageContract {
       gasPrice,
       value: amount,
     })
-
+    // debugger
     const txHash = await newAgreementTask.send({
       from, gas, gasPrice, value: amount,
     }).catch((err) => Promise.reject(err))
@@ -91,6 +99,7 @@ class StorageContract {
     billingRbtcWeiPrices: string[][],
     tokens: string[],
     peerId: string,
+    token: string,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions

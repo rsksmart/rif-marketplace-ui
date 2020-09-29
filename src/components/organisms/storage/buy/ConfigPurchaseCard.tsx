@@ -1,8 +1,9 @@
 import {
   Typography, Button, Table, TableBody, TableRow, makeStyles, TableCell,
 } from '@material-ui/core'
-import { colors } from '@rsksmart/rif-ui'
+import { colors, Web3Store } from '@rsksmart/rif-ui'
 import GridColumn from 'components/atoms/GridColumn'
+import Login from 'components/atoms/Login'
 import RifCard from 'components/organisms/RifCard'
 import { CheckoutContext } from 'components/pages/storage/buy/CheckoutContext'
 import React, { FC, useContext } from 'react'
@@ -34,38 +35,49 @@ const ConfigPurchaseCard: FC<Props> = ({ details }) => {
 
   const {
     state: {
-      agreement,
+      order,
+      pinned,
       contract: {
         createAgreement,
       },
     },
   } = useContext(CheckoutContext)
 
+  const {
+    state: {
+      account,
+    },
+  } = useContext(Web3Store)
+
+  const submitWithLogin = (): JSX.Element => (account ? (
+    <Button
+      style={{
+        background: colors.primary,
+        color: colors.gray1,
+      }}
+      onClick={(): void => {
+      // Validate input
+
+        // Submit
+        if (pinned) {
+          const agreement = { ...order, ...pinned }
+          createAgreement(agreement)
+          console.log(': -------------------')
+          console.log('agreement', agreement)
+          console.log(': -------------------')
+        }
+      }}
+    >
+      Buy
+    </Button>
+  ) : <Login />)
+
   return (
     <RifCard
       Header={(): JSX.Element => (
         <Typography variant="h6" color="primary">Configuring storage plan</Typography>
       )}
-      Actions={(): JSX.Element => (
-        <Button
-          style={{
-            background: colors.primary,
-            color: colors.gray1,
-          }}
-          onClick={(): void => {
-            // Validate input
-
-            // Submit
-            if (agreement) createAgreement(agreement)
-            console.log(': -------------------')
-            console.log('agreement', agreement)
-            console.log(': -------------------')
-          }}
-        >
-          Buy
-
-        </Button>
-      )}
+      Actions={submitWithLogin}
     >
       <GridColumn justify="space-evenly">
         <Table className={classes.contentDetails}>

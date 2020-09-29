@@ -48,10 +48,10 @@ export enum TimePeriodEnum {
 
 export type STORAGE_ACTION = STORAGE_SELL_ACTION | OFFERS_ACTION
 
-const ZeroAddress = '0x0000000000000000000000000000000000000000'
+export const zeroAddress = '0x'.padEnd(42, '0')
 
 export const TokenAddressees = {
-  [tokenDisplayNames.rbtc]: ZeroAddress, // we are using zero address for native token is Storage Manager SC
+  [tokenDisplayNames.rbtc]: zeroAddress, // we are using zero address for native token is Storage Manager SC
   [tokenDisplayNames.rif]: networkConfig.contractAddresses.rif,
 }
 export type PinnedContent = {

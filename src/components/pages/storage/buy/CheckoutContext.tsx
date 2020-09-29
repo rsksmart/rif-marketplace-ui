@@ -10,36 +10,25 @@ import React, {
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
+import { convertToWeiString, parseToBigDecimal } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import Web3 from 'web3'
 
 type AuxiliaryState = {
-  planOptions: BillingPlan[]
   currencyOptions: SupportedTokens[]
-  currentToken?: SupportedTokens
   currentRate: number
+  endDate: string
+  periodsCount: number
+  planOptions: BillingPlan[]
   selectedCurrency: number
   selectedPlan: number
-  periodsCount: number
+  totalFiat: string
 }
 
 export type Order = Pick<StorageOffer, 'id' | 'system' | 'location'> & {
+  billingPeriod
+  token
   total: string
-  totalFiat: string
-  endDate: string
-}
-
-type Agreement = {
-    provider
-    amount
-    size
-    billingPeriod
-    hash
-    token
-  }
-
-type ContractActions = {
-  createAgreement: (newAgreement: Agreement) => Promise<void>
 }
 
 export type PinnedContent = {
@@ -49,12 +38,17 @@ export type PinnedContent = {
   hash: string
 }
 
+type Agreement = Order & PinnedContent
+
+type ContractActions = {
+  createAgreement: (newAgreement: Agreement) => Promise<void>
+}
+
 type State = {
   order: Order
   auxiliary: AuxiliaryState
   pinned?: PinnedContent
   contract: ContractActions
-  agreement?: Agreement
 }
 
 type InitialisePayload = Pick<AuxiliaryState, 'currencyOptions'> & Pick<Order, 'id' | 'system' | 'location'>
@@ -174,6 +168,8 @@ const reducer = (state: State, action: PurchaseStorageAction): State => {
     } else {
       Logger.getInstance().debug('Checkout Context Action', type, 'old state:', state)
       Logger.getInstance().debug('Checkout Context Action', type, 'new state:', newState)
+      const diff = Object.entries(newState).filter((v, i) => state[i] !== v)
+      Logger.getInstance().debug('Checkout Context Action', type, 'state diff:', diff)
     }
     return newState
   }
@@ -188,16 +184,18 @@ const initialState: State = {
     system: '',
     location: '',
     total: '',
-    totalFiat: '',
-    endDate: '',
+    billingPeriod: '',
+    token: '',
   },
   auxiliary: {
     currencyOptions: [],
     currentRate: 0,
+    endDate: '',
+    periodsCount: 0,
     planOptions: [],
     selectedCurrency: 0,
     selectedPlan: 0,
-    periodsCount: 0,
+    totalFiat: '',
   },
   contract: {
     createAgreement: (): Promise<void> => Promise.resolve(),
@@ -205,28 +203,20 @@ const initialState: State = {
 }
 
 const newAgreement = (web3: Web3, account: string) => async ({
-  provider,
-  amount,
+  id,
+  total,
   size,
   billingPeriod,
   hash,
   token,
 }: Agreement): Promise<void> => {
   const storageContract = (await import('contracts/Storage')).default.getInstance(web3)
-  console.log('agreement:', {
-    provider,
-    amount,
-    size,
-    billingPeriod,
-    hash,
-    token,
-  })
   const receipt = await storageContract.newAgreement(
     {
-      amount,
+      amount: convertToWeiString(total),
       billingPeriod,
       fileHash: hash,
-      provider,
+      provider: id,
       size,
       token,
     }, { from: account },
@@ -273,9 +263,11 @@ const Provider: FC = ({ children }) => {
       selectedCurrency,
       currencyOptions,
       selectedPlan,
+      planOptions,
       periodsCount,
       currentRate,
     },
+    pinned,
   } = state
 
   // Initialise context
@@ -330,6 +322,7 @@ const Provider: FC = ({ children }) => {
       && currencyOptions.length
       && selectedCurrency >= 0
       && listedItem
+      && pinned
     ) {
       const { subscriptionOptions } = listedItem
       const newToken = currencyOptions[selectedCurrency]
@@ -337,27 +330,45 @@ const Provider: FC = ({ children }) => {
 
       const newPlans = subscriptionOptions
         .filter((plan: BillingPlan) => plan.currency === newToken)
+        .map((plan: BillingPlan) => {
+          const pricePerSize = (plan.price.div(UNIT_PREFIX_POW2.MEGA).mul(pinned.size)).mul(pinned.unit)
+          console.log(': ------------------------------------')
+          console.log('Provider:FC -> plan.price', plan.price)
+          console.log(': ------------------------------------')
+          console.log(': --------------------------------------------')
+          console.log('Provider:FC -> pricePerSizeMB', pricePerSize)
+          console.log(': --------------------------------------------')
+
+          return {
+            ...plan,
+            price: pricePerSize,
+          }
+        })
 
       dispatch({
         type: 'SET_AUXILIARY',
         payload: {
           planOptions: newPlans,
-          currentToken: newToken,
           currentRate: newRate,
         },
       })
+      dispatch({
+        type: 'SET_ORDER',
+        payload: {
+          token: newToken,
+        },
+      })
     }
-  }, [isInitialised, currencyOptions, selectedCurrency, crypto, listedItem])
+  }, [isInitialised, currencyOptions, selectedCurrency, crypto, listedItem, pinned])
 
   // Recalculates total amounts and subscription end date
   useEffect(() => {
-    const currentPlan: BillingPlan
-    | undefined = listedItem?.subscriptionOptions[selectedPlan]
-
-    if (isInitialised && currentPlan) {
-      const currentTotal = currentPlan.price.mul(periodsCount)
+    if (isInitialised && pinned) {
+      const { price, period }: BillingPlan = planOptions[selectedPlan]
+      const currentTotal = price.mul(periodsCount)
       const currentTotalFiat = currentTotal.mul(currentRate)
-      const currentPeriodsInSec = PeriodInSeconds[currentPlan.period]
+      const currentBillingPeriod = PeriodInSeconds[period]
+      const currentPeriodsInSec = currentBillingPeriod
       * periodsCount
       const dateNow = new Date(Date.now())
       const currentEndDate = new Date(
@@ -368,6 +379,12 @@ const Provider: FC = ({ children }) => {
         type: 'SET_ORDER',
         payload: {
           total: currentTotal.toString(),
+          billingPeriod: currentBillingPeriod,
+        },
+      })
+      dispatch({
+        type: 'SET_AUXILIARY',
+        payload: {
           totalFiat: currentTotalFiat.toString(),
           endDate: currentEndDate,
         },
