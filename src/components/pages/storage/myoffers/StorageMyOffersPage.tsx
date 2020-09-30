@@ -72,7 +72,7 @@ const StorageMyOffersPage: FC = () => {
     if (account) {
       dispatch({
         type: 'FILTER',
-        payload: { name: account },
+        payload: { provider: account },
       })
     }
   }, [account, dispatch])
