@@ -22,7 +22,7 @@ const useStyles = makeStyles((_: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
     '&:hover': {
-      fontWeight: fonts.weight.lightBold,
+      fontWeight: fonts.weight.regular,
     },
   },
   iconDescription: {
