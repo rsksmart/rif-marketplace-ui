@@ -1,7 +1,6 @@
 import { MinMaxFilter } from 'models/Filters'
 import { AbstractAPIService } from 'api/models/apiService'
 import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
-import { MinMax } from './offers'
 
 export const avgBillingPlanAddress: StorageServiceAddress = 'storage/v0/avgBillingPrice'
 
@@ -14,8 +13,8 @@ export class AvgBillingPriceService
     _fetch = (): Promise<[number, number]> => this.service.find()
 
     fetchPriceLimits = async (): Promise<MinMaxFilter> => {
-      const min = await this.service.get(MinMax.min)
-      const max = await this.service.get(MinMax.max)
+      // this 1 arg is required by service interface, but it's not actually used
+      const { min, max } = await this.service.get(1)
       return {
         min,
         max,
