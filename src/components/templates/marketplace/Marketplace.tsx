@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   th: {
     color: colors.gray6,
-    fontWeight: fonts.weight.normal,
+    fontWeight: fonts.weight.light,
     textAlign: 'left',
     textTransform: 'uppercase',
   },
