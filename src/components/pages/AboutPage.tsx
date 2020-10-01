@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { Typography, colors } from '@rsksmart/rif-ui'
+import Typography from '@material-ui/core/Typography'
+import { colors } from '@rsksmart/rif-ui'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
