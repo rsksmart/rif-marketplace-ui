@@ -33,7 +33,7 @@ const CancelOfferDialogue: FC<CancelOfferDialogueProps> = ({ open, onClose, onCo
     >
       <Grid container justify="center">
         <Typography align="center" color="secondary">
-          The offer will be cancelled inmediately but your active contracts will run until the expiration date.
+          The offer will be canceled inmediately but your active contracts will run until the expiration date.
         </Typography>
       </Grid>
     </ModalDialogue>
