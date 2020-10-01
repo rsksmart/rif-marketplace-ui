@@ -4,7 +4,7 @@ import React, { FC } from 'react'
 
 const StorageMyOffersCancelled: FC = () => (
   <TxCompletePageTemplate>
-    <JobDoneBox text="Your storage offer has been cancelled." />
+    <JobDoneBox text="Your storage offer has been canceled." />
   </TxCompletePageTemplate>
 )
 
