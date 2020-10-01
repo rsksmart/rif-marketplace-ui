@@ -440,8 +440,10 @@ const Provider: FC = ({ children }) => {
 
   // Recalculates total amounts and subscription end date
   useEffect(() => {
-    if (isInitialised) {
-      const { price, period }: BillingPlan = planOptions[selectedPlan]
+    const currentPlan = planOptions[selectedPlan]
+
+    if (isInitialised && currentPlan) {
+      const { price, period }: BillingPlan = currentPlan
       const currentTotal = price.mul(periodsCount)
       const currentTotalFiat = currentTotal.mul(currentRate)
       const currentBillingPeriod = PeriodInSeconds[period]
