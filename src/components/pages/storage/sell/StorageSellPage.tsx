@@ -151,7 +151,7 @@ const StorageSellPage = () => {
     } catch (error) {
       reportError(new UIError({
         error,
-        id: 'contract-storage-set-offer',
+        id: 'contract-storage',
         text: 'Could not set the offer in the contract.',
       }))
       setIsProcessing(false)

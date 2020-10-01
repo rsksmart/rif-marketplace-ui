@@ -1,5 +1,5 @@
-import { Button, ButtonProps } from '@material-ui/core'
-import { colors } from '@rsksmart/rif-ui'
+import { ButtonProps } from '@material-ui/core'
+import { colors, Button } from '@rsksmart/rif-ui'
 import PinEnterInfoTab from 'components/molecules/storage/buy/PinEnterInfoTab'
 import PinUploaderTab from 'components/molecules/storage/buy/PinUploaderTab'
 import RifCard from 'components/organisms/RifCard'
@@ -24,7 +24,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
   const [name, setName] = useState('')
   const [size, setSize] = useState('')
   const [hash, setHash] = useState('')
-  const [unit, setUnit] = useState<UNIT_PREFIX_POW2 | 0>(0)
+  const [unit, setUnit] = useState<UNIT_PREFIX_POW2>(UNIT_PREFIX_POW2.MEGA)
   const [files, setFiles] = useState<File[]>([])
 
   const handlePinning = async (): Promise<void> => {
@@ -72,6 +72,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
       )}
       Actions={(): JSX.Element => (
         <Button
+          rounded
           style={{
             background: colors.primary,
             color: colors.gray1,

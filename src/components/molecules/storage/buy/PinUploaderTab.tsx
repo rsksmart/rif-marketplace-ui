@@ -18,9 +18,6 @@ const useStyles = makeStyles(() => createStyles({
     fontFamily: fonts.family,
     fontSize: fonts.size.normal,
   },
-  columnItem: {
-    paddingBottom: '10px',
-  },
   previewChip: {
     minWidth: 160,
     maxWidth: 210,
@@ -38,7 +35,6 @@ const PinUploaderTab: FC<DropzoneAreaProps> = (props) => {
           <TextField
             id="contentName"
             label="Content name"
-            variant="outlined"
             required
           />
         </GridItem>
@@ -47,7 +43,7 @@ const PinUploaderTab: FC<DropzoneAreaProps> = (props) => {
         <GridItem>
           <DropzoneArea
             {...props}
-            classes={classes}
+            classes={{ root: classes.root, text: classes.text }}
             showPreviews
             showPreviewsInDropzone={false}
             useChipsForPreview

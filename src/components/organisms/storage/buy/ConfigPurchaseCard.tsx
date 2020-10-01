@@ -34,12 +34,8 @@ const ConfigPurchaseCard: FC<Props> = ({ details }) => {
   const classes = useStyles()
 
   const {
-    state: {
-      order,
-      pinned,
-      contract: {
-        createAgreement,
-      },
+    asyncActions: {
+      createAgreement,
     },
   } = useContext(CheckoutContext)
 
@@ -59,13 +55,7 @@ const ConfigPurchaseCard: FC<Props> = ({ details }) => {
       // Validate input
 
         // Submit
-        if (pinned) {
-          const agreement = { ...order, ...pinned }
-          createAgreement(agreement)
-          console.log(': -------------------')
-          console.log('agreement', agreement)
-          console.log(': -------------------')
-        }
+        createAgreement()
       }}
     >
       Buy

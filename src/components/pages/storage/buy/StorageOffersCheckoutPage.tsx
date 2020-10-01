@@ -8,20 +8,22 @@ import { SupportedTokens, tokenDisplayNames } from 'api/rif-marketplace-cache/ra
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
 import RoundedCard from 'components/atoms/RoundedCard'
-import { CombinedPriceCell } from 'components/molecules'
+import { CombinedPriceCell, JobDoneBox } from 'components/molecules'
 import GridRow from 'components/molecules/storage/buy/GridRow'
 import PlanOption from 'components/molecules/storage/buy/PlanOption'
 import RifSelect from 'components/molecules/storage/buy/RifSelect'
 import ConfigPurchaseCard from 'components/organisms/storage/buy/ConfigPurchaseCard'
 import PinningCard from 'components/organisms/storage/buy/PinningCard'
 import StorageOrderDescription from 'components/organisms/storage/buy/StorageOfferDescription'
+import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
+import TxCompletePageTemplate from 'components/templates/TxCompletePageTemplate'
 import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
 import React, {
   ChangeEvent, FC, useContext,
 } from 'react'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
-import withCheckoutContext, { CheckoutContext } from './CheckoutContext'
+import withCheckoutContext, { CheckoutContext, Props as ContextProps, initialState } from './CheckoutContext'
 
 const useStyles = makeStyles((theme: Theme) => ({
   stepperCard: {
@@ -31,6 +33,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   disclaimer: {
     alignSelf: 'center',
     marginBottom: theme.spacing(3),
+  },
+  progressContainer: {
+    background: 'rgba(275, 275, 275, 0.8)',
+    display: 'flex',
+    height: '100vh',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    position: 'fixed',
+    width: '100vw',
+    top: 0,
+    left: 0,
   },
 }))
 
@@ -60,9 +73,13 @@ const StorageOffersCheckoutPage: FC = () => {
         endDate,
       },
       pinned,
+      status: {
+        inProgress,
+        isDone,
+      },
     },
     dispatch,
-  } = useContext(CheckoutContext)
+  } = useContext<ContextProps>(CheckoutContext)
 
   const {
     token,
@@ -90,11 +107,11 @@ const StorageOffersCheckoutPage: FC = () => {
   }: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => dispatch({
     type: 'SET_AUXILIARY',
     payload: {
-      periodsCount: parseInt(value, 10) || 0,
+      periodsCount: parseInt(value, 10) || initialState.auxiliary.periodsCount,
     },
   })
 
-  const renderPlanOptions = planOptions.map((plan) => (
+  const subscriptionOptions = planOptions.map((plan) => (
     <PlanOption
       key={Object.entries(plan).toLocaleString()}
       plan={plan}
@@ -104,7 +121,6 @@ const StorageOffersCheckoutPage: FC = () => {
       }}
     />
   ))
-
   const orderConfigTB = pinned && {
     'CONTENT SIZE': `${pinned.size?.replace(/[a-zA-Z]+/g, '')} ${UNIT_PREFIX_POW2[pinned.unit][0]}B`,
     'CURRENCY TO PAY': <RifSelect<string>
@@ -118,14 +134,14 @@ const StorageOffersCheckoutPage: FC = () => {
     'SUBSCRIPTION PERIOD': <RifSelect<JSX.Element>
       id="plan"
       value={selectedPlan}
-      options={renderPlanOptions}
+      options={subscriptionOptions}
       onChange={changePlanHandle}
     />,
     'PERIODS TO PREPAY': <TextField
       type="number"
-      value={periodsCount}
-      inputProps={{
-        min: 0,
+      value={periodsCount.toString()}
+      InputProps={{
+        inputProps: { min: 1 },
       }}
       onChange={changePeriodCountHandle}
     />,
@@ -141,6 +157,81 @@ const StorageOffersCheckoutPage: FC = () => {
     'RENEWAL DATE': endDate,
   }
 
+  const renderStepper = (): JSX.Element => (
+    <>
+      <GridItem>
+        <GridRow justify="center">
+          <GridItem xs={10}>
+            <RoundedCard
+              color="primary"
+              className={classes.stepperCard}
+            >
+              <Stepper
+                activeStep={Number(Boolean(pinned?.hash))}
+                alternativeLabel
+              >
+                <Step>
+                  <StepLabel>Upload/Pin content</StepLabel>
+                </Step>
+                <Step>
+                  <StepLabel>Configure your storage plan</StepLabel>
+                </Step>
+              </Stepper>
+            </RoundedCard>
+          </GridItem>
+        </GridRow>
+      </GridItem>
+    </>
+  )
+
+  const renderContent = (): JSX.Element => (
+    <>
+      <GridItem className={classes.disclaimer}>
+        <Typography variant="caption" color="secondary">To buy your storage you have to select the currency, suscription and payment details to get the final price of your storage plan.</Typography>
+      </GridItem>
+      <GridItem>
+        <GridColumn alignContent="center">
+          <GridItem>
+            {pinned && orderConfigTB && (
+            <ConfigPurchaseCard details={orderConfigTB} />
+            )}
+            {!pinned && (
+            <PinningCard dispatch={dispatch} />
+            )}
+          </GridItem>
+        </GridColumn>
+      </GridItem>
+    </>
+  )
+
+  const renderProgressOverlay = (): JSX.Element | null => {
+    if (inProgress || isDone) {
+      return (
+        <div className={classes.progressContainer}>
+          {
+            inProgress && (
+            <TransactionInProgressPanel
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+              onProcessingComplete={(): void => {}}
+              text="Creating agreement!"
+              progMsg="The waiting period is required to securely list your offer.
+              Please do not close this tab until the process has finished."
+            />
+            )
+          }
+          {
+            isDone && (
+            <TxCompletePageTemplate>
+              <JobDoneBox text="Your offer agreement has been created." />
+            </TxCompletePageTemplate>
+            )
+          }
+        </div>
+      )
+    }
+    return null
+  }
+
   return (
     <CheckoutPageTemplate
       className="storage-checkout-page"
@@ -153,45 +244,14 @@ const StorageOffersCheckoutPage: FC = () => {
           {order && pinned && <StorageOrderDescription order={{ ...order, ...pinned }} />}
         </GridItem>
         {/* STEPPER */}
-        <GridItem>
-          <GridRow justify="center">
-            <GridItem xs={10}>
-              <RoundedCard
-                color="primary"
-                className={classes.stepperCard}
-              >
-                <Stepper
-                  activeStep={Number(Boolean(pinned?.hash))}
-                  alternativeLabel
-                >
-                  <Step>
-                    <StepLabel>Upload/Pin content</StepLabel>
-                  </Step>
-                  <Step>
-                    <StepLabel>Configure your storage plan</StepLabel>
-                  </Step>
-                </Stepper>
-              </RoundedCard>
-            </GridItem>
-          </GridRow>
-        </GridItem>
+        { renderStepper() }
         {/* CONTENT */}
-        <GridItem className={classes.disclaimer}>
-          <Typography variant="caption" color="secondary">To buy your storage you have to select the currency, suscription and payment details to get the final price of your storage plan.</Typography>
-        </GridItem>
-        <GridItem>
-          <GridColumn alignContent="center">
-            <GridItem>
-              {pinned && orderConfigTB && (
-                <ConfigPurchaseCard details={orderConfigTB} />
-              )}
-              {!pinned && (
-                <PinningCard dispatch={dispatch} />
-              )}
-            </GridItem>
-          </GridColumn>
-        </GridItem>
+        { renderContent() }
       </GridColumn>
+      {/* { inProgress && (
+        <div className={classes.progressContainer}>{renderProgress()}</div>
+      ) } */}
+      {renderProgressOverlay()}
     </CheckoutPageTemplate>
   )
 }

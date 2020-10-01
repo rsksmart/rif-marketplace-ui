@@ -1,16 +1,20 @@
 import { Web3Store } from '@rsksmart/rif-ui'
 import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
+import { LoadingPayload } from 'context/App/appActions'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
 import StorageOffersContext from 'context/Services/storage/OffersContext'
 import { BillingPlan, PeriodInSeconds, StorageOffer } from 'models/marketItems/StorageItem'
+import { UIError } from 'models/UIMessage'
 import React, {
   createContext, Dispatch, FC,
+  useCallback,
   useContext, useEffect, useMemo, useReducer, useState,
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
-import { convertToWeiString, parseToBigDecimal } from 'utils/parsers'
+import { convertToWeiString } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import Web3 from 'web3'
 
@@ -38,20 +42,28 @@ export type PinnedContent = {
   hash: string
 }
 
-type Agreement = Order & PinnedContent
-
-type ContractActions = {
-  createAgreement: (newAgreement: Agreement) => Promise<void>
+type Status = {
+  inProgress?: boolean
+  isDone?: boolean
 }
 
 type State = {
   order: Order
   auxiliary: AuxiliaryState
   pinned?: PinnedContent
-  contract: ContractActions
+  status: Status
 }
 
 type InitialisePayload = Pick<AuxiliaryState, 'currencyOptions'> & Pick<Order, 'id' | 'system' | 'location'>
+type StatusPayload = (
+  | {
+    inProgress: true
+    isDone?: never
+  } | {
+    inProgress?: never
+    isDone: true
+  }
+)
 
 export type PurchaseStorageAction = (
   | {
@@ -75,8 +87,8 @@ export type PurchaseStorageAction = (
     payload: InitialisePayload
   }
   | {
-    type: 'SET_ACTION'
-    payload: Partial<ContractActions>
+    type: 'SET_STATUS'
+    payload: StatusPayload
   }
 )
 
@@ -89,7 +101,7 @@ interface Actions {
   SET_ORDER: (state: State, payload: Partial<Order>) => State
   SET_PINNED: (state: State, payload: PinnedContent) => State
   INITIALISE: (state: State, payload: InitialisePayload) => State
-  SET_ACTION: (state: State, payload: Partial<ContractActions>) => State
+  SET_STATUS: (state: State, payload: StatusPayload) => State
 }
 
 const actions: Actions = {
@@ -139,21 +151,45 @@ const actions: Actions = {
       ...{ id, location, system },
     },
   }),
-  SET_ACTION: (
+  SET_STATUS: (
     state: State,
-    payload: Partial<ContractActions>,
+    payload: StatusPayload,
   ): State => ({
     ...state,
-    contract: {
-      ...state.contract,
-      ...payload,
-    },
+    status: payload,
   }),
+}
+
+type AsyncAction = {
+  (args?: unknown): Promise<unknown>
+}
+
+type StorageAsyncActions = {
+  createAgreement: AsyncAction
 }
 
 export type Props = {
     state: State
     dispatch: Dispatch<PurchaseStorageAction>
+    asyncActions: StorageAsyncActions
+}
+
+const isObject = (item: object | unknown): boolean => typeof item === 'object'
+const isUndefined = (item: undefined | unknown): boolean => typeof item === 'undefined'
+
+const recDiff = (obj1: object, obj2: object): unknown[] => {
+  const keys = Object.keys(obj1)
+  return keys.filter((key) => {
+    const value1 = obj1[key]
+    const value2 = obj2[key]
+
+    if (isUndefined(value1) || isUndefined(value2)) return false
+
+    if (isObject(value1) && isObject(value2)) {
+      return recDiff(value1, value2).length
+    }
+    return value1 !== value2
+  })
 }
 
 const reducer = (state: State, action: PurchaseStorageAction): State => {
@@ -168,7 +204,7 @@ const reducer = (state: State, action: PurchaseStorageAction): State => {
     } else {
       Logger.getInstance().debug('Checkout Context Action', type, 'old state:', state)
       Logger.getInstance().debug('Checkout Context Action', type, 'new state:', newState)
-      const diff = Object.entries(newState).filter((v, i) => state[i] !== v)
+      const diff = recDiff(newState, state)
       Logger.getInstance().debug('Checkout Context Action', type, 'state diff:', diff)
     }
     return newState
@@ -178,7 +214,7 @@ const reducer = (state: State, action: PurchaseStorageAction): State => {
   return state
 }
 
-const initialState: State = {
+export const initialState: State = {
   order: {
     id: '',
     system: '',
@@ -191,47 +227,35 @@ const initialState: State = {
     currencyOptions: [],
     currentRate: 0,
     endDate: '',
-    periodsCount: 0,
+    periodsCount: 1,
     planOptions: [],
     selectedCurrency: 0,
     selectedPlan: 0,
     totalFiat: '',
   },
-  contract: {
-    createAgreement: (): Promise<void> => Promise.resolve(),
-  },
+  status: {},
 }
 
-const newAgreement = (web3: Web3, account: string) => async ({
-  id,
-  total,
-  size,
-  billingPeriod,
-  hash,
-  token,
-}: Agreement): Promise<void> => {
-  const storageContract = (await import('contracts/Storage')).default.getInstance(web3)
-  const receipt = await storageContract.newAgreement(
-    {
-      amount: convertToWeiString(total),
-      billingPeriod,
-      fileHash: hash,
-      provider: id,
-      size,
-      token,
-    }, { from: account },
-  )
-  Logger.getInstance().info('Agreement created:', receipt)
+const initialAsyncActions: StorageAsyncActions = {
+  createAgreement: (): Promise<void> => Promise.resolve(),
 }
 
 const Context = createContext<Props>({
   state: initialState,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   dispatch: () => {},
+  asyncActions: initialAsyncActions,
 })
 
 const Provider: FC = ({ children }) => {
   const history = useHistory()
+
+  const {
+    dispatch: appDispatch,
+  } = useContext<AppContextProps>(AppContext)
+  const reportError = useCallback(
+    (e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch],
+  )
 
   const {
     state: {
@@ -255,6 +279,7 @@ const Provider: FC = ({ children }) => {
   const listedItem: StorageOffer | undefined = listedOffer?.item
 
   const [isInitialised, setIsInitialised] = useState(false)
+  const [asyncActions, setAsyncActions] = useState(initialAsyncActions)
 
   const [state, dispatch] = useReducer(reducer, initialState)
 
@@ -268,6 +293,7 @@ const Provider: FC = ({ children }) => {
       currentRate,
     },
     pinned,
+    order,
   } = state
 
   // Initialise context
@@ -298,22 +324,79 @@ const Provider: FC = ({ children }) => {
     }
   }, [listedItem, isInitialised])
 
-  // Prepare new agreement action
+  // Prepare async actions
   useEffect(() => {
-    console.log(': ----------------------------------------------')
-    console.log('Provider:FC -> web3', web3)
-    console.log('Provider:FC -> account', account)
-    console.log(': ----------------------------------------------')
+    if (web3 && account && pinned) {
+      const createAgreement = async (): Promise<void> => {
+        const {
+          id: provider,
+          billingPeriod,
+          token,
+          total,
+        } = order
+        const {
+          size,
+          hash: fileHash,
+        } = pinned as PinnedContent
+        const agreement = {
+          amount: convertToWeiString(total),
+          billingPeriod,
+          fileHash,
+          provider,
+          size,
+          token,
+        }
+        const storageContract = (await import('contracts/Storage')).default.getInstance(web3 as Web3)
+        appDispatch({
+          type: 'SET_IS_LOADING',
+          payload: {
+            isLoading: true,
+            id: 'contract',
+            message: 'Creating the agreement...',
+          } as LoadingPayload,
+        } as any)
+        dispatch({
+          type: 'SET_STATUS',
+          payload: { inProgress: true },
+        })
+        const receipt = await storageContract
+          .newAgreement(agreement, { from: account })
+          .catch((error) => {
+            reportError(new UIError({
+              error,
+              id: 'contract-storage',
+              text: 'Could not create new agreement.',
+            }))
+            Logger.getInstance().error('Error while creating new agreement:', error)
+          })
 
-    if (web3 && account) {
-      dispatch({
-        type: 'SET_ACTION',
-        payload: {
-          createAgreement: newAgreement(web3, account),
-        },
-      })
+        appDispatch({
+          type: 'SET_IS_LOADING',
+          payload: {
+            isLoading: false,
+            id: 'contract',
+          } as LoadingPayload,
+        } as any)
+        dispatch({
+          type: 'SET_STATUS',
+          payload: {
+            isDone: true,
+          },
+        })
+
+        if (receipt) {
+          Logger.getInstance().debug('Agreement receipt:', receipt)
+        } else {
+          reportError(new UIError({
+            error: new Error('Did not receive the recipt from the storage contract.'),
+            id: 'contract-storage',
+            text: 'Could not create new agreement.',
+          }))
+        }
+      }
+      setAsyncActions({ createAgreement })
     }
-  }, [web3, account])
+  }, [web3, account, appDispatch, history, order, pinned, reportError])
 
   // Sets currency related states
   useEffect(() => {
@@ -332,12 +415,6 @@ const Provider: FC = ({ children }) => {
         .filter((plan: BillingPlan) => plan.currency === newToken)
         .map((plan: BillingPlan) => {
           const pricePerSize = (plan.price.div(UNIT_PREFIX_POW2.MEGA).mul(pinned.size)).mul(pinned.unit)
-          console.log(': ------------------------------------')
-          console.log('Provider:FC -> plan.price', plan.price)
-          console.log(': ------------------------------------')
-          console.log(': --------------------------------------------')
-          console.log('Provider:FC -> pricePerSizeMB', pricePerSize)
-          console.log(': --------------------------------------------')
 
           return {
             ...plan,
@@ -363,7 +440,7 @@ const Provider: FC = ({ children }) => {
 
   // Recalculates total amounts and subscription end date
   useEffect(() => {
-    if (isInitialised && pinned) {
+    if (isInitialised) {
       const { price, period }: BillingPlan = planOptions[selectedPlan]
       const currentTotal = price.mul(periodsCount)
       const currentTotalFiat = currentTotal.mul(currentRate)
@@ -395,10 +472,11 @@ const Provider: FC = ({ children }) => {
     selectedPlan,
     periodsCount,
     listedItem,
+    planOptions,
     currentRate,
   ])
 
-  const value = useMemo(() => ({ state, dispatch }), [state])
+  const value = useMemo(() => ({ state, dispatch, asyncActions }), [state, asyncActions])
 
   if (!listedItem) {
     history.replace(ROUTES.STORAGE.BUY.BASE)

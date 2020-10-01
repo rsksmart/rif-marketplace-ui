@@ -14,7 +14,7 @@ const useTabsStyles = makeStyles(() => ({
     overflow: 'visible !important',
   },
   indicator: {
-    height: 0,
+    height: 'false',
   },
 }))
 const useTabItemStyles = makeStyles((

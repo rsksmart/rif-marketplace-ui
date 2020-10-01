@@ -14,7 +14,7 @@ import { storageAddress } from './config'
 
 const logger = Logger.getInstance()
 
-export type StorageContractErrorId = 'contract-storage-set-offer'
+export type StorageContractErrorId = 'contract-storage'
 
 class StorageContract {
   public static getInstance(web3: Web3): StorageContract {
@@ -56,9 +56,6 @@ class StorageContract {
       billingPeriod,
       amount,
     } = details
-    console.log(': ----------------------------------')
-    console.log('StorageContract -> details', details)
-    console.log(': ----------------------------------')
     const { from } = txOptions
     const dataReference = encodeHash(fileHash)
 
@@ -88,9 +85,14 @@ class StorageContract {
     // debugger
     const txHash = await newAgreementTask.send({
       from, gas, gasPrice, value: amount,
-    }).catch((err) => Promise.reject(err))
+    }, (err, response) => {
+      if (err) return Promise.reject(err)
+      return waitForReceipt(response, this.web3)
+    })
+    // .catch((err) => Promise.reject(err))
 
-    return waitForReceipt(txHash, this.web3)
+    // return waitForReceipt(txHash, this.web3)
+    return txHash
   }
 
   public setOffer = async (

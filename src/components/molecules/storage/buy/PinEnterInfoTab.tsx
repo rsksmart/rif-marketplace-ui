@@ -34,19 +34,19 @@ const PinEnterInfoTab: FC<Props> = ({
           type="string"
           id="contentName"
           label="Content name"
-          variant="outlined"
           {...name}
           required
         />
       </GridItem>
       <GridItem xs={6}>
         <TextField
-          error={isEmpty(size.value) && isEmpty(unit.value)}
+          error={isEmpty(size.value) || !parseFloat(size.value as string)}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
                 <Select
                   required
+                  defaultValue={UNIT_PREFIX_POW2.MEGA}
                   {...unit}
                 >
                   {Object.keys(UNIT_PREFIX_POW2).filter((k) => !parseInt(k, 10)).map((k) => <MenuItem key={k} value={UNIT_PREFIX_POW2[k]}>{`${k[0]}B`}</MenuItem>)}
@@ -57,9 +57,9 @@ const PinEnterInfoTab: FC<Props> = ({
           type="number"
           id="contentSize"
           label="Content size"
-          variant="outlined"
           {...size}
           required
+          fullWidth
         />
       </GridItem>
       <GridItem xs={12}>
@@ -68,7 +68,6 @@ const PinEnterInfoTab: FC<Props> = ({
           type="string"
           id="hash"
           label="Hash"
-          variant="outlined"
           required
           {...hash}
           style={{
