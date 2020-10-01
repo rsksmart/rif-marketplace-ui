@@ -22,8 +22,9 @@ const useStyles = makeStyles((_: Theme) => ({
   iconTitle: {
     display: 'flex',
     justifyContent: 'center',
+    fontWeight: fonts.weight.regular,
     '&:hover': {
-      fontWeight: fonts.weight.regular,
+      fontWeight: fonts.weight.medium,
     },
   },
   iconDescription: {
