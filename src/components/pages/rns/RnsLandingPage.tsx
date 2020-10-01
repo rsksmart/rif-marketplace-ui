@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Typography } from '@rsksmart/rif-ui'
+import Typography from '@material-ui/core/Typography'
 import SideImageTemplate from 'components/templates/SideImageTemplate'
 import Icon, { Icons } from 'components/atoms/Icon'
 
