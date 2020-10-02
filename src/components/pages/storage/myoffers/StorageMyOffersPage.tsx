@@ -134,22 +134,22 @@ const StorageMyOffersPage: FC = () => {
   }
 
   const handleEditOffer = (offer: StorageOffer) => {
-    const {
-      availableSizeGB, location, peerId, system, subscriptionOptions, id,
-    } = offer
+    // const {
+    //   availableSizeGB, location, peerId, system, subscriptionOptions, id,
+    // } = offer
 
-    const payload = {
-      availableSize: Number(availableSizeGB),
-      country: location,
-      peerId,
-      system,
-      billingPlans: subscriptionOptions,
-      offerId: id,
-    } as SetOfferPayload
+    // const payload = {
+    //   availableSize: Number(availableSizeGB),
+    //   country: location,
+    //   peerId,
+    //   system,
+    //   billingPlans: subscriptionOptions,
+    //   offerId: id,
+    // } as SetOfferPayload
 
     editOfferDispatch({
       type: 'SET_OFFER',
-      payload,
+      payload: offer as SetOfferPayload,
     })
     history.push(ROUTES.STORAGE.MYOFFERS.EDIT.BASE)
   }

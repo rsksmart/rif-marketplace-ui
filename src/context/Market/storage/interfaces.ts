@@ -2,7 +2,11 @@ import { Dispatch } from 'react'
 import { ContextState } from 'context/storeUtils/interfaces'
 import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import networkConfig from 'config'
-import { BillingPlan, SubscriptionPeriod } from 'models/marketItems/StorageItem'
+import {
+  BillingPlan,
+  StorageOffer,
+  SubscriptionPeriod,
+} from 'models/marketItems/StorageItem'
 import { OfferEditAction } from './offerEditActions'
 
 export interface StorageBillingPlan extends BillingPlan {
@@ -17,8 +21,8 @@ export interface OfferEditState extends ContextState {
   internalCounter: number // counter to assign unique ids to billingPlans, this counter only sums up
   allBillingPeriods: SubscriptionPeriod[]
   peerId: string
-  offerId?: string
   usedPeriodsPerCurrency: Record<string, SubscriptionPeriod[]> // dictionary to easily know the timePeriods already used by a given currency
+  originalOffer?: StorageOffer
 }
 
 export interface OfferEditContextProps {

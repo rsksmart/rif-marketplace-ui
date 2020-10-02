@@ -68,11 +68,11 @@ const StorageEditOfferPage: FC<{}> = () => {
   const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
   const {
     state: {
-      offerId, billingPlans, availableSize, peerId,
+      originalOffer, billingPlans, availableSize, peerId,
     },
   } = useContext<OfferEditContextProps>(OfferEditContext)
 
-  if (!offerId || !account) {
+  if (!originalOffer || !account) {
     history.replace(ROUTES.STORAGE.MYOFFERS.BASE)
   }
 

@@ -89,19 +89,16 @@ export const offerEditActions: OfferEditActions = {
     ...state,
     peerId,
   }),
-  SET_OFFER: (
-    state: OfferEditState,
-    {
-      availableSize,
-      country,
+  SET_OFFER: (state: OfferEditState, payload: SetOfferPayload) => {
+    const {
+      availableSizeGB,
+      location,
       peerId,
-      billingPlans,
+      subscriptionOptions,
       system,
-      offerId,
-    }: SetOfferPayload,
-  ) => {
+    } = payload
     // every plan item needs a unique id to handle the edition
-    const newBillingPlans: StorageBillingPlan[] = billingPlans.map(
+    const newBillingPlans: StorageBillingPlan[] = subscriptionOptions.map(
       (plan: StorageBillingPlan, index: number) => ({
         ...plan,
         price: plan.price.mul(UNIT_PREFIX_POW2.KILO),
@@ -110,14 +107,15 @@ export const offerEditActions: OfferEditActions = {
     )
     return {
       ...state,
-      availableSize,
-      country,
+      // TODO: use big instead of number for available size
+      availableSize: Number(availableSizeGB),
       peerId,
+      country: location,
       billingPlans: newBillingPlans,
       system,
       usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newBillingPlans),
       internalCounter: newBillingPlans.length + 1,
-      offerId,
+      originalOffer: { ...payload },
     }
   },
 }

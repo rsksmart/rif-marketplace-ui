@@ -1,4 +1,5 @@
 import { ContextDispatch, ContextPayload } from 'context/storeUtils/interfaces'
+import { StorageOffer } from 'models/marketItems/StorageItem'
 import { StorageBillingPlan } from './interfaces'
 import { OfferEditReducer } from './offerEditReducer'
 
@@ -43,14 +44,7 @@ export interface SetPeerIdPayload {
   peerId: string
 }
 
-export interface SetOfferPayload {
-  availableSize: number
-  country: string
-  peerId: string
-  billingPlans: StorageBillingPlan[]
-  system: string
-  offerId?: string
-}
+export type SetOfferPayload = StorageOffer
 
 export type OfferEditPayload =
   | ContextPayload
