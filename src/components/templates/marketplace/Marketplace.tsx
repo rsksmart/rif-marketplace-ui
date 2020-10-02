@@ -1,7 +1,9 @@
 import React, { FC } from 'react'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import {
-  makeStyles, Table, TableHead, TableRow, TableCell, TableBody, Theme,
+  Table, TableHead, TableRow, TableCell, TableBody, Typography,
 } from '@material-ui/core'
+
 import {
   colors, fonts,
   WithSpinner,
@@ -39,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   th: {
     color: colors.gray6,
-    fontWeight: fonts.weight.normal,
+    fontWeight: fonts.weight.light,
     textAlign: 'left',
     textTransform: 'uppercase',
   },
@@ -77,7 +79,7 @@ const Marketplace: FC<MarketplaceProps> = ({
                   {
                     Object.keys(headers).map((itemName: string) => (
                       <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={itemName}>
-                        {item[itemName]}
+                        <Typography>{item[itemName]}</Typography>
                       </TableCell>
                     ))
                   }

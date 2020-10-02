@@ -100,7 +100,7 @@ const StorageMyOffersPage: FC = () => {
         payload: {
           isLoading: true,
           id: 'contract',
-          message: 'Cancelling your offer...',
+          message: 'canceling your offer...',
         } as LoadingPayload,
       } as any)
 
@@ -172,7 +172,7 @@ const StorageMyOffersPage: FC = () => {
           <div className={classes.txInProgressContainer}>
             <TransactionInProgressPanel
               {...{ isPendingConfirm, onProcessingComplete }}
-              text="Cancelling your offer"
+              text="canceling your offer"
               progMsg="The waiting period is required to securely cancel your offer.
              Please do not close this tab until the process has finished."
             />

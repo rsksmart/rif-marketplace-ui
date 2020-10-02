@@ -23,8 +23,9 @@ import {
   Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody,
   TableCell, TableRow, Theme,
 } from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
 import {
-  Button, colors, shortenString, Typography, Web3Store,
+  Button, colors, shortenString, Web3Store,
   ShortenTextTooltip,
 } from '@rsksmart/rif-ui'
 

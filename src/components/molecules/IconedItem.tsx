@@ -1,7 +1,8 @@
 import React, { FC } from 'react'
 import { NavLink } from 'react-router-dom'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { fonts, Typography } from '@rsksmart/rif-ui'
+import Typography from '@material-ui/core/Typography'
+import { fonts } from '@rsksmart/rif-ui'
 import Icon, { IconProps } from 'components/atoms/Icon'
 
 export interface IconedItemProps {
@@ -21,8 +22,9 @@ const useStyles = makeStyles((_: Theme) => ({
   iconTitle: {
     display: 'flex',
     justifyContent: 'center',
+    fontWeight: fonts.weight.regular,
     '&:hover': {
-      fontWeight: fonts.weight.lightBold,
+      fontWeight: fonts.weight.medium,
     },
   },
   iconDescription: {

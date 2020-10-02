@@ -1,7 +1,8 @@
 import {
   CircularProgress, createStyles, makeStyles, Theme,
 } from '@material-ui/core'
-import { shortenString, Typography } from '@rsksmart/rif-ui'
+import Typography from '@material-ui/core/Typography'
+import { shortenString } from '@rsksmart/rif-ui'
 import React, {
   FC, useContext, useEffect,
 } from 'react'
