@@ -1,6 +1,6 @@
 /* eslint-disable-next-line import/no-unresolved */
 import { StyledNavTabProps } from '@rsksmart/rif-ui/dist/components/atoms/StyledNavTab'
-import React, { useEffect } from 'react'
+import React, { FC, useEffect } from 'react'
 import {
   Redirect, Route, Switch, useHistory, useLocation,
 } from 'react-router-dom'
@@ -45,7 +45,7 @@ const TABS: StyledNavTabProps[] = [
 
 const logger = Logger.getInstance()
 
-const StorageRoutes = () => {
+const StorageRoutes: FC = () => {
   const { pathname } = useLocation()
   const { services } = networkConfig
   const storageEnabled = services && (services as string[]).includes('storage')
@@ -56,7 +56,7 @@ const StorageRoutes = () => {
       logger.debug('StorageRoutes -> location', location)
       logger.debug('StorageRoutes -> action', action)
     })
-    return () => {
+    return (): void => {
       unlisten()
     }
   }, [history])
@@ -64,20 +64,39 @@ const StorageRoutes = () => {
   if (storageEnabled) {
     return (
       <Switch>
-        <Redirect exact from={ROUTES.STORAGE.BASE} to={ROUTES.STORAGE.BUY.BASE} />
+        <Redirect
+          exact
+          from={ROUTES.STORAGE.BASE}
+          to={ROUTES.STORAGE.BUY.BASE}
+        />
 
         <TabsTemplate
           title="Storage"
-          value={getTabValueFromLocation(TABS, ROUTES.STORAGE.BUY.BASE)(pathname)}
+          value={getTabValueFromLocation(
+            TABS,
+            ROUTES.STORAGE.BUY.BASE,
+          )(pathname)}
           tabs={TABS}
         >
           <Switch>
             <Route path={ROUTES.STORAGE.BUY.BASE}>
               <StorageOffersContextProvider>
                 <Switch>
-                  <Redirect exact from={ROUTES.STORAGE.BUY.BASE} to={ROUTES.STORAGE.BUY.LISTING} />
-                  <Route exact path={ROUTES.STORAGE.BUY.LISTING} component={StorageOffersPage} />
-                  <Route exact path={ROUTES.STORAGE.BUY.CHECKOUT} component={StorageOffersCheckoutPage} />
+                  <Redirect
+                    exact
+                    from={ROUTES.STORAGE.BUY.BASE}
+                    to={ROUTES.STORAGE.BUY.LISTING}
+                  />
+                  <Route
+                    exact
+                    path={ROUTES.STORAGE.BUY.LISTING}
+                    component={StorageOffersPage}
+                  />
+                  <Route
+                    exact
+                    path={ROUTES.STORAGE.BUY.CHECKOUT}
+                    component={StorageOffersCheckoutPage}
+                  />
                   <Route component={NotFound} />
                 </Switch>
               </StorageOffersContextProvider>
@@ -87,15 +106,30 @@ const StorageRoutes = () => {
                 <StorageSellPage />
               </StorageSellContextProvider>
             </Route>
-            <Route exact path={ROUTES.STORAGE.SELL.DONE} component={StorageSellDone} />
-            <Route exact path={ROUTES.STORAGE.MYOFFERS.BASE}>
+            <Route
+              exact
+              path={ROUTES.STORAGE.SELL.DONE}
+              component={StorageSellDone}
+            />
+            <Route
+              exact
+              path={ROUTES.STORAGE.MYOFFERS.BASE}
+            >
               <StorageOffersContextProvider>
                 <Switch>
-                  <Route exact path={ROUTES.STORAGE.MYOFFERS.BASE} component={StorageMyOffersPage} />
+                  <Route
+                    exact
+                    path={ROUTES.STORAGE.MYOFFERS.BASE}
+                    component={StorageMyOffersPage}
+                  />
                 </Switch>
               </StorageOffersContextProvider>
             </Route>
-            <Route exact path={ROUTES.STORAGE.MYOFFERS.CANCEL.DONE} component={StorageMyOffersCancelled} />
+            <Route
+              exact
+              path={ROUTES.STORAGE.MYOFFERS.CANCEL.DONE}
+              component={StorageMyOffersCancelled}
+            />
             <Route component={NotFound} />
           </Switch>
         </TabsTemplate>

@@ -4,7 +4,6 @@ import {
 } from '@material-ui/core'
 import { Modify } from 'utils/typeUtils'
 
-// Styles source: https://mui-treasury.com/styles/tabs/
 const useTabsStyles = makeStyles(() => ({
   root: {
     boxShadow: 'unset',
@@ -14,45 +13,17 @@ const useTabsStyles = makeStyles(() => ({
     overflow: 'visible !important',
   },
   indicator: {
-    height: 'false',
+    height: '0px',
   },
 }))
 const useTabItemStyles = makeStyles((
-  // {
-  //   breakpoints,
-  // }: Pick<Theme, 'breakpoints'>,
 ): unknown => ({
-//   root: {
-//     lineHeight: 'inherit',
-//     minWidth: 0,
-//     '&:not(:last-child)': {
-//       marginRight: 24,
-//       [breakpoints.up('sm')]: {
-//         marginRight: 60,
-//       },
-//     },
-//     [breakpoints.up('md')]: {
-//       minWidth: 0,
-//     },
-//   },
-//   labelIcon: {
-//     minHeight: 53,
-//     '& $wrapper > *:first-child': {
-//       marginBottom: 0,
-//     },
-//   },
-//   textColorInherit: {
-//     opacity: 0.4,
-//   },
-//   wrapper: {
-//     flexDirection: 'row',
-//     letterSpacing: '1px',
-//     textTransform: 'uppercase',
-//     '& svg, .material-icons': {
-//       fontSize: 16,
-//       marginRight: 8,
-//     },
-//   },
+  root: {
+    lineHeight: 'inherit',
+  },
+  textColorInherit: {
+    opacity: 0.4,
+  },
 }))
 
 export type StoragePinTabsProps = Modify<TabsProps, {

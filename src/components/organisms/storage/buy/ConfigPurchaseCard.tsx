@@ -51,12 +51,7 @@ const ConfigPurchaseCard: FC<Props> = ({ details }) => {
         background: colors.primary,
         color: colors.gray1,
       }}
-      onClick={(): void => {
-      // Validate input
-
-        // Submit
-        createAgreement()
-      }}
+      onClick={createAgreement}
     >
       Buy
     </Button>
@@ -72,15 +67,15 @@ const ConfigPurchaseCard: FC<Props> = ({ details }) => {
       <GridColumn justify="space-evenly">
         <Table className={classes.contentDetails}>
           <TableBody>
-            {Object.keys(details).map((key) => (
-              <TableRow key={key}>
+            {Object.keys(details).map((name) => (
+              <TableRow key={name}>
                 <TableCell className={classes.detailKey}>
                   <Typography variant="body2">
-                    {key}
+                    {name}
                   </Typography>
                 </TableCell>
                 <TableCell className={classes.detailValue}>
-                  {details[key]}
+                  {details[name]}
                 </TableCell>
               </TableRow>
             ))}

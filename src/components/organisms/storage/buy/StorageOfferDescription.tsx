@@ -9,15 +9,15 @@ import { UNIT_PREFIX_POW2 } from 'utils/utils'
 
 type Props = Order & PinnedContent
 
-const useStyles = makeStyles(() => ({
-  items: {
+const useItemsStyles = makeStyles(() => ({
+  root: {
     display: 'flex',
     justifyContent: 'start',
   },
 }))
 
 const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
-  const classes = useStyles()
+  const itemClasses = useItemsStyles()
 
   const {
     name: contentName,
@@ -42,13 +42,13 @@ const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
         </GridItem>
         <GridItem xs={9}>
           <GridRow spacing={3}>
-            <GridItem xs={4} className={classes.items}>
+            <GridItem xs={4} classes={itemClasses}>
               <LabelWithValue
                 label="Name:"
                 value={shortenString(id)}
               />
             </GridItem>
-            <GridItem xs={4} className={classes.items}>
+            <GridItem xs={4} classes={itemClasses}>
               <LabelWithValue
                 label="System:"
                 value={system}
@@ -71,20 +71,20 @@ const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
             </GridItem>
             <GridItem xs={9}>
               <GridRow spacing={3}>
-                <GridItem xs={4} className={classes.items}>
+                <GridItem xs={4} classes={itemClasses}>
                   <LabelWithValue
                     label="Name:"
                     value={contentName}
                   />
                 </GridItem>
-                <GridItem xs={4} className={classes.items}>
+                <GridItem xs={4} classes={itemClasses}>
 
                   <LabelWithValue
                     label="Hash:"
                     value={shortenString(contentHash)}
                   />
                 </GridItem>
-                <GridItem xs={4} className={classes.items}>
+                <GridItem xs={4} classes={itemClasses}>
                   <LabelWithValue
                     label="Size:"
                     value={`${contentSize} ${UNIT_PREFIX_POW2[contentSizeUnit][0]}B`}

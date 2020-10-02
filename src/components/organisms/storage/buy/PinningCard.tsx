@@ -1,4 +1,4 @@
-import { ButtonProps } from '@material-ui/core'
+import { ButtonProps, makeStyles } from '@material-ui/core'
 import { colors, Button } from '@rsksmart/rif-ui'
 import PinEnterInfoTab from 'components/molecules/storage/buy/PinEnterInfoTab'
 import PinUploaderTab from 'components/molecules/storage/buy/PinUploaderTab'
@@ -18,9 +18,20 @@ function setInfoHandle<T>(
   return ({ target: { value } }): void => setterFn(value as T)
 }
 
+const useActionButtonStyles = makeStyles(() => ({
+  root: {
+    background: colors.primary,
+    color: colors.gray1,
+  },
+  disabled: {
+    background: colors.gray1,
+  },
+}))
+
 const PinningCard: FC<Props> = ({ dispatch }) => {
+  const actionBtnClasses = useActionButtonStyles()
+
   const [isUpladed, setIsUploaded] = useState(false)
-  // const [isPinned, setIsPinned] = useState(false)
   const [name, setName] = useState('')
   const [size, setSize] = useState('')
   const [hash, setHash] = useState('')
@@ -55,7 +66,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     ? {
       children: 'Pin',
       onClick: handlePinning,
-      // disabled: name && size && hash && Boolean(unit),
+      disabled: !(name && size && hash && unit),
     }
     : {
       children: 'Upload',
@@ -72,11 +83,8 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
       )}
       Actions={(): JSX.Element => (
         <Button
+          classes={actionBtnClasses}
           rounded
-          style={{
-            background: colors.primary,
-            color: colors.gray1,
-          }}
           {...action}
         />
       )}

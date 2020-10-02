@@ -1,23 +1,23 @@
-import { Web3Store } from '@rsksmart/rif-ui'
-import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
-import { LoadingPayload } from 'context/App/appActions'
-import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
-import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
-import StorageOffersContext from 'context/Services/storage/OffersContext'
-import { BillingPlan, PeriodInSeconds, StorageOffer } from 'models/marketItems/StorageItem'
-import { UIError } from 'models/UIMessage'
 import React, {
   createContext, Dispatch, FC,
   useCallback,
   useContext, useEffect, useMemo, useReducer, useState,
 } from 'react'
 import { useHistory } from 'react-router-dom'
+import Web3 from 'web3'
+import { Big } from 'big.js'
+import { Web3Store } from '@rsksmart/rif-ui'
+import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
+import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
+import { TokenAddressees } from 'context/Services/storage/interfaces'
+import StorageOffersContext from 'context/Services/storage/OffersContext'
+import { BillingPlan, PeriodInSeconds, StorageOffer } from 'models/marketItems/StorageItem'
+import { UIError } from 'models/UIMessage'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { convertToWeiString } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
-import Web3 from 'web3'
-import { Big } from 'big.js'
 
 type AuxiliaryState = {
   currencyOptions: SupportedTokens[]
@@ -31,8 +31,8 @@ type AuxiliaryState = {
 }
 
 export type Order = Pick<StorageOffer, 'id' | 'system' | 'location'> & {
-  billingPeriod
-  token
+  billingPeriod: PeriodInSeconds
+  token: SupportedTokens
   total: Big
 }
 
@@ -221,8 +221,8 @@ export const initialState: State = {
     system: '',
     location: '',
     total: new Big(0),
-    billingPeriod: '',
-    token: '',
+    billingPeriod: PeriodInSeconds.Daily,
+    token: 'rbtc',
   },
   auxiliary: {
     currencyOptions: [],
@@ -345,7 +345,7 @@ const Provider: FC = ({ children }) => {
           fileHash,
           provider,
           size,
-          token,
+          token: TokenAddressees[token],
         }
         const storageContract = (await import('contracts/Storage')).default.getInstance(web3 as Web3)
         appDispatch({
@@ -354,8 +354,8 @@ const Provider: FC = ({ children }) => {
             isLoading: true,
             id: 'contract',
             message: 'Creating the agreement...',
-          } as LoadingPayload,
-        } as any)
+          },
+        })
         dispatch({
           type: 'SET_STATUS',
           payload: { inProgress: true },
@@ -376,8 +376,8 @@ const Provider: FC = ({ children }) => {
           payload: {
             isLoading: false,
             id: 'contract',
-          } as LoadingPayload,
-        } as any)
+          },
+        })
         dispatch({
           type: 'SET_STATUS',
           payload: {
@@ -399,7 +399,7 @@ const Provider: FC = ({ children }) => {
     }
   }, [web3, account, appDispatch, history, order, pinned, reportError])
 
-  // Sets currency related states
+  // Sets plans and currency related states
   useEffect(() => {
     if (
       isInitialised
@@ -415,7 +415,10 @@ const Provider: FC = ({ children }) => {
       const newPlans = subscriptionOptions
         .filter((plan: BillingPlan) => plan.currency === newToken)
         .map((plan: BillingPlan) => {
-          const pricePerSize = (plan.price.div(UNIT_PREFIX_POW2.MEGA).mul(pinned.size)).mul(pinned.unit)
+          const pricePerSize = (plan.price
+            .div(UNIT_PREFIX_POW2.MEGA)
+            .mul(pinned.size))
+            .mul(pinned.unit)
 
           return {
             ...plan,
@@ -437,7 +440,10 @@ const Provider: FC = ({ children }) => {
         },
       })
     }
-  }, [isInitialised, currencyOptions, selectedCurrency, crypto, listedItem, pinned])
+  }, [
+    isInitialised, currencyOptions, selectedCurrency,
+    crypto, listedItem, pinned,
+  ])
 
   // Recalculates total amounts and subscription end date
   useEffect(() => {
@@ -479,7 +485,11 @@ const Provider: FC = ({ children }) => {
     currentRate,
   ])
 
-  const value = useMemo(() => ({ state, dispatch, asyncActions }), [state, asyncActions])
+  const value = useMemo(() => ({
+    state,
+    dispatch,
+    asyncActions,
+  }), [state, asyncActions])
 
   if (!listedItem) {
     history.replace(ROUTES.STORAGE.BUY.BASE)
