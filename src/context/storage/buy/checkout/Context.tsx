@@ -186,16 +186,22 @@ const Provider: FC = ({ children }) => {
             id: 'contract',
           },
         })
-        dispatch({
-          type: 'SET_STATUS',
-          payload: {
-            isDone: true,
-          },
-        })
 
         if (receipt) {
+          dispatch({
+            type: 'SET_STATUS',
+            payload: {
+              isDone: true,
+            },
+          })
           Logger.getInstance().debug('Agreement receipt:', receipt)
         } else {
+          dispatch({
+            type: 'SET_STATUS',
+            payload: {
+              inProgress: false,
+            },
+          })
           reportError(new UIError({
             error: new Error('Did not receive the recipt from the storage contract.'),
             id: 'contract-storage',

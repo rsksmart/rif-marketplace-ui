@@ -45,7 +45,7 @@ export type State = {
 export type InitialisePayload = Pick<AuxiliaryState, 'currencyOptions'> & Pick<Order, 'id' | 'system' | 'location'>
 export type StatusPayload = (
   | {
-    inProgress: true
+    inProgress: boolean
     isDone?: never
   } | {
     inProgress?: never
