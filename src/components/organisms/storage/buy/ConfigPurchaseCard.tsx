@@ -1,9 +1,11 @@
 import {
-  Typography, Button, Table, TableBody, TableRow, makeStyles, TableCell,
+  makeStyles, Table, TableBody,
+  TableCell, TableRow, Typography,
 } from '@material-ui/core'
-import { colors, Web3Store } from '@rsksmart/rif-ui'
+import { Web3Store } from '@rsksmart/rif-ui'
 import GridColumn from 'components/atoms/GridColumn'
 import Login from 'components/atoms/Login'
+import RoundBtn from 'components/atoms/RoundBtn'
 import RifCard from 'components/organisms/RifCard'
 import { CheckoutContext } from 'components/pages/storage/buy/CheckoutContext'
 import React, { FC, useContext } from 'react'
@@ -46,15 +48,9 @@ const ConfigPurchaseCard: FC<Props> = ({ details }) => {
   } = useContext(Web3Store)
 
   const submitWithLogin = (): JSX.Element => (account ? (
-    <Button
-      style={{
-        background: colors.primary,
-        color: colors.gray1,
-      }}
-      onClick={createAgreement}
-    >
+    <RoundBtn onClick={createAgreement}>
       Buy
-    </Button>
+    </RoundBtn>
   ) : <Login />)
 
   return (

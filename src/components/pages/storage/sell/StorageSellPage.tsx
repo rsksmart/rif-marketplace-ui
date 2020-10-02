@@ -1,5 +1,5 @@
 import React, {
-  useContext, useCallback, useState, useEffect,, FC
+  useContext, useCallback, useState, useEffect, FC,
 } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button as RUIButton, Web3Store } from '@rsksmart/rif-ui'
@@ -106,7 +106,9 @@ const StorageSellPage: FC = () => {
   const { dispatch: bcDispatch } = useContext(BlockchainContext)
 
   const { dispatch: appDispatch } = useContext(AppContext)
-  const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
+  const reportError = useCallback((
+    e: UIError,
+  ) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -114,8 +116,8 @@ const StorageSellPage: FC = () => {
   const classes = useStyles()
   const history = useHistory()
 
-  const handleSubmit = async () => {
-    // without a web3 instance the submit action would be disabled
+  const handleSubmit = async (): Promise<void> => {
+  // without a web3 instance the submit action would be disabled
     if (!web3) return
     try {
       appDispatch({
@@ -169,7 +171,7 @@ const StorageSellPage: FC = () => {
     }
   }
 
-  const onProcessingComplete = () => {
+  const onProcessingComplete = (): void => {
     setIsProcessing(false)
   }
 
@@ -180,7 +182,7 @@ const StorageSellPage: FC = () => {
     }
   }, [isPendingConfirm, history, isProcessing])
 
-  useEffect(() => () => {
+  useEffect(() => (): void => {
     dispatch({
       type: 'CLEAN_UP',
       payload: {},
@@ -221,8 +223,8 @@ const StorageSellPage: FC = () => {
       <StakingCard
         className={classes.staking}
         balance="2048 RIF"
-        onWithdrawFunds={() => { logger.info('withdraw action') }}
-        onAddFunds={() => { logger.info('add funds action') }}
+        onWithdrawFunds={(): void => { logger.info('withdraw action') }}
+        onAddFunds={(): void => { logger.info('add funds action') }}
       />
       <Typography gutterBottom variant="h5" color="primary">List your storage service</Typography>
       <Typography gutterBottom color="secondary" variant="subtitle1">

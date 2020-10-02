@@ -23,6 +23,9 @@ import React, {
 } from 'react'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import GridRow from 'components/atoms/GridRow'
+import RoundBtn from 'components/atoms/RoundBtn'
+import { useHistory } from 'react-router-dom'
+import ROUTES from 'routes'
 import withCheckoutContext, { CheckoutContext, Props as ContextProps, initialState } from './CheckoutContext'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -49,6 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const StorageOffersCheckoutPage: FC = () => {
   const classes = useStyles()
+  const history = useHistory()
   const {
     state: {
       exchangeRates: {
@@ -229,6 +233,22 @@ const StorageOffersCheckoutPage: FC = () => {
             isDone && (
             <TxCompletePageTemplate>
               <JobDoneBox text="Your offer agreement has been created." />
+              <GridRow justify="center">
+                <GridItem>
+                  <RoundBtn
+                    onClick={(): void => { history.replace(ROUTES.STORAGE.MYPURCHASES.BASE) }}
+                  >
+                    View my purchases
+                  </RoundBtn>
+                </GridItem>
+                <GridItem>
+                  <RoundBtn
+                    onClick={(): void => { history.replace(ROUTES.STORAGE.BUY.BASE) }}
+                  >
+                    View storage listing
+                  </RoundBtn>
+                </GridItem>
+              </GridRow>
             </TxCompletePageTemplate>
             )
           }
