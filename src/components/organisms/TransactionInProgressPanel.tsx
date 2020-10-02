@@ -12,7 +12,7 @@ export interface TransactionInProgressPanelProps {
   text: string
   progMsg: string
   isPendingConfirm?: boolean
-  onProcessingComplete: () => void
+  onProcessingComplete?: () => void
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
   progMsg, text, isPendingConfirm,
-  onProcessingComplete,
+  onProcessingComplete = (): void => undefined,
 }) => {
   const classes = useStyles()
 

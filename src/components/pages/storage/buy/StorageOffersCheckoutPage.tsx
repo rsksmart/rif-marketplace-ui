@@ -149,9 +149,9 @@ const StorageOffersCheckoutPage: FC = () => {
       <CombinedPriceCell
         currency={token || ''}
         currencyFiat={fiatName}
-        price={total}
+        price={total.toFixed(18)}
         priceFiat={totalFiat}
-        divider=" "
+        divider={<br /> as any}
       />
     ) : '',
     'RENEWAL DATE': endDate,
@@ -219,8 +219,6 @@ const StorageOffersCheckoutPage: FC = () => {
           {
             inProgress && (
             <TransactionInProgressPanel
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-              onProcessingComplete={(): void => {}}
               text="Creating agreement!"
               progMsg="The waiting period is required to securely list your offer.
               Please do not close this tab until the process has finished."
@@ -256,9 +254,6 @@ const StorageOffersCheckoutPage: FC = () => {
         {/* CONTENT */}
         { renderContent() }
       </GridColumn>
-      {/* { inProgress && (
-        <div className={classes.progressContainer}>{renderProgress()}</div>
-      ) } */}
       {renderProgressOverlay()}
     </CheckoutPageTemplate>
   )

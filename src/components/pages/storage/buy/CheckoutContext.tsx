@@ -17,6 +17,7 @@ import Logger from 'utils/Logger'
 import { convertToWeiString } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import Web3 from 'web3'
+import { Big } from 'big.js'
 
 type AuxiliaryState = {
   currencyOptions: SupportedTokens[]
@@ -32,7 +33,7 @@ type AuxiliaryState = {
 export type Order = Pick<StorageOffer, 'id' | 'system' | 'location'> & {
   billingPeriod
   token
-  total: string
+  total: Big
 }
 
 export type PinnedContent = {
@@ -219,7 +220,7 @@ export const initialState: State = {
     id: '',
     system: '',
     location: '',
-    total: '',
+    total: new Big(0),
     billingPeriod: '',
     token: '',
   },
@@ -457,7 +458,7 @@ const Provider: FC = ({ children }) => {
       dispatch({
         type: 'SET_ORDER',
         payload: {
-          total: currentTotal.toString(),
+          total: currentTotal,
           billingPeriod: currentBillingPeriod,
         },
       })

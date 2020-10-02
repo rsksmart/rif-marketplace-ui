@@ -49,7 +49,18 @@ const PinEnterInfoTab: FC<Props> = ({
                   defaultValue={UNIT_PREFIX_POW2.MEGA}
                   {...unit}
                 >
-                  {Object.keys(UNIT_PREFIX_POW2).filter((k) => !parseInt(k, 10)).map((k) => <MenuItem key={k} value={UNIT_PREFIX_POW2[k]}>{`${k[0]}B`}</MenuItem>)}
+                  {
+                    Object.keys(UNIT_PREFIX_POW2)
+                      .filter((k) => !parseInt(k, 10)) // This is to filter out the enums' reverse resolved keys
+                      .map((k) => (
+                        <MenuItem
+                          key={k}
+                          value={UNIT_PREFIX_POW2[k]}
+                        >
+                          {`${k[0]}B`}
+                        </MenuItem>
+                      ))
+                  }
                 </Select>
               </InputAdornment>
             ),

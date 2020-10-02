@@ -24,6 +24,7 @@ const PlanOption: FC<PlanOptionProps> = ({ plan, xr }) => {
       style={{
         paddingBlockEnd: '0em',
       }}
+      spacing={1}
     >
       <GridItem>
         <Typography variant="subtitle2">{period}</Typography>
@@ -32,8 +33,8 @@ const PlanOption: FC<PlanOptionProps> = ({ plan, xr }) => {
         <CombinedPriceCell
           currency={tokenDisplayNames[currency]}
           currencyFiat={fiat}
-          price={price.toString()}
-          priceFiat={price.mul(rate).toString()}
+          price={price.toFixed(6)}
+          priceFiat={price.mul(rate).toFixed(3)}
           divider=" "
         />
       </GridItem>
