@@ -9,7 +9,6 @@ const GridRow: FC<GridRowProps> = ({ children, ...props }) => (
     direction="row"
     {...props}
   >
-    {/* {React.Children.map(children, (child) => <Grid item>{child}</Grid>)} */}
     {children}
   </Grid>
 )

@@ -1,5 +1,6 @@
 import {
-  TextFieldProps, Typography, TextField, InputAdornment, MenuItem, SelectProps, Select,
+  TextFieldProps, Typography, TextField,
+  InputAdornment, MenuItem, SelectProps, Select,
 } from '@material-ui/core'
 import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
@@ -22,7 +23,6 @@ const PinEnterInfoTab: FC<Props> = ({
 }) => (
   <>
     <GridRow justify="center">
-      {/* .juraj - put inside classes */}
       <Typography variant="body2" color="secondary" style={{ width: '70%' }} align="center">
         To ensure that your file persists in IPFS is necessary to pin it using its hash
       </Typography>
@@ -70,9 +70,7 @@ const PinEnterInfoTab: FC<Props> = ({
           label="Hash"
           required
           {...hash}
-          style={{
-            width: '100%',
-          }}
+          fullWidth
         />
         <Typography variant="caption" color="secondary">
           You can find the hash of your file in your storage system (IPFS, SWARM)

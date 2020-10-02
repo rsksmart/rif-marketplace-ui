@@ -8,6 +8,11 @@ export type RifSelectProps<T extends OptionType> = SelectProps & {
     options: T[] | undefined
 }
 
+const hasKey = (
+  obj: OptionType,
+): obj is JSX.Element => typeof obj !== 'string'
+  && obj.key !== undefined
+
 function RifSelect<T extends OptionType>({
   id, options, ...props
 }: RifSelectProps<T>): React.ReactElement {
@@ -17,9 +22,9 @@ function RifSelect<T extends OptionType>({
       id={`${id}-select`}
       {...props}
     >
-      {options?.map((option: any, i) => (
+      {options?.map((option: T, i) => (
         <MenuItem
-          key={option.key || option}
+          key={hasKey(option) ? option.key : option as string}
           value={i}
         >
           {option}

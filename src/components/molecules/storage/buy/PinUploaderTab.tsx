@@ -19,8 +19,8 @@ const useStyles = makeStyles(() => createStyles({
     fontSize: fonts.size.normal,
   },
   previewChip: {
-    minWidth: 160,
-    maxWidth: 210,
+    minWidth: '160px',
+    maxWidth: '210px',
   },
 }))
 const PinUploaderTab: FC<DropzoneAreaProps> = (props) => {

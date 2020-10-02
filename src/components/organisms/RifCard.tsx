@@ -4,10 +4,11 @@ import {
 } from '@material-ui/core'
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
+import { colors } from '@rsksmart/rif-ui'
 
 const useStylesRifCard = makeStyles((theme: Theme) => ({
   card: {
-    background: '#F8F7F7',
+    background: colors.gray1,
     borderRadius: '20px',
     minWidth: '--webkit-fill-available',
     border: '0px',
@@ -21,7 +22,7 @@ const useStylesRifCard = makeStyles((theme: Theme) => ({
     minHeight: '276px',
     margin: '50px',
     marginTop: '10px',
-    background: '#FFF',
+    background: colors.white,
     borderRadius: '20px',
     display: 'grid',
     alignContent: 'space-between',
