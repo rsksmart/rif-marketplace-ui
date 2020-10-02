@@ -82,16 +82,13 @@ class StorageContract {
       gasPrice,
       value: amount,
     })
-    // debugger
     const txHash = await newAgreementTask.send({
       from, gas, gasPrice, value: amount,
     }, (err, response) => {
       if (err) return Promise.reject(err)
       return waitForReceipt(response, this.web3)
     })
-    // .catch((err) => Promise.reject(err))
 
-    // return waitForReceipt(txHash, this.web3)
     return txHash
   }
 
@@ -128,7 +125,7 @@ class StorageContract {
         from,
         gas: Math.floor(await setOffer.estimateGas({ from, gasPrice }) * 1.1),
         gasPrice,
-      }, (err, txHash) => {
+      }, (err: Error, txHash: string) => {
         if (err) return Promise.reject(err)
         return waitForReceipt(txHash, this.web3)
       })
@@ -151,10 +148,11 @@ class StorageContract {
 
     return this.contract.methods
       .terminateOffer()
-      .send({ from, gas, gasPrice }, (err, txHash) => {
-        if (err) return Promise.reject(err)
-        return waitForReceipt(txHash, this.web3)
-      })
+      .send({ from, gas, gasPrice },
+        (err: Error, txHash: string) => {
+          if (err) return Promise.reject(err)
+          return waitForReceipt(txHash, this.web3)
+        })
   }
 }
 
