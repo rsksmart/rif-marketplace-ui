@@ -32,7 +32,8 @@ const StorageOffersPage: FC = () => {
   const collection = items
     .map<MarketplaceItem>((item) => {
       const {
-        id, system, availableSizeGB, averagePrice, subscriptionOptions, acceptedCurrencies,
+        id, system, availableSizeGB, averagePrice,
+        subscriptionOptions, acceptedCurrencies,
       } = item
       return {
         id,
@@ -46,7 +47,7 @@ const StorageOffersPage: FC = () => {
         averagePrice: <ItemWUnit type="mediumPrimary" value={averagePrice.toString()} unit="USD" />,
         action1: <SelectRowButton
           id={id}
-          handleSelect={() => {
+          handleSelect={(): void => {
             dispatch({
               type: 'SET_ORDER',
               payload: {

@@ -1,5 +1,5 @@
 import React, {
-  useContext, useCallback, useState, useEffect,
+  useContext, useCallback, useState, useEffect,, FC
 } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button as RUIButton, Web3Store } from '@rsksmart/rif-ui'
@@ -64,11 +64,14 @@ const transformOfferDataForContract = (
   availableSizeGB: number,
   planItems: StoragePlanItem[],
 ): OfferContractData => ({
-  availableSizeMB: new Big(availableSizeGB).mul(UNIT_PREFIX_POW2.KILO).toString(),
+  availableSizeMB: new Big(availableSizeGB)
+    .mul(UNIT_PREFIX_POW2.KILO)
+    .toString(),
   ...planItems.reduce(
     (acc, { timePeriod, pricePerGb, currency }) => {
       const tokenIndex = acc.tokens.findIndex(((t) => t === currency))
-      const weiPrice = convertToWeiString(new Big(pricePerGb).div(UNIT_PREFIX_POW2.KILO))
+      const weiPrice = convertToWeiString(new Big(pricePerGb)
+        .div(UNIT_PREFIX_POW2.KILO))
 
       if (tokenIndex !== -1) {
         acc.periods[tokenIndex].push(timePeriod * PeriodInSeconds.Daily)
@@ -86,7 +89,7 @@ const transformOfferDataForContract = (
   ),
 })
 
-const StorageSellPage = () => {
+const StorageSellPage: FC = () => {
   const {
     state: {
       planItems, availableSize, peerId, system,
@@ -122,7 +125,7 @@ const StorageSellPage = () => {
           id: 'contract',
           message: 'Listing your offer...',
         } as LoadingPayload,
-      } as any)
+      })
 
       setIsProcessing(true)
       const storageContract = StorageContract.getInstance(web3)
@@ -162,7 +165,7 @@ const StorageSellPage = () => {
           isLoading: false,
           id: 'contract',
         } as LoadingPayload,
-      } as any)
+      })
     }
   }
 
