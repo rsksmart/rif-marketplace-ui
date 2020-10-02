@@ -1,6 +1,5 @@
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
-import { asciiToHex } from 'web3-utils'
 
 export interface TransactionOptions {
   from?: string
@@ -33,46 +32,6 @@ function waitForReceipt(
       }
     }, POLLING_INTERVAL)
   })
-}
-
-export function prefixArray(
-  arr: string[],
-  prefix: string,
-  lengthPerElement = 32,
-): string[] {
-  if (prefix.length >= lengthPerElement) {
-    throw new Error(`Too long prefix! Max ${lengthPerElement} chars!`)
-  }
-
-  const endingLength = lengthPerElement - prefix.length
-
-  let tmp
-  let carryOver = prefix
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i].length > lengthPerElement) {
-      throw new Error(`Element ${i} was longer then expected!`)
-    }
-
-    tmp = `${carryOver}${arr[i].slice(0, endingLength)}`
-    carryOver = arr[i].slice(endingLength)
-    // eslint-disable-next-line no-param-reassign
-    arr[i] = tmp
-  }
-
-  if (carryOver) {
-    arr.push(carryOver)
-  }
-
-  return arr
-}
-
-export function encodeHash(hash: string): string[] {
-  if (hash.length <= 32) {
-    return [asciiToHex(hash)]
-  }
-
-  return [asciiToHex(hash.slice(0, 32)), ...encodeHash(hash.slice(32))]
 }
 
 export default waitForReceipt

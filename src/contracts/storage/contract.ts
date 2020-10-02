@@ -4,13 +4,10 @@ import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
+import { encodeHash, prefixArray } from './utils'
+import waitForReceipt, { TransactionOptions } from '../utils'
+import { storageAddress } from '../config'
 import { zeroAddress } from 'context/Services/storage/interfaces'
-import waitForReceipt, {
-  encodeHash,
-  prefixArray,
-  TransactionOptions,
-} from './utils'
-import { storageAddress } from './config'
 
 const logger = Logger.getInstance()
 
@@ -113,22 +110,24 @@ class StorageContract {
       throw error
     })
 
-    const setOffer = await this.contract.methods
-      .setOffer(capacityMB,
-        billingPeriods,
-        billingRbtcWeiPrices,
-        tokens,
-        prefixedMsg)
+    const setOffer = await this.contract.methods.setOffer(
+      capacityMB,
+      billingPeriods,
+      billingRbtcWeiPrices,
+      tokens,
+      prefixedMsg,
+    )
 
-    return setOffer
-      .send({
+    return setOffer.send(
+      {
         from,
-        gas: Math.floor(await setOffer.estimateGas({ from, gasPrice }) * 1.1),
+        gas: Math.floor((await setOffer.estimateGas({ from, gasPrice })) * 1.1),
         gasPrice,
       }, (err: Error, txHash: string) => {
         if (err) return Promise.reject(err)
         return waitForReceipt(txHash, this.web3)
-      })
+      },
+    )
   }
 
   public terminateOffer = async (

@@ -5,27 +5,24 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button as RUIButton, Web3Store } from '@rsksmart/rif-ui'
 import Typography from '@material-ui/core/Typography'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
-import StorageContract from 'contracts/Storage'
+import StorageContract from 'contracts/storage/contract'
 import Logger from 'utils/Logger'
-import { StorageBillingPlan, TokenAddressees } from 'context/Market/storage/interfaces'
-import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { UIError } from 'models/UIMessage'
 import Login from 'components/atoms/Login'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import Big from 'big.js'
-import { convertToWeiString } from 'utils/parsers'
 import AppContext, { errorReporterFactory } from 'context/App/AppContext'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import { AddTxPayload } from 'context/Blockchain/blockchainActions'
 import BlockchainContext from 'context/Blockchain/BlockchainContext'
 import { LoadingPayload } from 'context/App/appActions'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
-import { PeriodInSeconds } from 'models/marketItems/StorageItem'
 import StakingCard from 'components/organisms/storage/myoffers/StakingCard'
 import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper'
 import RoundedCard from 'components/atoms/RoundedCard'
 import { rifTokenAddress } from 'contracts/config'
+import { transformOfferDataForContract } from 'contracts/storage/utils'
 
 // TODO: discuss about wrapping the library and export it with this change
 Big.NE = -30
@@ -42,40 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-interface OfferContractData {
-  availableSizeMB: string
-  periods: number[][]
-  prices: string[][]
-  tokens: string[]
-}
-
-const transformOfferDataForContract = (
-  availableSizeGB: number,
-  billingPlans: StorageBillingPlan[],
-): OfferContractData => ({
-  availableSizeMB: new Big(availableSizeGB).mul(UNIT_PREFIX_POW2.KILO).toString(),
-  ...billingPlans.reduce(
-    (acc, { period, price, currency }) => {
-      const tokenIndex = acc.tokens.findIndex(((t) => t === currency))
-      const weiPrice = convertToWeiString(new Big(price).div(UNIT_PREFIX_POW2.KILO))
-
-      if (tokenIndex !== -1) {
-        acc.periods[tokenIndex].push(PeriodInSeconds[period])
-        acc.prices[tokenIndex].push(weiPrice)
-        return acc
-      }
-
-      return {
-        prices: [...acc.prices, [weiPrice]],
-        periods: [...acc.periods, [PeriodInSeconds[period]]],
-        tokens: [...acc.tokens, TokenAddressees[currency]],
-      }
-    },
-    { prices: [], periods: [], tokens: [] } as any,
-  ),
-})
-
-const StorageSellPage: FC = () => {
+const StorageSellPage = () => {
   const {
     state: {
       billingPlans, availableSize, peerId, system,

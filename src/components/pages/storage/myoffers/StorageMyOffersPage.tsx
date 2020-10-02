@@ -12,7 +12,7 @@ import { Web3Store } from '@rsksmart/rif-ui'
 import StorageOffersContext, { StorageOffersContextProps } from 'context/Services/storage/OffersContext'
 import OffersList from 'components/organisms/storage/myoffers/OffersList'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
-import StorageContract from 'contracts/Storage'
+import StorageContract from 'contracts/storage/contract'
 import BlockchainContext from 'context/Blockchain/BlockchainContext'
 import { AddTxPayload } from 'context/Blockchain/blockchainActions'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
@@ -134,19 +134,6 @@ const StorageMyOffersPage: FC = () => {
   }
 
   const handleEditOffer = (offer: StorageOffer) => {
-    // const {
-    //   availableSizeGB, location, peerId, system, subscriptionOptions, id,
-    // } = offer
-
-    // const payload = {
-    //   availableSize: Number(availableSizeGB),
-    //   country: location,
-    //   peerId,
-    //   system,
-    //   billingPlans: subscriptionOptions,
-    //   offerId: id,
-    // } as SetOfferPayload
-
     editOfferDispatch({
       type: 'SET_OFFER',
       payload: offer as SetOfferPayload,
