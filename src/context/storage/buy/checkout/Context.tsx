@@ -1,5 +1,5 @@
 import React, {
-  createContext, Dispatch, FC,
+  createContext, FC,
   useCallback,
   useContext, useEffect, useMemo, useReducer, useState,
 } from 'react'
@@ -18,202 +18,10 @@ import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { convertToWeiString } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
-
-type AuxiliaryState = {
-  currencyOptions: SupportedTokens[]
-  currentRate: number
-  endDate: string
-  periodsCount: number
-  planOptions: BillingPlan[]
-  selectedCurrency: number
-  selectedPlan: number
-  totalFiat: string
-}
-
-export type Order = Pick<StorageOffer, 'id' | 'system' | 'location'> & {
-  billingPeriod: PeriodInSeconds
-  token: SupportedTokens
-  total: Big
-}
-
-export type PinnedContent = {
-  name: string
-  size: string
-  unit: UNIT_PREFIX_POW2
-  hash: string
-}
-
-type Status = {
-  inProgress?: boolean
-  isDone?: boolean
-}
-
-type State = {
-  order: Order
-  auxiliary: AuxiliaryState
-  pinned?: PinnedContent
-  status: Status
-}
-
-type InitialisePayload = Pick<AuxiliaryState, 'currencyOptions'> & Pick<Order, 'id' | 'system' | 'location'>
-type StatusPayload = (
-  | {
-    inProgress: true
-    isDone?: never
-  } | {
-    inProgress?: never
-    isDone: true
-  }
-)
-
-export type PurchaseStorageAction = (
-  | {
-    type: 'CHANGE_CURRENCY'
-    payload: { index: number }
-  }
-  | {
-    type: 'SET_AUXILIARY'
-    payload: Partial<AuxiliaryState>
-  }
-  | {
-    type: 'SET_ORDER'
-    payload: Partial<Order>
-  }
-  | {
-    type: 'SET_PINNED'
-    payload: Partial<PinnedContent>
-  }
-  | {
-    type: 'INITIALISE'
-    payload: InitialisePayload
-  }
-  | {
-    type: 'SET_STATUS'
-    payload: StatusPayload
-  }
-)
-
-interface Actions {
-  CHANGE_CURRENCY: (
-    state: State,
-    { index: selectedCurrency }: { index: number },
-  ) => State
-  SET_AUXILIARY: (state: State, payload: Partial<AuxiliaryState>) => State
-  SET_ORDER: (state: State, payload: Partial<Order>) => State
-  SET_PINNED: (state: State, payload: PinnedContent) => State
-  INITIALISE: (state: State, payload: InitialisePayload) => State
-  SET_STATUS: (state: State, payload: StatusPayload) => State
-}
-
-const actions: Actions = {
-  CHANGE_CURRENCY: (
-    state: State,
-    { index: selectedCurrency }: { index: number },
-  ): State => ({
-    ...state,
-    auxiliary: {
-      ...state.auxiliary,
-      selectedCurrency,
-      selectedPlan: 0,
-      periodsCount: 0,
-    },
-  }),
-  SET_AUXILIARY: (state: State, payload: Partial<AuxiliaryState>): State => ({
-    ...state,
-    auxiliary: {
-      ...state.auxiliary,
-      ...payload,
-    },
-  }),
-  SET_ORDER: (state: State, payload: Partial<Order>): State => ({
-    ...state,
-    order: {
-      ...state.order,
-      ...payload,
-    },
-  }),
-  SET_PINNED: (state: State, payload: PinnedContent): State => ({
-    ...state,
-    pinned: {
-      ...state.pinned,
-      ...payload,
-    },
-  }),
-  INITIALISE: (state: State, {
-    currencyOptions, id, location, system,
-  }: InitialisePayload): State => ({
-    ...state,
-    auxiliary: {
-      ...state.auxiliary,
-      currencyOptions,
-    },
-    order: {
-      ...state.order,
-      ...{ id, location, system },
-    },
-  }),
-  SET_STATUS: (
-    state: State,
-    payload: StatusPayload,
-  ): State => ({
-    ...state,
-    status: payload,
-  }),
-}
-
-type AsyncAction = {
-  (args?: unknown): Promise<unknown>
-}
-
-type StorageAsyncActions = {
-  createAgreement: AsyncAction
-}
-
-export type Props = {
-    state: State
-    dispatch: Dispatch<PurchaseStorageAction>
-    asyncActions: StorageAsyncActions
-}
-
-const isObject = (item: object | unknown): boolean => typeof item === 'object'
-const isUndefined = (item: undefined | unknown): boolean => typeof item === 'undefined'
-
-const recDiff = (obj1: object, obj2: object): unknown[] => {
-  const keys = Object.keys(obj1)
-  return keys.filter((key) => {
-    const value1 = obj1[key]
-    const value2 = obj2[key]
-
-    if (isUndefined(value1) || isUndefined(value2)) return false
-
-    if (isObject(value1) && isObject(value2)) {
-      return recDiff(value1, value2).length
-    }
-    return value1 !== value2
-  })
-}
-
-const reducer = (state: State, action: PurchaseStorageAction): State => {
-  const { type, payload } = action
-  const actionFunction = actions[type]
-
-  if (actionFunction) {
-    const newState: State = actionFunction(state, payload as never)
-
-    if (state === newState) {
-      Logger.getInstance().debug('Checkout Context Action', type, 'no change in state:', state)
-    } else {
-      Logger.getInstance().debug('Checkout Context Action', type, 'old state:', state)
-      Logger.getInstance().debug('Checkout Context Action', type, 'new state:', newState)
-      const diff = recDiff(newState, state)
-      Logger.getInstance().debug('Checkout Context Action', type, 'state diff:', diff)
-    }
-    return newState
-  }
-
-  Logger.getInstance().warn('Storage Checkout Context:', type, 'action is not defined!')
-  return state
-}
+import {
+  PinnedContent, Props, State, AsyncActions,
+} from './interfaces'
+import { reducer } from './actions'
 
 export const initialState: State = {
   order: {
@@ -237,11 +45,11 @@ export const initialState: State = {
   status: {},
 }
 
-const initialAsyncActions: StorageAsyncActions = {
+const initialAsyncActions: AsyncActions = {
   createAgreement: (): Promise<void> => Promise.resolve(),
 }
 
-const Context = createContext<Props>({
+export const Context = createContext<Props>({
   state: initialState,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   dispatch: () => {},
@@ -514,4 +322,3 @@ function withCheckoutContext<T>(
 }
 
 export default withCheckoutContext
-export const CheckoutContext = Context

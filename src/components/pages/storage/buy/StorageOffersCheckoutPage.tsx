@@ -26,7 +26,10 @@ import GridRow from 'components/atoms/GridRow'
 import RoundBtn from 'components/atoms/RoundBtn'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import withCheckoutContext, { CheckoutContext, Props as ContextProps, initialState } from './CheckoutContext'
+import withCheckoutContext, {
+  StorageCheckoutContext,
+  initialState, ContextProps,
+} from 'context/storage/buy/checkout'
 
 const useStyles = makeStyles((theme: Theme) => ({
   stepperCard: {
@@ -83,7 +86,7 @@ const StorageOffersCheckoutPage: FC = () => {
       },
     },
     dispatch,
-  } = useContext<ContextProps>(CheckoutContext)
+  } = useContext<ContextProps>(StorageCheckoutContext)
 
   const {
     token,

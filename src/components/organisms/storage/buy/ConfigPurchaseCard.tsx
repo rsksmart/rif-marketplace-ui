@@ -1,3 +1,4 @@
+import React, { FC, useContext } from 'react'
 import {
   makeStyles, Table, TableBody,
   TableCell, TableRow, Typography,
@@ -7,8 +8,7 @@ import GridColumn from 'components/atoms/GridColumn'
 import Login from 'components/atoms/Login'
 import RoundBtn from 'components/atoms/RoundBtn'
 import RifCard from 'components/organisms/RifCard'
-import { CheckoutContext } from 'components/pages/storage/buy/CheckoutContext'
-import React, { FC, useContext } from 'react'
+import { StorageCheckoutContext } from 'context/storage/buy/checkout'
 
 type Props = {
     details: {[name: string]: string | JSX.Element}
@@ -39,7 +39,7 @@ const ConfigPurchaseCard: FC<Props> = ({ details }) => {
     asyncActions: {
       createAgreement,
     },
-  } = useContext(CheckoutContext)
+  } = useContext(StorageCheckoutContext)
 
   const {
     state: {

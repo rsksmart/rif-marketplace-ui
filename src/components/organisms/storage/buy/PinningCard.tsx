@@ -1,16 +1,16 @@
+import React, { Dispatch, FC, useState } from 'react'
 import { ButtonProps, makeStyles } from '@material-ui/core'
 import { colors } from '@rsksmart/rif-ui'
 import RoundBtn from 'components/atoms/RoundBtn'
 import PinEnterInfoTab from 'components/molecules/storage/buy/PinEnterInfoTab'
 import PinUploaderTab from 'components/molecules/storage/buy/PinUploaderTab'
 import RifCard from 'components/organisms/RifCard'
-import { PurchaseStorageAction } from 'components/pages/storage/buy/CheckoutContext'
-import React, { Dispatch, FC, useState } from 'react'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
+import { StorageCheckoutAction } from 'context/storage/buy/checkout'
 import StoragePinTabs from './StoragePinTabs'
 
 type Props = {
-    dispatch: Dispatch<PurchaseStorageAction>
+    dispatch: Dispatch<StorageCheckoutAction>
 }
 
 function setInfoHandle<T>(

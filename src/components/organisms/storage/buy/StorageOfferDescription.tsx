@@ -1,13 +1,13 @@
+import React, { FC } from 'react'
 import { Box, makeStyles, Typography } from '@material-ui/core'
 import { shortenString } from '@rsksmart/rif-ui'
 import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
 import LabelWithValue from 'components/atoms/LabelWithValue'
-import { Order, PinnedContent } from 'components/pages/storage/buy/CheckoutContext'
-import React, { FC } from 'react'
+import { StorageCheckoutOrder, StoragePinnedContent } from 'context/storage/buy/checkout'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 
-type Props = Order & PinnedContent
+type Props = StorageCheckoutOrder & StoragePinnedContent
 
 const useItemsStyles = makeStyles(() => ({
   root: {
