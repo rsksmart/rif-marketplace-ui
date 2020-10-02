@@ -22,7 +22,7 @@ export interface StorageOffer extends Item {
   subscriptionOptions: BillingPlan[]
   averagePrice: number
   acceptedCurrencies: string[]
-  peerId: string | null
+  peerId: string
 }
 
 export type StorageItem = StorageOffer
