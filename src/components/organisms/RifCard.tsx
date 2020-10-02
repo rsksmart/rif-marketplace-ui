@@ -31,6 +31,9 @@ const useStylesRifCard = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
   },
+  headerItem: {
+    alignSelf: 'center',
+  },
 }))
 
 export type RifCardProps = CardProps & {
@@ -50,10 +53,7 @@ const RifCard: FC<RifCardProps> = ({
         className={classes.titleContainer}
       >
         {!!Header && (
-        <GridItem style={{
-          alignSelf: 'center',
-        }}
-        >
+        <GridItem className={classes.headerItem}>
           <Header />
         </GridItem>
         )}

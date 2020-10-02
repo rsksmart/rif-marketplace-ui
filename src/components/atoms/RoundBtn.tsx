@@ -4,7 +4,7 @@ import {
 } from '@material-ui/core'
 import { Button } from '@rsksmart/rif-ui'
 
-export type RoundBtnProps = Omit<ButtonProps, 'color' | 'variant' | 'rounded'>
+export type RoundBtnProps = Omit<ButtonProps, 'color' | 'variant'>
 
 const RoundBtn: FC<RoundBtnProps> = (props) => (
   <Button

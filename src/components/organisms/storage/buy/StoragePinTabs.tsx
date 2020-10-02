@@ -16,13 +16,19 @@ const useTabsStyles = makeStyles(() => ({
     height: '0px',
   },
 }))
-const useTabItemStyles = makeStyles((
-): unknown => ({
+const useTabItemStyles = makeStyles(() => ({
   root: {
     lineHeight: 'inherit',
   },
   textColorInherit: {
     opacity: 0.4,
+  },
+}))
+const useDividerStyles = makeStyles(() => ({
+  root: {
+    height: '29px',
+    width: '2px',
+    alignSelf: 'center',
   },
 }))
 
@@ -34,6 +40,7 @@ export type StoragePinTabsProps = Modify<TabsProps, {
 const StoragePinTabs: FC<StoragePinTabsProps> = ({ ...props }) => {
   const tabsStylesClasses = useTabsStyles()
   const tabItemStylesClasses = useTabItemStyles()
+  const dividerStyleClasses = useDividerStyles()
 
   return (
     <Tabs
@@ -43,7 +50,7 @@ const StoragePinTabs: FC<StoragePinTabsProps> = ({ ...props }) => {
       {...props}
     >
       <Tab classes={tabItemStylesClasses} label="Upload file" value={false} />
-      <Divider orientation="vertical" flexItem style={{ height: '29px', width: '2px', alignSelf: 'center' }} />
+      <Divider orientation="vertical" flexItem classes={dividerStyleClasses} />
       <Tab classes={tabItemStylesClasses} label="Pin by hash" value />
     </Tabs>
   )
