@@ -2,10 +2,10 @@ import React, { FC } from 'react'
 import {
   GridProps, TypographyProps, Typography,
 } from '@material-ui/core'
+import { fonts } from '@rsksmart/rif-ui'
 import GridItem from 'components/atoms/GridItem'
 import { Modify } from 'utils/typeUtils'
-import { fonts } from '@rsksmart/rif-ui'
-import GridRow from './GridRow'
+import GridRow from 'components/atoms/GridRow'
 
 export type LabelWithValueProps = Modify<GridProps,
     {
@@ -19,9 +19,12 @@ const LabelWithValue: FC<LabelWithValueProps> = ({
   label, value, labelProps, valueProps, ...props
 }) => (
   <GridRow
+    alignItems="baseline"
+    justify="flex-start"
+    wrap="nowrap"
     spacing={2}
     style={{
-      paddingBottom: '0px',
+      paddingBlockEnd: '0px',
     }}
     {...props}
   >

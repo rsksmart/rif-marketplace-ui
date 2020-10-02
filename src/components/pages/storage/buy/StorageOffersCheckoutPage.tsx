@@ -9,7 +9,6 @@ import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
 import RoundedCard from 'components/atoms/RoundedCard'
 import { CombinedPriceCell, JobDoneBox } from 'components/molecules'
-import GridRow from 'components/molecules/storage/buy/GridRow'
 import PlanOption from 'components/molecules/storage/buy/PlanOption'
 import RifSelect from 'components/molecules/RifSelect'
 import ConfigPurchaseCard from 'components/organisms/storage/buy/ConfigPurchaseCard'
@@ -23,6 +22,7 @@ import React, {
   ChangeEvent, FC, useContext,
 } from 'react'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
+import GridRow from 'components/atoms/GridRow'
 import withCheckoutContext, { CheckoutContext, Props as ContextProps, initialState } from './CheckoutContext'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -160,7 +160,15 @@ const StorageOffersCheckoutPage: FC = () => {
   const renderStepper = (): JSX.Element => (
     <>
       <GridItem>
-        <GridRow justify="center">
+        <GridRow
+          alignItems="baseline"
+          wrap="nowrap"
+          style={{
+            paddingBlockEnd: '1.5em',
+          }}
+          spacing={5}
+          justify="center"
+        >
           <GridItem xs={10}>
             <RoundedCard
               color="primary"
