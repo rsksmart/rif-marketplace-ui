@@ -1,6 +1,6 @@
 import { Dispatch } from 'react'
 import { ContextState } from 'context/storeUtils/interfaces'
-import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
+import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
 import networkConfig from 'config'
 import {
   BillingPlan,
@@ -32,7 +32,7 @@ export interface OfferEditContextProps {
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
-export const TokenAddressees = {
-  [tokenDisplayNames.rbtc]: ZeroAddress, // we are using zero address for native token is Storage Manager SC
-  [tokenDisplayNames.rif]: networkConfig.contractAddresses.rif,
+export const TokenAddressees: Record<SupportedTokens, string> = {
+  rbtc: ZeroAddress, // we are using zero address for native token is Storage Manager SC
+  rif: networkConfig.contractAddresses.rif,
 }

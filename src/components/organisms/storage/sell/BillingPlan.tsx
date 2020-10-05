@@ -72,8 +72,8 @@ const BillingPlan: FC<BillingPlanProps> = ({
             </Typography>
           </Grid>
           <Grid xs={6} item style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-            <ItemWUnit type="mediumPrimary" unit={currency} value={price.toString()} />
-            <ItemWUnit unit={fiatDisplayName} type="normalGrey" value={fiatPriceDisplay} />
+            <ItemWUnit type="mediumPrimary" unit={currency.toUpperCase()} value={price.toString()} />
+            <ItemWUnit unit={fiatDisplayName.toUpperCase()} type="normalGrey" value={fiatPriceDisplay} />
           </Grid>
         </Grid>
       </Grid>

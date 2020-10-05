@@ -1,5 +1,5 @@
 import React, {
-  useContext, useCallback, useState, useEffect, FC,
+  useContext, useCallback, useState, useEffect,
 } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button as RUIButton, Web3Store } from '@rsksmart/rif-ui'
@@ -21,7 +21,6 @@ import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import StakingCard from 'components/organisms/storage/myoffers/StakingCard'
 import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper'
 import RoundedCard from 'components/atoms/RoundedCard'
-import { rifTokenAddress } from 'contracts/config'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
 
 // TODO: discuss about wrapping the library and export it with this change
@@ -91,7 +90,6 @@ const StorageSellPage = () => {
         prices,
         tokens,
         peerId,
-        rifTokenAddress,
         { from: account },
       )
       logger.info('setOffer receipt: ', setOfferReceipt)

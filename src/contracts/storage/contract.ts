@@ -4,10 +4,10 @@ import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
+import { zeroAddress } from 'context/Services/storage/interfaces'
 import { encodeHash, prefixArray } from './utils'
 import waitForReceipt, { TransactionOptions } from '../utils'
 import { storageAddress } from '../config'
-import { zeroAddress } from 'context/Services/storage/interfaces'
 
 const logger = Logger.getInstance()
 
@@ -95,7 +95,6 @@ class StorageContract {
     billingRbtcWeiPrices: string[][],
     tokens: string[],
     peerId: string,
-    token: string,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
