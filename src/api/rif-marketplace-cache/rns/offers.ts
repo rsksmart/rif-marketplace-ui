@@ -1,8 +1,9 @@
-import { AbstractAPIService } from 'api/models/apiService'
-import { RnsDomainOffer } from 'models/marketItems/DomainItem'
+import { Paginated } from '@feathersjs/feathers'
+import { AbstractAPIService, isResultPaginated } from 'api/models/apiService'
+import { PriceFilter, RnsFilter } from 'api/models/RnsFilter'
 import { OfferTransport } from 'api/models/transports'
-import { RnsFilter, PriceFilter } from 'api/models/RnsFilter'
-import { parseToBigDecimal, convertToBigString, parseToInt } from 'utils/parsers'
+import { RnsDomainOffer } from 'models/marketItems/DomainItem'
+import { convertToBigString, parseToBigDecimal, parseToInt } from 'utils/parsers'
 import {
   getAvailableTokens, RnsAddresses, RnsAPIService, RnsChannels,
 } from './common'
@@ -43,10 +44,13 @@ const fetchPriceLimit = async (service, limitType: LimitType): Promise<number> =
     },
     $select: ['priceString'],
   }
-  const results = await service.find({ query })
+  const results: Paginated<OfferTransport> = await service.find({ query })
+
+  const data: OfferTransport[] = isResultPaginated(results)
+    ? results.data : results
 
   // Gets the result parses it to the correct decimal and rounds it: up for max, down for min
-  return results.reduce(
+  return data.reduce(
     (_, item: { priceString: string }): number => {
       const round = limitType === LimitType.min ? Math.floor : Math.ceil
       return round(parseToInt(item.priceString, 18))
@@ -63,7 +67,7 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
   _fetch = async (filters: Partial<RnsFilter>): Promise<RnsDomainOffer[]> => {
     const { price, name } = filters
 
-    const results = await this.service.find({
+    const results: Paginated<OfferTransport> = await this.service.find({
       query: {
         domain: name ? {
           name: {
@@ -75,9 +79,12 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
           $lte: convertToBigString(price.max, 18),
         } : undefined,
       },
-    }) as unknown as OfferTransport[]
+    })
 
-    return results.map(mapFromTransport)
+    const data: OfferTransport[] = isResultPaginated(results)
+      ? results.data : results
+
+    return data.map(mapFromTransport)
   }
 
   fetchPriceLimits = async (): Promise<PriceFilter> => {

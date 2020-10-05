@@ -1,4 +1,4 @@
-import { Application, Service } from '@feathersjs/feathers'
+import { Application, Paginated, Service } from '@feathersjs/feathers'
 import { AuthenticationResult } from '@feathersjs/authentication'
 import client from 'api/rif-marketplace-cache/config'
 import { MarketFilterType } from 'models/Market'
@@ -27,6 +27,11 @@ export interface APIService {
   detachEvent: (name: string) => void
   errorReporter: ErrorReporter
 }
+
+export const isResultPaginated = <T>(
+  result: Paginated<T> | [],
+): result is Paginated<T> => (result as Paginated<T>)
+    .data !== undefined
 
 export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
   path!: string

@@ -1,12 +1,15 @@
-import { AbstractAPIService, APIService } from 'api/models/apiService'
+import { Paginated } from '@feathersjs/feathers'
+import { AbstractAPIService, APIService, isResultPaginated } from 'api/models/apiService'
 import { Modify } from 'utils/typeUtils'
 
 export type XRServiceAddress = 'rates/v0'
 export const xeServiceAddress: XRServiceAddress = 'rates/v0'
 
 export type SupportedFiat = 'usd' | 'eur' | 'btc' | 'ars' | 'cny' | 'krw' | 'jpy';
-export type SupportedTokens = 'rif';
-export const tokenDisplayNames: Record<SupportedTokens, string> = {
+
+export const SUPPORTED_TOKENS = ['rif'] as const
+export type SupportedToken = typeof SUPPORTED_TOKENS[number];
+export const tokenDisplayNames: Record<SupportedToken, string> = {
   rif: 'RIF',
   // rbtc: 'RBTC',
 }
@@ -17,21 +20,30 @@ export interface XRFilter {
 
 export type XRAPIService = Modify<APIService, {
   path: XRServiceAddress
-  fetch: (filters: XRFilter) => Promise<[]>
+  fetch: (filters: XRFilter) => Promise<ExchangeRate[]>
 }>
+
+export type ExchangeRate = Record<SupportedToken, number>
+
+export const isSupportedToken = (
+  token: SupportedToken | string,
+): token is SupportedToken => SUPPORTED_TOKENS.includes(token as SupportedToken)
 
 export class XRService extends AbstractAPIService implements XRAPIService {
   path = xeServiceAddress
 
-  _fetch = async (filters: XRFilter): Promise<[]> => {
+  _fetch = async (filters: XRFilter): Promise<ExchangeRate[]> => {
     const { fiatSymbol } = filters
 
-    const results = await this.service.find({
+    const results: Paginated<ExchangeRate> = await this.service.find({
       query: {
         $select: ['token', fiatSymbol],
       },
-    }) as unknown as []
+    })
 
-    return results
+    const data: ExchangeRate[] = isResultPaginated(results)
+      ? results.data : results
+
+    return data.filter((rate) => isSupportedToken(Object.keys(rate)[0]))
   }
 }

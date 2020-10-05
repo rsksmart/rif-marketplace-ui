@@ -1,4 +1,6 @@
-import { SupportedFiat, tokenDisplayNames, XRService } from 'api/rif-marketplace-cache/rates/xr'
+import {
+  SupportedFiat, tokenDisplayNames, XRService, ExchangeRate,
+} from 'api/rif-marketplace-cache/rates/xr'
 import React, {
   Dispatch, useContext, useEffect, useReducer, useState,
 } from 'react'
@@ -64,10 +66,8 @@ export const MarketStoreProvider = ({ children }) => {
       currentFiat: {
         symbol: fiatSymbol,
       },
-      crypto,
     },
   } = state as MarketState
-  const [supportedCrypto] = useState(Object.keys(crypto).filter((token) => tokenDisplayNames[token])) // prevents update to this list
 
   const {
     state: {
@@ -106,16 +106,14 @@ export const MarketStoreProvider = ({ children }) => {
     const { fetch } = api
 
     if (isInitialised) {
-      fetch({ fiatSymbol }).then((newRates: { [fiatSymbol: string]: number }[]) => {
+      fetch({ fiatSymbol }).then((newRates: ExchangeRate[]) => {
         const payload = Object.keys(newRates).reduce((acc, i) => {
           const symbol = newRates[i].token
-
-          if (supportedCrypto.includes(symbol)) {
-            acc[symbol] = {
-              rate: newRates[i][fiatSymbol],
-              displayName: tokenDisplayNames[symbol],
-            }
+          acc[symbol] = {
+            rate: newRates[i][fiatSymbol],
+            displayName: tokenDisplayNames[symbol],
           }
+
           return acc
         }, {})
         dispatch({
@@ -124,7 +122,7 @@ export const MarketStoreProvider = ({ children }) => {
         })
       })
     }
-  }, [isInitialised, api, fiatSymbol, supportedCrypto])
+  }, [isInitialised, api, fiatSymbol])
 
   const value = { state, dispatch }
   return <MarketStore.Provider value={value}>{children}</MarketStore.Provider>
