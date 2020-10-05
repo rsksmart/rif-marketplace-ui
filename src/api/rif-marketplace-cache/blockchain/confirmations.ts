@@ -1,4 +1,7 @@
-import { AbstractAPIService, APIService } from 'api/models/apiService'
+import { Paginated } from '@feathersjs/feathers'
+import {
+  AbstractAPIService, APIService, isResultPaginated, PaginatedResult,
+} from 'api/models/apiService'
 import { Modify } from 'utils/typeUtils'
 
 export type ConfirmationAddress = 'confirmations'
@@ -15,7 +18,7 @@ export interface ConfirmationsItem {
 
 export type Confirmations = Record<string, ConfirmationsItem>
 
-interface ConfirmationsTransportItem {
+interface Transport {
   transactionHash: string
   confirmations: number
   targetConfirmation: number
@@ -23,20 +26,26 @@ interface ConfirmationsTransportItem {
 }
 
 /* eslint-disable no-param-reassign */
-export const mapFromTransport = (data: ConfirmationsTransportItem[]): Confirmations => data.reduce((map, item: ConfirmationsTransportItem) => {
-  map[item.transactionHash] = {
-    currentCount: item.confirmations,
-    targetCount: item.targetConfirmation,
-  }
-  return map
-}, {})
+export const mapFromTransport = (data: Transport[]): Confirmations => data
+  .reduce((map, item: Transport) => {
+    map[item.transactionHash] = {
+      currentCount: item.confirmations,
+      targetCount: item.targetConfirmation,
+    }
+    return map
+  }, {})
 /* eslint-enable no-param-reassign */
 
-export class ConfirmationsService extends AbstractAPIService implements ConfirmationAPI {
+export class ConfirmationsService
+  extends AbstractAPIService
+  implements ConfirmationAPI {
   path = confirmationAddress
 
   _fetch = async (): Promise<Confirmations> => {
-    const data = await this.service.find() as unknown as ConfirmationsTransportItem[]
+    const result: Paginated<Transport> = await this.service.find()
+    const data: Transport[] = isResultPaginated(result)
+      ? result.data : result
+
     return mapFromTransport(data)
   }
 }

@@ -1,4 +1,5 @@
-import { AbstractAPIService } from 'api/models/apiService'
+import { Paginated } from '@feathersjs/feathers'
+import { AbstractAPIService, isResultPaginated } from 'api/models/apiService'
 import { RnsFilter } from 'api/models/RnsFilter'
 import { DomainTransport } from 'api/models/transports'
 import { RnsDomain } from 'models/marketItems/DomainItem'
@@ -33,7 +34,9 @@ const mapFromTransport = (item: DomainTransport): RnsDomain => {
   return domain
 }
 
-export class DomainsService extends AbstractAPIService implements RnsAPIService {
+export class DomainsService
+  extends AbstractAPIService
+  implements RnsAPIService {
   path = domainsAddress
 
   _channel = domainsChannel
@@ -41,16 +44,20 @@ export class DomainsService extends AbstractAPIService implements RnsAPIService 
   _fetch = async (filters: Partial<RnsFilter>): Promise<RnsDomain[]> => {
     const { name, status, ownerAddress } = filters
 
-    const results = await this.service.find({
-      query: {
-        placed: status === 'placed',
-        name: name ? {
-          $like: name,
-        } : undefined,
-        ownerAddress,
-      },
-    }) as unknown as DomainTransport[]
+    const results: Paginated<DomainTransport> = await this
+      .service.find({
+        query: {
+          placed: status === 'placed',
+          name: name ? {
+            $like: name,
+          } : undefined,
+          ownerAddress,
+        },
+      })
 
-    return results.map(mapFromTransport)
+    const data: DomainTransport[] = isResultPaginated(results)
+      ? results.data : results
+
+    return data.map(mapFromTransport)
   }
 }
