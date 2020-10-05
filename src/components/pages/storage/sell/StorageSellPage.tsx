@@ -1,5 +1,5 @@
 import React, {
-  useContext, useCallback, useState, useEffect,
+  useContext, useCallback, useState, useEffect, FC,
 } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button as RUIButton, Web3Store } from '@rsksmart/rif-ui'
@@ -25,6 +25,7 @@ import { PeriodInSeconds } from 'models/marketItems/StorageItem'
 import StakingCard from 'components/organisms/storage/myoffers/StakingCard'
 import SellStepper from 'components/organisms/storage/sell/SellStepper'
 import RoundedCard from 'components/atoms/RoundedCard'
+import { rifTokenAddress } from 'contracts/config'
 
 // TODO: discuss about wrapping the library and export it with this change
 Big.NE = -30
@@ -63,11 +64,14 @@ const transformOfferDataForContract = (
   availableSizeGB: number,
   planItems: StoragePlanItem[],
 ): OfferContractData => ({
-  availableSizeMB: new Big(availableSizeGB).mul(UNIT_PREFIX_POW2.KILO).toString(),
+  availableSizeMB: new Big(availableSizeGB)
+    .mul(UNIT_PREFIX_POW2.KILO)
+    .toString(),
   ...planItems.reduce(
     (acc, { timePeriod, pricePerGb, currency }) => {
       const tokenIndex = acc.tokens.findIndex(((t) => t === currency))
-      const weiPrice = convertToWeiString(new Big(pricePerGb).div(UNIT_PREFIX_POW2.KILO))
+      const weiPrice = convertToWeiString(new Big(pricePerGb)
+        .div(UNIT_PREFIX_POW2.KILO))
 
       if (tokenIndex !== -1) {
         acc.periods[tokenIndex].push(timePeriod * PeriodInSeconds.Daily)
@@ -85,7 +89,7 @@ const transformOfferDataForContract = (
   ),
 })
 
-const StorageSellPage = () => {
+const StorageSellPage: FC = () => {
   const {
     state: {
       planItems, availableSize, peerId, system,
@@ -102,7 +106,9 @@ const StorageSellPage = () => {
   const { dispatch: bcDispatch } = useContext(BlockchainContext)
 
   const { dispatch: appDispatch } = useContext(AppContext)
-  const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
+  const reportError = useCallback((
+    e: UIError,
+  ) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -110,8 +116,8 @@ const StorageSellPage = () => {
   const classes = useStyles()
   const history = useHistory()
 
-  const handleSubmit = async () => {
-    // without a web3 instance the submit action would be disabled
+  const handleSubmit = async (): Promise<void> => {
+  // without a web3 instance the submit action would be disabled
     if (!web3) return
     try {
       appDispatch({
@@ -121,7 +127,7 @@ const StorageSellPage = () => {
           id: 'contract',
           message: 'Listing your offer...',
         } as LoadingPayload,
-      } as any)
+      })
 
       setIsProcessing(true)
       const storageContract = StorageContract.getInstance(web3)
@@ -135,6 +141,7 @@ const StorageSellPage = () => {
         prices,
         tokens,
         peerId,
+        rifTokenAddress,
         { from: account },
       )
       logger.info('setOffer receipt: ', setOfferReceipt)
@@ -149,7 +156,7 @@ const StorageSellPage = () => {
     } catch (error) {
       reportError(new UIError({
         error,
-        id: 'contract-storage-set-offer',
+        id: 'contract-storage',
         text: 'Could not set the offer in the contract.',
       }))
       setIsProcessing(false)
@@ -160,11 +167,11 @@ const StorageSellPage = () => {
           isLoading: false,
           id: 'contract',
         } as LoadingPayload,
-      } as any)
+      })
     }
   }
 
-  const onProcessingComplete = () => {
+  const onProcessingComplete = (): void => {
     setIsProcessing(false)
   }
 
@@ -175,7 +182,7 @@ const StorageSellPage = () => {
     }
   }, [isPendingConfirm, history, isProcessing])
 
-  useEffect(() => () => {
+  useEffect(() => (): void => {
     dispatch({
       type: 'CLEAN_UP',
       payload: {},
@@ -216,8 +223,8 @@ const StorageSellPage = () => {
       <StakingCard
         className={classes.staking}
         balance="2048 RIF"
-        onWithdrawFunds={() => { logger.info('withdraw action') }}
-        onAddFunds={() => { logger.info('add funds action') }}
+        onWithdrawFunds={(): void => { logger.info('withdraw action') }}
+        onAddFunds={(): void => { logger.info('add funds action') }}
       />
       <Typography gutterBottom variant="h5" color="primary">List your storage service</Typography>
       <Typography gutterBottom color="secondary" variant="subtitle1">

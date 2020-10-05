@@ -4,7 +4,7 @@ import { priceDisplay } from 'utils/utils'
 
 export interface CombinedPriceCellProps {
   className?: string
-  divider?: string | React.ElementType
+  divider?: string | JSX.Element
   price: string
   currency: string
   priceFiat: string

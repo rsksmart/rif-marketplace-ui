@@ -61,7 +61,9 @@ const StorageMyOffersPage: FC = () => {
     dispatch,
   } = useContext<StorageOffersContextProps>(StorageOffersContext)
   const { dispatch: bcDispatch } = useContext(BlockchainContext)
-  const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
+  const reportError = useCallback((
+    e: UIError,
+  ) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -86,11 +88,11 @@ const StorageMyOffersPage: FC = () => {
     }
   }, [isPendingConfirm, history, isProcessing])
 
-  const onProcessingComplete = () => {
+  const onProcessingComplete = (): void => {
     setIsProcessing(false)
   }
 
-  const handleOfferCancel = async () => {
+  const handleOfferCancel = async (): Promise<void> => {
     // without web3 or account, the user wouldn't be able to perform this action
     if (!web3 || !account) return
 
@@ -102,12 +104,13 @@ const StorageMyOffersPage: FC = () => {
           id: 'contract',
           message: 'canceling your offer...',
         } as LoadingPayload,
-      } as any)
+      })
 
       setIsProcessing(true)
 
       const storageContract = StorageContract.getInstance(web3)
-      const terminateOfferRecepipt = await storageContract.terminateOffer({ from: account })
+      const terminateOfferRecepipt = await storageContract
+        .terminateOffer({ from: account })
 
       bcDispatch({
         type: 'SET_TX_HASH',
@@ -120,7 +123,7 @@ const StorageMyOffersPage: FC = () => {
     } catch (error) {
       reportError(new UIError({
         error,
-        id: 'contract-storage-set-offer',
+        id: 'contract-storage',
         text: 'Could not set the offer in the contract.',
       }))
       setIsProcessing(false)
@@ -131,20 +134,20 @@ const StorageMyOffersPage: FC = () => {
           isLoading: false,
           id: 'contract',
         } as LoadingPayload,
-      } as any)
+      })
     }
   }
 
   // TODO: handle edit offer
-  const handleEditOffer = () => logger.debug('todo: handle edit offer')
+  const handleEditOffer = (): void => logger.debug('todo: handle edit offer')
 
   return (
     <CenteredPageTemplate>
 
       <StakingCard
         balance="2048 RIF"
-        onAddFunds={() => logger.info('Add funds clicked')}
-        onWithdrawFunds={() => logger.info('withdraw funds clicked')}
+        onAddFunds={(): void => logger.info('Add funds clicked')}
+        onWithdrawFunds={(): void => logger.info('withdraw funds clicked')}
       />
       <Grid
         container

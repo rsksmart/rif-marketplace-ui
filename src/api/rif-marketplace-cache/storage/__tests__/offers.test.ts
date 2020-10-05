@@ -78,7 +78,7 @@ describe('Storage OffersService', () => {
           .map<BillingPlan>((plan) => ({
             period: PeriodInSeconds[plan.period],
             price: parseToBigDecimal(plan.price),
-            currency: 'RBTC',
+            currency: 'rbtc',
           })),
         averagePrice: avgBillingPrice,
       }
