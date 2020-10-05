@@ -64,17 +64,17 @@ const StorageMyOffersPage: FC = () => {
   const [isProcessing, setIsProcessing] = useState(false)
 
   useEffect(() => {
-    dispatch({
-      type: 'CLEAN_UP',
-      payload: {},
-    })
-
     if (account) {
       dispatch({
         type: 'FILTER',
         payload: { provider: account },
       })
     }
+
+    return dispatch({
+      type: 'CLEAN_UP',
+      payload: {},
+    })
   }, [account, dispatch])
 
   useEffect(() => {
