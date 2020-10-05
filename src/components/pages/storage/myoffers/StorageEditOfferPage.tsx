@@ -7,10 +7,9 @@ import { LoadingPayload } from 'context/App/appActions'
 import AppContext, { errorReporterFactory } from 'context/App/AppContext'
 import { AddTxPayload } from 'context/Blockchain/blockchainActions'
 import BlockchainContext from 'context/Blockchain/BlockchainContext'
-import { OfferEditContextProps, StorageBillingPlan, TokenAddressees } from 'context/Market/storage/interfaces'
+import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import StorageContract from 'contracts/storage/contract'
-import { PeriodInSeconds } from 'models/marketItems/StorageItem'
 import { UIError } from 'models/UIMessage'
 import React, {
   FC, useCallback, useContext, useEffect, useState,
@@ -18,45 +17,10 @@ import React, {
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
-import { convertToWeiString } from 'utils/parsers'
-import { UNIT_PREFIX_POW2 } from 'utils/utils'
-import { Big } from 'big.js'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
+import { transformOfferDataForContract } from 'contracts/storage/utils'
 
 const logger = Logger.getInstance()
-
-interface OfferContractData {
-  availableSizeMB: string
-  periods: number[][]
-  prices: string[][]
-  tokens: string[]
-}
-
-const transformOfferDataForContract = (
-  availableSizeGB: number,
-  billingPlans: StorageBillingPlan[],
-): OfferContractData => ({
-  availableSizeMB: new Big(availableSizeGB).mul(UNIT_PREFIX_POW2.KILO).toString(),
-  ...billingPlans.reduce(
-    (acc, { period, price, currency }) => {
-      const tokenIndex = acc.tokens.findIndex(((t) => t === currency))
-      const weiPrice = convertToWeiString(new Big(price).div(UNIT_PREFIX_POW2.KILO))
-
-      if (tokenIndex !== -1) {
-        acc.periods[tokenIndex].push(PeriodInSeconds[period])
-        acc.prices[tokenIndex].push(weiPrice)
-        return acc
-      }
-
-      return {
-        prices: [...acc.prices, [weiPrice]],
-        periods: [...acc.periods, [PeriodInSeconds[period]]],
-        tokens: [...acc.tokens, TokenAddressees[currency]],
-      }
-    },
-    { prices: [], periods: [], tokens: [] } as any,
-  ),
-})
 
 const StorageEditOfferPage: FC<{}> = () => {
   const history = useHistory()
