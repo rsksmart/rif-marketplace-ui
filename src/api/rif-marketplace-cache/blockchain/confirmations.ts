@@ -1,6 +1,6 @@
 import { Paginated } from '@feathersjs/feathers'
 import {
-  AbstractAPIService, APIService, isResultPaginated, PaginatedResult,
+  AbstractAPIService, APIService, isResultPaginated,
 } from 'api/models/apiService'
 import { Modify } from 'utils/typeUtils'
 
