@@ -44,7 +44,6 @@ const StorageEditOfferPage: FC<{}> = () => {
   const [isProcessing, setIsProcessing] = useState(false)
 
   // TODO: optimize to check what was edited and so send txs only to edit that info to save gas
-  // this code is repeated in sell page but will change with the optimiization
   const handleEditOffer = async () => {
     // without a web3 instance the submit action would be disabled
     if (!web3) return
@@ -62,7 +61,7 @@ const StorageEditOfferPage: FC<{}> = () => {
       const storageContract = StorageContract.getInstance(web3)
       const {
         availableSizeMB, periods, prices, tokens,
-      } = transformOfferDataForContract(availableSize, billingPlans)
+      } = transformOfferDataForContract(availableSize, billingPlans, originalOffer)
 
       const setOfferReceipt = await storageContract.setOffer(
         availableSizeMB,

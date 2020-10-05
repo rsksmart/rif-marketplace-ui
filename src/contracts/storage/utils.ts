@@ -2,7 +2,11 @@ import {
   StorageBillingPlan,
   TokenAddressees,
 } from 'context/Market/storage/interfaces'
-import { PeriodInSeconds } from 'models/marketItems/StorageItem'
+import {
+  BillingPlan,
+  PeriodInSeconds,
+  StorageOffer,
+} from 'models/marketItems/StorageItem'
 import { convertToWeiString } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { asciiToHex } from 'web3-utils'
@@ -52,11 +56,32 @@ export function encodeHash(hash: string): string[] {
 export const transformOfferDataForContract = (
   availableSizeGB: number,
   billingPlans: StorageBillingPlan[],
-): OfferContractData => ({
-  availableSizeMB: new Big(availableSizeGB)
+  originalOffer?: StorageOffer,
+): OfferContractData => {
+  const availableSizeMB = new Big(availableSizeGB)
     .mul(UNIT_PREFIX_POW2.KILO)
-    .toString(),
-  ...billingPlans.reduce(
+    .toString()
+
+  const resultsBillingPlan = [...billingPlans]
+
+  if (originalOffer) {
+    // gets the billing plans with period or currency no longer in the offer
+    const difference = originalOffer.subscriptionOptions.filter(
+      (originalSub) => !resultsBillingPlan.some(
+        (newSub) => originalSub.period === newSub.period
+            && originalSub.currency === newSub.currency,
+      ),
+    )
+
+    difference.forEach((removedPlan: BillingPlan) => {
+      resultsBillingPlan.push({
+        ...removedPlan,
+        price: new Big(0),
+      })
+    })
+  }
+
+  const { prices, periods, tokens } = resultsBillingPlan.reduce(
     (acc, { period, price, currency }) => {
       const tokenIndex = acc.tokens.findIndex((t) => t === currency)
       const weiPrice = convertToWeiString(
@@ -76,5 +101,11 @@ export const transformOfferDataForContract = (
       }
     },
     { prices: [], periods: [], tokens: [] } as any,
-  ),
-})
+  )
+  return {
+    availableSizeMB,
+    prices,
+    periods,
+    tokens,
+  }
+}
