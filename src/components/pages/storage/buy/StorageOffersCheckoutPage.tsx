@@ -158,7 +158,7 @@ const StorageOffersCheckoutPage: FC = () => {
         currencyFiat={fiatName}
         price={total.toFixed(18)}
         priceFiat={totalFiat}
-        divider={<br /> as any}
+        divider={<br />}
       />
     ) : '',
     'RENEWAL DATE': endDate,
@@ -219,6 +219,13 @@ const StorageOffersCheckoutPage: FC = () => {
     </>
   )
 
+  const navToMyPurchases = (): void => history.replace(
+    ROUTES.STORAGE.MYPURCHASES.BASE,
+  )
+  const navToStorageBase = (): void => history.replace(
+    ROUTES.STORAGE.BUY.BASE,
+  )
+
   const renderProgressOverlay = (): JSX.Element | null => {
     if (inProgress || isDone) {
       return (
@@ -239,14 +246,14 @@ const StorageOffersCheckoutPage: FC = () => {
               <GridRow justify="center">
                 <GridItem>
                   <RoundBtn
-                    onClick={(): void => { history.replace(ROUTES.STORAGE.MYPURCHASES.BASE) }}
+                    onClick={navToMyPurchases}
                   >
                     View my purchases
                   </RoundBtn>
                 </GridItem>
                 <GridItem>
                   <RoundBtn
-                    onClick={(): void => { history.replace(ROUTES.STORAGE.BUY.BASE) }}
+                    onClick={navToStorageBase}
                   >
                     View storage listing
                   </RoundBtn>

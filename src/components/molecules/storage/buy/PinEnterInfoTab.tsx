@@ -5,6 +5,7 @@ import {
 import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
 import React, { FC } from 'react'
+import { isEmpty } from 'utils/stringUtils'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 
 type Props = {
@@ -13,10 +14,6 @@ type Props = {
     hash: TextFieldProps
     unit: SelectProps
 }
-
-const isEmpty = (
-  text: string | unknown,
-): boolean => !text || !String(text).trim()
 
 const PinEnterInfoTab: FC<Props> = ({
   name, size, unit, hash,
