@@ -1,5 +1,5 @@
 import { Web3Store } from '@rsksmart/rif-ui'
-import { isServiceMetadata } from 'api/models/apiService'
+import { isServiceMetadata, ServiceMetadata } from 'api/models/apiService'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import DomainNameItem from 'components/molecules/DomainNameItem'
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
@@ -63,12 +63,19 @@ const DomainOffersPage: FC = () => {
 
   let collection = []
 
+  const pageData: ServiceMetadata | false = isServiceMetadata(pagination)
+    && pagination as ServiceMetadata
+  const paging = pageData && {
+    current: pageData.total < pageData.limit ? pageData.total : pageData.limit,
+    total: pageData.total,
+  }
+
   const headers = {
     domainName: 'Name',
     ownerAddress: 'Owner',
     expirationDate: 'Renewal Date',
     combinedPrice: 'Price',
-    action1: isServiceMetadata(pagination) ? `${pagination.limit}/${pagination.total}` : '',
+    action1: paging ? `${paging.current}/${paging.total}` : '',
   }
 
   collection = items
