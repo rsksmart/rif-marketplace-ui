@@ -1,3 +1,4 @@
+import { ServiceMetadata } from 'api/models/apiService'
 import { RnsFilter } from 'api/models/RnsFilter'
 import { OffersService } from 'api/rif-marketplace-cache/rns/offers'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
@@ -71,7 +72,7 @@ export const RnsOffersStoreProvider = ({ children }) => {
       },
     }, dispatch: appDispatch,
   }: AppStoreProps = useContext(AppStore)
-  const api = offers as unknown as OffersService
+  const api = offers as OffersService
 
   if (!api.service) {
     api.connect(errorReporterFactory(appDispatch))
@@ -198,6 +199,16 @@ export const RnsOffersStoreProvider = ({ children }) => {
         })
     }
   }, [isInitialised, isLimitsSet, filters, limits, api, appDispatch])
+
+  const { meta } = api
+  useEffect(() => {
+    if (meta) {
+      dispatch({
+        type: 'UPDATE_PAGE',
+        payload: meta as ServiceMetadata,
+      })
+    }
+  }, [meta])
 
   const value = { state, dispatch }
   return <RnsOffersStore.Provider value={value}>{children}</RnsOffersStore.Provider>

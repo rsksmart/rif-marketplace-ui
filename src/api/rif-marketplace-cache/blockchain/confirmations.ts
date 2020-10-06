@@ -43,8 +43,9 @@ export class ConfirmationsService
 
   _fetch = async (): Promise<Confirmations> => {
     const result: Paginated<Transport> = await this.service.find()
-    const data: Transport[] = isResultPaginated(result)
-      ? result.data : result
+    const { data, ...metadata } = isResultPaginated(result)
+      ? result : { data: result }
+    this.meta = metadata
 
     return mapFromTransport(data)
   }

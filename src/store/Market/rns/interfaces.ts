@@ -2,6 +2,7 @@ import { RnsFilter } from 'api/models/RnsFilter'
 import { RnsItem } from 'models/marketItems/DomainItem'
 import { Dispatch } from 'react'
 import { StoreState } from 'store/storeUtils/interfaces'
+import { ServiceMetadata } from 'api/models/apiService'
 import { StoreName as DomainsStoreName } from './DomainsStore'
 import { StoreName as OffersStoreName } from './OffersStore'
 import { StoreName as SoldStoreName } from './SoldStore'
@@ -26,6 +27,7 @@ export interface RnsState extends StoreState {
   limits?: Partial<RnsFilter>
   order?: RnsOrder
   needsRefresh: boolean
+  pagination?: ServiceMetadata
 }
 
 export interface RnsStoreProps {

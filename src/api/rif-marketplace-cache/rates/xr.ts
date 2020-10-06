@@ -23,7 +23,11 @@ export type XRAPIService = Modify<APIService, {
   fetch: (filters: XRFilter) => Promise<ExchangeRate[]>
 }>
 
-export type ExchangeRate = Record<SupportedToken, number>
+export type ExchangeRate = {
+  [fiatSymbol in SupportedFiat]: number
+} & {
+  token: SupportedToken
+}
 
 export const isSupportedToken = (
   token: SupportedToken | string,
@@ -40,10 +44,10 @@ export class XRService extends AbstractAPIService implements XRAPIService {
         $select: ['token', fiatSymbol],
       },
     })
+    const { data, ...metadata } = isResultPaginated(results)
+      ? results : { data: results }
+    this.meta = metadata
 
-    const data: ExchangeRate[] = isResultPaginated(results)
-      ? results.data : results
-
-    return data.filter((rate) => isSupportedToken(Object.keys(rate)[0]))
+    return data.filter((rate) => isSupportedToken(rate.token))
   }
 }

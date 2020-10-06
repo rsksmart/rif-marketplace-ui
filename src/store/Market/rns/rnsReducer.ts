@@ -1,6 +1,8 @@
 import { RnsState } from 'store/Market/rns/interfaces'
 import {
-  FilterPayload, ListingPayload, OrderPayload, ProgressPayload, OutdatePayload, RnsPayload, RNS_ACTIONS, LimitsPayload, RefreshPayload,
+  FilterPayload, ListingPayload, OrderPayload,
+  ProgressPayload, OutdatePayload, RnsPayload,
+  RNS_ACTIONS, LimitsPayload, RefreshPayload, PagePayload,
 } from './rnsActions'
 
 export interface RnsReducer {
@@ -77,5 +79,9 @@ export const rnsActions: RnsActions = {
   CLEAR_ORDER: (state: RnsState, _: RnsPayload) => ({
     ...state,
     order: undefined,
+  }),
+  UPDATE_PAGE: (state: RnsState, pagination: PagePayload) => ({
+    ...state,
+    pagination,
   }),
 }
