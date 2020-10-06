@@ -64,7 +64,9 @@ const BillingPlansList = () => {
             <Grid alignItems="center" container spacing={2}>
               {
                 billingPlans.sort(
-                  ({ period: a }: BillingPlan, { period: b }: BillingPlan) => (PeriodInSeconds[a] - PeriodInSeconds[b]),
+                  ({ period: a }: BillingPlan, { period: b }: BillingPlan) => (
+                    PeriodInSeconds[a] - PeriodInSeconds[b]
+                  ),
                 ).map(
                   (billingPlan: StorageBillingPlan) => (
                     <Grid item xs={12} key={billingPlan.internalId}>

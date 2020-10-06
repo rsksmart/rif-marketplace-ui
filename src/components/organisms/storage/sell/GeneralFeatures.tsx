@@ -105,7 +105,7 @@ const GeneralFeatures = () => {
           onChange={onPeerIdChange}
           placeholder="Paste here your Peer ID"
           inputProps={{ style: { textAlign: 'center' } }}
-          disabled={!!originalOffer}
+          disabled={Boolean(originalOffer)}
         />
       </Grid>
       <Grid item xs={4} md={2}>

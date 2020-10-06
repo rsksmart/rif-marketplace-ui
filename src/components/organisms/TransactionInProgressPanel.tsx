@@ -41,7 +41,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
   progMsg, text, isPendingConfirm,
-  onProcessingComplete = (): void => undefined, overlayed,
+  onProcessingComplete = (): void => undefined,
+  overlayed,
 }) => {
   const classes = useStyles()
 

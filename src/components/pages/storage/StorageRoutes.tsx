@@ -108,18 +108,38 @@ const StorageRoutes: FC = () => {
                 <StorageSellPage />
               </OfferEditContextProvider>
             </Route>
-            <Route exact path={ROUTES.STORAGE.SELL.DONE} component={StorageSellDone} />
+            <Route
+              exact
+              path={ROUTES.STORAGE.SELL.DONE}
+              component={StorageSellDone}
+            />
             <Route path={ROUTES.STORAGE.MYOFFERS.BASE}>
               <StorageOffersContextProvider>
                 <OfferEditContextProvider>
                   <Switch>
-                    <Route exact path={ROUTES.STORAGE.MYOFFERS.BASE} component={StorageMyOffersPage} />
-                    <Route exact path={ROUTES.STORAGE.MYOFFERS.EDIT.BASE} component={StorageEditOfferPage} />
+                    <Route
+                      exact
+                      path={ROUTES.STORAGE.MYOFFERS.BASE}
+                      component={StorageMyOffersPage}
+                    />
+                    <Route
+                      exact
+                      path={ROUTES.STORAGE.MYOFFERS.EDIT.BASE}
+                      component={StorageEditOfferPage}
+                    />
                   </Switch>
                 </OfferEditContextProvider>
               </StorageOffersContextProvider>
-              <Route exact path={ROUTES.STORAGE.MYOFFERS.CANCEL.DONE} component={StorageMyOffersCancelled} />
-              <Route exact path={ROUTES.STORAGE.MYOFFERS.EDIT.DONE} component={StorageEditOfferDone} />
+              <Route
+                exact
+                path={ROUTES.STORAGE.MYOFFERS.CANCEL.DONE}
+                component={StorageMyOffersCancelled}
+              />
+              <Route
+                exact
+                path={ROUTES.STORAGE.MYOFFERS.EDIT.DONE}
+                component={StorageEditOfferDone}
+              />
             </Route>
             <Route component={NotFound} />
           </Switch>
@@ -130,7 +150,11 @@ const StorageRoutes: FC = () => {
 
   return (
     <Switch>
-      <Route exact path={ROUTES.STORAGE.BASE} component={StorageLandingPage} />
+      <Route
+        exact
+        path={ROUTES.STORAGE.BASE}
+        component={StorageLandingPage}
+      />
       <Redirect from="*" to={ROUTES.STORAGE.BASE} />
     </Switch>
   )

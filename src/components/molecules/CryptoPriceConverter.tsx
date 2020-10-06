@@ -60,7 +60,7 @@ const CryptoPriceConverter: FC<CryptoPriceConverterProps> = (props) => {
           label={priceLabel}
           id="price-gb"
           type="number"
-          value={price?.toString()}
+          value={price}
           onChange={onPriceChange}
           error={!price || Number(price) <= 0}
           InputProps={{

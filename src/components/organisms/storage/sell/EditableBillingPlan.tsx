@@ -121,16 +121,18 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
             }}
           >
             {
-              allBillingPeriods.sort((a, b) => a - b).map(
-                (option: SubscriptionPeriod) => {
-                  const isDisabled = usedPeriodsPerCurrency[currency]?.includes(option) && option !== billingPlan?.period
-                  return (
-                    <MenuItem value={option} key={option} disabled={isDisabled}>
-                      {option}
-                    </MenuItem>
-                  )
-                },
-              )
+              allBillingPeriods.sort((a, b) => a - b)
+                .map(
+                  (option: SubscriptionPeriod) => {
+                    const isDisabled = usedPeriodsPerCurrency[currency]?.includes(option)
+                      && option !== billingPlan?.period
+                    return (
+                      <MenuItem value={option} key={option} disabled={isDisabled}>
+                        {option}
+                      </MenuItem>
+                    )
+                  },
+                )
             }
           </TextField>
         </Grid>
