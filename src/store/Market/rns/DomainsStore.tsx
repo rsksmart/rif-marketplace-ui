@@ -10,6 +10,7 @@ import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
 import { ErrorMessagePayload, LoadingPayload } from 'store/App/appActions'
+import { ServiceMetadata } from 'api/models/apiService'
 import {
   RnsListing, RnsOrder, RnsState, RnsStoreProps,
 } from './interfaces'
@@ -152,6 +153,16 @@ export const RnsDomainsStoreProvider = ({ children }) => {
       })
     }
   }, [isInitialised, needsRefresh, filters, api, account, appDispatch])
+
+  const { meta } = api
+  useEffect(() => {
+    if (meta) {
+      dispatch({
+        type: 'UPDATE_PAGE',
+        payload: meta as ServiceMetadata,
+      })
+    }
+  }, [meta])
 
   const value = { state, dispatch }
   return <RnsDomainsStore.Provider value={value}>{children}</RnsDomainsStore.Provider>

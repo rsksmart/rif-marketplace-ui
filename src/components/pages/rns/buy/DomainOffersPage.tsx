@@ -1,4 +1,5 @@
 import { Web3Store } from '@rsksmart/rif-ui'
+import { isServiceMetadata } from 'api/models/apiService'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import DomainNameItem from 'components/molecules/DomainNameItem'
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
@@ -28,9 +29,11 @@ const DomainOffersPage: FC = () => {
         outdatedTokens,
       },
       filters,
+      pagination,
     },
     dispatch,
   } = useContext(RnsOffersStore)
+
   const history = useHistory()
   const routeState = history.location.state as { refresh?: boolean }
 
@@ -65,7 +68,7 @@ const DomainOffersPage: FC = () => {
     ownerAddress: 'Owner',
     expirationDate: 'Renewal Date',
     combinedPrice: 'Price',
-    action1: '',
+    action1: isServiceMetadata(pagination) ? `${pagination.limit}/${pagination.total}` : '',
   }
 
   collection = items

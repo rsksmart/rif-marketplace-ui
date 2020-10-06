@@ -15,9 +15,17 @@ export interface ErrorReporter {
   (e: ErrorReporterError): void
 }
 
+export type ServiceMetadata = Omit<Paginated<never>, 'data' | 'skip'>
+
+export const isServiceMetadata = (
+  metadata: ServiceMetadata | unknown,
+): metadata is ServiceMetadata => metadata && (
+  metadata as ServiceMetadata).total !== undefined
+
 export interface APIService {
   path: string
   _channel: string
+  meta: ServiceMetadata | unknown
   service: Service<any>
   authenticate: (ownerAddress: string) => Promise<AuthenticationResult | void>
   connect: (errorReporter: ErrorReporter, newClient?: Application<any>) => string | undefined
@@ -41,6 +49,16 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
   service!: Service<any>
 
   errorReporter!: ErrorReporter
+
+  _meta?: ServiceMetadata
+
+  get meta(): ServiceMetadata | unknown {
+    return this._meta
+  }
+
+  set meta(meta: ServiceMetadata | unknown) {
+    this._meta = isServiceMetadata(meta) ? meta : undefined
+  }
 
   abstract _fetch: (filters?: MarketFilterType | any) => Promise<any>
 

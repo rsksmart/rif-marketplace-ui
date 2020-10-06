@@ -4,6 +4,7 @@ import { PriceFilter, RnsFilter } from 'api/models/RnsFilter'
 import { OfferTransport } from 'api/models/transports'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import { convertToBigString, parseToBigDecimal, parseToInt } from 'utils/parsers'
+import { isSupportedToken } from '../rates/xr'
 import {
   getAvailableTokens, RnsAddresses, RnsAPIService, RnsChannels,
 } from './common'
@@ -80,11 +81,13 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
         } : undefined,
       },
     })
+    const { data, ...metadata } = isResultPaginated(results)
+      ? results : { data: results }
+    this.meta = metadata
 
-    const data: OfferTransport[] = isResultPaginated(results)
-      ? results.data : results
-
-    return data.map(mapFromTransport)
+    return data
+      .map(mapFromTransport)
+      .filter(({ paymentToken }) => isSupportedToken(paymentToken))
   }
 
   fetchPriceLimits = async (): Promise<PriceFilter> => {

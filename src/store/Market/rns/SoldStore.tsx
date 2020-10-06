@@ -11,6 +11,7 @@ import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStor
 import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
 import { LoadingPayload } from 'store/App/appActions'
 import { RefreshPayload } from 'store/Market/rns/rnsActions'
+import { ServiceMetadata } from 'api/models/apiService'
 import {
   RnsListing, RnsOrder, RnsState, RnsStoreProps,
 } from './interfaces'
@@ -142,6 +143,16 @@ export const RnsSoldStoreProvider = ({ children }) => {
       })
     }
   }, [isInitialised, needsRefresh, filters, api, account, appDispatch])
+
+  const { meta } = api
+  useEffect(() => {
+    if (meta) {
+      dispatch({
+        type: 'UPDATE_PAGE',
+        payload: meta as ServiceMetadata,
+      })
+    }
+  }, [meta])
 
   const value = { state, dispatch }
   return <RnsSoldStore.Provider value={value}>{children}</RnsSoldStore.Provider>

@@ -53,9 +53,9 @@ export class SoldDomainsService
         ownerAddress,
       },
     })
-
-    const data: SoldDomainTransport[] = isResultPaginated(results)
-      ? results.data : results
+    const { data, ...metadata } = isResultPaginated(results)
+      ? results : { data: results }
+    this.meta = metadata
 
     return data.map(mapFromTransport)
   }
