@@ -85,7 +85,7 @@ export const transformOfferDataForContract = (
     (acc, { period, price, currency }) => {
       const tokenIndex = acc.tokens.findIndex((t) => t === currency)
       const weiPrice = convertToWeiString(
-        new Big(price).div(UNIT_PREFIX_POW2.KILO),
+        price.div(UNIT_PREFIX_POW2.KILO),
       )
 
       if (tokenIndex !== -1) {
