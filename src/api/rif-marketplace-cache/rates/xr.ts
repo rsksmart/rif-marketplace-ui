@@ -48,6 +48,6 @@ export class XRService extends AbstractAPIService implements XRAPIService {
       ? results : { data: results }
     this.meta = metadata
 
-    return data.filter((rate) => isSupportedToken(rate.token))
+    return data.filter(({ token }) => isSupportedToken(token))
   }
 }
