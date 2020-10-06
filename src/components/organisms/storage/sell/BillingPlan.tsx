@@ -6,17 +6,18 @@ import Box from '@material-ui/core/Box'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditIcon from '@material-ui/icons/Edit'
 import { colors, TooltipIconButton } from '@rsksmart/rif-ui'
-import { StoragePlanItem, StorageSellContextProps, TimePeriodEnum } from 'context/Services/storage/interfaces'
-import StorageSellContext from 'context/Services/storage/StorageSellContext'
-import { RemoveItemPayload } from 'context/Services/storage/storageSellActions'
+import { StorageBillingPlan, OfferEditContextProps } from 'context/Market/storage/interfaces'
+import OfferEditContext from 'context/Market/storage/OfferEditContext'
+import { RemoveItemPayload } from 'context/Market/storage/offerEditActions'
 import { priceDisplay } from 'utils/utils'
 import ItemWUnit from 'components/atoms/ItemWUnit'
+import { MarketCryptoRecord } from 'models/Market'
 
-export interface PlanItemProps {
+export interface BillingPlanProps {
   className?: string
   onEditClick: () => void
-  planItem: StoragePlanItem
-  fiatXR: number
+  billingPlan: StorageBillingPlan
+  cryptoXRs: MarketCryptoRecord
   fiatDisplayName: string
 }
 
@@ -33,21 +34,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const PlanItem: FC<PlanItemProps> = ({
-  className = '', planItem, onEditClick, fiatXR, fiatDisplayName,
+const BillingPlan: FC<BillingPlanProps> = ({
+  className = '', billingPlan, onEditClick, cryptoXRs, fiatDisplayName,
 }) => {
-  const { dispatch } = useContext<StorageSellContextProps>(StorageSellContext)
+  const { dispatch } = useContext<OfferEditContextProps>(OfferEditContext)
 
   const classes = useStyles()
 
-  const { timePeriod, pricePerGb, currency } = planItem
-  const fiatPrice = (pricePerGb * fiatXR)
+  const { period, price, currency } = billingPlan
+  const { rate } = cryptoXRs[currency.toLowerCase()]
+  const fiatPrice = (price.mul(rate))
+
   const fiatPriceDisplay = priceDisplay(fiatPrice, 2)
 
   const onItemRemoved = () => {
     dispatch({
       type: 'REMOVE_ITEM',
-      payload: planItem as RemoveItemPayload,
+      payload: billingPlan as RemoveItemPayload,
     } as any)
   }
 
@@ -63,13 +66,13 @@ const PlanItem: FC<PlanItemProps> = ({
           <Grid xs={6} item>
             <Typography component="div">
               <Box fontWeight="fontWeightMedium" textAlign="center" color={colors.gray5}>
-                {TimePeriodEnum[timePeriod]}
+                {period}
               </Box>
             </Typography>
           </Grid>
           <Grid xs={6} item style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-            <ItemWUnit type="mediumPrimary" unit={currency} value={pricePerGb.toString()} />
-            <ItemWUnit unit={fiatDisplayName} type="normalGrey" value={fiatPriceDisplay} />
+            <ItemWUnit type="mediumPrimary" unit={currency.toUpperCase()} value={price.toString()} />
+            <ItemWUnit unit={fiatDisplayName.toUpperCase()} type="normalGrey" value={fiatPriceDisplay} />
           </Grid>
         </Grid>
       </Grid>
@@ -83,4 +86,4 @@ const PlanItem: FC<PlanItemProps> = ({
   )
 }
 
-export default PlanItem
+export default BillingPlan

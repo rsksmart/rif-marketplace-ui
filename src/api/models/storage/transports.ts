@@ -8,7 +8,7 @@ export interface BillingPlanTransport {
 }
 
 export interface OfferTransport {
-    peerId: string | null
+    peerId: string
     provider: string
     totalCapacity: string
     availableCapacity: string

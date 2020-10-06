@@ -3,65 +3,69 @@ import React, {
 } from 'react'
 import InfoIcon from '@material-ui/icons/Info'
 import Grid from '@material-ui/core/Grid'
-import StorageSellContext from 'context/Services/storage/StorageSellContext'
-import { EditItemPayload, AddItemPayload } from 'context/Services/storage/storageSellActions'
-import { StoragePlanItem, TimePeriodEnum } from 'context/Services/storage/interfaces'
+import OfferEditContext from 'context/Market/storage/OfferEditContext'
+import { EditItemPayload, AddItemPayload } from 'context/Market/storage/offerEditActions'
+import { StorageBillingPlan } from 'context/Market/storage/interfaces'
 import { Button, TooltipIconButton } from '@rsksmart/rif-ui'
 import SaveIcon from '@material-ui/icons/Save'
 import CryptoPriceConverter from 'components/molecules/CryptoPriceConverter'
 import { TextField, MenuItem } from '@material-ui/core'
 import { MarketCryptoRecord } from 'models/Market'
+import { SubscriptionPeriod } from 'models/marketItems/StorageItem'
+import Big from 'big.js'
 
-export interface EditablePlanItemProps {
-  onPlanAdded?: (planItem: StoragePlanItem) => void
+export interface EditableBillingPlanProps {
+  onPlanAdded?: (billingPlan: StorageBillingPlan) => void
   onPlanSaved?: () => void
-  planItem?: StoragePlanItem
+  billingPlan?: StorageBillingPlan
   cryptoXRs: MarketCryptoRecord
   fiatDisplayName: string
 }
 
-const EditablePlanItem: FC<EditablePlanItemProps> = ({
+const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
   onPlanAdded,
-  planItem,
+  billingPlan,
   onPlanSaved,
   cryptoXRs,
   fiatDisplayName,
 }) => {
-  const { state: { allPeriods, usedPeriodsPerCurrency }, dispatch } = useContext(StorageSellContext)
+  const { state: { allBillingPeriods, usedPeriodsPerCurrency }, dispatch } = useContext(OfferEditContext)
 
-  const editMode = !!planItem
+  const editMode = !!billingPlan
   // TODO: remove hard-coded currency by default
-  const [currency, setCurrency] = useState(planItem?.currency || 'RBTC')
-  const [pricePerGb, setPricePerGb] = useState(planItem?.pricePerGb || 1)
-  const [timePeriod, setTimePeriod] = useState(planItem?.timePeriod || allPeriods[0])
+  const [currency, setCurrency] = useState(billingPlan?.currency || 'rbtc')
+  const [pricePerGb, setPricePerGb] = useState(billingPlan?.price.toString())
+  const [period, setPeriod] = useState(billingPlan?.period || allBillingPeriods[0])
 
   const onPriceChange = ({ target: { value } }) => setPricePerGb(value)
   const onCurrencyChange = ({ target: { value } }) => setCurrency(value)
-  const onSelectedPeriodChange = ({ target: { value } }) => setTimePeriod(value)
+  const onSelectedPeriodChange = ({ target: { value } }) => setPeriod(value)
 
   const handleOnAddClick = () => {
-    const newPlanItem: StoragePlanItem = {
-      pricePerGb,
+    if (!pricePerGb) return
+    const newBillingPlan: StorageBillingPlan = {
+      price: new Big(pricePerGb),
       currency,
-      timePeriod,
+      period,
     }
     dispatch({
       type: 'ADD_ITEM',
-      payload: newPlanItem as AddItemPayload,
+      payload: newBillingPlan as AddItemPayload,
     })
 
-    if (onPlanAdded) onPlanAdded(newPlanItem)
+    if (onPlanAdded) onPlanAdded(newBillingPlan)
   }
 
   const handleOnSaveClick = () => {
-    const internalId = planItem?.internalId
+    if (!pricePerGb) return
+    const internalId = billingPlan?.internalId
     dispatch(({
       type: 'EDIT_ITEM',
       payload: {
         internalId,
-        pricePerGb,
+        price: new Big(pricePerGb),
         currency,
-        timePeriod,
+        period,
       } as EditItemPayload,
     }))
 
@@ -76,17 +80,17 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
           variant="outlined"
           rounded
           onClick={handleOnAddClick}
-          disabled={pricePerGb <= 0 || usedPeriodsPerCurrency[currency]?.includes(timePeriod)}
+          disabled={Number(pricePerGb) <= 0 || usedPeriodsPerCurrency[currency]?.includes(period)}
         >
           {' '}
           Add storage plan
         </Button>
       )
     }
-    const hasChanged = planItem?.timePeriod !== timePeriod || planItem?.currency !== currency
-    const currencyAndPeriodInUse = usedPeriodsPerCurrency[currency].includes(timePeriod)
+    const hasChanged = billingPlan?.period !== period || billingPlan?.currency !== currency
+    const currencyAndPeriodInUse = usedPeriodsPerCurrency[currency]?.includes(period)
     // the period or currency have changed and the selected option is in use
-    const isDisabled = pricePerGb <= 0 || (hasChanged && currencyAndPeriodInUse)
+    const isDisabled = Number(pricePerGb) <= 0 || (hasChanged && currencyAndPeriodInUse)
 
     return (
       <TooltipIconButton
@@ -110,23 +114,25 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
             required
             label="Period"
             id="subscription-period-select"
-            value={timePeriod}
+            value={period}
             onChange={onSelectedPeriodChange}
             InputProps={{
               style: { textAlign: 'center' },
             }}
           >
             {
-              allPeriods.sort((a, b) => a - b).map(
-                (option: TimePeriodEnum) => {
-                  const isDisabled = usedPeriodsPerCurrency[currency]?.includes(option) && option !== planItem?.timePeriod
-                  return (
-                    <MenuItem value={option} key={option} disabled={isDisabled}>
-                      {TimePeriodEnum[option]}
-                    </MenuItem>
-                  )
-                },
-              )
+              allBillingPeriods.sort((a, b) => a - b)
+                .map(
+                  (option: SubscriptionPeriod) => {
+                    const isDisabled = usedPeriodsPerCurrency[currency]?.includes(option)
+                      && option !== billingPlan?.period
+                    return (
+                      <MenuItem value={option} key={option} disabled={isDisabled}>
+                        {option}
+                      </MenuItem>
+                    )
+                  },
+                )
             }
           </TextField>
         </Grid>
@@ -154,4 +160,4 @@ const EditablePlanItem: FC<EditablePlanItemProps> = ({
   )
 }
 
-export default EditablePlanItem
+export default EditableBillingPlan

@@ -12,7 +12,7 @@ import { Web3Store } from '@rsksmart/rif-ui'
 import StorageOffersContext, { StorageOffersContextProps } from 'context/Services/storage/OffersContext'
 import OffersList from 'components/organisms/storage/myoffers/OffersList'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
-import StorageContract from 'contracts/Storage'
+import StorageContract from 'contracts/storage/contract'
 import BlockchainContext from 'context/Blockchain/BlockchainContext'
 import { AddTxPayload } from 'context/Blockchain/blockchainActions'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
@@ -21,24 +21,16 @@ import { useHistory } from 'react-router-dom'
 import { LoadingPayload } from 'context/App/appActions'
 import { UIError } from 'models/UIMessage'
 import WithLoginCard from 'components/hoc/WithLoginCard'
+import OfferEditContext from 'context/Market/storage/OfferEditContext'
+import { OfferEditContextProps } from 'context/Market/storage/interfaces'
+import { SetOfferPayload } from 'context/Market/storage/offerEditActions'
+import { StorageOffer } from 'models/marketItems/StorageItem'
 
 const logger = Logger.getInstance()
 
 const useStyles = makeStyles((theme: Theme) => ({
   resultsContainer: {
     marginTop: theme.spacing(2),
-  },
-  // TODO: extract reusable component with the container
-  txInProgressContainer: {
-    background: 'rgba(275, 275, 275, 0.8)',
-    display: 'flex',
-    height: '100%',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    position: 'absolute',
-    width: '100%',
-    top: 0,
-    left: 0,
   },
 }))
 
@@ -60,6 +52,9 @@ const StorageMyOffersPage: FC = () => {
     },
     dispatch,
   } = useContext<StorageOffersContextProps>(StorageOffersContext)
+  const {
+    dispatch: editOfferDispatch,
+  } = useContext<OfferEditContextProps>(OfferEditContext)
   const { dispatch: bcDispatch } = useContext(BlockchainContext)
   const reportError = useCallback((
     e: UIError,
@@ -69,17 +64,17 @@ const StorageMyOffersPage: FC = () => {
   const [isProcessing, setIsProcessing] = useState(false)
 
   useEffect(() => {
-    dispatch({
-      type: 'CLEAN_UP',
-      payload: {},
-    })
-
     if (account) {
       dispatch({
         type: 'FILTER',
-        payload: { name: account },
+        payload: { provider: account },
       })
     }
+
+    return dispatch({
+      type: 'CLEAN_UP',
+      payload: {},
+    })
   }, [account, dispatch])
 
   useEffect(() => {
@@ -138,12 +133,16 @@ const StorageMyOffersPage: FC = () => {
     }
   }
 
-  // TODO: handle edit offer
-  const handleEditOffer = (): void => logger.debug('todo: handle edit offer')
+  const handleEditOffer = (offer: StorageOffer) => {
+    editOfferDispatch({
+      type: 'SET_OFFER',
+      payload: offer as SetOfferPayload,
+    })
+    history.push(ROUTES.STORAGE.MYOFFERS.EDIT.BASE)
+  }
 
   return (
     <CenteredPageTemplate>
-
       <StakingCard
         balance="2048 RIF"
         onAddFunds={(): void => logger.info('Add funds clicked')}
@@ -172,14 +171,13 @@ const StorageMyOffersPage: FC = () => {
       {
         isProcessing
         && (
-          <div className={classes.txInProgressContainer}>
-            <TransactionInProgressPanel
-              {...{ isPendingConfirm, onProcessingComplete }}
-              text="canceling your offer"
-              progMsg="The waiting period is required to securely cancel your offer.
+          <TransactionInProgressPanel
+            {...{ isPendingConfirm, onProcessingComplete }}
+            text="Canceling your offer"
+            progMsg="The waiting period is required to securely cancel your offer.
              Please do not close this tab until the process has finished."
-            />
-          </div>
+            overlayed
+          />
         )
       }
     </CenteredPageTemplate>

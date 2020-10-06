@@ -7,7 +7,7 @@ import {
 
 import TabsTemplate from 'components/templates/TabsTemplate'
 import networkConfig from 'config'
-import { StorageSellContextProvider } from 'context/Services/storage/StorageSellContext'
+import { OfferEditContextProvider } from 'context/Market/storage/OfferEditContext'
 import { StorageOffersContextProvider } from 'context/Services/storage/OffersContext'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
@@ -19,6 +19,8 @@ import { NotFound } from '..'
 import StorageSellDone from './sell/StorageSellDone'
 import StorageMyOffersCancelled from './myoffers/StorageMyOffersCancelled'
 import StorageOffersCheckoutPage from './buy/StorageOffersCheckoutPage'
+import StorageEditOfferPage from './myoffers/StorageEditOfferPage'
+import StorageEditOfferDone from './myoffers/StorageEditOfferDone'
 
 const TABS: StyledNavTabProps[] = [
   {
@@ -102,34 +104,43 @@ const StorageRoutes: FC = () => {
               </StorageOffersContextProvider>
             </Route>
             <Route exact path={ROUTES.STORAGE.SELL.BASE}>
-              <StorageSellContextProvider>
+              <OfferEditContextProvider>
                 <StorageSellPage />
-              </StorageSellContextProvider>
+              </OfferEditContextProvider>
             </Route>
             <Route
               exact
               path={ROUTES.STORAGE.SELL.DONE}
               component={StorageSellDone}
             />
-            <Route
-              exact
-              path={ROUTES.STORAGE.MYOFFERS.BASE}
-            >
+            <Route path={ROUTES.STORAGE.MYOFFERS.BASE}>
               <StorageOffersContextProvider>
-                <Switch>
-                  <Route
-                    exact
-                    path={ROUTES.STORAGE.MYOFFERS.BASE}
-                    component={StorageMyOffersPage}
-                  />
-                </Switch>
+                <OfferEditContextProvider>
+                  <Switch>
+                    <Route
+                      exact
+                      path={ROUTES.STORAGE.MYOFFERS.BASE}
+                      component={StorageMyOffersPage}
+                    />
+                    <Route
+                      exact
+                      path={ROUTES.STORAGE.MYOFFERS.EDIT.BASE}
+                      component={StorageEditOfferPage}
+                    />
+                  </Switch>
+                </OfferEditContextProvider>
               </StorageOffersContextProvider>
+              <Route
+                exact
+                path={ROUTES.STORAGE.MYOFFERS.CANCEL.DONE}
+                component={StorageMyOffersCancelled}
+              />
+              <Route
+                exact
+                path={ROUTES.STORAGE.MYOFFERS.EDIT.DONE}
+                component={StorageEditOfferDone}
+              />
             </Route>
-            <Route
-              exact
-              path={ROUTES.STORAGE.MYOFFERS.CANCEL.DONE}
-              component={StorageMyOffersCancelled}
-            />
             <Route component={NotFound} />
           </Switch>
         </TabsTemplate>
@@ -139,7 +150,11 @@ const StorageRoutes: FC = () => {
 
   return (
     <Switch>
-      <Route exact path={ROUTES.STORAGE.BASE} component={StorageLandingPage} />
+      <Route
+        exact
+        path={ROUTES.STORAGE.BASE}
+        component={StorageLandingPage}
+      />
       <Redirect from="*" to={ROUTES.STORAGE.BASE} />
     </Switch>
   )

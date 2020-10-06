@@ -1,35 +1,34 @@
-import { initialState } from '../StorageSellContext'
-import {
-  StoragePlanItem, TimePeriodEnum,
-} from '../interfaces'
-import { storageSellActions } from '../storageSellReducer'
+import { Big } from 'big.js'
+import { initialState } from '../OfferEditContext'
+import { StorageBillingPlan } from '../interfaces'
+import { offerEditActions } from '../offerEditReducer'
 import {
   AddItemPayload, SetCountryPayload, SetAvailableSizePayload,
-} from '../storageSellActions'
+} from '../offerEditActions'
 
-const mockedPlanItem: StoragePlanItem = {
+const mockedPlanItem: StorageBillingPlan = {
   currency: 'RBTC',
   internalId: 1,
-  pricePerGb: 0.001,
-  timePeriod: TimePeriodEnum.Daily,
+  price: new Big(0.001),
+  period: 'Daily',
 }
 
-describe('StorageSellContext', () => {
+describe('StorageOfferEditContext', () => {
   describe('initial state', () => {
     test('should have empty plan items', () => {
-      expect(initialState.planItems).toEqual([])
+      expect(initialState.billingPlans).toEqual([])
     })
   })
-  describe('storageSellActions', () => {
+  describe('offerEditActions', () => {
     describe('ADD_ITEM', () => {
       test('should add a planItem to the state', () => {
         const payload: AddItemPayload = mockedPlanItem
-        const { planItems } = storageSellActions.ADD_ITEM(initialState, payload)
-        expect(planItems).toEqual([mockedPlanItem])
+        const { billingPlans } = offerEditActions.ADD_ITEM(initialState, payload)
+        expect(billingPlans).toEqual([mockedPlanItem])
       })
       test('should increment the internalCounter', () => {
         const payload: AddItemPayload = mockedPlanItem
-        const { internalCounter } = storageSellActions.ADD_ITEM(initialState, payload)
+        const { internalCounter } = offerEditActions.ADD_ITEM(initialState, payload)
         const expectedInternalCounter = initialState.internalCounter + 1
         expect(internalCounter).toEqual(expectedInternalCounter)
       })
@@ -45,7 +44,7 @@ describe('StorageSellContext', () => {
       const payload: SetCountryPayload = {
         country: expectedCountry,
       }
-      const { country } = storageSellActions.SET_COUNTRY(initialState, payload)
+      const { country } = offerEditActions.SET_COUNTRY(initialState, payload)
       expect(country).toBe(expectedCountry)
     })
     describe('SET_AVAILABLE_SIZE', () => {
@@ -53,7 +52,7 @@ describe('StorageSellContext', () => {
       const payload: SetAvailableSizePayload = {
         availableSize: expectedSize,
       }
-      const { availableSize } = storageSellActions.SET_AVAILABLE_SIZE(initialState, payload)
+      const { availableSize } = offerEditActions.SET_AVAILABLE_SIZE(initialState, payload)
       expect(availableSize).toBe(expectedSize)
     })
   })

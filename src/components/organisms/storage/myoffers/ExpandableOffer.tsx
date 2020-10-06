@@ -67,9 +67,6 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
     onCancelOffer()
   }
 
-  // TODO: handle edit
-  const handleEditOffer = () => onEditOffer()
-
   // TODO: once we get the agreements, calculate the remaining size
   const remainingSize = availableSizeGB
   return (
@@ -112,7 +109,7 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
               variant="outlined"
               color="primary"
               rounded
-              onClick={handleEditOffer}
+              onClick={onEditOffer}
             >
               Edit offer
             </Button>

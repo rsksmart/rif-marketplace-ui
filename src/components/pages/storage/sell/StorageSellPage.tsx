@@ -1,31 +1,27 @@
 import React, {
-  useContext, useCallback, useState, useEffect, FC,
+  useContext, useCallback, useState, useEffect,
 } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button as RUIButton, Web3Store } from '@rsksmart/rif-ui'
 import Typography from '@material-ui/core/Typography'
-import StorageSellContext from 'context/Services/storage/StorageSellContext'
-import StorageContract from 'contracts/Storage'
+import OfferEditContext from 'context/Market/storage/OfferEditContext'
+import StorageContract from 'contracts/storage/contract'
 import Logger from 'utils/Logger'
-import { StoragePlanItem, TokenAddressees } from 'context/Services/storage/interfaces'
-import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { UIError } from 'models/UIMessage'
 import Login from 'components/atoms/Login'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import Big from 'big.js'
-import { convertToWeiString } from 'utils/parsers'
 import AppContext, { errorReporterFactory } from 'context/App/AppContext'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import { AddTxPayload } from 'context/Blockchain/blockchainActions'
 import BlockchainContext from 'context/Blockchain/BlockchainContext'
 import { LoadingPayload } from 'context/App/appActions'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
-import { PeriodInSeconds } from 'models/marketItems/StorageItem'
 import StakingCard from 'components/organisms/storage/myoffers/StakingCard'
-import SellStepper from 'components/organisms/storage/sell/SellStepper'
+import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper'
 import RoundedCard from 'components/atoms/RoundedCard'
-import { rifTokenAddress } from 'contracts/config'
+import { transformOfferDataForContract } from 'contracts/storage/utils'
 
 // TODO: discuss about wrapping the library and export it with this change
 Big.NE = -30
@@ -40,62 +36,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: theme.spacing(3, 0),
     width: '100%',
   },
-  progressContainer: {
-    background: 'rgba(275, 275, 275, 0.8)',
-    display: 'flex',
-    height: '100%',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    position: 'absolute',
-    width: '100%',
-    top: 0,
-    left: 0,
-  },
 }))
 
-interface OfferContractData {
-  availableSizeMB: string
-  periods: number[][]
-  prices: string[][]
-  tokens: string[]
-}
-
-const transformOfferDataForContract = (
-  availableSizeGB: number,
-  planItems: StoragePlanItem[],
-): OfferContractData => ({
-  availableSizeMB: new Big(availableSizeGB)
-    .mul(UNIT_PREFIX_POW2.KILO)
-    .toString(),
-  ...planItems.reduce(
-    (acc, { timePeriod, pricePerGb, currency }) => {
-      const tokenIndex = acc.tokens.findIndex(((t) => t === currency))
-      const weiPrice = convertToWeiString(new Big(pricePerGb)
-        .div(UNIT_PREFIX_POW2.KILO))
-
-      if (tokenIndex !== -1) {
-        acc.periods[tokenIndex].push(timePeriod * PeriodInSeconds.Daily)
-        acc.prices[tokenIndex].push(weiPrice)
-        return acc
-      }
-
-      return {
-        prices: [...acc.prices, [weiPrice]],
-        periods: [...acc.periods, [timePeriod * PeriodInSeconds.Daily]],
-        tokens: [...acc.tokens, TokenAddressees[currency]],
-      }
-    },
-        { prices: [], periods: [], tokens: [] } as any,
-  ),
-})
-
-const StorageSellPage: FC = () => {
+const StorageSellPage = () => {
   const {
     state: {
-      planItems, availableSize, peerId, system,
+      billingPlans, availableSize, peerId, system,
     },
     dispatch,
-  } = useContext(StorageSellContext)
+  } = useContext(OfferEditContext)
 
   const {
     state: {
@@ -133,7 +82,7 @@ const StorageSellPage: FC = () => {
       const storageContract = StorageContract.getInstance(web3)
       const {
         availableSizeMB, periods, prices, tokens,
-      } = transformOfferDataForContract(availableSize, planItems)
+      } = transformOfferDataForContract(availableSize, billingPlans)
 
       const setOfferReceipt = await storageContract.setOffer(
         availableSizeMB,
@@ -141,7 +90,6 @@ const StorageSellPage: FC = () => {
         prices,
         tokens,
         peerId,
-        rifTokenAddress,
         { from: account },
       )
       logger.info('setOffer receipt: ', setOfferReceipt)
@@ -189,7 +137,7 @@ const StorageSellPage: FC = () => {
     })
   }, [dispatch])
 
-  const isSubmitEnabled = planItems.length
+  const isSubmitEnabled = billingPlans.length
     && availableSize
     && system
     && peerId
@@ -231,19 +179,18 @@ const StorageSellPage: FC = () => {
         Fill out the fields below to list your storage service. All information provided is meant to be true and correct.
       </Typography>
       <RoundedCard color="primary" className={classes.stepperContainer}>
-        <SellStepper endHandler={endHandler} />
+        <EditOfferStepper endHandler={endHandler} />
       </RoundedCard>
       {
         isProcessing
         && (
-          <div className={classes.progressContainer}>
-            <TransactionInProgressPanel
-              {...{ isPendingConfirm, onProcessingComplete }}
-              text="Listing your offer!"
-              progMsg="The waiting period is required to securely list your offer.
+          <TransactionInProgressPanel
+            {...{ isPendingConfirm, onProcessingComplete }}
+            text="Listing your offer!"
+            progMsg="The waiting period is required to securely list your offer.
              Please do not close this tab until the process has finished."
-            />
-          </div>
+            overlayed
+          />
         )
       }
     </CenteredPageTemplate>

@@ -3,13 +3,14 @@ import React, {
 } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import { StoragePlanItem } from 'context/Services/storage/interfaces'
-import PlanItemWithEdit from 'components/organisms/storage/sell/PlanItemWithEdit'
-import StorageSellContext from 'context/Services/storage/StorageSellContext'
+import { StorageBillingPlan } from 'context/Market/storage/interfaces'
+import BillingPlanWithEdit from 'components/organisms/storage/sell/BillingPlanWithEdit'
+import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import MarketContext from 'context/Market/MarketContext'
 import { Theme, makeStyles } from '@material-ui/core/styles'
 import { colors, fonts } from '@rsksmart/rif-ui'
-import EditablePlanItem from './EditablePlanItem'
+import { BillingPlan, PeriodInSeconds } from 'models/marketItems/StorageItem'
+import EditableBillingPlan from './EditableBillingPlan'
 
 const useStyles = makeStyles((theme: Theme) => ({
   editablePlanContainer: {
@@ -29,13 +30,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const PlanItemsList = () => {
+const BillingPlansList = () => {
   const classes = useStyles()
   const {
     state: {
-      planItems,
+      billingPlans,
     },
-  } = useContext(StorageSellContext)
+  } = useContext(OfferEditContext)
 
   const {
     state: {
@@ -46,18 +47,14 @@ const PlanItemsList = () => {
     },
   } = useContext(MarketContext)
 
-  // TODO: handle multicurrency options
-  const currency = 'RBTC'
-  const { rate: fiatXR } = cryptoXRs[currency.toLowerCase()]
-
   return (
     <>
       <Grid className={classes.editablePlanContainer} item xs={12}>
-        <EditablePlanItem cryptoXRs={cryptoXRs} fiatDisplayName={fiatDisplayName} />
+        <EditableBillingPlan cryptoXRs={cryptoXRs} fiatDisplayName={fiatDisplayName} />
       </Grid>
       {/* STORAGE PLANS */}
       {
-        !!planItems.length
+        !!billingPlans.length
         && (
           <Grid className={classes.plansList} item xs={12}>
             <Grid container className={classes.listTitleContainer}>
@@ -66,16 +63,17 @@ const PlanItemsList = () => {
             </Grid>
             <Grid alignItems="center" container spacing={2}>
               {
-                planItems.sort(
-                  (a: StoragePlanItem, b: StoragePlanItem) => (a.timePeriod - b.timePeriod),
+                billingPlans.sort(
+                  ({ period: a }: BillingPlan, { period: b }: BillingPlan) => (
+                    PeriodInSeconds[a] - PeriodInSeconds[b]
+                  ),
                 ).map(
-                  (planItem: StoragePlanItem) => (
-                    <Grid item xs={12} key={planItem.internalId}>
-                      <PlanItemWithEdit
+                  (billingPlan: StorageBillingPlan) => (
+                    <Grid item xs={12} key={billingPlan.internalId}>
+                      <BillingPlanWithEdit
                         cryptoXRs={cryptoXRs}
-                        fiatXR={fiatXR}
                         fiatDisplayName={fiatDisplayName}
-                        planItem={planItem}
+                        billingPlan={billingPlan}
                       />
                     </Grid>
                   ),
@@ -89,4 +87,4 @@ const PlanItemsList = () => {
   )
 }
 
-export default PlanItemsList
+export default BillingPlansList

@@ -10,7 +10,7 @@ import { WithSpinner } from '@rsksmart/rif-ui'
 export interface OffersListProps {
   items: StorageOffer[]
   onCancelOffer: () => void
-  onEditOffer: () => void
+  onEditOffer: (offer: StorageOffer) => void
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -46,7 +46,7 @@ const OffersList: FC<OffersListProps> = ({ items, onCancelOffer, onEditOffer }) 
             storageOffer={storageOffer}
             initiallyExpanded={!i}
             onCancelOffer={onCancelOffer}
-            onEditOffer={onEditOffer}
+            onEditOffer={() => onEditOffer(storageOffer)}
           />
         ))
       }

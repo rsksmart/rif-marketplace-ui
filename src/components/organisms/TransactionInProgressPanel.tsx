@@ -13,6 +13,7 @@ export interface TransactionInProgressPanelProps {
   progMsg: string
   isPendingConfirm?: boolean
   onProcessingComplete?: () => void
+  overlayed?: boolean
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -25,11 +26,23 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     alignItems: 'center',
     textAlign: 'center',
   },
+  container: {
+    background: 'rgba(275, 275, 275, 0.8)',
+    display: 'flex',
+    height: '100%',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    position: 'absolute',
+    width: '100%',
+    top: 0,
+    left: 0,
+  },
 }))
 
 const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
   progMsg, text, isPendingConfirm,
   onProcessingComplete = (): void => undefined,
+  overlayed,
 }) => {
   const classes = useStyles()
 
@@ -53,7 +66,7 @@ const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
     }
   }, [txHash, isPendingConfirm, onProcessingComplete])
 
-  return (
+  const panelContent = (
     <div className={classes.content}>
       <Typography>{text}</Typography>
       {txHash && !currentCount && <Typography>{`Transaction ${shortenString(txHash)} is waiting for the first confirmation.`}</Typography>}
@@ -62,6 +75,15 @@ const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
       <Typography>{progMsg}</Typography>
     </div>
   )
+
+  if (overlayed) {
+    return (
+      <div className={classes.container}>
+        {panelContent}
+      </div>
+    )
+  }
+  return panelContent
 }
 
 export default TransactionInProgressPanel
