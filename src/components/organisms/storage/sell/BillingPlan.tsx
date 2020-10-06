@@ -45,8 +45,7 @@ const BillingPlan: FC<BillingPlanProps> = ({
   const { rate } = cryptoXRs[currency.toLowerCase()]
   const fiatPrice = (price.mul(rate))
 
-  // FIXME: priceDisplay fn should be able to receive Big type
-  const fiatPriceDisplay = priceDisplay(Number(fiatPrice), 2)
+  const fiatPriceDisplay = priceDisplay(fiatPrice, 2)
 
   const onItemRemoved = () => {
     dispatch({

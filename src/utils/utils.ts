@@ -1,4 +1,6 @@
-export const priceDisplay = (value: number, maxDecimals = 8): string => value
+import Big from 'big.js'
+
+export const priceDisplay = (value: number | Big, maxDecimals = 8): string => value
   .toFixed(maxDecimals)
   .toString()
   .replace(/[.,]00000000$/, '')

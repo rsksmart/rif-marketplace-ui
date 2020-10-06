@@ -9,7 +9,7 @@ import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import MarketContext from 'context/Market/MarketContext'
 import { Theme, makeStyles } from '@material-ui/core/styles'
 import { colors, fonts } from '@rsksmart/rif-ui'
-import { PeriodInSeconds } from 'models/marketItems/StorageItem'
+import { BillingPlan, PeriodInSeconds } from 'models/marketItems/StorageItem'
 import EditableBillingPlan from './EditableBillingPlan'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -64,7 +64,7 @@ const BillingPlansList = () => {
             <Grid alignItems="center" container spacing={2}>
               {
                 billingPlans.sort(
-                  (a: StorageBillingPlan, b: StorageBillingPlan) => (PeriodInSeconds[a.period] - PeriodInSeconds[b.period]),
+                  ({ period: a }: BillingPlan, { period: b }: BillingPlan) => (PeriodInSeconds[a] - PeriodInSeconds[b]),
                 ).map(
                   (billingPlan: StorageBillingPlan) => (
                     <Grid item xs={12} key={billingPlan.internalId}>
