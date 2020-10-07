@@ -56,6 +56,7 @@ export const initialState: OffersState = {
     },
   },
   needsRefresh: false,
+  pagination: {},
 }
 
 const RnsOffersStore = React.createContext({} as RnsOffersStoreProps | any)
@@ -83,6 +84,9 @@ export const RnsOffersStoreProvider = ({ children }) => {
     filters,
     limits,
     needsRefresh,
+    pagination: {
+      page,
+    },
   } = state as RnsState
 
   // Initialise
@@ -157,7 +161,7 @@ export const RnsOffersStoreProvider = ({ children }) => {
     }
   }, [api, isInitialised, needsRefresh, isLimitsSet, appDispatch])
 
-  // Pre-fetch limits
+  // Fetch data
   useEffect(() => {
     if (needsRefresh) {
       setIsLimitsSet(false)
@@ -175,7 +179,8 @@ export const RnsOffersStoreProvider = ({ children }) => {
           id: 'data',
         } as LoadingPayload,
       } as any)
-      fetch(filters)
+
+      fetch({ ...filters, skip: page })
         .then((items) => {
           dispatch({
             type: 'SET_LISTING',
@@ -198,7 +203,7 @@ export const RnsOffersStoreProvider = ({ children }) => {
           } as any)
         })
     }
-  }, [isInitialised, isLimitsSet, filters, limits, api, appDispatch])
+  }, [isInitialised, isLimitsSet, filters, page, limits, api, appDispatch])
 
   const { meta } = api
   useEffect(() => {

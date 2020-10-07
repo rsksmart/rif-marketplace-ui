@@ -80,8 +80,70 @@ export const rnsActions: RnsActions = {
     ...state,
     order: undefined,
   }),
-  UPDATE_PAGE: (state: RnsState, pagination: PagePayload) => ({
+  UPDATE_PAGE: (state: RnsState, { limit, skip, total }: PagePayload) => {
+    const { pagination: { current } } = state
+
+    if (skip === 0 || !current) {
+      return {
+        ...state,
+        pagination: {
+          current: { limit, skip, total },
+          next: { limit, skip: skip + limit, total },
+        },
+      }
+    }
+
+    if (skip > current.skip) {
+      const endPage = total - limit
+      const nextPage = skip + limit
+
+      return {
+        ...state,
+        pagination: {
+          ...state.pagination,
+          previous: current,
+          current: { limit, skip, total },
+          next: {
+            limit,
+            skip: nextPage >= endPage ? endPage : nextPage,
+            total,
+          },
+        },
+      }
+    }
+
+    if (skip < current.skip) {
+      const prevPage = skip - limit
+
+      return {
+        ...state,
+        pagination: {
+          ...state.pagination,
+          previous: {
+            limit,
+            skip: prevPage <= limit ? limit : prevPage,
+            total,
+          },
+          current: { limit, skip, total },
+          next: current,
+        },
+      }
+    }
+
+    return state
+  },
+  NEXT_PAGE: (state: RnsState, _: RnsPayload) => ({
     ...state,
-    pagination,
+    pagination: {
+      ...state.pagination,
+      page: state.pagination.next?.skip,
+    },
+  }),
+  PREV_PAGE: (state: RnsState, _: RnsPayload) => ({
+    ...state,
+    pagination: {
+      ...state.pagination,
+      page: state.pagination.previous?.skip,
+    },
   }),
 }

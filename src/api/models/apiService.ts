@@ -15,7 +15,7 @@ export interface ErrorReporter {
   (e: ErrorReporterError): void
 }
 
-export type ServiceMetadata = Omit<Paginated<never>, 'data' | 'skip'>
+export type ServiceMetadata = Omit<Paginated<never>, 'data'>
 
 export const isServiceMetadata = (
   metadata: ServiceMetadata | unknown,

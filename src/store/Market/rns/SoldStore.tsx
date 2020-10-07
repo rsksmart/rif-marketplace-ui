@@ -47,6 +47,7 @@ export const initialState: RnsSoldState = {
   filters: {
   },
   needsRefresh: false,
+  pagination: {},
 }
 
 const RnsSoldStore = React.createContext({} as RnsSoldStoreProps | any)
