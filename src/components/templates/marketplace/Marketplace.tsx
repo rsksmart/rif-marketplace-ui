@@ -9,7 +9,7 @@ import {
 import WithSpinner from 'components/hoc/WithSpinner'
 
 export interface TableHeaders {
-  [itemName: string]: string | React.ElementType
+  [itemName: string]: string | JSX.Element
 }
 export interface MarketplaceProps {
   className?: string

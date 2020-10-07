@@ -4,7 +4,18 @@ import { RnsItem } from 'models/marketItems/DomainItem'
 import { StorePayload, StoreDispatcher } from 'store/storeUtils/interfaces'
 import { RnsOrder } from './interfaces'
 
-export type RNS_ACTIONS = 'NOOP' | 'FILTER' | 'SET_LISTING' | 'OUTDATE' | 'SET_ORDER' | 'REFRESH' | 'SET_PROGRESS' | 'CLEAR_ORDER' | 'UPDATE_LIMITS' | 'UPDATE_PAGE'
+export type RNS_ACTIONS = 'NOOP'
+| 'FILTER'
+| 'SET_LISTING'
+| 'OUTDATE'
+| 'SET_ORDER'
+| 'REFRESH'
+| 'SET_PROGRESS'
+| 'CLEAR_ORDER'
+| 'UPDATE_LIMITS'
+| 'UPDATE_PAGE'
+| 'NEXT_PAGE'
+| 'PREV_PAGE'
 
 export type FilterPayload = Partial<RnsFilter>
 
@@ -26,7 +37,7 @@ export type ProgressPayload = Pick<RnsOrder, 'isProcessing'>
 
 export type LimitsPayload = Partial<RnsFilter>
 
-export type PagePayload = ServiceMetadata | undefined
+export type PagePayload = ServiceMetadata
 
 export type RnsPayload = StorePayload &
   FilterPayload &

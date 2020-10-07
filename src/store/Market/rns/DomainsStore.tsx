@@ -47,6 +47,7 @@ export const initialState: DomainsState = {
     status: 'owned',
   },
   needsRefresh: false,
+  pagination: {},
 }
 
 const RnsDomainsStore = React.createContext({} as RnsDomainsStoreProps | any)

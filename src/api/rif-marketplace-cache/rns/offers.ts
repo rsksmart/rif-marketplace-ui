@@ -65,8 +65,8 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
 
   _channel = offersChannel
 
-  _fetch = async (filters: Partial<RnsFilter>): Promise<RnsDomainOffer[]> => {
-    const { price, name } = filters
+  _fetch = async (filters: Partial<RnsFilter> & { skip?: number}): Promise<RnsDomainOffer[]> => {
+    const { price, name, skip } = filters
 
     const results: Paginated<OfferTransport> = await this.service.find({
       query: {
@@ -79,6 +79,7 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
           $gte: convertToBigString(price.min, 18),
           $lte: convertToBigString(price.max, 18),
         } : undefined,
+        $skip: skip,
       },
     })
     const { data, ...metadata } = isResultPaginated(results)

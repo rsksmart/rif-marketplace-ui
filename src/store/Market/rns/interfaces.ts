@@ -21,13 +21,20 @@ export interface RnsListing {
   outdatedTokens: []
 }
 
+export type PageState = {
+  previous?: ServiceMetadata
+  current?: ServiceMetadata
+  next?: ServiceMetadata
+  page?: number
+}
+
 export interface RnsState extends StoreState {
   listing: RnsListing
   filters: Partial<RnsFilter>
   limits?: Partial<RnsFilter>
   order?: RnsOrder
   needsRefresh: boolean
-  pagination?: ServiceMetadata
+  pagination: PageState
 }
 
 export interface RnsStoreProps {
