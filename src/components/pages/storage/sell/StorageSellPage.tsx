@@ -22,6 +22,7 @@ import StakingCard from 'components/organisms/storage/myoffers/StakingCard'
 import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper'
 import RoundedCard from 'components/atoms/RoundedCard'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
+import Staking from 'components/organisms/storage/staking/Staking'
 
 // TODO: discuss about wrapping the library and export it with this change
 Big.NE = -30
@@ -66,7 +67,7 @@ const StorageSellPage = () => {
   const history = useHistory()
 
   const handleSubmit = async (): Promise<void> => {
-  // without a web3 instance the submit action would be disabled
+    // without a web3 instance the submit action would be disabled
     if (!web3) return
     try {
       appDispatch({
@@ -168,6 +169,7 @@ const StorageSellPage = () => {
 
   return (
     <CenteredPageTemplate>
+      <Staking />
       <StakingCard
         className={classes.staking}
         balance="2048 RIF"
