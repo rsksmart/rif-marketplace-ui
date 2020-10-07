@@ -6,7 +6,6 @@ import { OffersService } from 'api/rif-marketplace-cache/rns/offers'
 import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
 import { AvgBillingPriceService } from 'api/rif-marketplace-cache/storage/avg-billing-plan-price'
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
-import { StakesService } from '../../api/rif-marketplace-cache/storage/stakes'
 import { ContextActions, ContextReducer, ContextState } from 'context/storeUtils/interfaces'
 import storeReducerFactory from 'context/storeUtils/reducer'
 import {
@@ -14,6 +13,7 @@ import {
 } from 'models/UIMessage'
 import React, { Dispatch, useReducer } from 'react'
 import { Modify } from 'utils/typeUtils'
+import { StakesService } from '../../api/rif-marketplace-cache/storage/stakes'
 import {
   AppAction, appActions, AppPayload, AppReducer, ErrorMessagePayload,
 } from './appActions'
