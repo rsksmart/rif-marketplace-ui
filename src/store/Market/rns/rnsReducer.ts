@@ -83,7 +83,7 @@ export const rnsActions: RnsActions = {
   UPDATE_PAGE: (state: RnsState, { limit, skip, total }: PagePayload) => {
     const { pagination: { current } } = state
 
-    if (skip === 0 || !current) {
+    if (!current) {
       return {
         ...state,
         pagination: {
@@ -94,7 +94,6 @@ export const rnsActions: RnsActions = {
     }
 
     if (skip > current.skip) {
-      const endPage = total - limit
       const nextPage = skip + limit
 
       return {
@@ -105,7 +104,7 @@ export const rnsActions: RnsActions = {
           current: { limit, skip, total },
           next: {
             limit,
-            skip: nextPage >= endPage ? endPage : nextPage,
+            skip: nextPage >= total ? skip : nextPage,
             total,
           },
         },
@@ -121,7 +120,7 @@ export const rnsActions: RnsActions = {
           ...state.pagination,
           previous: {
             limit,
-            skip: prevPage <= limit ? limit : prevPage,
+            skip: prevPage,
             total,
           },
           current: { limit, skip, total },
@@ -132,18 +131,34 @@ export const rnsActions: RnsActions = {
 
     return state
   },
-  NEXT_PAGE: (state: RnsState, _: RnsPayload) => ({
-    ...state,
-    pagination: {
-      ...state.pagination,
-      page: state.pagination.next?.skip,
-    },
-  }),
-  PREV_PAGE: (state: RnsState, _: RnsPayload) => ({
-    ...state,
-    pagination: {
-      ...state.pagination,
-      page: state.pagination.previous?.skip,
-    },
-  }),
+  NEXT_PAGE: (state: RnsState, _: RnsPayload) => {
+    const { pagination: { next } } = state
+
+    if (!next || next.skip >= next.total) {
+      return state
+    }
+
+    return {
+      ...state,
+      pagination: {
+        ...state.pagination,
+        page: next.skip,
+      },
+    }
+  },
+  PREV_PAGE: (state: RnsState, _: RnsPayload) => {
+    const { pagination: { previous } } = state
+
+    if (!previous || previous.skip < 0) {
+      return state
+    }
+
+    return {
+      ...state,
+      pagination: {
+        ...state.pagination,
+        page: previous.skip,
+      },
+    }
+  },
 }

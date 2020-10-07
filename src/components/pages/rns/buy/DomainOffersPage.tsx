@@ -65,10 +65,21 @@ const DomainOffersPage: FC = () => {
 
   let collection = []
 
-  const paging = currentPage && {
-    from: currentPage.skip,
-    to: currentPage.skip + currentPage.limit,
-    total: currentPage.total,
+  let action1Header: JSX.Element | string = ''
+
+  if (currentPage) {
+    const { skip, limit, total } = currentPage
+    const nextPage = skip + limit
+
+    action1Header = (
+      <RifPaging
+        from={skip + 1}
+        to={nextPage > total ? total : nextPage}
+        total={total}
+        onNext={(): void => dispatch({ type: 'NEXT_PAGE' })}
+        onPrev={(): void => dispatch({ type: 'PREV_PAGE' })}
+      />
+    )
   }
 
   const headers = {
@@ -76,15 +87,7 @@ const DomainOffersPage: FC = () => {
     ownerAddress: 'Owner',
     expirationDate: 'Renewal Date',
     combinedPrice: 'Price',
-    action1: currentPage
-      ? (
-        <RifPaging
-          {...paging}
-          onNext={(): void => dispatch({ type: 'NEXT_PAGE' })}
-          onPrev={(): void => dispatch({ type: 'PREV_PAGE' })}
-        />
-      )
-      : '',
+    action1: action1Header,
   }
 
   collection = items
