@@ -2,7 +2,7 @@ import networkConfig from 'config'
 
 const {
   contractAddresses: {
-    marketplace, rif, rnsDotRskOwner, storageManager, staking
+    marketplace, rif, rnsDotRskOwner, storageManager, staking,
   },
 } = networkConfig
 

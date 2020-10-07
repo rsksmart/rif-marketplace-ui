@@ -26,12 +26,11 @@ import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 import { SetOfferPayload } from 'context/Market/storage/offerEditActions'
 import { StorageOffer } from 'models/marketItems/StorageItem'
+import Web3 from 'web3'
 import StakingDepositDialogue from '../../../organisms/storage/myoffers/StakingDepositDialogue'
 import StakingWithdrawDialogue from '../../../organisms/storage/myoffers/StakingWithdrawDialogue'
 import { StakesService } from '../../../../api/rif-marketplace-cache/storage/stakes'
 import StakingContract, { ZERO_ADDRESS } from '../../../../contracts/Staking'
-import Web3 from 'web3'
-
 
 const logger = Logger.getInstance()
 
@@ -50,7 +49,7 @@ const StorageMyOffersPage: FC = () => {
   const {
     state: {
       loaders: { data: isLoadingItems },
-      apis
+      apis,
     },
     dispatch: appDispatch,
   } = useContext<AppContextProps>(AppContext)
@@ -89,21 +88,21 @@ const StorageMyOffersPage: FC = () => {
 
   const openWithdraw = async () => {
     if (!requireWeb3()) {
-      console.log('Please connect to your wallet')
+      logger.debug('Please connect to your wallet')
       // TODO show notification
       return
     }
 
     const storageContract = StorageContract.getInstance(web3 as Web3)
     // Check if we can make unstake
-    const canWithdraw = await storageContract.hasUtilizedCapacity(account as string, { from: account })
-    setCanWithdraw(Boolean(canWithdraw))
+    const hasUtilizedCapacity = await storageContract.hasUtilizedCapacity(account as string, { from: account })
+    setCanWithdraw(Boolean(hasUtilizedCapacity))
     setWithdrawalOpened(true)
   }
 
   const openStaking = () => {
     if (!requireWeb3()) {
-      console.log('Please connect to your wallet')
+      logger.debug('Please connect to your wallet')
       // TODO show notification
       return
     }
@@ -140,7 +139,7 @@ const StorageMyOffersPage: FC = () => {
   }
 
   useEffect(() => {
-    fetchStakeTotal().catch(e => logger.error('Fetch Stake total error: ' + e.message))
+    fetchStakeTotal().catch((e) => logger.error(`Fetch Stake total error: ${e.message}`))
   })
 
   useEffect(() => {

@@ -11,28 +11,28 @@ export interface CancelOfferDialogueProps {
 }
 
 const StakingStakeDialogue: FC<CancelOfferDialogueProps> = ({ open, onClose, onDeposit }) => {
-    const amount = 100
-    const token = ZERO_ADDRESS
-    const actions = (
-        <Grid justify="flex-end">
-            <Button color="primary" rounded variant="contained" onClick={() => onDeposit(amount, token)}>Stake Funds</Button>
-        </Grid>
-    )
-    return (
-        <ModalDialogue
-            open={open}
-            onClose={onClose}
-            title="Stacking"
-            footer={actions}
-        >
-            <Grid justify="center">
-                <Typography align="center" color="secondary">
-                    The amount of RIF staked in RIF Marketplace helps to enhance your
-                    reputation and position your offers at the top when selling storage.
-                </Typography>
-            </Grid>
-        </ModalDialogue>
-    )
+  const amount = 100
+  const token = ZERO_ADDRESS
+  const actions = (
+    <Grid justify="flex-end">
+      <Button color="primary" rounded variant="contained" onClick={() => onDeposit(amount, token)}>Stake Funds</Button>
+    </Grid>
+  )
+  return (
+    <ModalDialogue
+      open={open}
+      onClose={onClose}
+      title="Stacking"
+      footer={actions}
+    >
+      <Grid justify="center">
+        <Typography align="center" color="secondary">
+          The amount of RIF staked in RIF Marketplace helps to enhance your
+          reputation and position your offers at the top when selling storage.
+        </Typography>
+      </Grid>
+    </ModalDialogue>
+  )
 }
 
 export default StakingStakeDialogue
