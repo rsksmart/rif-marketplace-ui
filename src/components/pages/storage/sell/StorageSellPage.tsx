@@ -18,7 +18,6 @@ import { AddTxPayload } from 'context/Blockchain/blockchainActions'
 import BlockchainContext from 'context/Blockchain/BlockchainContext'
 import { LoadingPayload } from 'context/App/appActions'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
-import StakingCard from 'components/organisms/storage/myoffers/StakingCard'
 import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper'
 import RoundedCard from 'components/atoms/RoundedCard'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
@@ -170,12 +169,6 @@ const StorageSellPage = () => {
   return (
     <CenteredPageTemplate>
       <Staking />
-      <StakingCard
-        className={classes.staking}
-        balance="2048 RIF"
-        onWithdrawFunds={(): void => { logger.info('withdraw action') }}
-        onAddFunds={(): void => { logger.info('add funds action') }}
-      />
       <Typography gutterBottom variant="h5" color="primary">List your storage service</Typography>
       <Typography gutterBottom color="secondary" variant="subtitle1">
         Fill out the fields below to list your storage service. All information provided is meant to be true and correct.

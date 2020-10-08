@@ -2,7 +2,8 @@ import React, { FC, useState } from 'react'
 import Fab from '@material-ui/core/Fab'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import AddIcon from '@material-ui/icons/Add'
-import { Fade, Paper } from '@material-ui/core'
+import { Grid, Grow, Typography } from '@material-ui/core'
+import { Button, colors } from '@rsksmart/rif-ui'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
@@ -26,19 +27,70 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 const Staking: FC<{}> = () => {
   const classes = useStyles()
-  const [checked, setChecked] = useState(false)
+  const [expanded, setExpanded] = useState(true)
   return (
     <div className={classes.root}>
-      <Fade in={checked}>
-        <Paper elevation={4} className={classes.paper}>
-          <svg className={classes.svg}>
-            <polygon points="0,100 50,00, 100,100" className={classes.polygon} />
-          </svg>
-        </Paper>
-      </Fade>
-
-      <Fab color="primary" aria-label="staking" onClick={() => setChecked(!checked)}>
-
+      <Grow in={expanded}>
+        <Grid
+          container
+          style={{
+            border: `${colors.primary} 1px solid`,
+            maxWidth: '700px',
+            alignItems: 'center',
+            borderRadius: '50px 0px 0px 50px',
+            paddingRight: '40px',
+          }}
+        >
+          <Grid
+            item
+            xs={4}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              flexDirection: 'column',
+            }}
+          >
+            <Typography style={{ color: colors.gray5 }}>
+              BALANCE
+            </Typography>
+            <Typography color="primary" variant="h6">2048 RIF</Typography>
+          </Grid>
+          <Grid
+            item
+            xs={4}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <Button color="primary" rounded variant="outlined">
+              Add funds
+            </Button>
+          </Grid>
+          <Grid
+            item
+            xs={4}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <Button rounded variant="outlined">
+              Withdraw funds
+            </Button>
+          </Grid>
+        </Grid>
+      </Grow>
+      <Fab
+        color="primary"
+        aria-label="staking"
+        onClick={() => setExpanded(!expanded)}
+        style={{
+          height: '80px',
+          minWidth: '80px',
+          marginLeft: '-40px',
+        }}
+      >
         <AddIcon />
       </Fab>
     </div>
