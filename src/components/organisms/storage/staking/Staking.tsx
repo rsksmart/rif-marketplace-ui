@@ -13,7 +13,11 @@ import { UIError } from 'models/UIMessage'
 import { StakesService } from 'api/rif-marketplace-cache/storage/stakes'
 import { zeroAddress } from 'context/Services/storage/interfaces'
 import Logger from 'utils/Logger'
+import Web3 from 'web3'
+import StakingContract from 'contracts/Staking'
+import StorageContract from 'contracts/storage/contract'
 import DepositModal from './DepositModal'
+import WithdrawModal from './WithdrawModal'
 
 const logger = Logger.getInstance()
 
@@ -48,7 +52,7 @@ const Staking: FC<{}> = () => {
   const {
     state: {
       account,
-      // web3
+      web3,
     },
   } = useContext(Web3Store)
 
@@ -62,9 +66,11 @@ const Staking: FC<{}> = () => {
     e: UIError,
   ) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
-  const [expanded, setExpanded] = useState(true)
+  const [isExpanded, setIsExpanded] = useState(true)
   const [stakeTotal, setStakeTotal] = useState(0)
+  const [canWithdraw, setCanWithdraw] = useState(false)
   const [depositOpened, setDepositOpened] = useState(false)
+  const [withdrawOpened, setWithdrawOpened] = useState(false)
 
   // TODO: encapsulate into context
   const stakeApi = apis?.['storage/v0/stakes'] as StakesService
@@ -72,8 +78,11 @@ const Staking: FC<{}> = () => {
 
   // TODO: add multicurrency support
   // TODO: encapsulate into context
+  // TODO: subscribe to events so we can update this value automatically
   const fetchStakeTotal = async () => {
-    const [stakeRBTC] = await stakeApi.fetch({ account: account as string, token: zeroAddress })
+    const [stakeRBTC] = await stakeApi.fetch({
+      account: account as string, token: zeroAddress,
+    })
     setStakeTotal(stakeRBTC?.total || 0)
   }
 
@@ -92,19 +101,38 @@ const Staking: FC<{}> = () => {
     })
   })
 
-  const onDepositHandler = () => {
-    // TODO: send tx to deposit
-    logger.debug('Send transaction to deposit')
-   }
+  const onDepositHandler = async (amount: number, token: string) => {
+    //  users won't reach this point without web3 instance wouldn;'t reach
+    if (!web3) return
+    const stakeContract = StakingContract.getInstance(web3 as Web3)
+    await stakeContract.stake(amount, token, { from: account })
+    await fetchStakeTotal()
+    setDepositOpened(false)
+  }
+
+  const handleWithdraw = async (amount: number, token: string) => {
+    const stakeContract = StakingContract.getInstance(web3 as Web3)
+    logger.debug(await stakeContract.unstake(amount, token, { from: account }))
+    await fetchStakeTotal()
+    setWithdrawOpened(false)
+  }
+
+  const handleOpenWithdraw = async () => {
+    //
+    const storageContract = StorageContract.getInstance(web3 as Web3)
+    // Check if we can make unstake
+    const hasUtilizedCapacity = await storageContract.hasUtilizedCapacity(account as string, { from: account })
+    setCanWithdraw(Boolean(hasUtilizedCapacity))
+  }
 
   // TODO: consider using withAccount HOC to wrap this action
   // so it's only expanded if an account is provided
-  const handleExpandClick = () => setExpanded((exp) => !exp)
+  const handleExpandClick = () => setIsExpanded((exp) => !exp)
 
   return (
     <>
       <div className={classes.root}>
-        <Grow in={expanded}>
+        <Grow in={isExpanded}>
           <Grid
             container
             className={classes.infoContainer}
@@ -144,7 +172,11 @@ const Staking: FC<{}> = () => {
               xs={4}
               className={classes.infoColumn}
             >
-              <Button rounded variant="outlined">
+              <Button
+                onClick={handleOpenWithdraw}
+                rounded
+                variant="outlined"
+              >
                 Withdraw funds
               </Button>
             </Grid>
@@ -159,11 +191,18 @@ const Staking: FC<{}> = () => {
           <AddIcon />
         </Fab>
       </div>
-
       <DepositModal
+        currentBalance={`${stakeTotal} RIF`}
         onDeposit={onDepositHandler}
         open={depositOpened}
         onClose={() => setDepositOpened(false)}
+      />
+      <WithdrawModal
+        canWithdraw={canWithdraw}
+        onClose={() => setWithdrawOpened(false)}
+        open={withdrawOpened}
+        onWithdraw={handleWithdraw}
+        currentBalance={stakeTotal}
       />
     </>
   )
