@@ -17,6 +17,7 @@ import {
   StorageServiceAddress,
   StorageWSChannel,
 } from './interfaces'
+import { MinMax } from './utils'
 
 export const offersAddress: StorageServiceAddress = 'storage/v0/offers'
 export const offersWSChannel: StorageWSChannel = 'offers'
@@ -49,11 +50,6 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     peerId,
   }
   return offer
-}
-
-export enum MinMax {
-  min = 1,
-  max = -1,
 }
 
 const fetchMinMaxLimit = async (

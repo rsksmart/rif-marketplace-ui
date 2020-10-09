@@ -3,7 +3,7 @@ import { APIService } from 'api/models/apiService'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { StorageItem } from 'models/marketItems/StorageItem'
 
-export type StorageServiceAddress = 'storage/v0/offers' | 'storage/v0/avgBillingPrice' // | 'storage/v0/agreements'
+export type StorageServiceAddress = 'storage/v0/offers' | 'storage/v0/avgBillingPrice' | 'storage/v0/agreements'
 export type StorageWSChannel = 'offers' | 'agreements'
 
 export type StorageAPIService = Modify<

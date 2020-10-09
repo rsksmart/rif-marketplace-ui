@@ -4,6 +4,7 @@ import { XRService } from 'api/rif-marketplace-cache/rates/xr'
 import { DomainsService } from 'api/rif-marketplace-cache/rns/domains'
 import { OffersService } from 'api/rif-marketplace-cache/rns/offers'
 import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
+import { StorageAgreementService } from 'api/rif-marketplace-cache/storage/agreements'
 import { AvgBillingPriceService } from 'api/rif-marketplace-cache/storage/avg-billing-plan-price'
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
 import { ContextActions, ContextReducer, ContextState } from 'context/storeUtils/interfaces'
@@ -11,7 +12,7 @@ import storeReducerFactory from 'context/storeUtils/reducer'
 import {
   ErrorId, ErrorMessage, LoaderId, Message, MessageId,
 } from 'models/UIMessage'
-import React, { Dispatch, useReducer } from 'react'
+import React, { Dispatch, FC, useReducer } from 'react'
 import { Modify } from 'utils/typeUtils'
 import {
   AppAction, appActions, AppPayload, AppReducer, ErrorMessagePayload,
@@ -43,6 +44,7 @@ export const initialState: AppState = {
     'rates/v0': new XRService(),
     'storage/v0/offers': new StorageOffersService(),
     'storage/v0/avgBillingPrice': new AvgBillingPriceService(),
+    'storage/v0/agreements': new StorageAgreementService(),
   },
   messages: {},
   loaders: {
@@ -66,7 +68,9 @@ export interface ErrorReporterFactory {
   (dispatch: Dispatch<AppAction>): ErrorReporter
 }
 
-export const errorReporterFactory: ErrorReporterFactory = (dispatch: Dispatch<AppAction>) => (error: ErrorReporterError) => {
+export const errorReporterFactory: ErrorReporterFactory = (
+  dispatch: Dispatch<AppAction>,
+) => (error: ErrorReporterError): void => {
   dispatch({
     type: 'SET_MESSAGE',
     payload: {
@@ -75,7 +79,7 @@ export const errorReporterFactory: ErrorReporterFactory = (dispatch: Dispatch<Ap
     } as ErrorMessagePayload,
   })
 }
-export const AppContextProvider = ({ children }) => {
+export const AppContextProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState)
 
   const value = { state, dispatch }

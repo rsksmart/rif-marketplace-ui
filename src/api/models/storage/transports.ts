@@ -19,3 +19,15 @@ export interface OfferTransport {
     updatedAt: string
     acceptedCurrencies: string[]
 }
+
+export type AgreementTransport = {
+    agreementReference: string
+    dataReference: string
+    consumer: string
+    size: string
+    isActive: boolean
+    billingPeriod: string
+    billingPrice: string
+    tokenAddress: string
+    availableFunds: string
+}

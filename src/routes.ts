@@ -65,6 +65,7 @@ const ROUTES = {
     },
     MYPURCHASES: {
       BASE: STORAGE_MYPURCHASES,
+      LISTING: `${STORAGE_MYPURCHASES}/${LISTING}`,
     },
   },
   FAQ,
