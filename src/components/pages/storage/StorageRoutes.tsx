@@ -12,6 +12,7 @@ import { StorageOffersContextProvider } from 'context/Services/storage/OffersCon
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { getTabValueFromLocation } from 'utils/utils'
+import { AgreementsContextProvider } from 'context/Services/storage/agreements'
 import {
   StorageSellPage, StorageOffersPage, StorageMyOffersPage, StorageLandingPage,
 } from '.'
@@ -21,6 +22,7 @@ import StorageMyOffersCancelled from './myoffers/StorageMyOffersCancelled'
 import StorageOffersCheckoutPage from './buy/StorageOffersCheckoutPage'
 import StorageEditOfferPage from './myoffers/StorageEditOfferPage'
 import StorageEditOfferDone from './myoffers/StorageEditOfferDone'
+import MyStoragePurchases from './myPurchases/Page'
 
 const TABS: StyledNavTabProps[] = [
   {
@@ -140,6 +142,22 @@ const StorageRoutes: FC = () => {
                 path={ROUTES.STORAGE.MYOFFERS.EDIT.DONE}
                 component={StorageEditOfferDone}
               />
+            </Route>
+            <Route path={ROUTES.STORAGE.MYPURCHASES.BASE}>
+              <AgreementsContextProvider>
+                <Switch>
+                  <Redirect
+                    exact
+                    from={ROUTES.STORAGE.MYPURCHASES.BASE}
+                    to={ROUTES.STORAGE.MYPURCHASES.LISTING}
+                  />
+                  <Route
+                    exact
+                    path={ROUTES.STORAGE.MYPURCHASES.LISTING}
+                    component={MyStoragePurchases}
+                  />
+                </Switch>
+              </AgreementsContextProvider>
             </Route>
             <Route component={NotFound} />
           </Switch>

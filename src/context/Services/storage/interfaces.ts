@@ -5,8 +5,9 @@ import { StorageItem, StorageOffer } from 'models/marketItems/StorageItem'
 import { ServiceOrder, ServiceState } from '../interfaces'
 import { OFFERS_ACTION } from './offersActions'
 import { ContextName as OffersContextName } from './OffersContext'
+import { ContextName as AgreementContextName } from './agreements/interfaces'
 
-export type StorageContextNames = OffersContextName
+export type StorageContextNames = OffersContextName | AgreementContextName
 
 export type StorageState = ServiceState<StorageItem> & {
   filters: StorageOffersFilters

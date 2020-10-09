@@ -25,4 +25,13 @@ export interface StorageOffer extends Item {
   peerId: string
 }
 
+export type Agreement = Item & {
+  title: string
+  provider: string
+  size: string
+  renewalDate: string
+  subscriptionPeriod: SubscriptionPeriod
+  monthlyFee: Big
+}
+
 export type StorageItem = StorageOffer
