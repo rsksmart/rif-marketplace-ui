@@ -142,6 +142,7 @@ const StorageMyOffersPage: FC = () => {
     fetchStakeTotal().catch((e) => logger.error(`Fetch Stake total error: ${e.message}`))
   })
 
+  // filter by the current account and cleans up on willunmount
   useEffect(() => {
     if (account) {
       dispatch({
@@ -247,11 +248,13 @@ const StorageMyOffersPage: FC = () => {
         onCancelOffer={handleOfferCancel}
         onEditOffer={handleEditOffer}
       />
+      {/* TODO: remove */}
       <StakingDepositDialogue
         onDeposit={onDepositHandler}
         open={depositOpened}
         onClose={() => setDepositOpened(false)}
       />
+      {/* TODO: move to staking folder organisms */}
       <StakingWithdrawDialogue
         canWithdraw={canWithdraw}
         onWithdraw={onWithdrawHandler}
