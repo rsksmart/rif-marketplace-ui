@@ -118,11 +118,12 @@ const Staking: FC<{}> = () => {
   }
 
   const handleOpenWithdraw = async () => {
-    //
+    if (!web3) return
     const storageContract = StorageContract.getInstance(web3 as Web3)
     // Check if we can make unstake
     const hasUtilizedCapacity = await storageContract.hasUtilizedCapacity(account as string, { from: account })
     setCanWithdraw(Boolean(hasUtilizedCapacity))
+    setWithdrawOpened(true)
   }
 
   // TODO: consider using withAccount HOC to wrap this action
