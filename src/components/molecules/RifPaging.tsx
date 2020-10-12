@@ -1,11 +1,12 @@
-import { Button, Grid, makeStyles } from '@material-ui/core'
+import {
+  Button, Grid, makeStyles,
+} from '@material-ui/core'
 import { NavigateBefore, NavigateNext } from '@material-ui/icons'
-import React from 'react'
+import React, { FC } from 'react'
 
 const useButtonStyle = makeStyles(() => ({
   root: {
     minWidth: '1em',
-    // borderRadius: '50px',
     border: 'none',
   },
   label: {
@@ -13,7 +14,15 @@ const useButtonStyle = makeStyles(() => ({
   },
 }))
 
-const RifPaging = ({
+export type RifPagingProps = {
+  from: number
+  to: number
+  total: number
+  onNext: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onPrev: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+}
+
+const RifPaging: FC<RifPagingProps> = ({
   from, to, total, onNext, onPrev,
 }) => {
   const buttonStyleClasses = useButtonStyle()
@@ -21,14 +30,12 @@ const RifPaging = ({
     <Grid
       container
       direction="row"
-      spacing={0}
       wrap="nowrap"
     >
       <Grid item>
         <Button
           variant="text"
           color="primary"
-        //   startIcon={}
           onClick={onPrev}
           size="small"
           classes={buttonStyleClasses}
@@ -44,7 +51,6 @@ const RifPaging = ({
         <Button
           variant="text"
           color="primary"
-        //   endIcon={<NavigateNext />}
           onClick={onNext}
           size="small"
           classes={buttonStyleClasses}
