@@ -24,6 +24,7 @@ import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 import { SetOfferPayload } from 'context/Market/storage/offerEditActions'
 import { StorageOffer } from 'models/marketItems/StorageItem'
 import Staking from 'components/organisms/storage/staking/Staking'
+import { ContextProvider as StakingContextProvider } from 'context/Services/staking/Context'
 
 const useStyles = makeStyles((theme: Theme) => ({
   resultsContainer: {
@@ -141,7 +142,9 @@ const StorageMyOffersPage: FC = () => {
 
   return (
     <CenteredPageTemplate>
-      <Staking />
+      <StakingContextProvider>
+        <Staking />
+      </StakingContextProvider>
       <Grid
         container
         alignItems="center"

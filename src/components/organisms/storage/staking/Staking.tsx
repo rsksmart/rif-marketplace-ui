@@ -1,5 +1,5 @@
 import React, {
-  FC, useCallback, useContext, useEffect, useState,
+  FC, useCallback, useContext, useState,
 } from 'react'
 import Fab from '@material-ui/core/Fab'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
@@ -10,14 +10,15 @@ import {
 import { Button, colors, Web3Store } from '@rsksmart/rif-ui'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { UIError } from 'models/UIMessage'
-import { StakesService } from 'api/rif-marketplace-cache/storage/stakes'
-import { zeroAddress } from 'context/Services/storage/interfaces'
 import Logger from 'utils/Logger'
 import Web3 from 'web3'
 import StakingContract from 'contracts/Staking'
 import StorageContract from 'contracts/storage/contract'
-import DepositModal from './DepositModal'
+import StakingContext from 'context/Services/staking/Context'
+import { Props as StakingContextProps } from 'context/Services/staking/interfaces'
+import StakingBalance from 'components/molecules/storage/StakingBalance'
 import WithdrawModal from './WithdrawModal'
+import DepositModal from './DepositModal'
 
 const logger = Logger.getInstance()
 
@@ -57,70 +58,61 @@ const Staking: FC<{}> = () => {
   } = useContext(Web3Store)
 
   const {
-    state: {
-      apis,
-    },
     dispatch: appDispatch,
   } = useContext<AppContextProps>(AppContext)
   const reportError = useCallback((
     e: UIError,
   ) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
+  const {
+    state: {
+      totalStaked,
+      isFetching,
+    },
+    dispatch,
+  } = useContext<StakingContextProps>(StakingContext)
+
   const [isExpanded, setIsExpanded] = useState(true)
-  const [stakeTotal, setStakeTotal] = useState(0)
   const [canWithdraw, setCanWithdraw] = useState(false)
   const [depositOpened, setDepositOpened] = useState(false)
   const [withdrawOpened, setWithdrawOpened] = useState(false)
 
-  // TODO: encapsulate into context
-  const stakeApi = apis?.['storage/v0/stakes'] as StakesService
-  stakeApi.connect(errorReporterFactory(appDispatch))
-
-  // TODO: add multicurrency support
-  // TODO: encapsulate into context
-  // TODO: subscribe to events so we can update this value automatically
-  const fetchStakeTotal = async () => {
-    const [stakeRBTC] = await stakeApi.fetch({
-      account: account as string, token: zeroAddress,
-    })
-    setStakeTotal(stakeRBTC?.total || 0)
-  }
-
-  // TODO: encapsulate into context
-  // un component will mount, fetch the stake total
-  useEffect(() => {
-    fetchStakeTotal().catch((error) => {
-      reportError(new UIError(
-        {
-          error,
-          id: 'service-fetch',
-          text: 'There was an error fetching the current balance',
-        },
-      ))
-      logger.error(`Fetch Stake total error: ${error.message}`)
-    })
-  })
-
   const onDepositHandler = async (amount: number, token: string) => {
-    //  users won't reach this point without web3 instance wouldn;'t reach
+    //  users won't reach this point without a web3 instance
     if (!web3) return
     const stakeContract = StakingContract.getInstance(web3 as Web3)
     await stakeContract.stake(amount, token, { from: account })
-    await fetchStakeTotal()
+    dispatch({
+      type: 'SET_NEEDS_REFRESH',
+      payload: { needsRefresh: true },
+    })
+    // TODO: show TXInProgressPanel
     setDepositOpened(false)
   }
 
   const handleWithdraw = async (amount: number, token: string) => {
-    const stakeContract = StakingContract.getInstance(web3 as Web3)
-    logger.debug(await stakeContract.unstake(amount, token, { from: account }))
-    await fetchStakeTotal()
-    setWithdrawOpened(false)
+    if (!web3) return
+    try {
+      const stakeContract = StakingContract.getInstance(web3 as Web3)
+      logger.debug(await stakeContract.unstake(amount, token, { from: account }))
+      dispatch({
+        type: 'SET_NEEDS_REFRESH',
+        payload: { needsRefresh: true },
+      })
+      // TODO: show TXInProgressPanel
+      setWithdrawOpened(false)
+    } catch (error) {
+      reportError(new UIError({
+        error,
+        id: 'contract-storage-staking',
+        text: 'Could not set the offer in the contract.',
+      }))
+    }
   }
 
   const handleOpenWithdraw = async () => {
     if (!web3) return
     const storageContract = StorageContract.getInstance(web3 as Web3)
-    // Check if we can make unstake
     const hasUtilizedCapacity = await storageContract.hasUtilizedCapacity(account as string, { from: account })
     setCanWithdraw(Boolean(hasUtilizedCapacity))
     setWithdrawOpened(true)
@@ -148,11 +140,11 @@ const Staking: FC<{}> = () => {
                   BALANCE
                 </Box>
               </Typography>
-              <Typography color="primary" variant="h6">
-                {stakeTotal}
-                {' '}
-                RIF
-              </Typography>
+              <StakingBalance
+                isLoading={isFetching}
+                totalStaked={totalStaked}
+                units="RIF"
+              />
             </Grid>
             <Grid
               item
@@ -193,7 +185,7 @@ const Staking: FC<{}> = () => {
         </Fab>
       </div>
       <DepositModal
-        currentBalance={`${stakeTotal} RIF`}
+        currentBalance={`${totalStaked} RIF`}
         onDeposit={onDepositHandler}
         open={depositOpened}
         onClose={() => setDepositOpened(false)}
@@ -203,7 +195,7 @@ const Staking: FC<{}> = () => {
         onClose={() => setWithdrawOpened(false)}
         open={withdrawOpened}
         onWithdraw={handleWithdraw}
-        currentBalance={stakeTotal}
+        currentBalance={totalStaked}
       />
     </>
   )

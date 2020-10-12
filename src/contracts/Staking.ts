@@ -9,6 +9,7 @@ import waitForReceipt, { TransactionOptions } from './utils'
 import { stakingAddress } from './config'
 
 const logger = Logger.getInstance()
+export type StorageStakingContractErrorId = 'contract-storage-staking'
 
 const ZERO_BYTES = '0x0000000000000000000000000000000000000000000000000000000000000000'
 const isNativeToken = (token: string) => token === zeroAddress

@@ -1,14 +1,44 @@
-import { Actions, State } from './interfaces'
+import Logger from 'utils/Logger'
+import { Action, Actions, State } from './interfaces'
 
 export const actions: Actions = {
-  SET_CAN_WITHDRAW: (state: State, { canWithdraw }): State => ({
+  SET_IS_FETCHING: (state: State, { isFetching }): State => ({
     ...state,
-    canWithdraw,
+    isFetching,
   }),
   SET_TOTAL_STAKE: (state: State, { totalStaked }): State => ({
     ...state,
     totalStaked,
   }),
+  SET_NEEDS_REFRESH: (state: State, { needsRefresh }): State => ({
+    ...state,
+    needsRefresh,
+  }),
 }
 
-export default {}
+const logger = Logger.getInstance()
+
+export const reducer = (state: State, action: Action): State => {
+  const { type, payload } = action
+  const actionFunction = actions[type]
+
+  if (actionFunction) {
+    const newState: State = actionFunction(state, payload as never)
+
+    if (state === newState) {
+      logger.debug(
+        'Checkout Context Action',
+        type,
+        'no change in state:',
+        state,
+      )
+    } else {
+      logger.debug('Checkout Context Action', type, 'old state:', state)
+      logger.debug('Checkout Context Action', type, 'new state:', newState)
+    }
+    return newState
+  }
+
+  logger.warn('Storage Checkout Context:', type, 'action is not defined!')
+  return state
+}

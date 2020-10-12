@@ -22,6 +22,7 @@ import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper
 import RoundedCard from 'components/atoms/RoundedCard'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
 import Staking from 'components/organisms/storage/staking/Staking'
+import { ContextProvider as StakingContextProvider } from 'context/Services/staking/Context'
 
 // TODO: discuss about wrapping the library and export it with this change
 Big.NE = -30
@@ -168,7 +169,9 @@ const StorageSellPage = () => {
 
   return (
     <CenteredPageTemplate>
-      <Staking />
+      <StakingContextProvider>
+        <Staking />
+      </StakingContextProvider>
       <Typography gutterBottom variant="h5" color="primary">List your storage service</Typography>
       <Typography gutterBottom color="secondary" variant="subtitle1">
         Fill out the fields below to list your storage service. All information provided is meant to be true and correct.
