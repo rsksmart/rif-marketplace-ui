@@ -1,8 +1,11 @@
+import { Web3Store } from '@rsksmart/rif-ui'
 import React, {
-  createContext, FC, useContext, useMemo, useReducer,
+  createContext, FC, useContext,
+  useEffect, useMemo, useReducer, useState,
 } from 'react'
 import { createReducer } from 'context/storeUtils/reducer'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
+import { LoadingPayload } from 'context/App/appActions'
 import { Props, State } from './interfaces'
 import actions from './actions'
 
@@ -25,17 +28,65 @@ export const Provider: FC = ({ children }) => {
     },
     dispatch: appDispatch,
   } = useContext<AppContextProps>(AppContext)
+  const {
+    state: { account },
+  } = useContext(Web3Store)
 
-  if (api && !api.service) {
-    api.connect(errorReporterFactory(appDispatch))
-  }
+  const [isInitialised, setIsInitialised] = useState(false)
 
-  // Finalise
   const [state, dispatch] = useReducer(
     createReducer(initialState, actions),
     initialState,
   )
 
+  // Get service connection
+  if (api && !api.service) {
+    api.connect(errorReporterFactory(appDispatch))
+  }
+
+  // Initialise
+  useEffect(() => {
+    if (api.service && !isInitialised) {
+      try {
+        // Set up WS events here
+
+        setIsInitialised(true)
+      } catch (e) {
+        setIsInitialised(false)
+      }
+    }
+  }, [api, isInitialised, appDispatch])
+
+  // Fetch data
+  useEffect(() => {
+    if (isInitialised && account) {
+      appDispatch({
+        type: 'SET_IS_LOADING',
+        payload: {
+          isLoading: true,
+          id: 'data',
+        } as LoadingPayload,
+      })
+      api.fetch({ account })
+        .then((items) => {
+          dispatch({
+            type: 'SET_LISTING',
+            payload: items,
+          })
+        })
+        .finally(() => {
+          appDispatch({
+            type: 'SET_IS_LOADING',
+            payload: {
+              isLoading: false,
+              id: 'data',
+            } as LoadingPayload,
+          })
+        })
+    }
+  }, [isInitialised, api, account])
+
+  // Finalise
   const value = useMemo(() => ({
     state,
     dispatch,
