@@ -1,21 +1,16 @@
 import React, { FC, useContext } from 'react'
 import {
-  Button,
-  Grid, makeStyles, TableContainer, Typography,
+  Grid, TableContainer, Typography,
 } from '@material-ui/core'
+import ItemWUnit from 'components/atoms/ItemWUnit'
 import RoundedCard from 'components/atoms/RoundedCard'
+import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
+import Marketplace from 'components/templates/marketplace/Marketplace'
+import MarketContext from 'context/Market/MarketContext'
 import AgreementsContext, { AgreementContextProps } from 'context/Services/storage/agreements'
 import { Agreement } from 'models/marketItems/StorageItem'
-import Marketplace from 'components/templates/marketplace/Marketplace'
-import { shortenString } from '@rsksmart/rif-ui'
-import { AddressItem } from 'components/molecules'
-
-const useStyles = makeStyles(() => ({
-  root: {
-
-  },
-}))
+import { UNIT_PREFIX_POW2 } from 'utils/utils'
 
 const MyStoragePurchases: FC = () => {
   const {
@@ -23,7 +18,14 @@ const MyStoragePurchases: FC = () => {
       agreements,
     },
   } = useContext<AgreementContextProps>(AgreementsContext)
-  const classes = useStyles()
+  const {
+    state: {
+      exchangeRates: {
+        currentFiat,
+        crypto,
+      },
+    },
+  } = useContext(MarketContext)
 
   const headers = {
     title: 'Title',
@@ -44,21 +46,48 @@ const MyStoragePurchases: FC = () => {
     provider,
     monthlyFee,
     renewalDate,
+    paymentToken,
     size,
     subscriptionPeriod,
     title,
     id,
-  }: Agreement) => ({
-    id,
-    title: <AddressItem value={title || id} />,
-    contentSize: size,
-    monthlyFee: monthlyFee.toPrecision(2),
-    provider: <AddressItem value={provider} />,
-    renewalDate: renewalDate.toLocaleDateString(),
-    subscriptionType: subscriptionPeriod,
-    renew: <Button>Renew</Button>,
-    view: <Button>View</Button>,
-  }))
+  }: Agreement) => {
+    const currency = crypto[paymentToken]
+
+    return {
+      id,
+      title: <AddressItem value={title || id} />,
+      contentSize: <ItemWUnit
+        type="mediumPrimary"
+        value={size.div(UNIT_PREFIX_POW2.KILO).toPrecision(2)}
+        unit="GB"
+      />,
+      monthlyFee: <CombinedPriceCell
+        price={monthlyFee.toPrecision(2)}
+        priceFiat={currency && monthlyFee.times(currency.rate).toPrecision(3)}
+        currency={currency && currency.displayName}
+        currencyFiat={currentFiat.displayName}
+        divider=" "
+      />,
+      provider: <AddressItem value={provider} />,
+      renewalDate: renewalDate.toLocaleDateString(),
+      subscriptionType: subscriptionPeriod,
+      renew:
+  <SelectRowButton
+    id={id}
+    handleSelect={(): void => undefined}
+  >
+    Renew
+  </SelectRowButton>,
+      view:
+  <SelectRowButton
+    id={id}
+    handleSelect={(): void => undefined}
+  >
+    View
+  </SelectRowButton>,
+    }
+  })
 
   return (
     <CenteredPageTemplate>
@@ -71,22 +100,6 @@ const MyStoragePurchases: FC = () => {
               isLoading={false}
               items={items}
             />
-            {/* <Table
-              aria-labelledby="table of active contracts"
-              size="small"
-              aria-label="enhanced table"
-            >
-              <TableHead>
-                <TableRow>
-                  {headers.map((header) => (
-                    <TableCell>{header.toUpperCase()}</TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {}
-              </TableBody>
-            </Table> */}
           </TableContainer>
         </Grid>
       </RoundedCard>

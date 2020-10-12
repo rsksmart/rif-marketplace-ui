@@ -28,10 +28,11 @@ export interface StorageOffer extends Item {
 export type Agreement = Item & {
   title: string
   provider: string
-  size: string
+  size: Big
   renewalDate: Date
   subscriptionPeriod: SubscriptionPeriod
   monthlyFee: Big
+  paymentToken: SupportedTokens
 }
 
 export type StorageItem = StorageOffer

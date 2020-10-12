@@ -84,7 +84,7 @@ export const Provider: FC = ({ children }) => {
           })
         })
     }
-  }, [isInitialised, api, account])
+  }, [isInitialised, api, account, appDispatch])
 
   // Finalise
   const value = useMemo(() => ({
