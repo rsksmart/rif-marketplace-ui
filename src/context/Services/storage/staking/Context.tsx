@@ -14,7 +14,7 @@ import React, {
   useReducer,
 } from 'react'
 import Logger from 'utils/Logger'
-import { zeroAddress } from '../storage/interfaces'
+import { zeroAddress } from '../interfaces'
 import { reducer } from './actions'
 import { Props, State } from './interfaces'
 
