@@ -1,9 +1,7 @@
 import React, {
   FC, useCallback, useContext, useState,
 } from 'react'
-import Fab from '@material-ui/core/Fab'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import AddIcon from '@material-ui/icons/Add'
 import {
   Box, Grid, Grow, Typography,
 } from '@material-ui/core'
@@ -17,6 +15,7 @@ import StorageContract from 'contracts/storage/contract'
 import StakingContext from 'context/Services/staking/Context'
 import { Props as StakingContextProps } from 'context/Services/staking/interfaces'
 import StakingBalance from 'components/molecules/storage/StakingBalance'
+import StakingFab from 'components/molecules/storage/StakingFab'
 import WithdrawModal from './WithdrawModal'
 import DepositModal from './DepositModal'
 
@@ -125,6 +124,7 @@ const Staking: FC<{}> = () => {
   return (
     <>
       <div className={classes.root}>
+        {/* TODO: extract molecule */}
         <Grow in={isExpanded}>
           <Grid
             container
@@ -175,14 +175,7 @@ const Staking: FC<{}> = () => {
             </Grid>
           </Grid>
         </Grow>
-        <Fab
-          className={classes.stakingIcon}
-          color="primary"
-          aria-label="staking"
-          onClick={handleExpandClick}
-        >
-          <AddIcon />
-        </Fab>
+        <StakingFab className={classes.stakingIcon} onClick={handleExpandClick} />
       </div>
       <DepositModal
         currentBalance={`${totalStaked} RIF`}
