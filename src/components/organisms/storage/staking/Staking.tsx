@@ -12,10 +12,10 @@ import Logger from 'utils/Logger'
 import Web3 from 'web3'
 import StakingContract from 'contracts/Staking'
 import StorageContract from 'contracts/storage/contract'
-import StakingContext from 'context/Services/staking/Context'
 import { Props as StakingContextProps } from 'context/Services/staking/interfaces'
 import StakingBalance from 'components/molecules/storage/StakingBalance'
 import StakingFab from 'components/molecules/storage/StakingFab'
+import withStakingContext, { StakingContext } from 'context/Services/staking/Context'
 import WithdrawModal from './WithdrawModal'
 import DepositModal from './DepositModal'
 
@@ -194,4 +194,4 @@ const Staking: FC<{}> = () => {
   )
 }
 
-export default Staking
+export default withStakingContext(Staking)

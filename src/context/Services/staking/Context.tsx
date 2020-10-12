@@ -104,4 +104,14 @@ export const ContextProvider: FC = ({ children }) => {
   return <StakingContext.Provider value={value}>{children}</StakingContext.Provider>
 }
 
-export default StakingContext
+function withStakingContext<T>(
+  Component: React.ComponentType<T>,
+): React.ComponentType<T> {
+  return (props: T): React.ReactElement => (
+    <ContextProvider>
+      <Component {...props} />
+    </ContextProvider>
+  )
+}
+
+export default withStakingContext
