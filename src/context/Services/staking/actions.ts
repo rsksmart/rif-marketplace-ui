@@ -7,6 +7,8 @@ export const actions: Actions = {
   }),
   SET_TOTAL_STAKE: (state: State, { totalStaked }): State => ({
     ...state,
-    totalStaked: totalStaked,
+    totalStaked,
   }),
 }
+
+export default {}

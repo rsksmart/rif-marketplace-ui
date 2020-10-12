@@ -4,14 +4,14 @@ import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
+import { zeroAddress } from 'context/Services/storage/interfaces'
 import waitForReceipt, { TransactionOptions } from './utils'
 import { stakingAddress } from './config'
 
 const logger = Logger.getInstance()
 
-export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const ZERO_BYTES = '0x0000000000000000000000000000000000000000000000000000000000000000'
-const isNativeToken = (token: string) => token === ZERO_ADDRESS
+const isNativeToken = (token: string) => token === zeroAddress
 
 class StakingContract {
   public static getInstance(web3: Web3): StakingContract {
@@ -37,7 +37,7 @@ class StakingContract {
 
   public stake = async (
     amount: string | number,
-    token: string = ZERO_ADDRESS, // native token
+    token: string = zeroAddress, // native token
     // data: string = ZERO_BYTES,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
@@ -54,25 +54,25 @@ class StakingContract {
 
     const gas = await this.web3.eth.estimateGas({ from, gasPrice })
 
-    return this.contract.methods
-      .stake(isNativeToken(token) ? 0 : amount, token, ZERO_BYTES)
-      .send(
-        {
-          from,
-          gas,
-          gasPrice,
-          value: isNativeToken(token) ? amount : 0,
-        },
-        (err, txHash) => {
-          if (err) return Promise.reject(err)
-          return waitForReceipt(txHash, this.web3)
-        },
-      )
+    const amountToStake = isNativeToken(token) ? amount : 0
+
+    return this.contract.methods.stake(amountToStake, token, ZERO_BYTES).send(
+      {
+        from,
+        gas,
+        gasPrice,
+        value: amountToStake,
+      },
+      (err, txHash) => {
+        if (err) return Promise.reject(err)
+        return waitForReceipt(txHash, this.web3)
+      },
+    )
   }
 
   public unstake = async (
     amount: string | number,
-    token: string = ZERO_ADDRESS, // native token
+    token: string = zeroAddress, // native token
     // data: string = ZERO_BYTES,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
@@ -99,7 +99,7 @@ class StakingContract {
 
   public totalStakedFor = (
     account: string,
-    token: string = ZERO_ADDRESS, // native token
+    token: string = zeroAddress, // native token
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
@@ -108,7 +108,7 @@ class StakingContract {
   }
 
   public totalStaked = (
-    token: string = ZERO_ADDRESS, // native token
+    token: string = zeroAddress, // native token
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions

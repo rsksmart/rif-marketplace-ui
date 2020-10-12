@@ -5,3 +5,5 @@ export const initialState: State = {
   isFetching: true,
   totalStaked: 0,
 }
+
+export default {}
