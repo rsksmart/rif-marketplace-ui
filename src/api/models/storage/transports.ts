@@ -22,12 +22,19 @@ export interface OfferTransport {
 
 export type AgreementTransport = {
     agreementReference: string
-    dataReference: string
-    consumer: string
-    size: string
-    isActive: boolean
-    billingPeriod: string
-    billingPrice: string
-    tokenAddress: string
     availableFunds: string
+    billingPeriod: number
+    billingPrice: string
+    consumer: string
+    dataReference: string
+    hasSufficientFunds: boolean
+    isActive: boolean
+    lastPayout: Date
+    numberOfPrepaidPeriods: number
+    offerId: string
+    periodsSinceLastPayout: number
+    size: string
+    toBePayedOut: string
+    tokenAddress: string
+    expiresIn: string
 }

@@ -29,7 +29,7 @@ export type Agreement = Item & {
   title: string
   provider: string
   size: string
-  renewalDate: string
+  renewalDate: Date
   subscriptionPeriod: SubscriptionPeriod
   monthlyFee: Big
 }

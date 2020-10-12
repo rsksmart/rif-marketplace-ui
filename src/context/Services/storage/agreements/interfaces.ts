@@ -12,11 +12,14 @@ export type State = ContextState & {
 
 // ACTIONS
 export type Action = (
-    | {}
+    | {
+      type: 'SET_LISTING'
+      payload: Agreement[]
+    }
 )
 
 export type ActionFunctions = {
-
+  SET_LISTING: (state: State, payload: Agreement[]) => State
 }
 
 // PROPS
