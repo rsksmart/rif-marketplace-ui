@@ -87,7 +87,6 @@ const Staking: FC<{}> = () => {
     //  users won't reach this point without a web3 instance
     if (!web3) return
     try {
-
       const stakeContract = StakingContract.getInstance(web3 as Web3)
       await stakeContract.stake(amount, TokenAddressees[currency], { from: account })
       // TODO: remove when events are attached

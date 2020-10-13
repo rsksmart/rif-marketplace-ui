@@ -11,7 +11,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }))
 
-
 const CenteredContent: FC<{}> = ({ children }) => {
   const classes = useStyles()
   return (

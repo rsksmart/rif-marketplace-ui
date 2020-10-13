@@ -2,7 +2,9 @@ import React, { FC, useState } from 'react'
 import Box from '@material-ui/core/Box'
 import Typography from '@material-ui/core/Typography'
 import { Button, ModalDialogue } from '@rsksmart/rif-ui'
-import { createStyles, Divider, makeStyles, Theme } from '@material-ui/core'
+import {
+  createStyles, Divider, makeStyles, Theme,
+} from '@material-ui/core'
 import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
 import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
@@ -19,11 +21,11 @@ export interface WithdrawModalProps {
 const useStyles = makeStyles((theme: Theme) => createStyles({
   bodyChild: {
     padding: theme.spacing(2, 0),
-  }
+  },
 }))
 
 const WithdrawModal: FC<WithdrawModalProps> = ({
-  open, onClose, onWithdraw, canWithdraw, currentBalance
+  open, onClose, onWithdraw, canWithdraw, currentBalance,
 }) => {
   const classes = useStyles()
   const currencyOptions: SupportedTokens[] = ['rbtc', 'rif']
@@ -58,14 +60,15 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
       footer={actions}
     >
       <CenteredContent>
-        <Typography className={classes.bodyChild} component='div' align="center" color="secondary">
+        <Typography className={classes.bodyChild} component="div" align="center" color="secondary">
           {'Withdrawing RIF staked in the Marketplace '}
-          <Box display='inline' fontWeight='fontWeightMedium'>
+          <Box display="inline" fontWeight="fontWeightMedium">
             downgrade your reputation
-            </Box>
+          </Box>
           and
-          <Box display='inline' fontWeight='fontWeightMedium'>
-            your offers will not be positioned at the top</Box>
+          <Box display="inline" fontWeight="fontWeightMedium">
+            your offers will not be positioned at the top
+          </Box>
           {' when selling storage.'}
         </Typography>
         <Divider />

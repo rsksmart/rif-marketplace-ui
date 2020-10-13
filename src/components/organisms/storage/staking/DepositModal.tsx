@@ -19,7 +19,7 @@ export interface DepositModalProps {
 const useStyles = makeStyles((theme: Theme) => createStyles({
   bodyChild: {
     padding: theme.spacing(2, 0),
-  }
+  },
 }))
 
 const DepositModal: FC<DepositModalProps> = ({
@@ -65,11 +65,11 @@ const DepositModal: FC<DepositModalProps> = ({
           {'The amount of RIF staked in RIF Marketplace helps to '}
           <Box fontWeight="fontWeightMedium" display="inline">
             enhance your reputation
-            </Box>
+          </Box>
           {' and '}
           <Box fontWeight="fontWeightMedium" display="inline">
             position your offers at the top
-            </Box>
+          </Box>
           {' when selling storage.'}
         </Typography>
         <Divider />
