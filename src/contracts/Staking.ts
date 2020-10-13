@@ -53,11 +53,16 @@ class StakingContract {
       throw error
     })
 
-    const gas = await this.web3.eth.estimateGas({ from, gasPrice })
-
     const amountToStake = isNativeToken(token) ? amount : 0
 
-    return this.contract.methods.stake(amountToStake, token, ZERO_BYTES).send(
+    const stakeTask = this.contract.methods.stake(
+      amountToStake,
+      token,
+      ZERO_BYTES,
+    )
+    const gas = await stakeTask.estimateGas({ from, gasPrice })
+
+    return stakeTask.send(
       {
         from,
         gas,
@@ -88,14 +93,13 @@ class StakingContract {
       throw error
     })
 
-    const gas = await this.web3.eth.estimateGas({ from, gasPrice })
+    const unstakeTask = this.contract.methods.unstake(amount, token, ZERO_BYTES)
+    const gas = await unstakeTask.estimateGas({ from, gasPrice })
 
-    return this.contract.methods
-      .unstake(amount, token, ZERO_BYTES)
-      .send({ from, gas, gasPrice }, (err, txHash) => {
-        if (err) return Promise.reject(err)
-        return waitForReceipt(txHash, this.web3)
-      })
+    return unstakeTask.send({ from, gas, gasPrice }, (err, txHash) => {
+      if (err) return Promise.reject(err)
+      return waitForReceipt(txHash, this.web3)
+    })
   }
 
   public totalStakedFor = (
