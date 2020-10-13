@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }))
 
 const stakeInProgressMsg = 'Staking your funds'
-// const unstakeInProgressMsg = 'Unstaking your funds'
+const unstakeInProgressMsg = 'Unstaking your funds'
 
 const Staking: FC<{}> = () => {
   const classes = useStyles()
@@ -134,7 +134,6 @@ const Staking: FC<{}> = () => {
         type: 'SET_NEEDS_REFRESH',
         payload: { needsRefresh: true },
       })
-      // TODO: show TXInProgressPanel
     } catch (error) {
       logger.error('error depositing funds', error)
       reportError(new UIError({
@@ -153,13 +152,20 @@ const Staking: FC<{}> = () => {
     if (!web3) return
     try {
       const stakeContract = StakingContract.getInstance(web3 as Web3)
-      await stakeContract.unstake(amount, TokenAddressees[currency], { from: account })
+      setTxInProgressMessage(unstakeInProgressMsg)
+      setProcessingTx(true)
+      setShowTxInProgress(true)
+      setTxCompleteMsg('Your funds have been unstaked!')
+      const receipt = await stakeContract.unstake(amount, TokenAddressees[currency], { from: account })
+
+      if (receipt) {
+        setTxOperationDone(true)
+      }
       // TODO: remove when events are attached
       dispatch({
         type: 'SET_NEEDS_REFRESH',
         payload: { needsRefresh: true },
       })
-      // TODO: show TXInProgressPanel
       setWithdrawOpened(false)
     } catch (error) {
       logger.error('error withdrawing funds', error)
@@ -168,6 +174,9 @@ const Staking: FC<{}> = () => {
         id: 'contract-storage-staking',
         text: 'Could not withdraw your funds.',
       }))
+    } finally {
+      setDepositOpened(false)
+      setProcessingTx(false)
     }
   }
 
