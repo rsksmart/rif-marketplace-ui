@@ -81,6 +81,8 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
           {'Your current balance is '}
           <Box display="inline" fontWeight="fontWeightMedium">
             {currentBalance}
+            {' RBTC'}
+            {/* TODO: remove hard coded currency and handle multicurrency */}
           </Box>
         </Typography>
         <Divider />

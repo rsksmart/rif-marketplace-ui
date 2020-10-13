@@ -124,7 +124,7 @@ const Staking: FC<{}> = () => {
       setShowTxInProgress(true)
       setTxCompleteMsg('Your funds have been staked!')
       setDepositOpened(false)
-      
+
       const stakeContract = StakingContract.getInstance(web3 as Web3)
       const receipt = await stakeContract.stake(amount, TokenAddressees[currency], { from: account })
 
@@ -257,7 +257,7 @@ const Staking: FC<{}> = () => {
               <StakingBalance
                 isLoading={isFetching}
                 totalStaked={totalStaked}
-                units="RIF"
+                units="RBTC"
               />
             </Grid>
             <Grid
@@ -292,7 +292,7 @@ const Staking: FC<{}> = () => {
         <StakingFab className={classes.stakingIcon} onClick={handleExpandClick} />
       </div>
       <DepositModal
-        currentBalance={`${totalStaked} RIF`}
+        currentBalance={`${totalStaked} RBTC`}
         onDeposit={handleDeposit}
         open={depositOpened}
         onClose={() => setDepositOpened(false)}
