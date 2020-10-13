@@ -26,13 +26,22 @@ const RifPaging: FC<RifPagingProps> = ({
   from, to, total, onNext, onPrev,
 }) => {
   const buttonStyleClasses = useButtonStyle()
+
   return (
     <Grid
       container
       direction="row"
       spacing={1}
     >
-      <Grid item xs>
+      <Grid
+        item
+        xs={3}
+        md={4}
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+        }}
+      >
         <Button
           variant="text"
           color="primary"
@@ -44,10 +53,18 @@ const RifPaging: FC<RifPagingProps> = ({
 
         </Button>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={6} md={4}>
         { `${from}-${to}/${total}`}
       </Grid>
-      <Grid item xs>
+      <Grid
+        item
+        xs={3}
+        md={4}
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-start',
+        }}
+      >
         <Button
           variant="text"
           color="primary"
