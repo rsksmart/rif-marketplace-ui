@@ -4,18 +4,18 @@ import { Button, ModalDialogue } from '@rsksmart/rif-ui'
 import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid'
 import Divider from '@material-ui/core/Divider'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
-import TextField from '@material-ui/core/TextField'
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles'
-import { SupportedTokens, tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
+import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
+import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 
 export interface DepositModalProps {
+  // TODO: current balnce will be an array of {balance: number. token: SupportedTokens}
   currentBalance: string
   open: boolean
   onClose: () => void
   onDeposit: (amount: number, currency: SupportedTokens) => void
 }
+
 const useStyles = makeStyles((theme: Theme) => createStyles({
   bodyContainer: {
     width: '100%',
@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }))
 
-// TODO: read current balances as an array to handle multicurrency
 const DepositModal: FC<DepositModalProps> = ({
   currentBalance, open, onClose, onDeposit,
 }) => {
@@ -100,47 +99,15 @@ const DepositModal: FC<DepositModalProps> = ({
             </Box>
           </Typography>
           <Divider />
-          <Grid
+          <AmountWithCurrencySelect
             className={classes.bodyChild}
-            container
-            justify="center"
-          >
-            <Grid item>
-              <TextField
-                required
-                fullWidth
-                type="number"
-                label="Amount to stake"
-                id="amount-to-stake"
-                value={amountToStake || ''}
-                error={!amountToStake || amountToStake <= 0}
-                inputProps={{
-                  min: '0',
-                  style: { textAlign: 'center' },
-                }}
-                onChange={handleAmountChange}
-              />
-            </Grid>
-            <Grid
-              item
-              className={classes.currencySelectContainer}
-            >
-              <Select
-                value={selectedCurrency}
-                onChange={handleCurrencyChange}
-                variant="standard"
-                color="secondary"
-              >
-                {currencyOptions.map(
-                  (option: SupportedTokens) => (
-                    <MenuItem key={option as string} value={option}>
-                      {tokenDisplayNames[option]}
-                    </MenuItem>
-                  ),
-                )}
-              </Select>
-            </Grid>
-          </Grid>
+            amount={amountToStake}
+            onAmountChange={handleAmountChange}
+            onCurrencyChange={handleCurrencyChange}
+            currencyOptions={currencyOptions}
+            selectedCurrency={selectedCurrency}
+            amountLabel="Amount to stake"
+          />
         </div>
       </Grid>
     </ModalDialogue>

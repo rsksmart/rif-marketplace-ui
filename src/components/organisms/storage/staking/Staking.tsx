@@ -142,7 +142,6 @@ const Staking: FC<{}> = () => {
             Staking
           </Box>
         </Typography>
-        {/* TODO: extract molecule */}
         <Grow in={isExpanded}>
           <Grid
             container
