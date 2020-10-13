@@ -21,6 +21,10 @@ export const rnsActions: RnsActions = {
       ...state.filters,
       ...payload,
     },
+    pagination: {
+      ...state.pagination,
+      page: 0,
+    },
   }),
   UPDATE_LIMITS: (state: RnsState, payload: LimitsPayload) => ({
     ...state,
@@ -83,7 +87,7 @@ export const rnsActions: RnsActions = {
   UPDATE_PAGE: (state: RnsState, { limit, skip, total }: PagePayload) => {
     const { pagination: { current } } = state
 
-    if (!current) {
+    if (!current || total !== current.total) {
       return {
         ...state,
         pagination: {
