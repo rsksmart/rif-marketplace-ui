@@ -2,11 +2,11 @@ import React, { FC, useState } from 'react'
 import Typography from '@material-ui/core/Typography'
 import { Button, ModalDialogue } from '@rsksmart/rif-ui'
 import Box from '@material-ui/core/Box'
-import Grid from '@material-ui/core/Grid'
 import Divider from '@material-ui/core/Divider'
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles'
 import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
 import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
+import CenteredContent from 'components/molecules/CenteredContent'
 
 export interface DepositModalProps {
   // TODO: current balnce will be an array of {balance: number. token: SupportedTokens}
@@ -17,18 +17,9 @@ export interface DepositModalProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
-  bodyContainer: {
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      maxWidth: '80%',
-    },
-  },
   bodyChild: {
     padding: theme.spacing(2, 0),
-  },
-  currencySelectContainer: {
-    display: 'flex',
-  },
+  }
 }))
 
 const DepositModal: FC<DepositModalProps> = ({
@@ -64,52 +55,46 @@ const DepositModal: FC<DepositModalProps> = ({
       title="Stacking"
       footer={actions}
     >
-      <Grid
-        container
-        direction="column"
-        alignContent="center"
-      >
-        <div className={classes.bodyContainer}>
-          <Typography
-            className={classes.bodyChild}
-            component="div"
-            align="center"
-            color="secondary"
-          >
-            {'The amount of RIF staked in RIF Marketplace helps to '}
-            <Box fontWeight="fontWeightMedium" display="inline">
-              enhance your reputation
+      <CenteredContent>
+        <Typography
+          className={classes.bodyChild}
+          component="div"
+          align="center"
+          color="secondary"
+        >
+          {'The amount of RIF staked in RIF Marketplace helps to '}
+          <Box fontWeight="fontWeightMedium" display="inline">
+            enhance your reputation
             </Box>
-            {' and '}
-            <Box fontWeight="fontWeightMedium" display="inline">
-              position your offers at the top
+          {' and '}
+          <Box fontWeight="fontWeightMedium" display="inline">
+            position your offers at the top
             </Box>
-            {' when selling storage.'}
-          </Typography>
-          <Divider />
-          <Typography
-            className={classes.bodyChild}
-            component="div"
-            color="secondary"
-            align="center"
-          >
-            {'Your current balance is '}
-            <Box display="inline" fontWeight="fontWeightMedium">
-              {currentBalance}
-            </Box>
-          </Typography>
-          <Divider />
-          <AmountWithCurrencySelect
-            className={classes.bodyChild}
-            amount={amountToStake}
-            onAmountChange={handleAmountChange}
-            onCurrencyChange={handleCurrencyChange}
-            currencyOptions={currencyOptions}
-            selectedCurrency={selectedCurrency}
-            amountLabel="Amount to stake"
-          />
-        </div>
-      </Grid>
+          {' when selling storage.'}
+        </Typography>
+        <Divider />
+        <Typography
+          className={classes.bodyChild}
+          component="div"
+          color="secondary"
+          align="center"
+        >
+          {'Your current balance is '}
+          <Box display="inline" fontWeight="fontWeightMedium">
+            {currentBalance}
+          </Box>
+        </Typography>
+        <Divider />
+        <AmountWithCurrencySelect
+          className={classes.bodyChild}
+          amount={amountToStake}
+          onAmountChange={handleAmountChange}
+          onCurrencyChange={handleCurrencyChange}
+          currencyOptions={currencyOptions}
+          selectedCurrency={selectedCurrency}
+          amountLabel="Amount to stake"
+        />
+      </CenteredContent>
     </ModalDialogue>
   )
 }

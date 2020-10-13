@@ -83,25 +83,36 @@ const Staking: FC<{}> = () => {
   const [depositOpened, setDepositOpened] = useState(false)
   const [withdrawOpened, setWithdrawOpened] = useState(false)
 
-  const onDepositHandler = async (amount: number, currency: SupportedTokens) => {
+  const handleDeposit = async (amount: number, currency: SupportedTokens) => {
     //  users won't reach this point without a web3 instance
     if (!web3) return
-    const stakeContract = StakingContract.getInstance(web3 as Web3)
-    await stakeContract.stake(amount, TokenAddressees[currency], { from: account })
-    // TODO: remove when events are attached
-    dispatch({
-      type: 'SET_NEEDS_REFRESH',
-      payload: { needsRefresh: true },
-    })
-    // TODO: show TXInProgressPanel
-    setDepositOpened(false)
+    try {
+
+      const stakeContract = StakingContract.getInstance(web3 as Web3)
+      await stakeContract.stake(amount, TokenAddressees[currency], { from: account })
+      // TODO: remove when events are attached
+      dispatch({
+        type: 'SET_NEEDS_REFRESH',
+        payload: { needsRefresh: true },
+      })
+      // TODO: show TXInProgressPanel
+      setDepositOpened(false)
+    } catch (error) {
+      logger.error('error depositing funds', error)
+      reportError(new UIError({
+        error,
+        id: 'contract-storage-staking',
+        text: 'Could not stake funds.',
+      }))
+    }
   }
 
-  const handleWithdraw = async (amount: number, token: string) => {
+  const handleWithdraw = async (amount: number, currency: SupportedTokens) => {
+    //  users won't reach this point without a web3 instance
     if (!web3) return
     try {
       const stakeContract = StakingContract.getInstance(web3 as Web3)
-      logger.debug(await stakeContract.unstake(amount, token, { from: account }))
+      await stakeContract.unstake(amount, TokenAddressees[currency], { from: account })
       // TODO: remove when events are attached
       dispatch({
         type: 'SET_NEEDS_REFRESH',
@@ -110,10 +121,11 @@ const Staking: FC<{}> = () => {
       // TODO: show TXInProgressPanel
       setWithdrawOpened(false)
     } catch (error) {
+      logger.error('error withdrawing funds', error)
       reportError(new UIError({
         error,
         id: 'contract-storage-staking',
-        text: 'Could not set the offer in the contract.',
+        text: 'Could not withdraw your funds.',
       }))
     }
   }
@@ -196,7 +208,7 @@ const Staking: FC<{}> = () => {
       </div>
       <DepositModal
         currentBalance={`${totalStaked} RIF`}
-        onDeposit={onDepositHandler}
+        onDeposit={handleDeposit}
         open={depositOpened}
         onClose={() => setDepositOpened(false)}
       />
