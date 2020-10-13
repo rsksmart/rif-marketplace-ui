@@ -18,8 +18,14 @@ import StakingFab from 'components/molecules/storage/StakingFab'
 import withStakingContext, { StakingContext } from 'context/Services/storage/staking/Context'
 import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
 import { TokenAddressees } from 'context/Market/storage/interfaces'
-import WithdrawModal from './WithdrawModal'
+import { JobDoneBox } from 'components/molecules'
+import TxCompletePageTemplate from 'components/templates/TxCompletePageTemplate'
+import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
+import GridRow from 'components/atoms/GridRow'
+import GridItem from 'components/atoms/GridItem'
+import RoundBtn from 'components/atoms/RoundBtn'
 import DepositModal from './DepositModal'
+import WithdrawModal from './WithdrawModal'
 
 const logger = Logger.getInstance()
 
@@ -51,7 +57,22 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     top: '-20px',
     right: '20px',
   },
+  progressContainer: {
+    background: 'rgba(275, 275, 275, 0.8)',
+    display: 'flex',
+    height: '100vh',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    position: 'fixed',
+    width: '100vw',
+    top: 0,
+    left: 0,
+    zIndex: 9999,
+  },
 }))
+
+const stakeInProgressMsg = 'Staking your funds'
+// const unstakeInProgressMsg = 'Unstaking your funds'
 
 const Staking: FC<{}> = () => {
   const classes = useStyles()
@@ -82,20 +103,38 @@ const Staking: FC<{}> = () => {
   const [canWithdraw, setCanWithdraw] = useState(false)
   const [depositOpened, setDepositOpened] = useState(false)
   const [withdrawOpened, setWithdrawOpened] = useState(false)
+  const [txInProgressMessage, setTxInProgressMessage] = useState('')
+  const [txCompleteMsg, setTxCompleteMsg] = useState('')
+  const [processingTx, setProcessingTx] = useState(false)
+  const [txOperationDone, setTxOperationDone] = useState(false)
+  const [showTxInProgress, setShowTxInProgress] = useState(false)
+
+  const handleTxCompletedClose = () => {
+    setShowTxInProgress(false)
+    setProcessingTx(false)
+    setTxOperationDone(false)
+  }
 
   const handleDeposit = async (amount: number, currency: SupportedTokens) => {
     //  users won't reach this point without a web3 instance
     if (!web3) return
     try {
       const stakeContract = StakingContract.getInstance(web3 as Web3)
-      await stakeContract.stake(amount, TokenAddressees[currency], { from: account })
+      setTxInProgressMessage(stakeInProgressMsg)
+      setProcessingTx(true)
+      setShowTxInProgress(true)
+      setTxCompleteMsg('Your funds have been staked!')
+      const receipt = await stakeContract.stake(amount, TokenAddressees[currency], { from: account })
+
+      if (receipt) {
+        setTxOperationDone(true)
+      }
       // TODO: remove when events are attached
       dispatch({
         type: 'SET_NEEDS_REFRESH',
         payload: { needsRefresh: true },
       })
       // TODO: show TXInProgressPanel
-      setDepositOpened(false)
     } catch (error) {
       logger.error('error depositing funds', error)
       reportError(new UIError({
@@ -103,6 +142,9 @@ const Staking: FC<{}> = () => {
         id: 'contract-storage-staking',
         text: 'Could not stake funds.',
       }))
+    } finally {
+      setDepositOpened(false)
+      setProcessingTx(false)
     }
   }
 
@@ -140,6 +182,41 @@ const Staking: FC<{}> = () => {
   // TODO: consider using withAccount HOC to wrap this action
   // so it's only expanded if an account is provided
   const handleExpandClick = () => setIsExpanded((exp) => !exp)
+
+  const renderProgressOverlay = (): JSX.Element | null => {
+    if (showTxInProgress && (processingTx || txOperationDone)) {
+      return (
+        <div className={classes.progressContainer}>
+          {
+            processingTx && (
+              <TransactionInProgressPanel
+                text={txInProgressMessage}
+                progMsg="The waiting period is required to securely complete your action.
+              Please do not close this tab until the process has finished."
+              />
+            )
+          }
+          {
+            txOperationDone && (
+              <TxCompletePageTemplate>
+                <JobDoneBox text={txCompleteMsg} />
+                <GridRow justify="center">
+                  <GridItem>
+                    <RoundBtn
+                      onClick={handleTxCompletedClose}
+                    >
+                      Close
+                    </RoundBtn>
+                  </GridItem>
+                </GridRow>
+              </TxCompletePageTemplate>
+            )
+          }
+        </div>
+      )
+    }
+    return null
+  }
 
   return (
     <>
@@ -218,6 +295,7 @@ const Staking: FC<{}> = () => {
         onWithdraw={handleWithdraw}
         currentBalance={totalStaked}
       />
+      {renderProgressOverlay()}
     </>
   )
 }
