@@ -46,6 +46,11 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     minWidth: '80px',
     marginLeft: '-40px',
   },
+  fabTitle: {
+    position: 'absolute',
+    top: '-20px',
+    right: '20px',
+  },
 }))
 
 const Staking: FC<{}> = () => {
@@ -128,6 +133,15 @@ const Staking: FC<{}> = () => {
   return (
     <>
       <div className={classes.root}>
+        <Typography
+          className={classes.fabTitle}
+          component="div"
+          color="primary"
+        >
+          <Box fontWeight="fontWeightRegular">
+            Staking
+          </Box>
+        </Typography>
         {/* TODO: extract molecule */}
         <Grow in={isExpanded}>
           <Grid
