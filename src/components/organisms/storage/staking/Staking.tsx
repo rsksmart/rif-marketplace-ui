@@ -119,11 +119,13 @@ const Staking: FC<{}> = () => {
     //  users won't reach this point without a web3 instance
     if (!web3) return
     try {
-      const stakeContract = StakingContract.getInstance(web3 as Web3)
       setTxInProgressMessage(stakeInProgressMsg)
       setProcessingTx(true)
       setShowTxInProgress(true)
       setTxCompleteMsg('Your funds have been staked!')
+      setDepositOpened(false)
+      
+      const stakeContract = StakingContract.getInstance(web3 as Web3)
       const receipt = await stakeContract.stake(amount, TokenAddressees[currency], { from: account })
 
       if (receipt) {
@@ -142,7 +144,6 @@ const Staking: FC<{}> = () => {
         text: 'Could not stake funds.',
       }))
     } finally {
-      setDepositOpened(false)
       setProcessingTx(false)
     }
   }
@@ -151,11 +152,12 @@ const Staking: FC<{}> = () => {
     //  users won't reach this point without a web3 instance
     if (!web3) return
     try {
-      const stakeContract = StakingContract.getInstance(web3 as Web3)
       setTxInProgressMessage(unstakeInProgressMsg)
       setProcessingTx(true)
       setShowTxInProgress(true)
       setTxCompleteMsg('Your funds have been unstaked!')
+      setWithdrawOpened(false)
+      const stakeContract = StakingContract.getInstance(web3 as Web3)
       const receipt = await stakeContract.unstake(amount, TokenAddressees[currency], { from: account })
 
       if (receipt) {
@@ -166,7 +168,6 @@ const Staking: FC<{}> = () => {
         type: 'SET_NEEDS_REFRESH',
         payload: { needsRefresh: true },
       })
-      setWithdrawOpened(false)
     } catch (error) {
       logger.error('error withdrawing funds', error)
       reportError(new UIError({
@@ -175,7 +176,6 @@ const Staking: FC<{}> = () => {
         text: 'Could not withdraw your funds.',
       }))
     } finally {
-      setDepositOpened(false)
       setProcessingTx(false)
     }
   }
