@@ -16,6 +16,8 @@ import { Props as StakingContextProps } from 'context/Services/storage/staking/i
 import StakingBalance from 'components/molecules/storage/StakingBalance'
 import StakingFab from 'components/molecules/storage/StakingFab'
 import withStakingContext, { StakingContext } from 'context/Services/storage/staking/Context'
+import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
+import { TokenAddressees } from 'context/Market/storage/interfaces'
 import WithdrawModal from './WithdrawModal'
 import DepositModal from './DepositModal'
 
@@ -76,11 +78,12 @@ const Staking: FC<{}> = () => {
   const [depositOpened, setDepositOpened] = useState(false)
   const [withdrawOpened, setWithdrawOpened] = useState(false)
 
-  const onDepositHandler = async (amount: number, token: string) => {
+  const onDepositHandler = async (amount: number, currency: SupportedTokens) => {
     //  users won't reach this point without a web3 instance
     if (!web3) return
     const stakeContract = StakingContract.getInstance(web3 as Web3)
-    await stakeContract.stake(amount, token, { from: account })
+    await stakeContract.stake(amount, TokenAddressees[currency], { from: account })
+    // TODO: remove when events are attached
     dispatch({
       type: 'SET_NEEDS_REFRESH',
       payload: { needsRefresh: true },
@@ -94,6 +97,7 @@ const Staking: FC<{}> = () => {
     try {
       const stakeContract = StakingContract.getInstance(web3 as Web3)
       logger.debug(await stakeContract.unstake(amount, token, { from: account }))
+      // TODO: remove when events are attached
       dispatch({
         type: 'SET_NEEDS_REFRESH',
         payload: { needsRefresh: true },
