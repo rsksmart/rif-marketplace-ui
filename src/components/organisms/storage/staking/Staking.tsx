@@ -78,7 +78,7 @@ const Staking: FC<{}> = () => {
     dispatch,
   } = useContext<StakingContextProps>(StakingContext)
 
-  const [isExpanded, setIsExpanded] = useState(true)
+  const [isExpanded, setIsExpanded] = useState(false)
   const [canWithdraw, setCanWithdraw] = useState(false)
   const [depositOpened, setDepositOpened] = useState(false)
   const [withdrawOpened, setWithdrawOpened] = useState(false)
