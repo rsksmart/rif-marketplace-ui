@@ -28,8 +28,7 @@ export const initialState: State = {
 
 export const StakingContext = createContext<Props>({
   state: initialState,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  dispatch: () => { },
+  dispatch: () => undefined,
 })
 
 export const ContextProvider: FC = ({ children }) => {
@@ -74,7 +73,7 @@ export const ContextProvider: FC = ({ children }) => {
         })
         dispatch({
           type: 'SET_TOTAL_STAKE',
-          payload: { totalStaked: stakeRBTC.total || 0 },
+          payload: { totalStaked: stakeRBTC?.total || 0 },
         })
         dispatch({
           type: 'SET_IS_FETCHING',
