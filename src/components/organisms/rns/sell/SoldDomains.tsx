@@ -2,6 +2,7 @@ import { AddressItem, CombinedPriceCell } from 'components/molecules'
 import DomainNameItem from 'components/molecules/DomainNameItem'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
+import { HeadCell } from 'components/templates/marketplace/Marketplace'
 import { RnsSoldDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext } from 'react'
 import MarketStore from 'store/Market/MarketStore'
@@ -27,13 +28,28 @@ const SoldDomains: FC<{}> = () => {
   const { items, outdatedTokens } = listing
   const { name } = filters
 
-  const headers = {
-    domainName: 'Name',
-    buyer: 'Buyer',
-    currency: 'Currency',
-    sellingPrice: 'Selling price',
-    soldDate: 'Selling date',
-  }
+  const headers: HeadCell<RnsSoldDomain>[] = [
+    {
+      id: 'domainName',
+      label: 'Name',
+    },
+    {
+      id: 'buyer',
+      label: 'Buyer',
+    },
+    {
+      id: 'paymentToken',
+      label: 'Currency',
+    },
+    {
+      id: 'price',
+      label: 'Selling price',
+    },
+    {
+      id: 'soldDate',
+      label: 'Selling date',
+    },
+  ]
 
   const collection = items
     .map((domainItem: RnsSoldDomain) => {
@@ -74,10 +90,10 @@ const SoldDomains: FC<{}> = () => {
   return (
     <MarketPageTemplate
       filterItems={<DomainFilters />}
-      itemCollection={collection as any}
+      items={collection as any}
       headers={headers}
       requiresAccount
-      dispatch={dispatch}
+      dispatch={dispatch as React.Dispatch<unknown>} // FIXME: this sould be fixed when fixing the context typing
       outdatedCt={outdatedTokens.length}
     />
   )

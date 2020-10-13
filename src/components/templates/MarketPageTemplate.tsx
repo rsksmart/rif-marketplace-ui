@@ -3,23 +3,19 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Web3Store } from '@rsksmart/rif-ui'
 import InfoBar from 'components/molecules/InfoBar'
 import MarketFilter from 'components/templates/marketplace/MarketFilter'
-import { MarketItem } from 'models/Market'
 import React, {
-  Dispatch, FC, useContext, useEffect,
+  Dispatch, useContext, useEffect,
 } from 'react'
-import { RnsAction } from 'store/Market/rns/rnsActions'
 import AppStore from 'store/App/AppStore'
 import { MessagePayload } from 'store/App/appActions'
-import Marketplace, { TableHeaders } from './marketplace/Marketplace'
+import Marketplace, { MarketplaceProps } from './marketplace/Marketplace'
 import { AppStoreProps } from '../../store/App/AppStore'
 
-export interface MarketPageTemplateProps {
+export interface MarketPageTemplateProps<Item> extends MarketplaceProps<Item> {
   className?: string
   filterItems: React.ReactNode
-  headers: TableHeaders
-  itemCollection: MarketItem[]
   requiresAccount?: boolean
-  dispatch: Dispatch<RnsAction>
+  dispatch: Dispatch<unknown>
   outdatedCt: number
 }
 
@@ -40,15 +36,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
+const MarketPageTemplate = <Item extends object>({
   className = '',
   filterItems,
-  itemCollection,
+  items,
   headers,
   requiresAccount,
   dispatch,
   outdatedCt,
-}) => {
+}: MarketPageTemplateProps<Item>): JSX.Element => {
   const classes = useStyles()
   const {
     state: { account },
@@ -102,7 +98,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
             },
           }}
         />
-        <Marketplace items={itemCollection} headers={headers} isLoading={isLoadingItems} />
+        <Marketplace items={items} headers={headers} isLoading={isLoadingItems} />
       </Grid>
     </Grid>
   )

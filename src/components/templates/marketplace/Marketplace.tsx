@@ -1,20 +1,34 @@
-import React, { FC } from 'react'
+import React from 'react'
 import {
   makeStyles, Table, TableHead, TableRow, TableCell, TableBody, Theme,
 } from '@material-ui/core'
-import { MarketItem } from 'models/Market'
+// import { MarketItem } from 'models/Market'
 import {
   colors, fonts,
 } from '@rsksmart/rif-ui'
 import WithSpinner from 'components/hoc/WithSpinner'
 
-export interface TableHeaders {
-  [itemName: string]: string | JSX.Element
+export type HeadCell<Item> = (
+  | {
+    id: keyof Item
+    label: string
+  }
+  | {
+    id: 'action1' | 'action2' | 'action3'
+    label: '' | JSX.Element
+  }
+)
+
+export type TableItem<Item> = { id: string }
+& Item
+& {
+  [key: string]: JSX.Element
 }
-export interface MarketplaceProps {
+
+export interface MarketplaceProps<Item> {
   className?: string
-  items: MarketItem[]
-  headers: TableHeaders
+  items: TableItem<Item>[]
+  headers: HeadCell<Item>[]
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -50,11 +64,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const Marketplace: FC<MarketplaceProps> = ({
+const Marketplace = <Item extends object>({
   className = '',
   items,
   headers,
-}) => {
+}: MarketplaceProps<Item>): JSX.Element => {
   const classes = useStyles()
   return (
     <div className={`${classes.root} ${className}`}>
@@ -62,8 +76,13 @@ const Marketplace: FC<MarketplaceProps> = ({
         <Table>
           <TableHead>
             <TableRow className={classes.tr}>
-              {Object.keys(headers).map((itemName: string) => (
-                <TableCell className={classes.th} key={`th-${itemName}`}>{headers[itemName]}</TableCell>
+              {headers.map((cell: HeadCell<Item>) => (
+                <TableCell
+                  className={classes.th}
+                  key={`th-${cell.id}`}
+                >
+                  {cell.label}
+                </TableCell>
               ))}
             </TableRow>
           </TableHead>
@@ -71,9 +90,12 @@ const Marketplace: FC<MarketplaceProps> = ({
             {items.map((item, index) => (
               <TableRow className={`${classes.tr} ${index % 2 ? classes.coloredRow : ''}`} key={item.id}>
                 {
-                  Object.keys(headers).map((itemName: string) => (
-                    <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={itemName}>
-                      {item[itemName]}
+                  headers.map(({ id }: HeadCell<Item>) => (
+                    <TableCell
+                      className={`${classes.tc} ${classes[`tc-${id}`]}`}
+                      key={`tc-${id}`}
+                    >
+                      {item[id]}
                     </TableCell>
                   ))
                 }

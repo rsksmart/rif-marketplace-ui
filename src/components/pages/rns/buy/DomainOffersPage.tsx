@@ -4,6 +4,7 @@ import DomainNameItem from 'components/molecules/DomainNameItem'
 import RifPaging from 'components/molecules/RifPaging'
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
+import { HeadCell } from 'components/templates/marketplace/Marketplace'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -65,7 +66,7 @@ const DomainOffersPage: FC = () => {
 
   let collection = []
 
-  let action1Header: JSX.Element | string = ''
+  let action1Header: JSX.Element | '' = ''
 
   if (currentPage) {
     const { skip, limit, total } = currentPage
@@ -82,13 +83,28 @@ const DomainOffersPage: FC = () => {
     )
   }
 
-  const headers = {
-    domainName: 'Name',
-    ownerAddress: 'Owner',
-    expirationDate: 'Renewal Date',
-    combinedPrice: 'Price',
-    action1: action1Header,
-  }
+  const headers: HeadCell<RnsDomainOffer>[] = [
+    {
+      id: 'domainName',
+      label: 'Name',
+    },
+    {
+      id: 'ownerAddress',
+      label: 'Owner',
+    },
+    {
+      id: 'expirationDate',
+      label: 'Renewal Date',
+    },
+    {
+      id: 'price',
+      label: 'Price',
+    },
+    {
+      id: 'action1',
+      label: action1Header,
+    },
+  ]
 
   collection = items
     .map((item: RnsDomainOffer) => {
@@ -114,7 +130,7 @@ const DomainOffersPage: FC = () => {
         domainName: displayDomainName,
         ownerAddress: <AddressItem value={ownerAddress} />,
         expirationDate: expirationDate.toLocaleDateString(),
-        combinedPrice: <CombinedPriceCell
+        price: <CombinedPriceCell
           price={price.toString()}
           priceFiat={price.times(rate).toString()}
           currency={displayName}
@@ -141,10 +157,10 @@ const DomainOffersPage: FC = () => {
     }) as any // TODO: remove as any
 
   return (
-    <MarketPageTemplate
+    <MarketPageTemplate<RnsDomainOffer>
       className="Domain Offers"
       filterItems={<DomainOfferFilters />}
-      itemCollection={collection}
+      items={collection}
       headers={headers}
       dispatch={dispatch}
       outdatedCt={outdatedTokens.length}

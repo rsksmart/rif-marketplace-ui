@@ -2,6 +2,7 @@ import { AddressItem, SelectRowButton } from 'components/molecules'
 import DomainNameItem from 'components/molecules/DomainNameItem'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
+import { HeadCell } from 'components/templates/marketplace/Marketplace'
 import { RnsDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -41,11 +42,20 @@ const MyDomains: FC<{}> = () => {
 
   const { items } = listing
 
-  const headers = {
-    name: 'Name',
-    expirationDate: 'Renewal Date',
-    action1: '',
-  }
+  const headers: HeadCell<RnsDomain>[] = [
+    {
+      id: 'name',
+      label: 'Name',
+    },
+    {
+      id: 'expirationDate',
+      label: 'Renewal Date',
+    },
+    {
+      id: 'action1',
+      label: '',
+    },
+  ]
 
   const collection = items
     .map((domainItem: RnsDomain) => {
@@ -86,7 +96,7 @@ const MyDomains: FC<{}> = () => {
   return (
     <MarketPageTemplate
       filterItems={<DomainFilters />}
-      itemCollection={collection}
+      items={collection}
       headers={headers}
       requiresAccount
       dispatch={dispatch}
