@@ -30,9 +30,9 @@ const RifPaging: FC<RifPagingProps> = ({
     <Grid
       container
       direction="row"
-      wrap="nowrap"
+      spacing={1}
     >
-      <Grid item>
+      <Grid item xs>
         <Button
           variant="text"
           color="primary"
@@ -44,10 +44,10 @@ const RifPaging: FC<RifPagingProps> = ({
 
         </Button>
       </Grid>
-      <Grid item>
+      <Grid item xs={6}>
         { `${from}-${to}/${total}`}
       </Grid>
-      <Grid item>
+      <Grid item xs>
         <Button
           variant="text"
           color="primary"

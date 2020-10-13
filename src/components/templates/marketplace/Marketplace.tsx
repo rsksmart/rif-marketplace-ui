@@ -41,6 +41,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'left',
     textTransform: 'uppercase',
   },
+  tr: {
+    textAlignLast: 'center',
+  },
   'tc-domain': {
     align: 'left',
     color: colors.primary,
@@ -58,7 +61,7 @@ const Marketplace: FC<MarketplaceProps> = ({
       <div className={classes.content}>
         <Table>
           <TableHead>
-            <TableRow>
+            <TableRow className={classes.tr}>
               {Object.keys(headers).map((itemName: string) => (
                 <TableCell className={classes.th} key={`th-${itemName}`}>{headers[itemName]}</TableCell>
               ))}
@@ -66,7 +69,7 @@ const Marketplace: FC<MarketplaceProps> = ({
           </TableHead>
           <TableBody>
             {items.map((item, index) => (
-              <TableRow className={index % 2 ? classes.coloredRow : ''} key={item.id}>
+              <TableRow className={`${classes.tr} ${index % 2 ? classes.coloredRow : ''}`} key={item.id}>
                 {
                   Object.keys(headers).map((itemName: string) => (
                     <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={itemName}>
