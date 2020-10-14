@@ -11,7 +11,8 @@ import { stakingAddress } from './config'
 const logger = Logger.getInstance()
 export type StorageStakingContractErrorId = 'contract-storage-staking'
 
-const ZERO_BYTES = '0x0000000000000000000000000000000000000000000000000000000000000000'
+const ZERO_BYTES =
+  '0x0000000000000000000000000000000000000000000000000000000000000000'
 const isNativeToken = (token: string) => token === zeroAddress
 
 class StakingContract {
@@ -31,7 +32,7 @@ class StakingContract {
   private constructor(web3: Web3) {
     this.contract = new web3.eth.Contract(
       Staking.abi as AbiItem[],
-      stakingAddress,
+      stakingAddress
     )
     this.web3 = web3
   }
@@ -40,7 +41,7 @@ class StakingContract {
     amount: string | number,
     token: string = zeroAddress, // native token
     // data: string = ZERO_BYTES,
-    txOptions: TransactionOptions,
+    txOptions: TransactionOptions
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
 
@@ -58,9 +59,10 @@ class StakingContract {
     const stakeTask = this.contract.methods.stake(
       amountToStake,
       token,
-      ZERO_BYTES,
+      ZERO_BYTES
     )
-    const gas = await stakeTask.estimateGas({ from, gasPrice })
+    const estimatedGas = await stakeTask.estimateGas({ from, gasPrice })
+    const gas = Math.floor(estimatedGas * 1.3)
 
     return stakeTask.send(
       {
@@ -72,7 +74,7 @@ class StakingContract {
       (err, txHash) => {
         if (err) return Promise.reject(err)
         return waitForReceipt(txHash, this.web3)
-      },
+      }
     )
   }
 
@@ -80,7 +82,7 @@ class StakingContract {
     amount: string | number,
     token: string = zeroAddress, // native token
     // data: string = ZERO_BYTES,
-    txOptions: TransactionOptions,
+    txOptions: TransactionOptions
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
 
@@ -94,7 +96,8 @@ class StakingContract {
     })
 
     const unstakeTask = this.contract.methods.unstake(amount, token, ZERO_BYTES)
-    const gas = await unstakeTask.estimateGas({ from, gasPrice })
+    const estimatedGas = await unstakeTask.estimateGas({ from, gasPrice })
+    const gas = Math.floor(estimatedGas * 1.3)
 
     return unstakeTask.send({ from, gas, gasPrice }, (err, txHash) => {
       if (err) return Promise.reject(err)
@@ -105,7 +108,7 @@ class StakingContract {
   public totalStakedFor = (
     account: string,
     token: string = zeroAddress, // native token
-    txOptions: TransactionOptions,
+    txOptions: TransactionOptions
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
 
@@ -114,7 +117,7 @@ class StakingContract {
 
   public totalStaked = (
     token: string = zeroAddress, // native token
-    txOptions: TransactionOptions,
+    txOptions: TransactionOptions
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
 
