@@ -133,8 +133,8 @@ const Staking: FC<{}> = () => {
       }
       // TODO: remove when events are attached
       dispatch({
-        type: 'SET_NEEDS_REFRESH',
-        payload: { needsRefresh: true },
+        type: 'SET_IS_FETCHING',
+        payload: { isFetching: true },
       })
     } catch (error) {
       logger.error('error depositing funds', error)

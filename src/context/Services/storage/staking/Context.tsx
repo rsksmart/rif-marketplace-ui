@@ -7,16 +7,18 @@ import AppContext, {
 import { UIError } from 'models/UIMessage'
 import React, {
   createContext,
+  Dispatch,
   FC,
   useCallback,
   useContext,
   useEffect,
   useReducer,
+  useState,
 } from 'react'
 import Logger from 'utils/Logger'
 import { zeroAddress } from '../interfaces'
 import { reducer } from './actions'
-import { Props, State } from './interfaces'
+import { Action, Props, State } from './interfaces'
 
 const logger = Logger.getInstance()
 
@@ -30,6 +32,13 @@ export const StakingContext = createContext<Props>({
   state: initialState,
   dispatch: () => undefined,
 })
+
+const stakeNeedsRefresh = (dispatch: Dispatch<Action>) => () => {
+  dispatch({
+    type: 'SET_NEEDS_REFRESH',
+    payload: { needsRefresh: true }
+  })
+}
 
 export const ContextProvider: FC = ({ children }) => {
   const {
@@ -46,29 +55,35 @@ export const ContextProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
   const { needsRefresh } = state
 
-  const stakeApi = apis?.['storage/v0/stakes'] as StakesService
-  stakeApi.connect(errorReporterFactory(appDispatch))
+  const api = apis?.['storage/v0/stakes'] as StakesService
+  api.connect(errorReporterFactory(appDispatch))
 
-  // const [isInitialised, setIsInitialised] = useState(false)
-  // useEffect(() => {
-  //   if (stakeApi?.service && !isInitialised) {
-  //     try {
-  // TODO: subscribe to events so we can update values automatically
-  //       // attachEvent('updated', updateValues)
-  //       // attachEvent('patched', updateValues)
-  //       // attachEvent('created', updateValues)
-  //       // attachEvent('removed', updateValues)
-  //       setIsInitialised(true)
-  //     } catch (error) {
-  //       setIsInitialised(false)
-  //     }
-  //   }
-  // }, [stakeApi, isInitialised])
+  const [isInitialised, setIsInitialised] = useState(false)
+
+  // Initialise
+  useEffect(() => {
+    if (api && !isInitialised) {
+      const {
+        connect,
+        attachEvent,
+      } = api
+      setIsInitialised(true)
+      try {
+        connect(errorReporterFactory(appDispatch))
+        attachEvent('updated', stakeNeedsRefresh(dispatch))
+        attachEvent('patched', stakeNeedsRefresh(dispatch))
+        attachEvent('created', stakeNeedsRefresh(dispatch))
+        attachEvent('removed', stakeNeedsRefresh(dispatch))
+      } catch (e) {
+        setIsInitialised(false)
+      }
+    }
+  }, [api, isInitialised, appDispatch])
 
   useEffect(() => {
     if (needsRefresh) {
       const fetchStakeTotal = async () => {
-        const [stakeRBTC] = await stakeApi.fetch({
+        const [stakeRBTC] = await api.fetch({
           account, token: zeroAddress,
         })
         dispatch({
@@ -96,7 +111,7 @@ export const ContextProvider: FC = ({ children }) => {
         logger.error(`Fetch Stake total error: ${error.message}`)
       })
     }
-  }, [dispatch, stakeApi, account, reportError, needsRefresh])
+  }, [dispatch, api, account, reportError, needsRefresh])
 
   const value = { state, dispatch }
 
