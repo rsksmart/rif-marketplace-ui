@@ -62,7 +62,7 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
 
   abstract _fetch: (filters?: MarketFilterType | any) => Promise<any>
 
-  fetch = async (filters?: MarketFilterType | any): Promise<any> => {
+  fetch = async (filters?: MarketFilterType | any): Promise<any> => { // FIXME: remove any and add proper typing.
     if (!this.service) {
       this.errorReporter({
         id: 'service-connection',

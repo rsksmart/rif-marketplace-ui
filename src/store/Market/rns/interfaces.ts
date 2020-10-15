@@ -28,6 +28,16 @@ export type PageState = {
   page?: number
 }
 
+export enum SortOrder {
+  'asc' = 1,
+  'desc' = -1
+}
+
+export type Sort = {
+  by: string
+  order: SortOrder
+}
+
 export interface RnsState extends StoreState {
   listing: RnsListing
   filters: Partial<RnsFilter>
@@ -35,6 +45,7 @@ export interface RnsState extends StoreState {
   order?: RnsOrder
   needsRefresh: boolean
   pagination: PageState
+  sorting?: Sort
 }
 
 export interface RnsStoreProps {

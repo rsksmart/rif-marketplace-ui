@@ -1,8 +1,9 @@
 import { Paginated } from '@feathersjs/feathers'
 import { AbstractAPIService, isResultPaginated } from 'api/models/apiService'
 import { PriceFilter, RnsFilter } from 'api/models/RnsFilter'
-import { OfferTransport } from 'api/models/transports'
+import { DomainTransport, OfferTransport } from 'api/models/transports'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
+import { Sort } from 'store/Market/rns/interfaces'
 import { convertToBigString, parseToBigDecimal, parseToInt } from 'utils/parsers'
 import { isSupportedToken } from '../rates/xr'
 import {
@@ -60,13 +61,36 @@ const fetchPriceLimit = async (service, limitType: LimitType): Promise<number> =
   )
 }
 
+const createSort = ({ by, order }: Sort): any => {
+  if (by === 'expirationDate') {
+    return {
+      domain: {
+        expiration: {
+          date: order,
+        },
+      },
+    }
+  }
+
+  if (by === 'domainName') {
+    return {
+      domain: {
+        name: order,
+      },
+    }
+  }
+  return { [by]: order }
+}
+
 export class OffersService extends AbstractAPIService implements RnsAPIService {
   path = offersAddress
 
   _channel = offersChannel
 
-  _fetch = async (filters: Partial<RnsFilter> & { skip?: number}): Promise<RnsDomainOffer[]> => {
-    const { price, name, skip } = filters
+  _fetch = async (filters: Partial<RnsFilter> & { skip?: number} & { sort?: Sort}): Promise<RnsDomainOffer[]> => { // FIXME: sort out the Filter typings
+    const {
+      price, name, skip, sort,
+    } = filters
 
     const results: Paginated<OfferTransport> = await this.service.find({
       query: {
@@ -80,6 +104,7 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
           $lte: convertToBigString(price.max, 18),
         } : undefined,
         $skip: skip,
+        $sort: sort && createSort(sort),
       },
     })
     const { data, ...metadata } = isResultPaginated(results)

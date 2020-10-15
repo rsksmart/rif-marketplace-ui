@@ -88,7 +88,7 @@ const SoldDomains: FC<{}> = () => {
     })
 
   return (
-    <MarketPageTemplate
+    <MarketPageTemplate<RnsSoldDomain>
       filterItems={<DomainFilters />}
       items={collection as any}
       headers={headers}

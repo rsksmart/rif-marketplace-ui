@@ -94,7 +94,7 @@ const MyDomains: FC<{}> = () => {
     })
 
   return (
-    <MarketPageTemplate
+    <MarketPageTemplate<RnsDomain>
       filterItems={<DomainFilters />}
       items={collection}
       headers={headers}

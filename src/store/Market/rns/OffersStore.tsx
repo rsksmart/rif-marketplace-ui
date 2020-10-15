@@ -3,6 +3,7 @@ import { RnsFilter } from 'api/models/RnsFilter'
 import { OffersService } from 'api/rif-marketplace-cache/rns/offers'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import React, {
+  FC,
   useContext, useEffect, useReducer, useState,
 } from 'react'
 import { ErrorMessagePayload, LoadingPayload } from 'store/App/appActions'
@@ -11,7 +12,7 @@ import { StoreActions, StoreReducer } from 'store/storeUtils/interfaces'
 import storeReducerFactory from 'store/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
 import {
-  RnsListing, RnsOrder, RnsState, RnsStoreProps,
+  RnsListing, RnsOrder, RnsState, RnsStoreProps, SortOrder,
 } from './interfaces'
 import { rnsActions, RnsReducer } from './rnsReducer'
 import outdateTokenId from './utils'
@@ -57,12 +58,16 @@ export const initialState: OffersState = {
   },
   needsRefresh: false,
   pagination: {},
+  sorting: {
+    by: 'domainName',
+    order: SortOrder.asc,
+  },
 }
 
 const RnsOffersStore = React.createContext({} as RnsOffersStoreProps | any)
 const offersReducer: RnsReducer | StoreReducer = storeReducerFactory(initialState, rnsActions as unknown as StoreActions)
 
-export const RnsOffersStoreProvider = ({ children }) => {
+export const RnsOffersStoreProvider: FC = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)
   const [isLimitsSet, setIsLimitsSet] = useState(false)
 
@@ -87,6 +92,7 @@ export const RnsOffersStoreProvider = ({ children }) => {
     pagination: {
       page,
     },
+    sorting,
   } = state as RnsState
 
   // Initialise
@@ -180,7 +186,7 @@ export const RnsOffersStoreProvider = ({ children }) => {
         } as LoadingPayload,
       } as any)
 
-      fetch({ ...filters, skip: page })
+      fetch({ ...filters, skip: page, sort: sorting })
         .then((items) => {
           dispatch({
             type: 'SET_LISTING',

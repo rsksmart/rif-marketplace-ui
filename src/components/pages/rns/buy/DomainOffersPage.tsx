@@ -164,6 +164,12 @@ const DomainOffersPage: FC = () => {
       headers={headers}
       dispatch={dispatch}
       outdatedCt={outdatedTokens.length}
+      sort={{
+        by: 'domainName',
+        order: 'asc',
+        onChange: (evt, prop) => {
+        },
+      }}
     />
   )
 }

@@ -39,11 +39,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 const MarketPageTemplate = <Item extends object>({
   className = '',
   filterItems,
-  items,
-  headers,
   requiresAccount,
   dispatch,
   outdatedCt,
+  ...marketPlaceProps
 }: MarketPageTemplateProps<Item>): JSX.Element => {
   const classes = useStyles()
   const {
@@ -98,7 +97,7 @@ const MarketPageTemplate = <Item extends object>({
             },
           }}
         />
-        <Marketplace items={items} headers={headers} isLoading={isLoadingItems} />
+        <Marketplace {...marketPlaceProps} isLoading={isLoadingItems} />
       </Grid>
     </Grid>
   )

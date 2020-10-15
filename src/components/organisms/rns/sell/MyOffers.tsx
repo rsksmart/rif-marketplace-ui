@@ -138,7 +138,7 @@ const MyOffers: FC<{}> = () => {
     })
 
   return (
-    <MarketPageTemplate
+    <MarketPageTemplate<RnsDomain>
       filterItems={<DomainFilters />}
       items={collection}
       headers={headers}
