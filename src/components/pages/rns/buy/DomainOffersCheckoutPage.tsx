@@ -1,7 +1,6 @@
 import Login from 'components/atoms/Login'
 import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
-import DomainNameItem from 'components/molecules/DomainNameItem'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import MarketplaceContract from 'contracts/Marketplace'
@@ -13,28 +12,28 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import { LoadingPayload } from 'store/App/appActions'
-import AppStore, { errorReporterFactory } from 'store/App/AppStore'
-import { AddTxPayload } from 'store/Blockchain/blockchainActions'
-import BlockchainStore from 'store/Blockchain/BlockchainStore'
-import MarketStore from 'store/Market/MarketStore'
-import RnsOffersStore from 'store/Market/rns/OffersStore'
-import contractAdds from 'ui-config.json'
+import { LoadingPayload } from 'context/App/appActions'
+import AppContext, { errorReporterFactory } from 'context/App/AppContext'
+import { AddTxPayload } from 'context/Blockchain/blockchainActions'
+import BlockchainContext from 'context/Blockchain/BlockchainContext'
+import MarketContext from 'context/Market/MarketContext'
+import RnsOffersContext from 'context/Services/rns/OffersContext'
 import Logger from 'utils/Logger'
 
 import {
   Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody,
   TableCell, TableRow, Theme,
 } from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
 import {
-  Button, colors, shortenString, Typography, Web3Store,
+  Button, colors, shortenString, Web3Store,
+  ShortenTextTooltip,
 } from '@rsksmart/rif-ui'
 
 import { parseToBigDecimal } from 'utils/parsers'
+import { marketPlaceAddress } from 'contracts/config'
 
 const logger = Logger.getInstance()
-const network: string = process.env.REACT_APP_NETWORK || 'ganache'
-const marketPlaceAddress = contractAdds[network].marketplace.toLowerCase()
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   card: {
@@ -82,7 +81,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   const classes = useStyles()
   const history = useHistory()
 
-  const { dispatch: appDispatch } = useContext(AppStore)
+  const { dispatch: appDispatch } = useContext(AppContext)
   const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
   const {
@@ -92,20 +91,20 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
         crypto,
       },
     },
-  } = useContext(MarketStore)
+  } = useContext(MarketContext)
 
   const {
     state: {
       order,
     }, dispatch,
-  } = useContext(RnsOffersStore)
+  } = useContext(RnsOffersContext)
   const {
     state: {
       account,
       web3,
     },
   } = useContext(Web3Store)
-  const { dispatch: bcDispatch } = useContext(BlockchainStore)
+  const { dispatch: bcDispatch } = useContext(BlockchainContext)
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
 
   const [hasFunds, setHasFunds] = useState(false)
@@ -115,7 +114,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
 
   // check funds
   useEffect(() => {
-    if (account && tokenId && !isFundsConfirmed) {
+    if (web3 && account && tokenId && !isFundsConfirmed) {
       const checkFunds = async () => {
         appDispatch({
           type: 'SET_IS_LOADING',
@@ -146,9 +145,9 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
           })
 
         const price = tokenPlacement[1]
-        const { utils: { BN } } = web3
+        const { utils: { toBN } } = web3
 
-        setHasFunds(new BN(myBalance).gte(new BN(price)))
+        setHasFunds(toBN(myBalance).gte(toBN(price)))
         setIsFundsConfirmed(true)
       }
       checkFunds()
@@ -170,7 +169,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   useEffect(() => {
     if (isPendingConfirm && order && !order.isProcessing) {
       // Post-confirmations handle
-      history.replace(ROUTES.DOMAINS.DONE.BUY, { domainName: order.item.domainName })
+      history.replace(ROUTES.RNS.BUY.DONE, { domainName: order.item.domainName })
       dispatch({
         type: 'CLEAR_ORDER',
       } as never)
@@ -205,7 +204,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   const PriceCell = <CombinedPriceCell {...priceCellProps} />
 
   const displayName = domainName
-    ? <DomainNameItem value={domainName} />
+    ? <ShortenTextTooltip value={domainName} maxLength={30} />
     : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
   const details = {
@@ -312,6 +311,15 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
     }
   }
 
+  const onProcessingComplete = () => {
+    dispatch({
+      type: 'SET_PROGRESS',
+      payload: {
+        isProcessing: false,
+      },
+    })
+  }
+
   const buyingNameTitle = domainName
     ? shortenString(domainName, 30, 25)
     : shortenString(tokenId)
@@ -360,7 +368,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
           )}
         {!account && <Login />}
       </Card>
-      {!!isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, dispatch }} text="Buying the domain!" progMsg="The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished." />}
+      {!!isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, onProcessingComplete }} text="Buying the domain!" progMsg="The waiting period is required to securely buy your domain. Please do not close this tab until the process has finished." />}
     </CheckoutPageTemplate>
   )
 }

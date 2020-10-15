@@ -26,7 +26,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --unhandled-rejections=strict",
+    "coverage": "react-scripts test --unhandled-rejections=strict --coverageProvider=v8 --coverage --watchAll=false",
     "lint": "npx tasegir lint && eslint 'src/**/*.ts*'"
   },
   "dependencies": {
@@ -40,28 +41,32 @@
     "@rsksmart/erc677": "^1.0.2",
     "@rsksmart/erc721": "^1.0.0",
     "@rsksmart/rif-marketplace-nfts": "^0.1.4",
-    "@rsksmart/rif-ui": "^0.1.8",
+    "@rsksmart/rif-marketplace-storage": "0.1.0-dev.4",
+    "@rsksmart/rif-ui": "^0.3.0",
     "big.js": "^5.2.2",
+    "material-ui-dropzone": "^3.5.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.3",
+    "react-scripts": "3.4.3",
     "socket.io-client": "^2.3.0",
     "typescript": "^3.9.7",
     "web3": "^1.2.11",
     "web3-eth": "^1.2.11",
     "web3-eth-contract": "^1.2.11",
-    "web3-utils": "^1.2.11"
+    "web3-utils": "^1.2.11",
+    "webpack": "^4.42.0"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.11.3",
-    "@testing-library/react": "^10.4.8",
+    "@testing-library/jest-dom": "^5.11.1",
+    "@testing-library/react": "^11.0.2",
+    "@testing-library/react-hooks": "^3.4.1",
     "@testing-library/user-event": "^12.1.1",
     "@typechain/web3-v1": "^1.0.0",
     "@types/big.js": "^4.0.5",
-    "@types/jest": "26.0.5",
-    "@types/node": "^14.6.0",
-    "@types/react": "16.9.43",
+    "@types/jest": "26.0.13",
+    "@types/node": "^14.6.00",
+    "@types/react": "16.9.49",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
     "eslint-config-airbnb": "^18.2.0",
@@ -69,8 +74,8 @@
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-react": "^7.20.6",
     "tasegir": "^1.8.0",
-    "typechain": "^2.0.0",
-    "webpack": "4.42.0"
+    "ts-jest": "^26.1.2",
+    "typechain": "^2.0.0"
   },
   "engines": {
     "node": ">=10.0.0",

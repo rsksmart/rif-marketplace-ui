@@ -10,7 +10,10 @@ export interface TransactionOptions {
 const TIMEOUT_LIMIT = 120000
 const POLLING_INTERVAL = 2000
 
-function waitForReceipt(txHash: string, web3: Web3): Promise<TransactionReceipt> {
+function waitForReceipt(
+  txHash: string,
+  web3: Web3,
+): Promise<TransactionReceipt> {
   let timeElapsed = 0
   return new Promise<TransactionReceipt>((resolve, reject) => {
     const checkInterval = setInterval(async () => {
@@ -23,7 +26,9 @@ function waitForReceipt(txHash: string, web3: Web3): Promise<TransactionReceipt>
       }
 
       if (timeElapsed > TIMEOUT_LIMIT) {
-        reject(new Error('Transaction receipt could not be retrieved - Timeout'))
+        reject(
+          new Error('Transaction receipt could not be retrieved - Timeout'),
+        )
       }
     }, POLLING_INTERVAL)
   })

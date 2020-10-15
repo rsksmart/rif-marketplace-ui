@@ -1,18 +1,19 @@
 import {
   CircularProgress, createStyles, makeStyles, Theme,
 } from '@material-ui/core'
-import { shortenString, Typography } from '@rsksmart/rif-ui'
+import Typography from '@material-ui/core/Typography'
+import { shortenString } from '@rsksmart/rif-ui'
 import React, {
-  Dispatch, FC, useContext, useEffect,
+  FC, useContext, useEffect,
 } from 'react'
-import BlockchainStore, { BlockchainStoreProps } from 'store/Blockchain/BlockchainStore'
-import { StoreDispatcher, StorePayload } from 'store/storeUtils/interfaces'
+import BlockchainContext, { BlockchainContextProps } from 'context/Blockchain/BlockchainContext'
 
 export interface TransactionInProgressPanelProps {
   text: string
   progMsg: string
   isPendingConfirm?: boolean
-  dispatch: Dispatch<StoreDispatcher<StorePayload>>
+  onProcessingComplete?: () => void
+  overlayed?: boolean
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -25,14 +26,30 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     alignItems: 'center',
     textAlign: 'center',
   },
+  container: {
+    background: 'rgba(275, 275, 275, 0.8)',
+    display: 'flex',
+    height: '100%',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    position: 'absolute',
+    width: '100%',
+    top: 0,
+    left: 0,
+  },
 }))
 
 const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
-  progMsg, text, isPendingConfirm, dispatch,
+  progMsg, text, isPendingConfirm,
+  onProcessingComplete = (): void => undefined,
+  overlayed,
 }) => {
   const classes = useStyles()
 
-  const { state: { confirmations: { txHash, currentCount, targetCount } }, dispatch: bcDispatch }: BlockchainStoreProps = useContext(BlockchainStore)
+  const {
+    state: { confirmations: { txHash, currentCount, targetCount } },
+    dispatch: bcDispatch,
+  }: BlockchainContextProps = useContext(BlockchainContext)
 
   useEffect(() => {
     if (currentCount && targetCount && currentCount >= targetCount) {
@@ -45,16 +62,11 @@ const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
 
   useEffect(() => {
     if (isPendingConfirm && !txHash) {
-      dispatch({
-        type: 'SET_PROGRESS',
-        payload: {
-          isProcessing: false,
-        },
-      })
+      onProcessingComplete()
     }
-  }, [txHash, isPendingConfirm, dispatch])
+  }, [txHash, isPendingConfirm, onProcessingComplete])
 
-  return (
+  const panelContent = (
     <div className={classes.content}>
       <Typography>{text}</Typography>
       {txHash && !currentCount && <Typography>{`Transaction ${shortenString(txHash)} is waiting for the first confirmation.`}</Typography>}
@@ -63,6 +75,15 @@ const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
       <Typography>{progMsg}</Typography>
     </div>
   )
+
+  if (overlayed) {
+    return (
+      <div className={classes.container}>
+        {panelContent}
+      </div>
+    )
+  }
+  return panelContent
 }
 
 export default TransactionInProgressPanel

@@ -1,16 +1,16 @@
-import { Web3Store } from '@rsksmart/rif-ui'
+import { Web3Store, ShortenTextTooltip } from '@rsksmart/rif-ui'
+import React, { FC, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
-import DomainNameItem from 'components/molecules/DomainNameItem'
 import RifPaging from 'components/molecules/RifPaging'
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
-import React, { FC, useContext, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import MarketStore, { TxType } from 'store/Market/MarketStore'
-import RnsOffersStore from 'store/Market/rns/OffersStore'
-import { OrderPayload, RefreshPayload } from 'store/Market/rns/rnsActions'
+import MarketContext from 'context/Market/MarketContext'
+import RnsOffersContext, { RnsOffersContextProps } from 'context/Services/rns/OffersContext'
+import { OrderPayload, RefreshPayload } from 'context/Services/rns/rnsActions'
+import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 
 const DomainOffersPage: FC = () => {
   const {
@@ -20,8 +20,7 @@ const DomainOffersPage: FC = () => {
         crypto,
       },
     },
-    dispatch: mDispatch,
-  } = useContext(MarketStore)
+  } = useContext(MarketContext)
   const {
     state: {
       listing: {
@@ -34,8 +33,7 @@ const DomainOffersPage: FC = () => {
       },
     },
     dispatch,
-  } = useContext(RnsOffersStore)
-
+  } = useContext<RnsOffersContextProps>(RnsOffersContext)
   const history = useHistory()
   const routeState = history.location.state as { refresh?: boolean }
 
@@ -54,17 +52,6 @@ const DomainOffersPage: FC = () => {
     },
   } = useContext(Web3Store)
 
-  useEffect(() => {
-    mDispatch({
-      type: 'TOGGLE_TX_TYPE',
-      payload: {
-        txType: TxType.BUY,
-      },
-    })
-  }, [mDispatch])
-
-  let collection = []
-
   let action1Header: JSX.Element | string = ''
 
   if (currentPage) {
@@ -76,8 +63,8 @@ const DomainOffersPage: FC = () => {
         from={skip + 1}
         to={nextPage > total ? total : nextPage}
         total={total}
-        onNext={(): void => dispatch({ type: 'NEXT_PAGE' })}
-        onPrev={(): void => dispatch({ type: 'PREV_PAGE' })}
+        onNext={(): void => dispatch({ type: 'NEXT_PAGE', payload: {} })}
+        onPrev={(): void => dispatch({ type: 'PREV_PAGE', payload: {} })}
       />
     )
   }
@@ -90,8 +77,8 @@ const DomainOffersPage: FC = () => {
     action1: action1Header,
   }
 
-  collection = items
-    .map((item: RnsDomainOffer) => {
+  const collection = items
+    .map<MarketplaceItem>((item: RnsDomainOffer) => {
       const {
         id,
         price,
@@ -102,11 +89,11 @@ const DomainOffersPage: FC = () => {
         tokenId,
       } = item
 
-      const pseudoResolvedName = filters.name && (`${filters.name}.rsk`)
+      const pseudoResolvedName: string = filters.name as string && (`${filters.name}.rsk`)
       const { rate, displayName } = crypto[paymentToken]
 
       const displayDomainName = domainName || pseudoResolvedName
-        ? <DomainNameItem value={domainName || pseudoResolvedName} />
+        ? <ShortenTextTooltip value={domainName || pseudoResolvedName} maxLength={30} />
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
       const displayItem = {
@@ -131,20 +118,20 @@ const DomainOffersPage: FC = () => {
                   item,
                 } as OrderPayload,
               })
-              history.push(ROUTES.DOMAINS.CHECKOUT.BUY)
+              history.push(ROUTES.RNS.BUY.CHECKOUT)
             }}
           />
         ),
       }
 
       return displayItem
-    }) as any // TODO: remove as any
+    })
 
   return (
     <MarketPageTemplate
       className="Domain Offers"
       filterItems={<DomainOfferFilters />}
-      itemCollection={collection}
+      items={collection}
       headers={headers}
       dispatch={dispatch}
       outdatedCt={outdatedTokens.length}

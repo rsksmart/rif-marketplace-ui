@@ -5,10 +5,9 @@ import TxCompletePageTemplate from 'components/templates/TxCompletePageTemplate'
 import React, { FC } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import networkConfig from 'ui-config.json'
+import networkConfig from 'config'
 
-const network: string = process.env.REACT_APP_NETWORK || 'ganache'
-const { rnsManagerUrl } = networkConfig[network]
+const { rnsManagerUrl } = networkConfig
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   actions: {
@@ -48,7 +47,7 @@ const DomainPurchased: FC<{}> = () => {
           variant="contained"
           rounded
           shadow
-          onClick={() => { history.push(ROUTES.DOMAINS.BUY, { refresh: true }) }}
+          onClick={() => { history.push(ROUTES.RNS.BUY.BASE, { refresh: true }) }}
         >
           Buy another domain
         </Button>

@@ -1,11 +1,12 @@
 import { AddressItem, CombinedPriceCell } from 'components/molecules'
-import DomainNameItem from 'components/molecules/DomainNameItem'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsSoldDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext } from 'react'
-import MarketStore from 'store/Market/MarketStore'
-import RnsSoldStore, { RnsSoldStoreProps } from 'store/Market/rns/SoldStore'
+import MarketContext from 'context/Market/MarketContext'
+import RnsSoldContext, { RnsSoldContextProps } from 'context/Services/rns/SoldContext'
+import { ShortenTextTooltip } from '@rsksmart/rif-ui'
+import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 
 const SoldDomains: FC<{}> = () => {
   const {
@@ -15,14 +16,14 @@ const SoldDomains: FC<{}> = () => {
         crypto,
       },
     },
-  } = useContext(MarketStore)
+  } = useContext(MarketContext)
   const {
     state: {
       listing,
       filters,
     },
     dispatch,
-  } = useContext<RnsSoldStoreProps>(RnsSoldStore)
+  } = useContext<RnsSoldContextProps>(RnsSoldContext)
 
   const { items, outdatedTokens } = listing
   const { name } = filters
@@ -36,7 +37,7 @@ const SoldDomains: FC<{}> = () => {
   }
 
   const collection = items
-    .map((domainItem: RnsSoldDomain) => {
+    .map<MarketplaceItem>((domainItem: RnsSoldDomain) => {
       const {
         id,
         domainName,
@@ -50,7 +51,7 @@ const SoldDomains: FC<{}> = () => {
 
       const pseudoResolvedName = name && `${name}.rsk`
       const displayDomainName = domainName || pseudoResolvedName
-        ? <DomainNameItem value={domainName || pseudoResolvedName as string} />
+        ? <ShortenTextTooltip value={domainName || pseudoResolvedName as string} maxLength={30} />
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
       const displayItem = {
@@ -74,7 +75,7 @@ const SoldDomains: FC<{}> = () => {
   return (
     <MarketPageTemplate
       filterItems={<DomainFilters />}
-      itemCollection={collection as any}
+      items={collection as any}
       headers={headers}
       requiresAccount
       dispatch={dispatch}

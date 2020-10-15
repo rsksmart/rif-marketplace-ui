@@ -5,10 +5,10 @@ import { DomainTransport } from 'api/models/transports'
 import { RnsDomain } from 'models/marketItems/DomainItem'
 import { parseToBigDecimal } from 'utils/parsers'
 import {
-  getAvailableTokens, RnsAddresses, RnsAPIService, RnsChannels,
+  availableTokens, RnsServiceAddress, RnsAPIService, RnsChannels,
 } from './common'
 
-export const domainsAddress: RnsAddresses = 'rns/v0/domains'
+export const domainsAddress: RnsServiceAddress = 'rns/v0/domains'
 export const domainsChannel: RnsChannels = 'domains'
 
 const mapFromTransport = (item: DomainTransport): RnsDomain => {
@@ -27,7 +27,7 @@ const mapFromTransport = (item: DomainTransport): RnsDomain => {
     const offer = offers[0]
     domain.offer = {
       ...offer,
-      paymentToken: getAvailableTokens[offer.paymentToken.toLowerCase()],
+      paymentToken: availableTokens[offer.paymentToken.toLowerCase()],
       price: parseToBigDecimal(offer.priceString, 18),
     }
   }

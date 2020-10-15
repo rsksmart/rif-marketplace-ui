@@ -13,13 +13,14 @@ const Header = () => {
   const headerItems: HeaderItemProps[] = [
     {
       title: 'Domains',
-      to: ROUTES.DOMAINS.BUY,
-      isActive: (_, { pathname }) => pathname.includes(ROUTES.DOMAINS.BASE),
+      to: ROUTES.RNS.BASE,
+      isActive: (_, { pathname }) => pathname.includes(ROUTES.RNS.BASE),
       icon: <PeopleIcon />,
     },
     {
       title: 'Storage',
-      to: ROUTES.STORAGE,
+      to: ROUTES.STORAGE.BASE,
+      isActive: (_, { pathname }) => pathname.includes(ROUTES.STORAGE.BASE),
       icon: <StorageIcon />,
     },
     {

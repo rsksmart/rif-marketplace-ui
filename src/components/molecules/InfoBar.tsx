@@ -1,5 +1,5 @@
 import {
-  Button, ButtonProps, createStyles, makeStyles, Snackbar, Theme,
+  Button, ButtonProps, createStyles, makeStyles, Snackbar, Theme, Typography,
 } from '@material-ui/core'
 import MuiAlert from '@material-ui/lab/Alert'
 import { Severity } from 'models/UIMessage'
@@ -35,7 +35,7 @@ const InfoBar: FC<InfoBarProps> = ({
       open={isVisible}
     >
       <MuiAlert severity={type} className={classes.alert}>
-        {text}
+        <Typography display="inline">{text}</Typography>
         <Button className={classes.button} color="primary" {...button}>{buttonText}</Button>
       </MuiAlert>
     </Snackbar>

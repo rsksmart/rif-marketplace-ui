@@ -1,15 +1,14 @@
 import React, { useEffect } from 'react'
-import { Route, Switch, useHistory } from 'react-router-dom'
+import {
+  Route, Switch, useHistory,
+} from 'react-router-dom'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import {
   AboutPage, FAQPage, LandingPage, NotFound,
 } from './pages'
-import {
-  DomainOffersCheckoutPage, DomainOffersPage, DomainsCheckoutPage,
-  SellDomainsListPage, DomainListed, DomainPurchased, CancelDomainCheckoutPage, DomainCanceled,
-} from './pages/rns'
-import StoragePage from './pages/storage/StoragePage'
+import RnsRoutes from './pages/rns/RnsRoutes'
+import StorageRoutes from './pages/storage/StorageRoutes'
 
 const logger = Logger.getInstance()
 
@@ -29,16 +28,9 @@ const Routes = () => {
   return (
     <Switch>
       <Route exact path={ROUTES.LANDING} component={LandingPage} />
-      <Route exact path={ROUTES.STORAGE} component={StoragePage} />
       <Route exact path={ROUTES.FAQ} component={FAQPage} />
-      <Route exact path={ROUTES.DOMAINS.BUY} component={DomainOffersPage} />
-      <Route exact path={ROUTES.DOMAINS.CHECKOUT.BUY} component={DomainOffersCheckoutPage} />
-      <Route exact path={ROUTES.DOMAINS.DONE.BUY} component={DomainPurchased} />
-      <Route exact path={ROUTES.DOMAINS.SELL} component={SellDomainsListPage} />
-      <Route exact path={ROUTES.DOMAINS.CHECKOUT.SELL} component={DomainsCheckoutPage} />
-      <Route exact path={ROUTES.DOMAINS.DONE.SELL} component={DomainListed} />
-      <Route exact path={ROUTES.DOMAINS.CHECKOUT.CANCEL} component={CancelDomainCheckoutPage} />
-      <Route exact path={ROUTES.DOMAINS.DONE.CANCEL} component={DomainCanceled} />
+      <Route path={ROUTES.RNS.BASE} component={RnsRoutes} />
+      <Route path={ROUTES.STORAGE.BASE} component={StorageRoutes} />
       <Route exact path={ROUTES.ABOUT} component={AboutPage} />
       <Route component={NotFound} />
     </Switch>

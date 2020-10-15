@@ -1,39 +1,71 @@
+const LISTING = 'listing'
+const CHECKOUT = 'checkout'
+const DONE = 'done'
+const EDIT = 'edit'
+
 const LANDING = '/'
-const COMMUNICATIONS = '/communications'
-const DATA_SERVICE = 'data_service'
-const PAYMENTS = '/payments'
-const DOMAINS = '/domains'
-const DOMAINS_BUY = `${DOMAINS}/buy`
-const DOMAINS_SELL = `${DOMAINS}/sell`
-const DOMAIN_OFFERS_CHECKOUT = `${DOMAINS_BUY}/checkout`
-const DOMAINS_CHECKOUT = `${DOMAINS_SELL}/checkout`
-const DOMAIN_OFFERS_DONE = `${DOMAINS_BUY}/done`
-const DOMAINS_DONE = `${DOMAINS_SELL}/done`
-const DOMAIN_CANCEL_CHECKOUT = `${DOMAINS}/cancel/checkout`
-const DOMAIN_CANCEL_DONE = `${DOMAINS}/cancel/done`
+
+const RNS = '/domains'
+const RNS_BUY = `${RNS}/buy`
+const RNS_SELL = `${RNS}/sell`
+const RNS_CANCEL = `${RNS_SELL}/cancel`
+
 const STORAGE = '/storage'
+const STORAGE_BUY = `${STORAGE}/buy`
+const STORAGE_SELL = `${STORAGE}/sell`
+const STORAGE_MYOFFERS = `${STORAGE}/myoffers`
+const STORAGE_MYOFFERS_CANCEL = `${STORAGE_MYOFFERS}/cancel`
+const STORAGE_MYPURCHASES = `${STORAGE}/mypurchases`
+
 const FAQ = '/faq'
 const ABOUT = '/about'
 
 const ROUTES = {
   LANDING,
-  COMMUNICATIONS,
-  DATA_SERVICE,
-  PAYMENTS,
-  STORAGE,
-  DOMAINS: {
-    BASE: DOMAINS,
-    BUY: DOMAINS_BUY,
-    SELL: DOMAINS_SELL,
-    CHECKOUT: {
-      BUY: DOMAIN_OFFERS_CHECKOUT,
-      SELL: DOMAINS_CHECKOUT,
-      CANCEL: DOMAIN_CANCEL_CHECKOUT,
+  RNS: {
+    BASE: RNS,
+    BUY: {
+      BASE: RNS_BUY,
+      LISTING: `${RNS_BUY}/${LISTING}`,
+      CHECKOUT: `${RNS_BUY}/${CHECKOUT}`,
+      DONE: `${RNS_BUY}/${DONE}`,
     },
-    DONE: {
-      BUY: DOMAIN_OFFERS_DONE,
-      SELL: DOMAINS_DONE,
-      CANCEL: DOMAIN_CANCEL_DONE,
+    SELL: {
+      BASE: RNS_SELL,
+      LISTING: `${RNS_SELL}/${LISTING}`,
+      CHECKOUT: `${RNS_SELL}/${CHECKOUT}`,
+      DONE: `${RNS_SELL}/${DONE}`,
+      CANCEL: {
+        CHECKOUT: `${RNS_CANCEL}/${CHECKOUT}`,
+        DONE: `${RNS_CANCEL}/${DONE}`,
+      },
+    },
+  },
+  STORAGE: {
+    BASE: STORAGE,
+    BUY: {
+      BASE: STORAGE_BUY,
+      LISTING: `${STORAGE_BUY}/${LISTING}`,
+      CHECKOUT: `${STORAGE_BUY}/${CHECKOUT}`,
+    },
+    SELL: {
+      BASE: STORAGE_SELL,
+      LISTING: `${STORAGE_SELL}/${LISTING}`,
+      DONE: `${STORAGE_SELL}/${DONE}`,
+    },
+    MYOFFERS: {
+      BASE: STORAGE_MYOFFERS,
+      CANCEL: {
+        DONE: `${STORAGE_MYOFFERS_CANCEL}/${DONE}`,
+      },
+      EDIT: {
+        BASE: `${STORAGE_MYOFFERS}/${EDIT}`,
+        DONE: `${STORAGE_MYOFFERS}/${EDIT}/${DONE}`,
+      },
+    },
+    MYPURCHASES: {
+      BASE: STORAGE_MYPURCHASES,
+      LISTING: `${STORAGE_MYPURCHASES}/${LISTING}`,
     },
   },
   FAQ,

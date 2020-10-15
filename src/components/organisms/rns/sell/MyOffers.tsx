@@ -1,16 +1,17 @@
 import { IconButton } from '@material-ui/core'
 import ClearIcon from '@material-ui/icons/Clear'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
-import DomainNameItem from 'components/molecules/DomainNameItem'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import MarketStore from 'store/Market/MarketStore'
-import RnsDomainsStore from 'store/Market/rns/DomainsStore'
-import { OrderPayload } from 'store/Market/rns/rnsActions'
+import MarketContext from 'context/Market/MarketContext'
+import RnsDomainsContext, { RnsDomainsContextProps } from 'context/Services/rns/DomainsContext'
+import { OrderPayload } from 'context/Services/rns/rnsActions'
+import { ShortenTextTooltip } from '@rsksmart/rif-ui'
+import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 
 const MyOffers: FC<{}> = () => {
   const {
@@ -20,7 +21,7 @@ const MyOffers: FC<{}> = () => {
         crypto,
       },
     },
-  } = useContext(MarketStore)
+  } = useContext(MarketContext)
 
   const {
     state: {
@@ -31,7 +32,7 @@ const MyOffers: FC<{}> = () => {
       filters,
     },
     dispatch,
-  } = useContext(RnsDomainsStore)
+  } = useContext<RnsDomainsContextProps>(RnsDomainsContext)
 
   useEffect(() => {
     dispatch({
@@ -53,7 +54,7 @@ const MyOffers: FC<{}> = () => {
   }
 
   const collection = items
-    .map((domainItem: RnsDomain) => {
+    .map<MarketplaceItem>((domainItem: RnsDomain) => {
       const {
         id,
         name,
@@ -61,10 +62,10 @@ const MyOffers: FC<{}> = () => {
         expirationDate,
         tokenId,
       } = domainItem
-      const pseudoResolvedName = filters.name && (`${filters.name}.rsk`)
+      const pseudoResolvedName = filters.name as string && (`${filters.name}.rsk`)
 
       const displayDomainName = name || pseudoResolvedName
-        ? <DomainNameItem value={name || pseudoResolvedName} />
+        ? <ShortenTextTooltip value={name || pseudoResolvedName} maxLength={30} />
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
       const displayItem = {
@@ -72,16 +73,16 @@ const MyOffers: FC<{}> = () => {
         name: displayDomainName,
         expirationDate: expirationDate.toLocaleDateString(),
         action1: <SelectRowButton
-          id={id}
-          handleSelect={() => {
-            dispatch({
-              type: 'SET_ORDER',
-              payload: {
-                item: domainItem,
-              } as OrderPayload,
-            })
-            history.push(ROUTES.DOMAINS.CHECKOUT.SELL)
-          }}
+            id={id}
+            handleSelect={() => {
+              dispatch({
+                type: 'SET_ORDER',
+                payload: {
+                  item: domainItem,
+                } as OrderPayload,
+              })
+              history.push(ROUTES.RNS.SELL.CHECKOUT)
+            }}
         />,
         price: <></>,
         action2: <></>,
@@ -110,7 +111,7 @@ const MyOffers: FC<{}> = () => {
                   item: domainItem,
                 } as OrderPayload,
               })
-              history.push(ROUTES.DOMAINS.CHECKOUT.CANCEL)
+              history.push(ROUTES.RNS.SELL.CANCEL.CHECKOUT)
             }}
           >
             <ClearIcon />
@@ -124,7 +125,7 @@ const MyOffers: FC<{}> = () => {
   return (
     <MarketPageTemplate
       filterItems={<DomainFilters />}
-      itemCollection={collection}
+      items={collection}
       headers={headers}
       requiresAccount
       dispatch={dispatch}

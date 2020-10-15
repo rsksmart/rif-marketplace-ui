@@ -1,20 +1,24 @@
 import React, { FC } from 'react'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import {
-  makeStyles, Table, TableHead, TableRow, TableCell, TableBody, Theme,
+  Table, TableHead, TableRow, TableCell, TableBody, Typography,
 } from '@material-ui/core'
-import { MarketItem } from 'models/Market'
+
 import {
   colors, fonts,
+  WithSpinner,
 } from '@rsksmart/rif-ui'
-import WithSpinner from 'components/hoc/WithSpinner'
+
+export type MarketplaceItem = { id: string, [key: string]: any }
 
 export interface TableHeaders {
   [itemName: string]: string | JSX.Element
 }
 export interface MarketplaceProps {
   className?: string
-  items: MarketItem[]
+  items: MarketplaceItem[]
   headers: TableHeaders
+  Heading?: React.ElementType
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -37,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   th: {
     color: colors.gray6,
-    fontWeight: fonts.weight.normal,
+    fontWeight: fonts.weight.light,
     textAlign: 'left',
     textTransform: 'uppercase',
   },
@@ -54,31 +58,37 @@ const Marketplace: FC<MarketplaceProps> = ({
   className = '',
   items,
   headers,
+  Heading,
 }) => {
   const classes = useStyles()
   return (
     <div className={`${classes.root} ${className}`}>
+      {!!Heading && <Heading />}
       <div className={classes.content}>
         <Table>
           <TableHead>
             <TableRow className={classes.tr}>
-              {Object.keys(headers).map((itemName: string) => (
-                <TableCell className={classes.th} key={`th-${itemName}`}>{headers[itemName]}</TableCell>
-              ))}
+              {
+                Object.keys(headers).map((itemName: string) => (
+                  <TableCell className={classes.th} key={`th-${itemName}`}>{headers[itemName]}</TableCell>
+                ))
+              }
             </TableRow>
           </TableHead>
           <TableBody>
-            {items.map((item, index) => (
-              <TableRow className={`${classes.tr} ${index % 2 ? classes.coloredRow : ''}`} key={item.id}>
-                {
-                  Object.keys(headers).map((itemName: string) => (
-                    <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={itemName}>
-                      {item[itemName]}
-                    </TableCell>
-                  ))
-                }
-              </TableRow>
-            ))}
+            {
+              items.map((item, index) => (
+                <TableRow className={`${classes.tr} ${index % 2 ? classes.coloredRow : ''}`} key={item.id}>
+                  {
+                    Object.keys(headers).map((itemName: string) => (
+                      <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={itemName}>
+                        <Typography>{item[itemName]}</Typography>
+                      </TableCell>
+                    ))
+                  }
+                </TableRow>
+              ))
+            }
           </TableBody>
         </Table>
       </div>

@@ -3,23 +3,19 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Web3Store } from '@rsksmart/rif-ui'
 import InfoBar from 'components/molecules/InfoBar'
 import MarketFilter from 'components/templates/marketplace/MarketFilter'
-import { MarketItem } from 'models/Market'
 import React, {
   Dispatch, FC, useContext, useEffect,
 } from 'react'
-import { RnsAction } from 'store/Market/rns/rnsActions'
-import AppStore from 'store/App/AppStore'
-import { MessagePayload } from 'store/App/appActions'
-import Marketplace, { TableHeaders } from './marketplace/Marketplace'
-import { AppStoreProps } from '../../store/App/AppStore'
+import AppContext from 'context/App/AppContext'
+import { MessagePayload } from 'context/App/appActions'
+import Marketplace, { MarketplaceProps } from './marketplace/Marketplace'
+import { AppContextProps } from '../../context/App/AppContext'
 
-export interface MarketPageTemplateProps {
+export interface MarketPageTemplateProps extends MarketplaceProps {
   className?: string
   filterItems: React.ReactNode
-  headers: TableHeaders
-  itemCollection: MarketItem[]
   requiresAccount?: boolean
-  dispatch: Dispatch<RnsAction>
+  dispatch: Dispatch<any>
   outdatedCt: number
 }
 
@@ -43,11 +39,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   className = '',
   filterItems,
-  itemCollection,
-  headers,
   requiresAccount,
   dispatch,
   outdatedCt,
+  ...props
 }) => {
   const classes = useStyles()
   const {
@@ -58,7 +53,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
       loaders,
     },
     dispatch: appDispatch,
-  } = useContext<AppStoreProps>(AppStore)
+  } = useContext<AppContextProps>(AppContext)
 
   const isLoadingFilters = loaders.filters
   const isLoadingItems = loaders.data
@@ -71,12 +66,6 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
           type: 'warning',
           text: 'Please, connect your wallet.',
           id: 'wallet',
-          // customAction: {
-          //   name: 'Connect',
-          //   action: () => {
-          //     return <Login /> //TODO: dispatch web3dispatch action 'CONNECT' that would trigger the wallet connection modal to open
-          //   }
-          // }
         } as MessagePayload,
       } as any)
     }
@@ -102,7 +91,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
             },
           }}
         />
-        <Marketplace items={itemCollection} headers={headers} isLoading={isLoadingItems} />
+        <Marketplace isLoading={isLoadingItems} {...props} />
       </Grid>
     </Grid>
   )

@@ -1,13 +1,14 @@
 import {
   Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody, TableCell, TableRow, Theme,
 } from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
 import {
-  Button, colors, shortenString, Typography, Web3Store,
+  Button, colors, shortenString, Web3Store,
+  ShortenTextTooltip,
 } from '@rsksmart/rif-ui'
 import Box from '@material-ui/core/Box'
 import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
-import DomainNameItem from 'components/molecules/DomainNameItem'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import MarketplaceContract from 'contracts/Marketplace'
@@ -17,14 +18,14 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import { AddTxPayload } from 'store/Blockchain/blockchainActions'
-import BlockchainStore from 'store/Blockchain/BlockchainStore'
-import MarketStore from 'store/Market/MarketStore'
-import RnsDomainsStore from 'store/Market/rns/DomainsStore'
+import { AddTxPayload } from 'context/Blockchain/blockchainActions'
+import BlockchainContext from 'context/Blockchain/BlockchainContext'
+import MarketContext from 'context/Market/MarketContext'
+import RnsDomainsContext from 'context/Services/rns/DomainsContext'
 import Logger from 'utils/Logger'
-import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { UIError } from 'models/UIMessage'
-import { LoadingPayload } from 'store/App/appActions'
+import { LoadingPayload } from 'context/App/appActions'
 
 const logger = Logger.getInstance()
 
@@ -79,12 +80,12 @@ const CancelDomainCheckoutPage = () => {
         crypto,
       },
     },
-  } = useContext(MarketStore)
+  } = useContext(MarketContext)
   const {
     state: {
       order,
     }, dispatch,
-  } = useContext(RnsDomainsStore)
+  } = useContext(RnsDomainsContext)
   const classes = useStyles()
   const {
     state: {
@@ -92,17 +93,17 @@ const CancelDomainCheckoutPage = () => {
       web3,
     },
   } = useContext(Web3Store)
-  const { dispatch: bcDispatch } = useContext(BlockchainStore)
+  const { dispatch: bcDispatch } = useContext(BlockchainContext)
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
 
-  const { dispatch: appDispatch } = useContext<AppStoreProps>(AppStore)
+  const { dispatch: appDispatch } = useContext<AppContextProps>(AppContext)
   const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
   useEffect(() => {
     if (isPendingConfirm && order && !order.isProcessing) {
       // Post-confirmations handle
       const { item: { domainName } } = order
-      history.replace(ROUTES.DOMAINS.DONE.CANCEL, { domainName })
+      history.replace(ROUTES.RNS.SELL.CANCEL.DONE, { domainName })
       dispatch({
         type: 'CLEAR_ORDER',
       } as never)
@@ -136,7 +137,7 @@ const CancelDomainCheckoutPage = () => {
   const PriceCell = <CombinedPriceCell {...priceCellProps} />
 
   const displayName = name
-    ? <DomainNameItem value={name} />
+    ? <ShortenTextTooltip value={name} maxLength={30} />
     : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
   const details = {
@@ -227,16 +228,25 @@ const CancelDomainCheckoutPage = () => {
     }
   }
 
+  const onProcessingComplete = () => {
+    dispatch({
+      type: 'SET_PROGRESS',
+      payload: {
+        isProcessing: false,
+      },
+    })
+  }
+
   const cancelingNameTitle = name
     ? shortenString(name, 30, 25)
     : shortenString(tokenId)
 
   return (
     <CheckoutPageTemplate
-      className="domains-checkout-page"
-      backButtonProps={{
-        backTo: 'domains',
-      }}
+        className="domains-checkout-page"
+        backButtonProps={{
+          backTo: 'domains',
+        }}
     >
       <Card
         className={classes.card}
@@ -276,7 +286,7 @@ const CancelDomainCheckoutPage = () => {
             </CardActions>
           )}
       </Card>
-      {isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, dispatch }} text="Canceling the domain!" progMsg="The waiting period is required to securely cancel your domain listing. Please do not close this tab until the process has finished" />}
+      {isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, onProcessingComplete }} text="Canceling the domain!" progMsg="The waiting period is required to securely cancel your domain listing. Please do not close this tab until the process has finished" />}
     </CheckoutPageTemplate>
   )
 }

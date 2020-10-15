@@ -11,6 +11,7 @@ const useStyles = makeStyles(() => createStyles({
     justifyContent: 'center',
     justifyItems: 'center',
     paddingTop: 50,
+    width: '100%',
   },
 }))
 

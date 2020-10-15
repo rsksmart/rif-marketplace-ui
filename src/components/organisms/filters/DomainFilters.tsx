@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import RnsDomainsStore from 'store/Market/rns/DomainsStore'
+import RnsDomainsContext from 'context/Services/rns/DomainsContext'
 import { DomainsSaleStatus } from 'api/models/RnsFilter'
 import RadioFilter from './RadioFilter'
 import SearchFilter from './SearchFilter'
@@ -18,7 +18,7 @@ const DomainFilters = () => {
       },
     },
     dispatch,
-  } = useContext(RnsDomainsStore)
+  } = useContext(RnsDomainsContext)
 
   const domainStatusFilters: StatusFilter[] = [
     {
@@ -56,6 +56,7 @@ const DomainFilters = () => {
             payload: { name: value },
           })
         }}
+        placeholder="Search your domain"
       />
       <RadioFilter
         title="Domain Status"

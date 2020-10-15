@@ -1,6 +1,6 @@
-import { PriceFilter } from 'api/models/RnsFilter'
 import React, { FC, useContext } from 'react'
-import RnsOffersStore from 'store/Market/rns/OffersStore'
+import RnsOffersContext from 'context/Services/rns/OffersContext'
+import { MinMaxFilter } from 'models/Filters'
 import RangeFilter from './RangeFilter'
 import SearchFilter from './SearchFilter'
 
@@ -22,7 +22,7 @@ const DomainOfferFilters: FC<{}> = () => {
       },
     },
     dispatch,
-  } = useContext(RnsOffersStore)
+  } = useContext(RnsOffersContext)
 
   return (
     <>
@@ -36,6 +36,7 @@ const DomainOfferFilters: FC<{}> = () => {
             payload: { name: value },
           })
         }}
+        placeholder="Search your domain"
       />
       <RangeFilter
         title="Price"
@@ -48,7 +49,7 @@ const DomainOfferFilters: FC<{}> = () => {
           max: absMaxPrice,
         }}
         unit="RIF"
-        handleChange={(price: PriceFilter) => {
+        handleChange={(price: MinMaxFilter) => {
           dispatch({
             type: 'FILTER',
             payload: { price },

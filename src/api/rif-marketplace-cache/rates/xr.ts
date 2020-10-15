@@ -3,16 +3,18 @@ import { AbstractAPIService, APIService, isResultPaginated } from 'api/models/ap
 import { Modify } from 'utils/typeUtils'
 
 export type XRServiceAddress = 'rates/v0'
-export const xeServiceAddress: XRServiceAddress = 'rates/v0'
+export const xrServiceAddress: XRServiceAddress = 'rates/v0'
 
 export type SupportedFiat = 'usd' | 'eur' | 'btc' | 'ars' | 'cny' | 'krw' | 'jpy';
 
-export const SUPPORTED_TOKENS = ['rif'] as const
+export const SUPPORTED_TOKENS = ['rif', 'rbtc'] as const
 export type SupportedToken = typeof SUPPORTED_TOKENS[number];
 export const tokenDisplayNames: Record<SupportedToken, string> = {
   rif: 'RIF',
-  // rbtc: 'RBTC',
+  rbtc: 'RBTC',
 }
+
+export type XRItem = { [fiatSymbol: string]: number }
 
 export interface XRFilter {
   fiatSymbol: SupportedFiat
@@ -20,7 +22,7 @@ export interface XRFilter {
 
 export type XRAPIService = Modify<APIService, {
   path: XRServiceAddress
-  fetch: (filters: XRFilter) => Promise<ExchangeRate[]>
+  fetch: (filters: XRFilter) => Promise<XRItem[]>
 }>
 
 export type ExchangeRate = {
@@ -34,7 +36,7 @@ export const isSupportedToken = (
 ): token is SupportedToken => SUPPORTED_TOKENS.includes(token as SupportedToken)
 
 export class XRService extends AbstractAPIService implements XRAPIService {
-  path = xeServiceAddress
+  path = xrServiceAddress
 
   _fetch = async (filters: XRFilter): Promise<ExchangeRate[]> => {
     const { fiatSymbol } = filters

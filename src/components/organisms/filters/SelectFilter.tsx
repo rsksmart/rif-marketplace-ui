@@ -1,23 +1,27 @@
 import React from 'react'
-import { Accordion, FilterCheckboxCard } from '@rsksmart/rif-ui'
-/* eslint-disable-next-line import/no-unresolved */
-import { LabeledCheckboxProps } from '@rsksmart/rif-ui/dist/components/molecules/LabeledCheckbox'
+import { Accordion, Checkbox } from '@rsksmart/rif-ui'
+import { FormControlLabel, FormControlLabelProps } from '@material-ui/core'
 
 export interface SelectFilterProps {
   className?: string
   title: string
-  items: LabeledCheckboxProps[]
-  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  items: Omit<FormControlLabelProps, 'control'>[]
 }
 
-const SelectFilter = ({ className = '', title, ...rest }: SelectFilterProps) => (
+const SelectFilter = ({ className = '', title, items }: SelectFilterProps) => (
   <Accordion
     id={title.toLocaleLowerCase()}
-    className={`${title} ${className}`}
+    className={className}
     expanded
     title={title}
   >
-    <FilterCheckboxCard {...rest} />
+    {items.map((itemProps) => (
+      <FormControlLabel
+        key={itemProps.value as string}
+        {...itemProps}
+        control={<Checkbox />}
+      />
+    ))}
   </Accordion>
 )
 

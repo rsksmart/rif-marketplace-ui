@@ -1,15 +1,16 @@
 import { Paginated } from '@feathersjs/feathers'
 import { AbstractAPIService, isResultPaginated } from 'api/models/apiService'
-import { PriceFilter, RnsFilter } from 'api/models/RnsFilter'
+import { RnsFilter } from 'api/models/RnsFilter'
 import { OfferTransport } from 'api/models/transports'
+import { MinMaxFilter } from 'models/Filters'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import { convertToBigString, parseToBigDecimal, parseToInt } from 'utils/parsers'
 import { isSupportedToken } from '../rates/xr'
 import {
-  getAvailableTokens, RnsAddresses, RnsAPIService, RnsChannels,
+  availableTokens, RnsAPIService, RnsChannels, RnsServiceAddress,
 } from './common'
 
-export const offersAddress: RnsAddresses = 'rns/v0/offers'
+export const offersAddress: RnsServiceAddress = 'rns/v0/offers'
 export const offersChannel: RnsChannels = 'offers'
 
 const mapFromTransport = ({
@@ -18,26 +19,29 @@ const mapFromTransport = ({
     expiration: { date },
     name: domainName,
   },
-  id,
+  offerId,
   paymentToken,
   tokenId,
   ownerAddress,
 }: OfferTransport): RnsDomainOffer => ({
-  id,
+  id: offerId,
   ownerAddress,
   domainName,
   price: parseToBigDecimal(priceString, 18),
   expirationDate: new Date(date),
-  paymentToken: getAvailableTokens[paymentToken.toLowerCase()],
+  paymentToken: availableTokens[paymentToken.toLowerCase()],
   tokenId,
 })
 
 enum LimitType {
   min = 1,
-  max = -1
+  max = -1,
 }
 
-const fetchPriceLimit = async (service, limitType: LimitType): Promise<number> => {
+const fetchPriceLimit = async (
+  service,
+  limitType: LimitType,
+): Promise<number> => {
   const query = {
     $limit: 1,
     $sort: {
@@ -91,7 +95,7 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
       .filter(({ paymentToken }) => isSupportedToken(paymentToken))
   }
 
-  fetchPriceLimits = async (): Promise<PriceFilter> => {
+  fetchPriceLimits = async (): Promise<MinMaxFilter> => {
     const min = await fetchPriceLimit(this.service, LimitType.min)
     const max = await fetchPriceLimit(this.service, LimitType.max)
     return { min, max }

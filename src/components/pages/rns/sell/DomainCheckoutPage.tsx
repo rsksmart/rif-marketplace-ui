@@ -3,12 +3,12 @@ import {
 } from '@material-ui/core'
 import {
   Button, colors, shortenString, UnitsInput, validatedNumber, Web3Store,
+  ShortenTextTooltip,
 } from '@rsksmart/rif-ui'
 import Box from '@material-ui/core/Box'
-import PriceItem from 'components/atoms/PriceItem'
+import ItemWUnit from 'components/atoms/ItemWUnit'
 import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
-import DomainNameItem from 'components/molecules/DomainNameItem'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import MarketplaceContract from 'contracts/Marketplace'
@@ -18,21 +18,17 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import { AddTxPayload } from 'store/Blockchain/blockchainActions'
-import BlockchainStore from 'store/Blockchain/BlockchainStore'
-import MarketStore from 'store/Market/MarketStore'
-import RnsDomainsStore from 'store/Market/rns/DomainsStore'
-import contractAdds from 'ui-config.json'
+import { AddTxPayload } from 'context/Blockchain/blockchainActions'
+import BlockchainContext from 'context/Blockchain/BlockchainContext'
+import MarketContext from 'context/Market/MarketContext'
+import RnsDomainsContext from 'context/Services/rns/DomainsContext'
 import Logger from 'utils/Logger'
-import AppStore, { AppStoreProps, errorReporterFactory } from 'store/App/AppStore'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { UIError } from 'models/UIMessage'
-import { LoadingPayload } from 'store/App/appActions'
+import { LoadingPayload } from 'context/App/appActions'
+import { rifTokenAddress, marketPlaceAddress } from 'contracts/config'
 
 const logger = Logger.getInstance()
-
-const NETWORK: string = process.env.REACT_APP_NETWORK || 'ganache'
-const rifTokenAddress = contractAdds[NETWORK].rif.toLowerCase()
-const marketPlaceAddress = contractAdds[NETWORK].marketplace.toLowerCase()
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   card: {
@@ -90,7 +86,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
     state: {
       order,
     }, dispatch,
-  } = useContext(RnsDomainsStore)
+  } = useContext(RnsDomainsContext)
 
   const {
     state: {
@@ -99,7 +95,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
         crypto,
       },
     },
-  } = useContext(MarketStore)
+  } = useContext(MarketContext)
   const classes = useStyles()
   const {
     state: {
@@ -107,9 +103,9 @@ const DomainsCheckoutPage: FC<{}> = () => {
       web3,
     },
   } = useContext(Web3Store)
-  const { dispatch: bcDispatch } = useContext(BlockchainStore)
+  const { dispatch: bcDispatch } = useContext(BlockchainContext)
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
-  const { dispatch: appDispatch } = useContext<AppStoreProps>(AppStore)
+  const { dispatch: appDispatch } = useContext<AppContextProps>(AppContext)
   const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
   const currencySymbols = Object.keys(crypto)
@@ -123,7 +119,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
     if (isPendingConfirm && order && !order.isProcessing) {
       // Post-confirmations handle
       const { item: { name } } = order
-      history.replace(ROUTES.DOMAINS.DONE.SELL, { domainName: name })
+      history.replace(ROUTES.RNS.SELL.DONE, { domainName: name })
       dispatch({
         type: 'CLEAR_ORDER',
       } as never)
@@ -173,7 +169,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
             id: 'contract',
             message: 'Approving domain placement...',
           } as LoadingPayload,
-        } as any)
+        })
 
         // Send approval transaction
         const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId, { from: account, gasPrice })
@@ -233,9 +229,9 @@ const DomainsCheckoutPage: FC<{}> = () => {
   }
 
   const handlePriceChange = ({ target: { value } }) => {
-    // validatedNumber function gives as the closest value within limits
+    // validatedNumber function gives us the closest value within limits
     const newValue = validatedNumber(value)
-    setPrice(newValue)
+    setPrice(newValue.toString())
     // we convert to number after setting the newValue because we need to allow '0.' and Number('0.') is 0
     const priceNumber = Number(newValue)
 
@@ -263,20 +259,29 @@ const DomainsCheckoutPage: FC<{}> = () => {
   const submitDisabled = () => Number(price) <= 0
 
   const displayName = name
-    ? <DomainNameItem value={name} />
+    ? <ShortenTextTooltip value={name} maxLength={30} />
     : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
   const listingNameTitle = name
     ? shortenString(name, 30, 25)
     : shortenString(tokenId)
 
+  const onProcessingComplete = () => {
+    dispatch({
+      type: 'SET_PROGRESS',
+      payload: {
+        isProcessing: false,
+      },
+    })
+  }
+
   return (
     <CheckoutPageTemplate
-      isProcessing={order.isProcessing}
-      className="domains-checkout-page"
-      backButtonProps={{
-        backTo: 'domains',
-      }}
+        isProcessing={order.isProcessing}
+        className="domains-checkout-page"
+        backButtonProps={{
+          backTo: 'domains',
+        }}
     >
       <Card
         className={classes.card}
@@ -343,7 +348,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
                     <TableRow>
                       <TableCell className={classes.detailKey}>USD PRICE</TableCell>
                       <TableCell className={classes.detailValue}>
-                        <PriceItem type="fiat" price={`${priceFiat}`} currency={currentFiat.displayName} />
+                        <ItemWUnit type="normalGrey" value={`${priceFiat}`} unit={currentFiat.displayName} />
                       </TableCell>
                     </TableRow>
                   </>
@@ -375,7 +380,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
             </CardActions>
           )}
       </Card>
-      {isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, dispatch }} text="Listing the domain!" progMsg="The waiting period is required to securely list your domain. Please do not close this tab until the process has finished" />}
+      {isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, onProcessingComplete }} text="Listing the domain!" progMsg="The waiting period is required to securely list your domain. Please do not close this tab until the process has finished" />}
     </CheckoutPageTemplate>
   )
 }

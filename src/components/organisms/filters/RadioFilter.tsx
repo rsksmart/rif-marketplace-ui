@@ -20,7 +20,15 @@ const RadioFilter = ({
     title={title}
   >
     <RadioGroup {...rest}>
-      {items.map((itemProps) => <FormControlLabel key={itemProps.value as string} {...itemProps} control={<Radio color="primary" />} />)}
+      {items.map(
+        (itemProps) => (
+          <FormControlLabel
+            key={itemProps.value as string}
+            {...itemProps}
+            control={<Radio color="primary" />}
+          />
+        ),
+      )}
     </RadioGroup>
   </Accordion>
 )

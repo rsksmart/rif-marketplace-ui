@@ -1,7 +1,9 @@
 import Collapse from '@material-ui/core/Collapse'
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import Alert from '@material-ui/lab/Alert'
-import { PageTemplate, theme, Web3Provider } from '@rsksmart/rif-ui'
+import {
+  PageTemplate, theme, Web3Provider, defaultWeb3State,
+} from '@rsksmart/rif-ui'
 import '@rsksmart/rif-ui/dist/index.css'
 import ErrorPanel from 'components/organisms/ErrorPanel'
 import Footer from 'components/organisms/Footer'
@@ -9,12 +11,9 @@ import Header from 'components/organisms/Header'
 import Routes from 'components/Routes'
 import React, { useState } from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import { AppStoreProvider } from 'store/App/AppStore'
-import { BlockchainStoreProvider } from 'store/Blockchain/BlockchainStore'
-import { MarketStoreProvider } from 'store/Market/MarketStore'
-import { RnsDomainsStoreProvider } from 'store/Market/rns/DomainsStore'
-import { RnsOffersStoreProvider } from 'store/Market/rns/OffersStore'
-import { RnsSoldStoreProvider } from 'store/Market/rns/SoldStore'
+import { AppContextProvider } from 'context/App/AppContext'
+import { BlockchainContextProvider } from 'context/Blockchain/BlockchainContext'
+import { MarketContextProvider } from 'context/Market/MarketContext'
 
 const requiredNetworkId: number = Number(process.env.REACT_APP_REQUIRED_NETWORK_ID) || 8545
 
@@ -44,11 +43,8 @@ const App = () => {
   }
 
   const orderedProviders = [
-    BlockchainStoreProvider,
-    MarketStoreProvider,
-    RnsDomainsStoreProvider,
-    RnsOffersStoreProvider,
-    RnsSoldStoreProvider,
+    BlockchainContextProvider,
+    MarketContextProvider,
   ]
   const content = (
     <BrowserRouter>
@@ -69,7 +65,7 @@ const App = () => {
   )
 
   return (
-    <AppStoreProvider>
+    <AppContextProvider>
       <ThemeProvider theme={theme}>
         <Web3Provider.Provider
           requiredNetworkId={requiredNetworkId}
@@ -77,13 +73,14 @@ const App = () => {
             onConnectedAccountChange,
             onConnectedNetworkChange,
           }}
+          state={defaultWeb3State}
         >
           {
             orderedProviders.reverse().reduce((Wrapper: any, Provider: any) => <Provider>{Wrapper}</Provider>, content)
           }
         </Web3Provider.Provider>
       </ThemeProvider>
-    </AppStoreProvider>
+    </AppContextProvider>
   )
 }
 

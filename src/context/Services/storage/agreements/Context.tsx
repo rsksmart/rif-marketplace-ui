@@ -1,0 +1,102 @@
+import { Web3Store } from '@rsksmart/rif-ui'
+import React, {
+  createContext, FC, useContext,
+  useEffect, useMemo, useReducer, useState,
+} from 'react'
+import { createReducer } from 'context/storeUtils/reducer'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
+import { LoadingPayload } from 'context/App/appActions'
+import { Props, State } from './interfaces'
+import actions from './actions'
+
+export const initialState: State = {
+  contextID: 'storage_agreements',
+  agreements: [],
+}
+
+const Context = createContext<Props>({
+  state: initialState,
+  dispatch: () => undefined,
+})
+
+export const Provider: FC = ({ children }) => {
+  const {
+    state: {
+      apis: {
+        'storage/v0/agreements': api,
+      },
+    },
+    dispatch: appDispatch,
+  } = useContext<AppContextProps>(AppContext)
+  const {
+    state: { account },
+  } = useContext(Web3Store)
+
+  const [isInitialised, setIsInitialised] = useState(false)
+
+  const [state, dispatch] = useReducer(
+    createReducer(initialState, actions),
+    initialState,
+  )
+
+  // Get service connection
+  if (api && !api.service) {
+    api.connect(errorReporterFactory(appDispatch))
+  }
+
+  // Initialise
+  useEffect(() => {
+    if (api.service && !isInitialised) {
+      try {
+        // Set up WS events here
+
+        setIsInitialised(true)
+      } catch (e) {
+        setIsInitialised(false)
+      }
+    }
+  }, [api, isInitialised, appDispatch])
+
+  // Fetch data
+  useEffect(() => {
+    if (isInitialised && account) {
+      appDispatch({
+        type: 'SET_IS_LOADING',
+        payload: {
+          isLoading: true,
+          id: 'data',
+        } as LoadingPayload,
+      })
+      api.fetch({ account })
+        .then((items) => {
+          dispatch({
+            type: 'SET_LISTING',
+            payload: items,
+          })
+        })
+        .finally(() => {
+          appDispatch({
+            type: 'SET_IS_LOADING',
+            payload: {
+              isLoading: false,
+              id: 'data',
+            } as LoadingPayload,
+          })
+        })
+    }
+  }, [isInitialised, api, account, appDispatch])
+
+  // Finalise
+  const value = useMemo(() => ({
+    state,
+    dispatch,
+  }), [state])
+
+  return (
+    <Context.Provider value={value}>
+      {children}
+    </Context.Provider>
+  )
+}
+
+export default Context

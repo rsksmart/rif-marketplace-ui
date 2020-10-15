@@ -3,9 +3,10 @@ import {
   AbstractAPIService, APIService, isResultPaginated,
 } from 'api/models/apiService'
 import { Modify } from 'utils/typeUtils'
+import utils from './utils'
 
 export type ConfirmationAddress = 'confirmations'
-const confirmationAddress: ConfirmationAddress = 'confirmations'
+export const confirmationAddress: ConfirmationAddress = 'confirmations'
 
 export type ConfirmationAPI = Modify<APIService, {
   path: ConfirmationAddress
@@ -18,23 +19,12 @@ export interface ConfirmationsItem {
 
 export type Confirmations = Record<string, ConfirmationsItem>
 
-interface Transport {
+export interface Transport {
   transactionHash: string
   confirmations: number
   targetConfirmation: number
   event: string
 }
-
-/* eslint-disable no-param-reassign */
-export const mapFromTransport = (data: Transport[]): Confirmations => data
-  .reduce((map, item: Transport) => {
-    map[item.transactionHash] = {
-      currentCount: item.confirmations,
-      targetCount: item.targetConfirmation,
-    }
-    return map
-  }, {})
-/* eslint-enable no-param-reassign */
 
 export class ConfirmationsService
   extends AbstractAPIService
@@ -42,11 +32,12 @@ export class ConfirmationsService
   path = confirmationAddress
 
   _fetch = async (): Promise<Confirmations> => {
-    const result: Paginated<Transport> = await this.service.find()
+    const result: Paginated<Transport> = await this
+      .service.find()
     const { data, ...metadata } = isResultPaginated(result)
       ? result : { data: result }
     this.meta = metadata
 
-    return mapFromTransport(data)
+    return utils.mapFromTransport(data)
   }
 }

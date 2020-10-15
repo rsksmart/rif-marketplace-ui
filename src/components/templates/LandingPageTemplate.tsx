@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import ServiceCategories from 'components/organisms/ServiceCategories'
 import {
-  HeaderTongue, Typography,
+  HeaderTongue,
 } from '@rsksmart/rif-ui'
 /* eslint-disable-next-line import/no-unresolved */
 import { HeaderTongueProps } from '@rsksmart/rif-ui/dist/components/organisms/Header/HeaderTongue'
@@ -12,13 +12,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     display: 'flex',
     flexDirection: 'column',
-    margin: theme.spacing(2, 0),
-    width: '100%',
-  },
-  titleContainer: {
-    display: 'flex',
-    justifyContent: 'center',
     marginBottom: theme.spacing(2),
+    width: '100%',
   },
 }))
 
@@ -35,9 +30,6 @@ const LandingPageTemplate: FC = () => {
     <>
       <HeaderTongue {...headerTongueProps} />
       <div className={classes.root}>
-        <div className={classes.titleContainer}>
-          <Typography color="primary" variant="h4">RIF Marketplace Service Categories</Typography>
-        </div>
         <ServiceCategories />
       </div>
     </>
