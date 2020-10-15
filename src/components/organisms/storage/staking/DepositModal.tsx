@@ -52,7 +52,7 @@ const DepositModal: FC<DepositModalProps> = ({
     <ModalDialogue
       open={open}
       onClose={onClose}
-      title="Stacking"
+      title="Staking"
       footer={actions}
     >
       <CenteredContent>
