@@ -2,13 +2,13 @@ import { AbstractAPIService } from 'api/models/apiService'
 import { StakeAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
 
 export const stakesAddress: StorageServiceAddress = 'storage/v0/stakes'
-export const offersWSChannel: StorageWSChannel = 'stakes'
+export const stakesWSChannel: StorageWSChannel = 'stakes'
 
 export class StakesService
   extends AbstractAPIService implements StakeAPIService {
     path = stakesAddress
 
-    _channel = offersWSChannel
+    _channel = stakesWSChannel
 
     _fetch = (filters: { account: string, token: string }): Promise<any[]> => {
       const { account, token } = filters
