@@ -25,9 +25,9 @@ const logger = Logger.getInstance()
 export const initialState: State = {
   // FIXME:
   /**
-   * is awaiting aims to know if the action has been completed but we are 
+   * is awaiting aims to know if the action has been completed but we are
    * waiting for confirmations.
-   * This prop should live in the AppContext as that's a global context. 
+   * This prop should live in the AppContext as that's a global context.
    * Otherwise, we would loose track of this prop when switching to a new page
    */
   isAwaiting: false,
@@ -69,7 +69,7 @@ export const ContextProvider: FC = ({ children }) => {
 
   // Initialise
   useEffect(() => {
-    if (api && !isInitialised) {
+    if (api && !isInitialised && account) {
       const {
         connect,
         attachEvent,
@@ -85,14 +85,16 @@ export const ContextProvider: FC = ({ children }) => {
         setIsInitialised(false)
       }
     }
-  }, [api, isInitialised, appDispatch])
+  }, [api, isInitialised, appDispatch, account])
 
   useEffect(() => {
-    if (needsRefresh) {
+    if (needsRefresh && account) {
       const fetchStakeTotal = async () => {
-        const [stakeRBTC] = await api.fetch({
+        // TODO: don't filter by the token while fetching in order to support multicurrency
+        const balances = await api.fetch({
           account, token: zeroAddress,
         })
+        const [stakeRBTC] = balances
         dispatch({
           type: 'SET_TOTAL_STAKE',
           payload: { totalStaked: stakeRBTC?.total || 0 },
