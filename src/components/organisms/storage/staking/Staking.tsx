@@ -255,9 +255,9 @@ const Staking: FC<{}> = () => {
                 </Box>
               </Typography>
               <StakingBalance
-                isLoading={isFetching}
-                totalStaked={totalStaked}
-                units="RBTC"
+                isLoading={true}
+                totalStaked={isFetching ? '' : totalStaked}
+                units={isFetching ? '-' : "RBTC"}
               />
             </Grid>
             <Grid
