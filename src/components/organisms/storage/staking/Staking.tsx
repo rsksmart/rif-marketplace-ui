@@ -94,7 +94,7 @@ const Staking: FC<{}> = () => {
   const {
     state: {
       totalStaked,
-      isFetching,
+      isAwaiting,
     },
     dispatch,
   } = useContext<StakingContextProps>(StakingContext)
@@ -131,10 +131,9 @@ const Staking: FC<{}> = () => {
       if (receipt) {
         setTxOperationDone(true)
       }
-      // TODO: remove when events are attached
       dispatch({
-        type: 'SET_IS_FETCHING',
-        payload: { isFetching: true },
+        type: 'SET_IS_AWAITING',
+        payload: { isAwaiting: true },
       })
     } catch (error) {
       logger.error('error depositing funds', error)
@@ -255,9 +254,9 @@ const Staking: FC<{}> = () => {
                 </Box>
               </Typography>
               <StakingBalance
-                isLoading={true}
-                totalStaked={isFetching ? '' : totalStaked}
-                units={isFetching ? '-' : "RBTC"}
+                isLoading={isAwaiting}
+                totalStaked={isAwaiting ? '' : totalStaked}
+                units={isAwaiting ? '-' : 'RBTC'}
               />
             </Grid>
             <Grid

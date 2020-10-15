@@ -2,9 +2,9 @@ import Logger from 'utils/Logger'
 import { Action, Actions, State } from './interfaces'
 
 export const actions: Actions = {
-  SET_IS_FETCHING: (state: State, { isFetching }): State => ({
+  SET_IS_AWAITING: (state: State, { isAwaiting }): State => ({
     ...state,
-    isFetching,
+    isAwaiting,
   }),
   SET_TOTAL_STAKE: (state: State, { totalStaked }): State => ({
     ...state,

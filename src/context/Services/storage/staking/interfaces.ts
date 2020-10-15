@@ -2,7 +2,7 @@ import { Dispatch } from 'react'
 
 export type State = {
   totalStaked: number
-  isFetching: boolean
+  isAwaiting: boolean
   needsRefresh: boolean
 }
 
@@ -12,8 +12,8 @@ export type Action =
       payload: { totalStaked: number }
     }
   | {
-      type: 'SET_IS_FETCHING'
-      payload: { isFetching: boolean }
+      type: 'SET_IS_AWAITING'
+      payload: { isAwaiting: boolean }
     }
   | {
       type: 'SET_NEEDS_REFRESH'
@@ -22,7 +22,7 @@ export type Action =
 
 export type Actions = {
   SET_TOTAL_STAKE: (state: State, { totalStaked: number }) => State
-  SET_IS_FETCHING: (state: State, { isFetching: boolean }) => State
+  SET_IS_AWAITING: (state: State, { isAwaiting: boolean }) => State
   SET_NEEDS_REFRESH: (state: State, { needsRefresh }) => State
 }
 

@@ -23,7 +23,14 @@ import { Action, Props, State } from './interfaces'
 const logger = Logger.getInstance()
 
 export const initialState: State = {
-  isFetching: true,
+  // FIXME:
+  /**
+   * is awaiting aims to know if the action has been completed but we are 
+   * waiting for confirmations.
+   * This prop should live in the AppContext as that's a global context. 
+   * Otherwise, we would loose track of this prop when switching to a new page
+   */
+  isAwaiting: false,
   totalStaked: 0,
   needsRefresh: true,
 }
@@ -36,7 +43,7 @@ export const StakingContext = createContext<Props>({
 const stakeNeedsRefresh = (dispatch: Dispatch<Action>) => () => {
   dispatch({
     type: 'SET_NEEDS_REFRESH',
-    payload: { needsRefresh: true }
+    payload: { needsRefresh: true },
   })
 }
 
@@ -91,8 +98,8 @@ export const ContextProvider: FC = ({ children }) => {
           payload: { totalStaked: stakeRBTC?.total || 0 },
         })
         dispatch({
-          type: 'SET_IS_FETCHING',
-          payload: { isFetching: false },
+          type: 'SET_IS_AWAITING',
+          payload: { isAwaiting: false },
         })
         dispatch({
           type: 'SET_NEEDS_REFRESH',
