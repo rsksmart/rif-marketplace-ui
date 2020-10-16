@@ -47,6 +47,22 @@ const stakeNeedsRefresh = (dispatch: Dispatch<Action>) => () => {
   })
 }
 
+const onStakeUpdated = (dispatch, updatedVal) => {
+  dispatch({
+    type: 'SET_TOTAL_STAKE',
+    payload: { totalStaked: updatedVal.total || 0 },
+  })
+  dispatch({
+    type: 'SET_IS_AWAITING',
+    payload: { isAwaiting: false },
+  })
+
+  dispatch({
+    type: 'SET_NEEDS_REFRESH',
+    payload: { needsRefresh: false },
+  })
+}
+
 export const ContextProvider: FC = ({ children }) => {
   const {
     state: { apis },
@@ -77,7 +93,12 @@ export const ContextProvider: FC = ({ children }) => {
       setIsInitialised(true)
       try {
         connect(errorReporterFactory(appDispatch))
-        attachEvent('updated', stakeNeedsRefresh(dispatch))
+        // attachEvent('updated', (updatedVal) => {
+        attachEvent('updated', (updatedVal) => {
+          onStakeUpdated(dispatch, updatedVal)
+          // console.log({ updatedVal })
+          // stakeNeedsRefresh(dispatch)
+        })
         attachEvent('patched', stakeNeedsRefresh(dispatch))
         attachEvent('created', stakeNeedsRefresh(dispatch))
         attachEvent('removed', stakeNeedsRefresh(dispatch))
