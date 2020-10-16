@@ -92,7 +92,8 @@ export const ContextProvider: FC = ({ children }) => {
       const fetchStakeTotal = async () => {
         // TODO: don't filter by the token while fetching in order to support multicurrency
         const balances = await api.fetch({
-          account, token: zeroAddress,
+          account,
+          token: zeroAddress,
         })
         const [stakeRBTC] = balances
         dispatch({

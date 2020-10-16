@@ -19,11 +19,16 @@ export type StorageAPIService = Modify<
   }
 >
 
+export type StakeFilters = {
+  account: string
+  token?: string
+}
+
 export type StakeAPIService = Modify<
   APIService,
   {
     path: StorageServiceAddress
     _channel: StorageWSChannel
-    fetch: () => Promise<any[]>
+    fetch: (filters: StakeFilters) => Promise<any[]>
   }
 >
