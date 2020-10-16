@@ -31,8 +31,12 @@ export const initialState: State = {
    * Otherwise, we would loose track of this prop when switching to a new page
    */
   isAwaiting: false,
-  totalStaked: 0,
   needsRefresh: true,
+  totalStakedUSD: '',
+  stakes: {
+    rif: '',
+    rbtc: '',
+  },
 }
 
 export const StakingContext = createContext<Props>({
@@ -47,7 +51,13 @@ const stakeNeedsRefresh = (dispatch: Dispatch<Action>) => () => {
   })
 }
 
+// .ito - need an action that would set the amount staked of certain token - payload: token, amount
+// need an action that would set the total staked usd - payload: totalAmountUSD
 const onStakeUpdated = (dispatch, updatedVal) => {
+  dispatch({
+    type: 'SET_TOTAL_STAKED_USD',
+    payload: { totalStakedUSD: updatedVal.totalStakedUSD || '' },
+  })
   dispatch({
     type: 'SET_TOTAL_STAKE',
     payload: { totalStaked: updatedVal.total || 0 },
@@ -93,11 +103,8 @@ export const ContextProvider: FC = ({ children }) => {
       setIsInitialised(true)
       try {
         connect(errorReporterFactory(appDispatch))
-        // attachEvent('updated', (updatedVal) => {
-        attachEvent('updated', (updatedVal) => {
-          onStakeUpdated(dispatch, updatedVal)
-          // console.log({ updatedVal })
-          // stakeNeedsRefresh(dispatch)
+        attachEvent('updated', (updatedValue) => {
+          onStakeUpdated(dispatch, updatedValue)
         })
         attachEvent('patched', stakeNeedsRefresh(dispatch))
         attachEvent('created', stakeNeedsRefresh(dispatch))
@@ -116,11 +123,21 @@ export const ContextProvider: FC = ({ children }) => {
           account,
           token: zeroAddress,
         })
-        const [stakeRBTC] = balances
-        dispatch({
-          type: 'SET_TOTAL_STAKE',
-          payload: { totalStaked: stakeRBTC?.total || 0 },
-        })
+        // const [stakeRBTC] = balances
+        logger.info('balances result: ', { balances })
+
+        // FIXME:
+        /**
+         * as talked with Naz, we will receive an object with:
+         * {
+         *  totalStakedUSD,
+         *  stakes: {
+         *    SupportedToken,
+         *    amount
+         *  }
+         * }
+         * when that happens, we need to set the total usd amount
+         */
         dispatch({
           type: 'SET_IS_AWAITING',
           payload: { isAwaiting: false },

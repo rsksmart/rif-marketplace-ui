@@ -19,8 +19,8 @@ export class StakesService extends AbstractAPIService
     const { account, token } = filters
     return this.service.find({
       query: {
-        account: account,
-        token: token,
+        account,
+        token,
       },
     })
   }

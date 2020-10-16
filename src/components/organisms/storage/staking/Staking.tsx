@@ -93,7 +93,8 @@ const Staking: FC<{}> = () => {
 
   const {
     state: {
-      totalStaked,
+      // totalStaked,
+      totalStakedUSD,
       isAwaiting,
     },
     dispatch,
@@ -255,8 +256,8 @@ const Staking: FC<{}> = () => {
               </Typography>
               <StakingBalance
                 isLoading={isAwaiting}
-                totalStaked={isAwaiting ? '' : totalStaked}
-                units={isAwaiting ? '-' : 'RBTC'}
+                totalStaked={isAwaiting ? '' : totalStakedUSD}
+                units={isAwaiting ? '-' : 'USD'}
               />
             </Grid>
             <Grid
@@ -290,18 +291,20 @@ const Staking: FC<{}> = () => {
         </Grow>
         <StakingFab className={classes.stakingIcon} onClick={handleExpandClick} />
       </div>
+      {/* TODO: current balance should be a Record<SupportedTokens, string> */}
       <DepositModal
-        currentBalance={`${totalStaked} RBTC`}
+        currentBalance={`${totalStakedUSD} USD`}
         onDeposit={handleDeposit}
         open={depositOpened}
         onClose={() => setDepositOpened(false)}
       />
+      {/* TODO: current balance should be a Record<SupportedTokens, string> */}
       <WithdrawModal
         canWithdraw={canWithdraw}
         onClose={() => setWithdrawOpened(false)}
         open={withdrawOpened}
         onWithdraw={handleWithdraw}
-        currentBalance={totalStaked}
+        currentBalance={Number(totalStakedUSD)}
       />
       {renderProgressOverlay()}
     </>

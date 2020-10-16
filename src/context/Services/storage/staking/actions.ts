@@ -6,13 +6,13 @@ export const actions: Actions = {
     ...state,
     isAwaiting,
   }),
-  SET_TOTAL_STAKE: (state: State, { totalStaked }): State => ({
-    ...state,
-    totalStaked,
-  }),
   SET_NEEDS_REFRESH: (state: State, { needsRefresh }): State => ({
     ...state,
     needsRefresh,
+  }),
+  SET_TOTAL_STAKED_USD: (state: State, { totalStakedUSD }): State => ({
+    ...state,
+    totalStakedUSD,
   }),
 }
 
