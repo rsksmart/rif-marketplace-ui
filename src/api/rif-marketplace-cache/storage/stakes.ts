@@ -15,13 +15,11 @@ export class StakesService extends AbstractAPIService
 
   _channel = stakesWSChannel
 
+  // TODO: return proper type
   _fetch = (filters: StakeFilters): Promise<any[]> => {
-    const { account, token } = filters
-    return this.service.find({
-      query: {
-        account,
-        token,
-      },
-    })
+    const { account } = filters
+
+    // TODO: map from transport converting wei units
+    return this.service.get(account)
   }
 }

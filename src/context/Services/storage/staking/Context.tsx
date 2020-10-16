@@ -16,9 +16,10 @@ import React, {
   useState,
 } from 'react'
 import Logger from 'utils/Logger'
-import { zeroAddress } from '../interfaces'
 import { reducer } from './actions'
-import { Action, Props, State } from './interfaces'
+import {
+  Action, AmountToken, Props, State,
+} from './interfaces'
 
 const logger = Logger.getInstance()
 
@@ -33,10 +34,7 @@ export const initialState: State = {
   isAwaiting: false,
   needsRefresh: true,
   totalStakedUSD: '',
-  stakes: {
-    rif: '',
-    rbtc: '',
-  },
+  stakes: new Set(),
 }
 
 export const StakingContext = createContext<Props>({
@@ -51,25 +49,22 @@ const stakeNeedsRefresh = (dispatch: Dispatch<Action>) => () => {
   })
 }
 
-// .ito - need an action that would set the amount staked of certain token - payload: token, amount
-// need an action that would set the total staked usd - payload: totalAmountUSD
 const onStakeUpdated = (dispatch, updatedVal) => {
   dispatch({
     type: 'SET_TOTAL_STAKED_USD',
     payload: { totalStakedUSD: updatedVal.totalStakedUSD || '' },
   })
   dispatch({
-    type: 'SET_TOTAL_STAKE',
-    payload: { totalStaked: updatedVal.total || 0 },
-  })
-  dispatch({
     type: 'SET_IS_AWAITING',
     payload: { isAwaiting: false },
   })
-
   dispatch({
     type: 'SET_NEEDS_REFRESH',
     payload: { needsRefresh: false },
+  })
+  dispatch({
+    type: 'SET_STAKE',
+    payload: { token: updatedVal.symbol, amount: updatedVal.total },
   })
 }
 
@@ -118,26 +113,24 @@ export const ContextProvider: FC = ({ children }) => {
   useEffect(() => {
     if (needsRefresh && account) {
       const fetchStakeTotal = async () => {
-        // TODO: don't filter by the token while fetching in order to support multicurrency
-        const balances = await api.fetch({
+        const {
+          totalStakedFiat: totalStakedUSD,
+          stakes,
+        } = await api.fetch({
           account,
-          token: zeroAddress,
         })
-        // const [stakeRBTC] = balances
-        logger.info('balances result: ', { balances })
 
-        // FIXME:
-        /**
-         * as talked with Naz, we will receive an object with:
-         * {
-         *  totalStakedUSD,
-         *  stakes: {
-         *    SupportedToken,
-         *    amount
-         *  }
-         * }
-         * when that happens, we need to set the total usd amount
-         */
+        const stakesSet: Set<AmountToken> = stakes
+          .map(({ symbol, total }) => ({ token: symbol, amount: total }))
+
+        dispatch({
+          type: 'SET_STAKES',
+          payload: stakesSet,
+        })
+        dispatch({
+          type: 'SET_TOTAL_STAKED_USD',
+          payload: { totalStakedUSD },
+        })
         dispatch({
           type: 'SET_IS_AWAITING',
           payload: { isAwaiting: false },

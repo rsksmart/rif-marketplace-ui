@@ -1,5 +1,7 @@
 import Logger from 'utils/Logger'
-import { Action, Actions, State } from './interfaces'
+import {
+  Action, Actions, AmountToken, State,
+} from './interfaces'
 
 export const actions: Actions = {
   SET_IS_AWAITING: (state: State, { isAwaiting }): State => ({
@@ -13,6 +15,17 @@ export const actions: Actions = {
   SET_TOTAL_STAKED_USD: (state: State, { totalStakedUSD }): State => ({
     ...state,
     totalStakedUSD,
+  }),
+  SET_STAKE: (state: State, { token, amount }): State => ({
+    ...state,
+    stakes: {
+      ...state.stakes,
+      [token]: amount,
+    },
+  }),
+  SET_STAKES: (state: State, stakes: Set<AmountToken>): State => ({
+    ...state,
+    stakes,
   }),
 }
 
