@@ -7,15 +7,15 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles'
 import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
 import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
-import LabelWithValue from 'components/atoms/LabelWithValue'
-import { StakedBalances } from 'api/rif-marketplace-cache/storage/stakes'
+import { StakedBalances as StakedBalancesProp } from 'api/rif-marketplace-cache/storage/stakes'
+import StakedBalances from './StakedBalances'
 
 export interface DepositModalProps {
   totalStakedUSD: string
   open: boolean
   onClose: () => void
   onDeposit: (amount: number, currency: SupportedTokens) => void
-  stakes: StakedBalances
+  stakes: StakedBalancesProp
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -86,10 +86,7 @@ const DepositModal: FC<DepositModalProps> = ({
             {`${totalStakedUSD} USD`}
           </Box>
         </Typography>
-        {
-          Object.keys(stakes)
-            .map((symbol) => <LabelWithValue label={symbol} value={stakes[symbol]} />)
-        }
+        <StakedBalances stakes={stakes} />
         <Divider />
         <AmountWithCurrencySelect
           className={classes.bodyChild}
