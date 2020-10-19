@@ -7,10 +7,6 @@ import {
 } from './interfaces'
 
 export const actions: Actions = {
-  SET_IS_AWAITING: (state: State, { isAwaiting }): State => ({
-    ...state,
-    isAwaiting,
-  }),
   SET_NEEDS_REFRESH: (state: State, { needsRefresh }): State => ({
     ...state,
     needsRefresh,

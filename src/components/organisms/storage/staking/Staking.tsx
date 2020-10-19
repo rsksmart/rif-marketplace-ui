@@ -85,6 +85,11 @@ const Staking: FC<{}> = () => {
   } = useContext(Web3Store)
 
   const {
+    state: {
+      awaitingConfirmations: {
+        staking: isAwaitingConfirmations
+      }
+    },
     dispatch: appDispatch,
   } = useContext<AppContextProps>(AppContext)
   const reportError = useCallback((
@@ -95,9 +100,7 @@ const Staking: FC<{}> = () => {
     state: {
       stakes,
       totalStakedUSD,
-      isAwaiting,
     },
-    dispatch,
   } = useContext<StakingContextProps>(StakingContext)
 
   const [isExpanded, setIsExpanded] = useState(false)
@@ -131,11 +134,11 @@ const Staking: FC<{}> = () => {
 
       if (receipt) {
         setTxOperationDone(true)
+        appDispatch({
+          type: 'SET_AWAITING_CONFIRMATIONS',
+          payload: { service: 'staking', isAwaiting: true },
+        })
       }
-      dispatch({
-        type: 'SET_IS_AWAITING',
-        payload: { isAwaiting: true },
-      })
     } catch (error) {
       logger.error('error depositing funds', error)
       reportError(new UIError({
@@ -162,12 +165,11 @@ const Staking: FC<{}> = () => {
 
       if (receipt) {
         setTxOperationDone(true)
+        appDispatch({
+          type: 'SET_AWAITING_CONFIRMATIONS',
+          payload: { service: 'staking', isAwaiting: true },
+        })
       }
-      // TODO: move to appcontext
-      dispatch({
-        type: 'SET_NEEDS_REFRESH',
-        payload: { needsRefresh: true },
-      })
     } catch (error) {
       logger.error('error withdrawing funds', error)
       reportError(new UIError({
@@ -255,9 +257,9 @@ const Staking: FC<{}> = () => {
                 </Box>
               </Typography>
               <StakingBalance
-                isLoading={isAwaiting}
-                totalStaked={isAwaiting ? '' : totalStakedUSD}
-                units={isAwaiting ? '-' : 'USD'}
+                isLoading={isAwaitingConfirmations}
+                totalStaked={isAwaitingConfirmations ? '' : totalStakedUSD}
+                units={isAwaitingConfirmations ? '-' : 'USD'}
               />
             </Grid>
             <Grid

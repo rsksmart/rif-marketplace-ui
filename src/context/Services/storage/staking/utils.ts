@@ -1,5 +1,6 @@
 import { StakeTransport } from 'api/models/storage/transports'
 import { mapFromTransport } from 'api/rif-marketplace-cache/storage/stakes'
+import { AppAction } from 'context/App/appActions'
 import { Dispatch } from 'react'
 import { Action } from './interfaces'
 
@@ -12,7 +13,8 @@ export const setStakeNeedsRefresh = (dispatch: Dispatch<Action>) => () => {
 
 export const onStakeUpdated = (
   dispatch: Dispatch<Action>,
-  updatedVal: StakeTransport,
+  appDispatch: Dispatch<AppAction>,
+  updatedVal: StakeTransport
 ) => {
   const { stakedBalances, totalStakedUSD } = mapFromTransport(updatedVal)
   dispatch({
@@ -23,10 +25,9 @@ export const onStakeUpdated = (
     type: 'SET_STAKES',
     payload: stakedBalances,
   })
-  // TODO: move to appContext
-  dispatch({
-    type: 'SET_IS_AWAITING',
-    payload: { isAwaiting: false },
+  appDispatch({
+    type: 'SET_AWAITING_CONFIRMATIONS',
+    payload: { service: 'staking', isAwaiting: false },
   })
   dispatch({
     type: 'SET_NEEDS_REFRESH',

@@ -26,14 +26,6 @@ import { onStakeUpdated, setStakeNeedsRefresh } from './utils'
 const logger = Logger.getInstance()
 
 export const initialState: State = {
-  // FIXME:
-  /**
-   * is awaiting aims to know if the action has been completed but we are
-   * waiting for confirmations.
-   * This prop should live in the AppContext as that's a global context.
-   * Otherwise, we would loose track of this prop when switching to a new page
-   */
-  isAwaiting: false,
   needsRefresh: true,
   totalStakedUSD: '',
   stakes: {
@@ -78,7 +70,7 @@ export const ContextProvider: FC = ({ children }) => {
       try {
         connect(errorReporterFactory(appDispatch))
         attachEvent('updated', (updatedValue) => {
-          onStakeUpdated(dispatch, updatedValue)
+          onStakeUpdated(dispatch, appDispatch, updatedValue)
         })
         attachEvent('patched', setStakeNeedsRefresh(dispatch))
         attachEvent('created', setStakeNeedsRefresh(dispatch))
@@ -106,10 +98,6 @@ export const ContextProvider: FC = ({ children }) => {
           payload: { totalStakedUSD },
         })
         dispatch({
-          type: 'SET_IS_AWAITING',
-          payload: { isAwaiting: false },
-        })
-        dispatch({
           type: 'SET_NEEDS_REFRESH',
           payload: { needsRefresh: false },
         })
@@ -126,7 +114,7 @@ export const ContextProvider: FC = ({ children }) => {
         logger.error(`Fetch Stake total error: ${error.message}`)
       })
     }
-  }, [dispatch, api, account, reportError, needsRefresh])
+  }, [dispatch, api, account, reportError, needsRefresh, appDispatch])
 
   const value = { state, dispatch }
 

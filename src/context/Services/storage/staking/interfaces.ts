@@ -8,17 +8,12 @@ export type AmountToken = {
 }
 
 export type State = {
-  isAwaiting: boolean
   needsRefresh: boolean
   totalStakedUSD: string
   stakes: StakedBalances
 }
 
 export type Action =
-  | {
-      type: 'SET_IS_AWAITING'
-      payload: { isAwaiting: boolean }
-    }
   | {
       type: 'SET_NEEDS_REFRESH'
       payload: { needsRefresh: boolean }
@@ -37,7 +32,6 @@ export type Action =
     }
 
 export type Actions = {
-  SET_IS_AWAITING: (state: State, { isAwaiting: boolean }) => State
   SET_NEEDS_REFRESH: (state: State, { needsRefresh: boolean }) => State
   SET_TOTAL_STAKED_USD: (state: State, { totalStakedUSD: string }) => State
   SET_STAKE: (state: State, amountToken: AmountToken) => State
