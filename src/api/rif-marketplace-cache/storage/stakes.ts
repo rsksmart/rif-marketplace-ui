@@ -24,7 +24,7 @@ export const mapStakesListFromTransport = (stakes): StakedBalances => stakes.red
   return acc
 }, {})
 
-const mapFromTransport = (stakeTransport: StakeTransport): Staked => {
+export const mapFromTransport = (stakeTransport: StakeTransport): Staked => {
   const { totalStakedFiat: totalStakedUSD, stakes } = stakeTransport
   const stakedBalances = mapStakesListFromTransport(stakes)
 

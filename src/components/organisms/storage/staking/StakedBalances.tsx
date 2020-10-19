@@ -6,21 +6,19 @@ export interface StakedBalancesProps {
   stakes: StakedBalancesProp
 }
 
-const StakedBalances: FC<StakedBalancesProps> = ({ stakes }) => {
-  return (
-    <>
-      {
+const StakedBalances: FC<StakedBalancesProps> = ({ stakes }) => (
+  <>
+    {
         Object.keys(stakes)
-          .map((symbol) =>
+          .map((symbol) => (
             <LabelWithValue
               key={symbol}
               label={symbol}
-              value={stakes[symbol]} />
-          )
+              value={stakes[symbol]}
+            />
+          ))
       }
-    </>
-  )
-
-}
+  </>
+)
 
 export default StakedBalances

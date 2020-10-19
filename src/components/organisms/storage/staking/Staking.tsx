@@ -298,7 +298,6 @@ const Staking: FC<{}> = () => {
         open={depositOpened}
         onClose={() => setDepositOpened(false)}
       />
-      {/* TODO: current balance should be a Record<SupportedTokens, string> */}
       <WithdrawModal
         canWithdraw={canWithdraw}
         onClose={() => setWithdrawOpened(false)}

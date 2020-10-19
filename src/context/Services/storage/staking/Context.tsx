@@ -1,5 +1,7 @@
 import { Web3Store } from '@rsksmart/rif-ui'
-import { mapStakesListFromTransport, StakesService } from 'api/rif-marketplace-cache/storage/stakes'
+import {
+  StakesService
+} from 'api/rif-marketplace-cache/storage/stakes'
 import AppContext, {
   AppContextProps,
   errorReporterFactory,
@@ -7,7 +9,6 @@ import AppContext, {
 import { UIError } from 'models/UIMessage'
 import React, {
   createContext,
-  Dispatch,
   FC,
   useCallback,
   useContext,
@@ -18,8 +19,9 @@ import React, {
 import Logger from 'utils/Logger'
 import { reducer } from './actions'
 import {
-  Action, Props, State,
+  Props, State,
 } from './interfaces'
+import { onStakeUpdated, setStakeNeedsRefresh } from './utils'
 
 const logger = Logger.getInstance()
 
@@ -44,35 +46,6 @@ export const StakingContext = createContext<Props>({
   state: initialState,
   dispatch: () => undefined,
 })
-
-// TODO: move
-const setStakeNeedsRefresh = (dispatch: Dispatch<Action>) => () => {
-  dispatch({
-    type: 'SET_NEEDS_REFRESH',
-    payload: { needsRefresh: true },
-  })
-}
-
-// TODO: move
-const onStakeUpdated = (dispatch, updatedVal) => {
-  const { stakes, totalStakedFiat } = updatedVal
-  dispatch({
-    type: 'SET_TOTAL_STAKED_USD',
-    payload: { totalStakedUSD: totalStakedFiat || '' },
-  })
-  dispatch({
-    type: 'SET_IS_AWAITING',
-    payload: { isAwaiting: false },
-  })
-  dispatch({
-    type: 'SET_NEEDS_REFRESH',
-    payload: { needsRefresh: false },
-  })
-  dispatch({
-    type: 'SET_STAKES',
-    payload: mapStakesListFromTransport(stakes),
-  })
-}
 
 export const ContextProvider: FC = ({ children }) => {
   const {
