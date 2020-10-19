@@ -23,21 +23,15 @@ const mapFromTransport = ({
   paymentToken,
   tokenId,
   ownerAddress,
-}: OfferTransport): RnsDomainOffer => {
-  console.log(': -------------------------')
-  console.log('paymentToken', paymentToken)
-  console.log('availableTokens', availableTokens)
-  console.log(': -------------------------')
-  return ({
-    id: offerId,
-    ownerAddress,
-    domainName,
-    price: parseToBigDecimal(priceString, 18),
-    expirationDate: new Date(date),
-    paymentToken: availableTokens[paymentToken.toLowerCase()],
-    tokenId,
-  })
-}
+}: OfferTransport): RnsDomainOffer => ({
+  id: offerId,
+  ownerAddress,
+  domainName,
+  price: parseToBigDecimal(priceString, 18),
+  expirationDate: new Date(date),
+  paymentToken: availableTokens[paymentToken.toLowerCase()],
+  tokenId,
+})
 
 enum LimitType {
   min = 1,

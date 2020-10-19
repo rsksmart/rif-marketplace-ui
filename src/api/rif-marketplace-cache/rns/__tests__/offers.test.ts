@@ -82,9 +82,6 @@ describe('OffersService', () => {
     test('should return RnsDomainOffer[] on success', async () => {
       const actualReturnValue: RnsDomainOffer[] = await offersAPI.fetch(MOCK_FILTERS)
 
-      console.log(': -----------------------------------------')
-      console.log('actualReturnValue[0]', actualReturnValue[0])
-      console.log(': -----------------------------------------')
       expect(isRnsDomainOffer(actualReturnValue[0])).toBe(true)
     })
 
