@@ -11,6 +11,7 @@ import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/A
 import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
 import { LoadingPayload } from 'context/App/appActions'
 import { RefreshPayload, RnsPayload } from 'context/Services/rns/rnsActions'
+import { ServiceMetadata } from 'api/models/apiService'
 import {
   RnsListing, RnsOrder, RnsState, RnsContextProps,
 } from './interfaces'
@@ -42,6 +43,7 @@ export const initialState: RnsSoldState = {
   filters: {
   },
   needsRefresh: false,
+  pagination: {},
 }
 
 const RnsSoldContext = React.createContext({} as RnsSoldContextProps | any)
@@ -49,9 +51,8 @@ const soldDomainsReducer: RnsReducer<RnsPayload> | ContextReducer = storeReducer
 
 export const RnsSoldContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(soldDomainsReducer, initialState)
-  const {
-    state: appState, dispatch: appDispatch,
-  }: AppContextProps = useContext(AppContext)
+
+  const { state: appState, dispatch: appDispatch }: AppContextProps = useContext(AppContext)
   const api = appState?.apis?.['rns/v0/sold'] as SoldDomainsService
 
   const {
@@ -132,6 +133,17 @@ export const RnsSoldContextProvider = ({ children }) => {
       })
     }
   }, [isInitialised, needsRefresh, filters, api, account, appDispatch])
+
+  const meta = api?.meta
+
+  useEffect(() => {
+    if (meta) {
+      dispatch({
+        type: 'UPDATE_PAGE',
+        payload: meta as ServiceMetadata,
+      })
+    }
+  }, [meta])
 
   const value = { state, dispatch }
   return <RnsSoldContext.Provider value={value}>{children}</RnsSoldContext.Provider>

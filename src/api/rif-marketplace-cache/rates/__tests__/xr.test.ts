@@ -1,15 +1,17 @@
 import { AbstractAPIService } from 'api/models/apiService'
 import { XRService, xrServiceAddress, XRItem } from 'api/rif-marketplace-cache/rates/xr'
 
-const testFiatSymbol = 'usd'
-const testFilter = { fiatSymbol: testFiatSymbol }
+const TEST_FIAT_SYMBOL = 'usd'
+const TEST_Q_FILTER = { fiatSymbol: TEST_FIAT_SYMBOL }
+const TEST_TOKEN = 'rbtc'
 const expectedFindOptions = {
   query: {
-    $select: ['token', testFiatSymbol],
+    $select: ['token', TEST_FIAT_SYMBOL],
   },
 }
 const expectedXRItem: XRItem = {
-  [testFiatSymbol]: 0.01,
+  [TEST_FIAT_SYMBOL]: 0.01,
+  token: TEST_TOKEN,
 }
 
 const mockFeathersService = {
@@ -50,12 +52,12 @@ describe('Exchange rate service', () => {
 
     test(`should call service.find with ${JSON.stringify(expectedFindOptions)}`, () => {
       const fetchSpy = jest.spyOn(xrService.service, 'find')
-      xrService.fetch(testFilter)
+      xrService.fetch(TEST_Q_FILTER)
 
       expect(fetchSpy).toBeCalledWith(expectedFindOptions)
     })
     test('should return XRItem[] on success', async () => {
-      const actualItem = await xrService.fetch(testFilter)
+      const actualItem = await xrService.fetch(TEST_Q_FILTER)
 
       expect(actualItem).toEqual([expectedXRItem])
     })

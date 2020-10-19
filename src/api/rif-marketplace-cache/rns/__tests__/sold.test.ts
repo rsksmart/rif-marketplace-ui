@@ -2,7 +2,7 @@ import { SoldDomainTransport } from 'api/models/transports'
 import mockFeathersService from 'api/test-utils/feathers'
 import { RnsSoldDomain } from 'models/marketItems/DomainItem'
 import { parseToBigDecimal } from 'utils/parsers'
-import { RnsAPIService, availableTokens } from '../common'
+import { availableTokens, RnsAPIService } from '../common'
 import { SoldDomainsService } from '../sold'
 
 const mockOwnerAddress = 'fake_owner_address'
@@ -26,7 +26,7 @@ const MOCK_DOMAIN_TRANSPORT_ITEM_0: SoldDomainTransport = {
     tokenId: 'fake_token_id',
   },
   id: 'fake_id',
-  paymentToken: 'rif',
+  paymentToken: 'mockAddress',
   priceString: '900000',
   soldDate: MOCK_DATE,
   tokenId: 'fake_token_id',
@@ -37,6 +37,8 @@ const MOCK_DOMAIN_TRANSPORT_ITEM_0: SoldDomainTransport = {
   transferId: 'mock_id',
   txHash: 'mock_hash',
 }
+
+availableTokens.mockaddress = 'rif'
 
 const MOCK_TRANSPORT = [MOCK_DOMAIN_TRANSPORT_ITEM_0]
 
@@ -85,7 +87,7 @@ describe('DomainsService', () => {
 
     test('should return RnsSoldDomain[] on success', async () => {
       const actualReturn = await soldDomainsAPI.fetch(MOCK_FILTER)
-      expect(actualReturn).toContainEqual(expectedDomains[0])
+      expect(actualReturn[0]).toEqual<RnsSoldDomain>(expectedDomains[0])
     })
   })
 })

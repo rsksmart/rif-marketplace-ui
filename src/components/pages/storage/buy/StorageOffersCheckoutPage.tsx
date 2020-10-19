@@ -4,7 +4,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core'
-import { SupportedTokens, tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
+import { SupportedToken, tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
 import RoundedCard from 'components/atoms/RoundedCard'
@@ -134,7 +134,7 @@ const StorageOffersCheckoutPage: FC = () => {
       id="currency"
       value={selectedCurrency}
       options={currencyOptions
-        .map((symbol: SupportedTokens) => tokenDisplayNames[symbol])}
+        .map((symbol: SupportedToken) => tokenDisplayNames[symbol])}
       onChange={changeCurrencyHandle}
       disabled={currencyOptions.length <= 1}
     />,

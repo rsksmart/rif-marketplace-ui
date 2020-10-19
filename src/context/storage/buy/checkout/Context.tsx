@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom'
 import Web3 from 'web3'
 import { Big } from 'big.js'
 import { Web3Store } from '@rsksmart/rif-ui'
-import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
+import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
 import { TokenAddressees } from 'context/Services/storage/interfaces'
@@ -114,7 +114,7 @@ const Provider: FC = ({ children }) => {
         system,
         location,
       } = listedItem
-      const currencies: SupportedTokens[] = Array.from(
+      const currencies: SupportedToken[] = Array.from(
         new Set(subscriptionOptions.map(
           (option: BillingPlan) => option.currency,
         )),

@@ -18,7 +18,7 @@ const MOCK_OFFER_0: OfferTransport = {
     tokenId: 'fake_token_id',
   },
   offerId: 'fake_id',
-  paymentToken: 'mock',
+  paymentToken: 'mockAddress',
   priceString: '19000000000',
   ownerAddress: 'string',
   ownerDomain: 'string',
@@ -34,7 +34,7 @@ const MOCK_FILTERS: RnsFilter = {
   },
 }
 
-availableTokens.mock = 'mock'
+availableTokens.mockaddress = 'rif'
 
 const expectedDomains: RnsDomainOffer[] = [
   {
@@ -80,7 +80,8 @@ describe('OffersService', () => {
     })
 
     test('should return RnsDomainOffer[] on success', async () => {
-      const actualReturnValue = await offersAPI.fetch(MOCK_FILTERS)
+      const actualReturnValue: RnsDomainOffer[] = await offersAPI.fetch(MOCK_FILTERS)
+
       expect(isRnsDomainOffer(actualReturnValue[0])).toBe(true)
     })
 

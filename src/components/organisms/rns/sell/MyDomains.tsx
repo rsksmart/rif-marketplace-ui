@@ -67,16 +67,16 @@ const MyDomains: FC<{}> = () => {
         name: displayDomainName,
         expirationDate: expirationDate.toLocaleDateString(),
         action1: <SelectRowButton
-          id={id}
-          handleSelect={() => {
-            dispatch({
-              type: 'SET_ORDER',
-              payload: {
-                item: domainItem,
-              } as OrderPayload,
-            })
-            history.push(ROUTES.RNS.SELL.CHECKOUT)
-          }}
+            id={id}
+            handleSelect={() => {
+              dispatch({
+                type: 'SET_ORDER',
+                payload: {
+                  item: domainItem,
+                } as OrderPayload,
+              })
+              history.push(ROUTES.RNS.SELL.CHECKOUT)
+            }}
         />,
       }
       return displayItem

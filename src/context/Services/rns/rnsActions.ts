@@ -1,9 +1,20 @@
 import { RnsFilter } from 'api/models/RnsFilter'
 import { RnsItem } from 'models/marketItems/DomainItem'
 import { ContextPayload, ContextDispatch } from 'context/storeUtils/interfaces'
+import { ServiceMetadata } from 'api/models/apiService'
 import { RnsOrder, RnsState } from './interfaces'
 
-export type RNS_ACTION = 'FILTER' | 'SET_LISTING' | 'OUTDATE' | 'SET_ORDER' | 'REFRESH' | 'SET_PROGRESS' | 'CLEAR_ORDER' | 'UPDATE_LIMITS'
+export type RNS_ACTION = 'FILTER'
+| 'SET_LISTING'
+| 'OUTDATE'
+| 'SET_ORDER'
+| 'REFRESH'
+| 'SET_PROGRESS'
+| 'CLEAR_ORDER'
+| 'UPDATE_LIMITS'
+| 'UPDATE_PAGE'
+| 'NEXT_PAGE'
+| 'PREV_PAGE'
 
 export type FilterPayload = Partial<RnsFilter>
 
@@ -25,14 +36,17 @@ export type ProgressPayload = Pick<RnsOrder<RnsItem>, 'isProcessing'>
 
 export type LimitsPayload = Partial<Pick<RnsFilter, 'price'>>
 
-export type RnsPayload = ContextPayload |
-  FilterPayload |
-  ListingPayload |
-  OutdatePayload |
-  OrderPayload |
-  ProgressPayload |
-  LimitsPayload |
-  RefreshPayload
+export type PagePayload = ServiceMetadata
+
+export type RnsPayload = ContextPayload
+  | FilterPayload
+  | ListingPayload
+  | OutdatePayload
+  | OrderPayload
+  | ProgressPayload
+  | LimitsPayload
+  | RefreshPayload
+  | PagePayload
 
 export type RnsAction = ContextDispatch<RNS_ACTION, RnsPayload>
 
@@ -49,6 +63,9 @@ export type RnsActions = {
   SET_ORDER: RnsReducer<OrderPayload>
   SET_PROGRESS: RnsReducer<ProgressPayload>
   CLEAR_ORDER: RnsReducer<{}>
+  UPDATE_PAGE: RnsReducer<PagePayload>
+  NEXT_PAGE: RnsReducer<{}>
+  PREV_PAGE: RnsReducer<{}>
 }
 
 export const rnsActions: RnsActions = {
@@ -117,4 +134,85 @@ export const rnsActions: RnsActions = {
     ...state,
     order: undefined,
   }),
+  UPDATE_PAGE: (state: RnsState, { limit, skip, total }: PagePayload) => {
+    const { pagination: { current } } = state
+
+    if (!current || total !== current.total) {
+      return {
+        ...state,
+        pagination: {
+          current: { limit, skip, total },
+          next: { limit, skip: skip + limit, total },
+        },
+      }
+    }
+
+    if (skip > current.skip) {
+      const nextPage = skip + limit
+
+      return {
+        ...state,
+        pagination: {
+          ...state.pagination,
+          previous: current,
+          current: { limit, skip, total },
+          next: {
+            limit,
+            skip: nextPage >= total ? skip : nextPage,
+            total,
+          },
+        },
+      }
+    }
+
+    if (skip < current.skip) {
+      const prevPage = skip - limit
+
+      return {
+        ...state,
+        pagination: {
+          ...state.pagination,
+          previous: {
+            limit,
+            skip: prevPage,
+            total,
+          },
+          current: { limit, skip, total },
+          next: current,
+        },
+      }
+    }
+
+    return state
+  },
+  NEXT_PAGE: (state: RnsState, _: RnsPayload) => {
+    const { pagination: { next } } = state
+
+    if (!next || next.skip >= next.total) {
+      return state
+    }
+
+    return {
+      ...state,
+      pagination: {
+        ...state.pagination,
+        page: next.skip,
+      },
+    }
+  },
+  PREV_PAGE: (state: RnsState, _: RnsPayload) => {
+    const { pagination: { previous } } = state
+
+    if (!previous || previous.skip < 0) {
+      return state
+    }
+
+    return {
+      ...state,
+      pagination: {
+        ...state.pagination,
+        page: previous.skip,
+      },
+    }
+  },
 }

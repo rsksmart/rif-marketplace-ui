@@ -17,7 +17,7 @@ const MOCK_DOMAIN_TRANSPORT_ITEM_0: DomainTransport = {
   owner: {
     address: 'mock_owner',
   },
-  tokenId: 'mock_tokenId',
+  tokenId: 'rbtc',
 }
 const MOCK_DOMAIN_TRANSPORT_ITEM_1: DomainTransport = {
   expiration: { date: MOCK_DATE },
@@ -25,29 +25,27 @@ const MOCK_DOMAIN_TRANSPORT_ITEM_1: DomainTransport = {
   owner: {
     address: 'mock_owner_1',
   },
-  tokenId: 'mock_tokenId_1',
+  tokenId: 'rbtc',
 }
 
 const MOCK_TRANSPORT = [MOCK_DOMAIN_TRANSPORT_ITEM_0, MOCK_DOMAIN_TRANSPORT_ITEM_1]
 
 const MOCK_FILTER = { price: { max: 2, min: 2 }, ownerAddress: 'mock_owner_address' }
 
-const expectedDomains: RnsDomain[] = [
-  {
-    expirationDate: new Date(MOCK_DOMAIN_TRANSPORT_ITEM_0.expiration.date),
-    id: MOCK_DOMAIN_TRANSPORT_ITEM_0.tokenId,
-    name: MOCK_DOMAIN_TRANSPORT_ITEM_0.name,
-    ownerAddress: MOCK_DOMAIN_TRANSPORT_ITEM_0.owner.address,
-    tokenId: MOCK_DOMAIN_TRANSPORT_ITEM_0.tokenId,
-  },
-  {
-    expirationDate: new Date(MOCK_DOMAIN_TRANSPORT_ITEM_1.expiration.date),
-    id: MOCK_DOMAIN_TRANSPORT_ITEM_1.tokenId,
-    name: MOCK_DOMAIN_TRANSPORT_ITEM_1.name,
-    ownerAddress: MOCK_DOMAIN_TRANSPORT_ITEM_1.owner.address,
-    tokenId: MOCK_DOMAIN_TRANSPORT_ITEM_1.tokenId,
-  },
-]
+const expectedDomain1 = {
+  expirationDate: new Date(MOCK_DOMAIN_TRANSPORT_ITEM_0.expiration.date),
+  id: MOCK_DOMAIN_TRANSPORT_ITEM_0.tokenId,
+  name: MOCK_DOMAIN_TRANSPORT_ITEM_0.name,
+  ownerAddress: MOCK_DOMAIN_TRANSPORT_ITEM_0.owner.address,
+  tokenId: MOCK_DOMAIN_TRANSPORT_ITEM_0.tokenId,
+}
+const expectedDomain2 = {
+  expirationDate: new Date(MOCK_DOMAIN_TRANSPORT_ITEM_1.expiration.date),
+  id: MOCK_DOMAIN_TRANSPORT_ITEM_1.tokenId,
+  name: MOCK_DOMAIN_TRANSPORT_ITEM_1.name,
+  ownerAddress: MOCK_DOMAIN_TRANSPORT_ITEM_1.owner.address,
+  tokenId: MOCK_DOMAIN_TRANSPORT_ITEM_1.tokenId,
+}
 
 const expectedFindQuery = {
   query: {
@@ -80,9 +78,9 @@ describe('DomainsService', () => {
     })
 
     test('should return RnsDomain[] on success', async () => {
-      const actualReturn = await domainsAPI.fetch(MOCK_FILTER)
-      expect(actualReturn).toContainEqual(expectedDomains[0])
-      expect(actualReturn).toContainEqual(expectedDomains[1])
+      const actualReturn: RnsDomain[] = await domainsAPI.fetch(MOCK_FILTER) as RnsDomain[]
+      expect(actualReturn[0]).toEqual(expectedDomain1)
+      expect(actualReturn[1]).toEqual(expectedDomain2)
     })
   })
 })

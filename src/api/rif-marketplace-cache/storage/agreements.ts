@@ -6,20 +6,20 @@ import { zeroAddress } from 'context/Services/storage/interfaces'
 import { parseToBigDecimal } from 'utils/parsers'
 import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
 import { availableTokens } from '../rns/common'
-import { SupportedTokens } from '../rates/xr'
+import { SupportedToken } from '../rates/xr'
 
 export const agreementsAddress: StorageServiceAddress = 'storage/v0/agreements'
 export const agreementsWSChannel: StorageWSChannel = 'agreements'
 
-const getPaymentToken = (tokenAddress: string): SupportedTokens => {
+const getPaymentToken = (tokenAddress: string): SupportedToken => {
   const tokenIsRbtc = tokenAddress === zeroAddress
   const tokenSymbol = Object.entries(availableTokens).reduce((acc, [symbol, addr]) => {
     if (addr === tokenAddress) {
       // eslint-disable-next-line no-param-reassign
-      acc = symbol as SupportedTokens
+      acc = symbol as SupportedToken
     }
     return acc
-  }, '' as SupportedTokens)
+  }, '' as SupportedToken)
 
   return tokenIsRbtc
     ? 'rbtc'

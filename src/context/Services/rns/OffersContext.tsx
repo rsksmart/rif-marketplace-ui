@@ -1,3 +1,4 @@
+import { ServiceMetadata } from 'api/models/apiService'
 import { RnsFilter } from 'api/models/RnsFilter'
 import { OffersService } from 'api/rif-marketplace-cache/rns/offers'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
@@ -51,6 +52,7 @@ export const initialState: OffersState = {
     },
   },
   needsRefresh: false,
+  pagination: {},
 }
 
 const RnsOffersContext = React.createContext({} as RnsOffersContextProps | any)
@@ -60,9 +62,7 @@ export const RnsOffersContextProvider = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)
   const [isLimitsSet, setIsLimitsSet] = useState(false)
 
-  const {
-    state: appState, dispatch: appDispatch,
-  }: AppContextProps = useContext(AppContext)
+  const { state: appState, dispatch: appDispatch }: AppContextProps = useContext(AppContext)
   const api = appState?.apis?.['rns/v0/offers'] as OffersService
 
   const [state, dispatch] = useReducer(offersReducer, initialState)
@@ -70,6 +70,9 @@ export const RnsOffersContextProvider = ({ children }) => {
     filters,
     limits,
     needsRefresh,
+    pagination: {
+      page,
+    },
   } = state as RnsState
 
   // Initialise
@@ -144,7 +147,7 @@ export const RnsOffersContextProvider = ({ children }) => {
     }
   }, [api, isInitialised, needsRefresh, isLimitsSet, appDispatch])
 
-  // Pre-fetch limits
+  // Fetch data
   useEffect(() => {
     if (needsRefresh) {
       setIsLimitsSet(false)
@@ -160,7 +163,7 @@ export const RnsOffersContextProvider = ({ children }) => {
           id: 'data',
         } as LoadingPayload,
       } as any)
-      api.fetch(filters)
+      api.fetch({ ...filters, skip: page })
         .then((items) => {
           dispatch({
             type: 'SET_LISTING',
@@ -183,7 +186,18 @@ export const RnsOffersContextProvider = ({ children }) => {
           } as any)
         })
     }
-  }, [isInitialised, isLimitsSet, filters, limits, api, appDispatch])
+  }, [isInitialised, isLimitsSet, filters, page, limits, api, appDispatch])
+
+  const meta = api?.meta
+
+  useEffect(() => {
+    if (meta) {
+      dispatch({
+        type: 'UPDATE_PAGE',
+        payload: meta as ServiceMetadata,
+      })
+    }
+  }, [meta])
 
   const value = { state, dispatch }
   return <RnsOffersContext.Provider value={value}>{children}</RnsOffersContext.Provider>

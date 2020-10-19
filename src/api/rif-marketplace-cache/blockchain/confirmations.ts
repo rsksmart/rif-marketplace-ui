@@ -1,4 +1,7 @@
-import { AbstractAPIService, APIService } from 'api/models/apiService'
+import { Paginated } from '@feathersjs/feathers'
+import {
+  AbstractAPIService, APIService, isResultPaginated,
+} from 'api/models/apiService'
 import { Modify } from 'utils/typeUtils'
 import utils from './utils'
 
@@ -16,17 +19,25 @@ export interface ConfirmationsItem {
 
 export type Confirmations = Record<string, ConfirmationsItem>
 
-export interface ConfirmationsTransportItem {
+export interface Transport {
   transactionHash: string
   confirmations: number
   targetConfirmation: number
   event: string
 }
-export class ConfirmationsService extends AbstractAPIService implements ConfirmationAPI {
+
+export class ConfirmationsService
+  extends AbstractAPIService
+  implements ConfirmationAPI {
   path = confirmationAddress
 
   _fetch = async (): Promise<Confirmations> => {
-    const data = await this.service.find() as unknown as ConfirmationsTransportItem[]
+    const result: Paginated<Transport> = await this
+      .service.find()
+    const { data, ...metadata } = isResultPaginated(result)
+      ? result : { data: result }
+    this.meta = metadata
+
     return utils.mapFromTransport(data)
   }
 }

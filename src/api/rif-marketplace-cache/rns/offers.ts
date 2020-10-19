@@ -1,11 +1,13 @@
-import { AbstractAPIService } from 'api/models/apiService'
-import { RnsDomainOffer } from 'models/marketItems/DomainItem'
-import { OfferTransport } from 'api/models/transports'
+import { Paginated } from '@feathersjs/feathers'
+import { AbstractAPIService, isResultPaginated } from 'api/models/apiService'
 import { RnsFilter } from 'api/models/RnsFilter'
-import { parseToBigDecimal, convertToBigString, parseToInt } from 'utils/parsers'
+import { OfferTransport } from 'api/models/transports'
 import { MinMaxFilter } from 'models/Filters'
+import { RnsDomainOffer } from 'models/marketItems/DomainItem'
+import { convertToBigString, parseToBigDecimal, parseToInt } from 'utils/parsers'
 import {
-  availableTokens, RnsServiceAddress, RnsAPIService, RnsChannels,
+  availableTokens,
+  RnsAPIService, RnsChannels, RnsServiceAddress,
 } from './common'
 
 export const offersAddress: RnsServiceAddress = 'rns/v0/offers'
@@ -17,12 +19,12 @@ const mapFromTransport = ({
     expiration: { date },
     name: domainName,
   },
-  offerId: id,
+  offerId,
   paymentToken,
   tokenId,
   ownerAddress,
 }: OfferTransport): RnsDomainOffer => ({
-  id,
+  id: offerId,
   ownerAddress,
   domainName,
   price: parseToBigDecimal(priceString, 18),
@@ -47,11 +49,17 @@ const fetchPriceLimit = async (
     },
     $select: ['priceString'],
   }
-  const results = await service.find({ query })
+  const results: Paginated<OfferTransport> = await service.find({ query })
 
-  // Gets the result parses it io the correct decimal and ensures that the limits are always 1bigger/smaller than the actual largest/smallest price
-  return results.reduce(
-    (_, item: { priceString: string }): number => Math.round(parseToInt(item.priceString, 18)) - limitType,
+  const data: OfferTransport[] = isResultPaginated(results)
+    ? results.data : results
+
+  // Gets the result parses it to the correct decimal and rounds it: up for max, down for min
+  return data.reduce(
+    (_, item: { priceString: string }): number => {
+      const round = limitType === LimitType.min ? Math.floor : Math.ceil
+      return round(parseToInt(item.priceString, 18))
+    },
     0,
   )
 }
@@ -61,10 +69,10 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
 
   _channel = offersChannel
 
-  _fetch = async (filters: Partial<RnsFilter>): Promise<RnsDomainOffer[]> => {
-    const { price, name } = filters
+  _fetch = async (filters: Partial<RnsFilter> & { skip?: number}): Promise<RnsDomainOffer[]> => {
+    const { price, name, skip } = filters
 
-    const results = await this.service.find({
+    const results: Paginated<OfferTransport> = await this.service.find({
       query: {
         domain: name ? {
           name: {
@@ -75,10 +83,18 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
           $gte: convertToBigString(price.min, 18),
           $lte: convertToBigString(price.max, 18),
         } : undefined,
+        $skip: skip,
       },
-    }) as unknown as OfferTransport[]
+    })
 
-    return results.map(mapFromTransport)
+    const { data, ...metadata } = isResultPaginated(results)
+      ? results : { data: results }
+    this.meta = metadata
+
+    const filteredData = data
+    const mappedData = filteredData.map(mapFromTransport)
+
+    return mappedData
   }
 
   fetchPriceLimits = async (): Promise<MinMaxFilter> => {
