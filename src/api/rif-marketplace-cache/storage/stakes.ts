@@ -1,4 +1,7 @@
 import { AbstractAPIService } from 'api/models/apiService'
+import { StakeTransport } from 'api/models/storage/transports'
+import { parseToBigDecimal } from 'utils/parsers'
+import { SupportedTokens } from '../rates/xr'
 import {
   StakeAPIService,
   StakeFilters,
@@ -9,17 +12,37 @@ import {
 export const stakesAddress: StorageServiceAddress = 'storage/v0/stakes'
 export const stakesWSChannel: StorageWSChannel = 'stakes'
 
+export type StakedBalances = Record<SupportedTokens, string>
+
+export type Staked = {
+  stakedBalances: StakedBalances
+  totalStakedUSD: string
+}
+
+export const mapStakesListFromTransport = (stakes): StakedBalances => stakes.reduce((acc, { symbol, total }) => {
+  acc[symbol] = parseToBigDecimal(total, 18).toString()
+  return acc
+}, {})
+
+const mapFromTransport = (stakeTransport: StakeTransport): Staked => {
+  const { totalStakedFiat: totalStakedUSD, stakes } = stakeTransport
+  const stakedBalances = mapStakesListFromTransport(stakes)
+
+  return {
+    stakedBalances,
+    totalStakedUSD,
+  }
+}
+
 export class StakesService extends AbstractAPIService
   implements StakeAPIService {
   path = stakesAddress
 
   _channel = stakesWSChannel
 
-  // TODO: return proper type
-  _fetch = (filters: StakeFilters): Promise<any[]> => {
+  _fetch = async (filters: StakeFilters): Promise<Staked> => {
     const { account } = filters
-
-    // TODO: map from transport converting wei units
-    return this.service.get(account)
+    const result = await this.service.get(account)
+    return mapFromTransport(result)
   }
 }

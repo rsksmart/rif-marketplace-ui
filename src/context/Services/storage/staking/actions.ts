@@ -1,8 +1,8 @@
+import { StakedBalances } from 'api/rif-marketplace-cache/storage/stakes'
 import Logger from 'utils/Logger'
 import {
   Action,
   Actions,
-  StakedBalances,
   State,
 } from './interfaces'
 

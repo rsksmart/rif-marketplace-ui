@@ -8,8 +8,8 @@ import {
 import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
 import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
-import { StakedBalances } from 'context/Services/storage/staking/interfaces'
 import LabelWithValue from 'components/atoms/LabelWithValue'
+import { StakedBalances } from 'api/rif-marketplace-cache/storage/stakes'
 
 export interface WithdrawModalProps {
   open: boolean

@@ -1,12 +1,11 @@
 import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
+import { StakedBalances } from 'api/rif-marketplace-cache/storage/stakes'
 import { Dispatch } from 'react'
 
 export type AmountToken = {
   amount: string
   token: SupportedTokens
 }
-
-export type StakedBalances = Record<SupportedTokens, string>
 
 export type State = {
   isAwaiting: boolean

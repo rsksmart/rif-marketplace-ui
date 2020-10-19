@@ -1,5 +1,5 @@
 import { Web3Store } from '@rsksmart/rif-ui'
-import { StakesService } from 'api/rif-marketplace-cache/storage/stakes'
+import { mapStakesListFromTransport, StakesService } from 'api/rif-marketplace-cache/storage/stakes'
 import AppContext, {
   AppContextProps,
   errorReporterFactory,
@@ -18,7 +18,7 @@ import React, {
 import Logger from 'utils/Logger'
 import { reducer } from './actions'
 import {
-  Action, Props, StakedBalances, State,
+  Action, Props, State,
 } from './interfaces'
 
 const logger = Logger.getInstance()
@@ -53,14 +53,6 @@ const setStakeNeedsRefresh = (dispatch: Dispatch<Action>) => () => {
   })
 }
 
-// TODO: move function
-const mapStakesFromApi = (stakes): StakedBalances => (
-  stakes.reduce((acc, { symbol, total }) => {
-    acc[symbol] = total
-    return acc
-  }, {})
-)
-
 // TODO: move
 const onStakeUpdated = (dispatch, updatedVal) => {
   const { stakes, totalStakedFiat } = updatedVal
@@ -78,7 +70,7 @@ const onStakeUpdated = (dispatch, updatedVal) => {
   })
   dispatch({
     type: 'SET_STAKES',
-    payload: mapStakesFromApi(stakes),
+    payload: mapStakesListFromTransport(stakes),
   })
 }
 
@@ -128,17 +120,9 @@ export const ContextProvider: FC = ({ children }) => {
     if (needsRefresh && account) {
       const fetchStakeTotal = async () => {
         const {
-          totalStakedFiat: totalStakedUSD,
-          stakes,
-        } = await api.fetch({
-          account,
-        })
-
-        const stakedBalances: StakedBalances = stakes
-          .reduce((acc, { symbol, total }) => {
-            acc[symbol] = total
-            return acc
-          }, {})
+          totalStakedUSD,
+          stakedBalances,
+        } = await api.fetch({ account })
 
         dispatch({
           type: 'SET_STAKES',
