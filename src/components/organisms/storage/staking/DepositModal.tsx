@@ -7,13 +7,15 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles'
 import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
 import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
+import { StakedBalances } from 'context/Services/storage/staking/interfaces'
+import LabelWithValue from 'components/atoms/LabelWithValue'
 
 export interface DepositModalProps {
-  // TODO: current balnce will be an array of {balance: number. token: SupportedTokens}
-  currentBalance: string
+  totalStakedUSD: string
   open: boolean
   onClose: () => void
   onDeposit: (amount: number, currency: SupportedTokens) => void
+  stakes: StakedBalances
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -23,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }))
 
 const DepositModal: FC<DepositModalProps> = ({
-  currentBalance, open, onClose, onDeposit,
+  totalStakedUSD, open, onClose, onDeposit, stakes,
 }) => {
   const classes = useStyles()
   const currencyOptions: SupportedTokens[] = ['rbtc', 'rif']
@@ -81,9 +83,13 @@ const DepositModal: FC<DepositModalProps> = ({
         >
           {'Your current balance is '}
           <Box display="inline" fontWeight="fontWeightMedium">
-            {currentBalance}
+            {`${totalStakedUSD} USD`}
           </Box>
         </Typography>
+        {
+          Object.keys(stakes)
+            .map((symbol) => <LabelWithValue label={symbol} value={stakes[symbol]} />)
+        }
         <Divider />
         <AmountWithCurrencySelect
           className={classes.bodyChild}

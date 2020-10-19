@@ -93,7 +93,7 @@ const Staking: FC<{}> = () => {
 
   const {
     state: {
-      // totalStaked,
+      stakes,
       totalStakedUSD,
       isAwaiting,
     },
@@ -163,7 +163,7 @@ const Staking: FC<{}> = () => {
       if (receipt) {
         setTxOperationDone(true)
       }
-      // TODO: remove when events are attached
+      // TODO: move to appcontext
       dispatch({
         type: 'SET_NEEDS_REFRESH',
         payload: { needsRefresh: true },
@@ -291,9 +291,9 @@ const Staking: FC<{}> = () => {
         </Grow>
         <StakingFab className={classes.stakingIcon} onClick={handleExpandClick} />
       </div>
-      {/* TODO: current balance should be a Record<SupportedTokens, string> */}
       <DepositModal
-        currentBalance={`${totalStakedUSD} USD`}
+        totalStakedUSD={totalStakedUSD}
+        stakes={stakes}
         onDeposit={handleDeposit}
         open={depositOpened}
         onClose={() => setDepositOpened(false)}
@@ -304,7 +304,8 @@ const Staking: FC<{}> = () => {
         onClose={() => setWithdrawOpened(false)}
         open={withdrawOpened}
         onWithdraw={handleWithdraw}
-        currentBalance={Number(totalStakedUSD)}
+        totalStakedUSD={totalStakedUSD}
+        stakes={stakes}
       />
       {renderProgressOverlay()}
     </>

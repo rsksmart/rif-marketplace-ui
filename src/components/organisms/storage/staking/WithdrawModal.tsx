@@ -8,14 +8,16 @@ import {
 import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
 import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
+import { StakedBalances } from 'context/Services/storage/staking/interfaces'
+import LabelWithValue from 'components/atoms/LabelWithValue'
 
 export interface WithdrawModalProps {
   open: boolean
   onClose: () => void
   onWithdraw: (amount: number, currency: SupportedTokens) => void
   canWithdraw: boolean
-  // TODO: current balnce will be an array of {balance: number. token: SupportedTokens}
-  currentBalance: number
+  totalStakedUSD: string
+  stakes: StakedBalances
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -25,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }))
 
 const WithdrawModal: FC<WithdrawModalProps> = ({
-  open, onClose, onWithdraw, canWithdraw, currentBalance,
+  open, onClose, onWithdraw, canWithdraw, totalStakedUSD, stakes,
 }) => {
   const classes = useStyles()
   const currencyOptions: SupportedTokens[] = ['rbtc', 'rif']
@@ -38,7 +40,11 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
 
   const handleWithdraw = () => onWithdraw(Number(amountToWithdraw), selectedCurrency)
 
-  const disableWithdrawAction = !canWithdraw || !amountToWithdraw || amountToWithdraw > currentBalance || amountToWithdraw <= 0
+  const disableWithdrawAction = !canWithdraw
+    || !amountToWithdraw
+    || amountToWithdraw <= 0
+  // || amountToWithdraw > Number(totalStakedUSD)
+  // TODO: compare the amount to withdraw with the balance of the selected currency
 
   const actions: JSX.Element = (
     <Button
@@ -80,11 +86,13 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
         >
           {'Your current balance is '}
           <Box display="inline" fontWeight="fontWeightMedium">
-            {currentBalance}
-            {' RBTC'}
-            {/* TODO: remove hard coded currency and handle multicurrency */}
+            {`${totalStakedUSD} USD`}
           </Box>
         </Typography>
+        {
+          Object.keys(stakes)
+            .map((symbol) => <LabelWithValue label={symbol} value={stakes[symbol]} />)
+        }
         <Divider />
 
         <AmountWithCurrencySelect
