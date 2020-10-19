@@ -18,7 +18,7 @@ import React, {
 import Logger from 'utils/Logger'
 import { reducer } from './actions'
 import {
-  Action, AmountToken, Props, State,
+  Action, Props, StakedBalances, State,
 } from './interfaces'
 
 const logger = Logger.getInstance()
@@ -34,7 +34,10 @@ export const initialState: State = {
   isAwaiting: false,
   needsRefresh: true,
   totalStakedUSD: '',
-  stakes: new Set(),
+  stakes: {
+    rbtc: '0',
+    rif: '0',
+  },
 }
 
 export const StakingContext = createContext<Props>({
@@ -42,17 +45,28 @@ export const StakingContext = createContext<Props>({
   dispatch: () => undefined,
 })
 
-const stakeNeedsRefresh = (dispatch: Dispatch<Action>) => () => {
+// TODO: move
+const setStakeNeedsRefresh = (dispatch: Dispatch<Action>) => () => {
   dispatch({
     type: 'SET_NEEDS_REFRESH',
     payload: { needsRefresh: true },
   })
 }
 
+// TODO: move function
+const mapStakesFromApi = (stakes): StakedBalances => (
+  stakes.reduce((acc, { symbol, total }) => {
+    acc[symbol] = total
+    return acc
+  }, {})
+)
+
+// TODO: move
 const onStakeUpdated = (dispatch, updatedVal) => {
+  const { stakes, totalStakedFiat } = updatedVal
   dispatch({
     type: 'SET_TOTAL_STAKED_USD',
-    payload: { totalStakedUSD: updatedVal.totalStakedUSD || '' },
+    payload: { totalStakedUSD: totalStakedFiat || '' },
   })
   dispatch({
     type: 'SET_IS_AWAITING',
@@ -63,8 +77,8 @@ const onStakeUpdated = (dispatch, updatedVal) => {
     payload: { needsRefresh: false },
   })
   dispatch({
-    type: 'SET_STAKE',
-    payload: { token: updatedVal.symbol, amount: updatedVal.total },
+    type: 'SET_STAKES',
+    payload: mapStakesFromApi(stakes),
   })
 }
 
@@ -101,9 +115,9 @@ export const ContextProvider: FC = ({ children }) => {
         attachEvent('updated', (updatedValue) => {
           onStakeUpdated(dispatch, updatedValue)
         })
-        attachEvent('patched', stakeNeedsRefresh(dispatch))
-        attachEvent('created', stakeNeedsRefresh(dispatch))
-        attachEvent('removed', stakeNeedsRefresh(dispatch))
+        attachEvent('patched', setStakeNeedsRefresh(dispatch))
+        attachEvent('created', setStakeNeedsRefresh(dispatch))
+        attachEvent('removed', setStakeNeedsRefresh(dispatch))
       } catch (e) {
         setIsInitialised(false)
       }
@@ -120,12 +134,15 @@ export const ContextProvider: FC = ({ children }) => {
           account,
         })
 
-        const stakesSet: Set<AmountToken> = stakes
-          .map(({ symbol, total }) => ({ token: symbol, amount: total }))
+        const stakedBalances: StakedBalances = stakes
+          .reduce((acc, { symbol, total }) => {
+            acc[symbol] = total
+            return acc
+          }, {})
 
         dispatch({
           type: 'SET_STAKES',
-          payload: stakesSet,
+          payload: stakedBalances,
         })
         dispatch({
           type: 'SET_TOTAL_STAKED_USD',

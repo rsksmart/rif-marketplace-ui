@@ -6,11 +6,13 @@ export type AmountToken = {
   token: SupportedTokens
 }
 
+export type StakedBalances = Record<SupportedTokens, string>
+
 export type State = {
   isAwaiting: boolean
   needsRefresh: boolean
   totalStakedUSD: string
-  stakes: Set<AmountToken>
+  stakes: StakedBalances
 }
 
 export type Action =
@@ -32,7 +34,7 @@ export type Action =
     }
   | {
       type: 'SET_STAKES'
-      payload: Set<AmountToken>
+      payload: StakedBalances
     }
 
 export type Actions = {
@@ -40,7 +42,7 @@ export type Actions = {
   SET_NEEDS_REFRESH: (state: State, { needsRefresh: boolean }) => State
   SET_TOTAL_STAKED_USD: (state: State, { totalStakedUSD: string }) => State
   SET_STAKE: (state: State, amountToken: AmountToken) => State
-  SET_STAKES: (state: State, stakes: Set<AmountToken>) => State
+  SET_STAKES: (state: State, stakes: StakedBalances) => State
 }
 
 export type Props = {

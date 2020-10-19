@@ -1,6 +1,9 @@
 import Logger from 'utils/Logger'
 import {
-  Action, Actions, AmountToken, State,
+  Action,
+  Actions,
+  StakedBalances,
+  State,
 } from './interfaces'
 
 export const actions: Actions = {
@@ -23,7 +26,7 @@ export const actions: Actions = {
       [token]: amount,
     },
   }),
-  SET_STAKES: (state: State, stakes: Set<AmountToken>): State => ({
+  SET_STAKES: (state: State, stakes: StakedBalances): State => ({
     ...state,
     stakes,
   }),
