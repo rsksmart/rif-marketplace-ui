@@ -5,6 +5,7 @@ import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
 import { zeroAddress } from 'context/Services/storage/interfaces'
+import { convertToWeiString } from 'utils/parsers'
 import waitForReceipt, { TransactionOptions } from './utils'
 import { stakingAddress } from './config'
 
@@ -12,7 +13,6 @@ const logger = Logger.getInstance()
 export type StorageStakingContractErrorId = 'contract-storage-staking'
 
 const ZERO_BYTES = '0x0000000000000000000000000000000000000000000000000000000000000000'
-const isNativeToken = (token: string) => token === zeroAddress
 
 class StakingContract {
   public static getInstance(web3: Web3): StakingContract {
@@ -39,7 +39,6 @@ class StakingContract {
   public stake = async (
     amount: string | number,
     token: string = zeroAddress, // native token
-    // data: string = ZERO_BYTES,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
@@ -53,10 +52,10 @@ class StakingContract {
       throw error
     })
 
-    const amountToStake = isNativeToken(token) ? amount : 0
+    const amountWei = convertToWeiString(amount)
 
     const stakeTask = this.contract.methods.stake(
-      amountToStake,
+      amountWei,
       token,
       ZERO_BYTES,
     )
@@ -68,7 +67,7 @@ class StakingContract {
         from,
         gas,
         gasPrice,
-        value: amountToStake,
+        value: amountWei,
       },
       (err, txHash) => {
         if (err) return Promise.reject(err)
@@ -80,7 +79,6 @@ class StakingContract {
   public unstake = async (
     amount: string | number,
     token: string = zeroAddress, // native token
-    // data: string = ZERO_BYTES,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
@@ -94,7 +92,9 @@ class StakingContract {
       throw error
     })
 
-    const unstakeTask = this.contract.methods.unstake(amount, token, ZERO_BYTES)
+    const amountWei = convertToWeiString(amount)
+
+    const unstakeTask = this.contract.methods.unstake(amountWei, token, ZERO_BYTES)
     const estimatedGas = await unstakeTask.estimateGas({ from, gasPrice })
     const gas = Math.floor(estimatedGas * 1.3)
 
@@ -114,6 +114,7 @@ class StakingContract {
     return this.contract.methods.totalStakedFor(account, token).call({ from })
   }
 
+  // FIXME: what is this function for?
   public totalStaked = (
     token: string = zeroAddress, // native token
     txOptions: TransactionOptions,
