@@ -6,7 +6,7 @@ import { MinMaxFilter } from 'models/Filters'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import { convertToBigString, parseToBigDecimal, parseToInt } from 'utils/parsers'
 import {
-  isSupportedToken,
+  availableTokens,
   RnsAPIService, RnsChannels, RnsServiceAddress,
 } from './common'
 
@@ -23,15 +23,21 @@ const mapFromTransport = ({
   paymentToken,
   tokenId,
   ownerAddress,
-}: OfferTransport): RnsDomainOffer => ({
-  id: offerId,
-  ownerAddress,
-  domainName,
-  price: parseToBigDecimal(priceString, 18),
-  expirationDate: new Date(date),
-  paymentToken: paymentToken.toLowerCase(),
-  tokenId,
-})
+}: OfferTransport): RnsDomainOffer => {
+  console.log(': -------------------------')
+  console.log('paymentToken', paymentToken)
+  console.log('availableTokens', availableTokens)
+  console.log(': -------------------------')
+  return ({
+    id: offerId,
+    ownerAddress,
+    domainName,
+    price: parseToBigDecimal(priceString, 18),
+    expirationDate: new Date(date),
+    paymentToken: availableTokens[paymentToken.toLowerCase()],
+    tokenId,
+  })
+}
 
 enum LimitType {
   min = 1,
@@ -92,7 +98,6 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
     this.meta = metadata
 
     const filteredData = data
-      .filter(({ paymentToken }) => isSupportedToken(paymentToken))
     const mappedData = filteredData.map(mapFromTransport)
 
     return mappedData

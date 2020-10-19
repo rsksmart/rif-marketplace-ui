@@ -31,7 +31,7 @@ export const isSupportedToken = (
 const { contractAddresses } = network
 export const availableTokens = Object.keys(contractAddresses).reduce((acc, symbol) => {
   if (!isSupportedToken(symbol)) return acc
-  const value = contractAddresses[symbol]
+  const value = contractAddresses[symbol].toLowerCase()
   acc[value] = symbol
   return acc
 }, {})

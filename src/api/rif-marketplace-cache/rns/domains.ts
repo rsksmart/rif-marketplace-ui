@@ -5,7 +5,7 @@ import { DomainTransport } from 'api/models/transports'
 import { RnsDomain } from 'models/marketItems/DomainItem'
 import { parseToBigDecimal } from 'utils/parsers'
 import {
-  RnsServiceAddress, RnsAPIService, RnsChannels, isSupportedToken,
+  RnsServiceAddress, RnsAPIService, RnsChannels, availableTokens,
 } from './common'
 
 export const domainsAddress: RnsServiceAddress = 'rns/v0/domains'
@@ -27,7 +27,7 @@ const mapFromTransport = (item: DomainTransport): RnsDomain => {
     const offer = offers[0]
     domain.offer = {
       ...offer,
-      paymentToken: offer.paymentToken.toLowerCase(),
+      paymentToken: availableTokens[offer.paymentToken.toLowerCase()],
       price: parseToBigDecimal(offer.priceString, 18),
     }
   }
@@ -58,8 +58,6 @@ export class DomainsService
       ? results : { data: results }
     this.meta = metadata
 
-    return data
-      .filter(({ tokenId }) => isSupportedToken(tokenId))
-      .map(mapFromTransport)
+    return data.map(mapFromTransport)
   }
 }

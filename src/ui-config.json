@@ -1,8 +1,7 @@
 {
     "ganache": {
         "contractAddresses": {
-            "rbtc": "0x0000000000000000000000000000000000000000",
-            "rif": "0x67B5656d60a809915323Bf2C40A8bEF15A152e3e",
+            "rif": "0x67b5656d60a809915323bf2c40a8bef15a152e3e",
             "rnsDotRskOwner": "0x4bf749ec68270027C5910220CEAB30Cc284c7BA2",
             "marketplace": "0x12ae8689c3E889A0fC81f4E2ba9D6C5Bf358F392",
             "storageManager": "0xeea2Fc1D255Fd28aA15c6c2324Ad40B03267f9c5"
@@ -15,7 +14,6 @@
     },
     "rskmainnet": {
         "contractAddresses": {
-            "rbtc": "0x0000000000000000000000000000000000000000",
             "rif": "0x2acc95758f8b5f583470ba265eb685a8f45fc9d5",
             "rnsDotRskOwner": "0x45d3e4fb311982a06ba52359d44cb4f5980e0ef1",
             "marketplace": "0xa966Be39A13723d991dFA92B2B0CF6b0c7416eE5"
@@ -27,7 +25,6 @@
     },
     "rsktestnet": {
         "contractAddresses": {
-            "rbtc": "0x0000000000000000000000000000000000000000",
             "rif": "0x19f64674D8a5b4e652319F5e239EFd3bc969a1FE",
             "rnsDotRskOwner": "0xca0a477e19bac7e0e172ccfd2e3c28a7200bdb71",
             "marketplace": "0xFa5ade767a422C66cAFd94c3710f5b92467fB85e"

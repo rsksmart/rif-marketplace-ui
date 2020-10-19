@@ -90,6 +90,7 @@ const DomainOffersPage: FC = () => {
       } = item
 
       const pseudoResolvedName: string = filters.name as string && (`${filters.name}.rsk`)
+
       const { rate, displayName } = crypto[paymentToken]
 
       const displayDomainName = domainName || pseudoResolvedName

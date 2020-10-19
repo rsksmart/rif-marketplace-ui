@@ -4,6 +4,7 @@ import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import { parseToBigDecimal } from 'utils/parsers'
 import { RnsFilter } from 'api/models/RnsFilter'
 import { OffersService } from '../offers'
+import { availableTokens } from '../common'
 
 const MOCK_OFFER_0: OfferTransport = {
   domain: {
@@ -17,7 +18,7 @@ const MOCK_OFFER_0: OfferTransport = {
     tokenId: 'fake_token_id',
   },
   offerId: 'fake_id',
-  paymentToken: 'rbtc',
+  paymentToken: 'mockAddress',
   priceString: '19000000000',
   ownerAddress: 'string',
   ownerDomain: 'string',
@@ -33,13 +34,15 @@ const MOCK_FILTERS: RnsFilter = {
   },
 }
 
+availableTokens.mockaddress = 'rif'
+
 const expectedDomains: RnsDomainOffer[] = [
   {
     domainName: MOCK_OFFER_0.domain.name,
     expirationDate: new Date(MOCK_OFFER_0.domain.expiration.date),
     id: MOCK_OFFER_0.offerId,
     ownerAddress: MOCK_OFFER_0.ownerAddress,
-    paymentToken: MOCK_OFFER_0.paymentToken.toLowerCase(),
+    paymentToken: availableTokens[MOCK_OFFER_0.paymentToken.toLowerCase()],
     price: parseToBigDecimal(MOCK_OFFER_0.priceString, 18),
     tokenId: MOCK_OFFER_0.tokenId,
   },
@@ -78,6 +81,10 @@ describe('OffersService', () => {
 
     test('should return RnsDomainOffer[] on success', async () => {
       const actualReturnValue: RnsDomainOffer[] = await offersAPI.fetch(MOCK_FILTERS)
+
+      console.log(': -----------------------------------------')
+      console.log('actualReturnValue[0]', actualReturnValue[0])
+      console.log(': -----------------------------------------')
       expect(isRnsDomainOffer(actualReturnValue[0])).toBe(true)
     })
 
