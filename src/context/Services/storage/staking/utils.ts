@@ -14,7 +14,7 @@ export const setStakeNeedsRefresh = (dispatch: Dispatch<Action>) => () => {
 export const onStakeUpdated = (
   dispatch: Dispatch<Action>,
   appDispatch: Dispatch<AppAction>,
-  updatedVal: StakeTransport
+  updatedVal: StakeTransport,
 ) => {
   const { stakedBalances, totalStakedUSD } = mapFromTransport(updatedVal)
   dispatch({

@@ -43,8 +43,7 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
   const disableWithdrawAction = !canWithdraw
     || !amountToWithdraw
     || amountToWithdraw <= 0
-  // || amountToWithdraw > Number(totalStakedUSD)
-  // TODO: compare the amount to withdraw with the balance of the selected currency
+    || amountToWithdraw > Number(stakes[selectedCurrency])
 
   const actions: JSX.Element = (
     <Button

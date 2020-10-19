@@ -87,8 +87,8 @@ const Staking: FC<{}> = () => {
   const {
     state: {
       awaitingConfirmations: {
-        staking: isAwaitingConfirmations
-      }
+        staking: isAwaitingConfirmations,
+      },
     },
     dispatch: appDispatch,
   } = useContext<AppContextProps>(AppContext)
@@ -183,16 +183,16 @@ const Staking: FC<{}> = () => {
   }
 
   const handleOpenWithdraw = async () => {
-    if (!web3) return
+    if (!web3 || !account) return
     const storageContract = StorageContract.getInstance(web3 as Web3)
     const hasUtilizedCapacity = await storageContract.hasUtilizedCapacity(account as string, { from: account })
     setCanWithdraw(Boolean(hasUtilizedCapacity))
     setWithdrawOpened(true)
   }
 
-  // TODO: consider using withAccount HOC to wrap this action
-  // so it's only expanded if an account is provided
-  const handleExpandClick = () => setIsExpanded((exp) => !exp)
+  const handleExpandClick = () => {
+    if (account) setIsExpanded((exp) => !exp)
+  }
 
   const renderProgressOverlay = (): JSX.Element | null => {
     if (showTxInProgress && (processingTx || txOperationDone)) {

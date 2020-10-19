@@ -1,6 +1,6 @@
 import { Web3Store } from '@rsksmart/rif-ui'
 import {
-  StakesService
+  StakesService,
 } from 'api/rif-marketplace-cache/storage/stakes'
 import AppContext, {
   AppContextProps,
