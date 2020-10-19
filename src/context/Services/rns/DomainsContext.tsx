@@ -148,7 +148,8 @@ export const RnsDomainsContextProvider = ({ children }) => {
     }
   }, [isInitialised, needsRefresh, filters, api, account, appDispatch])
 
-  const { meta } = api
+  const meta = api?.meta
+
   useEffect(() => {
     if (meta) {
       dispatch({

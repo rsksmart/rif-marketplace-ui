@@ -14,7 +14,11 @@ export const tokenDisplayNames: Record<SupportedToken, string> = {
   rbtc: 'RBTC',
 }
 
-export type XRItem = { [fiatSymbol: string]: number }
+export type XRItem = Partial<{
+  [F in SupportedFiat]: number
+}> & {
+  token: SupportedToken
+}
 
 export interface XRFilter {
   fiatSymbol: SupportedFiat
@@ -25,23 +29,13 @@ export type XRAPIService = Modify<APIService, {
   fetch: (filters: XRFilter) => Promise<XRItem[]>
 }>
 
-export type ExchangeRate = {
-  [fiatSymbol in SupportedFiat]: number
-} & {
-  token: SupportedToken
-}
-
-export const isSupportedToken = (
-  token: SupportedToken | string,
-): token is SupportedToken => SUPPORTED_TOKENS.includes(token as SupportedToken)
-
 export class XRService extends AbstractAPIService implements XRAPIService {
   path = xrServiceAddress
 
-  _fetch = async (filters: XRFilter): Promise<ExchangeRate[]> => {
+  _fetch = async (filters: XRFilter): Promise<XRItem[]> => {
     const { fiatSymbol } = filters
 
-    const results: Paginated<ExchangeRate> = await this.service.find({
+    const results: Paginated<XRItem> = await this.service.find({
       query: {
         $select: ['token', fiatSymbol],
       },
@@ -50,6 +44,6 @@ export class XRService extends AbstractAPIService implements XRAPIService {
       ? results : { data: results }
     this.meta = metadata
 
-    return data.filter(({ token }) => isSupportedToken(token))
+    return data.filter((item) => !!SUPPORTED_TOKENS.includes(item.token))
   }
 }

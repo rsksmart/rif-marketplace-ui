@@ -62,14 +62,8 @@ export const RnsOffersContextProvider = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)
   const [isLimitsSet, setIsLimitsSet] = useState(false)
 
-  const {
-    state: {
-      apis: {
-        'rns/v0/offers': offers,
-      },
-    }, dispatch: appDispatch,
-  }: AppContextProps = useContext(AppContext)
-  const api = offers as OffersService
+  const { state: appState, dispatch: appDispatch }: AppContextProps = useContext(AppContext)
+  const api = appState?.apis?.['rns/v0/offers'] as OffersService
 
   const [state, dispatch] = useReducer(offersReducer, initialState)
   const {
@@ -194,7 +188,8 @@ export const RnsOffersContextProvider = ({ children }) => {
     }
   }, [isInitialised, isLimitsSet, filters, page, limits, api, appDispatch])
 
-  const { meta } = api
+  const meta = api?.meta
+
   useEffect(() => {
     if (meta) {
       dispatch({

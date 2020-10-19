@@ -51,14 +51,9 @@ const soldDomainsReducer: RnsReducer<RnsPayload> | ContextReducer = storeReducer
 
 export const RnsSoldContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(soldDomainsReducer, initialState)
-  const {
-    state: {
-      apis: {
-        'rns/v0/sold': sold,
-      },
-    }, dispatch: appDispatch,
-  }: AppContextProps = useContext(AppContext)
-  const api = sold as SoldDomainsService
+
+  const { state: appState, dispatch: appDispatch }: AppContextProps = useContext(AppContext)
+  const api = appState?.apis?.['rns/v0/sold'] as SoldDomainsService
 
   const {
     filters,
@@ -139,7 +134,8 @@ export const RnsSoldContextProvider = ({ children }) => {
     }
   }, [isInitialised, needsRefresh, filters, api, account, appDispatch])
 
-  const { meta } = api
+  const meta = api?.meta
+
   useEffect(() => {
     if (meta) {
       dispatch({

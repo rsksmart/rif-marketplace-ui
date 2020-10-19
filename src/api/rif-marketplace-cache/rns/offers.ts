@@ -5,9 +5,9 @@ import { OfferTransport } from 'api/models/transports'
 import { MinMaxFilter } from 'models/Filters'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import { convertToBigString, parseToBigDecimal, parseToInt } from 'utils/parsers'
-import { isSupportedToken } from '../rates/xr'
 import {
-  availableTokens, RnsAPIService, RnsChannels, RnsServiceAddress,
+  isSupportedToken,
+  RnsAPIService, RnsChannels, RnsServiceAddress,
 } from './common'
 
 export const offersAddress: RnsServiceAddress = 'rns/v0/offers'
@@ -29,7 +29,7 @@ const mapFromTransport = ({
   domainName,
   price: parseToBigDecimal(priceString, 18),
   expirationDate: new Date(date),
-  paymentToken: availableTokens[paymentToken.toLowerCase()],
+  paymentToken: paymentToken.toLowerCase(),
   tokenId,
 })
 
@@ -86,13 +86,16 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
         $skip: skip,
       },
     })
+
     const { data, ...metadata } = isResultPaginated(results)
       ? results : { data: results }
     this.meta = metadata
 
-    return data
-      .map(mapFromTransport)
+    const filteredData = data
       .filter(({ paymentToken }) => isSupportedToken(paymentToken))
+    const mappedData = filteredData.map(mapFromTransport)
+
+    return mappedData
   }
 
   fetchPriceLimits = async (): Promise<MinMaxFilter> => {

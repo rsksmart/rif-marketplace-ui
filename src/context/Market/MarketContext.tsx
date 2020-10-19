@@ -68,14 +68,8 @@ export const MarketContextProvider = ({ children }) => {
   } = state as MarketState
   const [supportedCrypto] = useState(Object.keys(crypto).filter((token) => tokenDisplayNames[token])) // prevents update to this list
 
-  const {
-    state: {
-      apis: {
-        'rates/v0': rates,
-      },
-    }, dispatch: appDispatch,
-  }: AppContextProps = useContext(AppContext)
-  const api = rates as XRService
+  const { state: appState, dispatch: appDispatch }: AppContextProps = useContext(AppContext)
+  const api = appState?.apis?.['rates/v0'] as XRService
 
   // Initialise
   useEffect(() => {
