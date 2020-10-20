@@ -15,13 +15,6 @@ export const actions: Actions = {
     ...state,
     totalStakedUSD,
   }),
-  SET_STAKE: (state: State, { token, amount }): State => ({
-    ...state,
-    stakes: {
-      ...state.stakes,
-      [token]: amount,
-    },
-  }),
   SET_STAKES: (state: State, stakes: StakedBalances): State => ({
     ...state,
     stakes,
