@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
-import { SupportedTokens, tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
+import { SupportedToken, tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import GridItem from 'components/atoms/GridItem'
 
 export type AmountWithCurrencySelectProps = {
@@ -13,8 +13,8 @@ export type AmountWithCurrencySelectProps = {
   className?: string
   onAmountChange: (event: React.ChangeEvent<{ name?: string, value: unknown }>) => void
   onCurrencyChange: (event: React.ChangeEvent<{ name?: string, value: unknown }>) => void
-  selectedCurrency: SupportedTokens
-  currencyOptions: SupportedTokens[]
+  selectedCurrency: SupportedToken
+  currencyOptions: SupportedToken[]
 }
 
 const useStyles = makeStyles(() => createStyles({
@@ -66,7 +66,7 @@ const AmountWithCurrencySelect: FC<AmountWithCurrencySelectProps> = (props) => {
           color="secondary"
         >
           {currencyOptions.map(
-            (option: SupportedTokens) => (
+            (option: SupportedToken) => (
               <MenuItem key={option as string} value={option}>
                 {tokenDisplayNames[option]}
               </MenuItem>

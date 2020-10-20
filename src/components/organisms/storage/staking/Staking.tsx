@@ -21,7 +21,7 @@ import StakingBalance from 'components/molecules/storage/StakingBalance'
 import StakingFab from 'components/molecules/storage/StakingFab'
 import withStakingContext, { StakingContext }
   from 'context/Services/storage/staking/Context'
-import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
+import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
 import { TokenAddressees } from 'context/Market/storage/interfaces'
 import { JobDoneBox } from 'components/molecules'
 import TxCompletePageTemplate
@@ -129,7 +129,7 @@ const Staking: FC = () => {
   }
 
   const handleDeposit = async (
-    amount: number, currency: SupportedTokens,
+    amount: number, currency: SupportedToken,
   ): Promise<void> => {
     //  users won't reach this point without a web3 instance
     if (!web3) return
@@ -165,7 +165,7 @@ const Staking: FC = () => {
   }
 
   const handleWithdraw = async (
-    amount: number, currency: SupportedTokens,
+    amount: number, currency: SupportedToken,
   ): Promise<void> => {
     //  users won't reach this point without a web3 instance
     if (!web3) return

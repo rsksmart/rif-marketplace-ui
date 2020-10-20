@@ -4,7 +4,7 @@ import { Button, ModalDialogue } from '@rsksmart/rif-ui'
 import Box from '@material-ui/core/Box'
 import Divider from '@material-ui/core/Divider'
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles'
-import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
+import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
 import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
 import {
@@ -16,7 +16,7 @@ export interface DepositModalProps {
   totalStakedUSD: string
   open: boolean
   onClose: () => void
-  onDeposit: (amount: number, currency: SupportedTokens) => void
+  onDeposit: (amount: number, currency: SupportedToken) => void
   stakes: StakedBalancesProp
 }
 
@@ -30,14 +30,14 @@ const DepositModal: FC<DepositModalProps> = ({
   totalStakedUSD, open, onClose, onDeposit, stakes,
 }) => {
   const classes = useStyles()
-  const currencyOptions: SupportedTokens[] = ['rbtc', 'rif']
-  const [selectedCurrency, setSelectedCurrency] = useState<SupportedTokens>('rbtc')
+  const currencyOptions: SupportedToken[] = ['rbtc', 'rif']
+  const [selectedCurrency, setSelectedCurrency] = useState<SupportedToken>('rbtc')
   const [amountToStake, setAmountToStake] = useState<number | undefined>(undefined)
 
   const handleCurrencyChange = ({
     target: { value },
   }: React.ChangeEvent<{ name?: string, value: unknown }>): void => {
-    setSelectedCurrency(value as SupportedTokens)
+    setSelectedCurrency(value as SupportedToken)
   }
 
   const handleAmountChange = ({
