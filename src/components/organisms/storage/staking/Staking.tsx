@@ -36,20 +36,28 @@ import WithdrawModal from './WithdrawModal'
 
 const logger = Logger.getInstance()
 
-const stakingIconSizePx = 80
+const stakingIconSize = 10
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
+  wrapper: {
+    position: 'relative',
+  },
   root: {
-    margin: theme.spacing(1),
     display: 'flex',
     justifyContent: 'flex-end',
+    width: '100%',
+    right: 0,
+    position: 'absolute',
   },
   infoContainer: {
     border: `${colors.primary} 1px solid`,
     maxWidth: '700px',
     alignItems: 'center',
     borderRadius: '50px 0px 0px 50px',
-    paddingRight: '40px',
+    paddingRight: theme.spacing(stakingIconSize / 2),
+    backgroundColor: colors.white,
+    zIndex: 99,
+    whiteSpace: 'nowrap',
   },
   infoColumn: {
     display: 'flex',
@@ -57,14 +65,15 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     flexDirection: 'column',
   },
   stakingIcon: {
-    height: `${stakingIconSizePx}px`,
-    minWidth: `${stakingIconSizePx}px`,
-    marginLeft: `-${stakingIconSizePx / 2}px`,
+    height: theme.spacing(stakingIconSize),
+    minWidth: theme.spacing(stakingIconSize),
+    marginLeft: -theme.spacing(stakingIconSize / 2),
+    zIndex: 99,
   },
   fabTitle: {
     position: 'absolute',
-    top: '-20px',
-    right: '20px',
+    top: '-25px',
+    right: '15px',
   },
   progressContainer: {
     background: 'rgba(275, 275, 275, 0.8)',
@@ -247,7 +256,7 @@ const Staking: FC = () => {
   }
 
   return (
-    <>
+    <div className={classes.wrapper}>
       <div className={classes.root}>
         <Typography
           className={classes.fabTitle}
@@ -283,7 +292,7 @@ const Staking: FC = () => {
               className={classes.infoColumn}
             >
               <Button
-                onClick={() => setDepositOpened(true)}
+                onClick={(): void => setDepositOpened(true)}
                 color="primary"
                 rounded
                 variant="outlined"
@@ -316,18 +325,18 @@ const Staking: FC = () => {
         stakes={stakes}
         onDeposit={handleDeposit}
         open={depositOpened}
-        onClose={() => setDepositOpened(false)}
+        onClose={(): void => setDepositOpened(false)}
       />
       <WithdrawModal
         canWithdraw={canWithdraw}
-        onClose={() => setWithdrawOpened(false)}
+        onClose={(): void => setWithdrawOpened(false)}
         open={withdrawOpened}
         onWithdraw={handleWithdraw}
         totalStakedUSD={totalStakedUSD}
         stakes={stakes}
       />
       {renderProgressOverlay()}
-    </>
+    </div>
   )
 }
 
