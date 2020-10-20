@@ -5,6 +5,7 @@ import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import { SupportedTokens, tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
+import GridItem from 'components/atoms/GridItem'
 
 export type AmountWithCurrencySelectProps = {
   amountLabel?: string
@@ -40,7 +41,7 @@ const AmountWithCurrencySelect: FC<AmountWithCurrencySelectProps> = (props) => {
       container
       justify="center"
     >
-      <Grid item>
+      <GridItem>
         <TextField
           required
           fullWidth
@@ -54,9 +55,8 @@ const AmountWithCurrencySelect: FC<AmountWithCurrencySelectProps> = (props) => {
           }}
           onChange={onAmountChange}
         />
-      </Grid>
-      <Grid
-        item
+      </GridItem>
+      <GridItem
         className={classes.currencySelectContainer}
       >
         <Select
@@ -73,7 +73,7 @@ const AmountWithCurrencySelect: FC<AmountWithCurrencySelectProps> = (props) => {
             ),
           )}
         </Select>
-      </Grid>
+      </GridItem>
     </Grid>
   )
 }

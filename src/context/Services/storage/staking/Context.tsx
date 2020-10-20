@@ -83,7 +83,7 @@ export const ContextProvider: FC = ({ children }) => {
 
   useEffect(() => {
     if (needsRefresh && account) {
-      const fetchStakeTotal = async () => {
+      const fetchStakeTotal = async (): Promise<void> => {
         const {
           totalStakedUSD,
           stakedBalances,
@@ -118,7 +118,11 @@ export const ContextProvider: FC = ({ children }) => {
 
   const value = { state, dispatch }
 
-  return <StakingContext.Provider value={value}>{children}</StakingContext.Provider>
+  return (
+    <StakingContext.Provider value={value}>
+      {children}
+    </StakingContext.Provider>
+  )
 }
 
 function withStakingContext<T>(

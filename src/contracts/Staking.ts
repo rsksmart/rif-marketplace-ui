@@ -12,7 +12,7 @@ import { stakingAddress } from './config'
 const logger = Logger.getInstance()
 export type StorageStakingContractErrorId = 'contract-storage-staking'
 
-const ZERO_BYTES = '0x0000000000000000000000000000000000000000000000000000000000000000'
+const zeroBytes = '0x'.padEnd(64, '0')
 
 class StakingContract {
   public static getInstance(web3: Web3): StakingContract {
@@ -47,18 +47,15 @@ class StakingContract {
       throw new Error('amount should greater then 0')
     }
 
-    const gasPrice = await this.web3.eth.getGasPrice().catch((error: Error) => {
-      logger.error('error getting gas price, error:', error)
-      throw error
-    })
+    const gasPrice = await this.web3.eth.getGasPrice()
+      .catch((error: Error) => {
+        logger.error('error getting gas price, error:', error)
+        throw error
+      })
 
     const amountWei = convertToWeiString(amount)
 
-    const stakeTask = this.contract.methods.stake(
-      amountWei,
-      token,
-      ZERO_BYTES,
-    )
+    const stakeTask = this.contract.methods.stake(amountWei, token, zeroBytes)
     const estimatedGas = await stakeTask.estimateGas({ from, gasPrice })
     const gas = Math.floor(estimatedGas * 1.3)
 
@@ -87,14 +84,19 @@ class StakingContract {
       throw new Error('amount should greater then 0')
     }
 
-    const gasPrice = await this.web3.eth.getGasPrice().catch((error: Error) => {
-      logger.error('error getting gas price, error:', error)
-      throw error
-    })
+    const gasPrice = await this.web3.eth.getGasPrice()
+      .catch((error: Error) => {
+        logger.error('error getting gas price, error:', error)
+        throw error
+      })
 
     const amountWei = convertToWeiString(amount)
 
-    const unstakeTask = this.contract.methods.unstake(amountWei, token, ZERO_BYTES)
+    const unstakeTask = this.contract.methods.unstake(
+      amountWei,
+      token,
+      zeroBytes,
+    )
     const estimatedGas = await unstakeTask.estimateGas({ from, gasPrice })
     const gas = Math.floor(estimatedGas * 1.3)
 
@@ -114,7 +116,6 @@ class StakingContract {
     return this.contract.methods.totalStakedFor(account, token).call({ from })
   }
 
-  // FIXME: what is this function for?
   public totalStaked = (
     token: string = zeroAddress, // native token
     txOptions: TransactionOptions,

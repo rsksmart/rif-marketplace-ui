@@ -6,21 +6,28 @@ import {
   Box, Grid, Grow, Typography,
 } from '@material-ui/core'
 import { Button, colors, Web3Store } from '@rsksmart/rif-ui'
-import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
+import AppContext, {
+  AppContextProps, errorReporterFactory,
+} from 'context/App/AppContext'
 import { UIError } from 'models/UIMessage'
 import Logger from 'utils/Logger'
 import Web3 from 'web3'
 import StakingContract from 'contracts/Staking'
 import StorageContract from 'contracts/storage/contract'
-import { Props as StakingContextProps } from 'context/Services/storage/staking/interfaces'
+import {
+  Props as StakingContextProps,
+} from 'context/Services/storage/staking/interfaces'
 import StakingBalance from 'components/molecules/storage/StakingBalance'
 import StakingFab from 'components/molecules/storage/StakingFab'
-import withStakingContext, { StakingContext } from 'context/Services/storage/staking/Context'
+import withStakingContext, { StakingContext }
+  from 'context/Services/storage/staking/Context'
 import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
 import { TokenAddressees } from 'context/Market/storage/interfaces'
 import { JobDoneBox } from 'components/molecules'
-import TxCompletePageTemplate from 'components/templates/TxCompletePageTemplate'
-import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
+import TxCompletePageTemplate
+  from 'components/templates/TxCompletePageTemplate'
+import TransactionInProgressPanel
+  from 'components/organisms/TransactionInProgressPanel'
 import GridRow from 'components/atoms/GridRow'
 import GridItem from 'components/atoms/GridItem'
 import RoundBtn from 'components/atoms/RoundBtn'
@@ -28,6 +35,8 @@ import DepositModal from './DepositModal'
 import WithdrawModal from './WithdrawModal'
 
 const logger = Logger.getInstance()
+
+const stakingIconSizePx = 80
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
@@ -48,9 +57,9 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     flexDirection: 'column',
   },
   stakingIcon: {
-    height: '80px',
-    minWidth: '80px',
-    marginLeft: '-40px',
+    height: `${stakingIconSizePx}px`,
+    minWidth: `${stakingIconSizePx}px`,
+    marginLeft: `-${stakingIconSizePx / 2}px`,
   },
   fabTitle: {
     position: 'absolute',
@@ -74,7 +83,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 const stakeInProgressMsg = 'Staking your funds'
 const unstakeInProgressMsg = 'Unstaking your funds'
 
-const Staking: FC<{}> = () => {
+const Staking: FC = () => {
   const classes = useStyles()
 
   const {
@@ -113,13 +122,15 @@ const Staking: FC<{}> = () => {
   const [txOperationDone, setTxOperationDone] = useState(false)
   const [showTxInProgress, setShowTxInProgress] = useState(false)
 
-  const handleTxCompletedClose = () => {
+  const handleTxCompletedClose = (): void => {
     setShowTxInProgress(false)
     setProcessingTx(false)
     setTxOperationDone(false)
   }
 
-  const handleDeposit = async (amount: number, currency: SupportedTokens) => {
+  const handleDeposit = async (
+    amount: number, currency: SupportedTokens,
+  ): Promise<void> => {
     //  users won't reach this point without a web3 instance
     if (!web3) return
     try {
@@ -130,7 +141,9 @@ const Staking: FC<{}> = () => {
       setDepositOpened(false)
 
       const stakeContract = StakingContract.getInstance(web3 as Web3)
-      const receipt = await stakeContract.stake(amount, TokenAddressees[currency], { from: account })
+      const receipt = await stakeContract.stake(
+        amount, TokenAddressees[currency], { from: account },
+      )
 
       if (receipt) {
         setTxOperationDone(true)
@@ -151,7 +164,9 @@ const Staking: FC<{}> = () => {
     }
   }
 
-  const handleWithdraw = async (amount: number, currency: SupportedTokens) => {
+  const handleWithdraw = async (
+    amount: number, currency: SupportedTokens,
+  ): Promise<void> => {
     //  users won't reach this point without a web3 instance
     if (!web3) return
     try {
@@ -161,7 +176,9 @@ const Staking: FC<{}> = () => {
       setTxCompleteMsg('Your funds have been unstaked!')
       setWithdrawOpened(false)
       const stakeContract = StakingContract.getInstance(web3 as Web3)
-      const receipt = await stakeContract.unstake(amount, TokenAddressees[currency], { from: account })
+      const receipt = await stakeContract.unstake(
+        amount, TokenAddressees[currency], { from: account },
+      )
 
       if (receipt) {
         setTxOperationDone(true)
@@ -182,15 +199,17 @@ const Staking: FC<{}> = () => {
     }
   }
 
-  const handleOpenWithdraw = async () => {
+  const handleOpenWithdraw = async (): Promise<void> => {
     if (!web3 || !account) return
     const storageContract = StorageContract.getInstance(web3 as Web3)
-    const hasUtilizedCapacity = await storageContract.hasUtilizedCapacity(account as string, { from: account })
-    setCanWithdraw(Boolean(hasUtilizedCapacity))
+    const hasUtilizedCapacity = await storageContract.hasUtilizedCapacity(
+      account as string, { from: account },
+    )
+    setCanWithdraw(Boolean(!hasUtilizedCapacity))
     setWithdrawOpened(true)
   }
 
-  const handleExpandClick = () => setIsExpanded((exp) => !exp)
+  const handleExpandClick = (): void => setIsExpanded((exp) => !exp)
 
   const renderProgressOverlay = (): JSX.Element | null => {
     if (showTxInProgress && (processingTx || txOperationDone)) {
@@ -289,7 +308,8 @@ const Staking: FC<{}> = () => {
         <StakingFab
           disabled={!account}
           className={classes.stakingIcon}
-          onClick={handleExpandClick} />
+          onClick={handleExpandClick}
+        />
       </div>
       <DepositModal
         totalStakedUSD={totalStakedUSD}

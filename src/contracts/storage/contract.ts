@@ -1,4 +1,5 @@
-import StorageManager from '@rsksmart/rif-marketplace-storage/build/contracts/StorageManager.json'
+import StorageManager
+  from '@rsksmart/rif-marketplace-storage/build/contracts/StorageManager.json'
 import Web3 from 'web3'
 import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
@@ -64,10 +65,11 @@ class StorageContract {
       zeroAddress,
     )
 
-    const gasPrice = await this.web3.eth.getGasPrice().catch((error: Error) => {
-      logger.error('error getting gas price, error:', error)
-      throw error
-    })
+    const gasPrice = await this.web3.eth.getGasPrice()
+      .catch((error: Error) => {
+        logger.error('error getting gas price, error:', error)
+        throw error
+      })
 
     const gas = await newAgreementTask.estimateGas({
       from,
@@ -105,10 +107,11 @@ class StorageContract {
       (el) => `0x${el}`,
     )
 
-    const gasPrice = await this.web3.eth.getGasPrice().catch((error: Error) => {
-      logger.error('error getting gas price, error:', error)
-      throw error
-    })
+    const gasPrice = await this.web3.eth.getGasPrice()
+      .catch((error: Error) => {
+        logger.error('error getting gas price, error:', error)
+        throw error
+      })
 
     const setOffer = await this.contract.methods.setOffer(
       capacityMB,
@@ -136,10 +139,11 @@ class StorageContract {
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
 
-    const gasPrice = await this.web3.eth.getGasPrice().catch((error: Error) => {
-      logger.error('error getting gas price, error:', error)
-      throw error
-    })
+    const gasPrice = await this.web3.eth.getGasPrice()
+      .catch((error: Error) => {
+        logger.error('error getting gas price, error:', error)
+        throw error
+      })
 
     const estimatedGas = await this.contract.methods
       .terminateOffer()
@@ -160,10 +164,11 @@ class StorageContract {
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
 
-    const gasPrice = await this.web3.eth.getGasPrice().catch((error: Error) => {
-      logger.error('error getting gas price, error:', error)
-      throw error
-    })
+    const gasPrice = await this.web3.eth.getGasPrice()
+      .catch((error: Error) => {
+        logger.error('error getting gas price, error:', error)
+        throw error
+      })
 
     const gas = await this.web3.eth.estimateGas({
       from,

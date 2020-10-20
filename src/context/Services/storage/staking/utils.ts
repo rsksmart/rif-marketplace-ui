@@ -4,7 +4,9 @@ import { AppAction } from 'context/App/appActions'
 import { Dispatch } from 'react'
 import { Action } from './interfaces'
 
-export const setStakeNeedsRefresh = (dispatch: Dispatch<Action>) => () => {
+export const setStakeNeedsRefresh = (
+  dispatch: Dispatch<Action>,
+) => (): void => {
   dispatch({
     type: 'SET_NEEDS_REFRESH',
     payload: { needsRefresh: true },
@@ -15,7 +17,7 @@ export const onStakeUpdated = (
   dispatch: Dispatch<Action>,
   appDispatch: Dispatch<AppAction>,
   updatedVal: StakeTransport,
-) => {
+): void => {
   const { stakedBalances, totalStakedUSD } = mapFromTransport(updatedVal)
   dispatch({
     type: 'SET_TOTAL_STAKED_USD',

@@ -7,7 +7,9 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles'
 import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
 import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
-import { StakedBalances as StakedBalancesProp } from 'api/rif-marketplace-cache/storage/stakes'
+import {
+  StakedBalances as StakedBalancesProp,
+} from 'api/rif-marketplace-cache/storage/stakes'
 import StakedBalances from './StakedBalances'
 
 export interface DepositModalProps {
@@ -32,11 +34,21 @@ const DepositModal: FC<DepositModalProps> = ({
   const [selectedCurrency, setSelectedCurrency] = useState<SupportedTokens>('rbtc')
   const [amountToStake, setAmountToStake] = useState<number | undefined>(undefined)
 
-  const handleCurrencyChange = ({ target: { value } }: React.ChangeEvent<{ name?: string, value: unknown }>): void => setSelectedCurrency(value as SupportedTokens)
+  const handleCurrencyChange = ({
+    target: { value },
+  }: React.ChangeEvent<{ name?: string, value: unknown }>): void => {
+    setSelectedCurrency(value as SupportedTokens)
+  }
 
-  const handleAmountChange = ({ target: { value } }: React.ChangeEvent<{ name?: string, value: unknown }>): void => setAmountToStake(value as number)
+  const handleAmountChange = ({
+    target: { value },
+  }: React.ChangeEvent<{ name?: string, value: unknown }>): void => {
+    setAmountToStake(value as number)
+  }
 
-  const handleDeposit = () => onDeposit(Number(amountToStake), selectedCurrency)
+  const handleDeposit = (): void => onDeposit(
+    Number(amountToStake), selectedCurrency,
+  )
 
   const actions: JSX.Element = (
     <Button

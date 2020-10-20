@@ -6,9 +6,12 @@ import {
   createStyles, Divider, makeStyles, Theme,
 } from '@material-ui/core'
 import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
-import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
+import AmountWithCurrencySelect
+  from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
-import { StakedBalances as StakedBalancesProp } from 'api/rif-marketplace-cache/storage/stakes'
+import {
+  StakedBalances as StakedBalancesProp,
+} from 'api/rif-marketplace-cache/storage/stakes'
 import StakedBalances from './StakedBalances'
 
 export interface WithdrawModalProps {
@@ -34,11 +37,21 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
   const [selectedCurrency, setSelectedCurrency] = useState<SupportedTokens>('rbtc')
   const [amountToWithdraw, setAmountToWithdraw] = useState<number | undefined>(undefined)
 
-  const handleCurrencyChange = ({ target: { value } }: React.ChangeEvent<{ name?: string, value: unknown }>): void => setSelectedCurrency(value as SupportedTokens)
+  const handleCurrencyChange = ({
+    target: { value },
+  }: React.ChangeEvent<{ name?: string, value: unknown }>): void => {
+    setSelectedCurrency(value as SupportedTokens)
+  }
 
-  const handleAmountChange = ({ target: { value } }: React.ChangeEvent<{ name?: string, value: unknown }>): void => setAmountToWithdraw(value as number)
+  const handleAmountChange = ({
+    target: { value },
+  }: React.ChangeEvent<{ name?: string, value: unknown }>): void => {
+    setAmountToWithdraw(value as number)
+  }
 
-  const handleWithdraw = () => onWithdraw(Number(amountToWithdraw), selectedCurrency)
+  const handleWithdraw = (): void => {
+    onWithdraw(Number(amountToWithdraw), selectedCurrency)
+  }
 
   const disableWithdrawAction = !canWithdraw
     || !amountToWithdraw
@@ -65,7 +78,12 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
       footer={actions}
     >
       <CenteredContent>
-        <Typography className={classes.bodyChild} component="div" align="center" color="secondary">
+        <Typography
+          className={classes.bodyChild}
+          component="div"
+          align="center"
+          color="secondary"
+        >
           {'Withdrawing RIF staked in the Marketplace '}
           <Box display="inline" fontWeight="fontWeightMedium">
             downgrade your reputation
