@@ -190,9 +190,7 @@ const Staking: FC<{}> = () => {
     setWithdrawOpened(true)
   }
 
-  const handleExpandClick = () => {
-    if (account) setIsExpanded((exp) => !exp)
-  }
+  const handleExpandClick = () => setIsExpanded((exp) => !exp)
 
   const renderProgressOverlay = (): JSX.Element | null => {
     if (showTxInProgress && (processingTx || txOperationDone)) {
@@ -246,8 +244,7 @@ const Staking: FC<{}> = () => {
             container
             className={classes.infoContainer}
           >
-            <Grid
-              item
+            <GridItem
               xs={4}
               className={classes.infoColumn}
             >
@@ -261,9 +258,8 @@ const Staking: FC<{}> = () => {
                 totalStaked={isAwaitingConfirmations ? '' : totalStakedUSD}
                 units={isAwaitingConfirmations ? '-' : 'USD'}
               />
-            </Grid>
-            <Grid
-              item
+            </GridItem>
+            <GridItem
               xs={4}
               className={classes.infoColumn}
             >
@@ -275,9 +271,8 @@ const Staking: FC<{}> = () => {
               >
                 Add funds
               </Button>
-            </Grid>
-            <Grid
-              item
+            </GridItem>
+            <GridItem
               xs={4}
               className={classes.infoColumn}
             >
@@ -288,10 +283,13 @@ const Staking: FC<{}> = () => {
               >
                 Withdraw funds
               </Button>
-            </Grid>
+            </GridItem>
           </Grid>
         </Grow>
-        <StakingFab className={classes.stakingIcon} onClick={handleExpandClick} />
+        <StakingFab
+          disabled={!account}
+          className={classes.stakingIcon}
+          onClick={handleExpandClick} />
       </div>
       <DepositModal
         totalStakedUSD={totalStakedUSD}
