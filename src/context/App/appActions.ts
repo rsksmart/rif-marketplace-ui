@@ -2,7 +2,7 @@ import { ContextDispatch } from 'context/storeUtils/interfaces'
 import { Modify } from 'utils/typeUtils'
 import { Message, MessageId, ErrorMessage } from 'models/UIMessage'
 import { LoaderId } from '../../models/UIMessage'
-import { AppState, AwaitingServices } from './AppContext'
+import { AppState } from './AppContext'
 
 export type APP_ACTION =
   | 'SET_IS_LOADING'
@@ -26,16 +26,10 @@ export type RemoveMessagePayload = {
   id: MessageId
 }
 
-export type AwaitingConfirmationsPayload = {
-  service: AwaitingServices
-  isAwaiting: boolean
-}
-
 export type AppPayload = LoadingPayload |
   MessagePayload |
   ErrorMessagePayload |
-  RemoveMessagePayload |
-  AwaitingConfirmationsPayload
+  RemoveMessagePayload
 
 export type AppAction = ContextDispatch<APP_ACTION, AppPayload>
 
@@ -47,7 +41,6 @@ type AppActions = {
   SET_IS_LOADING: AppReducer<LoadingPayload>
   SET_MESSAGE: AppReducer<MessagePayload | ErrorMessagePayload>
   REMOVE_MESSAGE: AppReducer<RemoveMessagePayload>
-  SET_AWAITING_CONFIRMATIONS: AppReducer<AwaitingConfirmationsPayload>
 }
 
 const LOADING_MSG_ID = 'loading'
@@ -99,11 +92,5 @@ export const appActions: AppActions = {
       ...state,
       messages: messagesCopy,
     }
-  },
-  SET_AWAITING_CONFIRMATIONS: (state,
-    { service, isAwaiting }: AwaitingConfirmationsPayload) => {
-    const stateCopy = { ...state }
-    stateCopy.awaitingConfirmations[service] = isAwaiting
-    return stateCopy
   },
 }

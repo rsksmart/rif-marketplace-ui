@@ -30,6 +30,9 @@ import TransactionInProgressPanel
 import GridRow from 'components/atoms/GridRow'
 import GridItem from 'components/atoms/GridItem'
 import RoundBtn from 'components/atoms/RoundBtn'
+import BlockchainContext,
+{ BlockchainContextProps }
+  from 'context/Blockchain/BlockchainContext'
 import DepositModal from './DepositModal'
 import WithdrawModal from './WithdrawModal'
 import StakingCard from './StakingCard'
@@ -102,13 +105,16 @@ const Staking: FC = () => {
   } = useContext(Web3Store)
 
   const {
+    dispatch: appDispatch,
+  } = useContext<AppContextProps>(AppContext)
+  const {
     state: {
-      awaitingConfirmations: {
+      servicesAwaitingConfirmations: {
         staking: isAwaitingConfirmations,
       },
     },
-    dispatch: appDispatch,
-  } = useContext<AppContextProps>(AppContext)
+    dispatch: bcDispatch,
+  }: BlockchainContextProps = useContext(BlockchainContext)
   const reportError = useCallback((
     e: UIError,
   ) => errorReporterFactory(appDispatch)(e), [appDispatch])
@@ -155,9 +161,9 @@ const Staking: FC = () => {
 
       if (receipt) {
         setTxOperationDone(true)
-        appDispatch({
+        bcDispatch({
           type: 'SET_AWAITING_CONFIRMATIONS',
-          payload: { service: 'staking', isAwaiting: true },
+          payload: { service: 'staking', isAwaiting: true } as never,
         })
       }
     } catch (error) {
@@ -190,9 +196,9 @@ const Staking: FC = () => {
 
       if (receipt) {
         setTxOperationDone(true)
-        appDispatch({
+        bcDispatch({
           type: 'SET_AWAITING_CONFIRMATIONS',
-          payload: { service: 'staking', isAwaiting: true },
+          payload: { service: 'staking', isAwaiting: true } as never,
         })
       }
     } catch (error) {

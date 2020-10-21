@@ -24,14 +24,10 @@ export type ContextName = 'app'
 export type MessageMap = Record<MessageId, Message | ErrorMessage>
 export type LoaderMap = Record<LoaderId, boolean>
 
-export type AwaitingServices = 'staking'
-export type AwaitingConfirmationsMap = Record<AwaitingServices, boolean>
-
 export interface AppState extends ContextState {
   loaders: LoaderMap
   messages: Partial<MessageMap>
   apis: ServiceMap
-  awaitingConfirmations: AwaitingConfirmationsMap
 }
 
 export interface AppContextProps {
@@ -58,9 +54,6 @@ export const initialState: AppState = {
     data: false,
     filters: false,
     other: false,
-  },
-  awaitingConfirmations: {
-    staking: false,
   },
 }
 
