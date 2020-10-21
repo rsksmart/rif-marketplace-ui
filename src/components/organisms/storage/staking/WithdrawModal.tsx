@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import Box from '@material-ui/core/Box'
 import Typography from '@material-ui/core/Typography'
 import { Button, ModalDialogue } from '@rsksmart/rif-ui'
@@ -36,6 +36,10 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
   const currencyOptions: SupportedToken[] = ['rbtc', 'rif']
   const [selectedCurrency, setSelectedCurrency] = useState<SupportedToken>('rbtc')
   const [amountToWithdraw, setAmountToWithdraw] = useState<number | undefined>(undefined)
+
+  useEffect(() => {
+    setAmountToWithdraw(undefined)
+  }, [open])
 
   const handleCurrencyChange = ({
     target: { value },
@@ -84,7 +88,7 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
           align="center"
           color="secondary"
         >
-          {'Withdrawing RIF staked in the Marketplace '}
+          {'Withdrawing staked funds will '}
           <Box display="inline" fontWeight="fontWeightMedium">
             downgrade your reputation
           </Box>

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import Typography from '@material-ui/core/Typography'
 import { Button, ModalDialogue } from '@rsksmart/rif-ui'
 import Box from '@material-ui/core/Box'
@@ -33,6 +33,10 @@ const DepositModal: FC<DepositModalProps> = ({
   const currencyOptions: SupportedToken[] = ['rbtc', 'rif']
   const [selectedCurrency, setSelectedCurrency] = useState<SupportedToken>('rbtc')
   const [amountToStake, setAmountToStake] = useState<number | undefined>(undefined)
+
+  useEffect(() => {
+    setAmountToStake(undefined)
+  }, [open])
 
   const handleCurrencyChange = ({
     target: { value },
@@ -76,15 +80,14 @@ const DepositModal: FC<DepositModalProps> = ({
           align="center"
           color="secondary"
         >
-          {'The amount of RIF staked in RIF Marketplace helps to '}
+          {'The amount staked in the RIF Marketplace helps to '}
           <Box fontWeight="fontWeightMedium" display="inline">
             enhance your reputation
           </Box>
           {' and '}
           <Box fontWeight="fontWeightMedium" display="inline">
-            position your offers at the top
+            position your offers at the top of the list.
           </Box>
-          {' when selling storage.'}
         </Typography>
         <Divider />
         <Typography
