@@ -3,9 +3,9 @@ import React, {
 } from 'react'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import {
-  Box, Grid, Grow, Typography,
+  Box, Grow, Typography,
 } from '@material-ui/core'
-import { Button, colors, Web3Store } from '@rsksmart/rif-ui'
+import { colors, Web3Store } from '@rsksmart/rif-ui'
 import AppContext, {
   AppContextProps, errorReporterFactory,
 } from 'context/App/AppContext'
@@ -17,7 +17,6 @@ import StorageContract from 'contracts/storage/contract'
 import {
   Props as StakingContextProps,
 } from 'context/Services/storage/staking/interfaces'
-import StakingBalance from 'components/molecules/storage/StakingBalance'
 import StakingFab from 'components/molecules/storage/StakingFab'
 import withStakingContext, { StakingContext }
   from 'context/Services/storage/staking/Context'
@@ -33,6 +32,7 @@ import GridItem from 'components/atoms/GridItem'
 import RoundBtn from 'components/atoms/RoundBtn'
 import DepositModal from './DepositModal'
 import WithdrawModal from './WithdrawModal'
+import StakingCard from './StakingCard'
 
 const logger = Logger.getInstance()
 
@@ -49,20 +49,19 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     right: 0,
     position: 'absolute',
   },
+  cardWrapper: {
+    maxWidth: '550px',
+    width: '100%',
+  },
   infoContainer: {
     border: `${colors.primary} 1px solid`,
-    maxWidth: '700px',
     alignItems: 'center',
     borderRadius: '50px 0px 0px 50px',
     paddingRight: theme.spacing(stakingIconSize / 2),
     backgroundColor: colors.white,
     zIndex: 99,
     whiteSpace: 'nowrap',
-  },
-  infoColumn: {
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'column',
+    height: theme.spacing(stakingIconSize),
   },
   stakingIcon: {
     height: theme.spacing(stakingIconSize),
@@ -268,51 +267,15 @@ const Staking: FC = () => {
           </Box>
         </Typography>
         <Grow in={isExpanded}>
-          <Grid
-            container
-            className={classes.infoContainer}
-          >
-            <GridItem
-              xs={4}
-              className={classes.infoColumn}
-            >
-              <Typography component="div" color="secondary">
-                <Box fontWeight="fontWeightRegular">
-                  BALANCE
-                </Box>
-              </Typography>
-              <StakingBalance
-                isLoading={isAwaitingConfirmations}
-                totalStaked={isAwaitingConfirmations ? '' : totalStakedUSD}
-                units={isAwaitingConfirmations ? '-' : 'USD'}
-              />
-            </GridItem>
-            <GridItem
-              xs={4}
-              className={classes.infoColumn}
-            >
-              <Button
-                onClick={(): void => setDepositOpened(true)}
-                color="primary"
-                rounded
-                variant="outlined"
-              >
-                Add funds
-              </Button>
-            </GridItem>
-            <GridItem
-              xs={4}
-              className={classes.infoColumn}
-            >
-              <Button
-                onClick={handleOpenWithdraw}
-                rounded
-                variant="outlined"
-              >
-                Withdraw funds
-              </Button>
-            </GridItem>
-          </Grid>
+          <div className={classes.cardWrapper}>
+            <StakingCard
+              className={classes.infoContainer}
+              onAddFundsClicked={(): void => setDepositOpened(true)}
+              onWithdrawClicked={handleOpenWithdraw}
+              totalStakedUSD={totalStakedUSD || '0.00'}
+              isAwaitingConfirmations={isAwaitingConfirmations}
+            />
+          </div>
         </Grow>
         <StakingFab
           disabled={!account}
