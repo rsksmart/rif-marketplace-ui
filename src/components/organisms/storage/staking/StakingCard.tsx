@@ -30,6 +30,9 @@ const StakingCard: FC<StakingCardProps> = (props) => {
     onAddFundsClicked,
   } = props
   const classes = useStyles()
+
+  const withdrawButtonEnabled = Boolean(Number(totalStakedUSD))
+
   return (
     <Grid
       container
@@ -69,6 +72,7 @@ const StakingCard: FC<StakingCardProps> = (props) => {
           onClick={onWithdrawClicked}
           rounded
           variant="outlined"
+          disabled={!withdrawButtonEnabled}
         >
           Withdraw funds
         </Button>
