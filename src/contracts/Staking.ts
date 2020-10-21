@@ -13,6 +13,7 @@ const logger = Logger.getInstance()
 export type StorageStakingContractErrorId = 'contract-storage-staking'
 
 const zeroBytes = '0x'.padEnd(64, '0')
+const extraGasPercentage = 1.3
 
 class StakingContract {
   public static getInstance(web3: Web3): StakingContract {
@@ -57,7 +58,7 @@ class StakingContract {
 
     const stakeTask = this.contract.methods.stake(amountWei, token, zeroBytes)
     const estimatedGas = await stakeTask.estimateGas({ from, gasPrice })
-    const gas = Math.floor(estimatedGas * 1.3)
+    const gas = Math.floor(estimatedGas * extraGasPercentage)
 
     return stakeTask.send(
       {
@@ -98,7 +99,7 @@ class StakingContract {
       zeroBytes,
     )
     const estimatedGas = await unstakeTask.estimateGas({ from, gasPrice })
-    const gas = Math.floor(estimatedGas * 1.3)
+    const gas = Math.floor(estimatedGas * extraGasPercentage)
 
     return unstakeTask.send({ from, gas, gasPrice }, (err, txHash) => {
       if (err) return Promise.reject(err)

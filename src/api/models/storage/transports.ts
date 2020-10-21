@@ -20,13 +20,6 @@ export interface OfferTransport {
   acceptedCurrencies: string[]
 }
 
-export type StakeBalance = {
-  account: string
-  symbol: string
-  token: string
-  total: string
-}
-
 export type AgreementTransport = {
     agreementReference: string
     availableFunds: string
@@ -46,7 +39,14 @@ export type AgreementTransport = {
     expiresIn: string
 }
 
+export type StakeBalanceTransport = {
+  account: string
+  symbol: string
+  token: string
+  total: string
+}
+
 export interface StakeTransport {
   totalStakedFiat: string
-  stakes: StakeBalance[]
+  stakes: StakeBalanceTransport[]
 }
