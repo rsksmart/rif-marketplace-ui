@@ -1,23 +1,23 @@
 export interface BillingPlanTransport {
-    id: number
-    period: string
-    price: string
-    offerId: string
-    createdAt: string
-    updatedAt: string
+  id: number
+  period: string
+  price: string
+  offerId: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface OfferTransport {
-    peerId: string
-    provider: string
-    totalCapacity: string
-    availableCapacity: string
-    utilizedCapacity: string
-    plans: BillingPlanTransport[]
-    avgBillingPrice: number
-    createdAt: string
-    updatedAt: string
-    acceptedCurrencies: string[]
+  peerId: string
+  provider: string
+  totalCapacity: string
+  availableCapacity: string
+  utilizedCapacity: string
+  plans: BillingPlanTransport[]
+  avgBillingPrice: number
+  createdAt: string
+  updatedAt: string
+  acceptedCurrencies: string[]
 }
 
 export type AgreementTransport = {
@@ -37,4 +37,16 @@ export type AgreementTransport = {
     toBePayedOut: string
     tokenAddress: string
     expiresIn: string
+}
+
+export type StakeBalanceTransport = {
+  account: string
+  symbol: string
+  token: string
+  total: string
+}
+
+export interface StakeTransport {
+  totalStakedFiat: string
+  stakes: StakeBalanceTransport[]
 }

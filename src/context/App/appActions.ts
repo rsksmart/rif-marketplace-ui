@@ -4,7 +4,11 @@ import { Message, MessageId, ErrorMessage } from 'models/UIMessage'
 import { LoaderId } from '../../models/UIMessage'
 import { AppState } from './AppContext'
 
-export type APP_ACTION = 'SET_IS_LOADING' | 'SET_MESSAGE' | 'REMOVE_MESSAGE'
+export type APP_ACTION =
+  | 'SET_IS_LOADING'
+  | 'SET_MESSAGE'
+  | 'REMOVE_MESSAGE'
+  | 'SET_AWAITING_CONFIRMATIONS'
 
 export interface LoadingPayload {
   readonly id: LoaderId

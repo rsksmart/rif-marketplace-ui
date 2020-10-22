@@ -1,6 +1,6 @@
 import { initialState } from 'context/Blockchain/BlockchainContext'
 import {
-  AddTxPayload, BlockchainPayload, BLOCKCHAIN_ACTION, ConfirmationsPayload,
+  AddTxPayload, AwaitingConfirmationsPayload, BlockchainPayload, BLOCKCHAIN_ACTION, ConfirmationsPayload,
 } from './blockchainActions'
 import { BlockchainState } from './BlockchainContext'
 
@@ -35,5 +35,12 @@ export const blockchainActions: IBlockchainActions = {
     }
   },
   CLEAR_CONFIRMATIONS: (_, __) => initialState,
-
+  SET_AWAITING_CONFIRMATIONS: (
+    state: BlockchainState,
+    { service, isAwaiting }: AwaitingConfirmationsPayload,
+  ) => {
+    const stateCopy = { ...state }
+    stateCopy.servicesAwaitingConfirmations[service] = isAwaiting
+    return stateCopy
+  },
 }
