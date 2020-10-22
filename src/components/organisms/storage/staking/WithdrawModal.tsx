@@ -92,7 +92,7 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
           <Box display="inline" fontWeight="fontWeightMedium">
             downgrade your reputation
           </Box>
-          and
+          {' and '}
           <Box display="inline" fontWeight="fontWeightMedium">
             your offers will not be positioned at the top
           </Box>
