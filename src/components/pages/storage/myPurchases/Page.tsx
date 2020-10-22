@@ -15,6 +15,11 @@ import {
 } from '@rsksmart/rif-ui'
 import RifCard from 'components/organisms/RifCard'
 import RoundBtn from 'components/atoms/RoundBtn'
+import { ConfigPurchaseCardDetails } from 'components/organisms/storage/buy/ConfigPurchaseCard'
+import { Agreement } from 'models/marketItems/StorageItem'
+import RifSelect from 'components/molecules/RifSelect'
+import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
+import PlanOption from 'components/molecules/storage/buy/PlanOption'
 import createItemFields, { AgreementView } from './utils'
 
 const useTitleStyles = makeStyles(() => ({
@@ -73,10 +78,54 @@ const MyStoragePurchases: FC = () => {
     view: '',
   }
 
+  // const setItemForRenewal = (agreement: Agreement) => {
+  //   const orderConfigTB: ConfigPurchaseCardDetails = {
+  //     'CONTENT SIZE': `${agreement.size.toPrecision(2)} MB`,
+  //     'CURRENCY TO PAY': <RifSelect<string>
+  //       id="currency"
+  //       value={0}
+  //       options={[tokenDisplayNames[agreement.paymentToken]]}
+  //       disabled
+  //     />,
+  //     'SUBSCRIPTION PERIOD': <RifSelect<JSX.Element>
+  //       id="plan"
+  //       value={0}
+  //       options={[<PlanOption
+  //         plan={agreement.subscriptionPeriod}
+  //         xr={{
+  //           fiat: fiatName,
+  //           rate: currentRate,
+  //         }}
+  //   />]}
+  //       onChange={changePlanHandle}
+  //     />,
+  //     'PERIODS TO PREPAY': <TextField
+  //       type="number"
+  //       value={periodsCount.toString()}
+  //       InputProps={{
+  //         inputProps: { min: 1 },
+  //       }}
+  //       onChange={changePeriodCountHandle}
+  //     />,
+  //     'TOTAL PRICE': total && totalFiat ? (
+  //       <CombinedPriceCell
+  //         currency={token || ''}
+  //         currencyFiat={fiatName}
+  //         price={total.toFixed(18)}
+  //         priceFiat={totalFiat}
+  //         divider={<br />}
+  //       />
+  //     ) : null,
+  //     'RENEWAL DATE': endDate,
+  //   }
+  // }
+
   const items = createItemFields(
     agreements,
     crypto,
     currentFiat,
+    (_, id: string) => {
+    },
     (_, agreementView: AgreementView) => {
       setItemDetails(agreementView)
     },
