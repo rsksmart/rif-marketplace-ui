@@ -9,9 +9,19 @@ import Login from 'components/atoms/Login'
 import RoundBtn from 'components/atoms/RoundBtn'
 import RifCard from 'components/organisms/RifCard'
 import { StorageCheckoutContext } from 'context/storage/buy/checkout'
+import { Details } from '@material-ui/icons'
 
-type Props = {
-    details: {[name: string]: string | JSX.Element}
+type Details = {
+    'CONTENT SIZE': string
+    'CURRENCY TO PAY': JSX.Element
+    'SUBSCRIPTION PERIOD': JSX.Element
+    'PERIODS TO PREPAY': JSX.Element
+    'TOTAL PRICE': JSX.Element | null
+    'RENEWAL DATE': string
+  }
+
+type Props ={
+  details: Details
 }
 
 const useStyles = makeStyles(() => ({
@@ -83,3 +93,5 @@ const ConfigPurchaseCard: FC<Props> = ({ details }) => {
 }
 
 export default ConfigPurchaseCard
+export type ConfigPurchaseCardProps = Props
+export type ConfigPurchaseCardDetails = Details

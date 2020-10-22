@@ -8,7 +8,7 @@ import {
 import TabsTemplate from 'components/templates/TabsTemplate'
 import networkConfig from 'config'
 import { OfferEditContextProvider } from 'context/Market/storage/OfferEditContext'
-import { StorageOffersContextProvider } from 'context/Services/storage/OffersContext'
+import { StorageOffersContextProvider } from 'context/Services/storage'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { getTabValueFromLocation } from 'utils/utils'

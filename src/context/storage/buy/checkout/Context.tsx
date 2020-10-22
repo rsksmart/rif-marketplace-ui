@@ -11,13 +11,14 @@ import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
 import { TokenAddressees } from 'context/Services/storage/interfaces'
-import { StorageOffersContext } from 'context/Services/storage/OffersContext'
+import { StorageOffersContext } from 'context/Services/storage'
 import { BillingPlan, PeriodInSeconds, StorageOffer } from 'models/marketItems/StorageItem'
 import { UIError } from 'models/UIMessage'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { convertToWeiString } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
+import createWithContext from 'context/storeUtils/createWithContext'
 import {
   PinnedContent, Props, State, AsyncActions,
 } from './interfaces'
@@ -317,14 +318,4 @@ const Provider: FC = ({ children }) => {
   )
 }
 
-function withCheckoutContext<T>(
-  Component: React.ComponentType<T>,
-): React.ComponentType<T> {
-  return (props: T): React.ReactElement => (
-    <Provider>
-      <Component {...props} />
-    </Provider>
-  )
-}
-
-export default withCheckoutContext
+export default createWithContext(Provider)
