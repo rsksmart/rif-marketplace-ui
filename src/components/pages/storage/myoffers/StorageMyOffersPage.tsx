@@ -60,7 +60,7 @@ const StorageMyOffersPage: FC = () => {
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
 
-  // filter by the current account and cleans up on willunmount
+  // filter by the current account
   useEffect(() => {
     if (account) {
       dispatch({
@@ -68,12 +68,13 @@ const StorageMyOffersPage: FC = () => {
         payload: { provider: account },
       })
     }
-
-    return dispatch({
-      type: 'CLEAN_UP',
-      payload: {},
-    })
   }, [account, dispatch])
+
+  // cleans up on willunmount
+  useEffect(() => dispatch({
+    type: 'CLEAN_UP',
+    payload: {},
+  }))
 
   useEffect(() => {
     if (isPendingConfirm && !isProcessing) { // Post-confirmations handle
