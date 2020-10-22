@@ -14,6 +14,7 @@ import {
 } from 'models/UIMessage'
 import React, { Dispatch, FC, useReducer } from 'react'
 import { Modify } from 'utils/typeUtils'
+import { StakesService } from '../../api/rif-marketplace-cache/storage/stakes'
 import {
   AppAction, appActions, AppPayload, AppReducer, ErrorMessagePayload,
 } from './appActions'
@@ -45,6 +46,7 @@ export const initialState: AppState = {
     'storage/v0/offers': new StorageOffersService(),
     'storage/v0/avgBillingPrice': new AvgBillingPriceService(),
     'storage/v0/agreements': new StorageAgreementService(),
+    'storage/v0/stakes': new StakesService(),
   },
   messages: {},
   loaders: {

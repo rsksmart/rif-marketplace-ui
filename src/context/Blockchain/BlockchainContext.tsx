@@ -14,10 +14,15 @@ import { blockchainActions, BlockchainReducer } from './blockchainReducer'
 const { mapFromTransport } = utils
 
 export type ContextName = 'blockchain'
+
+export type AwaitingServices = 'staking'
+export type AwaitingConfirmationsMap = Record<AwaitingServices, boolean>
+
 export interface BlockchainState extends ContextState {
   confirmations: Modify<Partial<ConfirmationsItem>, {
     txHash?: string
   }>
+  servicesAwaitingConfirmations: AwaitingConfirmationsMap
 }
 
 export interface BlockchainContextProps {
@@ -28,6 +33,9 @@ export interface BlockchainContextProps {
 export const initialState: BlockchainState = {
   contextID: 'blockchain',
   confirmations: {},
+  servicesAwaitingConfirmations: {
+    staking: false,
+  },
 }
 
 const BlockchainContext = createContext({} as BlockchainContextProps | any)
