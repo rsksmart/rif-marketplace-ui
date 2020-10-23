@@ -1,4 +1,6 @@
-import React, { FC, useContext, useState } from 'react'
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react'
 import {
   Grid,
   makeStyles, Modal, TableContainer, Typography,
@@ -11,7 +13,7 @@ import AgreementsContext, { AgreementContextProps } from 'context/Services/stora
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
 import {
-  ModalBody, ModalHeader, ModalTitle, theme,
+  ModalBody, ModalHeader, ModalTitle, theme, Web3Store,
 } from '@rsksmart/rif-ui'
 import RifCard from 'components/organisms/RifCard'
 import RoundBtn from 'components/atoms/RoundBtn'
@@ -61,11 +63,23 @@ const MyStoragePurchases: FC = () => {
       },
     },
   } = useContext(MarketContext)
+  const {
+    state: { account },
+  } = useContext(Web3Store)
 
   const [
     itemDetails,
     setItemDetails,
   ] = useState<AgreementView | undefined>(undefined)
+
+  useEffect(() => {
+    if (account) {
+      dispatch({
+        type: 'SET_FILTERS',
+        payload: { consumer: account },
+      })
+    }
+  }, [account, dispatch])
 
   const headers = {
     title: 'Title',
