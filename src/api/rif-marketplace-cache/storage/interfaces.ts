@@ -31,3 +31,14 @@ export type StakeAPIService = Modify<
     fetch: (filters: StakeFilters) => Promise<any[]>
   }
 >
+
+export type AgreementFilters = (
+  | {
+    consumer: string
+    provider?: never
+  }
+  | {
+    consumer?: never
+    provider: string
+  }
+)
