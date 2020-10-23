@@ -31,7 +31,7 @@ const StorageOffersPage: FC = () => {
 
   // cleans up on component willunmount
   useEffect(() => (): void => dispatch({
-    type: 'CLEAN_UP',
+    type: 'CLEAN_UP_FILTERS',
     payload: {},
   }), [dispatch])
 
