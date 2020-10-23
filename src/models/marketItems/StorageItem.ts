@@ -19,6 +19,7 @@ export interface StorageOffer extends Item {
   location: string
   system: string
   availableSizeGB: Big
+  utilizedCapacityGB: Big
   subscriptionOptions: BillingPlan[]
   averagePrice: number
   acceptedCurrencies: string[]

@@ -55,7 +55,7 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
   className = '', offerName, storageOffer, initiallyExpanded = false, onCancelOffer, onEditOffer,
 }) => {
   const classes = useStyles()
-  const { system, availableSizeGB } = storageOffer
+  const { system, availableSizeGB, utilizedCapacityGB } = storageOffer
   const [isExpanded, setIsExpanded] = useState(initiallyExpanded)
   const [cancelOfferOpen, setCancelOfferOpen] = useState(false)
   const handleChange = () => setIsExpanded(!isExpanded)
@@ -67,8 +67,7 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
     onCancelOffer()
   }
 
-  // TODO: once we get the agreements, calculate the remaining size
-  const remainingSize = availableSizeGB
+  const remainingSize = availableSizeGB.minus(utilizedCapacityGB)
   return (
     <Accordion
       className={`${classes.root} ${className}`}

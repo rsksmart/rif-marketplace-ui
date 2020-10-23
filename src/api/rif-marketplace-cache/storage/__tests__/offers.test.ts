@@ -14,7 +14,7 @@ import { StorageOffersService } from '../offers'
 import { StorageAPIService } from '../interfaces'
 
 const FAKE_OFFER_0: OfferTransport = {
-  utilizedCapacity: '1',
+  utilizedCapacity: '0',
   availableCapacity: '1073741824',
   provider: '0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1',
   totalCapacity: '1073741824',
@@ -71,6 +71,7 @@ describe('Storage OffersService', () => {
         avgBillingPrice,
         plans,
         acceptedCurrencies,
+        utilizedCapacity,
       } = FAKE_OFFER_0
       const expectedOffers: StorageOffer = {
         id: provider,
@@ -87,6 +88,7 @@ describe('Storage OffersService', () => {
           })),
         averagePrice: avgBillingPrice,
         peerId: 'QmYyQSo1c1Ym7orWxLYvCrM2EmxFTANf8wXmmE7DWjhx5N',
+        utilizedCapacityGB: new Big(utilizedCapacity).div(UNIT_PREFIX_POW2.KILO),
       }
 
       expect(actualReturnValue[0]).toStrictEqual(expectedOffers)
