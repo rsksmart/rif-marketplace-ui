@@ -24,12 +24,16 @@ import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 import { SetOfferPayload } from 'context/Market/storage/offerEditActions'
 import { StorageOffer } from 'models/marketItems/StorageItem'
 import Staking from 'components/organisms/storage/staking/Staking'
+import AgreementsContext, { AgreementContextProps } from 'context/Services/storage/agreements'
+import Logger from 'utils/Logger'
 
 const useStyles = makeStyles((theme: Theme) => ({
   resultsContainer: {
     marginTop: theme.spacing(2),
   },
 }))
+
+const logger = Logger.getInstance()
 
 const StorageMyOffersPage: FC = () => {
   const classes = useStyles()
@@ -53,12 +57,21 @@ const StorageMyOffersPage: FC = () => {
     dispatch: editOfferDispatch,
   } = useContext<OfferEditContextProps>(OfferEditContext)
   const { dispatch: bcDispatch } = useContext(BlockchainContext)
+  const {
+    state: {
+      agreements,
+    },
+    dispatch: agreementsDispatch,
+  } = useContext<AgreementContextProps>(AgreementsContext)
   const reportError = useCallback((
     e: UIError,
   ) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+
+  // FIXME: remove next line
+  logger.info('agreements: ', { agreements })
 
   // filter by the current account
   useEffect(() => {
@@ -67,8 +80,12 @@ const StorageMyOffersPage: FC = () => {
         type: 'FILTER',
         payload: { provider: account },
       })
+      agreementsDispatch({
+        type: 'SET_FILTERS',
+        payload: { provider: account },
+      })
     }
-  }, [account, dispatch])
+  }, [account, dispatch, agreementsDispatch])
 
   useEffect(() => {
     if (isPendingConfirm && !isProcessing) { // Post-confirmations handle
