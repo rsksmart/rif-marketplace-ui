@@ -70,12 +70,6 @@ const StorageMyOffersPage: FC = () => {
     }
   }, [account, dispatch])
 
-  // cleans up on component willunmount
-  // useEffect(() => (): void => dispatch({
-  //   type: 'CLEAN_UP',
-  //   payload: {},
-  // }), [dispatch])
-
   useEffect(() => {
     if (isPendingConfirm && !isProcessing) { // Post-confirmations handle
       history.replace(ROUTES.STORAGE.MYOFFERS.CANCEL.DONE)
