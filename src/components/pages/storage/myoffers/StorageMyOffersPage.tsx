@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import { Web3Store } from '@rsksmart/rif-ui'
 import handProvidingFunds from 'assets/images/handProvidingFunds.svg'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
-import StorageOffersContext, { StorageOffersContextProps } from 'context/Services/storage/OffersContext'
+import withOffersContext, { StorageOffersContext, StorageOffersContextProps } from 'context/Services/storage/OffersContext'
 import OffersList from 'components/organisms/storage/myoffers/OffersList'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import StorageContract from 'contracts/storage/contract'
@@ -71,10 +71,10 @@ const StorageMyOffersPage: FC = () => {
   }, [account, dispatch])
 
   // cleans up on component willunmount
-  useEffect(() => (): void => dispatch({
-    type: 'CLEAN_UP',
-    payload: {},
-  }), [dispatch])
+  // useEffect(() => (): void => dispatch({
+  //   type: 'CLEAN_UP',
+  //   payload: {},
+  // }), [dispatch])
 
   useEffect(() => {
     if (isPendingConfirm && !isProcessing) { // Post-confirmations handle
@@ -180,7 +180,7 @@ const StorageMyOffersPage: FC = () => {
 }
 
 export default WithLoginCard({
-  WrappedComponent: StorageMyOffersPage,
+  WrappedComponent: withOffersContext(StorageMyOffersPage),
   title: 'Connect your wallet to see your offers',
   contentText: 'Connect your wallet to get detailed information about your offers',
 })

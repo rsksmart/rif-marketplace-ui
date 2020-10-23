@@ -5,7 +5,7 @@ import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { TableHeaders, MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import { BillingPlan } from 'models/marketItems/StorageItem'
 import { SelectRowButton, AddressItem } from 'components/molecules'
-import StorageOffersContext, { StorageOffersContextProps } from 'context/Services/storage/OffersContext'
+import { StorageOffersContext, StorageOffersContextProps } from 'context/Services/storage/OffersContext'
 import ItemWUnit from 'components/atoms/ItemWUnit'
 import ROUTES from 'routes'
 import { OrderPayload } from 'context/Services/storage/offersActions'
@@ -30,10 +30,10 @@ const StorageOffersPage: FC = () => {
   } = useContext<StorageOffersContextProps>(StorageOffersContext)
 
   // cleans up on component willunmount
-  useEffect(() => (): void => dispatch({
-    type: 'CLEAN_UP_FILTERS',
-    payload: {},
-  }), [dispatch])
+  // useEffect(() => (): void => dispatch({
+  //   type: 'CLEAN_UP_FILTERS',
+  //   payload: {},
+  // }), [dispatch])
 
   const collection = items
     .map<MarketplaceItem>((item) => {

@@ -116,22 +116,20 @@ const StorageRoutes: FC = () => {
               component={StorageSellDone}
             />
             <Route path={ROUTES.STORAGE.MYOFFERS.BASE}>
-              <StorageOffersContextProvider>
-                <OfferEditContextProvider>
-                  <Switch>
-                    <Route
-                      exact
-                      path={ROUTES.STORAGE.MYOFFERS.BASE}
-                      component={StorageMyOffersPage}
-                    />
-                    <Route
-                      exact
-                      path={ROUTES.STORAGE.MYOFFERS.EDIT.BASE}
-                      component={StorageEditOfferPage}
-                    />
-                  </Switch>
-                </OfferEditContextProvider>
-              </StorageOffersContextProvider>
+              <OfferEditContextProvider>
+                <Switch>
+                  <Route
+                    exact
+                    path={ROUTES.STORAGE.MYOFFERS.BASE}
+                    component={StorageMyOffersPage}
+                  />
+                  <Route
+                    exact
+                    path={ROUTES.STORAGE.MYOFFERS.EDIT.BASE}
+                    component={StorageEditOfferPage}
+                  />
+                </Switch>
+              </OfferEditContextProvider>
               <Route
                 exact
                 path={ROUTES.STORAGE.MYOFFERS.CANCEL.DONE}
