@@ -70,11 +70,11 @@ const StorageMyOffersPage: FC = () => {
     }
   }, [account, dispatch])
 
-  // cleans up on willunmount
-  useEffect(() => dispatch({
+  // cleans up on component willunmount
+  useEffect(() => (): void => dispatch({
     type: 'CLEAN_UP',
     payload: {},
-  }))
+  }), [dispatch])
 
   useEffect(() => {
     if (isPendingConfirm && !isProcessing) { // Post-confirmations handle

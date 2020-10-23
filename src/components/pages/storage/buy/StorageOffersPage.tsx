@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react'
+import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import StorageFilters from 'components/organisms/filters/storage/StorageFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
@@ -28,6 +28,12 @@ const StorageOffersPage: FC = () => {
     },
     dispatch,
   } = useContext<StorageOffersContextProps>(StorageOffersContext)
+
+  // cleans up on component willunmount
+  useEffect(() => (): void => dispatch({
+    type: 'CLEAN_UP',
+    payload: {},
+  }), [dispatch])
 
   const collection = items
     .map<MarketplaceItem>((item) => {
