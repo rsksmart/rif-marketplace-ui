@@ -4,7 +4,7 @@ import { StorageOrder } from './interfaces'
 import { initialState, OffersListing, StorageOffersState } from './OffersContext'
 
 export type OFFERS_ACTION = 'FILTER' | 'SET_LISTING' | 'REFRESH' | 'UPDATE_LIMITS' | 'SET_ORDER'
-  | 'CLEAN_UP_FILTERS' | 'CLEAN_UP'
+  | 'CLEAN_UP'
 
 export type ListingPayload = Pick<OffersListing, 'items'>
 
@@ -39,7 +39,6 @@ export type Actions = {
   FILTER: StorageOffersReducer<FiltersLimits>
   UPDATE_LIMITS: StorageOffersReducer<LimitsPayload>
   CLEAN_UP: StorageOffersReducer<{}>
-  CLEAN_UP_FILTERS: StorageOffersReducer<{}>
   SET_ORDER: StorageOffersReducer<OrderPayload>
 }
 
@@ -67,11 +66,6 @@ export const storageOffersActions: Actions = {
       ...state.limits,
       ...payload,
     },
-  }),
-  CLEAN_UP_FILTERS: (state, _) => ({
-    ...state,
-    filters: initialState.filters,
-    needsRefresh: true,
   }),
   CLEAN_UP: (_, __) => initialState,
   SET_ORDER: (state, payload) => ({
