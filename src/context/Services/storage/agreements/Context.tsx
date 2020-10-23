@@ -1,4 +1,3 @@
-import { Web3Store } from '@rsksmart/rif-ui'
 import React, {
   createContext, FC, useContext,
   useEffect, useMemo, useReducer, useState,
@@ -28,9 +27,6 @@ export const Provider: FC = ({ children }) => {
     },
     dispatch: appDispatch,
   } = useContext<AppContextProps>(AppContext)
-  const {
-    state: { account },
-  } = useContext(Web3Store)
 
   const [isInitialised, setIsInitialised] = useState(false)
 
@@ -38,6 +34,8 @@ export const Provider: FC = ({ children }) => {
     createReducer(initialState, actions),
     initialState,
   )
+
+  const { filters } = state
 
   // Get service connection
   if (api && !api.service) {
@@ -59,7 +57,7 @@ export const Provider: FC = ({ children }) => {
 
   // Fetch data
   useEffect(() => {
-    if (isInitialised && account) {
+    if (isInitialised && filters) {
       appDispatch({
         type: 'SET_IS_LOADING',
         payload: {
@@ -67,7 +65,7 @@ export const Provider: FC = ({ children }) => {
           id: 'data',
         } as LoadingPayload,
       })
-      api.fetch({ account })
+      api.fetch(filters)
         .then((items) => {
           dispatch({
             type: 'SET_LISTING',
@@ -84,7 +82,7 @@ export const Provider: FC = ({ children }) => {
           })
         })
     }
-  }, [isInitialised, api, account, appDispatch])
+  }, [isInitialised, api, filters, appDispatch])
 
   // Finalise
   const value = useMemo(() => ({
