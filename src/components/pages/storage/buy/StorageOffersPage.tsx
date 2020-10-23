@@ -1,11 +1,11 @@
-import React, { FC, useContext, useEffect } from 'react'
+import React, { FC, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import StorageFilters from 'components/organisms/filters/storage/StorageFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { TableHeaders, MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import { BillingPlan } from 'models/marketItems/StorageItem'
 import { SelectRowButton, AddressItem } from 'components/molecules'
-import StorageOffersContext, { StorageOffersContextProps } from 'context/Services/storage/OffersContext'
+import { StorageOffersContext, StorageOffersContextProps } from 'context/Services/storage/OffersContext'
 import ItemWUnit from 'components/atoms/ItemWUnit'
 import ROUTES from 'routes'
 import { OrderPayload } from 'context/Services/storage/offersActions'
@@ -28,12 +28,6 @@ const StorageOffersPage: FC = () => {
     },
     dispatch,
   } = useContext<StorageOffersContextProps>(StorageOffersContext)
-
-  // cleans up on component willunmount
-  useEffect(() => (): void => dispatch({
-    type: 'CLEAN_UP',
-    payload: {},
-  }), [dispatch])
 
   const collection = items
     .map<MarketplaceItem>((item) => {
