@@ -5,6 +5,10 @@ const actions: ActionFunctions = {
     ...state,
     agreements,
   }),
+  SET_ORDER: (state, order) => ({
+    ...state,
+    order,
+  }),
 }
 
 export default actions

@@ -12,7 +12,7 @@ export {
   StorageRenewContext,
   initialState,
 }
-export type ContextProps = Props
+export type StorageRenewContextProps = Props
 export type StorageRenewAction = Action
 export type StorageRenewOrder = Order
 
