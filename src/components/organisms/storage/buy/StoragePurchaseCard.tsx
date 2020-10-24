@@ -42,7 +42,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const ConfigPurchaseCard: FC<Props> = ({ details }) => {
+const StoragePurchaseCard: FC<Props> = ({ details }) => {
   const classes = useStyles()
 
   const {
@@ -92,6 +92,6 @@ const ConfigPurchaseCard: FC<Props> = ({ details }) => {
   )
 }
 
-export default ConfigPurchaseCard
-export type ConfigPurchaseCardProps = Props
-export type ConfigPurchaseCardDetails = Details
+export default StoragePurchaseCard
+export type StoragePurchaseCardProps = Props
+export type StoragePurchaseCardDetails = Details
