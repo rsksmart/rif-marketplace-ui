@@ -35,10 +35,15 @@ class MarketplaceContract {
     const gas = Math.floor(estimatedGas * 1.1)
 
     // Placement Transaction
-    const placeReceipt = await new Promise<TransactionReceipt>((resolve, reject) => {
-      this.contract.methods.place(tokenId, rifTokenAddress, this.web3.utils.toWei(price)).send({ from, gas, gasPrice },
-        withWaitForReceipt(this.web3))
-    })
+    const placeReceipt = await new Promise<TransactionReceipt>(
+      () => this.contract.methods.place(
+        tokenId, rifTokenAddress, this.web3.utils.toWei(price),
+      )
+        .send(
+          { from, gas, gasPrice },
+          withWaitForReceipt(this.web3),
+        ),
+    )
     return placeReceipt
   }
 
@@ -50,10 +55,13 @@ class MarketplaceContract {
     const gas = Math.floor(estimatedGas * 1.1)
 
     // Unplacement Transaction
-    const unplaceReceipt = await new Promise<TransactionReceipt>((resolve, reject) => {
-      this.contract.methods.unplace(tokenId).send({ from, gas, gasPrice },
-        withWaitForReceipt(this.web3))
-    })
+    const unplaceReceipt = await new Promise<TransactionReceipt>(
+      () => this.contract.methods.unplace(tokenId)
+        .send(
+          { from, gas, gasPrice },
+          withWaitForReceipt(this.web3),
+        ),
+    )
     return unplaceReceipt
   }
 

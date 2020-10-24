@@ -26,6 +26,7 @@ import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
 import withCheckoutContext, { ContextProps, initialState, StorageCheckoutContext } from 'context/storage/buy/checkout'
 import ROUTES from 'routes'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
+import RoundBtn from 'components/atoms/RoundBtn'
 
 const useStyles = makeStyles((theme: Theme) => ({
   stepperCard: {
@@ -68,6 +69,9 @@ const StorageOffersCheckoutPage: FC = () => {
       status,
     },
     dispatch,
+    asyncActions: {
+      createAgreement,
+    },
   } = useContext<ContextProps>(StorageCheckoutContext)
 
   const {
@@ -190,7 +194,10 @@ const StorageOffersCheckoutPage: FC = () => {
         <GridColumn alignContent="center">
           <GridItem>
             {pinned && orderConfigTB && (
-            <StoragePurchaseCard details={orderConfigTB} />
+            <StoragePurchaseCard
+              details={orderConfigTB}
+              txAction={createAgreement}
+            />
             )}
             {!pinned && (
             <PinningCard dispatch={dispatch} />
@@ -228,15 +235,14 @@ const StorageOffersCheckoutPage: FC = () => {
         title="Creating agreement!"
         {...status}
         buttons={[
-          {
-            children: 'View my purchases',
-            onClick: navToMyPurchases,
-          },
-          {
-            children: 'View storage listing',
-            onClick: navToStorageBase,
-          },
+          <RoundBtn onClick={navToMyPurchases}>
+            View my purchases
+          </RoundBtn>,
+          <RoundBtn onClick={navToStorageBase}>
+            View storage listing
+          </RoundBtn>,
         ]}
+
       />
     </CheckoutPageTemplate>
   )

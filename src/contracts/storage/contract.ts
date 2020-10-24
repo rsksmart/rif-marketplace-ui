@@ -2,7 +2,7 @@ import StorageManager
   from '@rsksmart/rif-marketplace-storage/build/contracts/StorageManager.json'
 import Web3 from 'web3'
 import { Contract } from 'web3-eth-contract'
-import { AbiItem } from 'web3-utils'
+import { AbiItem, asciiToHex } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
 import { zeroAddress } from 'context/Services/storage/interfaces'
@@ -98,12 +98,12 @@ class StorageContract {
       provider: string
       token: string
     },
-    txOptions: TransactionOptions,
+    { from }: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const newTask = this.contract.methods.depositFunds(
       token,
       amount,
-      dataReference,
+      [asciiToHex(dataReference)],
       provider,
     )
 
@@ -112,17 +112,15 @@ class StorageContract {
         logger.error('error while getting gas price:', error)
         throw error
       })
-
     const gas = await newTask.estimateGas({
-      ...txOptions,
+      from,
       gasPrice,
-      value: amount,
     })
+
     const txHash = await newTask.send({
-      ...txOptions,
+      from,
       gas,
       gasPrice,
-      value: amount,
     },
     withWaitForReceipt(this.web3))
 

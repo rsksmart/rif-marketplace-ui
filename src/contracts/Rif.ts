@@ -41,10 +41,14 @@ class RIFContract {
     const gas = Math.floor(estimatedGas * 1.1)
 
     // Transfer and Call transaction
-    const transferReceipt = await new Promise<TransactionReceipt>((resolve, reject) => {
-      this.contract.methods.transferAndCall(contractAddress, tokenPrice, tokenId).send({ from, gas, gasPrice },
-        withWaitForReceipt(this.web3))
-    })
+    const transferReceipt = await new Promise<TransactionReceipt>(
+      () => this.contract.methods.transferAndCall(
+        contractAddress, tokenPrice, tokenId,
+      ).send(
+        { from, gas, gasPrice },
+        withWaitForReceipt(this.web3),
+      ),
+    )
     return transferReceipt
   }
 }

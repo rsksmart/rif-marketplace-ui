@@ -14,6 +14,7 @@ import PlanOption from 'components/molecules/storage/buy/PlanOption'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
+import RoundBtn from 'components/atoms/RoundBtn'
 
 export type Props = {
 }
@@ -35,6 +36,9 @@ const RenewAgreement: FC<Props> = () => {
       order,
       status,
     }, dispatch,
+    asyncActions: {
+      renewAgreement,
+    },
   } = useContext<StorageRenewContextProps>(StorageRenewContext)
 
   if (!order) return null
@@ -114,7 +118,10 @@ const RenewAgreement: FC<Props> = () => {
         <GridItem>
           <GridColumn alignContent="center">
             <GridItem>
-              <StoragePurchaseCard details={agreementDetails} />
+              <StoragePurchaseCard
+                details={agreementDetails}
+                txAction={renewAgreement}
+              />
             </GridItem>
           </GridColumn>
         </GridItem>
@@ -124,14 +131,12 @@ const RenewAgreement: FC<Props> = () => {
         title="Renewing agreement!"
         {...status}
         buttons={[
-          {
-            children: 'View my purchases',
-            onClick: navToMyPurchases,
-          },
-          {
-            children: 'View storage listing',
-            onClick: navToStorageBase,
-          },
+          <RoundBtn onClick={navToMyPurchases}>
+            View my purchases
+          </RoundBtn>,
+          <RoundBtn onClick={navToStorageBase}>
+            View storage listing
+          </RoundBtn>,
         ]}
       />
     </CheckoutPageTemplate>

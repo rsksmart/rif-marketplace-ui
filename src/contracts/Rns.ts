@@ -38,12 +38,10 @@ class RNSContract {
       from, gasPrice,
     })
     const approveReceipt = await new Promise<TransactionReceipt>(
-      (resolve, reject) => {
-        this.contract.methods.approve(
-          contractAddress, tokenId,
-        ).send({ from, gas, gasPrice },
-          withWaitForReceipt(this.web3))
-      },
+      () => this.contract.methods.approve(
+        contractAddress, tokenId,
+      ).send({ from, gas, gasPrice },
+        withWaitForReceipt(this.web3)),
     )
     return approveReceipt
   }

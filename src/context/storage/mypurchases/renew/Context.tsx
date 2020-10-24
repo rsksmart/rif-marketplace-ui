@@ -8,7 +8,7 @@ import { Web3Store } from '@rsksmart/rif-ui'
 import Web3 from 'web3'
 import Big from 'big.js'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
-import { TokenAddressees } from 'context/Services/storage/interfaces'
+import networkConfig from 'config'
 import createWithContext from 'context/storeUtils/createWithContext'
 import {
   BillingPlan, PeriodInSeconds,
@@ -133,9 +133,10 @@ const Provider: FC = ({ children }) => {
           amount: convertToWeiString(total),
           dataReference,
           provider,
-          token: TokenAddressees[paymentToken],
+          token: networkConfig.contractAddresses[paymentToken],
         }
         const storageContract = (await import('contracts/storage/contract')).default.getInstance(web3 as Web3)
+
         appDispatch({
           type: 'SET_IS_LOADING',
           payload: {

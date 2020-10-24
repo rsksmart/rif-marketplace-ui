@@ -8,7 +8,6 @@ import GridColumn from 'components/atoms/GridColumn'
 import Login from 'components/atoms/Login'
 import RoundBtn from 'components/atoms/RoundBtn'
 import RifCard from 'components/organisms/RifCard'
-import { StorageCheckoutContext } from 'context/storage/buy/checkout'
 
 type Details = {
     'CONTENT SIZE': string
@@ -21,6 +20,7 @@ type Details = {
 
 type Props = {
   details: Details
+  txAction: () => Promise<void>
 }
 
 const useStyles = makeStyles(() => ({
@@ -41,14 +41,8 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const StoragePurchaseCard: FC<Props> = ({ details }) => {
+const StoragePurchaseCard: FC<Props> = ({ details, txAction }) => {
   const classes = useStyles()
-
-  const {
-    asyncActions: {
-      createAgreement,
-    },
-  } = useContext(StorageCheckoutContext)
 
   const {
     state: {
@@ -57,7 +51,7 @@ const StoragePurchaseCard: FC<Props> = ({ details }) => {
   } = useContext(Web3Store)
 
   const submitWithLogin = (): JSX.Element => (account ? (
-    <RoundBtn onClick={createAgreement}>
+    <RoundBtn onClick={txAction}>
       Buy
     </RoundBtn>
   ) : <Login />)
