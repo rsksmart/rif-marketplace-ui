@@ -1,9 +1,9 @@
+import { recursiveDiff } from 'context/storeUtils/recursiveDiff'
 import Logger from 'utils/Logger'
 import {
   Actions, AuxiliaryState, InitialisePayload, Order,
   PinnedContent, Action, State, StatusPayload,
 } from './interfaces'
-import { recDiff } from './utils'
 
 export const actions: Actions = {
   CHANGE_CURRENCY: (
@@ -75,7 +75,7 @@ export const reducer = (state: State, action: Action): State => {
     } else {
       logger.debug('Checkout Context Action', type, 'old state:', state)
       logger.debug('Checkout Context Action', type, 'new state:', newState)
-      const diff = recDiff(newState, state)
+      const diff = recursiveDiff(newState, state)
       logger.debug('Checkout Context Action', type, 'state diff:', diff)
     }
     return newState
