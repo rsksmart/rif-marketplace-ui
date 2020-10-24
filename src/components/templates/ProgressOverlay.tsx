@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core'
 import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
-import RoundBtn, { RoundBtnProps } from 'components/atoms/RoundBtn'
 import { JobDoneBox } from 'components/molecules'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import React, { FC } from 'react'
@@ -9,7 +8,6 @@ import React, { FC } from 'react'
 import TxCompletePageTemplate from './TxCompletePageTemplate'
 
 const useStyle = makeStyles(() => ({
-
   progressContainer: {
     background: 'rgba(275, 275, 275, 0.8)',
     display: 'flex',
@@ -30,7 +28,7 @@ export type Status = {
 
 type Props = Status & {
     title: string
-    buttons: (RoundBtnProps & {children: JSX.Element | string})[]
+    buttons: JSX.Element[]
 }
 
 const ProgressOverlay: FC<Props> = ({
@@ -58,15 +56,15 @@ const ProgressOverlay: FC<Props> = ({
             <TxCompletePageTemplate>
               <JobDoneBox text="Your offer agreement has been created." />
               <GridRow justify="center">
-                {buttons.map((children, props) => (
-                  <GridItem>
-                    <RoundBtn
-                      {...props}
+                {
+                  buttons.map((btn) => (
+                    <GridItem
+                      key={btn.key || (btn as unknown as HTMLElement).innerText}
                     >
-                      {children}
-                    </RoundBtn>
-                  </GridItem>
-                ))}
+                      {btn}
+                    </GridItem>
+                  ))
+                }
               </GridRow>
             </TxCompletePageTemplate>
             )

@@ -64,7 +64,7 @@ export type Actions = {
 }
 
 export type AsyncAction = {
-  (args?: unknown): Promise<unknown>
+  (args?: unknown): Promise<void>
 }
 
 export type AsyncActions = {
