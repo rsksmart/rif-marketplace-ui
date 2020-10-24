@@ -11,7 +11,7 @@ import RoundedCard from 'components/atoms/RoundedCard'
 import { CombinedPriceCell, JobDoneBox } from 'components/molecules'
 import PlanOption from 'components/molecules/storage/buy/PlanOption'
 import RifSelect from 'components/molecules/RifSelect'
-import ConfigPurchaseCard, { ConfigPurchaseCardDetails } from 'components/organisms/storage/buy/ConfigPurchaseCard'
+import StoragePurchaseCard, { StoragePurchaseCardDetails } from 'components/organisms/storage/buy/StoragePurchaseCard'
 import PinningCard from 'components/organisms/storage/buy/PinningCard'
 import StorageOrderDescription from 'components/organisms/storage/buy/StorageOfferDescription'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
@@ -128,7 +128,7 @@ const StorageOffersCheckoutPage: FC = () => {
       }}
     />
   ))
-  const orderConfigTB: ConfigPurchaseCardDetails | undefined = pinned && {
+  const orderConfigTB: StoragePurchaseCardDetails | undefined = pinned && {
     'CONTENT SIZE': `${pinned.size?.replace(/[a-zA-Z]+/g, '')} ${UNIT_PREFIX_POW2[pinned.unit][0]}B`,
     'CURRENCY TO PAY': <RifSelect<string>
       id="currency"
@@ -208,7 +208,7 @@ const StorageOffersCheckoutPage: FC = () => {
         <GridColumn alignContent="center">
           <GridItem>
             {pinned && orderConfigTB && (
-            <ConfigPurchaseCard details={orderConfigTB} />
+            <StoragePurchaseCard details={orderConfigTB} />
             )}
             {!pinned && (
             <PinningCard dispatch={dispatch} />

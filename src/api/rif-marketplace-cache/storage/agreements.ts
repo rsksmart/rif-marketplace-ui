@@ -49,8 +49,11 @@ const mapFromTransport = ({
   return {
     id: agreementReference,
     provider: offerId,
-    monthlyFee: parseToBigDecimal(getMonthlyFee(billingPrice, billingPeriod), 18),
+    subscriptionPrice: new Big(billingPrice),
     renewalDate: new Date(Date.now() + miliesToDeath),
+    monthlyFee: parseToBigDecimal(
+      getMonthlyFee(billingPrice, billingPeriod), 18,
+    ),
     size: new Big(size),
     subscriptionPeriod: PeriodInSeconds[billingPeriod] as SubscriptionPeriod,
     title: '',

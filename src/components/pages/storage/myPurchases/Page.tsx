@@ -15,11 +15,6 @@ import {
 } from '@rsksmart/rif-ui'
 import RifCard from 'components/organisms/RifCard'
 import RoundBtn from 'components/atoms/RoundBtn'
-import { ConfigPurchaseCardDetails } from 'components/organisms/storage/buy/ConfigPurchaseCard'
-import { Agreement } from 'models/marketItems/StorageItem'
-import RifSelect from 'components/molecules/RifSelect'
-import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
-import PlanOption from 'components/molecules/storage/buy/PlanOption'
 import createItemFields, { AgreementView } from './utils'
 
 const useTitleStyles = makeStyles(() => ({

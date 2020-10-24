@@ -31,6 +31,7 @@ export type Agreement = Item & {
   provider: string
   size: Big
   renewalDate: Date
+  subscriptionPrice: Big
   subscriptionPeriod: SubscriptionPeriod
   monthlyFee: Big
   paymentToken: SupportedToken
