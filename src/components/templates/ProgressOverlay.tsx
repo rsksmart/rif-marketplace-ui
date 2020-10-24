@@ -1,0 +1,80 @@
+import { makeStyles } from '@material-ui/core'
+import GridItem from 'components/atoms/GridItem'
+import GridRow from 'components/atoms/GridRow'
+import RoundBtn, { RoundBtnProps } from 'components/atoms/RoundBtn'
+import { JobDoneBox } from 'components/molecules'
+import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
+import React, { FC } from 'react'
+
+import TxCompletePageTemplate from './TxCompletePageTemplate'
+
+const useStyle = makeStyles(() => ({
+
+  progressContainer: {
+    background: 'rgba(275, 275, 275, 0.8)',
+    display: 'flex',
+    height: '100vh',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    position: 'fixed',
+    width: '100vw',
+    top: 0,
+    left: 0,
+  },
+}))
+
+export type Status = {
+  inProgress?: boolean
+  isDone?: boolean
+}
+
+type Props = Status & {
+    title: string
+    buttons: (RoundBtnProps & {children: JSX.Element | string})[]
+}
+
+const ProgressOverlay: FC<Props> = ({
+  inProgress,
+  isDone,
+  buttons,
+  title,
+}) => {
+  const classes = useStyle()
+
+  if (inProgress || isDone) {
+    return (
+      <div className={classes.progressContainer}>
+        {
+            inProgress && (
+            <TransactionInProgressPanel
+              text={title}
+              progMsg="The waiting period is required to securely complete your transaction.
+              Please do not close this tab until the process has finished."
+            />
+            )
+          }
+        {
+            isDone && (
+            <TxCompletePageTemplate>
+              <JobDoneBox text="Your offer agreement has been created." />
+              <GridRow justify="center">
+                {buttons.map((children, props) => (
+                  <GridItem>
+                    <RoundBtn
+                      {...props}
+                    >
+                      {children}
+                    </RoundBtn>
+                  </GridItem>
+                ))}
+              </GridRow>
+            </TxCompletePageTemplate>
+            )
+          }
+      </div>
+    )
+  }
+  return null
+}
+
+export default ProgressOverlay

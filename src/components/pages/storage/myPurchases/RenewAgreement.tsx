@@ -1,31 +1,25 @@
 import React, { ChangeEvent, FC, useContext } from 'react'
-import {
-  createStyles, makeStyles, TextField, Theme, Typography,
-} from '@material-ui/core'
+import { TextField, Typography } from '@material-ui/core'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
 import StoragePurchaseCard, { StoragePurchaseCardDetails } from 'components/organisms/storage/buy/StoragePurchaseCard'
 import withRenewContext, {
-  initialState, StorageRenewContext, StorageRenewContextProps, StorageRenewOrder,
+  initialState, StorageRenewContext, StorageRenewContextProps,
 } from 'context/storage/mypurchases/renew'
 import RifSelect from 'components/molecules/RifSelect'
 import { CombinedPriceCell } from 'components/molecules'
 import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import PlanOption from 'components/molecules/storage/buy/PlanOption'
+import ProgressOverlay from 'components/templates/ProgressOverlay'
+import { useHistory } from 'react-router-dom'
+import ROUTES from 'routes'
 
 export type Props = {
 }
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
-  root: {
-
-  },
-}))
-
 const RenewAgreement: FC<Props> = () => {
-  const classes = useStyles()
-
+  const history = useHistory()
   const {
     state: {
       auxiliary: {
@@ -56,6 +50,13 @@ const RenewAgreement: FC<Props> = () => {
     },
   })
 
+  const navToMyPurchases = (): void => history.replace(
+    ROUTES.STORAGE.MYPURCHASES.BASE,
+  )
+  const navToStorageBase = (): void => history.replace(
+    ROUTES.STORAGE.BUY.BASE,
+  )
+
   const agreementDetails: StoragePurchaseCardDetails = {
     'CONTENT SIZE': `${agreement.size} MB`,
     'CURRENCY TO PAY': <RifSelect<string>
@@ -76,6 +77,7 @@ const RenewAgreement: FC<Props> = () => {
           }}
         />,
       ]}
+      disabled
     />,
     'PERIODS TO PREPAY': <TextField
       type="number"
@@ -118,6 +120,20 @@ const RenewAgreement: FC<Props> = () => {
         </GridItem>
 
       </GridColumn>
+      <ProgressOverlay
+        title="Renewing agreement!"
+        {...status}
+        buttons={[
+          {
+            children: 'View my purchases',
+            onClick: navToMyPurchases,
+          },
+          {
+            children: 'View storage listing',
+            onClick: navToStorageBase,
+          },
+        ]}
+      />
     </CheckoutPageTemplate>
   )
 }

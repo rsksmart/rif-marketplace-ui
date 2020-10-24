@@ -3,6 +3,7 @@ import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
 import { BillingPlan, StorageOffer, PeriodInSeconds } from 'models/marketItems/StorageItem'
 import { Dispatch } from 'react'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
+import { Status } from 'components/templates/ProgressOverlay'
 
 // STATE
 export type AuxiliaryState = {
@@ -27,11 +28,6 @@ export type PinnedContent = {
   size: string
   unit: UNIT_PREFIX_POW2
   hash: string
-}
-
-export type Status = {
-  inProgress?: boolean
-  isDone?: boolean
 }
 
 export type State = {
