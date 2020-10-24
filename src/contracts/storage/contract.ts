@@ -90,6 +90,46 @@ class StorageContract {
     return txHash
   }
 
+  public depositFunds = async (
+    {
+      amount, dataReference, provider, token,
+    }: {
+      amount: string
+      dataReference: string
+      provider: string
+      token: string
+    },
+    txOptions: TransactionOptions,
+  ): Promise<TransactionReceipt> => {
+    const newTask = this.contract.methods.depositFunds(
+      token,
+      amount,
+      dataReference,
+      provider,
+    )
+
+    const gasPrice = await this.web3.eth.getGasPrice()
+      .catch((error: Error) => {
+        logger.error('error while getting gas price:', error)
+        throw error
+      })
+
+    const gas = await newTask.estimateGas({
+      ...txOptions,
+      gasPrice,
+      value: amount,
+    })
+    const txHash = await newTask.send({
+      ...txOptions,
+      gas,
+      gasPrice,
+      value: amount,
+    },
+    withWaitForReceipt(this.web3))
+
+    return txHash
+  }
+
   public setOffer = async (
     capacityMB: string,
     billingPeriods: number[][],
