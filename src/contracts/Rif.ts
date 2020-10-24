@@ -4,7 +4,7 @@ import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import { rifTokenAddress } from './config'
-import waitForReceipt, { TransactionOptions } from './utils'
+import withWaitForReceipt, { TransactionOptions } from './utils'
 
 export type RifContractErrorId = 'contract-rif-getBalanceOf' | 'contract-rif-transferAndCall'
 
@@ -43,15 +43,7 @@ class RIFContract {
     // Transfer and Call transaction
     const transferReceipt = await new Promise<TransactionReceipt>((resolve, reject) => {
       this.contract.methods.transferAndCall(contractAddress, tokenPrice, tokenId).send({ from, gas, gasPrice },
-        async (err, txHash) => {
-          if (err) return reject(err)
-          try {
-            const receipt = await waitForReceipt(txHash, this.web3)
-            return resolve(receipt)
-          } catch (e) {
-            return reject(e)
-          }
-        })
+        withWaitForReceipt(this.web3))
     })
     return transferReceipt
   }
