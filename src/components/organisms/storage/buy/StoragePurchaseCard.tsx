@@ -9,7 +9,6 @@ import Login from 'components/atoms/Login'
 import RoundBtn from 'components/atoms/RoundBtn'
 import RifCard from 'components/organisms/RifCard'
 import { StorageCheckoutContext } from 'context/storage/buy/checkout'
-import { Details } from '@material-ui/icons'
 
 type Details = {
     'CONTENT SIZE': string
@@ -20,7 +19,7 @@ type Details = {
     'RENEWAL DATE': string
   }
 
-type Props ={
+type Props = {
   details: Details
 }
 

@@ -37,6 +37,7 @@ const getMonthlyFee = (
 
 const mapFromTransport = ({
   agreementReference,
+  dataReference,
   billingPeriod,
   billingPrice,
   tokenAddress,
@@ -49,6 +50,7 @@ const mapFromTransport = ({
   return {
     id: agreementReference,
     provider: offerId,
+    dataReference,
     subscriptionPrice: new Big(billingPrice),
     renewalDate: new Date(Date.now() + miliesToDeath),
     monthlyFee: parseToBigDecimal(
