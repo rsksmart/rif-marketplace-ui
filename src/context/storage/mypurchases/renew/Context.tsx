@@ -16,7 +16,7 @@ import {
 import { UIError } from 'models/UIMessage'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
-import { convertToWeiString } from 'utils/parsers'
+import { convertToWeiString, parseToBigDecimal } from 'utils/parsers'
 import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
 import AgreementsContext, { AgreementContextProps } from 'context/Services/storage/agreements'
 import { reducer } from './actions'
@@ -92,6 +92,7 @@ const Provider: FC = ({ children }) => {
     auxiliary: {
       periodsCount,
       currentRate,
+      plan,
     },
     order,
   } = state
@@ -99,17 +100,17 @@ const Provider: FC = ({ children }) => {
   // Initialise context
   useEffect(() => {
     if (!isInitialised && agreement) {
-      const plan: BillingPlan = {
+      const billingPlan: BillingPlan = {
         currency: agreement.paymentToken,
         period: agreement.subscriptionPeriod,
-        price: agreement.subscriptionPrice,
+        price: Big(parseToBigDecimal(agreement.subscriptionPrice, 18)),
       }
 
       dispatch({
         type: 'INITIALISE',
         payload: {
           ...agreement,
-          plan,
+          plan: billingPlan,
         },
       })
       setIsInitialised(true)
@@ -193,13 +194,14 @@ const Provider: FC = ({ children }) => {
   }, [web3, account, appDispatch, order, reportError])
 
   // Sets current exchange rate and fiat
+  const paymentToken = order?.paymentToken
   useEffect(() => {
     if (
       isInitialised
       && crypto
-      && order
+      && paymentToken
     ) {
-      const newRate = crypto[order.paymentToken]?.rate
+      const newRate = crypto[paymentToken]?.rate
 
       dispatch({
         type: 'SET_AUXILIARY',
@@ -209,19 +211,17 @@ const Provider: FC = ({ children }) => {
         },
       })
     }
-  }, [isInitialised, crypto, order])
+  }, [isInitialised, crypto, paymentToken, currentFiat])
 
   // Recalculates total amounts and subscription end date
+  const renewalDate = order?.renewalDate
   useEffect(() => {
-    if (isInitialised && order) {
-      const {
-        subscriptionPeriod,
-        renewalDate,
-        subscriptionPrice,
-      } = order
-      const currentTotal = new Big(subscriptionPrice).mul(periodsCount)
+    if (isInitialised && renewalDate) {
+      const { period, price } = plan
+
+      const currentTotal = new Big(price).mul(periodsCount)
       const currentTotalFiat = currentTotal.mul(currentRate)
-      const periodSec = PeriodInSeconds[subscriptionPeriod]
+      const periodSec = PeriodInSeconds[period]
       const currentPeriodsInSec = periodSec * periodsCount
       const currentEndDate = new Date(
         renewalDate.setSeconds(renewalDate.getSeconds() + currentPeriodsInSec),
@@ -245,6 +245,7 @@ const Provider: FC = ({ children }) => {
     isInitialised,
     periodsCount,
     currentRate,
+    plan, renewalDate,
   ])
 
   const value = useMemo(() => ({
