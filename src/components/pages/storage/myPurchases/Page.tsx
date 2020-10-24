@@ -15,6 +15,9 @@ import {
 } from '@rsksmart/rif-ui'
 import RifCard from 'components/organisms/RifCard'
 import RoundBtn from 'components/atoms/RoundBtn'
+import { useHistory } from 'react-router-dom'
+import ROUTES from 'routes'
+import { Agreement } from 'models/marketItems/StorageItem'
 import createItemFields, { AgreementView } from './utils'
 
 const useTitleStyles = makeStyles(() => ({
@@ -41,12 +44,14 @@ const useModalStyles = makeStyles(() => ({
 }))
 
 const MyStoragePurchases: FC = () => {
+  const history = useHistory()
   const titleStyleClass = useTitleStyles()
   const modalCardStyleClasses = useModalStyles()
   const {
     state: {
       agreements,
     },
+    dispatch,
   } = useContext<AgreementContextProps>(AgreementsContext)
   const {
     state: {
@@ -73,53 +78,16 @@ const MyStoragePurchases: FC = () => {
     view: '',
   }
 
-  // const setItemForRenewal = (agreement: Agreement) => {
-  //   const orderConfigTB: ConfigPurchaseCardDetails = {
-  //     'CONTENT SIZE': `${agreement.size.toPrecision(2)} MB`,
-  //     'CURRENCY TO PAY': <RifSelect<string>
-  //       id="currency"
-  //       value={0}
-  //       options={[tokenDisplayNames[agreement.paymentToken]]}
-  //       disabled
-  //     />,
-  //     'SUBSCRIPTION PERIOD': <RifSelect<JSX.Element>
-  //       id="plan"
-  //       value={0}
-  //       options={[<PlanOption
-  //         plan={agreement.subscriptionPeriod}
-  //         xr={{
-  //           fiat: fiatName,
-  //           rate: currentRate,
-  //         }}
-  //   />]}
-  //       onChange={changePlanHandle}
-  //     />,
-  //     'PERIODS TO PREPAY': <TextField
-  //       type="number"
-  //       value={periodsCount.toString()}
-  //       InputProps={{
-  //         inputProps: { min: 1 },
-  //       }}
-  //       onChange={changePeriodCountHandle}
-  //     />,
-  //     'TOTAL PRICE': total && totalFiat ? (
-  //       <CombinedPriceCell
-  //         currency={token || ''}
-  //         currencyFiat={fiatName}
-  //         price={total.toFixed(18)}
-  //         priceFiat={totalFiat}
-  //         divider={<br />}
-  //       />
-  //     ) : null,
-  //     'RENEWAL DATE': endDate,
-  //   }
-  // }
-
   const items = createItemFields(
     agreements,
     crypto,
     currentFiat,
-    (_, id: string) => {
+    (_, agreement: Agreement) => {
+      dispatch({
+        type: 'SET_ORDER',
+        payload: agreement,
+      })
+      history.push(ROUTES.STORAGE.MYPURCHASES.RENEW)
     },
     (_, agreementView: AgreementView) => {
       setItemDetails(agreementView)

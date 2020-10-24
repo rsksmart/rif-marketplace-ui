@@ -1,3 +1,4 @@
+import Big from 'big.js'
 import { recursiveDiff } from 'context/storeUtils/recursiveDiff'
 import Logger from 'utils/Logger'
 import {
@@ -21,16 +22,16 @@ export const actions: Actions = {
     },
   }),
   INITIALISE: (state: State, {
-    currencyOptions, id,
+    plan, ...agreement
   }: InitialisePayload): State => ({
     ...state,
     auxiliary: {
       ...state.auxiliary,
-      currencyOptions,
+      plan,
     },
     order: {
-      ...state.order,
-      ...{ id } as Order,
+      total: new Big(0),
+      ...agreement,
     },
   }),
   SET_STATUS: (

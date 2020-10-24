@@ -3,32 +3,40 @@ import React, {
   useCallback,
   useContext, useEffect, useMemo, useReducer, useState,
 } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { Web3Store } from '@rsksmart/rif-ui'
 import Web3 from 'web3'
+import Big from 'big.js'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { TokenAddressees } from 'context/Services/storage/interfaces'
 import createWithContext from 'context/storeUtils/createWithContext'
 import {
-  Agreement, PeriodInSeconds,
+  BillingPlan, PeriodInSeconds,
 } from 'models/marketItems/StorageItem'
 import { UIError } from 'models/UIMessage'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { convertToWeiString } from 'utils/parsers'
+import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
+import AgreementsContext, { AgreementContextProps } from 'context/Services/storage/agreements'
 import { reducer } from './actions'
 import { AsyncActions, Props, State } from './interfaces'
 
 export const initialState: State = {
   auxiliary: {
-    currencyOptions: [],
     currentRate: 0,
     endDate: '',
     periodsCount: 1,
-    planOptions: [],
-    selectedCurrency: 0,
-    selectedPlan: 0,
+    plan: {
+      currency: 'rbtc',
+      period: 'Daily',
+      price: new Big(0),
+    },
     totalFiat: '',
+    currentFiat: {
+      displayName: 'XYZ',
+      symbol: 'usd',
+    },
   },
   status: {},
 }
@@ -44,7 +52,6 @@ export const Context = createContext<Props>({
 })
 
 const Provider: FC = ({ children }) => {
-  const { state: agreement } = useLocation<Agreement>()
   const history = useHistory()
 
   const {
@@ -54,13 +61,21 @@ const Provider: FC = ({ children }) => {
     (e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch],
   )
 
-  // const {
-  //   state: {
-  //     exchangeRates: {
-  //       crypto,
-  //     },
-  //   },
-  // } = useContext<MarketContextProps>(MarketContext)
+  const {
+    state: {
+      exchangeRates: {
+        crypto,
+        currentFiat,
+      },
+    },
+  } = useContext<MarketContextProps>(MarketContext)
+
+  const {
+    state: {
+      order: agreement,
+    },
+  } = useContext<AgreementContextProps>(AgreementsContext)
+
   const {
     state: {
       web3,
@@ -75,8 +90,6 @@ const Provider: FC = ({ children }) => {
 
   const {
     auxiliary: {
-      selectedPlan,
-      planOptions,
       periodsCount,
       currentRate,
     },
@@ -86,14 +99,20 @@ const Provider: FC = ({ children }) => {
   // Initialise context
   useEffect(() => {
     if (!isInitialised && agreement) {
-      setIsInitialised(true)
+      const plan: BillingPlan = {
+        currency: agreement.paymentToken,
+        period: agreement.subscriptionPeriod,
+        price: agreement.subscriptionPrice,
+      }
+
       dispatch({
         type: 'INITIALISE',
         payload: {
           ...agreement,
-          currencyOptions: [agreement.paymentToken],
+          plan,
         },
       })
+      setIsInitialised(true)
     }
   }, [agreement, isInitialised])
 
@@ -173,40 +192,40 @@ const Provider: FC = ({ children }) => {
     }
   }, [web3, account, appDispatch, order, reportError])
 
-  // // Sets current exchange rate
-  // useEffect(() => {
-  //   if (
-  //     isInitialised
-  //     && currencyOptions.length
-  //     && selectedCurrency >= 0
-  //     && agreement
-  //   ) {
-  //     const newRate = crypto[agreement.paymentToken]?.rate
+  // Sets current exchange rate and fiat
+  useEffect(() => {
+    if (
+      isInitialised
+      && crypto
+      && order
+    ) {
+      const newRate = crypto[order.paymentToken]?.rate
 
-  //     dispatch({
-  //       type: 'SET_AUXILIARY',
-  //       payload: {
-  //         currentRate: newRate,
-  //       },
-  //     })
-  //   }
-  // }, [isInitialised, crypto, agreement])
+      dispatch({
+        type: 'SET_AUXILIARY',
+        payload: {
+          currentRate: newRate,
+          currentFiat,
+        },
+      })
+    }
+  }, [isInitialised, crypto, order])
 
   // Recalculates total amounts and subscription end date
   useEffect(() => {
-    if (isInitialised && agreement) {
+    if (isInitialised && order) {
       const {
         subscriptionPeriod,
         renewalDate,
         subscriptionPrice,
-      } = agreement
-      const currentTotal = subscriptionPrice.mul(periodsCount)
+      } = order
+      const currentTotal = new Big(subscriptionPrice).mul(periodsCount)
       const currentTotalFiat = currentTotal.mul(currentRate)
       const periodSec = PeriodInSeconds[subscriptionPeriod]
       const currentPeriodsInSec = periodSec * periodsCount
       const currentEndDate = new Date(
         renewalDate.setSeconds(renewalDate.getSeconds() + currentPeriodsInSec),
-      ).toLocaleDateString()
+      ).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
 
       dispatch({
         type: 'SET_ORDER',
@@ -224,9 +243,7 @@ const Provider: FC = ({ children }) => {
     }
   }, [
     isInitialised,
-    selectedPlan,
     periodsCount,
-    planOptions,
     currentRate,
   ])
 

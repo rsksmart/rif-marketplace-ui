@@ -1,18 +1,16 @@
 import { Big } from 'big.js'
-import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
+import { MarketFiat } from 'context/Market/MarketContext'
 import { BillingPlan, Agreement } from 'models/marketItems/StorageItem'
 import { Dispatch } from 'react'
 
 // STATE
 export type AuxiliaryState = {
-  currencyOptions: SupportedToken[]
   currentRate: number
   endDate: string
   periodsCount: number
-  planOptions: BillingPlan[]
-  selectedCurrency: number
-  selectedPlan: number
+  plan: BillingPlan
   totalFiat: string
+  currentFiat: MarketFiat
 }
 
 export type Order = Agreement & {
@@ -31,7 +29,7 @@ export type State = {
 }
 
 // PAYLOAD
-export type InitialisePayload = Pick<AuxiliaryState, 'currencyOptions'> & Omit<Order, 'total'>
+export type InitialisePayload = Agreement & Pick<AuxiliaryState, 'plan'>
 export type StatusPayload = (
   | {
     inProgress: boolean
