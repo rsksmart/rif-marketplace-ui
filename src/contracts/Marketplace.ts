@@ -4,7 +4,7 @@ import { TransactionReceipt } from 'web3-eth'
 import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
 import { marketPlaceAddress } from './config'
-import waitForReceipt, { TransactionOptions } from './utils'
+import withWaitForReceipt, { TransactionOptions } from './utils'
 
 export type MarketplaceContractErrorId = 'contract-marketplace-place' | 'contract-marketplace-unplace' | 'contract-marketplace-getPlacement'
 
@@ -37,15 +37,7 @@ class MarketplaceContract {
     // Placement Transaction
     const placeReceipt = await new Promise<TransactionReceipt>((resolve, reject) => {
       this.contract.methods.place(tokenId, rifTokenAddress, this.web3.utils.toWei(price)).send({ from, gas, gasPrice },
-        async (err, txHash) => {
-          try {
-            if (err) throw err
-            const receipt = await waitForReceipt(txHash, this.web3)
-            return resolve(receipt)
-          } catch (e) {
-            return reject(e)
-          }
-        })
+        withWaitForReceipt(this.web3))
     })
     return placeReceipt
   }
@@ -60,15 +52,7 @@ class MarketplaceContract {
     // Unplacement Transaction
     const unplaceReceipt = await new Promise<TransactionReceipt>((resolve, reject) => {
       this.contract.methods.unplace(tokenId).send({ from, gas, gasPrice },
-        async (err, txHash) => {
-          if (err) return reject(err)
-          try {
-            const receipt = await waitForReceipt(txHash, this.web3)
-            return resolve(receipt)
-          } catch (e) {
-            return reject(e)
-          }
-        })
+        withWaitForReceipt(this.web3))
     })
     return unplaceReceipt
   }

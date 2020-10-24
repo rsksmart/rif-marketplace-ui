@@ -6,8 +6,9 @@ import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
 import { zeroAddress } from 'context/Services/storage/interfaces'
+import { availableTokens } from 'api/rif-marketplace-cache/rns/common'
 import { encodeHash, prefixArray } from './utils'
-import waitForReceipt, { TransactionOptions } from '../utils'
+import withWaitForReceipt, { TransactionOptions } from '../utils'
 import { storageAddress } from '../config'
 
 const logger = Logger.getInstance()
@@ -83,10 +84,7 @@ class StorageContract {
         gasPrice,
         value: amount,
       },
-      (err, response) => {
-        if (err) return Promise.reject(err)
-        return waitForReceipt(response, this.web3)
-      },
+      withWaitForReceipt(this.web3),
     )
 
     return txHash
@@ -127,10 +125,7 @@ class StorageContract {
         gas: Math.floor((await setOffer.estimateGas({ from, gasPrice })) * 1.1),
         gasPrice,
       },
-      (err: Error, txHash: string) => {
-        if (err) return Promise.reject(err)
-        return waitForReceipt(txHash, this.web3)
-      },
+      withWaitForReceipt(this.web3),
     )
   }
 
@@ -152,10 +147,10 @@ class StorageContract {
 
     return this.contract.methods
       .terminateOffer()
-      .send({ from, gas, gasPrice }, (err: Error, txHash: string) => {
-        if (err) return Promise.reject(err)
-        return waitForReceipt(txHash, this.web3)
-      })
+      .send(
+        { from, gas, gasPrice },
+        withWaitForReceipt(this.web3),
+      )
   }
 
   public hasUtilizedCapacity = async (

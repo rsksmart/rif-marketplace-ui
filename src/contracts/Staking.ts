@@ -6,7 +6,7 @@ import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
 import { zeroAddress } from 'context/Services/storage/interfaces'
 import { convertToWeiString } from 'utils/parsers'
-import waitForReceipt, { TransactionOptions } from './utils'
+import withWaitForReceipt, { TransactionOptions } from './utils'
 import { stakingAddress } from './config'
 
 const logger = Logger.getInstance()
@@ -67,10 +67,7 @@ class StakingContract {
         gasPrice,
         value: amountWei,
       },
-      (err, txHash) => {
-        if (err) return Promise.reject(err)
-        return waitForReceipt(txHash, this.web3)
-      },
+      withWaitForReceipt(this.web3),
     )
   }
 
@@ -101,10 +98,7 @@ class StakingContract {
     const estimatedGas = await unstakeTask.estimateGas({ from, gasPrice })
     const gas = Math.floor(estimatedGas * extraGasPercentage)
 
-    return unstakeTask.send({ from, gas, gasPrice }, (err, txHash) => {
-      if (err) return Promise.reject(err)
-      return waitForReceipt(txHash, this.web3)
-    })
+    return unstakeTask.send({ from, gas, gasPrice }, withWaitForReceipt(this.web3))
   }
 
   public totalStakedFor = (
