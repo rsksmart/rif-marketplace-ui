@@ -106,6 +106,7 @@ const MyStoragePurchases: FC = () => {
     (_, agreementView: AgreementView) => {
       setItemDetails(agreementView)
     },
+    'Consumer',
   )
 
   const renderDetailsActions = (): JSX.Element => (
