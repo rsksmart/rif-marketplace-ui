@@ -1,7 +1,7 @@
 import { APIService } from 'api/models/apiService'
 import { RnsFilter } from 'api/models/RnsFilter'
 import network from 'blockchain/config'
-import { zeroAddress } from 'context/Services/storage/interfaces'
+import { ZERO_ADDRESS } from 'constants/strings'
 import {
   RnsDomain,
   RnsDomainOffer,
@@ -30,7 +30,7 @@ export const isSupportedToken = (
   .includes(token)
 
 const { contractAddresses } = network
-contractAddresses.rbtc = zeroAddress
+contractAddresses.rbtc = ZERO_ADDRESS
 
 export const availableTokens = Object.keys(contractAddresses).reduce((acc, symbol) => {
   if (!isSupportedToken(symbol)) return acc

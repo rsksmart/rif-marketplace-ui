@@ -23,19 +23,31 @@ class MarketplaceContract {
   private web3: Web3
 
   private constructor(web3: Web3) {
-    this.contract = new web3.eth.Contract(RNSSimplePlacementsV1.abi as AbiItem[], marketPlaceAddress)
+    this.contract = new web3.eth.Contract(
+      RNSSimplePlacementsV1.abi as AbiItem[],
+      marketPlaceAddress,
+    )
     this.web3 = web3
   }
 
   // Place: Proxy function for placement transaction
-  public place = async (tokenId: string, rifTokenAddress: string, price: string, txOptions: TransactionOptions): Promise<TransactionReceipt> => {
+  public place = async (
+    tokenId: string,
+    rifTokenAddress: string,
+    price: string,
+    txOptions: TransactionOptions): Promise<TransactionReceipt> => {
     // Get gas limit for Placement
     const { from, gasPrice } = txOptions
-    const estimatedGas = await this.contract.methods.place(tokenId, rifTokenAddress, this.web3.utils.toWei(price)).estimateGas({ from, gasPrice })
+    const estimatedGas = await this.contract.methods.place(
+      tokenId,
+      rifTokenAddress,
+      this.web3.utils.toWei(price),
+    )
+      .estimateGas({ from, gasPrice })
     const gas = Math.floor(estimatedGas * 1.1)
 
     // Placement Transaction
-    const placeReceipt = await new Promise<TransactionReceipt>(
+    return new Promise<TransactionReceipt>(
       () => this.contract.methods.place(
         tokenId, rifTokenAddress, this.web3.utils.toWei(price),
       )
@@ -44,28 +56,32 @@ class MarketplaceContract {
           withWaitForReceipt(this.web3),
         ),
     )
-    return placeReceipt
   }
 
   // Unplace: Proxy function for unplacement transaction
-  public unplace = async (tokenId: string, txOptions: TransactionOptions): Promise<TransactionReceipt> => {
+  public unplace = async (
+    tokenId: string,
+    txOptions: TransactionOptions): Promise<TransactionReceipt> => {
     // Get gas limit for Unplacement
     const { from, gasPrice } = txOptions
-    const estimatedGas = await this.contract.methods.unplace(tokenId).estimateGas({ from, gasPrice })
+    const estimatedGas = await this.contract.methods.unplace(tokenId)
+      .estimateGas({ from, gasPrice })
     const gas = Math.floor(estimatedGas * 1.1)
 
     // Unplacement Transaction
-    const unplaceReceipt = await new Promise<TransactionReceipt>(
+    return new Promise<TransactionReceipt>(
       () => this.contract.methods.unplace(tokenId)
         .send(
           { from, gas, gasPrice },
           withWaitForReceipt(this.web3),
         ),
     )
-    return unplaceReceipt
   }
 
-  public getPlacement = (tokenId: string, txOptions: TransactionOptions): Promise<Array<string>> => {
+  public getPlacement = (
+    tokenId: string,
+    txOptions: TransactionOptions,
+  ): Promise<Array<string>> => {
     const { from } = txOptions
     const placement = this.contract.methods.placement(tokenId).call({ from })
     return placement

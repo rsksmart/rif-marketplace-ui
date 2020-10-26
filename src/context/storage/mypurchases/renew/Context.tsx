@@ -34,7 +34,7 @@ export const initialState: State = {
     },
     totalFiat: '',
     currentFiat: {
-      displayName: 'XYZ',
+      displayName: 'USD',
       symbol: 'usd',
     },
   },

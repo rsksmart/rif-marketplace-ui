@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Accordion, FilterCheckboxCard } from '@rsksmart/rif-ui'
 
-import { StorageOffersContext } from 'context/Services/storage'
+import { StorageOffersContext } from 'context/Services/storage/offers'
 import { MinMaxFilter } from 'models/Filters'
 import { SubscriptionPeriod } from 'models/marketItems/StorageItem'
 import { CheckboxProps } from '@material-ui/core'

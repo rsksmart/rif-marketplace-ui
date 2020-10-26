@@ -1,5 +1,4 @@
 import { RnsContextNames } from 'context/Services/rns/interfaces'
-import { StorageContextNames } from 'context/Services/storage/interfaces'
 import { ContextName as BlockchainContextName } from 'context/Blockchain/BlockchainContext'
 import { ContextName as MarketContextName } from 'context/Market/MarketContext'
 import { ContextName as AppContextName } from 'context/App/AppContext'
@@ -9,6 +8,7 @@ import { APP_ACTION } from 'context/App/appActions'
 import { BLOCKCHAIN_ACTION } from 'context/Blockchain/blockchainActions'
 import { SERVICE_ACTION } from 'context/Services/interfaces'
 import { OFFER_EDIT_ACTION } from 'context/Market/storage/offerEditActions'
+import { StorageContextNames } from 'context/Services/storage/interfaces'
 
 export type AvailableContexts =
   | RnsContextNames
