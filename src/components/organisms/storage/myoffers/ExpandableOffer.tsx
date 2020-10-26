@@ -1,7 +1,9 @@
-import React, { FC, useState } from 'react'
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react'
 import Grid from '@material-ui/core/Grid'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { Button, colors } from '@rsksmart/rif-ui'
+import { Button, colors, Web3Store } from '@rsksmart/rif-ui'
 import Typography from '@material-ui/core/Typography'
 import Accordion from '@material-ui/core/Accordion'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
@@ -10,7 +12,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Divider from '@material-ui/core/Divider'
 import LabelWithValue from 'components/atoms/LabelWithValue'
 import { StorageOffer } from 'models/marketItems/StorageItem'
-// import ActiveContracts from './ActiveContracts'
+import AgreementsContext, {
+  AgreementContextProps,
+} from 'context/Services/storage/agreements'
 import CancelOfferDialogue from './CancelOfferDialogue'
 
 export interface ExpandableOfferProps {
@@ -55,19 +59,58 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
   className = '', offerName, storageOffer, initiallyExpanded = false, onCancelOffer, onEditOffer,
 }) => {
   const classes = useStyles()
+  const {
+    state: { account },
+  } = useContext(Web3Store)
+  const {
+    state: {
+      agreements,
+    },
+    dispatch: agreementsDispatch,
+  } = useContext<AgreementContextProps>(AgreementsContext)
+  // filter by the current account
+  useEffect(() => {
+    if (account) {
+      agreementsDispatch({
+        type: 'SET_FILTERS',
+        payload: { provider: account },
+      })
+    }
+  }, [account, agreementsDispatch])
+
   const { system, availableSizeGB, utilizedCapacityGB } = storageOffer
   const [isExpanded, setIsExpanded] = useState(initiallyExpanded)
   const [cancelOfferOpen, setCancelOfferOpen] = useState(false)
-  const handleChange = () => setIsExpanded(!isExpanded)
-  const handleCancelOpen = () => setCancelOfferOpen(true)
-  const handleCancelClose = () => setCancelOfferOpen(false)
+  const handleChange = (): void => setIsExpanded(!isExpanded)
+  const handleCancelOpen = (): void => setCancelOfferOpen(true)
+  const handleCancelClose = (): void => setCancelOfferOpen(false)
 
-  const handleCancelation = () => {
+  const handleCancelation = (): void => {
     setCancelOfferOpen(false)
     onCancelOffer()
   }
 
   const remainingSize = availableSizeGB.minus(utilizedCapacityGB)
+
+  const renderAgreements = (): JSX.Element => {
+    if (!agreements.length) {
+      return (
+        <Typography
+          align="center"
+          color="secondary"
+        >
+          No active contracts yet
+        </Typography>
+      )
+    }
+    return (
+      // TODO: render ActiveContracts
+      <Typography>
+        There are some active contracts that will be displayed here!
+      </Typography>
+    )
+  }
+
   return (
     <Accordion
       className={`${classes.root} ${className}`}
@@ -121,9 +164,7 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
           </Grid>
           <Divider />
           <Grid container className={classes.activeContractsContainer}>
-            <Typography align="center" color="secondary">No active contracts yet</Typography>
-            {/* TODO: get active contracts of the offer */}
-            {/* <ActiveContracts /> */}
+            {renderAgreements()}
           </Grid>
         </Grid>
       </AccordionDetails>

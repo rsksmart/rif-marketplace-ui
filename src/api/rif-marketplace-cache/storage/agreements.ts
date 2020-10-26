@@ -46,6 +46,8 @@ const mapFromTransport = ({
   expiresIn,
   offerId,
   size,
+  consumer,
+  availableFunds,
 }: AgreementTransport): Agreement => {
   const miliesToDeath = parseInt(expiresIn, 10) * 1000
 
@@ -62,6 +64,8 @@ const mapFromTransport = ({
     subscriptionPeriod: PeriodInSeconds[billingPeriod] as SubscriptionPeriod,
     title: '',
     paymentToken: getPaymentToken(tokenAddress),
+    consumer,
+    availableFunds: parseToBigDecimal(availableFunds, 18),
   }
 }
 

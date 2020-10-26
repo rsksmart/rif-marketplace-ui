@@ -36,6 +36,8 @@ export type Agreement = Item & {
   subscriptionPeriod: SubscriptionPeriod
   monthlyFee: Big
   paymentToken: SupportedToken
+  consumer: string
+  availableFunds: Big
 }
 
 export type StorageItem = StorageOffer
