@@ -16,6 +16,7 @@ import AgreementsContext, {
   AgreementContextProps,
 } from 'context/Services/storage/agreements'
 import CancelOfferDialogue from './CancelOfferDialogue'
+import ActiveContracts from './ActiveContracts'
 
 export interface ExpandableOfferProps {
   className?: string
@@ -92,25 +93,6 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
 
   const remainingSize = availableSizeGB.minus(utilizedCapacityGB)
 
-  const renderAgreements = (): JSX.Element => {
-    if (!agreements.length) {
-      return (
-        <Typography
-          align="center"
-          color="secondary"
-        >
-          No active contracts yet
-        </Typography>
-      )
-    }
-    return (
-      // TODO: render ActiveContracts
-      <Typography>
-        There are some active contracts that will be displayed here!
-      </Typography>
-    )
-  }
-
   return (
     <Accordion
       className={`${classes.root} ${className}`}
@@ -164,7 +146,7 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
           </Grid>
           <Divider />
           <Grid container className={classes.activeContractsContainer}>
-            {renderAgreements()}
+            <ActiveContracts agreements={agreements} />
           </Grid>
         </Grid>
       </AccordionDetails>
