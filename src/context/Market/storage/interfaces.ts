@@ -7,7 +7,7 @@ import {
   StorageOffer,
   SubscriptionPeriod,
 } from 'models/marketItems/StorageItem'
-import { zeroAddress } from 'context/Services/storage/interfaces'
+import { ZERO_ADDRESS } from 'constants/strings'
 import { OfferEditAction } from './offerEditActions'
 
 export interface StorageBillingPlan extends BillingPlan {
@@ -32,6 +32,6 @@ export interface OfferEditContextProps {
 }
 
 export const TokenAddressees: Record<SupportedToken, string> = {
-  rbtc: zeroAddress, // we are using zero address for native token is Storage Manager SC
+  rbtc: ZERO_ADDRESS, // we are using zero address for native token is Storage Manager SC
   rif: networkConfig.contractAddresses.rif,
 }

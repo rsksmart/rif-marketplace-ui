@@ -16,10 +16,7 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import RoundBtn from 'components/atoms/RoundBtn'
 
-export type Props = {
-}
-
-const RenewAgreement: FC<Props> = () => {
+const RenewAgreement: FC = () => {
   const history = useHistory()
   const {
     state: {

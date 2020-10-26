@@ -17,8 +17,8 @@ import {
   storageOffersActions, StorageOffersPayload,
   StorageOffersReducer, StorageOffersAction,
 } from './offersActions'
-import { ServiceState } from '../interfaces'
-import { StorageOrder } from './interfaces'
+import { ServiceState } from '../../interfaces'
+import { StorageOrder } from '../interfaces'
 
 export type ContextName = 'storage_offers'
 

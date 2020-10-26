@@ -5,7 +5,7 @@ import { Contract } from 'web3-eth-contract'
 import { AbiItem, asciiToHex } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
-import { zeroAddress } from 'context/Services/storage/interfaces'
+import { ZERO_ADDRESS } from 'constants/strings'
 import { encodeHash, prefixArray } from './utils'
 import withWaitForReceipt, { TransactionOptions } from '../utils'
 import { storageAddress } from '../config'
@@ -58,11 +58,11 @@ class StorageContract {
       provider,
       size,
       billingPeriod,
-      zeroAddress,
+      ZERO_ADDRESS,
       0,
       [],
       [],
-      zeroAddress,
+      ZERO_ADDRESS,
     )
 
     const gasPrice = await this.web3.eth.getGasPrice()
@@ -76,7 +76,7 @@ class StorageContract {
       gasPrice,
       value: amount,
     })
-    const txHash = await newAgreementTask.send(
+    return newAgreementTask.send(
       {
         from,
         gas,
@@ -85,8 +85,6 @@ class StorageContract {
       },
       withWaitForReceipt(this.web3),
     )
-
-    return txHash
   }
 
   public depositFunds = async (
@@ -117,14 +115,12 @@ class StorageContract {
       gasPrice,
     })
 
-    const txHash = await newTask.send({
+    return newTask.send({
       from,
       gas,
       gasPrice,
     },
     withWaitForReceipt(this.web3))
-
-    return txHash
   }
 
   public setOffer = async (

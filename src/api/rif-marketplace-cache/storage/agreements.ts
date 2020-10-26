@@ -2,7 +2,7 @@ import { Big } from 'big.js'
 import { AbstractAPIService } from 'api/models/apiService'
 import { AgreementTransport } from 'api/models/storage/transports'
 import { Agreement, PeriodInSeconds, SubscriptionPeriod } from 'models/marketItems/StorageItem'
-import { zeroAddress } from 'context/Services/storage/interfaces'
+import { ZERO_ADDRESS } from 'constants/strings'
 import { parseToBigDecimal } from 'utils/parsers'
 import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
 import { availableTokens } from '../rns/common'
@@ -12,7 +12,7 @@ export const agreementsAddress: StorageServiceAddress = 'storage/v0/agreements'
 export const agreementsWSChannel: StorageWSChannel = 'agreements'
 
 const getPaymentToken = (tokenAddress: string): SupportedToken => {
-  const tokenIsRbtc = tokenAddress === zeroAddress
+  const tokenIsRbtc = tokenAddress === ZERO_ADDRESS
   const tokenSymbol = Object.entries(availableTokens).reduce((acc, [symbol, addr]) => {
     if (addr === tokenAddress) {
       // eslint-disable-next-line no-param-reassign

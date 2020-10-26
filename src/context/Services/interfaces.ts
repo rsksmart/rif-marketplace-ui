@@ -1,6 +1,6 @@
 import { ContextState } from 'context/storeUtils/interfaces'
-import { STORAGE_ACTION } from './storage/interfaces'
 import { RNS_ACTION } from './rns/rnsActions'
+import { STORAGE_ACTION } from './storage/interfaces'
 
 export type SERVICE_ACTION = STORAGE_ACTION | RNS_ACTION
 

@@ -4,8 +4,8 @@ import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
-import { zeroAddress } from 'context/Services/storage/interfaces'
 import { convertToWeiString } from 'utils/parsers'
+import { ZERO_ADDRESS } from 'constants/strings'
 import withWaitForReceipt, { TransactionOptions } from './utils'
 import { stakingAddress } from './config'
 
@@ -39,7 +39,7 @@ class StakingContract {
 
   public stake = async (
     amount: string | number,
-    token: string = zeroAddress, // native token
+    token: string = ZERO_ADDRESS, // native token
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
@@ -73,7 +73,7 @@ class StakingContract {
 
   public unstake = async (
     amount: string | number,
-    token: string = zeroAddress, // native token
+    token: string = ZERO_ADDRESS, // native token
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
@@ -103,7 +103,7 @@ class StakingContract {
 
   public totalStakedFor = (
     account: string,
-    token: string = zeroAddress, // native token
+    token: string = ZERO_ADDRESS, // native token
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
@@ -112,7 +112,7 @@ class StakingContract {
   }
 
   public totalStaked = (
-    token: string = zeroAddress, // native token
+    token: string = ZERO_ADDRESS, // native token
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
