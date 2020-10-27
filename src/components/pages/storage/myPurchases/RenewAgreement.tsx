@@ -126,6 +126,7 @@ const RenewAgreement: FC = () => {
       </GridColumn>
       <ProgressOverlay
         title="Renewing agreement!"
+        doneMsg="Your agreement has been renewed."
         {...status}
         buttons={[
           <RoundBtn onClick={navToMyPurchases}>

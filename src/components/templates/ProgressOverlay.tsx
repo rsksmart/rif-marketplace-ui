@@ -29,6 +29,7 @@ export type Status = {
 type Props = Status & {
     title: string
     buttons: JSX.Element[]
+    doneMsg: string
 }
 
 const ProgressOverlay: FC<Props> = ({
@@ -36,6 +37,7 @@ const ProgressOverlay: FC<Props> = ({
   isDone,
   buttons,
   title,
+  doneMsg,
 }) => {
   const classes = useStyle()
 
@@ -54,7 +56,7 @@ const ProgressOverlay: FC<Props> = ({
         {
             isDone && (
             <TxCompletePageTemplate>
-              <JobDoneBox text="Your offer agreement has been created." />
+              <JobDoneBox text={doneMsg} />
               <GridRow justify="center">
                 {
                   buttons.map((btn) => (
