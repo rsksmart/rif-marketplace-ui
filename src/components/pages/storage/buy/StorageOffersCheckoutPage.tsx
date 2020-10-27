@@ -233,6 +233,7 @@ const StorageOffersCheckoutPage: FC = () => {
       </GridColumn>
       <ProgressOverlay
         title="Creating agreement!"
+        doneMsg="Your offer has been created."
         {...status}
         buttons={[
           <RoundBtn onClick={navToMyPurchases}>
