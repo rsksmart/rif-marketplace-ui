@@ -147,7 +147,7 @@ const StorageMyOffersPage: FC = () => {
         </Grid>
         <Grid item xs={10} md="auto">
           <Typography gutterBottom variant="h5" color="primary">
-            You are providing the following storage space to your customers
+            You are providing the following storage offers to your customers
           </Typography>
         </Grid>
       </Grid>

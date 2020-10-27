@@ -171,7 +171,7 @@ const StorageSellPage = () => {
       <Staking />
       <Typography gutterBottom variant="h5" color="primary">List your storage service</Typography>
       <Typography gutterBottom color="secondary" variant="subtitle1">
-        Fill out the fields below to list your storage service. All information provided is meant to be true and correct.
+        Fill out the fields below to list your storage service. All the information provided is meant to be true and correct.
       </Typography>
       <RoundedCard color="primary" className={classes.stepperContainer}>
         <EditOfferStepper endHandler={endHandler} />
@@ -182,7 +182,7 @@ const StorageSellPage = () => {
           <TransactionInProgressPanel
             {...{ isPendingConfirm, onProcessingComplete }}
             text="Listing your offer!"
-            progMsg="The waiting period is required to securely list your offer.
+            progMsg="The waiting period is required to securely list your storage offer.
              Please do not close this tab until the process has finished."
             overlayed
           />
