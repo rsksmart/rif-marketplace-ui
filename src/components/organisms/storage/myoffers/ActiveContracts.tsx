@@ -31,7 +31,7 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
     )
   }
   const items = createItemFields(
-    agreements, crypto, currentFiat, () => undefined, 'Provider',
+    agreements, crypto, currentFiat, () => undefined, () => undefined, 'Provider',
   )
 
   const headers = {
