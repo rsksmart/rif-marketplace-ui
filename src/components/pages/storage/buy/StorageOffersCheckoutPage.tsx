@@ -186,7 +186,7 @@ const StorageOffersCheckoutPage: FC = () => {
                 alternativeLabel
               >
                 <Step>
-                  <StepLabel>Upload/Pin content</StepLabel>
+                  <StepLabel>Upload/Pin Content</StepLabel>
                 </Step>
                 <Step>
                   <StepLabel>Configure your storage plan</StepLabel>
@@ -202,7 +202,7 @@ const StorageOffersCheckoutPage: FC = () => {
   const renderContent = (): JSX.Element => (
     <>
       <GridItem className={classes.disclaimer}>
-        <Typography variant="caption" color="secondary">To buy your storage you have to select the currency, suscription and payment details to get the final price of your storage plan.</Typography>
+        <Typography variant="caption" color="secondary">You have to select the currency, subscription, and payment details to get the final price of your storage plan.</Typography>
       </GridItem>
       <GridItem>
         <GridColumn alignContent="center">
@@ -234,7 +234,7 @@ const StorageOffersCheckoutPage: FC = () => {
             inProgress && (
             <TransactionInProgressPanel
               text="Creating agreement!"
-              progMsg="The waiting period is required to securely list your offer.
+              progMsg="The waiting period is required to securely buy the storage.
               Please do not close this tab until the process has finished."
             />
             )
@@ -242,7 +242,7 @@ const StorageOffersCheckoutPage: FC = () => {
           {
             isDone && (
             <TxCompletePageTemplate>
-              <JobDoneBox text="Your offer agreement has been created." />
+              <JobDoneBox text="Your storage agreement has been created." />
               <GridRow justify="center">
                 <GridItem>
                   <RoundBtn

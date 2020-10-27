@@ -4,7 +4,7 @@ import React, { FC } from 'react'
 
 const StorageEditOfferDone: FC<{}> = () => (
   <TxCompletePageTemplate>
-    <JobDoneBox text="Your offer has been edited." />
+    <JobDoneBox text="Your offer has been updated." />
   </TxCompletePageTemplate>
 )
 
