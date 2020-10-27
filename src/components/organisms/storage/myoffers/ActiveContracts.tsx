@@ -1,8 +1,9 @@
 import Typography from '@material-ui/core/Typography'
 import TableContainer from '@material-ui/core/TableContainer'
-import createItemFields, {
+import {
   AgreementProviderView,
   AgreementView,
+  createProviderItemFields,
 } from 'components/organisms/storage/agreements/utils'
 import Marketplace from 'components/templates/marketplace/Marketplace'
 import MarketContext from 'context/Market/MarketContext'
@@ -40,7 +41,7 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
       </Typography>
     )
   }
-  const items = createItemFields(
+  const items = createProviderItemFields(
     agreements,
     crypto,
     currentFiat,
@@ -48,7 +49,6 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
     (_, agreementView: AgreementView) => {
       setItemDetails(agreementView as AgreementProviderView)
     },
-    'Provider',
   )
 
   const headers = {
