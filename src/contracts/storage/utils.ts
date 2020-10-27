@@ -82,10 +82,10 @@ export const transformOfferDataForContract = (
   }
 
   const { prices, periods, tokens } = resultsBillingPlan.reduce(
-    (acc, { period, price, currency }) => {
+    (acc, { period, price: priceGB, currency }) => {
       const tokenIndex = acc.tokens.findIndex((t) => t === currency)
       const weiPrice = convertToWeiString(
-        price.div(UNIT_PREFIX_POW2.KILO),
+        priceGB.div(UNIT_PREFIX_POW2.KILO),
       )
 
       if (tokenIndex !== -1) {

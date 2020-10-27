@@ -40,7 +40,7 @@ class StorageContract {
     details: {
       fileHash: string
       provider: string
-      size: string
+      sizeMB: string
       billingPeriod: number
       token: string
       amount: string
@@ -48,7 +48,7 @@ class StorageContract {
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const {
-      fileHash, provider, size, billingPeriod, amount,
+      fileHash, provider, sizeMB, billingPeriod, amount,
     } = details
     const { from } = txOptions
     const dataReference = encodeHash(fileHash)
@@ -56,7 +56,7 @@ class StorageContract {
     const newAgreementTask = this.contract.methods.newAgreement(
       dataReference,
       provider,
-      size,
+      sizeMB,
       billingPeriod,
       zeroAddress,
       0,
@@ -106,7 +106,6 @@ class StorageContract {
     const prefixedMsg = prefixArray(encodedPeerId, '01', 64).map(
       (el) => `0x${el}`,
     )
-
     const gasPrice = await this.web3.eth.getGasPrice()
       .catch((error: Error) => {
         logger.error('error getting gas price, error:', error)

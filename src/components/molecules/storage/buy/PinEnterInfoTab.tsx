@@ -9,14 +9,13 @@ import { isEmpty } from 'utils/stringUtils'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 
 type Props = {
-    name: TextFieldProps
     size: TextFieldProps
     hash: TextFieldProps
     unit: SelectProps
 }
 
 const PinEnterInfoTab: FC<Props> = ({
-  name, size, unit, hash,
+  size, unit, hash,
 }) => (
   <>
     <GridRow justify="center">
@@ -25,20 +24,11 @@ const PinEnterInfoTab: FC<Props> = ({
       </Typography>
     </GridRow>
     <GridRow spacing={3}>
-      <GridItem xs={6}>
-        <TextField
-          error={isEmpty(name.value)}
-          type="string"
-          id="contentName"
-          label="Content name"
-          {...name}
-          required
-        />
-      </GridItem>
-      <GridItem xs={6}>
+      <GridItem xs={12}>
         <TextField
           error={isEmpty(size.value) || !parseFloat(size.value as string)}
           InputProps={{
+            inputProps: { min: 1 },
             endAdornment: (
               <InputAdornment position="end">
                 <Select
@@ -46,18 +36,16 @@ const PinEnterInfoTab: FC<Props> = ({
                   defaultValue={UNIT_PREFIX_POW2.MEGA}
                   {...unit}
                 >
-                  {
-                    Object.keys(UNIT_PREFIX_POW2)
-                      .filter((k) => !parseInt(k, 10)) // This is to filter out the enums' reverse resolved keys
-                      .map((k) => (
-                        <MenuItem
-                          key={k}
-                          value={UNIT_PREFIX_POW2[k]}
-                        >
-                          {`${k[0]}B`}
-                        </MenuItem>
-                      ))
-                  }
+                  <MenuItem
+                    value={UNIT_PREFIX_POW2.MEGA}
+                  >
+                    MB
+                  </MenuItem>
+                  <MenuItem
+                    value={UNIT_PREFIX_POW2.GIGA}
+                  >
+                    GB
+                  </MenuItem>
                 </Select>
               </InputAdornment>
             ),
@@ -69,6 +57,9 @@ const PinEnterInfoTab: FC<Props> = ({
           required
           fullWidth
         />
+        <Typography variant="caption" color="secondary">
+          Content size will always ROUND UP to the nearest MB integer.
+        </Typography>
       </GridItem>
       <GridItem xs={12}>
         <TextField
