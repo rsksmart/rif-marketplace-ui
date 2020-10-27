@@ -10,7 +10,6 @@ import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 
 export type AgreementView = {
   title: JSX.Element
-  'PROVIDER': JSX.Element
   'HASH': JSX.Element
   'CURRENCY': string
   'SYSTEM': string
@@ -18,9 +17,15 @@ export type AgreementView = {
   'PRICE/GB': JSX.Element // monthly fee
   'SUBSCRIPTION PERIOD': SubscriptionPeriod
   'RENEWAL DATE': string
-  // TODO: provider fields
-  // 'CONSUMER': string
-  // 'AVAILABLE FUNDS': string
+}
+
+export type AgreementProviderView = AgreementView & {
+  'CONSUMER': JSX.Element
+  'AVAILABLE FUNDS': JSX.Element
+}
+
+export type AgreementConsumerView = AgreementView & {
+  'PROVIDER': JSX.Element
 }
 // FIXME: enclose in object
 const createItemFields = (
@@ -28,7 +33,10 @@ const createItemFields = (
   crypto: MarketCryptoRecord,
   currentFiat: MarketFiat,
   onItemRenew: (event, agreement: Agreement) => void,
-  onItemSelect: (event, agreement: AgreementView) => void,
+  onItemSelect: (
+    event,
+    agreementView: (AgreementConsumerView | AgreementProviderView)
+  ) => void,
   userType: ('Consumer' | 'Provider'),
 ): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
   const {
@@ -61,11 +69,11 @@ const createItemFields = (
       divider=" "
     />
   )
+  const titleValue = <AddressItem value={title || id} />
 
   let specificAttributes = {}
 
   if (userType === 'Consumer') {
-    const titleValue = <AddressItem value={title || id} />
     const providerValue = <AddressItem value={provider} />
     specificAttributes = {
       title: titleValue,
@@ -95,22 +103,24 @@ const createItemFields = (
               undefined, { day: 'numeric', month: 'short', year: 'numeric' },
             ),
             title: titleValue,
-          })}
+          } as AgreementConsumerView)}
         >
           View
         </SelectRowButton>
       ),
     }
   } else if (userType === 'Provider') {
+    const consumerValue = <AddressItem value={consumer} />
+    const availableFundsValue = (
+      <ItemWUnit
+        type="mediumPrimary"
+        value={availableFunds.toPrecision(2)}
+        unit="USD"
+      />
+    )
     specificAttributes = {
-      customer: <AddressItem value={consumer} />,
-      availableFunds: (
-        <ItemWUnit
-          type="mediumPrimary"
-          value={availableFunds.toPrecision(2)}
-          unit="USD"
-        />
-      ),
+      consumer: consumerValue,
+      availableFunds: availableFundsValue,
       withdraw: (
         <SelectRowButton
           id={id}
@@ -122,9 +132,21 @@ const createItemFields = (
       view: (
         <SelectRowButton
           id={id}
-          handleSelect={(): void => undefined}
+          handleSelect={(event): void => onItemSelect(event, {
+            CONSUMER: consumerValue,
+            HASH: <AddressItem value={id} />,
+            CURRENCY: tokenDisplayNames[paymentToken],
+            SYSTEM: 'IPFS',
+            AMOUNT: sizeValue,
+            'PRICE/GB': feeValue,
+            'SUBSCRIPTION PERIOD': subscriptionPeriod,
+            'RENEWAL DATE': renewalDate.toLocaleDateString(
+              undefined, { day: 'numeric', month: 'short', year: 'numeric' },
+            ),
+            title: titleValue,
+            'AVAILABLE FUNDS': availableFundsValue,
+          } as AgreementProviderView)}
         >
-          {/* TODO: handle provider agreement view */}
           View
         </SelectRowButton>
       ),
