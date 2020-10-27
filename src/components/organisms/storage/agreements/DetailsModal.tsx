@@ -10,7 +10,7 @@ import { ModalProps } from '@rsksmart/rif-ui/dist/components/atoms/modal/Modal'
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
 import RifCard from 'components/organisms/RifCard'
-import { AgreementConsumerView, AgreementProviderView } from 'components/pages/storage/myPurchases/utils'
+import { AgreementConsumerView, AgreementProviderView } from 'components/organisms/storage/agreements/utils'
 import React, { FC } from 'react'
 
 export type DetailsModalProps = {
