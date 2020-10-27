@@ -10,12 +10,12 @@ import { ModalProps } from '@rsksmart/rif-ui/dist/components/atoms/modal/Modal'
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
 import RifCard from 'components/organisms/RifCard'
-import { AgreementConsumerView, AgreementProviderView } from 'components/organisms/storage/agreements/utils'
+import { AgreementCustomerView, AgreementProviderView } from 'components/organisms/storage/agreements/utils'
 import React, { FC } from 'react'
 
 export type DetailsModalProps = {
   modalProps: Omit<ModalProps, 'children'>
-  itemDetails: AgreementConsumerView | AgreementProviderView | undefined
+  itemDetails: AgreementCustomerView | AgreementProviderView | undefined
   actions: React.ElementType
 }
 

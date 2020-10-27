@@ -24,23 +24,16 @@ export type AgreementProviderView = AgreementView & {
   'AVAILABLE FUNDS': JSX.Element
 }
 
-export type AgreementConsumerView = AgreementView & {
+export type AgreementCustomerView = AgreementView & {
   'PROVIDER': JSX.Element
 }
-// FIXME: enclose in object
-const createItemFields = (
-  agreements: Agreement[],
+
+const getCoreItemFields = (
+  agreement: Agreement,
   crypto: MarketCryptoRecord,
   currentFiat: MarketFiat,
-  onItemRenew: (event, agreement: Agreement) => void,
-  onItemSelect: (
-    event,
-    agreementView: (AgreementConsumerView | AgreementProviderView)
-  ) => void,
-  userType: ('Consumer' | 'Provider'),
-): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
+): AgreementView => {
   const {
-    provider,
     title,
     monthlyFee,
     renewalDate,
@@ -48,8 +41,6 @@ const createItemFields = (
     size,
     subscriptionPeriod,
     id,
-    consumer,
-    availableFunds,
   } = agreement
   const currency = crypto[paymentToken]
 
@@ -71,98 +62,121 @@ const createItemFields = (
   )
   const titleValue = <AddressItem value={title || id} />
 
-  let specificAttributes = {}
-
-  if (userType === 'Consumer') {
-    const providerValue = <AddressItem value={provider} />
-    specificAttributes = {
-      title: titleValue,
-      provider: providerValue,
-      renew: (
-        <SelectRowButton
-          id={id}
-          handleSelect={(event): void => {
-            onItemRenew(event, agreement)
-          }}
-        >
-          Renew
-        </SelectRowButton>
-      ),
-      view: (
-        <SelectRowButton
-          id={id}
-          handleSelect={(event): void => onItemSelect(event, {
-            PROVIDER: providerValue,
-            HASH: <AddressItem value={id} />,
-            CURRENCY: tokenDisplayNames[paymentToken],
-            SYSTEM: 'IPFS',
-            AMOUNT: sizeValue,
-            'PRICE/GB': feeValue,
-            'SUBSCRIPTION PERIOD': subscriptionPeriod,
-            'RENEWAL DATE': renewalDate.toLocaleDateString(
-              undefined, { day: 'numeric', month: 'short', year: 'numeric' },
-            ),
-            title: titleValue,
-          } as AgreementConsumerView)}
-        >
-          View
-        </SelectRowButton>
-      ),
-    }
-  } else if (userType === 'Provider') {
-    const consumerValue = <AddressItem value={consumer} />
-    const availableFundsValue = (
-      <ItemWUnit
-        type="mediumPrimary"
-        value={availableFunds.toPrecision(2)}
-        unit="USD"
-      />
-    )
-    specificAttributes = {
-      consumer: consumerValue,
-      availableFunds: availableFundsValue,
-      withdraw: (
-        <SelectRowButton
-          id={id}
-          handleSelect={(): void => undefined}
-        >
-          Withdraw
-        </SelectRowButton>
-      ),
-      view: (
-        <SelectRowButton
-          id={id}
-          handleSelect={(event): void => onItemSelect(event, {
-            CONSUMER: consumerValue,
-            HASH: <AddressItem value={id} />,
-            CURRENCY: tokenDisplayNames[paymentToken],
-            SYSTEM: 'IPFS',
-            AMOUNT: sizeValue,
-            'PRICE/GB': feeValue,
-            'SUBSCRIPTION PERIOD': subscriptionPeriod,
-            'RENEWAL DATE': renewalDate.toLocaleDateString(
-              undefined, { day: 'numeric', month: 'short', year: 'numeric' },
-            ),
-            title: titleValue,
-            'AVAILABLE FUNDS': availableFundsValue,
-          } as AgreementProviderView)}
-        >
-          View
-        </SelectRowButton>
-      ),
-    }
-  }
+  const renewalDateValue = renewalDate.toLocaleDateString(
+    undefined, { day: 'numeric', month: 'short', year: 'numeric' },
+  )
 
   return {
+    HASH: <AddressItem value={id} />,
+    title: titleValue,
+    'PRICE/GB': feeValue,
+    AMOUNT: sizeValue,
+    'RENEWAL DATE': renewalDateValue,
+    'SUBSCRIPTION PERIOD': subscriptionPeriod,
+    CURRENCY: tokenDisplayNames[paymentToken],
+    SYSTEM: 'IPFS',
+  }
+}
+
+export const createCustomerItemFields = (
+  agreements: Agreement[],
+  crypto: MarketCryptoRecord,
+  currentFiat: MarketFiat,
+  onItemRenew: (event, agreement: Agreement) => void,
+  onItemSelect: (
+    event,
+    agreementView: (AgreementCustomerView)
+  ) => void,
+): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
+  const agreementInfo = getCoreItemFields(agreement, crypto, currentFiat)
+  const { id, provider } = agreement
+  const providerValue = <AddressItem value={provider} />
+
+  return {
+    ...agreementInfo,
     id,
-    contentSize: sizeValue,
-    monthlyFee: feeValue,
-    renewalDate: renewalDate.toLocaleDateString(
-      undefined, { day: 'numeric', month: 'short', year: 'numeric' },
+    provider: providerValue,
+    contentSize: agreementInfo.AMOUNT,
+    renewalDate: agreementInfo['RENEWAL DATE'],
+    subscriptionPeriod: agreementInfo['SUBSCRIPTION PERIOD'],
+    monthlyFee: agreementInfo['PRICE/GB'],
+    renew: (
+      <SelectRowButton
+        id={id}
+        handleSelect={(event): void => {
+          onItemRenew(event, agreement)
+        }}
+      >
+        Renew
+      </SelectRowButton>
     ),
-    subscriptionPeriod,
-    ...specificAttributes,
+    view: (
+      <SelectRowButton
+        id={id}
+        handleSelect={(event): void => onItemSelect(event, {
+          ...agreementInfo,
+          PROVIDER: providerValue,
+        } as AgreementCustomerView)}
+      >
+        View
+      </SelectRowButton>
+    ),
   }
 })
 
-export default createItemFields
+export const createProviderItemFields = (
+  agreements: Agreement[],
+  crypto: MarketCryptoRecord,
+  currentFiat: MarketFiat,
+  onItemWithdraw: (event, agreement: Agreement) => void,
+  onItemSelect: (
+    event,
+    agreementView: (AgreementProviderView)
+  ) => void,
+): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
+  const agreementInfo = getCoreItemFields(agreement, crypto, currentFiat)
+  const {
+    id, consumer, availableFunds, paymentToken,
+  } = agreement
+  const consumerValue = <AddressItem value={consumer} />
+  const availableFundsValue = (
+    <ItemWUnit
+      type="mediumPrimary"
+      value={availableFunds.toPrecision(2)}
+      unit={tokenDisplayNames[paymentToken]}
+    />
+  )
+
+  return {
+    ...agreementInfo,
+    id,
+    customer: consumerValue,
+    contentSize: agreementInfo.AMOUNT,
+    renewalDate: agreementInfo['RENEWAL DATE'],
+    subscriptionPeriod: agreementInfo['SUBSCRIPTION PERIOD'],
+    monthlyFee: agreementInfo['PRICE/GB'],
+    availableFunds: availableFundsValue,
+    withdraw: (
+      <SelectRowButton
+        id={id}
+        handleSelect={(event): void => {
+          onItemWithdraw(event, agreement)
+        }}
+      >
+        Withdraw
+      </SelectRowButton>
+    ),
+    view: (
+      <SelectRowButton
+        id={id}
+        handleSelect={(event): void => onItemSelect(event, {
+          ...agreementInfo,
+          CONSUMER: consumerValue,
+          'AVAILABLE FUNDS': availableFundsValue,
+        } as AgreementProviderView)}
+      >
+        View
+      </SelectRowButton>
+    ),
+  }
+})
