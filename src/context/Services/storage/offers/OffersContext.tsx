@@ -17,8 +17,8 @@ import {
   storageOffersActions, StorageOffersPayload,
   StorageOffersReducer, StorageOffersAction,
 } from './offersActions'
-import { ServiceState } from '../interfaces'
-import { StorageOrder } from './interfaces'
+import { ServiceState } from '../../interfaces'
+import { StorageOrder } from '../interfaces'
 
 export type ContextName = 'storage_offers'
 
@@ -36,7 +36,7 @@ export type StorageOffersState = Modify<ServiceState<StorageItem>, {
   limits: ContextLimits
 }>
 
-type Props = {
+export type Props = {
   state: StorageOffersState
   dispatch: Dispatch<StorageOffersAction>
 }
@@ -71,7 +71,7 @@ export const initialState: StorageOffersState = {
   needsRefresh: true,
 }
 
-const Context = React.createContext({} as StorageOffersState as any)
+export const Context = React.createContext({} as StorageOffersState as any)
 const reducer: StorageOffersReducer<StorageOffersPayload> | ContextReducer = storeReducerFactory(initialState, storageOffersActions as unknown as ContextActions)
 
 export const Provider = ({ children }) => {
@@ -241,6 +241,3 @@ export const Provider = ({ children }) => {
 }
 
 export default createWithContext(Provider)
-export const StorageOffersContext = Context
-export const StorageOffersContextProvider = Provider
-export type StorageOffersContextProps = Props

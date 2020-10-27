@@ -8,10 +8,19 @@ import GridColumn from 'components/atoms/GridColumn'
 import Login from 'components/atoms/Login'
 import RoundBtn from 'components/atoms/RoundBtn'
 import RifCard from 'components/organisms/RifCard'
-import { StorageCheckoutContext } from 'context/storage/buy/checkout'
+
+type Details = {
+    'CONTENT SIZE': string
+    'CURRENCY TO PAY': JSX.Element
+    'SUBSCRIPTION PERIOD': JSX.Element
+    'PERIODS TO PREPAY': JSX.Element
+    'TOTAL PRICE': JSX.Element | null
+    'RENEWAL DATE': string
+  }
 
 type Props = {
-    details: {[name: string]: string | JSX.Element}
+  details: Details
+  txAction: () => Promise<void>
 }
 
 const useStyles = makeStyles(() => ({
@@ -32,14 +41,8 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const ConfigPurchaseCard: FC<Props> = ({ details }) => {
+const StoragePurchaseCard: FC<Props> = ({ details, txAction }) => {
   const classes = useStyles()
-
-  const {
-    asyncActions: {
-      createAgreement,
-    },
-  } = useContext(StorageCheckoutContext)
 
   const {
     state: {
@@ -48,7 +51,7 @@ const ConfigPurchaseCard: FC<Props> = ({ details }) => {
   } = useContext(Web3Store)
 
   const submitWithLogin = (): JSX.Element => (account ? (
-    <RoundBtn onClick={createAgreement}>
+    <RoundBtn onClick={txAction}>
       Buy
     </RoundBtn>
   ) : <Login />)
@@ -82,4 +85,6 @@ const ConfigPurchaseCard: FC<Props> = ({ details }) => {
   )
 }
 
-export default ConfigPurchaseCard
+export default StoragePurchaseCard
+export type StoragePurchaseCardProps = Props
+export type StoragePurchaseCardDetails = Details

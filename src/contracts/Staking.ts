@@ -4,9 +4,9 @@ import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
-import { zeroAddress } from 'context/Services/storage/interfaces'
 import { convertToWeiString } from 'utils/parsers'
-import waitForReceipt, { TransactionOptions } from './utils'
+import { ZERO_ADDRESS } from 'constants/strings'
+import withWaitForReceipt, { TransactionOptions } from './utils'
 import { stakingAddress } from './config'
 
 const logger = Logger.getInstance()
@@ -39,7 +39,7 @@ class StakingContract {
 
   public stake = async (
     amount: string | number,
-    token: string = zeroAddress, // native token
+    token: string = ZERO_ADDRESS, // native token
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
@@ -67,16 +67,13 @@ class StakingContract {
         gasPrice,
         value: amountWei,
       },
-      (err, txHash) => {
-        if (err) return Promise.reject(err)
-        return waitForReceipt(txHash, this.web3)
-      },
+      withWaitForReceipt(this.web3),
     )
   }
 
   public unstake = async (
     amount: string | number,
-    token: string = zeroAddress, // native token
+    token: string = ZERO_ADDRESS, // native token
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
@@ -101,15 +98,12 @@ class StakingContract {
     const estimatedGas = await unstakeTask.estimateGas({ from, gasPrice })
     const gas = Math.floor(estimatedGas * extraGasPercentage)
 
-    return unstakeTask.send({ from, gas, gasPrice }, (err, txHash) => {
-      if (err) return Promise.reject(err)
-      return waitForReceipt(txHash, this.web3)
-    })
+    return unstakeTask.send({ from, gas, gasPrice }, withWaitForReceipt(this.web3))
   }
 
   public totalStakedFor = (
     account: string,
-    token: string = zeroAddress, // native token
+    token: string = ZERO_ADDRESS, // native token
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
@@ -118,7 +112,7 @@ class StakingContract {
   }
 
   public totalStaked = (
-    token: string = zeroAddress, // native token
+    token: string = ZERO_ADDRESS, // native token
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions

@@ -8,7 +8,7 @@ import {
 import TabsTemplate from 'components/templates/TabsTemplate'
 import networkConfig from 'config'
 import { OfferEditContextProvider } from 'context/Market/storage/OfferEditContext'
-import { StorageOffersContextProvider } from 'context/Services/storage/OffersContext'
+import { StorageOffersContextProvider } from 'context/Services/storage/offers'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { getTabValueFromLocation } from 'utils/utils'
@@ -23,6 +23,7 @@ import StorageOffersCheckoutPage from './buy/StorageOffersCheckoutPage'
 import StorageEditOfferPage from './myoffers/StorageEditOfferPage'
 import StorageEditOfferDone from './myoffers/StorageEditOfferDone'
 import MyStoragePurchases from './myPurchases/Page'
+import RenewAgreement from './myPurchases/RenewAgreement'
 
 const TABS: StyledNavTabProps[] = [
   {
@@ -153,6 +154,11 @@ const StorageRoutes: FC = () => {
                     exact
                     path={ROUTES.STORAGE.MYPURCHASES.LISTING}
                     component={MyStoragePurchases}
+                  />
+                  <Route
+                    exact
+                    path={ROUTES.STORAGE.MYPURCHASES.RENEW}
+                    component={RenewAgreement}
                   />
                 </Switch>
               </AgreementsContextProvider>

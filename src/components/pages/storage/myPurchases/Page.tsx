@@ -15,6 +15,9 @@ import {
 } from '@rsksmart/rif-ui'
 import RifCard from 'components/organisms/RifCard'
 import RoundBtn from 'components/atoms/RoundBtn'
+import { useHistory } from 'react-router-dom'
+import ROUTES from 'routes'
+import { Agreement } from 'models/marketItems/StorageItem'
 import createItemFields, { AgreementView } from './utils'
 
 const useTitleStyles = makeStyles(() => ({
@@ -41,12 +44,14 @@ const useModalStyles = makeStyles(() => ({
 }))
 
 const MyStoragePurchases: FC = () => {
+  const history = useHistory()
   const titleStyleClass = useTitleStyles()
   const modalCardStyleClasses = useModalStyles()
   const {
     state: {
       agreements,
     },
+    dispatch,
   } = useContext<AgreementContextProps>(AgreementsContext)
   const {
     state: {
@@ -77,6 +82,13 @@ const MyStoragePurchases: FC = () => {
     agreements,
     crypto,
     currentFiat,
+    (_, agreement: Agreement) => {
+      dispatch({
+        type: 'SET_ORDER',
+        payload: agreement,
+      })
+      history.push(ROUTES.STORAGE.MYPURCHASES.RENEW)
+    },
     (_, agreementView: AgreementView) => {
       setItemDetails(agreementView)
     },

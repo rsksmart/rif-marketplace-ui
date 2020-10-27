@@ -2,12 +2,12 @@ import StorageManager
   from '@rsksmart/rif-marketplace-storage/build/contracts/StorageManager.json'
 import Web3 from 'web3'
 import { Contract } from 'web3-eth-contract'
-import { AbiItem } from 'web3-utils'
+import { AbiItem, asciiToHex } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
-import { zeroAddress } from 'context/Services/storage/interfaces'
+import { ZERO_ADDRESS } from 'constants/strings'
 import { encodeHash, prefixArray } from './utils'
-import waitForReceipt, { TransactionOptions } from '../utils'
+import withWaitForReceipt, { TransactionOptions } from '../utils'
 import { storageAddress } from '../config'
 
 const logger = Logger.getInstance()
@@ -58,11 +58,11 @@ class StorageContract {
       provider,
       sizeMB,
       billingPeriod,
-      zeroAddress,
+      ZERO_ADDRESS,
       0,
       [],
       [],
-      zeroAddress,
+      ZERO_ADDRESS,
     )
 
     const gasPrice = await this.web3.eth.getGasPrice()
@@ -76,20 +76,51 @@ class StorageContract {
       gasPrice,
       value: amount,
     })
-    const txHash = await newAgreementTask.send(
+    return newAgreementTask.send(
       {
         from,
         gas,
         gasPrice,
         value: amount,
       },
-      (err, response) => {
-        if (err) return Promise.reject(err)
-        return waitForReceipt(response, this.web3)
-      },
+      withWaitForReceipt(this.web3),
+    )
+  }
+
+  public depositFunds = async (
+    {
+      amount, dataReference, provider, token,
+    }: {
+      amount: string
+      dataReference: string
+      provider: string
+      token: string
+    },
+    { from }: TransactionOptions,
+  ): Promise<TransactionReceipt> => {
+    const newTask = this.contract.methods.depositFunds(
+      token,
+      amount,
+      [asciiToHex(dataReference)],
+      provider,
     )
 
-    return txHash
+    const gasPrice = await this.web3.eth.getGasPrice()
+      .catch((error: Error) => {
+        logger.error('error while getting gas price:', error)
+        throw error
+      })
+    const gas = await newTask.estimateGas({
+      from,
+      gasPrice,
+    })
+
+    return newTask.send({
+      from,
+      gas,
+      gasPrice,
+    },
+    withWaitForReceipt(this.web3))
   }
 
   public setOffer = async (
@@ -126,10 +157,7 @@ class StorageContract {
         gas: Math.floor((await setOffer.estimateGas({ from, gasPrice })) * 1.1),
         gasPrice,
       },
-      (err: Error, txHash: string) => {
-        if (err) return Promise.reject(err)
-        return waitForReceipt(txHash, this.web3)
-      },
+      withWaitForReceipt(this.web3),
     )
   }
 
@@ -151,10 +179,10 @@ class StorageContract {
 
     return this.contract.methods
       .terminateOffer()
-      .send({ from, gas, gasPrice }, (err: Error, txHash: string) => {
-        if (err) return Promise.reject(err)
-        return waitForReceipt(txHash, this.web3)
-      })
+      .send(
+        { from, gas, gasPrice },
+        withWaitForReceipt(this.web3),
+      )
   }
 
   public hasUtilizedCapacity = async (

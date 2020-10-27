@@ -1,35 +1,32 @@
+import React, {
+  ChangeEvent, FC, useContext,
+} from 'react'
+import { useHistory } from 'react-router-dom'
 import {
   makeStyles, Step, StepLabel, Stepper,
-  Theme,
-  TextField,
+
+  TextField, Theme,
+
   Typography,
 } from '@material-ui/core'
 import { SupportedToken, tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
+import GridRow from 'components/atoms/GridRow'
 import RoundedCard from 'components/atoms/RoundedCard'
-import { CombinedPriceCell, JobDoneBox } from 'components/molecules'
-import PlanOption from 'components/molecules/storage/buy/PlanOption'
+import { CombinedPriceCell } from 'components/molecules'
 import RifSelect from 'components/molecules/RifSelect'
-import ConfigPurchaseCard from 'components/organisms/storage/buy/ConfigPurchaseCard'
+import PlanOption from 'components/molecules/storage/buy/PlanOption'
 import PinningCard from 'components/organisms/storage/buy/PinningCard'
 import StorageOrderDescription from 'components/organisms/storage/buy/StorageOfferDescription'
-import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
+import StoragePurchaseCard, { StoragePurchaseCardDetails } from 'components/organisms/storage/buy/StoragePurchaseCard'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
-import TxCompletePageTemplate from 'components/templates/TxCompletePageTemplate'
+import ProgressOverlay from 'components/templates/ProgressOverlay'
 import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
-import React, {
-  ChangeEvent, FC, useContext,
-} from 'react'
-import { UNIT_PREFIX_POW2 } from 'utils/utils'
-import GridRow from 'components/atoms/GridRow'
-import RoundBtn from 'components/atoms/RoundBtn'
-import { useHistory } from 'react-router-dom'
+import withCheckoutContext, { ContextProps, initialState, StorageCheckoutContext } from 'context/storage/buy/checkout'
 import ROUTES from 'routes'
-import withCheckoutContext, {
-  StorageCheckoutContext,
-  initialState, ContextProps,
-} from 'context/storage/buy/checkout'
+import { UNIT_PREFIX_POW2 } from 'utils/utils'
+import RoundBtn from 'components/atoms/RoundBtn'
 
 const useStyles = makeStyles((theme: Theme) => ({
   stepperCard: {
@@ -39,17 +36,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   disclaimer: {
     alignSelf: 'center',
     marginBottom: theme.spacing(3),
-  },
-  progressContainer: {
-    background: 'rgba(275, 275, 275, 0.8)',
-    display: 'flex',
-    height: '100vh',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    position: 'fixed',
-    width: '100vw',
-    top: 0,
-    left: 0,
   },
 }))
 
@@ -80,12 +66,12 @@ const StorageOffersCheckoutPage: FC = () => {
         endDate,
       },
       pinned,
-      status: {
-        inProgress,
-        isDone,
-      },
+      status,
     },
     dispatch,
+    asyncActions: {
+      createAgreement,
+    },
   } = useContext<ContextProps>(StorageCheckoutContext)
 
   const {
@@ -128,7 +114,7 @@ const StorageOffersCheckoutPage: FC = () => {
       }}
     />
   ))
-  const orderConfigTB = pinned && {
+  const orderConfigTB: StoragePurchaseCardDetails | undefined = pinned && {
     'CONTENT SIZE': `${pinned.size?.replace(/[a-zA-Z]+/g, '')} ${UNIT_PREFIX_POW2[pinned.unit][0]}B`,
     'CURRENCY TO PAY': <RifSelect<string>
       id="currency"
@@ -160,7 +146,7 @@ const StorageOffersCheckoutPage: FC = () => {
         priceFiat={totalFiat}
         divider={<br />}
       />
-    ) : '',
+    ) : null,
     'RENEWAL DATE': endDate,
   }
 
@@ -208,7 +194,10 @@ const StorageOffersCheckoutPage: FC = () => {
         <GridColumn alignContent="center">
           <GridItem>
             {pinned && orderConfigTB && (
-            <ConfigPurchaseCard details={orderConfigTB} />
+            <StoragePurchaseCard
+              details={orderConfigTB}
+              txAction={createAgreement}
+            />
             )}
             {!pinned && (
             <PinningCard dispatch={dispatch} />
@@ -226,48 +215,6 @@ const StorageOffersCheckoutPage: FC = () => {
     ROUTES.STORAGE.BUY.BASE,
   )
 
-  const renderProgressOverlay = (): JSX.Element | null => {
-    if (inProgress || isDone) {
-      return (
-        <div className={classes.progressContainer}>
-          {
-            inProgress && (
-            <TransactionInProgressPanel
-              text="Creating agreement!"
-              progMsg="The waiting period is required to securely buy the storage.
-              Please do not close this tab until the process has finished."
-            />
-            )
-          }
-          {
-            isDone && (
-            <TxCompletePageTemplate>
-              <JobDoneBox text="Your storage agreement has been created." />
-              <GridRow justify="center">
-                <GridItem>
-                  <RoundBtn
-                    onClick={navToMyPurchases}
-                  >
-                    View my purchases
-                  </RoundBtn>
-                </GridItem>
-                <GridItem>
-                  <RoundBtn
-                    onClick={navToStorageBase}
-                  >
-                    View storage listing
-                  </RoundBtn>
-                </GridItem>
-              </GridRow>
-            </TxCompletePageTemplate>
-            )
-          }
-        </div>
-      )
-    }
-    return null
-  }
-
   return (
     <CheckoutPageTemplate
       className="storage-checkout-page"
@@ -284,7 +231,20 @@ const StorageOffersCheckoutPage: FC = () => {
         {/* CONTENT */}
         { renderContent() }
       </GridColumn>
-      {renderProgressOverlay()}
+      <ProgressOverlay
+        title="Creating agreement!"
+        doneMsg="Your offer has been created."
+        {...status}
+        buttons={[
+          <RoundBtn onClick={navToMyPurchases}>
+            View my purchases
+          </RoundBtn>,
+          <RoundBtn onClick={navToStorageBase}>
+            View storage listing
+          </RoundBtn>,
+        ]}
+
+      />
     </CheckoutPageTemplate>
   )
 }

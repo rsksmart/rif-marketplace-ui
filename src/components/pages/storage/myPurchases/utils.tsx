@@ -19,11 +19,12 @@ export type AgreementView = {
   'SUBSCRIPTION PERIOD': SubscriptionPeriod
   'RENEWAL DATE': string
 }
-
+// FIXME: enclose in object
 const createItemFields = (
   agreements: Agreement[],
   crypto: MarketCryptoRecord,
   currentFiat: MarketFiat,
+  onItemRenew: (event, agreement: Agreement) => void,
   onItemSelect: (event, agreement: AgreementView) => void,
 ): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
   const {
@@ -68,7 +69,9 @@ const createItemFields = (
     renew: (
       <SelectRowButton
         id={id}
-        handleSelect={(): void => undefined}
+        handleSelect={(event): void => {
+          onItemRenew(event, agreement)
+        }}
       >
         Renew
       </SelectRowButton>

@@ -1,43 +1,31 @@
 import { Big } from 'big.js'
-import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
-import { BillingPlan, StorageOffer, PeriodInSeconds } from 'models/marketItems/StorageItem'
-import { Dispatch } from 'react'
-import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { Status } from 'components/templates/ProgressOverlay'
+import { MarketFiat } from 'context/Market/MarketContext'
+import { BillingPlan, Agreement } from 'models/marketItems/StorageItem'
+import { Dispatch } from 'react'
 
 // STATE
 export type AuxiliaryState = {
-  currencyOptions: SupportedToken[]
   currentRate: number
   endDate: string
   periodsCount: number
-  planOptions: BillingPlan[]
-  selectedCurrency: number
-  selectedPlan: number
+  plan: BillingPlan
   totalFiat: string
+  currentFiat: MarketFiat
 }
 
-export type Order = Pick<StorageOffer, 'id' | 'system' | 'location'> & {
-  billingPeriod: PeriodInSeconds
-  token: SupportedToken
+export type Order = Agreement & {
   total: Big
 }
 
-export type PinnedContent = {
-  size: string
-  unit: UNIT_PREFIX_POW2
-  hash: string
-}
-
 export type State = {
-  order: Order
+  order?: Order
   auxiliary: AuxiliaryState
-  pinned?: PinnedContent
   status: Status
 }
 
 // PAYLOAD
-export type InitialisePayload = Pick<AuxiliaryState, 'currencyOptions'> & Pick<Order, 'id' | 'system' | 'location'>
+export type InitialisePayload = Agreement & Pick<AuxiliaryState, 'plan'>
 export type StatusPayload = (
   | {
     inProgress: boolean
@@ -51,20 +39,12 @@ export type StatusPayload = (
 // ACTIONS
 export type Action = (
   | {
-    type: 'CHANGE_CURRENCY'
-    payload: { index: number }
-  }
-  | {
     type: 'SET_AUXILIARY'
     payload: Partial<AuxiliaryState>
   }
   | {
     type: 'SET_ORDER'
     payload: Partial<Order>
-  }
-  | {
-    type: 'SET_PINNED'
-    payload: Partial<PinnedContent>
   }
   | {
     type: 'INITIALISE'
@@ -77,13 +57,8 @@ export type Action = (
 )
 
 export type Actions = {
-  CHANGE_CURRENCY: (
-    state: State,
-    { index: selectedCurrency }: { index: number },
-  ) => State
   SET_AUXILIARY: (state: State, payload: Partial<AuxiliaryState>) => State
   SET_ORDER: (state: State, payload: Partial<Order>) => State
-  SET_PINNED: (state: State, payload: PinnedContent) => State
   INITIALISE: (state: State, payload: InitialisePayload) => State
   SET_STATUS: (state: State, payload: StatusPayload) => State
 }
@@ -93,7 +68,7 @@ export type AsyncAction = {
 }
 
 export type AsyncActions = {
-  createAgreement: AsyncAction
+  renewAgreement: AsyncAction
 }
 
 // PROPS

@@ -6,6 +6,7 @@ import { ContextState } from 'context/storeUtils/interfaces'
 export type ContextName = 'storage_agreements'
 export type State = ContextState & {
   agreements: Agreement[]
+  order?: Agreement
 }
 
 // PAYLOAD
@@ -16,10 +17,15 @@ export type Action = (
       type: 'SET_LISTING'
       payload: Agreement[]
     }
+    | {
+      type: 'SET_ORDER'
+      payload: Agreement
+    }
 )
 
 export type ActionFunctions = {
   SET_LISTING: (state: State, payload: Agreement[]) => State
+  SET_ORDER: (state: State, payload: Agreement) => State
 }
 
 // PROPS
