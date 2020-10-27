@@ -19,7 +19,7 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import { Agreement } from 'models/marketItems/StorageItem'
 import DetailsModal from 'components/organisms/storage/agreements/DetailsModal'
-import createItemFields, { AgreementView, AgreementConsumerView } from './utils'
+import createItemFields, { AgreementView, AgreementConsumerView } from '../../../organisms/storage/agreements/utils'
 
 const useTitleStyles = makeStyles(() => ({
   root: {
