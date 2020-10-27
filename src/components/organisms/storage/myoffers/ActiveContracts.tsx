@@ -1,10 +1,15 @@
 import Typography from '@material-ui/core/Typography'
 import TableContainer from '@material-ui/core/TableContainer'
-import createItemFields from 'components/pages/storage/myPurchases/utils'
+import createItemFields, {
+  AgreementProviderView,
+  AgreementView,
+} from 'components/organisms/storage/agreements/utils'
 import Marketplace from 'components/templates/marketplace/Marketplace'
 import MarketContext from 'context/Market/MarketContext'
 import { Agreement } from 'models/marketItems/StorageItem'
-import React, { FC, useContext } from 'react'
+import React, { FC, useContext, useState } from 'react'
+import RoundBtn from 'components/atoms/RoundBtn'
+import DetailsModal from '../agreements/DetailsModal'
 
 export type ActiveContractsProps = {
   agreements: Agreement[]
@@ -20,6 +25,11 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
     },
   } = useContext(MarketContext)
 
+  const [
+    itemDetails,
+    setItemDetails,
+  ] = useState<AgreementProviderView | undefined>(undefined)
+
   if (!agreements.length) {
     return (
       <Typography
@@ -31,7 +41,14 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
     )
   }
   const items = createItemFields(
-    agreements, crypto, currentFiat, () => undefined, () => undefined, 'Provider',
+    agreements,
+    crypto,
+    currentFiat,
+    () => undefined,
+    (_, agreementView: AgreementView) => {
+      setItemDetails(agreementView as AgreementProviderView)
+    },
+    'Provider',
   )
 
   const headers = {
@@ -45,14 +62,33 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
     view: '',
   }
 
+  const actions = (): JSX.Element => (
+    <RoundBtn
+      onClick={(): void => undefined}
+    >
+      Withdraw funds
+    </RoundBtn>
+  )
+
   return (
-    <TableContainer>
-      <Marketplace
-        headers={headers}
-        isLoading={false}
-        items={items}
+    <>
+      <TableContainer>
+        <Marketplace
+          headers={headers}
+          isLoading={false}
+          items={items}
+        />
+      </TableContainer>
+      <DetailsModal
+        modalProps={{
+          open: Boolean(itemDetails),
+          onBackdropClick: (): void => setItemDetails(undefined),
+          onEscapeKeyDown: (): void => setItemDetails(undefined),
+        }}
+        itemDetails={itemDetails}
+        actions={actions}
       />
-    </TableContainer>
+    </>
   )
 }
 
