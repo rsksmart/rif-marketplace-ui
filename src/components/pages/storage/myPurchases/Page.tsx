@@ -19,7 +19,11 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import { Agreement } from 'models/marketItems/StorageItem'
 import DetailsModal from 'components/organisms/storage/agreements/DetailsModal'
-import createItemFields, { AgreementView, AgreementConsumerView } from '../../../organisms/storage/agreements/utils'
+import {
+  AgreementView,
+  AgreementCustomerView,
+  createCustomerItemFields,
+} from 'components/organisms/storage/agreements/utils'
 
 const useTitleStyles = makeStyles(() => ({
   root: {
@@ -52,7 +56,7 @@ const MyStoragePurchases: FC = () => {
   const [
     itemDetails,
     setItemDetails,
-  ] = useState<AgreementConsumerView | undefined>(undefined)
+  ] = useState<AgreementCustomerView | undefined>(undefined)
 
   useEffect(() => {
     if (account) {
@@ -74,7 +78,7 @@ const MyStoragePurchases: FC = () => {
     view: '',
   }
 
-  const items = createItemFields(
+  const items = createCustomerItemFields(
     agreements,
     crypto,
     currentFiat,
@@ -86,9 +90,8 @@ const MyStoragePurchases: FC = () => {
       history.push(ROUTES.STORAGE.MYPURCHASES.RENEW)
     },
     (_, agreementView: AgreementView) => {
-      setItemDetails(agreementView as AgreementConsumerView)
+      setItemDetails(agreementView as AgreementCustomerView)
     },
-    'Consumer',
   )
 
   const renderDetailsActions = (): JSX.Element => (
@@ -111,7 +114,6 @@ const MyStoragePurchases: FC = () => {
               classes={titleStyleClass}
             >
               Active contracts
-
             </Typography>
           </GridItem>
           <GridItem>
