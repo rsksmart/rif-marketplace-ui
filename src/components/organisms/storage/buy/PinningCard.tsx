@@ -29,7 +29,6 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
   const actionBtnClasses = useActionButtonStyles()
 
   const [isUpladed, setIsUploaded] = useState(false)
-  const [name, setName] = useState('')
   const [size, setSize] = useState('')
   const [hash, setHash] = useState('')
   const [unit, setUnit] = useState<UNIT_PREFIX_POW2>(UNIT_PREFIX_POW2.MEGA)
@@ -42,7 +41,9 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     dispatch({
       type: 'SET_PINNED',
       payload: {
-        name, size, unit: unit || undefined, hash,
+        size,
+        unit,
+        hash,
       },
     })
   }
@@ -57,7 +58,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     ? {
       children: 'Pin',
       onClick: handlePinning,
-      disabled: !(name && size && hash && unit),
+      disabled: !(size && hash && unit),
     }
     : {
       children: 'Upload',
@@ -82,7 +83,6 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
       {isUpladed
         ? (
           <PinEnterInfoTab
-            name={{ value: name, onChange: setInfoHandle(setName) }}
             size={{ value: size, onChange: setInfoHandle(setSize) }}
             hash={{ value: hash, onChange: setInfoHandle(setHash) }}
             unit={{ value: unit, onChange: setInfoHandle(setUnit) }}

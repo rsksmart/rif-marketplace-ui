@@ -24,4 +24,4 @@ export const convertToBigString = (
 // parses to wei ignoring the decimals
 export const convertToWeiString = (
   src: BigSource,
-): string => parseInt(parseToBigDecimal(src, -18).toString(), 10).toString()
+): string => parseToBigDecimal(src, -18).round(0).toFixed(0)

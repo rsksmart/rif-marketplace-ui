@@ -24,7 +24,6 @@ export type Order = Pick<StorageOffer, 'id' | 'system' | 'location'> & {
 }
 
 export type PinnedContent = {
-  name: string
   size: string
   unit: UNIT_PREFIX_POW2
   hash: string
