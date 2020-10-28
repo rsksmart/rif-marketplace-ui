@@ -126,7 +126,7 @@ const StorageMyOffersPage: FC = () => {
     }
   }
 
-  const handleEditOffer = (offer: StorageOffer) => {
+  const handleEditOffer = (offer: StorageOffer): void => {
     editOfferDispatch({
       type: 'SET_OFFER',
       payload: offer as SetOfferPayload,

@@ -1,7 +1,8 @@
-import React, { FC, useContext, useState } from 'react'
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react'
 import {
-  Grid,
-  makeStyles, Modal, TableContainer, Typography,
+  makeStyles, TableContainer, Typography,
 } from '@material-ui/core'
 import RoundedCard from 'components/atoms/RoundedCard'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
@@ -11,14 +12,18 @@ import AgreementsContext, { AgreementContextProps } from 'context/Services/stora
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
 import {
-  ModalBody, ModalHeader, ModalTitle, theme,
+  theme, Web3Store,
 } from '@rsksmart/rif-ui'
-import RifCard from 'components/organisms/RifCard'
 import RoundBtn from 'components/atoms/RoundBtn'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import { Agreement } from 'models/marketItems/StorageItem'
-import createItemFields, { AgreementView } from './utils'
+import DetailsModal from 'components/organisms/storage/agreements/DetailsModal'
+import {
+  AgreementView,
+  AgreementCustomerView,
+  createCustomerItemFields,
+} from 'components/organisms/storage/agreements/utils'
 
 const useTitleStyles = makeStyles(() => ({
   root: {
@@ -27,26 +32,9 @@ const useTitleStyles = makeStyles(() => ({
   },
 }))
 
-const useModalStyles = makeStyles(() => ({
-  root: {
-    display: 'contents',
-    width: 'initial',
-  },
-  modalWidth: {
-    width: 'initial',
-  },
-  itemDetails: {
-    marginTop: `${theme.spacing(2)}px`,
-  },
-  itemName: {
-    textAlign: 'right',
-  },
-}))
-
 const MyStoragePurchases: FC = () => {
   const history = useHistory()
   const titleStyleClass = useTitleStyles()
-  const modalCardStyleClasses = useModalStyles()
   const {
     state: {
       agreements,
@@ -61,11 +49,23 @@ const MyStoragePurchases: FC = () => {
       },
     },
   } = useContext(MarketContext)
+  const {
+    state: { account },
+  } = useContext(Web3Store)
 
   const [
     itemDetails,
     setItemDetails,
-  ] = useState<AgreementView | undefined>(undefined)
+  ] = useState<AgreementCustomerView | undefined>(undefined)
+
+  useEffect(() => {
+    if (account) {
+      dispatch({
+        type: 'SET_FILTERS',
+        payload: { consumer: account },
+      })
+    }
+  }, [account, dispatch])
 
   const headers = {
     title: 'Title',
@@ -78,7 +78,7 @@ const MyStoragePurchases: FC = () => {
     view: '',
   }
 
-  const items = createItemFields(
+  const items = createCustomerItemFields(
     agreements,
     crypto,
     currentFiat,
@@ -90,7 +90,7 @@ const MyStoragePurchases: FC = () => {
       history.push(ROUTES.STORAGE.MYPURCHASES.RENEW)
     },
     (_, agreementView: AgreementView) => {
-      setItemDetails(agreementView)
+      setItemDetails(agreementView as AgreementCustomerView)
     },
   )
 
@@ -114,7 +114,6 @@ const MyStoragePurchases: FC = () => {
               classes={titleStyleClass}
             >
               Active contracts
-
             </Typography>
           </GridItem>
           <GridItem>
@@ -129,60 +128,15 @@ const MyStoragePurchases: FC = () => {
         </GridColumn>
       </RoundedCard>
 
-      <Modal
-        open={!!itemDetails}
-        onBackdropClick={(): void => setItemDetails(undefined)}
-        onEscapeKeyDown={(): void => setItemDetails(undefined)}
-        title="Details"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+      <DetailsModal
+        modalProps={{
+          open: Boolean(itemDetails),
+          onBackdropClick: (): void => setItemDetails(undefined),
+          onEscapeKeyDown: (): void => setItemDetails(undefined),
         }}
-      >
-        <>
-          <ModalBody className={modalCardStyleClasses.modalWidth}>
-            <RifCard
-              className={modalCardStyleClasses.root}
-              Actions={renderDetailsActions}
-            >
-              <ModalHeader className={modalCardStyleClasses.modalWidth}>
-                <ModalTitle>{itemDetails?.title}</ModalTitle>
-              </ModalHeader>
-              <GridColumn
-                spacing={2}
-                className={modalCardStyleClasses.itemDetails}
-              >
-                {itemDetails ? Object.keys(itemDetails)
-                  .filter((k) => k !== 'title')
-                  .map((key) => (
-                    <Grid
-                      key={key}
-                      item
-                      container
-                      direction="row"
-                      spacing={6}
-                      xs={12}
-                    >
-                      <GridItem
-                        xs={6}
-                        className={modalCardStyleClasses.itemName}
-                      >
-                        <Typography
-                          variant="body2"
-                          color="textSecondary"
-                        >
-                          {key}
-                        </Typography>
-                      </GridItem>
-                      <GridItem xs={6}>{itemDetails[key]}</GridItem>
-                    </Grid>
-                  )) : ''}
-              </GridColumn>
-            </RifCard>
-          </ModalBody>
-        </>
-      </Modal>
+        itemDetails={itemDetails}
+        actions={renderDetailsActions}
+      />
     </CenteredPageTemplate>
   )
 }

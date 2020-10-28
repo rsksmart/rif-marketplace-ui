@@ -9,6 +9,10 @@ const actions: ActionFunctions = {
     ...state,
     order,
   }),
+  SET_FILTERS: (state, filters) => ({
+    ...state,
+    filters,
+  }),
 }
 
 export default actions

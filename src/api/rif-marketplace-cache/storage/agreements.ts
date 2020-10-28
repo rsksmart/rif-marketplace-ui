@@ -4,7 +4,9 @@ import { AgreementTransport } from 'api/models/storage/transports'
 import { Agreement, PeriodInSeconds, SubscriptionPeriod } from 'models/marketItems/StorageItem'
 import { ZERO_ADDRESS } from 'constants/strings'
 import { parseToBigDecimal } from 'utils/parsers'
-import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
+import {
+  AgreementFilters, StorageAPIService, StorageServiceAddress, StorageWSChannel,
+} from './interfaces'
 import { availableTokens } from '../rns/common'
 import { SupportedToken } from '../rates/xr'
 
@@ -44,6 +46,8 @@ const mapFromTransport = ({
   expiresIn,
   offerId,
   size,
+  consumer,
+  availableFunds,
 }: AgreementTransport): Agreement => {
   const miliesToDeath = parseInt(expiresIn, 10) * 1000
 
@@ -60,6 +64,8 @@ const mapFromTransport = ({
     subscriptionPeriod: PeriodInSeconds[billingPeriod] as SubscriptionPeriod,
     title: '',
     paymentToken: getPaymentToken(tokenAddress),
+    consumer,
+    availableFunds: parseToBigDecimal(availableFunds, 18),
   }
 }
 
@@ -69,11 +75,11 @@ export class StorageAgreementService extends AbstractAPIService
 
   _channel = agreementsWSChannel
 
-  _fetch = async ({ account }): Promise<Agreement[]> => {
+  _fetch = async ({
+    consumer, provider: offerId,
+  }: AgreementFilters): Promise<Agreement[]> => {
     const result = await this.service.find({
-      query: {
-        consumer: account,
-      },
+      query: { consumer, offerId },
     })
 
     return result.map(mapFromTransport)
