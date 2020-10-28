@@ -146,6 +146,7 @@ const Provider: FC = ({ children }) => {
         } = order
         const {
           size,
+          unit,
           hash: fileHash,
         } = pinned as PinnedContent
         const agreement = {
@@ -153,7 +154,10 @@ const Provider: FC = ({ children }) => {
           billingPeriod,
           fileHash,
           provider,
-          size,
+          sizeMB: Big(size).mul(unit)
+            .div(UNIT_PREFIX_POW2.MEGA)
+            .round(0)
+            .toString(),
           token: TokenAddressees[token],
         }
         const storageContract = (await import('contracts/storage/contract')).default.getInstance(web3 as Web3)
@@ -227,13 +231,16 @@ const Provider: FC = ({ children }) => {
       const newToken = currencyOptions[selectedCurrency]
       const newRate = crypto[newToken]?.rate
 
+      const pinnedSizeMB = Big(pinned.size)
+        .mul(pinned.unit)
+        .div(UNIT_PREFIX_POW2.MEGA)
+        .round(0, 3) // RoundingMode.RoundUp - can't use the enum for ts(2748); Rounding up for cannot process fractions of a MB
+
       const newPlans = subscriptionOptions
         .filter((plan: BillingPlan) => plan.currency === newToken)
         .map((plan: BillingPlan) => {
-          const pricePerSize = (plan.price
-            .div(UNIT_PREFIX_POW2.MEGA)
-            .mul(pinned.size))
-            .mul(pinned.unit)
+          const pricePerSize = plan.price
+            .mul(pinnedSizeMB)
 
           return {
             ...plan,
