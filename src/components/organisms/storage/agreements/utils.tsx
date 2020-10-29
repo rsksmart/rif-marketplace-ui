@@ -7,6 +7,7 @@ import { Agreement, SubscriptionPeriod } from 'models/marketItems/StorageItem'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
+import { getShortDateString } from 'utils/dateUtils'
 
 export type AgreementView = {
   title: JSX.Element
@@ -62,16 +63,12 @@ const getCoreItemFields = (
   )
   const titleValue = <AddressItem value={title || id} />
 
-  const renewalDateValue = renewalDate.toLocaleDateString(
-    undefined, { day: 'numeric', month: 'short', year: 'numeric' },
-  )
-
   return {
     HASH: <AddressItem value={id} />,
     title: titleValue,
     'PRICE/GB': feeValue,
     AMOUNT: sizeValue,
-    'RENEWAL DATE': renewalDateValue,
+    'RENEWAL DATE': getShortDateString(renewalDate),
     'SUBSCRIPTION PERIOD': subscriptionPeriod,
     CURRENCY: tokenDisplayNames[paymentToken],
     SYSTEM: 'IPFS',

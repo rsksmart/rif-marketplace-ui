@@ -10,15 +10,14 @@ import Big from 'big.js'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import networkConfig from 'config'
 import createWithContext from 'context/storeUtils/createWithContext'
-import {
-  BillingPlan, PeriodInSeconds,
-} from 'models/marketItems/StorageItem'
+import { BillingPlan } from 'models/marketItems/StorageItem'
 import { UIError } from 'models/UIMessage'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { convertToWeiString, parseToBigDecimal } from 'utils/parsers'
 import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
 import AgreementsContext, { AgreementContextProps } from 'context/Services/storage/agreements'
+import { calcRenewalDate, getShortDateString } from 'utils/dateUtils'
 import { reducer } from './actions'
 import { AsyncActions, Props, State } from './interfaces'
 
@@ -215,18 +214,16 @@ const Provider: FC = ({ children }) => {
   }, [isInitialised, crypto, paymentToken, currentFiat])
 
   // Recalculates total amounts and subscription end date
-  const renewalDate = order?.renewalDate
+  const renewalDate = agreement?.renewalDate
   useEffect(() => {
     if (isInitialised && renewalDate) {
       const { period, price } = plan
 
       const currentTotal = new Big(price).mul(periodsCount)
       const currentTotalFiat = currentTotal.mul(currentRate)
-      const periodSec = PeriodInSeconds[period]
-      const currentPeriodsInSec = periodSec * periodsCount
-      const currentEndDate = new Date(
-        renewalDate.setSeconds(renewalDate.getSeconds() + currentPeriodsInSec),
-      ).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
+      const currentEndDate = getShortDateString(
+        calcRenewalDate(period, periodsCount, renewalDate),
+      )
 
       dispatch({
         type: 'SET_ORDER',
