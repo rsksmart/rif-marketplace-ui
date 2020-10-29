@@ -28,7 +28,7 @@ const getPaymentToken = (tokenAddress: string): SupportedToken => {
     : tokenSymbol
 }
 
-const getMonthlyFee = (
+const calcMonthlyRate = (
   billingPrice: string,
   billingPeriod: number,
 ): Big => (billingPeriod === PeriodInSeconds.Monthly
@@ -50,6 +50,7 @@ const mapFromTransport = ({
   availableFunds,
 }: AgreementTransport): Agreement => {
   const miliesToDeath = parseInt(expiresIn, 10) * 1000
+  const contentSize = new Big(size)
 
   return {
     id: agreementReference,
@@ -58,9 +59,9 @@ const mapFromTransport = ({
     subscriptionPrice: new Big(billingPrice),
     renewalDate: new Date(Date.now() + miliesToDeath),
     monthlyFee: parseToBigDecimal(
-      getMonthlyFee(billingPrice, billingPeriod), 18,
+      calcMonthlyRate(billingPrice, billingPeriod).times(contentSize), 18,
     ),
-    size: new Big(size),
+    size: contentSize,
     subscriptionPeriod: PeriodInSeconds[billingPeriod] as SubscriptionPeriod,
     title: '',
     paymentToken: getPaymentToken(tokenAddress),
