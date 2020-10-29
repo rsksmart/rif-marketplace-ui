@@ -196,7 +196,11 @@ const StorageOffersCheckoutPage: FC = () => {
             {pinned && orderConfigTB && (
             <StoragePurchaseCard
               details={orderConfigTB}
-              txAction={createAgreement}
+              submitProps={{
+                onClick: createAgreement,
+                children: 'Buy',
+              }}
+              title="Configuring storage plan"
             />
             )}
             {!pinned && (
