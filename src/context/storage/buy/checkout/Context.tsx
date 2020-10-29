@@ -19,6 +19,7 @@ import Logger from 'utils/Logger'
 import { convertToWeiString } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import createWithContext from 'context/storeUtils/createWithContext'
+import { calcRenewalDate, getShortDateString } from 'utils/dateUtils'
 import {
   PinnedContent, Props, State, AsyncActions,
 } from './interfaces'
@@ -275,19 +276,16 @@ const Provider: FC = ({ children }) => {
       const { price, period }: BillingPlan = currentPlan
       const currentTotal = price.mul(periodsCount)
       const currentTotalFiat = currentTotal.mul(currentRate)
-      const currentBillingPeriod = PeriodInSeconds[period]
-      const currentPeriodsInSec = currentBillingPeriod
-      * periodsCount
-      const dateNow = new Date(Date.now())
-      const currentEndDate = new Date(
-        dateNow.setSeconds(dateNow.getSeconds() + currentPeriodsInSec),
-      ).toLocaleDateString()
+
+      const currentEndDate = getShortDateString(
+        calcRenewalDate(period, periodsCount, new Date()),
+      )
 
       dispatch({
         type: 'SET_ORDER',
         payload: {
           total: currentTotal,
-          billingPeriod: currentBillingPeriod,
+          billingPeriod: PeriodInSeconds[period],
         },
       })
       dispatch({
