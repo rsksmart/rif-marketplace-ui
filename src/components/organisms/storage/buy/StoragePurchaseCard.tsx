@@ -6,8 +6,8 @@ import {
 import { Web3Store } from '@rsksmart/rif-ui'
 import GridColumn from 'components/atoms/GridColumn'
 import Login from 'components/atoms/Login'
-import RoundBtn from 'components/atoms/RoundBtn'
 import RifCard from 'components/organisms/RifCard'
+import RoundBtn, { RoundBtnProps } from 'components/atoms/RoundBtn'
 
 type Details = {
     'CONTENT SIZE': string
@@ -20,7 +20,8 @@ type Details = {
 
 type Props = {
   details: Details
-  txAction: () => Promise<void>
+  submitProps: RoundBtnProps
+  title: string
 }
 
 const useStyles = makeStyles(() => ({
@@ -41,7 +42,11 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const StoragePurchaseCard: FC<Props> = ({ details, txAction }) => {
+const StoragePurchaseCard: FC<Props> = ({
+  details,
+  submitProps,
+  title,
+}) => {
   const classes = useStyles()
 
   const {
@@ -51,15 +56,13 @@ const StoragePurchaseCard: FC<Props> = ({ details, txAction }) => {
   } = useContext(Web3Store)
 
   const submitWithLogin = (): JSX.Element => (account ? (
-    <RoundBtn onClick={txAction}>
-      Buy
-    </RoundBtn>
+    <RoundBtn {...submitProps} />
   ) : <Login />)
 
   return (
     <RifCard
       Header={(): JSX.Element => (
-        <Typography variant="h6" color="primary">Configuring storage plan</Typography>
+        <Typography variant="h6" color="primary">{title}</Typography>
       )}
       Actions={submitWithLogin}
     >

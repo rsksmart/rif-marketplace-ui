@@ -117,7 +117,11 @@ const RenewAgreement: FC = () => {
             <GridItem>
               <StoragePurchaseCard
                 details={agreementDetails}
-                txAction={renewAgreement}
+                title="Renewing storage agreement"
+                submitProps={{
+                  onClick: renewAgreement,
+                  children: 'Renew',
+                }}
               />
             </GridItem>
           </GridColumn>
