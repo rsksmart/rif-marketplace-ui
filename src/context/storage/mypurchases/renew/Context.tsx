@@ -103,7 +103,7 @@ const Provider: FC = ({ children }) => {
       const billingPlan: BillingPlan = {
         currency: agreement.paymentToken,
         period: agreement.subscriptionPeriod,
-        price: Big(parseToBigDecimal(agreement.subscriptionPrice, 18)),
+        price: parseToBigDecimal(agreement.subscriptionPrice.times(agreement.size), 18),
       }
 
       dispatch({
