@@ -22,17 +22,11 @@ import withStakingContext, { StakingContext }
   from 'context/Services/storage/staking/Context'
 import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
 import { TokenAddressees } from 'context/Market/storage/interfaces'
-import { JobDoneBox } from 'components/molecules'
-import TxCompletePageTemplate
-  from 'components/templates/TxCompletePageTemplate'
-import TransactionInProgressPanel
-  from 'components/organisms/TransactionInProgressPanel'
-import GridRow from 'components/atoms/GridRow'
-import GridItem from 'components/atoms/GridItem'
 import RoundBtn from 'components/atoms/RoundBtn'
 import BlockchainContext,
 { BlockchainContextProps }
   from 'context/Blockchain/BlockchainContext'
+import ProgressOverlay from 'components/templates/ProgressOverlay'
 import DepositModal from './DepositModal'
 import WithdrawModal from './WithdrawModal'
 import StakingCard from './StakingCard'
@@ -51,6 +45,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     width: '100%',
     right: 0,
     position: 'absolute',
+    zIndex: 99,
   },
   cardWrapper: {
     maxWidth: '550px',
@@ -62,7 +57,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     borderRadius: '50px 0px 0px 50px',
     paddingRight: theme.spacing(stakingIconSize / 2),
     backgroundColor: colors.white,
-    zIndex: 99,
     whiteSpace: 'nowrap',
     height: theme.spacing(stakingIconSize),
   },
@@ -70,24 +64,11 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     height: theme.spacing(stakingIconSize),
     minWidth: theme.spacing(stakingIconSize),
     marginLeft: -theme.spacing(stakingIconSize / 2),
-    zIndex: 99,
   },
   fabTitle: {
     position: 'absolute',
     top: '-25px',
     right: '15px',
-  },
-  progressContainer: {
-    background: 'rgba(275, 275, 275, 0.8)',
-    display: 'flex',
-    height: '100vh',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    position: 'fixed',
-    width: '100vw',
-    top: 0,
-    left: 0,
-    zIndex: 9999,
   },
 }))
 
@@ -134,10 +115,8 @@ const Staking: FC = () => {
   const [txCompleteMsg, setTxCompleteMsg] = useState('')
   const [processingTx, setProcessingTx] = useState(false)
   const [txOperationDone, setTxOperationDone] = useState(false)
-  const [showTxInProgress, setShowTxInProgress] = useState(false)
 
   const handleTxCompletedClose = (): void => {
-    setShowTxInProgress(false)
     setProcessingTx(false)
     setTxOperationDone(false)
   }
@@ -150,7 +129,6 @@ const Staking: FC = () => {
     try {
       setTxInProgressMessage(stakeInProgressMsg)
       setProcessingTx(true)
-      setShowTxInProgress(true)
       setTxCompleteMsg('Your funds have been staked!')
       setDepositOpened(false)
 
@@ -186,7 +164,6 @@ const Staking: FC = () => {
     try {
       setTxInProgressMessage(unstakeInProgressMsg)
       setProcessingTx(true)
-      setShowTxInProgress(true)
       setTxCompleteMsg('Your funds have been unstaked!')
       setWithdrawOpened(false)
       const stakeContract = StakingContract.getInstance(web3 as Web3)
@@ -224,41 +201,6 @@ const Staking: FC = () => {
   }
 
   const handleExpandClick = (): void => setIsExpanded((exp) => !exp)
-
-  const renderProgressOverlay = (): JSX.Element | null => {
-    if (showTxInProgress && (processingTx || txOperationDone)) {
-      return (
-        <div className={classes.progressContainer}>
-          {
-            processingTx && (
-              <TransactionInProgressPanel
-                text={txInProgressMessage}
-                progMsg="The waiting period is required to securely complete your action.
-              Please do not close this tab until the process has finished."
-              />
-            )
-          }
-          {
-            txOperationDone && (
-              <TxCompletePageTemplate>
-                <JobDoneBox text={txCompleteMsg} />
-                <GridRow justify="center">
-                  <GridItem>
-                    <RoundBtn
-                      onClick={handleTxCompletedClose}
-                    >
-                      Close
-                    </RoundBtn>
-                  </GridItem>
-                </GridRow>
-              </TxCompletePageTemplate>
-            )
-          }
-        </div>
-      )
-    }
-    return null
-  }
 
   return (
     <div className={classes.wrapper}>
@@ -304,7 +246,20 @@ const Staking: FC = () => {
         totalStakedUSD={totalStakedUSD}
         stakes={stakes}
       />
-      {renderProgressOverlay()}
+      <ProgressOverlay
+        title={txInProgressMessage}
+        doneMsg={txCompleteMsg}
+        inProgress={processingTx}
+        isDone={txOperationDone}
+        buttons={[
+          <RoundBtn
+            onClick={handleTxCompletedClose}
+          >
+            Close
+          </RoundBtn>,
+        ]}
+
+      />
     </div>
   )
 }

@@ -18,6 +18,7 @@ const useStyle = makeStyles(() => ({
     width: '100vw',
     top: 0,
     left: 0,
+    zIndex: 999,
   },
 }))
 
@@ -27,9 +28,9 @@ export type Status = {
 }
 
 type Props = Status & {
-    title: string
-    buttons: JSX.Element[]
-    doneMsg: string
+  title: string
+  buttons: JSX.Element[]
+  doneMsg: string
 }
 
 const ProgressOverlay: FC<Props> = ({
@@ -45,16 +46,16 @@ const ProgressOverlay: FC<Props> = ({
     return (
       <div className={classes.progressContainer}>
         {
-            inProgress && (
+          inProgress && (
             <TransactionInProgressPanel
               text={title}
               progMsg="The waiting period is required to securely complete your transaction.
               Please do not close this tab until the process has finished."
             />
-            )
-          }
+          )
+        }
         {
-            isDone && (
+          isDone && (
             <TxCompletePageTemplate>
               <JobDoneBox text={doneMsg} />
               <GridRow justify="center">
@@ -69,8 +70,8 @@ const ProgressOverlay: FC<Props> = ({
                 }
               </GridRow>
             </TxCompletePageTemplate>
-            )
-          }
+          )
+        }
       </div>
     )
   }
