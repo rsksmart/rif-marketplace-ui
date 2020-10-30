@@ -43,7 +43,7 @@
     "@rsksmart/rif-marketplace-nfts": "^0.1.4",
     "@rsksmart/rif-marketplace-storage": "0.1.0-dev.5",
     "@rsksmart/rif-ui": "^0.3.2",
-    "big.js": "^5.2.2",
+    "big.js": "^6.0.1",
     "material-ui-dropzone": "^3.5.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
