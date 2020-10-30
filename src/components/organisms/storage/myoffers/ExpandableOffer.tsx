@@ -79,7 +79,7 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
     }
   }, [account, agreementsDispatch])
 
-  const { system, availableSizeGB, utilizedCapacityGB } = storageOffer
+  const { system, availableSizeGB } = storageOffer
   const [isExpanded, setIsExpanded] = useState(initiallyExpanded)
   const [cancelOfferOpen, setCancelOfferOpen] = useState(false)
   const handleChange = (): void => setIsExpanded(!isExpanded)
@@ -90,8 +90,6 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
     setCancelOfferOpen(false)
     onCancelOffer()
   }
-
-  const remainingSize = availableSizeGB.minus(utilizedCapacityGB)
 
   return (
     <Accordion
@@ -108,7 +106,7 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
             <Typography align="center" color="primary" variant="subtitle1">{offerName}</Typography>
           </Grid>
           <Grid item sm={3}>
-            <LabelWithValue label="Remaining size" value={`${remainingSize} GB`} />
+            <LabelWithValue label="Remaining size" value={`${availableSizeGB} GB`} />
           </Grid>
           <Grid item sm={3}>
             <LabelWithValue label="System" value={system} />
