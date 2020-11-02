@@ -33,7 +33,7 @@ const PinnerInstructionsModal: FC<PinnerInstructionsModal> = ({ open, onClose })
           </Grid>
           <Grid item xs={12}>
             <Typography align="center" component="div" color="secondary">
-              {'$ rif-pinner init --offerId <'}
+              {'$ rif-pinning init --offerId <'}
               <Box
                 display="inline"
                 style={{ color: colors.primary }}
