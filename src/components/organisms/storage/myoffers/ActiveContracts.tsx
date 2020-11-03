@@ -9,7 +9,7 @@ import Marketplace from 'components/templates/marketplace/Marketplace'
 import MarketContext from 'context/Market/MarketContext'
 import { Agreement } from 'models/marketItems/StorageItem'
 import React, {
-  FC, useCallback, useContext, useState,
+  FC, useCallback, useContext, useEffect, useState,
 } from 'react'
 import RoundBtn from 'components/atoms/RoundBtn'
 import { Web3Store } from '@rsksmart/rif-ui'
@@ -47,11 +47,18 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
 
   const [processingTx, setProcessingTx] = useState(false)
   const [txOperationDone, setTxOperationDone] = useState(false)
-
   const [
     itemDetails,
     setItemDetails,
   ] = useState<AgreementProviderView | undefined>(undefined)
+  const [selectedAgreement, setSelectedAgreement] = useState<Agreement | undefined>(undefined)
+
+  useEffect(() => {
+    // hides modal on tx operation done
+    if (txOperationDone && itemDetails) {
+      setItemDetails(undefined)
+    }
+  }, [txOperationDone, itemDetails])
 
   if (!agreements.length) {
     return (
@@ -64,7 +71,9 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
     )
   }
 
-  const onWithdraw = async (agreement: Agreement): Promise<void> => {
+  const onWithdraw = async (
+    agreement: Agreement,
+  ): Promise<void> => {
     try {
       appDispatch({
         type: 'SET_IS_LOADING',
@@ -115,6 +124,7 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
   const handleTxCompletedClose = (): void => {
     setProcessingTx(false)
     setTxOperationDone(false)
+    setItemDetails(undefined)
   }
 
   const items = createProviderItemFields(
@@ -124,8 +134,9 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
     (_, agreement: Agreement) => {
       onWithdraw(agreement)
     },
-    (_, agreementView: AgreementView) => {
+    (_, agreementView: AgreementView, agreement: Agreement) => {
       setItemDetails(agreementView as AgreementProviderView)
+      setSelectedAgreement(agreement)
     },
   )
 
@@ -140,12 +151,9 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
     view: '',
   }
 
-  // TODO: handle currentAgreement to withdraw,
-  // option1: have only agreement and add method like 'getAgreementViewFromAgreement'
-  // option2: set currentAgreement on openning the modal, set undef on close
   const actions = (): JSX.Element => (
     <RoundBtn
-      onClick={(): void => undefined}
+      onClick={(): Promise<void> => onWithdraw(selectedAgreement as Agreement)}
     >
       Withdraw funds
     </RoundBtn>

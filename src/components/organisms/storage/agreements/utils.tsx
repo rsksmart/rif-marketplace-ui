@@ -121,19 +121,14 @@ export const createCustomerItemFields = (
   }
 })
 
-export const createProviderItemFields = (
-  agreements: Agreement[],
+export const getProviderViewFrom = (
+  agreement: Agreement,
   crypto: MarketCryptoRecord,
   currentFiat: MarketFiat,
-  onItemWithdraw: (event, agreement: Agreement) => void,
-  onItemSelect: (
-    event,
-    agreementView: (AgreementProviderView)
-  ) => void,
-): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
+): AgreementProviderView => {
   const agreementInfo = getCoreItemFields(agreement, crypto, currentFiat)
   const {
-    id, consumer, availableFunds, paymentToken,
+    consumer, availableFunds, paymentToken,
   } = agreement
   const consumerValue = <AddressItem value={consumer} />
   const availableFundsValue = (
@@ -146,13 +141,36 @@ export const createProviderItemFields = (
 
   return {
     ...agreementInfo,
+    CONSUMER: consumerValue,
+    'AVAILABLE FUNDS': availableFundsValue,
+  } as AgreementProviderView
+}
+
+export const createProviderItemFields = (
+  agreements: Agreement[],
+  crypto: MarketCryptoRecord,
+  currentFiat: MarketFiat,
+  onItemWithdraw: (event, agreement: Agreement) => void,
+  onItemSelect: (
+    event,
+    agreementView: (AgreementProviderView),
+    agreement: Agreement,
+  ) => void,
+): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
+  const providerView = getProviderViewFrom(agreement, crypto, currentFiat)
+  const {
     id,
-    customer: consumerValue,
-    contentSize: agreementInfo.AMOUNT,
-    renewalDate: agreementInfo['RENEWAL DATE'],
-    subscriptionPeriod: agreementInfo['SUBSCRIPTION PERIOD'],
-    monthlyFee: agreementInfo['PRICE/GB'],
-    availableFunds: availableFundsValue,
+  } = agreement
+
+  return {
+    ...providerView,
+    id,
+    customer: providerView.CONSUMER,
+    contentSize: providerView.AMOUNT,
+    renewalDate: providerView['RENEWAL DATE'],
+    subscriptionPeriod: providerView['SUBSCRIPTION PERIOD'],
+    monthlyFee: providerView['PRICE/GB'],
+    availableFunds: providerView['AVAILABLE FUNDS'],
     withdraw: (
       <SelectRowButton
         id={id}
@@ -166,11 +184,7 @@ export const createProviderItemFields = (
     view: (
       <SelectRowButton
         id={id}
-        handleSelect={(event): void => onItemSelect(event, {
-          ...agreementInfo,
-          CONSUMER: consumerValue,
-          'AVAILABLE FUNDS': availableFundsValue,
-        } as AgreementProviderView)}
+        handleSelect={(event): void => onItemSelect(event, providerView, agreement)}
       >
         View
       </SelectRowButton>
