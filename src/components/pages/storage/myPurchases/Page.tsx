@@ -24,6 +24,7 @@ import {
   AgreementCustomerView,
   createCustomerItemFields,
 } from 'components/organisms/storage/agreements/utils'
+import WithLoginCard from 'components/hoc/WithLoginCard'
 
 const useTitleStyles = makeStyles(() => ({
   root: {
@@ -141,4 +142,8 @@ const MyStoragePurchases: FC = () => {
   )
 }
 
-export default MyStoragePurchases
+export default WithLoginCard({
+  WrappedComponent: MyStoragePurchases,
+  title: 'Connect your wallet to see your purchases',
+  contentText: 'Connect your wallet to get detailed information about your purchases',
+})
