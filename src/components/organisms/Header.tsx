@@ -1,13 +1,17 @@
 import React from 'react'
 import ROUTES from 'routes'
-import { Header as RUIHeader } from '@rsksmart/rif-ui'
 /* eslint-disable import/no-unresolved */
-import { HeaderItemProps } from '@rsksmart/rif-ui/dist/components/organisms/Header/HeaderProps'
 import InfoIcon from '@material-ui/icons/Info'
 import LiveHelpIcon from '@material-ui/icons/LiveHelp'
 import PeopleIcon from '@material-ui/icons/People'
 import StorageIcon from '@material-ui/icons/Storage'
 import Login from 'components/atoms/Login'
+import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone'
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive'
+import { colors } from '@rsksmart/rif-ui'
+import { HeaderItemProps } from '@rsksmart/rif-ui/dist/components/organisms/Header/HeaderProps'
+import { Header as RUIHeader } from './Header/'
+import { ActionHeaderItemProps } from './Header/HeaderProps'
 
 const Header = () => {
   const headerItems: HeaderItemProps[] = [
@@ -35,7 +39,25 @@ const Header = () => {
     },
   ]
 
-  return (<RUIHeader hreflogo={ROUTES.LANDING} items={headerItems} login={Login} />)
+  const hasNotification = true
+
+  const actionItems: ActionHeaderItemProps[] = [
+    {
+      icon: hasNotification
+        ? <NotificationsActiveIcon htmlColor={colors.white} />
+        : <NotificationsNoneIcon htmlColor={colors.white} />,
+      onClick: () => {},
+    },
+  ]
+
+  return (
+    <RUIHeader
+        hreflogo={ROUTES.LANDING}
+        itemsStart={headerItems}
+        itemsEnd={actionItems}
+        login={Login}
+    />
+  )
 }
 
 export default Header
