@@ -1,5 +1,5 @@
 import React, {
-  FC, useContext, useEffect, useState,
+  FC, useCallback, useContext, useEffect, useState,
 } from 'react'
 import {
   makeStyles, TableContainer, Typography,
@@ -25,6 +25,13 @@ import {
   createCustomerItemFields,
 } from 'components/organisms/storage/agreements/utils'
 import WithLoginCard from 'components/hoc/WithLoginCard'
+import AppContext, { errorReporterFactory } from 'context/App/AppContext'
+import { UIError } from 'models/UIMessage'
+import { LoadingPayload } from 'context/App/appActions'
+import { TokenAddressees } from 'context/Market/storage/interfaces'
+import Web3 from 'web3'
+import Logger from 'utils/Logger'
+import ProgressOverlay from 'components/templates/ProgressOverlay'
 
 const useTitleStyles = makeStyles(() => ({
   root: {
@@ -32,6 +39,8 @@ const useTitleStyles = makeStyles(() => ({
     marginInlineStart: `${theme.spacing(2)}px`,
   },
 }))
+
+const logger = Logger.getInstance()
 
 const MyStoragePurchases: FC = () => {
   const history = useHistory()
@@ -51,13 +60,24 @@ const MyStoragePurchases: FC = () => {
     },
   } = useContext(MarketContext)
   const {
-    state: { account },
+    state: { account, web3 },
   } = useContext(Web3Store)
+  const { dispatch: appDispatch } = useContext(AppContext)
+  const reportError = useCallback((
+    e: UIError,
+  ) => errorReporterFactory(appDispatch)(e), [appDispatch])
+
+  const [processingTx, setProcessingTx] = useState(false)
+  const [txOperationDone, setTxOperationDone] = useState(false)
 
   const [
     itemDetails,
     setItemDetails,
   ] = useState<AgreementCustomerView | undefined>(undefined)
+  const [
+    selectedAgreement,
+    setSelectedAgreement,
+  ] = useState<Agreement | undefined>(undefined)
 
   useEffect(() => {
     if (account) {
@@ -67,6 +87,61 @@ const MyStoragePurchases: FC = () => {
       })
     }
   }, [account, dispatch])
+
+  useEffect(() => {
+    // hides modal on tx operation done
+    if (txOperationDone && itemDetails) {
+      setItemDetails(undefined)
+    }
+  }, [txOperationDone, itemDetails])
+
+  const onWithdraw = async (agreement: Agreement): Promise<void> => {
+    try {
+      appDispatch({
+        type: 'SET_IS_LOADING',
+        payload: {
+          isLoading: true,
+          id: 'contract',
+          message: 'Withdrawing your funds...',
+        } as LoadingPayload,
+      })
+      setProcessingTx(true)
+      const storageContract = (await import('contracts/storage/contract'))
+        .default.getInstance(web3 as Web3)
+
+      const withdrawFundsReceipt = await storageContract
+        .withdrawFunds(
+          {
+            amounts: ['0'], // using 0 withdraws the max amount available
+            dataReference: agreement.dataReference,
+            provider: agreement.provider,
+            tokens: [TokenAddressees[agreement.paymentToken]],
+          },
+          { from: account },
+        )
+      logger.debug('receipt: ', { withdrawFundsReceipt })
+
+      if (withdrawFundsReceipt) {
+        setTxOperationDone(true)
+      }
+    } catch (error) {
+      logger.error('error withdrawing consumer funds', error)
+      reportError(new UIError({
+        error,
+        id: 'contract-storage',
+        text: 'Could not withdraw your funds.',
+      }))
+    } finally {
+      setProcessingTx(false)
+      appDispatch({
+        type: 'SET_IS_LOADING',
+        payload: {
+          isLoading: false,
+          id: 'contract',
+        } as LoadingPayload,
+      })
+    }
+  }
 
   const headers = {
     title: 'Title',
@@ -90,18 +165,25 @@ const MyStoragePurchases: FC = () => {
       })
       history.push(ROUTES.STORAGE.MYPURCHASES.RENEW)
     },
-    (_, agreementView: AgreementView) => {
+    (_, agreementView: AgreementView, agreement: Agreement) => {
       setItemDetails(agreementView as AgreementCustomerView)
+      setSelectedAgreement(agreement)
     },
   )
 
   const renderDetailsActions = (): JSX.Element => (
     <RoundBtn
-      onClick={(): void => undefined}
+      onClick={(): Promise<void> => onWithdraw(selectedAgreement as Agreement)}
     >
-      Withdraw funds
+      Withdraw all funds
     </RoundBtn>
   )
+
+  const handleTxCompletedClose = (): void => {
+    setProcessingTx(false)
+    setTxOperationDone(false)
+    setItemDetails(undefined)
+  }
 
   return (
     <CenteredPageTemplate>
@@ -137,6 +219,19 @@ const MyStoragePurchases: FC = () => {
         }}
         itemDetails={itemDetails}
         actions={renderDetailsActions}
+      />
+      <ProgressOverlay
+        isDone={txOperationDone}
+        doneMsg="Your funds have been withdrawed!"
+        inProgress={processingTx}
+        buttons={[
+          <RoundBtn
+            onClick={handleTxCompletedClose}
+          >
+            Close
+          </RoundBtn>,
+        ]}
+        title="Withdrawing your funds"
       />
     </CenteredPageTemplate>
   )
