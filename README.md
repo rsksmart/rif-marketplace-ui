@@ -4,6 +4,12 @@
 
 **Warning: This project is in alpha state. There might (and most probably will) be changes in the future to its working. Also, no guarantees can be made about its stability, efficiency, and security at this stage.**
 
+## Lead Maintainer
+
+[Juraj Piar](https://github.com/jurajpiar)
+
+See what "Lead Maintainer" means [here](https://github.com/rsksmart/lead-maintainer).
+
 ## Install
 
 Download and setup the RIF Marketplace UI
