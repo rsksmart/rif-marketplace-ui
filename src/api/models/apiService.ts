@@ -15,6 +15,8 @@ export interface ErrorReporter {
   (e: ErrorReporterError): void
 }
 
+export type MapFromTransport<Transport, Local> = (item: Transport) => Local
+
 export type ServiceMetadata = Omit<Paginated<never>, 'data'>
 
 export const isServiceMetadata = (
