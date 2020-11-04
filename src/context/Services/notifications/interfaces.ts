@@ -5,7 +5,7 @@ import { ContextProps, ContextState } from 'context/storeUtils/interfaces'
 // STATE
 export type ContextName = typeof serviceAddress
 export type State = ContextState & {
-    notifications: Set<NotificationsItem>
+    notifications: NotificationsItem[]
 }
 
 // PAYLOAD

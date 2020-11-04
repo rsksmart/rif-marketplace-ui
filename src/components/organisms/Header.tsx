@@ -10,6 +10,7 @@ import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone'
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive'
 import { colors } from '@rsksmart/rif-ui'
 import { HeaderItemProps } from '@rsksmart/rif-ui/dist/components/organisms/Header/HeaderProps'
+import withNotificationsContext from 'context/Services/notifications'
 import { Header as RUIHeader } from './Header/'
 import { ActionHeaderItemProps } from './Header/HeaderProps'
 
@@ -60,4 +61,4 @@ const Header = () => {
   )
 }
 
-export default Header
+export default withNotificationsContext(Header)
