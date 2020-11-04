@@ -5,6 +5,7 @@ export interface TransactionOptions {
   from?: string
   gas?: number
   gasPrice?: string
+  value?: string | number
 }
 
 const TIMEOUT_LIMIT = 120000
