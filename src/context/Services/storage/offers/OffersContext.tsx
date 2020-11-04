@@ -12,12 +12,13 @@ import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { MinMaxFilter } from 'models/Filters'
 import { UIError } from 'models/UIMessage'
 import { AvgBillingPriceService } from 'api/rif-marketplace-cache/storage/avg-billing-plan-price'
+import createWithContext from 'context/storeUtils/createWithContext'
 import {
   storageOffersActions, StorageOffersPayload,
   StorageOffersReducer, StorageOffersAction,
 } from './offersActions'
-import { ServiceState } from '../interfaces'
-import { StorageOrder } from './interfaces'
+import { ServiceState } from '../../interfaces'
+import { StorageOrder } from '../interfaces'
 
 export type ContextName = 'storage_offers'
 
@@ -35,7 +36,7 @@ export type StorageOffersState = Modify<ServiceState<StorageItem>, {
   limits: ContextLimits
 }>
 
-export type StorageOffersContextProps = {
+export type Props = {
   state: StorageOffersState
   dispatch: Dispatch<StorageOffersAction>
 }
@@ -70,10 +71,10 @@ export const initialState: StorageOffersState = {
   needsRefresh: true,
 }
 
-const StorageOffersContext = React.createContext({} as StorageOffersState as any)
+export const Context = React.createContext({} as StorageOffersState as any)
 const reducer: StorageOffersReducer<StorageOffersPayload> | ContextReducer = storeReducerFactory(initialState, storageOffersActions as unknown as ContextActions)
 
-export const StorageOffersContextProvider = ({ children }) => {
+export const Provider = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)
   const [isLimitsSet, setIsLimitsSet] = useState(false)
 
@@ -236,7 +237,7 @@ export const StorageOffersContextProvider = ({ children }) => {
   }, [isLimitsSet, isInitialised, filters, limits, api, appDispatch])
 
   const value = { state, dispatch }
-  return <StorageOffersContext.Provider value={value}>{children}</StorageOffersContext.Provider>
+  return <Context.Provider value={value}>{children}</Context.Provider>
 }
 
-export default StorageOffersContext
+export default createWithContext(Provider)

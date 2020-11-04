@@ -35,4 +35,11 @@ function waitForReceipt(
   })
 }
 
-export default waitForReceipt
+const withWaitForReceipt = (web3: Web3) => (
+  err, response,
+): Promise<TransactionReceipt | never> => {
+  if (err) return Promise.reject(err)
+  return waitForReceipt(response, web3)
+}
+
+export default withWaitForReceipt

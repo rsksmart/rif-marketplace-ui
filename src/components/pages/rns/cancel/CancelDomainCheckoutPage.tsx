@@ -6,6 +6,7 @@ import {
   Button, colors, shortenString, Web3Store,
   ShortenTextTooltip,
 } from '@rsksmart/rif-ui'
+import Box from '@material-ui/core/Box'
 import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
@@ -242,10 +243,10 @@ const CancelDomainCheckoutPage = () => {
 
   return (
     <CheckoutPageTemplate
-      className="domains-checkout-page"
-      backButtonProps={{
-        backTo: 'domains',
-      }}
+        className="domains-checkout-page"
+        backButtonProps={{
+          backTo: 'domains',
+        }}
     >
       <Card
         className={classes.card}
@@ -267,7 +268,12 @@ const CancelDomainCheckoutPage = () => {
         {!isProcessing
           && (
             <CardActions className={classes.footer}>
-              <p>Your wallet will open and you will be asked to confirm the transaction for canceling the domain.</p>
+              <Typography>
+                Your wallet will open and you will be asked to confirm
+                <Box display="inline" fontWeight="fontWeightMedium" color={`${colors.primary}`}>two transactions</Box>
+                {' '}
+                to cancel the domain.
+              </Typography>
               <Button
                 color="primary"
                 variant="contained"

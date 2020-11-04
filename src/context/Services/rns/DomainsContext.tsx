@@ -10,6 +10,7 @@ import { ContextActions, ContextReducer } from 'context/storeUtils/interfaces'
 import storeReducerFactory from 'context/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
 import { ErrorMessagePayload, LoadingPayload } from 'context/App/appActions'
+import { ServiceMetadata } from 'api/models/apiService'
 import {
   RnsListing, RnsOrder, RnsState, RnsContextProps,
 } from './interfaces'
@@ -43,6 +44,7 @@ export const initialState: DomainsState = {
     status: 'owned',
   },
   needsRefresh: false,
+  pagination: {},
 }
 
 const RnsDomainsContext = React.createContext({} as RnsDomainsContextProps | any)
@@ -145,6 +147,17 @@ export const RnsDomainsContextProvider = ({ children }) => {
       })
     }
   }, [isInitialised, needsRefresh, filters, api, account, appDispatch])
+
+  const meta = api?.meta
+
+  useEffect(() => {
+    if (meta) {
+      dispatch({
+        type: 'UPDATE_PAGE',
+        payload: meta as ServiceMetadata,
+      })
+    }
+  }, [meta])
 
   const value = { state, dispatch }
   return <RnsDomainsContext.Provider value={value}>{children}</RnsDomainsContext.Provider>

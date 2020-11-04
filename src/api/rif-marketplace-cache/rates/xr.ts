@@ -1,17 +1,24 @@
-import { AbstractAPIService, APIService } from 'api/models/apiService'
+import { Paginated } from '@feathersjs/feathers'
+import { AbstractAPIService, APIService, isResultPaginated } from 'api/models/apiService'
 import { Modify } from 'utils/typeUtils'
 
 export type XRServiceAddress = 'rates/v0'
 export const xrServiceAddress: XRServiceAddress = 'rates/v0'
 
-export type SupportedFiat = 'usd' | 'eur' | 'btc' | 'ars' | 'cny' | 'krw' | 'jpy'
-export type SupportedTokens = 'rif' | 'rbtc'
-export const tokenDisplayNames: Record<SupportedTokens, string> = {
+export type SupportedFiat = 'usd' | 'eur' | 'btc' | 'ars' | 'cny' | 'krw' | 'jpy';
+
+export const SUPPORTED_TOKENS = ['rif', 'rbtc'] as const
+export type SupportedToken = typeof SUPPORTED_TOKENS[number];
+export const tokenDisplayNames: Record<SupportedToken, string> = {
   rif: 'RIF',
   rbtc: 'RBTC',
 }
 
-export type XRItem = { [fiatSymbol: string]: number }
+export type XRItem = Partial<{
+  [F in SupportedFiat]: number
+}> & {
+  token: SupportedToken
+}
 
 export interface XRFilter {
   fiatSymbol: SupportedFiat
@@ -25,15 +32,18 @@ export type XRAPIService = Modify<APIService, {
 export class XRService extends AbstractAPIService implements XRAPIService {
   path = xrServiceAddress
 
-  _fetch = async (filters: XRFilter): Promise<[]> => {
+  _fetch = async (filters: XRFilter): Promise<XRItem[]> => {
     const { fiatSymbol } = filters
 
-    const results = await this.service.find({
+    const results: Paginated<XRItem> = await this.service.find({
       query: {
         $select: ['token', fiatSymbol],
       },
-    }) as unknown as []
+    })
+    const { data, ...metadata } = isResultPaginated(results)
+      ? results : { data: results }
+    this.meta = metadata
 
-    return results
+    return data.filter((item) => !!SUPPORTED_TOKENS.includes(item.token))
   }
 }

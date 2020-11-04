@@ -1,7 +1,7 @@
 export const isObject = (item: object | unknown): boolean => typeof item === 'object'
 export const isUndefined = (item: undefined | unknown): boolean => typeof item === 'undefined'
 
-export const recDiff = (obj1: object, obj2: object): unknown[] => {
+export const recursiveDiff = (obj1: object, obj2: object): unknown[] => {
   const keys = Object.keys(obj1)
   return keys.filter((key) => {
     const value1 = obj1[key]
@@ -10,7 +10,7 @@ export const recDiff = (obj1: object, obj2: object): unknown[] => {
     if (isUndefined(value1) || isUndefined(value2)) return false
 
     if (isObject(value1) && isObject(value2)) {
-      return recDiff(value1, value2).length
+      return recursiveDiff(value1, value2).length
     }
     return value1 !== value2
   })

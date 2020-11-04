@@ -1,12 +1,13 @@
 import { Big } from 'big.js'
-import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
+import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
 import { BillingPlan, StorageOffer, PeriodInSeconds } from 'models/marketItems/StorageItem'
 import { Dispatch } from 'react'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
+import { Status } from 'components/templates/ProgressOverlay'
 
 // STATE
 export type AuxiliaryState = {
-  currencyOptions: SupportedTokens[]
+  currencyOptions: SupportedToken[]
   currentRate: number
   endDate: string
   periodsCount: number
@@ -18,20 +19,14 @@ export type AuxiliaryState = {
 
 export type Order = Pick<StorageOffer, 'id' | 'system' | 'location'> & {
   billingPeriod: PeriodInSeconds
-  token: SupportedTokens
+  token: SupportedToken
   total: Big
 }
 
 export type PinnedContent = {
-  name: string
   size: string
   unit: UNIT_PREFIX_POW2
   hash: string
-}
-
-export type Status = {
-  inProgress?: boolean
-  isDone?: boolean
 }
 
 export type State = {
@@ -94,7 +89,7 @@ export type Actions = {
 }
 
 export type AsyncAction = {
-  (args?: unknown): Promise<unknown>
+  (args?: unknown): Promise<void>
 }
 
 export type AsyncActions = {

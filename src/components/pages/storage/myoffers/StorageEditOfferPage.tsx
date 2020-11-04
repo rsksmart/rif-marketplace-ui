@@ -53,7 +53,7 @@ const StorageEditOfferPage: FC<{}> = () => {
         payload: {
           isLoading: true,
           id: 'contract',
-          message: 'Editing your offer...',
+          message: 'Updating your offer...',
         } as LoadingPayload,
       } as any)
 
@@ -127,7 +127,7 @@ const StorageEditOfferPage: FC<{}> = () => {
   return (
     <CenteredPageTemplate
       title="Edit your storage offer"
-      subtitle="Fill out the fields below to edit your storage offer. All information provided is meant to be true and correct."
+      subtitle="Fill out the fields below to edit your storage offer. All the information provided is meant to be true and correct."
     >
       <RoundedCard color="primary">
         <EditOfferStepper endHandler={endHandler} />
@@ -137,8 +137,8 @@ const StorageEditOfferPage: FC<{}> = () => {
         && (
           <TransactionInProgressPanel
             {...{ isPendingConfirm, onProcessingComplete }}
-            text="Editing your offer!"
-            progMsg="The waiting period is required to securely list your offer.
+            text="Updating your offer!"
+            progMsg="The waiting period is required to securely update your offer.
              Please do not close this tab until the process has finished."
             overlayed
           />

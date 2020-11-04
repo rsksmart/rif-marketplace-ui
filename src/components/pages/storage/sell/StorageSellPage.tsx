@@ -18,10 +18,10 @@ import { AddTxPayload } from 'context/Blockchain/blockchainActions'
 import BlockchainContext from 'context/Blockchain/BlockchainContext'
 import { LoadingPayload } from 'context/App/appActions'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
-import StakingCard from 'components/organisms/storage/myoffers/StakingCard'
 import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper'
 import RoundedCard from 'components/atoms/RoundedCard'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
+import Staking from 'components/organisms/storage/staking/Staking'
 
 // TODO: discuss about wrapping the library and export it with this change
 Big.NE = -30
@@ -66,7 +66,7 @@ const StorageSellPage = () => {
   const history = useHistory()
 
   const handleSubmit = async (): Promise<void> => {
-  // without a web3 instance the submit action would be disabled
+    // without a web3 instance the submit action would be disabled
     if (!web3) return
     try {
       appDispatch({
@@ -168,15 +168,10 @@ const StorageSellPage = () => {
 
   return (
     <CenteredPageTemplate>
-      <StakingCard
-        className={classes.staking}
-        balance="2048 RIF"
-        onWithdrawFunds={(): void => { logger.info('withdraw action') }}
-        onAddFunds={(): void => { logger.info('add funds action') }}
-      />
+      <Staking />
       <Typography gutterBottom variant="h5" color="primary">List your storage service</Typography>
       <Typography gutterBottom color="secondary" variant="subtitle1">
-        Fill out the fields below to list your storage service. All information provided is meant to be true and correct.
+        Fill out the fields below to list your storage service. All the information provided is meant to be true and correct.
       </Typography>
       <RoundedCard color="primary" className={classes.stepperContainer}>
         <EditOfferStepper endHandler={endHandler} />
@@ -187,7 +182,7 @@ const StorageSellPage = () => {
           <TransactionInProgressPanel
             {...{ isPendingConfirm, onProcessingComplete }}
             text="Listing your offer!"
-            progMsg="The waiting period is required to securely list your offer.
+            progMsg="The waiting period is required to securely list your storage offer.
              Please do not close this tab until the process has finished."
             overlayed
           />

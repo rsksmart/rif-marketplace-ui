@@ -1,10 +1,11 @@
 import { Web3Store, ShortenTextTooltip } from '@rsksmart/rif-ui'
+import React, { FC, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
+import RifPaging from 'components/molecules/RifPaging'
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
-import React, { FC, useContext } from 'react'
-import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import MarketContext from 'context/Market/MarketContext'
 import RnsOffersContext, { RnsOffersContextProps } from 'context/Services/rns/OffersContext'
@@ -27,6 +28,9 @@ const DomainOffersPage: FC = () => {
         outdatedTokens,
       },
       filters,
+      pagination: {
+        current: currentPage,
+      },
     },
     dispatch,
   } = useContext<RnsOffersContextProps>(RnsOffersContext)
@@ -48,12 +52,29 @@ const DomainOffersPage: FC = () => {
     },
   } = useContext(Web3Store)
 
+  let action1Header: JSX.Element | string = ''
+
+  if (currentPage) {
+    const { skip, limit, total } = currentPage
+    const nextPage = skip + limit
+
+    action1Header = (
+      <RifPaging
+        from={skip + 1}
+        to={nextPage > total ? total : nextPage}
+        total={total}
+        onNext={(): void => dispatch({ type: 'NEXT_PAGE', payload: {} })}
+        onPrev={(): void => dispatch({ type: 'PREV_PAGE', payload: {} })}
+      />
+    )
+  }
+
   const headers = {
     domainName: 'Name',
     ownerAddress: 'Owner',
     expirationDate: 'Renewal Date',
     combinedPrice: 'Price',
-    action1: '',
+    action1: action1Header,
   }
 
   const collection = items
@@ -69,6 +90,7 @@ const DomainOffersPage: FC = () => {
       } = item
 
       const pseudoResolvedName: string = filters.name as string && (`${filters.name}.rsk`)
+
       const { rate, displayName } = crypto[paymentToken]
 
       const displayDomainName = domainName || pseudoResolvedName

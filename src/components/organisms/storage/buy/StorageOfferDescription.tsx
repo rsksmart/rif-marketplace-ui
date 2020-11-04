@@ -20,7 +20,6 @@ const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
   const itemClasses = useItemsStyles()
 
   const {
-    name: contentName,
     size: contentSize,
     unit: contentSizeUnit,
     hash: contentHash,
@@ -57,7 +56,7 @@ const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
           </GridRow>
         </GridItem>
       </GridRow>
-      {contentHash && contentSize && contentName && contentSizeUnit
+      {contentHash && contentSize && contentSizeUnit
         ? (
           <GridRow spacing={3}>
             <GridItem xs={3}>
@@ -71,12 +70,6 @@ const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
             </GridItem>
             <GridItem xs={9}>
               <GridRow spacing={3}>
-                <GridItem xs={4} classes={itemClasses}>
-                  <LabelWithValue
-                    label="Name:"
-                    value={contentName}
-                  />
-                </GridItem>
                 <GridItem xs={4} classes={itemClasses}>
 
                   <LabelWithValue

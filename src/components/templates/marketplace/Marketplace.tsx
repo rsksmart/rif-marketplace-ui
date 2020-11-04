@@ -12,7 +12,7 @@ import {
 export type MarketplaceItem = { id: string, [key: string]: any }
 
 export interface TableHeaders {
-  [itemName: string]: string | React.ElementType
+  [itemName: string]: string | JSX.Element
 }
 export interface MarketplaceProps {
   className?: string
@@ -38,12 +38,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tc: {
     border: 0,
+    '&:last-child': {
+      textAlignLast: 'center',
+    },
   },
   th: {
     color: colors.gray6,
     fontWeight: fonts.weight.light,
     textAlign: 'left',
     textTransform: 'uppercase',
+    '&:last-child': {
+      textAlignLast: 'center',
+    },
   },
   'tc-domain': {
     align: 'left',

@@ -1,8 +1,8 @@
 import { AbstractAPIService } from 'api/models/apiService'
-import { Confirmations, ConfirmationsService, ConfirmationsTransportItem } from '../confirmations'
+import { Confirmations, ConfirmationsService, Transport as ConfirmationTransport } from '../confirmations'
 import utils from '../utils'
 
-const MOCK_CONFIRMATION_0: ConfirmationsTransportItem = {
+const MOCK_CONFIRMATION_0: ConfirmationTransport = {
   transactionHash: 'mock_transaction_hash',
   targetConfirmation: 2,
   confirmations: 0,

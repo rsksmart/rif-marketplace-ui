@@ -1,10 +1,11 @@
-import { AbstractAPIService } from 'api/models/apiService'
+import { Paginated } from '@feathersjs/feathers'
+import { AbstractAPIService, isResultPaginated } from 'api/models/apiService'
 import { RnsFilter } from 'api/models/RnsFilter'
 import { DomainTransport } from 'api/models/transports'
 import { RnsDomain } from 'models/marketItems/DomainItem'
 import { parseToBigDecimal } from 'utils/parsers'
 import {
-  availableTokens, RnsServiceAddress, RnsAPIService, RnsChannels,
+  RnsServiceAddress, RnsAPIService, RnsChannels, availableTokens,
 } from './common'
 
 export const domainsAddress: RnsServiceAddress = 'rns/v0/domains'
@@ -33,7 +34,9 @@ const mapFromTransport = (item: DomainTransport): RnsDomain => {
   return domain
 }
 
-export class DomainsService extends AbstractAPIService implements RnsAPIService {
+export class DomainsService
+  extends AbstractAPIService
+  implements RnsAPIService {
   path = domainsAddress
 
   _channel = domainsChannel
@@ -41,16 +44,20 @@ export class DomainsService extends AbstractAPIService implements RnsAPIService 
   _fetch = async (filters: Partial<RnsFilter>): Promise<RnsDomain[]> => {
     const { name, status, ownerAddress } = filters
 
-    const results = await this.service.find({
-      query: {
-        placed: status === 'placed',
-        name: name ? {
-          $like: name,
-        } : undefined,
-        ownerAddress,
-      },
-    }) as unknown as DomainTransport[]
+    const results: Paginated<DomainTransport> = await this
+      .service.find({
+        query: {
+          placed: status === 'placed',
+          name: name ? {
+            $like: name,
+          } : undefined,
+          ownerAddress,
+        },
+      })
+    const { data, ...metadata } = isResultPaginated(results)
+      ? results : { data: results }
+    this.meta = metadata
 
-    return results.map(mapFromTransport)
+    return data.map(mapFromTransport)
   }
 }

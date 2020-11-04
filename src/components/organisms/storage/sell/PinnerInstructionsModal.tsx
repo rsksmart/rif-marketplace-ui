@@ -29,11 +29,11 @@ const PinnerInstructionsModal: FC<PinnerInstructionsModal> = ({ open, onClose })
           className={classes.terminalInstructions}
         >
           <Grid item xs={12}>
-            <Typography align="center" color="secondary">$ npm install -g @rsksmart/rif-storage-pinner</Typography>
+            <Typography align="center" color="secondary">$ npm install -g @rsksmart/rif-storage-pinning</Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography align="center" component="div" color="secondary">
-              {'$ rif-pinner init --offerId <'}
+              {'$ rif-pinning init --offerId <'}
               <Box
                 display="inline"
                 style={{ color: colors.primary }}

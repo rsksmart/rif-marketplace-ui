@@ -5,6 +5,7 @@ import { StorageOffer } from 'models/marketItems/StorageItem'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import RoundedCard from 'components/atoms/RoundedCard'
+import { AgreementsContextProvider } from 'context/Services/storage/agreements'
 import { WithSpinner } from '@rsksmart/rif-ui'
 
 export interface OffersListProps {
@@ -22,7 +23,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const OffersList: FC<OffersListProps> = ({ items, onCancelOffer, onEditOffer }) => {
+const OffersList: FC<OffersListProps> = (
+  { items, onCancelOffer, onEditOffer },
+) => {
   const classes = useStyles()
 
   if (!items.length) {
@@ -36,21 +39,23 @@ const OffersList: FC<OffersListProps> = ({ items, onCancelOffer, onEditOffer }) 
   }
 
   return (
-    <Grid container>
-      {
-        items.map((storageOffer: StorageOffer, i) => (
-          <ExpandableOffer
-            key={storageOffer.id}
-            className={classes.expandableOffer}
-            offerName={`Offer ${i + 1}`}
-            storageOffer={storageOffer}
-            initiallyExpanded={!i}
-            onCancelOffer={onCancelOffer}
-            onEditOffer={() => onEditOffer(storageOffer)}
-          />
-        ))
-      }
-    </Grid>
+    <AgreementsContextProvider>
+      <Grid container>
+        {
+          items.map((storageOffer: StorageOffer, i) => (
+            <ExpandableOffer
+              key={storageOffer.id}
+              className={classes.expandableOffer}
+              offerName={`Offer ${i + 1}`}
+              storageOffer={storageOffer}
+              initiallyExpanded={!i}
+              onCancelOffer={onCancelOffer}
+              onEditOffer={(): void => onEditOffer(storageOffer)}
+            />
+          ))
+        }
+      </Grid>
+    </AgreementsContextProvider>
   )
 }
 

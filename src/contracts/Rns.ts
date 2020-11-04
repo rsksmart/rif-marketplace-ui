@@ -4,9 +4,9 @@ import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import { rnsAddress } from './config'
-import waitForReceipt, { TransactionOptions } from './utils'
+import withWaitForReceipt, { TransactionOptions } from './utils'
 
-export type RnsContractErrorId = 'contract-rns-approve' | 'contract-rns-unapprove'
+export type RnsContractErrorId = 'contract-rns-approve' | 'contract-rns-unapprove' | 'contract-rns-getApproved' | 'contract-rns-notApproved'
 
 class RNSContract {
   public static getInstance(web3: Web3): RNSContract {
@@ -38,20 +38,10 @@ class RNSContract {
       from, gasPrice,
     })
     const approveReceipt = await new Promise<TransactionReceipt>(
-      (resolve, reject) => {
-        this.contract.methods.approve(
-          contractAddress, tokenId,
-        ).send({ from, gas, gasPrice },
-          async (err, txHash) => {
-            if (err) return reject(err)
-            try {
-              const receipt = await waitForReceipt(txHash, this.web3)
-              return resolve(receipt)
-            } catch (e) {
-              return reject(e)
-            }
-          })
-      },
+      () => this.contract.methods.approve(
+        contractAddress, tokenId,
+      ).send({ from, gas, gasPrice },
+        withWaitForReceipt(this.web3)),
     )
     return approveReceipt
   }
@@ -63,6 +53,12 @@ class RNSContract {
   ): Promise<TransactionReceipt> => {
     const contractAddress = '0x0000000000000000000000000000000000000000'
     return this.approve(contractAddress, tokenId, txOptions)
+  }
+
+  public getApproved = (tokenId: string, txOptions: TransactionOptions): Promise<Array<string>> => {
+    const { from } = txOptions
+    const approved = this.contract.methods.getApproved(tokenId).call({ from })
+    return approved
   }
 }
 

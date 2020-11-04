@@ -1,5 +1,5 @@
 import { RnsFilter } from 'api/models/RnsFilter'
-import { SupportedTokens, XRFilter } from 'api/rif-marketplace-cache/rates/xr'
+import { SupportedToken, XRFilter } from 'api/rif-marketplace-cache/rates/xr'
 import { RnsItem } from './marketItems/DomainItem'
 import { StorageItem } from './marketItems/StorageItem'
 
@@ -20,4 +20,4 @@ export type MarketCrypto = {
   rate: number
 }
 
-export type MarketCryptoRecord = Record<SupportedTokens, MarketCrypto>
+export type MarketCryptoRecord = Record<SupportedToken, MarketCrypto>

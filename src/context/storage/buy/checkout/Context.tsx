@@ -7,17 +7,19 @@ import { useHistory } from 'react-router-dom'
 import Web3 from 'web3'
 import { Big } from 'big.js'
 import { Web3Store } from '@rsksmart/rif-ui'
-import { SupportedTokens } from 'api/rif-marketplace-cache/rates/xr'
+import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
 import { TokenAddressees } from 'context/Services/storage/interfaces'
-import StorageOffersContext from 'context/Services/storage/OffersContext'
+import { StorageOffersContext } from 'context/Services/storage/offers'
 import { BillingPlan, PeriodInSeconds, StorageOffer } from 'models/marketItems/StorageItem'
 import { UIError } from 'models/UIMessage'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { convertToWeiString } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
+import createWithContext from 'context/storeUtils/createWithContext'
+import { calcRenewalDate, getShortDateString } from 'utils/dateUtils'
 import {
   PinnedContent, Props, State, AsyncActions,
 } from './interfaces'
@@ -114,7 +116,7 @@ const Provider: FC = ({ children }) => {
         system,
         location,
       } = listedItem
-      const currencies: SupportedTokens[] = Array.from(
+      const currencies: SupportedToken[] = Array.from(
         new Set(subscriptionOptions.map(
           (option: BillingPlan) => option.currency,
         )),
@@ -145,6 +147,7 @@ const Provider: FC = ({ children }) => {
         } = order
         const {
           size,
+          unit,
           hash: fileHash,
         } = pinned as PinnedContent
         const agreement = {
@@ -152,7 +155,10 @@ const Provider: FC = ({ children }) => {
           billingPeriod,
           fileHash,
           provider,
-          size,
+          sizeMB: Big(size).mul(unit)
+            .div(UNIT_PREFIX_POW2.MEGA)
+            .round(0)
+            .toString(),
           token: TokenAddressees[token],
         }
         const storageContract = (await import('contracts/storage/contract')).default.getInstance(web3 as Web3)
@@ -226,13 +232,16 @@ const Provider: FC = ({ children }) => {
       const newToken = currencyOptions[selectedCurrency]
       const newRate = crypto[newToken]?.rate
 
+      const pinnedSizeMB = Big(pinned.size)
+        .mul(pinned.unit)
+        .div(UNIT_PREFIX_POW2.MEGA)
+        .round(0, 3) // RoundingMode.RoundUp - can't use the enum for ts(2748); Rounding up for cannot process fractions of a MB
+
       const newPlans = subscriptionOptions
         .filter((plan: BillingPlan) => plan.currency === newToken)
         .map((plan: BillingPlan) => {
-          const pricePerSize = (plan.price
-            .div(UNIT_PREFIX_POW2.MEGA)
-            .mul(pinned.size))
-            .mul(pinned.unit)
+          const pricePerSize = plan.price
+            .mul(pinnedSizeMB)
 
           return {
             ...plan,
@@ -267,19 +276,16 @@ const Provider: FC = ({ children }) => {
       const { price, period }: BillingPlan = currentPlan
       const currentTotal = price.mul(periodsCount)
       const currentTotalFiat = currentTotal.mul(currentRate)
-      const currentBillingPeriod = PeriodInSeconds[period]
-      const currentPeriodsInSec = currentBillingPeriod
-      * periodsCount
-      const dateNow = new Date(Date.now())
-      const currentEndDate = new Date(
-        dateNow.setSeconds(dateNow.getSeconds() + currentPeriodsInSec),
-      ).toLocaleDateString()
+
+      const currentEndDate = getShortDateString(
+        calcRenewalDate(period, periodsCount, new Date()),
+      )
 
       dispatch({
         type: 'SET_ORDER',
         payload: {
           total: currentTotal,
-          billingPeriod: currentBillingPeriod,
+          billingPeriod: PeriodInSeconds[period],
         },
       })
       dispatch({
@@ -317,14 +323,4 @@ const Provider: FC = ({ children }) => {
   )
 }
 
-function withCheckoutContext<T>(
-  Component: React.ComponentType<T>,
-): React.ComponentType<T> {
-  return (props: T): React.ReactElement => (
-    <Provider>
-      <Component {...props} />
-    </Provider>
-  )
-}
-
-export default withCheckoutContext
+export default createWithContext(Provider)

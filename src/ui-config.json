@@ -1,10 +1,11 @@
 {
     "ganache": {
         "contractAddresses": {
-            "rif": "0x67B5656d60a809915323Bf2C40A8bEF15A152e3e",
+            "rif": "0x67b5656d60a809915323bf2c40a8bef15a152e3e",
             "rnsDotRskOwner": "0x4bf749ec68270027C5910220CEAB30Cc284c7BA2",
-            "marketplace": "0xA29740dB2594af3786bc437Fc742Ae93e3Ec5B97",
-            "storageManager": "0x47a2Db5D68751EeAdFBC44851E84AcDB4F7299Cc"
+            "marketplace": "0x12ae8689c3E889A0fC81f4E2ba9D6C5Bf358F392",
+            "storageManager": "0xeea2Fc1D255Fd28aA15c6c2324Ad40B03267f9c5",
+            "storageStaking": "0x7231ECd1355a60251eE56Bf81f987969fc9bAe29"
         },
         "rnsManagerUrl": "http://localhost:3001",
         "services": [
@@ -12,15 +13,42 @@
             "storage"
         ]
     },
+    "rskmainnet": {
+        "contractAddresses": {
+            "rif": "0x2acc95758f8b5f583470ba265eb685a8f45fc9d5",
+            "rnsDotRskOwner": "0x45d3e4fb311982a06ba52359d44cb4f5980e0ef1",
+            "marketplace": "0xa966Be39A13723d991dFA92B2B0CF6b0c7416eE5"
+        },
+        "rnsManagerUrl": "https://manager.rns.rifos.org",
+         "services": [
+            "rns"
+        ]
+    },
     "rsktestnet": {
         "contractAddresses": {
             "rif": "0x19f64674D8a5b4e652319F5e239EFd3bc969a1FE",
             "rnsDotRskOwner": "0xca0a477e19bac7e0e172ccfd2e3c28a7200bdb71",
-            "marketplace": "0xA5c1afA6A7928aa017E800fB6B89f11219836C58"
+            "marketplace": "0xFa5ade767a422C66cAFd94c3710f5b92467fB85e",
+            "storageManager": "0x87DcECDe4DCb2bac2375CDc1d1F764088cEb5b6b",
+            "storageStaking": "0x04274451015fD802c144f3CD549F71E9EAF70fe1"
         },
         "rnsManagerUrl": "https://testnet.manager.rns.rifos.org",
         "services": [
             "rns"
+        ]
+    },
+    "rskstaging": {
+        "contractAddresses": {
+            "rif": "0x19f64674D8a5b4e652319F5e239EFd3bc969a1FE",
+            "rnsDotRskOwner": "0xca0a477e19bac7e0e172ccfd2e3c28a7200bdb71",
+            "marketplace": "0x978908db72E43DB49A80c74A1383Bd5b3e832c46",
+            "storageManager": "0x2e851dD35163fb4FFc6a8D0aDe95D4f8B8D4BCEa",
+            "storageStaking": "0x976f2727d5eaC1eb1043aE48241008c071983bAC"
+        },
+        "rnsManagerUrl": "https://testnet.manager.rns.rifos.org",
+        "services": [
+            "rns",
+            "storage"
         ]
     }
 }

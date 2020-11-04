@@ -17,6 +17,7 @@ import {
   StorageServiceAddress,
   StorageWSChannel,
 } from './interfaces'
+import { MinMax } from './utils'
 
 export const offersAddress: StorageServiceAddress = 'storage/v0/offers'
 export const offersWSChannel: StorageWSChannel = 'offers'
@@ -29,6 +30,7 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     avgBillingPrice: averagePriceTransport,
     acceptedCurrencies,
     peerId,
+    utilizedCapacity: utilizedCapacityMB,
   } = offerTransport
 
   const offer: StorageOffer = {
@@ -37,7 +39,11 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     system: 'IPFS',
     availableSizeGB: new Big(availableCapacityMB).div(UNIT_PREFIX_POW2.KILO),
     subscriptionOptions: plans
-      .sort((a: BillingPlanTransport, b: BillingPlanTransport) => parseInt(a.period, 10) - parseInt(b.period, 10))
+      .sort(
+        (a: BillingPlanTransport, b: BillingPlanTransport) => (
+          parseInt(a.period, 10) - parseInt(b.period, 10)
+        ),
+      )
       .filter((plan) => !!PeriodInSeconds[plan.period])
       .map<BillingPlan>((plan) => ({
         period: PeriodInSeconds[plan.period],
@@ -47,13 +53,9 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     averagePrice: averagePriceTransport,
     acceptedCurrencies,
     peerId,
+    utilizedCapacityGB: new Big(utilizedCapacityMB).div(UNIT_PREFIX_POW2.KILO),
   }
   return offer
-}
-
-export enum MinMax {
-  min = 1,
-  max = -1,
 }
 
 const fetchMinMaxLimit = async (

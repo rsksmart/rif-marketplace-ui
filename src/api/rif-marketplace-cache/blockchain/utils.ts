@@ -1,6 +1,8 @@
-import { ConfirmationsTransportItem, Confirmations } from './confirmations'
+import { Transport as ConfirmationTransport, Confirmations } from './confirmations'
 
-const mapFromTransport = (data: ConfirmationsTransportItem[]): Confirmations => data.reduce((map, item: ConfirmationsTransportItem) => {
+const mapFromTransport = (
+  data: ConfirmationTransport[],
+): Confirmations => data.reduce((map, item: ConfirmationTransport) => {
   const newMap = { ...map }
   newMap[item.transactionHash] = {
     currentCount: item.confirmations,
