@@ -9,7 +9,17 @@ import waitForReceipt, { TransactionOptions } from './utils'
 
 const logger = Logger.getInstance()
 
-type TxOptions = TransactionOptions & { sendUsingToken?: boolean, onApprove?: (receipt: TransactionReceipt) => void }
+enum TOKENS {
+  RIF = 'rif'
+}
+
+type SupportedTokens = TOKENS.RIF
+
+type TxOptions = TransactionOptions & {
+  gasMultiplayer?: number
+  sendUsingToken?: SupportedTokens
+  onApprove?: (receipt: TransactionReceipt) => void
+}
 
 export default class ContractNative {
   protected readonly contract: Contract
@@ -25,7 +35,7 @@ export default class ContractNative {
     tx: any,
     txOptions: TxOptions,
   ): Promise<TxOptions> {
-    const { value, from } = txOptions
+    const { value, from, gasMultiplayer } = txOptions
     let { gasPrice, gas } = txOptions
 
     if (!gasPrice) {
@@ -37,7 +47,11 @@ export default class ContractNative {
     }
 
     if (!gas) {
-      gas = await tx.estimateGas({ from, gasPrice, value })
+      gas = (await tx.estimateGas({
+        from,
+        gasPrice,
+        value,
+      })) * (gasMultiplayer || 1)
     }
 
     return {
@@ -70,12 +84,13 @@ export default class ContractNative {
   }
 }
 
-export class ContractERC20andNative extends ContractNative {
-  private readonly tokenContract: Contract
+export class ContractTokensAndNative extends ContractNative {
+  private readonly ERC20Token: Contract
 
   constructor(web3: Web3, abi: AbiItem[], address: string) {
     super(web3, abi, address)
-    this.tokenContract = new web3.eth.Contract(ERC20.abi as AbiItem[], rifTokenAddress)
+    this.ERC20Token = new web3.eth.Contract(ERC20.abi as AbiItem[], rifTokenAddress)
+    // this.SomeOtherTokenContract = new web3.eth.Contract(...)
   }
 
   approveCall(
@@ -83,7 +98,7 @@ export class ContractERC20andNative extends ContractNative {
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> {
     const { from, gasPrice } = txOptions
-    return this.tokenContract.methods
+    return this.ERC20Token.methods
       .approve(this.contract.options.address, amount)
       .send({ from, gasPrice })
   }
@@ -98,13 +113,21 @@ export class ContractERC20andNative extends ContractNative {
       onApprove,
     } = await this.processOptions(tx, { ...txOptions })
 
-    // Send using ERC20 token
-    if (sendUsingToken) {
-      const approveReceipt = await this.approveCall(value as number, { from, gasPrice })
+    // Approve call if use token contract
+    switch (sendUsingToken) {
+      case TOKENS.RIF:
+        // eslint-disable-next-line no-case-declarations
+        const approveReceipt = await this.approveCall(
+            value as number,
+            { from, gasPrice },
+        )
 
-      if (onApprove) {
-        await onApprove(approveReceipt)
-      }
+        if (onApprove) {
+          await onApprove(approveReceipt)
+        }
+        break
+      default:
+        break
     }
 
     return super.send(
