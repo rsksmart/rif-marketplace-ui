@@ -1,4 +1,5 @@
-import NotificationsContext, {
+import withNotificationsContext, {
+  Context,
   Provider,
   initialState,
 } from './Context'
@@ -8,10 +9,11 @@ import {
 } from './interfaces'
 
 export {
+  Context as NotificationsContext,
   Provider as NotificationsContextProvider,
   initialState as notificationsInitialState,
 }
 export type NotificationsContextProps = Props
 export type NotificationsAction = Action
 
-export default NotificationsContext
+export default withNotificationsContext

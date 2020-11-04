@@ -4,15 +4,25 @@ import React, {
 } from 'react'
 import { serviceAddress } from 'api/rif-marketplace-cache/notifications'
 import { createReducer } from 'context/storeUtils/reducer'
+import { NotificationsItem } from 'api/rif-marketplace-cache/notifications/interfaces'
+import createWithContext from 'context/storeUtils/createWithContext'
 import { Props, State } from './interfaces'
 import actions from './actions'
 
 export const initialState: State = {
   contextID: serviceAddress,
-  notifications: new Set([]),
+  notifications: [
+    {
+      account: '0xACCOUNT',
+      type: 'storage',
+      payload: {
+        agreementReference: '0xSOME_AG_REFERENCE',
+      },
+    },
+  ], // new Set<NotificationsItem>([]),
 }
 
-const Context = createContext<Props>({
+export const Context = createContext<Props>({
   state: initialState,
   dispatch: () => undefined,
 })
@@ -37,4 +47,4 @@ export const Provider: FC = ({ children }) => {
   )
 }
 
-export default Context
+export default createWithContext(Provider)

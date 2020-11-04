@@ -1,5 +1,6 @@
 import { ServiceMap } from 'api/models/apiService'
 import { ConfirmationsService } from 'api/rif-marketplace-cache/blockchain/confirmations'
+import { NotificationsService } from 'api/rif-marketplace-cache/notifications'
 import { XRService } from 'api/rif-marketplace-cache/rates/xr'
 import { DomainsService } from 'api/rif-marketplace-cache/rns/domains'
 import { OffersService } from 'api/rif-marketplace-cache/rns/offers'
@@ -38,6 +39,7 @@ export interface AppContextProps {
 export const initialState: AppState = {
   contextID: 'app',
   apis: {
+    notification: new NotificationsService(),
     confirmations: new ConfirmationsService(),
     'rns/v0/offers': new OffersService(),
     'rns/v0/domains': new DomainsService(),
