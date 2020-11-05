@@ -4,7 +4,8 @@ import { TransactionReceipt } from 'web3-eth'
 import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
 import { marketPlaceAddress } from './config'
-import withWaitForReceipt, { TransactionOptions } from './utils'
+import { TransactionOptions } from './interfaces'
+import withWaitForReceipt from './utils'
 
 export type MarketplaceContractErrorId = 'contract-marketplace-place' | 'contract-marketplace-unplace' | 'contract-marketplace-getPlacement'
 

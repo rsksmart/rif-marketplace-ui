@@ -5,9 +5,9 @@ import { AbiItem } from 'web3-utils'
 
 import Logger from '../utils/Logger'
 import {
-  TxOptions, Token, SupportedTokens, TOKENS_TYPES, TOKENS,
+  TxOptions, Token, SupportedTokens, TOKENS_TYPES, TOKENS, TransactionOptions,
 } from './interfaces'
-import withWaitForReceipt, { TransactionOptions } from './utils'
+import withWaitForReceipt from './utils'
 
 const logger = Logger.getInstance()
 

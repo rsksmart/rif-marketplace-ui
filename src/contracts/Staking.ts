@@ -6,7 +6,8 @@ import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
 import { convertToWeiString } from 'utils/parsers'
 import { ZERO_ADDRESS } from 'constants/strings'
-import withWaitForReceipt, { TransactionOptions } from './utils'
+import { TransactionOptions } from './interfaces'
+import withWaitForReceipt from './utils'
 import { stakingAddress } from './config'
 
 const logger = Logger.getInstance()

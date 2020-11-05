@@ -6,8 +6,9 @@ import { AbiItem, asciiToHex } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
 import { ZERO_ADDRESS } from 'constants/strings'
+import { TransactionOptions } from '../interfaces'
 import { encodeHash, prefixArray } from './utils'
-import withWaitForReceipt, { TransactionOptions } from '../utils'
+import withWaitForReceipt from '../utils'
 import { storageAddress } from '../config'
 
 const logger = Logger.getInstance()

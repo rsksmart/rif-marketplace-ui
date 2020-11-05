@@ -4,7 +4,8 @@ import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import { rnsAddress } from './config'
-import withWaitForReceipt, { TransactionOptions } from './utils'
+import { TransactionOptions } from './interfaces'
+import withWaitForReceipt from './utils'
 
 export type RnsContractErrorId = 'contract-rns-approve' | 'contract-rns-unapprove' | 'contract-rns-getApproved' | 'contract-rns-notApproved'
 

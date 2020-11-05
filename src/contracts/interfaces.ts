@@ -1,13 +1,20 @@
 import { TransactionReceipt } from 'web3-eth'
-import type { RifERC677ContractErrorId, RifERC20ContractErrorId } from './tokens/rif'
+
 import { ContractBase } from './contract-wrapper'
 import { MarketplaceContractErrorId } from './Marketplace'
 import { RnsContractErrorId } from './Rns'
 import { StorageStakingContractErrorId } from './Staking'
 import { StorageContractErrorId } from './storage/contract'
-import { TransactionOptions } from './utils'
+import type { RifERC677ContractErrorId, RifERC20ContractErrorId } from './tokens/rif'
 
-interface ERC20ContractI extends ContractBase {
+export interface TransactionOptions {
+  from?: string
+  gas?: number
+  gasPrice?: string
+  value?: string | number
+}
+
+export interface ERC20ContractI extends ContractBase {
   approve (address: string, amount: string | number, options: TransactionOptions): Promise<TransactionReceipt>
   getBalanceOf (account: string, options: TransactionOptions): Promise<string | number>
 }

@@ -1,13 +1,6 @@
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 
-export interface TransactionOptions {
-  from?: string
-  gas?: number
-  gasPrice?: string
-  value?: string | number
-}
-
 const TIMEOUT_LIMIT = 120000
 const POLLING_INTERVAL = 2000
 
