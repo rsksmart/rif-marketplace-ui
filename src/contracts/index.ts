@@ -4,24 +4,36 @@ import { Contract } from 'web3-eth-contract'
 import { AbiItem } from 'web3-utils'
 
 import Logger from '../utils/Logger'
-import { rifTokenAddress } from './config'
-import waitForReceipt, { TransactionOptions } from './utils'
+import RifERC20Contract from './tokens/rif/erc20'
+import withWaitForReceipt, { TransactionOptions } from './utils'
 
 const logger = Logger.getInstance()
 
 enum TOKENS {
-  RIF = 'rif'
+  RIF = 'rif',
+  RBTC = 'rbtc'
 }
 
-type SupportedTokens = TOKENS.RIF
+enum TOKENS_TYPES {
+  ERC20 = 'erc20',
+  ERC677 = 'erc677'
+}
+
+type SupportedTokens = TOKENS.RIF | TOKENS.RBTC
+type TokenTypes = TOKENS_TYPES.ERC20 | TOKENS_TYPES.ERC677
+type Token = { token: SupportedTokens, type: TokenTypes }
 
 type TxOptions = TransactionOptions & {
   gasMultiplayer?: number
-  sendUsingToken?: SupportedTokens
+  currency?: SupportedTokens
   onApprove?: (receipt: TransactionReceipt) => void
 }
 
-export default class ContractNative {
+interface TokenContracts {
+  [key: string]: Contract
+}
+
+export default class ContractBase {
   protected readonly contract: Contract
 
   private readonly web3: Web3
@@ -31,7 +43,7 @@ export default class ContractNative {
     this.web3 = web3
   }
 
-  async processOptions(
+  protected async _processOptions(
     tx: any,
     txOptions: TxOptions,
   ): Promise<TxOptions> {
@@ -61,7 +73,7 @@ export default class ContractNative {
     }
   }
 
-  async send(
+  protected async _send(
     tx: any,
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
@@ -70,37 +82,54 @@ export default class ContractNative {
       value,
       gas,
       gasPrice,
-    } = await this.processOptions(tx, txOptions)
+    } = await this._processOptions(tx, txOptions)
 
-    return tx.send({
-      from,
-      gas,
-      value,
-      gasPrice,
-    }, (err, response) => {
-      if (err) return Promise.reject(err)
-      return waitForReceipt(response, this.web3)
-    })
+    return tx.send(
+      {
+        from,
+        gas,
+        value,
+        gasPrice,
+      },
+      withWaitForReceipt(this.web3),
+    )
   }
 }
 
-export class ContractTokensAndNative extends ContractNative {
-  private readonly ERC20Token: Contract
+export class ContractWithTokens extends ContractBase {
+  private readonly name?: string
 
-  constructor(web3: Web3, abi: AbiItem[], address: string) {
+  private readonly supportedTokens: Token[]
+
+  private readonly tokenContracts: TokenContracts
+
+  constructor(
+    web3: Web3,
+    abi: AbiItem[],
+    address: string,
+    supportedTokens: Token[],
+    name?: string,
+  ) {
     super(web3, abi, address)
-    this.ERC20Token = new web3.eth.Contract(ERC20.abi as AbiItem[], rifTokenAddress)
-    // this.SomeOtherTokenContract = new web3.eth.Contract(...)
+    this.supportedTokens = supportedTokens
+    this.name = name
+    // TODO build this bvased on supportedCurrencies
+    this.tokenContracts = {
+      [TOKENS.RIF]: RifERC20Contract,
+    }
   }
 
-  approveCall(
-    amount: number | string,
-    txOptions: TransactionOptions,
-  ): Promise<TransactionReceipt> {
-    const { from, gasPrice } = txOptions
-    return this.ERC20Token.methods
-      .approve(this.contract.options.address, amount)
-      .send({ from, gasPrice })
+  private _isCurrencySupported(currency: SupportedTokens): boolean {
+    return !!this.supportedTokens.find(({ token }) => currency === token)
+  }
+
+  private getToken(tokenName: SupportedTokens): { tokenContract: Contract, tokenType: TokenTypes } {
+    const tokenInfo = this.supportedTokens.find(({ token }) => token === tokenName)
+
+    if (!tokenInfo) {
+      throw new Error(`Token ${tokenName} is not supported by ${this.name} contract`)
+    }
+    return { tokenContract: await this.tokenContracts[tokenName].getInstance(), tokenType: tokenInfo.type }
   }
 
   async send(tx: any, txOptions: TxOptions): Promise<TransactionReceipt> {
@@ -109,20 +138,29 @@ export class ContractTokensAndNative extends ContractNative {
       gas,
       value,
       gasPrice,
-      sendUsingToken,
+      currency,
       onApprove,
-    } = await this.processOptions(tx, { ...txOptions })
+    } = await this._processOptions(tx, txOptions)
+
+    const currencyToUse = currency || TOKENS.RBTC
+
+    if (!this._isCurrencySupported(currencyToUse)) {
+      throw new Error(`Token ${currency} is not supported by ${this.name} contract`)
+    }
+
+    const { tokenContract, tokenType } = await this.getToken(currencyToUse)
 
     // Approve call if use token contract
-    switch (sendUsingToken) {
+    switch (currency) {
       case TOKENS.RIF:
         // eslint-disable-next-line no-case-declarations
-        const approveReceipt = await this.approveCall(
-            value as number,
-            { from, gasPrice },
+        const approveReceipt = await tokenContract.approve( // Add base interface for all of the tokens
+              value as number,
+              { from, gasPrice },
         )
 
         if (onApprove) {
+          // Hook for on approve transacion
           await onApprove(approveReceipt)
         }
         break
@@ -130,12 +168,12 @@ export class ContractTokensAndNative extends ContractNative {
         break
     }
 
-    return super.send(
+    return this._send(
       tx,
       {
         from,
         gas,
-        value: sendUsingToken ? 0 : value,
+        value: currency === TOKENS.RBTC ? value : 0, // If use native token(RBTC) send as usual
         gasPrice,
       },
     )
