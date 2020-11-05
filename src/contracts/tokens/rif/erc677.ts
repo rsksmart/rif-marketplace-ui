@@ -6,17 +6,17 @@ import { TransactionReceipt } from 'web3-eth'
 import { rifTokenAddress } from '../../config'
 import withWaitForReceipt, { TransactionOptions } from '../../utils'
 
-export type RifContractErrorId = 'contract-rif-getBalanceOf' | 'contract-rif-transferAndCall'
+export type RifERC677ContractErrorId = 'contract-rif-getBalanceOf' | 'contract-rif-transferAndCall'
 
-class RIFContract {
-  public static getInstance(web3: Web3): RIFContract {
-    if (!RIFContract.instance) {
-      RIFContract.instance = new RIFContract(web3)
+export class RifERC677Contract {
+  public static getInstance(web3: Web3): RifERC677Contract {
+    if (!RifERC677Contract.instance) {
+      RifERC677Contract.instance = new RifERC677Contract(web3)
     }
-    return RIFContract.instance
+    return RifERC677Contract.instance
   }
 
-  private static instance: RIFContract
+  private static instance: RifERC677Contract
 
   private contract: Contract
 
@@ -53,4 +53,4 @@ class RIFContract {
   }
 }
 
-export default RIFContract
+export default RifERC677Contract
