@@ -30,7 +30,7 @@ type TxOptions = TransactionOptions & {
 }
 
 interface TokenContracts {
-  [key: string]: Contract
+  [key: string]: ContractBase
 }
 
 export default class ContractBase {
@@ -123,13 +123,31 @@ export class ContractWithTokens extends ContractBase {
     return !!this.supportedTokens.find(({ token }) => currency === token)
   }
 
-  private getToken(tokenName: SupportedTokens): { tokenContract: Contract, tokenType: TokenTypes } {
+  private async getToken(tokenName: SupportedTokens): Promise<{ tokenContract: Contract, tokenType: TokenTypes }> {
     const tokenInfo = this.supportedTokens.find(({ token }) => token === tokenName)
 
     if (!tokenInfo) {
       throw new Error(`Token ${tokenName} is not supported by ${this.name} contract`)
     }
     return { tokenContract: await this.tokenContracts[tokenName].getInstance(), tokenType: tokenInfo.type }
+  }
+
+  private async approveToken(currency: SupportedTokens, txOptions: TransactionOptions): Promise<TransactionReceipt> {
+    const { value, from, gasPrice } = txOptions
+    const { tokenContract, tokenType } = await this.getToken(currency)
+
+    // Approve call
+    switch (tokenType) {
+      case TOKENS_TYPES.ERC20:
+        // eslint-disable-next-line no-case-declarations
+        // TODO const erc20Contract = tokenContract as ERC20ContractI
+        return tokenContract.approve( // Add base interface for all of the tokens
+            value as number,
+            { from, gasPrice },
+        )
+      default:
+        throw new Error(`Unknown token contract interface ${tokenType}`)
+    }
   }
 
   async send(tx: any, txOptions: TxOptions): Promise<TransactionReceipt> {
@@ -142,30 +160,19 @@ export class ContractWithTokens extends ContractBase {
       onApprove,
     } = await this._processOptions(tx, txOptions)
 
-    const currencyToUse = currency || TOKENS.RBTC
+    const tokenToUse = currency || TOKENS.RBTC
 
-    if (!this._isCurrencySupported(currencyToUse)) {
+    if (!this._isCurrencySupported(tokenToUse)) {
       throw new Error(`Token ${currency} is not supported by ${this.name} contract`)
     }
 
-    const { tokenContract, tokenType } = await this.getToken(currencyToUse)
+    // Need approve tx
+    if (tokenToUse !== TOKENS.RBTC) {
+      const approveReceipt = await this.approveToken(tokenToUse, { from, gasPrice, value })
 
-    // Approve call if use token contract
-    switch (currency) {
-      case TOKENS.RIF:
-        // eslint-disable-next-line no-case-declarations
-        const approveReceipt = await tokenContract.approve( // Add base interface for all of the tokens
-              value as number,
-              { from, gasPrice },
-        )
-
-        if (onApprove) {
-          // Hook for on approve transacion
-          await onApprove(approveReceipt)
-        }
-        break
-      default:
-        break
+      if (onApprove) {
+        await onApprove(approveReceipt)
+      }
     }
 
     return this._send(
@@ -173,7 +180,7 @@ export class ContractWithTokens extends ContractBase {
       {
         from,
         gas,
-        value: currency === TOKENS.RBTC ? value : 0, // If use native token(RBTC) send as usual
+        value: tokenToUse === TOKENS.RBTC ? value : 0, // If use native token(RBTC) send as usual
         gasPrice,
       },
     )
