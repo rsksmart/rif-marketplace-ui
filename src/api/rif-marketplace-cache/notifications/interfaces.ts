@@ -9,19 +9,22 @@ export type NotificationsAPI = Modify<APIService, {
   path: NotoficationsAddress
 }>
 
-export interface NotificationsItem {
+export enum MessageCodesEnum {
+  I_AGREEMENT_NEW = 'I_AGR_NEW', // PROVIDER
+  I_AGREEMENT_EXPIRED = 'I_AGR_EXP', // BOTH
+  I_HASH_PINNED = 'I_HASH_STOP', // CONSUMER
+  E_AGREEMENT_SIZE_LIMIT_EXCEEDED = 'E_AGR_SIZE_OVERFLOW', // CONSUMER
+}
+
+export interface NotificationItem {
   type: string
   account: string
   payload: NotificationPayload
+  code: MessageCodesEnum
+  timestamp: number
 }
 interface BasePayload {
   agreementReference: string
-}
-
-export interface RetryPayload extends BasePayload {
-  error: string
-  retryNumber: number
-  totalRetries: number
 }
 
 export interface HashInfoPayload extends BasePayload {
@@ -36,13 +39,7 @@ export interface AgreementSizeExceededPayload extends BasePayload {
   expectedSize: number
 }
 
-export type NotificationPayload = AgreementSizeExceededPayload
+export type NotificationPayload =
+| AgreementSizeExceededPayload
 | AgreementInfoPayload
 | HashInfoPayload
-| RetryPayload
-
-export type Confirmations = Record<string, NotificationsItem>
-
-export type Transport = Modify<NotificationsItem, {
-  payload: string
-}>

@@ -2,7 +2,7 @@ import { Paginated } from '@feathersjs/feathers'
 import {
   AbstractAPIService, isResultPaginated,
 } from 'api/models/apiService'
-import { NotificationsAPI, NotificationsItem } from './interfaces'
+import { NotificationItem, NotificationsAPI } from './interfaces'
 
 export const serviceAddress = 'notification' as const
 export const serviceChannel = 'notifications' as const
@@ -12,13 +12,13 @@ export class NotificationsService
   implements NotificationsAPI {
   path = serviceAddress
 
-  _fetch = async (): Promise<NotificationsItem[]> => {
-    const result: Paginated<Transport> = await this
+  _fetch = async (): Promise<NotificationItem[]> => {
+    const result: Paginated<NotificationItem> = await this
       .service.find()
     const { data, ...metadata } = isResultPaginated(result)
       ? result : { data: result }
     this.meta = metadata
 
-    return data as unknown as NotificationsItem[] // .map(utils.mapFromTransport)
+    return data // .map(utils.mapFromTransport)
   }
 }

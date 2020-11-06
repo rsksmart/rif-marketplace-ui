@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC, useContext } from 'react'
 import ROUTES from 'routes'
 /* eslint-disable import/no-unresolved */
 import InfoIcon from '@material-ui/icons/Info'
@@ -8,14 +8,30 @@ import StorageIcon from '@material-ui/icons/Storage'
 import Login from 'components/atoms/Login'
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone'
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive'
-import { colors } from '@rsksmart/rif-ui'
-import { HeaderItemProps } from '@rsksmart/rif-ui/dist/components/organisms/Header/HeaderProps'
-import withNotificationsContext from 'context/Services/notifications'
-import { Header as RUIHeader } from './Header/'
-import { ActionHeaderItemProps } from './Header/HeaderProps'
+import { colors, Header as RifHeader } from '@rsksmart/rif-ui'
+import { NavItemProps, ActionHeaderItemProps } from '@rsksmart/rif-ui/dist/components/organisms/Header/HeaderProps'
+import withNotificationsContext, { NotificationsContext } from 'context/Services/notifications'
+import NotificationsPopover from './NotificationsPopover'
 
-const Header = () => {
-  const headerItems: HeaderItemProps[] = [
+const Headers: FC = () => {
+  const {
+    state: {
+      notifications,
+    },
+  } = useContext(NotificationsContext)
+  const [
+    anchorNotificationsMenu,
+    setAnchorNotificationsMenu,
+  ] = React.useState<null | HTMLElement>(null)
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+    setAnchorNotificationsMenu(event.currentTarget)
+  }
+
+  const handleClose = (): void => {
+    setAnchorNotificationsMenu(null)
+  }
+
+  const headerItems: NavItemProps[] = [
     {
       title: 'Domains',
       to: ROUTES.RNS.BASE,
@@ -40,25 +56,32 @@ const Header = () => {
     },
   ]
 
-  const hasNotification = true
-
   const actionItems: ActionHeaderItemProps[] = [
     {
-      icon: hasNotification
+      icon: notifications.length
         ? <NotificationsActiveIcon htmlColor={colors.white} />
         : <NotificationsNoneIcon htmlColor={colors.white} />,
-      onClick: () => {},
+      onClick: handleClick,
+      'aria-haspopup': 'true',
     },
   ]
 
   return (
-    <RUIHeader
-        hreflogo={ROUTES.LANDING}
-        itemsStart={headerItems}
-        itemsEnd={actionItems}
-        login={Login}
-    />
+    <>
+      <RifHeader
+          hreflogo={ROUTES.LANDING}
+          itemsStart={headerItems}
+          itemsEnd={actionItems}
+          login={Login}
+      />
+      <NotificationsPopover
+        anchorEl={anchorNotificationsMenu}
+        onClose={handleClose}
+        notifications={notifications}
+        open={Boolean(anchorNotificationsMenu)}
+      />
+    </>
   )
 }
 
-export default withNotificationsContext(Header)
+export default withNotificationsContext(Headers)

@@ -1,5 +1,10 @@
 import { ActionFunctions } from './interfaces'
 
-const actions: ActionFunctions = {}
+const actions: ActionFunctions = {
+  SET_NOTIFICATIONS: (state, notifications) => ({
+    ...state,
+    notifications,
+  }),
+}
 
 export default actions
