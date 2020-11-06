@@ -19,6 +19,6 @@ export class NotificationsService
       ? result : { data: result }
     this.meta = metadata
 
-    return data // .map(utils.mapFromTransport)
+    return data
   }
 }

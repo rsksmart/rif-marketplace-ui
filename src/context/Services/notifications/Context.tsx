@@ -26,6 +26,7 @@ export const Provider: FC = ({ children }) => {
       apis: {
         notification: {
           service,
+          fetch,
           attachEvent,
           connect,
         },
@@ -71,6 +72,35 @@ export const Provider: FC = ({ children }) => {
       }
     }
   }, [service, attachEvent, errorReporter, isInitialised, dispatch])
+
+  // Fetch data
+  useEffect(() => {
+    if (isInitialised) {
+      appDispatch({
+        type: 'SET_IS_LOADING',
+        payload: {
+          isLoading: true,
+          id: 'data',
+        },
+      })
+      fetch()
+        .then((items) => {
+          dispatch({
+            type: 'SET_NOTIFICATIONS',
+            payload: items,
+          })
+        })
+        .finally(() => {
+          appDispatch({
+            type: 'SET_IS_LOADING',
+            payload: {
+              isLoading: false,
+              id: 'data',
+            },
+          })
+        })
+    }
+  }, [isInitialised, fetch, appDispatch])
 
   // Finalise
   const value = useMemo(() => ({

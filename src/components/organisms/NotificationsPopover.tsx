@@ -4,7 +4,7 @@ import {
   CardContent,
   CardHeader,
   Divider,
-  ListItem,
+  Grid,
   makeStyles, Popover, PopoverProps, Typography,
 } from '@material-ui/core'
 import { Notifications } from 'context/Services/notifications/interfaces'
@@ -20,7 +20,7 @@ const codeMessageMap: CodeMessage = {
   [MessageCodesEnum.I_AGREEMENT_EXPIRED]: ({ payload: { agreementReference } }) => `Agreement ${agreementReference} expired.`,
   [MessageCodesEnum.E_AGREEMENT_SIZE_LIMIT_EXCEEDED]: ({ payload: { agreementReference } }) => `Size limit exceeded for agreement ${agreementReference}`,
   [MessageCodesEnum.I_HASH_PINNED]: (notification) => {
-    const { hash } = notification.payload as HashInfoPayload
+    const { hash } = notification?.payload as HashInfoPayload
 
     return `Hash ${hash} successfully pinned.`
   },
@@ -77,15 +77,17 @@ const NotificationsPopover: FC<Props> = ({
         <CardContent>
           {
           !!notifications && notifications.map((item, i) => (
-            <ListItem
-              key={item.timestamp}
-              onClick={(evt): void => (!!onClose && onClose(evt, 'escapeKeyDown')) as void}
-            >
-              {!!i && <Divider classes={dividerClasses} />}
-              <Typography variant="caption">
-                {codeMessageMap[item.code](item)}
-              </Typography>
-            </ListItem>
+            <Grid container key={item.payload.timestamp}>
+              <Grid item>
+                {!!i && <Divider classes={dividerClasses} />}
+                <Typography
+                  variant="caption"
+                  onClick={(evt): void => (!!onClose && onClose(evt, 'escapeKeyDown')) as void}
+                >
+                  {codeMessageMap[item.payload.code](item)}
+                </Typography>
+              </Grid>
+            </Grid>
           ))
         }
         </CardContent>

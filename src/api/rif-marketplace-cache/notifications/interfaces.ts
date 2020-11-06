@@ -20,8 +20,6 @@ export interface NotificationItem {
   type: string
   account: string
   payload: NotificationPayload
-  code: MessageCodesEnum
-  timestamp: number
 }
 interface BasePayload {
   agreementReference: string
@@ -39,7 +37,11 @@ export interface AgreementSizeExceededPayload extends BasePayload {
   expectedSize: number
 }
 
-export type NotificationPayload =
-| AgreementSizeExceededPayload
-| AgreementInfoPayload
-| HashInfoPayload
+export type NotificationPayload = {
+  code: MessageCodesEnum
+  timestamp: number
+} & (
+  | AgreementSizeExceededPayload
+  | AgreementInfoPayload
+  | HashInfoPayload
+)
