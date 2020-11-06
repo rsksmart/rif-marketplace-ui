@@ -6,8 +6,7 @@ import {
   PeriodInSeconds,
 } from 'models/marketItems/StorageItem'
 import { BillingPlanTransport, OfferTransport } from 'api/models/storage/transports'
-import { Big } from 'big.js'
-import { parseToBigDecimal } from 'utils/parsers'
+import { parseConvertBig, parseToBigDecimal } from 'utils/parsers'
 import { MinMaxFilter } from 'models/Filters'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { mapToTransport } from 'api/models/storage/StorageFilter'
@@ -38,7 +37,9 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     id: provider,
     location: 'UK',
     system: 'IPFS',
-    availableSizeGB: new Big(availableCapacityMB).div(UNIT_PREFIX_POW2.KILO),
+    availableSizeGB: parseConvertBig(
+      availableCapacityMB, UNIT_PREFIX_POW2.KILO,
+    ),
     subscriptionOptions: plans
       .sort(
         (a: BillingPlanTransport, b: BillingPlanTransport) => (
@@ -54,8 +55,12 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     averagePrice: averagePriceTransport,
     acceptedCurrencies,
     peerId,
-    utilizedCapacityGB: new Big(utilizedCapacityMB).div(UNIT_PREFIX_POW2.KILO),
-    totalCapacityGB: new Big(totalCapacityMB).div(UNIT_PREFIX_POW2.KILO),
+    utilizedCapacityGB: parseConvertBig(
+      utilizedCapacityMB, UNIT_PREFIX_POW2.KILO,
+    ),
+    totalCapacityGB: parseConvertBig(
+      totalCapacityMB, UNIT_PREFIX_POW2.KILO,
+    ),
   }
   return offer
 }
