@@ -39,7 +39,7 @@ export class RifERC20Contract extends ContractBase implements ERC20ContractI {
   ): Promise<TransactionReceipt> {
     return this._send(
       this.contract.methods.approve(contractAddress, amount),
-      { ...txOptions, gasMultiplayer: 1.1 },
+      { ...txOptions, gasMultiplier: 1.1 },
     )
   }
 }

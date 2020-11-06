@@ -23,7 +23,7 @@ export class ContractBase {
     tx: any,
     txOptions: TxOptions,
   ): Promise<TxOptions> {
-    const { value, from, gasMultiplayer } = txOptions
+    const { value, from, gasMultiplier } = txOptions
     let { gasPrice, gas } = txOptions
 
     if (!gasPrice) {
@@ -39,7 +39,7 @@ export class ContractBase {
         from,
         gasPrice,
         value,
-      })) * (gasMultiplayer ?? 1))
+      })) * (gasMultiplier ?? 1))
     }
 
     return {

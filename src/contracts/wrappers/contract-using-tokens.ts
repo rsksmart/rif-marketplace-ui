@@ -4,7 +4,7 @@ import { AbiItem } from 'web3-utils'
 
 import ContractBase from './contract-base'
 import {
-  SupportedTokens, Token, TOKENS, TOKENS_TYPES, TransactionOptions, TxOptions,
+  SupportedTokens, Token, SUPPORTED_TOKENS, TOKEN_TYPES, TransactionOptions, TxOptions,
 } from '../interfaces'
 
 export class ContractWithTokens extends ContractBase {
@@ -25,8 +25,8 @@ export class ContractWithTokens extends ContractBase {
     this.supportedTokens = supportedTokens
     this.name = name
     // Set default token
-    this._defaultToken = this._isCurrencySupported(TOKENS.RBTC)
-      ? TOKENS.RBTC
+    this._defaultToken = this._isCurrencySupported(SUPPORTED_TOKENS.RBTC)
+      ? SUPPORTED_TOKENS.RBTC
       : this.supportedTokens[0].token
   }
 
@@ -61,7 +61,7 @@ export class ContractWithTokens extends ContractBase {
     const { tokenContract, type: tokenType } = this._getToken(currency)
 
     switch (tokenType) {
-      case TOKENS_TYPES.ERC20:
+      case TOKEN_TYPES.ERC20:
         return tokenContract.approve(
           this.contract.options.address, value as number, { from, gasPrice },
         )
@@ -87,7 +87,7 @@ export class ContractWithTokens extends ContractBase {
     }
 
     // Need approve tx
-    if (tokenToUse !== TOKENS.RBTC) {
+    if (tokenToUse !== SUPPORTED_TOKENS.RBTC) {
       const approveReceipt = await this._approveTokenTransfer(
         tokenToUse, { from, gasPrice, value },
       )
@@ -102,7 +102,7 @@ export class ContractWithTokens extends ContractBase {
       {
         from,
         gas,
-        value: tokenToUse === TOKENS.RBTC ? value : 0, // If use native token(RBTC) send as usual
+        value: tokenToUse === SUPPORTED_TOKENS.RBTC ? value : 0, // If use native token(RBTC) send as usual
         gasPrice,
       },
     )

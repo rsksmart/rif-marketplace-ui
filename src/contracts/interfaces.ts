@@ -1,6 +1,6 @@
 import { TransactionReceipt } from 'web3-eth'
 
-import ContractBase from './wrappers/contract-base'
+import { RifERC20Contract } from './tokens/rif'
 import { MarketplaceContractErrorId } from './Marketplace'
 import { RnsContractErrorId } from './Rns'
 import { StorageStakingContractErrorId } from './Staking'
@@ -14,7 +14,7 @@ export interface TransactionOptions {
   value?: string | number
 }
 
-export interface ERC20ContractI extends ContractBase {
+export interface ERC20ContractI {
   approve (
       address: string, amount: string | number, options: TransactionOptions
   ): Promise<TransactionReceipt>
@@ -35,18 +35,19 @@ export type ContractErrorId =
   | StorageContractErrorId
   | StorageStakingContractErrorId
 
-export enum TOKENS {
+export enum SUPPORTED_TOKENS {
   RIF = 'rif',
   RBTC = 'rbtc'
 }
 
-export enum TOKENS_TYPES {
+export enum TOKEN_TYPES {
   ERC20 = 'erc20',
+  NATIVE = 'native'
 }
 
-export type SupportedTokens = TOKENS.RIF | TOKENS.RBTC
+export type SupportedTokens = SUPPORTED_TOKENS.RIF | SUPPORTED_TOKENS.RBTC
 
-export type TokenTypes = TOKENS_TYPES.ERC20
+export type TokenTypes = TOKEN_TYPES.NATIVE | TOKEN_TYPES.ERC20
 
 export type TokenContractsType = ERC20ContractI
 
@@ -57,7 +58,12 @@ export type Token = {
 }
 
 export type TxOptions = TransactionOptions & {
-  gasMultiplayer?: number
+  gasMultiplier?: number
   token?: SupportedTokens
   onApprove?: (receipt: TransactionReceipt) => void
+}
+
+export const TOKENS: { [key: string]: Token } = {
+  [SUPPORTED_TOKENS.RBTC]: { token: SUPPORTED_TOKENS.RBTC, type: TOKEN_TYPES.NATIVE } as Token,
+  [SUPPORTED_TOKENS.RIF]: { token: SUPPORTED_TOKENS.RIF, type: TOKEN_TYPES.ERC20, tokenContract: RifERC20Contract as unknown as ERC20ContractI },
 }

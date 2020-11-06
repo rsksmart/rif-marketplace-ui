@@ -42,7 +42,7 @@ export class RifERC677Contract extends ContractBase {
       this.contract.methods.transferAndCall(
         contractAddress, tokenPrice, tokenId,
       ),
-      { ...txOptions, gasMultiplayer: 1.1 },
+      { ...txOptions, gasMultiplier: 1.1 },
     )
   }
 }
