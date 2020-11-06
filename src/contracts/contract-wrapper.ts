@@ -5,7 +5,7 @@ import { AbiItem } from 'web3-utils'
 
 import Logger from '../utils/Logger'
 import {
-  TxOptions, Token, SupportedTokens, TOKENS_TYPES, TOKENS, TransactionOptions,
+  SupportedTokens, Token, TOKENS, TOKENS_TYPES, TransactionOptions, TxOptions,
 } from './interfaces'
 import withWaitForReceipt from './utils'
 
@@ -37,7 +37,7 @@ export class ContractBase {
     }
 
     if (!gas) {
-      gas = Math.floor((await tx.estimateGas({
+      gas = Math.ceil((await tx.estimateGas({
         from,
         gasPrice,
         value,
@@ -75,9 +75,11 @@ export class ContractBase {
 }
 
 export class ContractWithTokens extends ContractBase {
-  private readonly name?: string
+  public readonly name?: string
 
   private readonly supportedTokens: Token[]
+
+  private _defaultToken: SupportedTokens
 
   constructor(
     web3: Web3,
@@ -89,6 +91,18 @@ export class ContractWithTokens extends ContractBase {
     super(web3, abi, address)
     this.supportedTokens = supportedTokens
     this.name = name
+    // Set default token
+    this._defaultToken = this._isCurrencySupported(TOKENS.RBTC)
+      ? TOKENS.RBTC
+      : this.supportedTokens[0].token
+  }
+
+  get defaultToken(): SupportedTokens {
+    return this._defaultToken
+  }
+
+  set defaultToken(token: SupportedTokens) {
+    this._defaultToken = token
   }
 
   private _isCurrencySupported(currency: SupportedTokens): boolean {
@@ -96,7 +110,9 @@ export class ContractWithTokens extends ContractBase {
   }
 
   private _getToken(tokenName: SupportedTokens): Token {
-    const tokenObject = this.supportedTokens.find(({ token }) => token === tokenName)
+    const tokenObject = this.supportedTokens.find(
+      ({ token }) => token === tokenName,
+    )
 
     if (!tokenObject) {
       throw new Error(`Token ${tokenName} is not supported by ${this.name} contract`)
@@ -104,13 +120,18 @@ export class ContractWithTokens extends ContractBase {
     return tokenObject
   }
 
-  private _approveToken(currency: SupportedTokens, txOptions: TransactionOptions): Promise<TransactionReceipt> {
+  private _approveTokenTransfer(
+    currency: SupportedTokens,
+    txOptions: TransactionOptions,
+  ): Promise<TransactionReceipt> {
     const { value, from, gasPrice } = txOptions
     const { tokenContract, type: tokenType } = this._getToken(currency)
 
     switch (tokenType) {
       case TOKENS_TYPES.ERC20:
-        return tokenContract.approve(this.contract.options.address, value as number, { from, gasPrice })
+        return tokenContract.approve(
+          this.contract.options.address, value as number, { from, gasPrice },
+        )
       default:
         throw new Error(`Unknown token contract interface ${tokenType}`)
     }
@@ -122,11 +143,11 @@ export class ContractWithTokens extends ContractBase {
       gas,
       value,
       gasPrice,
-      useToken,
+      token,
       onApprove,
     } = await this._processOptions(tx, txOptions)
 
-    const tokenToUse = useToken || TOKENS.RBTC
+    const tokenToUse = token || this.defaultToken
 
     if (!this._isCurrencySupported(tokenToUse)) {
       throw new Error(`Token ${tokenToUse} is not supported by ${this.name} contract`)
@@ -134,7 +155,9 @@ export class ContractWithTokens extends ContractBase {
 
     // Need approve tx
     if (tokenToUse !== TOKENS.RBTC) {
-      const approveReceipt = await this._approveToken(tokenToUse, { from, gasPrice, value })
+      const approveReceipt = await this._approveTokenTransfer(
+        tokenToUse, { from, gasPrice, value },
+      )
 
       if (onApprove) {
         await onApprove(approveReceipt)

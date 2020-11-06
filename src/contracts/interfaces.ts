@@ -15,8 +15,13 @@ export interface TransactionOptions {
 }
 
 export interface ERC20ContractI extends ContractBase {
-  approve (address: string, amount: string | number, options: TransactionOptions): Promise<TransactionReceipt>
-  getBalanceOf (account: string, options: TransactionOptions): Promise<string | number>
+  approve (
+      address: string, amount: string | number, options: TransactionOptions
+  ): Promise<TransactionReceipt>
+
+  getBalanceOf (
+      account: string, options: TransactionOptions
+  ): Promise<string | number>
 }
 
 export type Web3ErrorId = 'web3-getGasPrice'
@@ -45,10 +50,14 @@ export type TokenTypes = TOKENS_TYPES.ERC20
 
 export type TokenContractsType = ERC20ContractI
 
-export type Token = { token: SupportedTokens, type: TokenTypes, tokenContract: TokenContractsType }
+export type Token = {
+  token: SupportedTokens
+  type: TokenTypes
+  tokenContract: TokenContractsType
+}
 
 export type TxOptions = TransactionOptions & {
   gasMultiplayer?: number
-  useToken?: SupportedTokens
+  token?: SupportedTokens
   onApprove?: (receipt: TransactionReceipt) => void
 }

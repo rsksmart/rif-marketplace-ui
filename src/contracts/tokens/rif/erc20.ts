@@ -1,15 +1,15 @@
 import Web3 from 'web3'
-import { Contract } from 'web3-eth-contract'
-import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
+import { AbiItem } from 'web3-utils'
 
+import ERC20 from '../../abi/ERC20.json'
 import { rifTokenAddress } from '../../config'
-import { TransactionOptions } from '../../interfaces'
-import withWaitForReceipt from '../../utils'
+import { ContractBase } from '../../contract-wrapper'
+import { ERC20ContractI, TransactionOptions } from '../../interfaces'
 
 export type RifERC20ContractErrorId = 'contract-rif-getBalanceOf' | 'contract-rif-transferAndCall'
 
-export class RifERC20Contract {
+export class RifERC20Contract extends ContractBase implements ERC20ContractI {
   public static getInstance(web3: Web3): RifERC20Contract {
     if (!RifERC20Contract.instance) {
       RifERC20Contract.instance = new RifERC20Contract(web3)
@@ -19,35 +19,27 @@ export class RifERC20Contract {
 
   private static instance: RifERC20Contract
 
-  private contract: Contract
-
-  private web3: Web3
-
   private constructor(web3: Web3) {
-    this.contract = new web3.eth.Contract(ERC20.abi as AbiItem[], rifTokenAddress)
-    this.web3 = web3
+    const { abi: ERC20Abi } = ERC20 as { abi: AbiItem[] }
+    super(web3, ERC20Abi, rifTokenAddress)
   }
 
-  public getBalanceOf = (account: string, txOptions: TransactionOptions): Promise<number> => {
+  public getBalanceOf(
+    account: string,
+    txOptions: TransactionOptions,
+  ): Promise<number> {
     const { from } = txOptions
-    const balance = this.contract.methods.balanceOf(account).call({ from })
-    return balance
+    return this.contract.methods.balanceOf(account).call({ from })
   }
 
-  public approve = async (contractAddress: string, amount: string, txOptions: TransactionOptions): Promise<TransactionReceipt> => {
-    // Get gas limit for Payment transaction
-    const { from, gasPrice } = txOptions
-    const estimatedGas = await this.contract.methods.approve(contractAddress, amount).estimateGas({ from, gasPrice })
-    const gas = Math.floor(estimatedGas * 1.1)
-
-    // Transfer and Call transaction
-    return new Promise<TransactionReceipt>(
-      () => this.contract.methods.approve(
-        contractAddress, amount,
-      ).send(
-        { from, gas, gasPrice },
-        withWaitForReceipt(this.web3),
-      ),
+  public approve(
+    contractAddress: string,
+    amount: string,
+    txOptions: TransactionOptions,
+  ): Promise<TransactionReceipt> {
+    return this._send(
+      this.contract.methods.approve(contractAddress, amount),
+      { ...txOptions, gasMultiplayer: 1.1 },
     )
   }
 }
