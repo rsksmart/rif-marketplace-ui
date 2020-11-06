@@ -4,7 +4,7 @@ import { AbiItem } from 'web3-utils'
 
 import ERC20 from '../../abi/ERC20.json'
 import { rifTokenAddress } from '../../config'
-import { ContractBase } from '../../contract-wrapper'
+import ContractBase from '../../wrappers/contract-base'
 import { ERC20ContractI, TransactionOptions } from '../../interfaces'
 
 export type RifERC20ContractErrorId = 'contract-rif-getBalanceOf' | 'contract-rif-transferAndCall'

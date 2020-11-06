@@ -1,6 +1,6 @@
 import { TransactionReceipt } from 'web3-eth'
 
-import { ContractBase } from './contract-wrapper'
+import ContractBase from './wrappers/contract-base'
 import { MarketplaceContractErrorId } from './Marketplace'
 import { RnsContractErrorId } from './Rns'
 import { StorageStakingContractErrorId } from './Staking'

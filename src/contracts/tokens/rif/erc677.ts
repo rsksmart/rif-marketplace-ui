@@ -4,7 +4,7 @@ import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 
 import { rifTokenAddress } from '../../config'
-import { ContractBase } from '../../contract-wrapper'
+import ContractBase from '../../wrappers/contract-base'
 import { TransactionOptions } from '../../interfaces'
 
 export type RifERC677ContractErrorId = 'contract-rif-getBalanceOf' | 'contract-rif-transferAndCall'
