@@ -69,6 +69,7 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
     },
     dispatch: agreementsDispatch,
   } = useContext<AgreementContextProps>(AgreementsContext)
+
   // filter by the current account
   useEffect(() => {
     if (account) {

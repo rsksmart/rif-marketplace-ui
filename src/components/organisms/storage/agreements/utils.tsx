@@ -133,13 +133,13 @@ export const createProviderItemFields = (
 ): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
   const agreementInfo = getCoreItemFields(agreement, crypto, currentFiat)
   const {
-    id, consumer, availableFunds, paymentToken,
+    id, consumer, paymentToken, toBePayedOut,
   } = agreement
   const consumerValue = <AddressItem value={consumer} />
-  const availableFundsValue = (
+  const toBePayedOutValue = (
     <ItemWUnit
       type="mediumPrimary"
-      value={availableFunds.toPrecision(2)}
+      value={toBePayedOut.toPrecision(2)}
       unit={tokenDisplayNames[paymentToken]}
     />
   )
@@ -152,7 +152,7 @@ export const createProviderItemFields = (
     renewalDate: agreementInfo['RENEWAL DATE'],
     subscriptionPeriod: agreementInfo['SUBSCRIPTION PERIOD'],
     monthlyFee: agreementInfo['PRICE/GB'],
-    availableFunds: availableFundsValue,
+    toBePayedOut: toBePayedOutValue,
     withdraw: (
       <SelectRowButton
         id={id}
@@ -169,7 +169,7 @@ export const createProviderItemFields = (
         handleSelect={(event): void => onItemSelect(event, {
           ...agreementInfo,
           CONSUMER: consumerValue,
-          'AVAILABLE FUNDS': availableFundsValue,
+          'AVAILABLE FUNDS': toBePayedOutValue,
         } as AgreementProviderView)}
       >
         View

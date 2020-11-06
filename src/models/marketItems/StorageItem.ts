@@ -38,6 +38,7 @@ export type Agreement = Item & {
   paymentToken: SupportedToken
   consumer: string
   availableFunds: Big
+  toBePayedOut: Big
 }
 
 export type StorageItem = StorageOffer
