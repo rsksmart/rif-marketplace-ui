@@ -72,6 +72,7 @@ describe('Storage OffersService', () => {
         plans,
         acceptedCurrencies,
         utilizedCapacity,
+        totalCapacity,
       } = FAKE_OFFER_0
       const expectedOffers: StorageOffer = {
         id: provider,
@@ -89,6 +90,7 @@ describe('Storage OffersService', () => {
         averagePrice: avgBillingPrice,
         peerId: 'QmYyQSo1c1Ym7orWxLYvCrM2EmxFTANf8wXmmE7DWjhx5N',
         utilizedCapacityGB: new Big(utilizedCapacity).div(UNIT_PREFIX_POW2.KILO),
+        totalCapacityGB: new Big(totalCapacity).div(UNIT_PREFIX_POW2.KILO),
       }
 
       expect(actualReturnValue[0]).toStrictEqual(expectedOffers)

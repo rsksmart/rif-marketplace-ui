@@ -31,6 +31,7 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     acceptedCurrencies,
     peerId,
     utilizedCapacity: utilizedCapacityMB,
+    totalCapacity: totalCapacityMB,
   } = offerTransport
 
   const offer: StorageOffer = {
@@ -54,6 +55,7 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     acceptedCurrencies,
     peerId,
     utilizedCapacityGB: new Big(utilizedCapacityMB).div(UNIT_PREFIX_POW2.KILO),
+    totalCapacityGB: new Big(totalCapacityMB).div(UNIT_PREFIX_POW2.KILO),
   }
   return offer
 }
