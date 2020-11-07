@@ -1,9 +1,8 @@
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 import { Contract } from 'web3-eth-contract'
-import { AbiItem } from 'web3-utils'
-import Logger from '../../utils/Logger'
 
+import Logger from '../../utils/Logger'
 import { TxOptions } from '../interfaces'
 import withWaitForReceipt from '../utils'
 
@@ -14,8 +13,8 @@ export class ContractBase {
 
   private readonly web3: Web3
 
-  constructor(web3: Web3, abi: AbiItem[], address: string) {
-    this.contract = new web3.eth.Contract(abi, address)
+  constructor(web3: Web3, contact: Contract) {
+    this.contract = contact
     this.web3 = web3
   }
 

@@ -63,7 +63,7 @@ export type TxOptions = TransactionOptions & {
   onApprove?: (receipt: TransactionReceipt) => void
 }
 
-export const TOKENS: { [key: string]: Token } = {
+export const TOKENS: Record<SupportedTokens, Token> = {
   [SUPPORTED_TOKENS.RBTC]: { token: SUPPORTED_TOKENS.RBTC, type: TOKEN_TYPES.NATIVE } as Token,
   [SUPPORTED_TOKENS.RIF]: { token: SUPPORTED_TOKENS.RIF, type: TOKEN_TYPES.ERC20, tokenContract: RifERC20Contract as unknown as ERC20ContractI },
 }

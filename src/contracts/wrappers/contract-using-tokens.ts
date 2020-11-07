@@ -1,6 +1,6 @@
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
-import { AbiItem } from 'web3-utils'
+import { Contract } from 'web3-eth-contract'
 
 import ContractBase from './contract-base'
 import {
@@ -16,12 +16,11 @@ export class ContractWithTokens extends ContractBase {
 
   constructor(
     web3: Web3,
-    abi: AbiItem[],
-    address: string,
+    contract: Contract,
     supportedTokens: Token[],
     name?: string,
   ) {
-    super(web3, abi, address)
+    super(web3, contract)
     this.supportedTokens = supportedTokens
     this.name = name
     // Set default token
