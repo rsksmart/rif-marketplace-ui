@@ -2,10 +2,15 @@ import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 import { Contract } from 'web3-eth-contract'
 
-import ContractBase from './contract-base'
 import {
-  SupportedTokens, Token, SUPPORTED_TOKENS, TOKEN_TYPES, TransactionOptions, TxOptions,
+  SUPPORTED_TOKENS,
+  SupportedTokens,
+  Token,
+  TOKEN_TYPES,
+  TransactionOptions,
+  TxOptions,
 } from '../interfaces'
+import ContractBase from './contract-base'
 
 export class ContractWithTokens extends ContractBase {
   public readonly name?: string
@@ -53,11 +58,11 @@ export class ContractWithTokens extends ContractBase {
   }
 
   private _approveTokenTransfer(
-    currency: SupportedTokens,
+    token: Token,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> {
     const { value, from, gasPrice } = txOptions
-    const { tokenContract, type: tokenType } = this._getToken(currency)
+    const { tokenContract, type: tokenType } = token
 
     switch (tokenType) {
       case TOKEN_TYPES.ERC20:
@@ -79,14 +84,14 @@ export class ContractWithTokens extends ContractBase {
       onApprove,
     } = await this._processOptions(tx, txOptions)
 
-    const tokenToUse = token || this.defaultToken
+    const tokenToUse = this._getToken(token || this.defaultToken)
 
-    if (!this._isCurrencySupported(tokenToUse)) {
+    if (!this._isCurrencySupported(tokenToUse.token)) {
       throw new Error(`Token ${tokenToUse} is not supported by ${this.name} contract`)
     }
 
-    // Need approve tx
-    if (tokenToUse !== SUPPORTED_TOKENS.RBTC) {
+    // Need token transaction
+    if (tokenToUse.type !== TOKEN_TYPES.NATIVE) {
       const approveReceipt = await this._approveTokenTransfer(
         tokenToUse, { from, gasPrice, value },
       )
@@ -101,7 +106,7 @@ export class ContractWithTokens extends ContractBase {
       {
         from,
         gas,
-        value: tokenToUse === SUPPORTED_TOKENS.RBTC ? value : 0, // If use native token(RBTC) send as usual
+        value: tokenToUse.type === TOKEN_TYPES.NATIVE ? value : 0, // If use native token(RBTC) send as usual
         gasPrice,
       },
     )
