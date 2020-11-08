@@ -69,6 +69,7 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
     },
     dispatch: agreementsDispatch,
   } = useContext<AgreementContextProps>(AgreementsContext)
+
   // filter by the current account
   useEffect(() => {
     if (account) {
@@ -79,7 +80,7 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
     }
   }, [account, agreementsDispatch])
 
-  const { system, availableSizeGB } = storageOffer
+  const { system, availableSizeGB, totalCapacityGB } = storageOffer
   const [isExpanded, setIsExpanded] = useState(initiallyExpanded)
   const [cancelOfferOpen, setCancelOfferOpen] = useState(false)
   const handleChange = (): void => setIsExpanded(!isExpanded)
@@ -112,7 +113,7 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
             <LabelWithValue label="System" value={system} />
           </Grid>
           <Grid item sm={3}>
-            <LabelWithValue label="Listed Size" value={`${availableSizeGB} GB`} />
+            <LabelWithValue label="Listed Size" value={`${totalCapacityGB} GB`} />
           </Grid>
           <Grid item sm={2}>
             <Typography align="right" color="primary" variant="body2">
