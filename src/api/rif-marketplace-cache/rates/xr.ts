@@ -1,6 +1,7 @@
 import { Paginated } from '@feathersjs/feathers'
 import { AbstractAPIService, APIService, isResultPaginated } from 'api/models/apiService'
 import { Modify } from 'utils/typeUtils'
+import client from '../client'
 
 export type XRServiceAddress = 'rates/v0'
 export const xrServiceAddress: XRServiceAddress = 'rates/v0'
@@ -31,6 +32,8 @@ export type XRAPIService = Modify<APIService, {
 
 export class XRService extends AbstractAPIService implements XRAPIService {
   path = xrServiceAddress
+
+  constructor() { super(client) }
 
   _fetch = async (filters: XRFilter): Promise<XRItem[]> => {
     const { fiatSymbol } = filters
