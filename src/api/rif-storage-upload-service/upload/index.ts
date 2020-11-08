@@ -1,6 +1,6 @@
 import { AbstractAPIService, APIService } from 'api/models/apiService'
 import { Modify } from 'utils/typeUtils'
-import client from './client'
+import client from '../client'
 
 export const xrServiceAddress = 'upload' as const
 export type XRServiceAddress = typeof xrServiceAddress
