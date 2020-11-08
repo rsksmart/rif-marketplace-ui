@@ -24,6 +24,7 @@ export interface StorageOffer extends Item {
   averagePrice: number
   acceptedCurrencies: string[]
   peerId: string
+  totalCapacityGB: Big
 }
 
 export type Agreement = Item & {
@@ -38,6 +39,7 @@ export type Agreement = Item & {
   paymentToken: SupportedToken
   consumer: string
   availableFunds: Big
+  toBePayedOut: Big
 }
 
 export type StorageItem = StorageOffer

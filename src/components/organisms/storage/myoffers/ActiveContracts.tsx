@@ -57,7 +57,7 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
     renewalDate: 'Renewal date',
     subscriptionPeriod: 'Subscription type',
     monthlyFee: 'Monthly fee',
-    availableFunds: 'Available funds',
+    toBePayedOut: 'Available funds', // available funds to be paid to provider
     withdraw: '',
     view: '',
   }
