@@ -1,4 +1,6 @@
-import React, { Dispatch, FC, useState } from 'react'
+import React, {
+  Dispatch, FC, useContext, useState,
+} from 'react'
 import { ButtonProps, makeStyles } from '@material-ui/core'
 import { colors } from '@rsksmart/rif-ui'
 import RoundBtn from 'components/atoms/RoundBtn'
@@ -6,6 +8,7 @@ import PinEnterInfoTab from 'components/molecules/storage/buy/PinEnterInfoTab'
 import PinUploaderTab from 'components/molecules/storage/buy/PinUploaderTab'
 import RifCard from 'components/organisms/RifCard'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
+import withStorageUploadContext, { StorageUploadContext } from 'context/Services/storage/upload'
 import { StorageCheckoutAction } from 'context/storage/buy/checkout'
 import StoragePinTabs from './StoragePinTabs'
 
@@ -28,6 +31,12 @@ const useActionButtonStyles = makeStyles(() => ({
 const PinningCard: FC<Props> = ({ dispatch }) => {
   const actionBtnClasses = useActionButtonStyles()
 
+  const {
+    asyncActions: {
+      uploadFiles,
+    },
+  } = useContext(StorageUploadContext)
+
   const [isUpladed, setIsUploaded] = useState(false)
   const [size, setSize] = useState('')
   const [hash, setHash] = useState('')
@@ -48,10 +57,11 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     })
   }
 
-  const handleUpload = async (): Promise<void> => {
-    // Upload files
-    await Promise.resolve(files)
-    // Update context
+  const handleUpload = (): void => {
+    if (files) {
+      console.log('Uploading files:', files)
+      uploadFiles(files)
+    }
   }
 
   const action: Pick<ButtonProps, 'children' | 'onClick' | 'disabled'> = isUpladed
@@ -92,4 +102,4 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
   )
 }
 
-export default PinningCard
+export default withStorageUploadContext(PinningCard)

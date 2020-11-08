@@ -2,18 +2,18 @@ import { AbstractAPIService, APIService } from 'api/models/apiService'
 import { Modify } from 'utils/typeUtils'
 import client from '../client'
 
-export const xrServiceAddress = 'upload' as const
-export type XRServiceAddress = typeof xrServiceAddress
+export const serviceAddress = 'upload' as const
+export type ServiceAddress = typeof serviceAddress
 
 export type UploadAPIService = Modify<APIService, {
-  path: XRServiceAddress
-  post: (data) => Promise<void>
+  path: ServiceAddress
+  post: (files: File[]) => Promise<unknown>
 }>
 
 export default class UploadService
   extends AbstractAPIService
   implements UploadAPIService {
-    path = xrServiceAddress
+    path = serviceAddress
 
     constructor() {
       super(client)
@@ -21,7 +21,21 @@ export default class UploadService
 
     _fetch = (): Promise<void> => Promise.resolve()
 
-    post = async (): Promise<void> => {
+    post = async (): Promise<unknown> => {
+      // FIXME: change for a real request
+      const result: {
+        message: string
+        fileHash: string
+      } = await new Promise((resolve) => {
+        const wait = setTimeout(() => {
+          clearTimeout(wait)
+          resolve({
+            message: 'File uploaded',
+            fileHash: '0xFILE_HASH',
+          })
+        }, 10000)
+      })
 
+      return result.fileHash
     }
 }

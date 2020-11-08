@@ -5,7 +5,7 @@ import { ErrorReporterError } from 'context/App/AppContext'
 import createClient from 'api/client'
 import { ServiceAddress } from './serviceAddresses'
 
-export type APIErrorId = 'service-connection' | 'service-event-attach' | 'service-fetch'
+export type APIErrorId = 'service-connection' | 'service-event-attach' | 'service-fetch' | 'service-post'
 
 export interface ServiceEventListener {
   (...args: any[]): void
