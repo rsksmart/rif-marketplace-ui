@@ -15,12 +15,6 @@ export type StorageState = ServiceState<StorageItem> & {
   limits: Pick<StorageOffersFilters, 'price' | 'size'>
 }
 
-export enum TimePeriodEnum {
-  Daily = 1,
-  Weekly = 7,
-  Monthly = 30,
-}
-
 export type STORAGE_ACTION = OFFERS_ACTION
 
 export const TokenAddressees = {
