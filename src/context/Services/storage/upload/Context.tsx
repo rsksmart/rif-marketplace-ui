@@ -76,7 +76,10 @@ export const Provider: FC = ({ children }) => {
         })
         dispatch({
           type: 'SET_STATUS',
-          payload: { inProgress: true },
+          payload: {
+            ...initialState.status,
+            inProgress: true,
+          },
         })
 
         return new Promise((resolve) => post(files)

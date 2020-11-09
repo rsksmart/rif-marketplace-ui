@@ -27,6 +27,7 @@ export default class UploadService
         message: string
         fileHash: string
       } = await new Promise((resolve) => {
+        console.log('fake posting')
         const wait = setTimeout(() => {
           clearTimeout(wait)
           resolve({

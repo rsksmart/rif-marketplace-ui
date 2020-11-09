@@ -1,9 +1,12 @@
 import { Actions } from './interfaces'
 
 const actions: Actions = {
-  SET_STATUS: (state, status) => ({
+  SET_STATUS: (state, payload) => ({
     ...state,
-    status,
+    status: {
+      ...state.status,
+      ...payload,
+    },
   }),
 }
 
