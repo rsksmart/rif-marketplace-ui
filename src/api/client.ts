@@ -4,9 +4,6 @@ import io from 'socket.io-client'
 import auth from '@feathersjs/authentication-client'
 
 const defaultOptions: SocketIOClient.ConnectOpts = {
-  transports: ['websocket'],
-  forceNew: true,
-  timeout: undefined,
 }
 
 const createClient = <ServiceType extends object>(

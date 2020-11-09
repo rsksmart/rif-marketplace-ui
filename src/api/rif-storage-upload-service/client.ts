@@ -4,4 +4,5 @@ const UPLOAD_ADDRESS = process.env.REACT_APP_UPLOAD_ADDR || 'http://localhost:30
 
 export default createClient(UPLOAD_ADDRESS, {
   autoConnect: false, // FIXME: REMOVE!!!
+  forceNew: true,
 })
