@@ -1,4 +1,3 @@
-import { Dispatch } from 'react'
 import { Agreement } from 'models/marketItems/StorageItem'
 import { ContextProps, ContextState } from 'context/storeUtils/interfaces'
 import { AgreementFilters } from 'api/rif-marketplace-cache/storage/interfaces'

@@ -2,9 +2,9 @@ import React, {
   createContext,
   FC, useContext, useEffect, useMemo, useReducer, useState,
 } from 'react'
-import { serviceAddress } from 'api/rif-marketplace-cache/notifications'
+import { mapFromTransport, serviceAddress } from 'api/rif-marketplace-cache/notifications'
 import { createReducer } from 'context/storeUtils/reducer'
-import { NotificationPayload } from 'api/rif-marketplace-cache/notifications/interfaces'
+import { Transport as NotificationsTransport } from 'api/rif-marketplace-cache/notifications/interfaces'
 import createWithContext from 'context/storeUtils/createWithContext'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { Props, State } from './interfaces'
@@ -40,10 +40,10 @@ export const Provider: FC = ({ children }) => {
     initialState,
   )
 
-  const onEvent = (payload: NotificationPayload): void => {
+  const onEvent = (transport: NotificationsTransport): void => {
     dispatch({
       type: 'SET_NOTIFICATIONS',
-      payload,
+      payload: mapFromTransport(transport),
     })
   }
 
