@@ -48,6 +48,7 @@ const mapFromTransport = ({
   size,
   consumer,
   availableFunds,
+  toBePayedOut,
 }: AgreementTransport): Agreement => {
   const miliesToDeath = parseInt(expiresIn, 10) * 1000
   const contentSize = new Big(size)
@@ -67,6 +68,7 @@ const mapFromTransport = ({
     paymentToken: getPaymentToken(tokenAddress),
     consumer,
     availableFunds: parseToBigDecimal(availableFunds, 18),
+    toBePayedOut: parseToBigDecimal(toBePayedOut, 18),
   }
 }
 

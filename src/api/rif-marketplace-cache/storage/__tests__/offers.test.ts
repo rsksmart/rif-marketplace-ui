@@ -1,4 +1,3 @@
-import { Big } from 'big.js'
 import { OfferTransport } from 'api/models/storage/transports'
 import mockFeathersService from 'api/test-utils/feathers'
 import {
@@ -7,7 +6,7 @@ import {
   PeriodInSeconds,
   SubscriptionPeriod,
 } from 'models/marketItems/StorageItem'
-import { parseToBigDecimal } from 'utils/parsers'
+import { parseConvertBig, parseToBigDecimal } from 'utils/parsers'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { StorageOffersService } from '../offers'
@@ -72,13 +71,16 @@ describe('Storage OffersService', () => {
         plans,
         acceptedCurrencies,
         utilizedCapacity,
+        totalCapacity,
       } = FAKE_OFFER_0
       const expectedOffers: StorageOffer = {
         id: provider,
         location: 'UK',
         acceptedCurrencies,
         system: 'IPFS',
-        availableSizeGB: new Big(availableCapacity).div(UNIT_PREFIX_POW2.KILO),
+        availableSizeGB: parseConvertBig(
+          availableCapacity, UNIT_PREFIX_POW2.KILO,
+        ),
         subscriptionOptions: plans
           .filter((plan) => !!PeriodInSeconds[plan.period])
           .map<BillingPlan>((plan) => ({
@@ -88,7 +90,10 @@ describe('Storage OffersService', () => {
           })),
         averagePrice: avgBillingPrice,
         peerId: 'QmYyQSo1c1Ym7orWxLYvCrM2EmxFTANf8wXmmE7DWjhx5N',
-        utilizedCapacityGB: new Big(utilizedCapacity).div(UNIT_PREFIX_POW2.KILO),
+        utilizedCapacityGB: parseConvertBig(
+          utilizedCapacity, UNIT_PREFIX_POW2.KILO,
+        ),
+        totalCapacityGB: parseConvertBig(totalCapacity, UNIT_PREFIX_POW2.KILO),
       }
 
       expect(actualReturnValue[0]).toStrictEqual(expectedOffers)
