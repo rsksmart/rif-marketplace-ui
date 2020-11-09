@@ -1,5 +1,5 @@
 import React, {
-  FC, useCallback, useContext, useEffect, useState,
+  FC, useContext, useEffect, useState,
 } from 'react'
 import {
   makeStyles, TableContainer, Typography,
@@ -25,13 +25,8 @@ import {
   createCustomerItemFields,
 } from 'components/organisms/storage/agreements/utils'
 import WithLoginCard from 'components/hoc/WithLoginCard'
-import AppContext, { errorReporterFactory } from 'context/App/AppContext'
-import { UIError } from 'models/UIMessage'
-import { LoadingPayload } from 'context/App/appActions'
-import { TokenAddressees } from 'context/Market/storage/interfaces'
-import Web3 from 'web3'
-import Logger from 'utils/Logger'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
+import withWithdrawContext, { StorageWithdrawContext, StorageWithdrawContextProps } from 'context/storage/mypurchases/withdraw'
 
 const useTitleStyles = makeStyles(() => ({
   root: {
@@ -40,8 +35,6 @@ const useTitleStyles = makeStyles(() => ({
   },
 }))
 
-const logger = Logger.getInstance()
-
 const MyStoragePurchases: FC = () => {
   const history = useHistory()
   const titleStyleClass = useTitleStyles()
@@ -49,7 +42,7 @@ const MyStoragePurchases: FC = () => {
     state: {
       agreements,
     },
-    dispatch,
+    dispatch: agreementsDispatch,
   } = useContext<AgreementContextProps>(AgreementsContext)
   const {
     state: {
@@ -60,88 +53,42 @@ const MyStoragePurchases: FC = () => {
     },
   } = useContext(MarketContext)
   const {
-    state: { account, web3 },
+    state: { account },
   } = useContext(Web3Store)
-  const { dispatch: appDispatch } = useContext(AppContext)
-  const reportError = useCallback((
-    e: UIError,
-  ) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
-  const [processingTx, setProcessingTx] = useState(false)
-  const [txOperationDone, setTxOperationDone] = useState(false)
+  const {
+    state: {
+      status: {
+        inProgress, isDone,
+      },
+      agreement: selectedAgreement,
+    },
+    dispatch,
+    asyncActions: {
+      withdraw: withdrawAction,
+    },
+  } = useContext<StorageWithdrawContextProps>(StorageWithdrawContext)
 
   const [
     itemDetails,
     setItemDetails,
   ] = useState<AgreementCustomerView | undefined>(undefined)
-  const [
-    selectedAgreement,
-    setSelectedAgreement,
-  ] = useState<Agreement | undefined>(undefined)
 
   useEffect(() => {
     if (account) {
-      dispatch({
+      agreementsDispatch({
         type: 'SET_FILTERS',
         payload: { consumer: account },
       })
     }
-  }, [account, dispatch])
+  }, [account, agreementsDispatch])
 
   useEffect(() => {
     // hides modal on tx operation done
-    if (txOperationDone && itemDetails) {
+    if (isDone && itemDetails) {
       setItemDetails(undefined)
     }
-  }, [txOperationDone, itemDetails])
-
-  const onWithdraw = async (agreement: Agreement): Promise<void> => {
-    try {
-      appDispatch({
-        type: 'SET_IS_LOADING',
-        payload: {
-          isLoading: true,
-          id: 'contract',
-          message: 'Withdrawing your funds...',
-        } as LoadingPayload,
-      })
-      setProcessingTx(true)
-      const storageContract = (await import('contracts/storage/contract'))
-        .default.getInstance(web3 as Web3)
-
-      const withdrawFundsReceipt = await storageContract
-        .withdrawFunds(
-          {
-            amounts: ['0'], // using 0 withdraws the max amount available
-            dataReference: agreement.dataReference,
-            provider: agreement.provider,
-            tokens: [TokenAddressees[agreement.paymentToken]],
-          },
-          { from: account },
-        )
-      logger.debug('receipt: ', { withdrawFundsReceipt })
-
-      if (withdrawFundsReceipt) {
-        setTxOperationDone(true)
-      }
-    } catch (error) {
-      logger.error('error withdrawing consumer funds', error)
-      reportError(new UIError({
-        error,
-        id: 'contract-storage',
-        text: 'Could not withdraw your funds.',
-      }))
-    } finally {
-      setProcessingTx(false)
-      appDispatch({
-        type: 'SET_IS_LOADING',
-        payload: {
-          isLoading: false,
-          id: 'contract',
-        } as LoadingPayload,
-      })
-    }
-  }
+  }, [isDone, itemDetails])
 
   const headers = {
     title: 'Title',
@@ -159,7 +106,7 @@ const MyStoragePurchases: FC = () => {
     crypto,
     currentFiat,
     (_, agreement: Agreement) => {
-      dispatch({
+      agreementsDispatch({
         type: 'SET_ORDER',
         payload: agreement,
       })
@@ -167,21 +114,36 @@ const MyStoragePurchases: FC = () => {
     },
     (_, agreementView: AgreementView, agreement: Agreement) => {
       setItemDetails(agreementView as AgreementCustomerView)
-      setSelectedAgreement(agreement)
+      dispatch({
+        type: 'SET_AGREEMENT',
+        payload: agreement,
+      })
     },
   )
 
   const renderDetailsActions = (): JSX.Element => (
     <RoundBtn
-      onClick={(): Promise<void> => onWithdraw(selectedAgreement as Agreement)}
+      onClick={
+        (): void => {
+          dispatch({
+            type: 'SET_AGREEMENT',
+            payload: selectedAgreement as Agreement,
+          })
+          withdrawAction()
+        }
+      }
     >
       Withdraw all funds
     </RoundBtn>
   )
 
   const handleTxCompletedClose = (): void => {
-    setProcessingTx(false)
-    setTxOperationDone(false)
+    dispatch({
+      type: 'SET_STATUS',
+      payload: {
+        inProgress: false,
+      },
+    })
     setItemDetails(undefined)
   }
 
@@ -221,9 +183,9 @@ const MyStoragePurchases: FC = () => {
         actions={renderDetailsActions}
       />
       <ProgressOverlay
-        isDone={txOperationDone}
+        isDone={isDone}
         doneMsg="Your funds have been withdrawed!"
-        inProgress={processingTx}
+        inProgress={inProgress}
         buttons={[
           <RoundBtn
             onClick={handleTxCompletedClose}
@@ -237,8 +199,10 @@ const MyStoragePurchases: FC = () => {
   )
 }
 
-export default WithLoginCard({
-  WrappedComponent: MyStoragePurchases,
-  title: 'Connect your wallet to see your purchases',
-  contentText: 'Connect your wallet to get detailed information about your purchases',
-})
+export default withWithdrawContext(
+  WithLoginCard({
+    WrappedComponent: MyStoragePurchases,
+    title: 'Connect your wallet to see your purchases',
+    contentText: 'Connect your wallet to get detailed information about your purchases',
+  }),
+)
