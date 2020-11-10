@@ -13,6 +13,7 @@ import { TextField, MenuItem } from '@material-ui/core'
 import { MarketCryptoRecord } from 'models/Market'
 import { SubscriptionPeriod } from 'models/marketItems/StorageItem'
 import Big from 'big.js'
+import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
 
 export interface EditableBillingPlanProps {
   onPlanAdded?: (billingPlan: StorageBillingPlan) => void
@@ -29,19 +30,29 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
   cryptoXRs,
   fiatDisplayName,
 }) => {
-  const { state: { allBillingPeriods, usedPeriodsPerCurrency }, dispatch } = useContext(OfferEditContext)
+  const {
+    state: { allBillingPeriods, usedPeriodsPerCurrency },
+    dispatch,
+  } = useContext(OfferEditContext)
 
   const editMode = !!billingPlan
-  // TODO: remove hard-coded currency by default
-  const [currency, setCurrency] = useState(billingPlan?.currency || 'rbtc')
+  const [currency, setCurrency] = useState<SupportedToken>(billingPlan?.currency || 'rbtc')
   const [pricePerGb, setPricePerGb] = useState(billingPlan?.price.toString())
-  const [period, setPeriod] = useState(billingPlan?.period || allBillingPeriods[0])
+  const [period, setPeriod] = useState(
+    billingPlan?.period || allBillingPeriods[0],
+  )
 
-  const onPriceChange = ({ target: { value } }) => setPricePerGb(value)
-  const onCurrencyChange = ({ target: { value } }) => setCurrency(value)
-  const onSelectedPeriodChange = ({ target: { value } }) => setPeriod(value)
+  const onPriceChange = (
+    { target: { value } },
+  ): void => setPricePerGb(value)
+  const onCurrencyChange = (
+    { target: { value } },
+  ): void => setCurrency(value)
+  const onSelectedPeriodChange = (
+    { target: { value } },
+  ): void => setPeriod(value)
 
-  const handleOnAddClick = () => {
+  const handleOnAddClick = (): void => {
     if (!pricePerGb) return
     const newBillingPlan: StorageBillingPlan = {
       price: new Big(pricePerGb),
@@ -56,7 +67,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
     if (onPlanAdded) onPlanAdded(newBillingPlan)
   }
 
-  const handleOnSaveClick = () => {
+  const handleOnSaveClick = (): void => {
     if (!pricePerGb) return
     const internalId = billingPlan?.internalId
     dispatch(({
@@ -72,7 +83,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
     if (onPlanSaved) onPlanSaved()
   }
 
-  const ActionButton = () => {
+  const ActionButton = (): JSX.Element => {
     if (!editMode) {
       return (
         <Button
@@ -80,17 +91,22 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
           variant="outlined"
           rounded
           onClick={handleOnAddClick}
-          disabled={Number(pricePerGb) <= 0 || usedPeriodsPerCurrency[currency]?.includes(period)}
+          disabled={
+            Number(pricePerGb) <= 0
+            || usedPeriodsPerCurrency[currency]?.includes(period)
+          }
         >
           {' '}
           Add storage plan
         </Button>
       )
     }
-    const hasChanged = billingPlan?.period !== period || billingPlan?.currency !== currency
+    const hasChanged = billingPlan?.period !== period
+      || billingPlan?.currency !== currency
     const currencyAndPeriodInUse = usedPeriodsPerCurrency[currency]?.includes(period)
     // the period or currency have changed and the selected option is in use
-    const isDisabled = Number(pricePerGb) <= 0 || (hasChanged && currencyAndPeriodInUse)
+    const isDisabled = Number(pricePerGb) <= 0
+      || (hasChanged && currencyAndPeriodInUse)
 
     return (
       <TooltipIconButton

@@ -33,8 +33,8 @@ const EditOfferStepper: FC<EditOfferStepperProps> = ({ endHandler }) => {
     state: { availableSize, system, peerId },
   } = useContext<OfferEditContextProps>(OfferEditContext)
 
-  const handleNext = () => setActiveStep(1)
-  const handleBack = () => setActiveStep(0)
+  const handleNext = (): void => setActiveStep(1)
+  const handleBack = (): void => setActiveStep(0)
 
   return (
     <Stepper activeStep={activeStep} orientation="vertical">
@@ -51,7 +51,7 @@ const EditOfferStepper: FC<EditOfferStepperProps> = ({ endHandler }) => {
               onClick={handleNext}
               className={classes.button}
               rounded
-              disabled={!availableSize || !system || !peerId}
+              disabled={!availableSize || availableSize <= 0 || !system || !peerId}
             >
               Next
             </Button>
