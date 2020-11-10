@@ -14,6 +14,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { AppContextProvider } from 'context/App/AppContext'
 import { BlockchainContextProvider } from 'context/Blockchain/BlockchainContext'
 import { MarketContextProvider } from 'context/Market/MarketContext'
+import { NotificationsContextProvider } from 'context/Services/notifications'
 
 const requiredNetworkId: number = Number(process.env.REACT_APP_REQUIRED_NETWORK_ID) || 8545
 
@@ -43,6 +44,7 @@ const App = () => {
   }
 
   const orderedProviders = [
+    NotificationsContextProvider,
     BlockchainContextProvider,
     MarketContextProvider,
   ]
