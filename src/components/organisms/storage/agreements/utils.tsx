@@ -83,7 +83,8 @@ export const createCustomerItemFields = (
   onItemRenew: (event, agreement: Agreement) => void,
   onItemSelect: (
     event,
-    agreementView: (AgreementCustomerView)
+    agreementView: (AgreementCustomerView),
+    agreement: Agreement
   ) => void,
 ): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
   const agreementInfo = getCoreItemFields(agreement, crypto, currentFiat)
@@ -121,11 +122,14 @@ export const createCustomerItemFields = (
     view: (
       <SelectRowButton
         id={id}
-        handleSelect={(event): void => onItemSelect(event, {
-          ...agreementInfo,
-          PROVIDER: providerValue,
-          'WITHDRAWABLE FUNDS': withdrawableFundsValue,
-        } as AgreementCustomerView)}
+        handleSelect={(event): void => onItemSelect(
+          event, {
+            ...agreementInfo,
+            PROVIDER: providerValue,
+            'WITHDRAWABLE FUNDS': withdrawableFundsValue,
+          } as AgreementCustomerView,
+          agreement,
+        )}
       >
         View
       </SelectRowButton>

@@ -6,6 +6,7 @@ import { AbiItem, asciiToHex } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
 import { ZERO_ADDRESS } from 'constants/strings'
+import { convertToWeiString } from 'utils/parsers'
 import { encodeHash, prefixArray } from './utils'
 import withWaitForReceipt, { TransactionOptions } from '../utils'
 import { storageAddress } from '../config'
@@ -120,7 +121,7 @@ class StorageContract {
       gas,
       gasPrice,
     },
-    withWaitForReceipt(this.web3))
+      withWaitForReceipt(this.web3))
   }
 
   public setOffer = async (
@@ -205,6 +206,51 @@ class StorageContract {
     return this.contract.methods
       .hasUtilizedCapacity(account)
       .call({ from, gas, gasPrice })
+  }
+
+  public withdrawFunds = async (
+    {
+      dataReference,
+      provider,
+      tokens,
+      amounts,
+    }: {
+      dataReference: string
+      provider: string
+      tokens: string[]
+      amounts: string[]
+    },
+    txOptions: TransactionOptions,
+  ): Promise<TransactionReceipt> => {
+    const encodedDataReference = asciiToHex(dataReference)
+    const { from } = txOptions
+
+    const gasPrice = await this.web3.eth.getGasPrice()
+      .catch((error: Error) => {
+        logger.error('error getting gas price, error:', error)
+        throw error
+      })
+
+    const weiAmounts = amounts.map(convertToWeiString)
+    const withdrawFundsTask = await this.contract.methods
+      .withdrawFunds([encodedDataReference], provider, tokens, weiAmounts)
+
+    const estimatedGas = await withdrawFundsTask.estimateGas({ from, gasPrice })
+      .catch((error: Error) => {
+        logger.error('error estimating gas, error:', error)
+        throw error
+      })
+
+    const gas = Math.floor(estimatedGas * 1.1)
+
+    return withdrawFundsTask.send(
+      {
+        from,
+        gas,
+        gasPrice,
+      },
+      withWaitForReceipt(this.web3),
+    )
   }
 
   public payoutFunds = async (

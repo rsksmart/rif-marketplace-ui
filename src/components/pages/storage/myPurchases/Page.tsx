@@ -25,6 +25,8 @@ import {
   createCustomerItemFields,
 } from 'components/organisms/storage/agreements/utils'
 import WithLoginCard from 'components/hoc/WithLoginCard'
+import ProgressOverlay from 'components/templates/ProgressOverlay'
+import withWithdrawContext, { StorageWithdrawContext, StorageWithdrawContextProps } from 'context/storage/mypurchases/withdraw'
 
 const useTitleStyles = makeStyles(() => ({
   root: {
@@ -40,7 +42,7 @@ const MyStoragePurchases: FC = () => {
     state: {
       agreements,
     },
-    dispatch,
+    dispatch: agreementsDispatch,
   } = useContext<AgreementContextProps>(AgreementsContext)
   const {
     state: {
@@ -54,6 +56,19 @@ const MyStoragePurchases: FC = () => {
     state: { account },
   } = useContext(Web3Store)
 
+  const {
+    state: {
+      status: {
+        inProgress, isDone,
+      },
+      agreement: selectedAgreement,
+    },
+    dispatch,
+    asyncActions: {
+      withdraw: withdrawAction,
+    },
+  } = useContext<StorageWithdrawContextProps>(StorageWithdrawContext)
+
   const [
     itemDetails,
     setItemDetails,
@@ -61,12 +76,19 @@ const MyStoragePurchases: FC = () => {
 
   useEffect(() => {
     if (account) {
-      dispatch({
+      agreementsDispatch({
         type: 'SET_FILTERS',
         payload: { consumer: account },
       })
     }
-  }, [account, dispatch])
+  }, [account, agreementsDispatch])
+
+  useEffect(() => {
+    // hides modal on tx operation done
+    if (isDone && itemDetails) {
+      setItemDetails(undefined)
+    }
+  }, [isDone, itemDetails])
 
   const headers = {
     title: 'Title',
@@ -84,24 +106,46 @@ const MyStoragePurchases: FC = () => {
     crypto,
     currentFiat,
     (_, agreement: Agreement) => {
-      dispatch({
+      agreementsDispatch({
         type: 'SET_ORDER',
         payload: agreement,
       })
       history.push(ROUTES.STORAGE.MYPURCHASES.RENEW)
     },
-    (_, agreementView: AgreementView) => {
+    (_, agreementView: AgreementView, agreement: Agreement) => {
       setItemDetails(agreementView as AgreementCustomerView)
+      dispatch({
+        type: 'SET_AGREEMENT',
+        payload: agreement,
+      })
     },
   )
 
   const renderDetailsActions = (): JSX.Element => (
     <RoundBtn
-      onClick={(): void => undefined}
+      onClick={
+        (): void => {
+          dispatch({
+            type: 'SET_AGREEMENT',
+            payload: selectedAgreement as Agreement,
+          })
+          withdrawAction()
+        }
+      }
     >
-      Withdraw funds
+      Withdraw all funds
     </RoundBtn>
   )
+
+  const handleTxCompletedClose = (): void => {
+    dispatch({
+      type: 'SET_STATUS',
+      payload: {
+        inProgress: false,
+      },
+    })
+    setItemDetails(undefined)
+  }
 
   return (
     <CenteredPageTemplate>
@@ -138,12 +182,27 @@ const MyStoragePurchases: FC = () => {
         itemDetails={itemDetails}
         actions={renderDetailsActions}
       />
+      <ProgressOverlay
+        isDone={isDone}
+        doneMsg="Your funds have been withdrawed!"
+        inProgress={inProgress}
+        buttons={[
+          <RoundBtn
+            onClick={handleTxCompletedClose}
+          >
+            Close
+          </RoundBtn>,
+        ]}
+        title="Withdrawing your funds"
+      />
     </CenteredPageTemplate>
   )
 }
 
-export default WithLoginCard({
-  WrappedComponent: MyStoragePurchases,
-  title: 'Connect your wallet to see your purchases',
-  contentText: 'Connect your wallet to get detailed information about your purchases',
-})
+export default withWithdrawContext(
+  WithLoginCard({
+    WrappedComponent: MyStoragePurchases,
+    title: 'Connect your wallet to see your purchases',
+    contentText: 'Connect your wallet to get detailed information about your purchases',
+  }),
+)
