@@ -121,7 +121,7 @@ class StorageContract {
       gas,
       gasPrice,
     },
-      withWaitForReceipt(this.web3))
+    withWaitForReceipt(this.web3))
   }
 
   public setOffer = async (
