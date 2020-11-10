@@ -170,7 +170,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
               setSize(sizeUnit.toString())
               setFiles(addedFiles)
             }}
-            filesLimit={1}
+            filesLimit={666}
             maxFileSize={UNIT_PREFIX_POW2.KILO * UNIT_PREFIX_POW2.GIGA}
           />
         )}
