@@ -5,14 +5,13 @@ import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
 import { convertToWeiString } from 'utils/parsers'
-import { ZERO_ADDRESS } from 'constants/strings'
+import { ZERO_ADDRESS, ZERO_BYTES } from 'constants/strings'
 import withWaitForReceipt, { TransactionOptions } from './utils'
 import { stakingAddress } from './config'
 
 const logger = Logger.getInstance()
 export type StorageStakingContractErrorId = 'contract-storage-staking'
 
-const zeroBytes = '0x'.padEnd(64, '0')
 const extraGasPercentage = 1.3
 
 class StakingContract {
@@ -56,7 +55,7 @@ class StakingContract {
 
     const amountWei = convertToWeiString(amount)
 
-    const stakeTask = this.contract.methods.stake(amountWei, token, zeroBytes)
+    const stakeTask = this.contract.methods.stake(amountWei, token, ZERO_BYTES)
     const estimatedGas = await stakeTask.estimateGas({ from, gasPrice })
     const gas = Math.floor(estimatedGas * extraGasPercentage)
 
@@ -93,7 +92,7 @@ class StakingContract {
     const unstakeTask = this.contract.methods.unstake(
       amountWei,
       token,
-      zeroBytes,
+      ZERO_BYTES,
     )
     const estimatedGas = await unstakeTask.estimateGas({ from, gasPrice })
     const gas = Math.floor(estimatedGas * extraGasPercentage)

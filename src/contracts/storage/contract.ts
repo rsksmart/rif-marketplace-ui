@@ -252,6 +252,48 @@ class StorageContract {
       withWaitForReceipt(this.web3),
     )
   }
+
+  public payoutFunds = async (
+    {
+      creatorOfAgreement,
+      dataReferences = [],
+      token = ZERO_ADDRESS,
+    }: {
+      creatorOfAgreement: string
+      dataReferences: string[]
+      token: string
+    },
+    txOptions: TransactionOptions,
+  ): Promise<TransactionReceipt> => {
+    const encodedDataReferences = dataReferences.map(asciiToHex)
+    const { from } = txOptions
+
+    const gasPrice = await this.web3.eth.getGasPrice()
+      .catch((error: Error) => {
+        logger.error('error getting gas price, error:', error)
+        throw error
+      })
+
+    const payoutFundsTask = await this.contract.methods
+      .payoutFunds([encodedDataReferences], [creatorOfAgreement], token, from)
+
+    const estimatedGas = await payoutFundsTask.estimateGas({ from, gasPrice })
+      .catch((error: Error) => {
+        logger.error('error estimating gas, error:', error)
+        throw error
+      })
+
+    const gas = Math.floor(estimatedGas * 1.1)
+
+    return payoutFundsTask.send(
+      {
+        from,
+        gas,
+        gasPrice,
+      },
+      withWaitForReceipt(this.web3),
+    )
+  }
 }
 
 export default StorageContract
