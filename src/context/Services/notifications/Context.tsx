@@ -7,6 +7,7 @@ import { createReducer } from 'context/storeUtils/reducer'
 import { Transport as NotificationsTransport } from 'api/rif-marketplace-cache/notifications/interfaces'
 import createWithContext from 'context/storeUtils/createWithContext'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
+import { Web3Store } from '@rsksmart/rif-ui'
 import { Props, State } from './interfaces'
 import actions from './actions'
 
@@ -22,6 +23,9 @@ export const Context = createContext<Props>({
 
 export const Provider: FC = ({ children }) => {
   const {
+    state: { account },
+  } = useContext(Web3Store)
+  const {
     state: {
       apis: {
         notification: {
@@ -29,6 +33,7 @@ export const Provider: FC = ({ children }) => {
           fetch,
           attachEvent,
           connect,
+          authenticate,
         },
       },
     }, dispatch: appDispatch,
@@ -43,7 +48,7 @@ export const Provider: FC = ({ children }) => {
   const onEvent = (transport: NotificationsTransport): void => {
     dispatch({
       type: 'SET_NOTIFICATIONS',
-      payload: mapFromTransport(transport),
+      payload: [mapFromTransport(transport)],
     })
   }
 
@@ -54,28 +59,35 @@ export const Provider: FC = ({ children }) => {
 
   // Initialise
   useEffect(() => {
-    if (service && !isInitialised) {
-      try {
-        // Set up WS events here
-        attachEvent('updated', onEvent)
-        attachEvent('patched', onEvent)
-        attachEvent('created', onEvent)
-        attachEvent('removed', onEvent)
-        setIsInitialised(true)
-      } catch (e) {
-        errorReporter({
-          error: e,
-          id: 'service-connection',
-          text: 'Error while initialising notifications service.',
-        })
-        setIsInitialised(false)
+    if (service && !isInitialised && account) {
+      const initialise = async (): Promise<void> => {
+        await authenticate(account)
+
+        try {
+          authenticate(account)
+          // Set up WS events here
+          attachEvent('updated', onEvent)
+          attachEvent('patched', onEvent)
+          attachEvent('created', onEvent)
+          attachEvent('removed', onEvent)
+          setIsInitialised(true)
+        } catch (e) {
+          errorReporter({
+            error: e,
+            id: 'service-connection',
+            text: 'Error while initialising notifications service.',
+          })
+          setIsInitialised(false)
+        }
       }
+
+      initialise()
     }
   }, [service, attachEvent, errorReporter, isInitialised, dispatch])
 
   // Fetch data
   useEffect(() => {
-    if (isInitialised) {
+    if (isInitialised && account) {
       appDispatch({
         type: 'SET_IS_LOADING',
         payload: {
@@ -100,7 +112,7 @@ export const Provider: FC = ({ children }) => {
           })
         })
     }
-  }, [isInitialised, fetch, appDispatch])
+  }, [isInitialised, fetch, appDispatch, account])
 
   // Finalise
   const value = useMemo(() => ({

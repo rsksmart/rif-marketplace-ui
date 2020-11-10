@@ -60,7 +60,7 @@ const NotificationsPopover: FC<Props> = ({
         <CardContent>
           {
               Boolean(notifications) && notifications.map((notification, i) => (
-                <div key={notification.payload.timestamp}>
+                <div key={notification.payload.timestamp + notification.payload.agreementReference}>
                   {Boolean(i) && <Divider classes={dividerClasses} />}
                   <NotificationMessage {...{ notification }} />
                 </div>
