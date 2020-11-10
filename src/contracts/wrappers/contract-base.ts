@@ -11,7 +11,7 @@ const logger = Logger.getInstance()
 export class ContractBase {
   protected readonly contract: Contract
 
-  private readonly web3: Web3
+  protected readonly web3: Web3
 
   constructor(web3: Web3, contact: Contract) {
     this.contract = contact
@@ -68,6 +68,22 @@ export class ContractBase {
       },
       withWaitForReceipt(this.web3),
     )
+  }
+
+  protected async _call(
+    tx: any,
+    txOptions: TxOptions,
+  ): Promise<TransactionReceipt> {
+    const {
+      from,
+      value,
+      gas,
+      gasPrice,
+    } = await this._processOptions(tx, txOptions)
+
+    return tx.call({
+      from, gas, gasPrice, value,
+    })
   }
 }
 

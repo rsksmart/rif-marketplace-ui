@@ -1,5 +1,8 @@
 import { TransactionReceipt } from 'web3-eth'
+import Web3 from 'web3'
 
+import { ZERO_ADDRESS } from '../constants/strings'
+import { rifTokenAddress } from './config'
 import { RifERC20Contract } from './tokens/rif'
 import { MarketplaceContractErrorId } from './Marketplace'
 import { RnsContractErrorId } from './Rns'
@@ -49,12 +52,13 @@ export type SupportedTokens = SUPPORTED_TOKENS.RIF | SUPPORTED_TOKENS.RBTC
 
 export type TokenTypes = TOKEN_TYPES.NATIVE | TOKEN_TYPES.ERC20
 
-export type TokenContractsType = ERC20ContractI
+export type SingletonContract = { getInstance(web3: Web3): any }
 
 export type Token = {
   token: SupportedTokens
   type: TokenTypes
-  tokenContract: TokenContractsType
+  tokenContract: SingletonContract
+  tokenAddress: string
 }
 
 export type TxOptions = TransactionOptions & {
@@ -64,6 +68,8 @@ export type TxOptions = TransactionOptions & {
 }
 
 export const TOKENS: Record<SupportedTokens, Token> = {
-  [SUPPORTED_TOKENS.RBTC]: { token: SUPPORTED_TOKENS.RBTC, type: TOKEN_TYPES.NATIVE } as Token,
-  [SUPPORTED_TOKENS.RIF]: { token: SUPPORTED_TOKENS.RIF, type: TOKEN_TYPES.ERC20, tokenContract: RifERC20Contract as unknown as ERC20ContractI },
+  [SUPPORTED_TOKENS.RBTC]: { token: SUPPORTED_TOKENS.RBTC, type: TOKEN_TYPES.NATIVE, tokenAddress: ZERO_ADDRESS } as Token,
+  [SUPPORTED_TOKENS.RIF]: {
+    token: SUPPORTED_TOKENS.RIF, type: TOKEN_TYPES.ERC20, tokenContract: RifERC20Contract, tokenAddress: rifTokenAddress,
+  },
 }

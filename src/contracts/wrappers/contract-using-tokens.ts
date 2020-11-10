@@ -3,6 +3,7 @@ import { TransactionReceipt } from 'web3-eth'
 import { Contract } from 'web3-eth-contract'
 
 import {
+  ERC20ContractI,
   SUPPORTED_TOKENS,
   SupportedTokens,
   Token,
@@ -46,17 +47,6 @@ export class ContractWithTokens extends ContractBase {
     return !!this.supportedTokens.find(({ token }) => currency === token)
   }
 
-  private _getToken(tokenName: SupportedTokens): Token {
-    const tokenObject = this.supportedTokens.find(
-      ({ token }) => token === tokenName,
-    )
-
-    if (!tokenObject) {
-      throw new Error(`Token ${tokenName} is not supported by ${this.name} contract`)
-    }
-    return tokenObject
-  }
-
   private _approveTokenTransfer(
     token: Token,
     txOptions: TransactionOptions,
@@ -66,12 +56,23 @@ export class ContractWithTokens extends ContractBase {
 
     switch (tokenType) {
       case TOKEN_TYPES.ERC20:
-        return tokenContract.approve(
+        return (tokenContract.getInstance(this.web3) as ERC20ContractI).approve(
           this.contract.options.address, value as number, { from, gasPrice },
         )
       default:
         throw new Error(`Unknown token contract interface ${tokenType}`)
     }
+  }
+
+  public getToken(tokenName?: SupportedTokens): Token {
+    const tokenObject = this.supportedTokens.find(
+      ({ token }) => token === (tokenName || this.defaultToken),
+    )
+
+    if (!tokenObject) {
+      throw new Error(`Token ${tokenName} is not supported by ${this.name} contract`)
+    }
+    return tokenObject
   }
 
   async send(tx: any, txOptions: TxOptions): Promise<TransactionReceipt> {
@@ -84,7 +85,7 @@ export class ContractWithTokens extends ContractBase {
       onApprove,
     } = await this._processOptions(tx, txOptions)
 
-    const tokenToUse = this._getToken(token || this.defaultToken)
+    const tokenToUse = this.getToken(token)
 
     if (!this._isCurrencySupported(tokenToUse.token)) {
       throw new Error(`Token ${tokenToUse} is not supported by ${this.name} contract`)
