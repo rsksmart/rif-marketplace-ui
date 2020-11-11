@@ -153,6 +153,7 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
 
   const actions = (): JSX.Element => (
     <RoundBtn
+      disabled={Number(selectedAgreement?.toBePayedOut) <= 0}
       onClick={(): Promise<void> => onWithdraw(selectedAgreement as Agreement)}
     >
       Withdraw funds

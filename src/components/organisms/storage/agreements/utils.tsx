@@ -193,6 +193,7 @@ export const createProviderItemFields = (
         handleSelect={(event): void => {
           onItemWithdraw(event, agreement)
         }}
+        disabled={Number(agreement.toBePayedOut) <= 0}
       >
         Withdraw
       </SelectRowButton>
