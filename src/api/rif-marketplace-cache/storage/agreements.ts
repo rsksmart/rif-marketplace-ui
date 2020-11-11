@@ -37,6 +37,10 @@ const calcMonthlyRate = (
     .div(billingPeriod)
     .mul(PeriodInSeconds.Monthly))
 
+const calcPeriodPrice = (size: Big, billingPrice: string): Big => (
+  size.times(parseToBigDecimal(billingPrice, 18))
+)
+
 const mapFromTransport = ({
   agreementReference,
   dataReference,
@@ -49,9 +53,17 @@ const mapFromTransport = ({
   consumer,
   availableFunds,
   toBePayedOut,
+  periodsSinceLastPayout,
 }: AgreementTransport): Agreement => {
   const miliesToDeath = parseInt(expiresIn, 10) * 1000
   const contentSize = new Big(size)
+
+  // periodsSinceLastPayout comes floored, so we add the current period
+  const unpaidPeriods = new Big(Number(periodsSinceLastPayout) + 1)
+  const priceOfUnpaidPeriods = unpaidPeriods
+    .times(calcPeriodPrice(contentSize, billingPrice))
+  const withdrawableFunds = parseToBigDecimal(availableFunds, 18)
+    .minus(priceOfUnpaidPeriods)
 
   return {
     id: agreementReference,
@@ -67,7 +79,7 @@ const mapFromTransport = ({
     title: '',
     paymentToken: getPaymentToken(tokenAddress),
     consumer,
-    availableFunds: parseToBigDecimal(availableFunds, 18),
+    withdrawableFunds,
     toBePayedOut: parseToBigDecimal(toBePayedOut, 18),
   }
 }

@@ -89,13 +89,13 @@ export const createCustomerItemFields = (
 ): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
   const agreementInfo = getCoreItemFields(agreement, crypto, currentFiat)
   const {
-    id, provider, toBePayedOut, availableFunds, paymentToken,
+    id, provider, withdrawableFunds, paymentToken,
   } = agreement
   const providerValue = <AddressItem value={provider} />
   const withdrawableFundsValue = (
     <ItemWUnit
       type="mediumPrimary"
-      value={availableFunds.minus(toBePayedOut).toPrecision(2)}
+      value={withdrawableFunds.toPrecision(2)}
       unit={tokenDisplayNames[paymentToken]}
     />
   )
