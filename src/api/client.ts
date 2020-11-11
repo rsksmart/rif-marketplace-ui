@@ -3,6 +3,8 @@ import feathersSocketioClient from '@feathersjs/socketio-client'
 import io from 'socket.io-client'
 import auth from '@feathersjs/authentication-client'
 
+import rest from '@feathersjs/rest-client'
+
 const defaultOptions: SocketIOClient.ConnectOpts = {
 }
 
@@ -25,3 +27,12 @@ const createClient = <ServiceType extends object>(
 }
 
 export default createClient
+
+export const createRestClient = <ServiceType extends object>(
+  addr: string,
+): feathers.Application<ServiceType> => {
+  const client = feathers<ServiceType>()
+  const restClient = rest(addr)
+  client.configure(restClient.fetch(window.fetch))
+  return client
+}

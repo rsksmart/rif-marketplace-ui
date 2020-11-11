@@ -52,6 +52,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     },
   } = useContext(StorageUploadContext)
 
+  // TODO: extract into context
   const [isUpladed, setIsUploaded] = useState(false)
   const [size, setSize] = useState('')
   const [sizeB, setSizeB] = useState(Big(0))
@@ -156,7 +157,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
               setSize(sizeUnit.toString())
               setFiles(addedFiles)
             }}
-            filesLimit={666}
+            filesLimit={666 * 666 * 666}
             maxFileSize={Big(TOTAL_SIZE_LIMIT).minus(sizeB).toNumber()}
           />
         )}
@@ -165,3 +166,6 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
 }
 
 export default withStorageUploadContext(PinningCard)
+
+// title: 'Connect your wallet to pin/upload files',
+// contentText: 'Connect your wallet in order to upload files to IPFS or pin existing uploads.',

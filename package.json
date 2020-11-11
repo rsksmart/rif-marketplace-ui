@@ -34,6 +34,7 @@
     "@feathersjs/authentication": "^4.5.8",
     "@feathersjs/authentication-client": "^4.5.8",
     "@feathersjs/feathers": "^4.5.8",
+    "@feathersjs/rest-client": "^4.5.10",
     "@feathersjs/socketio-client": "^4.5.8",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",

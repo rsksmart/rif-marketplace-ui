@@ -1,8 +1,6 @@
-import createClient from 'api/client'
+import { createRestClient } from 'api/client'
+import { UploadAPIService } from './upload'
 
-const UPLOAD_ADDRESS = process.env.REACT_APP_UPLOAD_ADDR || 'http://localhost:3031'
+export const UPLOAD_ADDRESS = process.env.REACT_APP_UPLOAD_ADDR || 'http://localhost:3031'
 
-export default createClient(UPLOAD_ADDRESS, {
-  autoConnect: false, // FIXME: REMOVE!!!
-  forceNew: true,
-})
+export default createRestClient<UploadAPIService>(UPLOAD_ADDRESS)

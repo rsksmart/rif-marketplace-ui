@@ -8,8 +8,10 @@ import { UploadAPIService } from 'api/rif-storage-upload-service/upload'
 import Logger from 'utils/Logger'
 import { UIError } from 'models/UIMessage'
 import createWithContext from 'context/storeUtils/createWithContext'
+import { Web3Store } from '@rsksmart/rif-ui'
 import { AsyncActions, Props, State } from './interfaces'
 import actions from './actions'
+import { StorageOffersContext, StorageOffersContextProps } from '../offers'
 
 export const contextID = 'storage_upload' as const
 export type ContextName = typeof contextID
@@ -45,6 +47,14 @@ export const Provider: FC = ({ children }) => {
     connect,
     post,
   } = api as UploadAPIService
+  const {
+    state: {
+      order: offer,
+    },
+  } = useContext<StorageOffersContextProps>(StorageOffersContext)
+  const {
+    state: { account },
+  } = useContext(Web3Store)
   const [asyncActions, setAsyncActions] = useState(initialAsyncActions)
 
   const [state, dispatch] = useReducer(
@@ -64,7 +74,13 @@ export const Provider: FC = ({ children }) => {
   }
 
   useEffect(() => {
-    if (service) {
+    if (service && account && offer) {
+      const {
+        item: {
+          id: offerId,
+          peerId,
+        },
+      } = offer
       const uploadFiles = (files: File[]): Promise<void> => {
         appDispatch({
           type: 'SET_IS_LOADING',
@@ -82,7 +98,12 @@ export const Provider: FC = ({ children }) => {
           },
         })
 
-        return new Promise((resolve) => post(files)
+        return new Promise((resolve) => post({
+          files,
+          account,
+          peerId,
+          offerId,
+        })
           .then((hash) => {
             dispatch({
               type: 'SET_STATUS',
@@ -118,7 +139,14 @@ export const Provider: FC = ({ children }) => {
         uploadFiles,
       })
     }
-  }, [service, appDispatch, post, reportError])
+  }, [
+    service,
+    appDispatch,
+    post,
+    reportError,
+    account,
+    offer,
+  ])
 
   // Finalise
   const value = useMemo(() => ({

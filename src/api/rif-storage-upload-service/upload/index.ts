@@ -1,13 +1,21 @@
 import { AbstractAPIService, APIService } from 'api/models/apiService'
+import { UIError } from 'models/UIMessage'
 import { Modify } from 'utils/typeUtils'
-import client from '../client'
+import client, { UPLOAD_ADDRESS } from '../client'
 
 export const serviceAddress = 'upload' as const
 export type ServiceAddress = typeof serviceAddress
 
+export type StorageUploadArgs = {
+  files: File[]
+  account: string
+  peerId: string
+  offerId: string
+}
+
 export type UploadAPIService = Modify<APIService, {
   path: ServiceAddress
-  post: (files: File[]) => Promise<unknown>
+  post: (args: StorageUploadArgs) => Promise<unknown>
 }>
 
 export default class UploadService
@@ -21,22 +29,44 @@ export default class UploadService
 
     _fetch = (): Promise<void> => Promise.resolve()
 
-    post = async (): Promise<unknown> => {
-      // FIXME: change for a real request
-      const result: {
-        message: string
-        fileHash: string
-      } = await new Promise((resolve) => {
-        console.log('fake posting')
-        const wait = setTimeout(() => {
-          clearTimeout(wait)
-          resolve({
-            message: 'File uploaded',
-            fileHash: '0xFILE_HASH',
-          })
-        }, 10000)
+    post = async ({
+      files, account, offerId, peerId,
+    }: StorageUploadArgs): Promise<unknown> => {
+      // TODO: the use of the propper client is commented out for now for bug
+      // const data = await this.service.create(formData, {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      // })
+
+      const formData = new FormData()
+
+      files.forEach((file) => {
+        formData.append('files', file, file.name)
       })
 
-      return result.fileHash
+      formData.append('offerId', offerId)
+      formData.append('peerId', peerId)
+      formData.append('account', account)
+
+      const options = {
+        method: 'POST',
+        host: UPLOAD_ADDRESS,
+        path: `/${serviceAddress}`,
+        body: formData,
+      }
+
+      const response = await fetch(`${UPLOAD_ADDRESS}/upload`, options)
+
+      if (response.status !== 200) {
+        throw new UIError({
+          error: new Error(await response.json()),
+          text: 'Error: Could not upload files:',
+          id: 'service-post',
+        })
+      }
+      const data = await response.json()
+
+      return data.fileHash
     }
 }
