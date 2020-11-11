@@ -2,20 +2,20 @@ import React, {
   Dispatch, FC, useContext, useEffect, useState,
 } from 'react'
 import {
-  ButtonProps, CircularProgress, makeStyles, Typography,
+  ButtonProps, CircularProgress, makeStyles,
 } from '@material-ui/core'
-import DoneIcon from '@material-ui/icons/Done'
 import { colors } from '@rsksmart/rif-ui'
 import { Big } from 'big.js'
-import RoundBtn from 'components/atoms/RoundBtn'
+import GridColumn from 'components/atoms/GridColumn'
 import PinEnterInfoTab from 'components/molecules/storage/buy/PinEnterInfoTab'
 import PinUploaderTab from 'components/molecules/storage/buy/PinUploaderTab'
+import StorageUploadAction from 'components/molecules/storage/upload/StorageUploadAction'
+import StorageUploaded from 'components/molecules/storage/upload/StorageUploaded'
 import RifCard from 'components/organisms/RifCard'
-import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import withStorageUploadContext, { StorageUploadContext } from 'context/Services/storage/upload'
 import { StorageCheckoutAction } from 'context/storage/buy/checkout'
-import GridColumn from 'components/atoms/GridColumn'
-import GridItem from 'components/atoms/GridItem'
+import { parseConvertBig } from 'utils/parsers'
+import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import StoragePinTabs from './StoragePinTabs'
 
 type Props = {
@@ -33,6 +33,8 @@ const useActionButtonStyles = makeStyles(() => ({
     background: colors.gray1,
   },
 }))
+
+const TOTAL_SIZE_LIMIT = UNIT_PREFIX_POW2.GIGA
 
 const PinningCard: FC<Props> = ({ dispatch }) => {
   const actionBtnClasses = useActionButtonStyles()
@@ -52,9 +54,11 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
 
   const [isUpladed, setIsUploaded] = useState(false)
   const [size, setSize] = useState('')
+  const [sizeB, setSizeB] = useState(Big(0))
   const [hash, setHash] = useState('')
   const [unit, setUnit] = useState<UNIT_PREFIX_POW2>(UNIT_PREFIX_POW2.MEGA)
   const [files, setFiles] = useState<File[]>([])
+  const [uploadDisabled, setUploadDisabled] = useState(false)
 
   const handlePinning = async (): Promise<void> => {
     // Pin
@@ -81,20 +85,18 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
       uploadFiles(files)
     }
   }
-  const pinActionProps = {
+  const pinActionProps: ButtonProps = {
     children: 'Pin',
     onClick: handlePinning,
     disabled: !(size && hash && unit),
+    classes: actionBtnClasses,
   }
-  const uploadActionProps = {
+  const uploadActionProps: ButtonProps = {
     children: `Upload ${parseFloat(size) ? `${`${Big(size).toFixed(3)} ${UNIT_PREFIX_POW2[unit][0]}B`}` : ''}`,
     onClick: handleUpload,
-    disabled: !files.length,
+    disabled: uploadDisabled,
+    classes: actionBtnClasses,
   }
-  const action: Pick<
-  ButtonProps,
-  'children' | 'onClick' | 'disabled'
-  > = isUpladed ? pinActionProps : uploadActionProps
 
   const renderUploadProgress = (): JSX.Element => {
     if (inProgress) {
@@ -105,40 +107,21 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
           spacing={1}
         >
           <CircularProgress />
-          <Typography>Uploading file</Typography>
         </GridColumn>
       )
     }
 
     if (isDone) {
-      return (
-        <GridColumn
-          justify="center"
-          alignItems="center"
-        >
-          <GridItem>
-            <DoneIcon fontSize="large" htmlColor={colors.primary} />
-          </GridItem>
-          <GridItem>
-            <Typography variant="body1" color="primary">File was uploaded successfully!</Typography>
-          </GridItem>
-          <GridItem>
-            <Typography variant="subtitle1" color="secondary">The hash of your upload is:</Typography>
-          </GridItem>
-          <GridItem>
-            <Typography variant="caption" color="secondary">{uploadedHash}</Typography>
-          </GridItem>
-          <RoundBtn
-            classes={actionBtnClasses}
-            {...pinActionProps}
-          />
-        </GridColumn>
-      )
+      return <StorageUploaded {...{ uploadedHash, ...pinActionProps }} />
     }
     return (
-      <RoundBtn
-        classes={actionBtnClasses}
-        {...action}
+      <StorageUploadAction
+        sizeOverflow={Boolean(uploadDisabled && size)
+          && parseConvertBig(sizeB.minus(TOTAL_SIZE_LIMIT),
+            UNIT_PREFIX_POW2.MEGA).toFixed(3)}
+        maxSize={parseConvertBig(TOTAL_SIZE_LIMIT,
+          UNIT_PREFIX_POW2.MEGA).toString()}
+        {...{ actionBtnClasses, ...uploadActionProps }}
       />
     )
   }
@@ -163,15 +146,18 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
         ) : (
           <PinUploaderTab
             onChange={(addedFiles): void => {
-              const sizeB = new Big(addedFiles.reduce((
+              const totalB = new Big(addedFiles.reduce((
                 acc, file,
               ) => acc + file.size, 0))
-              const sizeUnit = sizeB.div(unit)
+              setSizeB(totalB)
+              const sizeUnit = totalB.div(unit)
+              setUploadDisabled(!!addedFiles.length
+                && totalB.gt(TOTAL_SIZE_LIMIT))
               setSize(sizeUnit.toString())
               setFiles(addedFiles)
             }}
             filesLimit={666}
-            maxFileSize={UNIT_PREFIX_POW2.KILO * UNIT_PREFIX_POW2.GIGA}
+            maxFileSize={Big(TOTAL_SIZE_LIMIT).minus(sizeB).toNumber()}
           />
         )}
     </RifCard>

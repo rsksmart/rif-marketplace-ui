@@ -71,7 +71,7 @@ export const Provider: FC = ({ children }) => {
           payload: {
             isLoading: true,
             id: 'contract',
-            message: 'Creating the agreement...',
+            message: 'Uploading files...',
           },
         })
         dispatch({
