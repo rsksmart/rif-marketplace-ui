@@ -42,7 +42,7 @@ const getCoreItemFields = (
     paymentToken,
     size,
     subscriptionPeriod,
-    id,
+    dataReference,
   } = agreement
   const currency = crypto[paymentToken]
 
@@ -62,10 +62,10 @@ const getCoreItemFields = (
       divider=" "
     />
   )
-  const titleValue = <AddressItem value={title || id} />
+  const titleValue = <AddressItem value={title || dataReference} />
 
   return {
-    HASH: <AddressItem value={id} />,
+    HASH: <AddressItem value={dataReference} />,
     title: titleValue,
     'PRICE/GB': feeValue,
     AMOUNT: sizeValue,
