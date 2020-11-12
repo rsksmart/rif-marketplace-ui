@@ -85,16 +85,16 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
 
   const ActionButton = (): JSX.Element => {
     if (!editMode) {
+      const addIsDisabled = Number(pricePerGb) <= 0
+        || usedPeriodsPerCurrency[currency]?.includes(period)
+
       return (
         <Button
           color="primary"
           variant="outlined"
           rounded
           onClick={handleOnAddClick}
-          disabled={
-            Number(pricePerGb) <= 0
-            || usedPeriodsPerCurrency[currency]?.includes(period)
-          }
+          disabled={addIsDisabled}
         >
           {' '}
           Add storage plan
