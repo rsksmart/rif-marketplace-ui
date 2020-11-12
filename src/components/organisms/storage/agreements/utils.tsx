@@ -36,12 +36,12 @@ const getCoreItemFields = (
   currentFiat: MarketFiat,
 ): AgreementView => {
   const {
-    title,
     monthlyFee,
     renewalDate,
     paymentToken,
     size,
     subscriptionPeriod,
+    id,
     dataReference,
   } = agreement
   const currency = crypto[paymentToken]
@@ -62,11 +62,11 @@ const getCoreItemFields = (
       divider=" "
     />
   )
-  const titleValue = <AddressItem value={title || dataReference} />
+  const idValue = <AddressItem value={id} />
 
   return {
     HASH: <AddressItem value={dataReference} />,
-    title: titleValue,
+    title: idValue,
     'PRICE/GB': feeValue,
     AMOUNT: sizeValue,
     'RENEWAL DATE': getShortDateString(renewalDate),
