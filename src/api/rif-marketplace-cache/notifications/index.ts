@@ -26,8 +26,14 @@ export class NotificationsService
   implements NotificationsAPI {
   path = serviceAddress
 
-  _fetch = async (): Promise<NotificationItem[]> => {
-    const result: Paginated<Transport> = await this.service.find()
+  _fetch = async (account: string): Promise<NotificationItem[]> => {
+    const result: Paginated<Transport> = await this.service.find({
+      query: {
+        accounts: {
+          $like: `%${account}%`,
+        },
+      },
+    })
     const { data, ...metadata } = isResultPaginated(result)
       ? result : { data: result }
     this.meta = metadata
