@@ -21,24 +21,17 @@ export const mapFromTransport: MapFromTransport<
   },
 })
 
-type NotificationsServiceFilter = {
-  account: string
-}
-
 export class NotificationsService
   extends AbstractAPIService
   implements NotificationsAPI {
   path = serviceAddress
 
-  _fetch = async (
-    { account }: NotificationsServiceFilter,
-  ): Promise<NotificationItem[]> => {
+  _fetch = async (account: string): Promise<NotificationItem[]> => {
     const result: Paginated<Transport> = await this.service.find({
       query: {
-        $or: [
-          { provider: account },
-          { consumer: account },
-        ],
+        accounts: {
+          $like: `%${account}%`,
+        },
       },
     })
     const { data, ...metadata } = isResultPaginated(result)

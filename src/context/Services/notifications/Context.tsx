@@ -95,7 +95,7 @@ export const Provider: FC = ({ children }) => {
           id: 'data',
         },
       })
-      fetch({ account })
+      fetch(account)
         .then((items) => {
           dispatch({
             type: 'SET_NOTIFICATIONS',
