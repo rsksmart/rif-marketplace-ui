@@ -7,28 +7,28 @@ import { Typography } from '@material-ui/core'
 import { ButtonProps } from '@rsksmart/rif-ui/dist/components/atoms/Button'
 
 type Props = ButtonProps & {
-  sizeOverflow: string | false | undefined
-  maxSize: string
+  sizeOverLimitMB: string | false | undefined
+  maxSizeMB: string
 }
 const StorageUploadAction: FC<Props> = ({
-  sizeOverflow,
-  maxSize,
+  sizeOverLimitMB,
+  maxSizeMB,
   ...actionProps
 }) => (
   <GridColumn alignItems="center" alignContent="center" spacing={2}>
     <GridItem xs={12}>
       <RoundBtn {...actionProps} />
     </GridItem>
-    {Boolean(sizeOverflow)
+    {Boolean(sizeOverLimitMB)
         && (
           <Typography variant="caption" color="error">
             Max upload size is
             {' '}
-            {maxSize}
+            {maxSizeMB}
             {' '}
             MB. Remove
             {' '}
-            {sizeOverflow}
+            {sizeOverLimitMB}
             {' '}
             MB to continue.
           </Typography>

@@ -16,6 +16,7 @@ import withStorageUploadContext, { StorageUploadContext } from 'context/Services
 import { StorageCheckoutAction } from 'context/storage/buy/checkout'
 import { parseConvertBig } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
+import RoundBtn from 'components/atoms/RoundBtn'
 import StoragePinTabs from './StoragePinTabs'
 
 type Props = {
@@ -117,15 +118,23 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     }
     return (
       <StorageUploadAction
-        sizeOverflow={Boolean(uploadDisabled && size)
+        sizeOverLimitMB={Boolean(uploadDisabled && size)
           && parseConvertBig(sizeB.minus(TOTAL_SIZE_LIMIT),
             UNIT_PREFIX_POW2.MEGA).toFixed(3)}
-        maxSize={parseConvertBig(TOTAL_SIZE_LIMIT,
+        maxSizeMB={parseConvertBig(TOTAL_SIZE_LIMIT,
           UNIT_PREFIX_POW2.MEGA).toString()}
-        {...{ actionBtnClasses, ...uploadActionProps }}
+        classes={actionBtnClasses}
+        {...uploadActionProps}
       />
     )
   }
+
+  const renderPinBtn = (): JSX.Element => (
+    <RoundBtn
+      classes={actionBtnClasses}
+      {...pinActionProps}
+    />
+  )
 
   return (
     <RifCard
@@ -135,7 +144,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
           value={isUpladed}
         />
       )}
-      Actions={renderUploadProgress}
+      Actions={isUpladed ? renderPinBtn : renderUploadProgress}
     >
       {isUpladed && !isDone
         ? (
@@ -166,6 +175,3 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
 }
 
 export default withStorageUploadContext(PinningCard)
-
-// title: 'Connect your wallet to pin/upload files',
-// contentText: 'Connect your wallet in order to upload files to IPFS or pin existing uploads.',
