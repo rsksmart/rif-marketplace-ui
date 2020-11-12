@@ -31,8 +31,8 @@ export default class UploadService
 
     post = async ({
       files, account, offerId, peerId,
-    }: StorageUploadArgs): Promise<unknown> => {
-      // TODO: the use of the propper client is commented out for now for bug
+    }: StorageUploadArgs): Promise<string> => {
+      // TODO: the use of the propper client is commented out for now for bug: https://github.com/feathersjs/feathers/issues/1744#issuecomment-568015824
       // const data = await this.service.create(formData, {
       //   headers: {
       //     'Content-Type': 'multipart/form-data',

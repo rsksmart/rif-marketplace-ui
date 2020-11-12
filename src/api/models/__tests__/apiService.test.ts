@@ -1,14 +1,26 @@
-import { AbstractAPIService } from 'api/models/apiService'
+import { Service } from '@feathersjs/feathers'
+import createClient from 'api/client'
+import { AbstractAPIService, APIService } from 'api/models/apiService'
+import { Modify } from 'utils/typeUtils'
 
-const MOCK_PATH = 'fake_path'
+const MOCK_PATH = 'fake_path' as const
+type Path = typeof MOCK_PATH
 
 describe('AbstractAPIService', () => {
   const fakeErrorReporter = jest.fn()
 
-  class FakeAPIService extends AbstractAPIService {
+  class FakeAPIService
+    extends AbstractAPIService
+    implements Modify<APIService, {
+  path: Path
+}> {
     path = MOCK_PATH
 
-    _fetch!: (filters?: any) => Promise<any>
+    constructor() {
+      super(createClient(''))
+    }
+
+    _fetch!: (filters?: unknown) => Promise<unknown>
   }
 
   let fakeApiService: FakeAPIService
@@ -39,13 +51,13 @@ describe('AbstractAPIService', () => {
     })
     test('should call errorReporter if service is falsy', () => {
       fakeApiService.connect(fakeErrorReporter)
-      fakeApiService.service = undefined as any
+      fakeApiService.service = undefined as unknown as Service<unknown>
       fakeApiService.fetch()
       expect(fakeErrorReporter).toBeCalled()
     })
     test('should call errorReporter if this._fetch fails', () => {
       fakeApiService.connect(fakeErrorReporter)
-      fakeApiService._fetch = () => Promise.reject(new Error('fake reject')) // eslint-disable-line no-underscore-dangle
+      fakeApiService._fetch = (): Promise<unknown> => Promise.reject(new Error('fake reject')) // eslint-disable-line no-underscore-dangle
 
       fakeApiService.fetch()
       expect(fakeErrorReporter).toBeCalled()

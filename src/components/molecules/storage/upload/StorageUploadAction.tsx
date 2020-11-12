@@ -1,8 +1,10 @@
 import React, { FC } from 'react'
-import { ButtonProps, Typography } from '@material-ui/core'
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
 import RoundBtn from 'components/atoms/RoundBtn'
+import { Typography } from '@material-ui/core'
+/* eslint-disable-next-line import/no-unresolved */
+import { ButtonProps } from '@rsksmart/rif-ui/dist/components/atoms/Button'
 
 type Props = ButtonProps & {
   sizeOverflow: string | false | undefined
