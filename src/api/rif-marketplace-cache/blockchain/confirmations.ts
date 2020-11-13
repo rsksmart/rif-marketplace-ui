@@ -3,6 +3,7 @@ import {
   AbstractAPIService, APIService, isResultPaginated,
 } from 'api/models/apiService'
 import { Modify } from 'utils/typeUtils'
+import client from '../client'
 import utils from './utils'
 
 export type ConfirmationAddress = 'confirmations'
@@ -30,6 +31,8 @@ export class ConfirmationsService
   extends AbstractAPIService
   implements ConfirmationAPI {
   path = confirmationAddress
+
+  constructor() { super(client) }
 
   _fetch = async (): Promise<Confirmations> => {
     const result: Paginated<Transport> = await this

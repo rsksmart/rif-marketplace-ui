@@ -1,11 +1,11 @@
 import { Application, Paginated, Service } from '@feathersjs/feathers'
 import { AuthenticationResult } from '@feathersjs/authentication'
-import client from 'api/rif-marketplace-cache/client'
 import { MarketFilterType } from 'models/Market'
 import { ErrorReporterError } from 'context/App/AppContext'
+import createClient from 'api/client'
 import { ServiceAddress } from './serviceAddresses'
 
-export type APIErrorId = 'service-connection' | 'service-event-attach' | 'service-fetch'
+export type APIErrorId = 'service-connection' | 'service-event-attach' | 'service-fetch' | 'service-post'
 
 export interface ServiceEventListener {
   (...args: any[]): void
@@ -24,13 +24,16 @@ export const isServiceMetadata = (
 ): metadata is ServiceMetadata => metadata && (
   metadata as ServiceMetadata).total !== undefined
 
+type ConnectOptions = {
+  client: ReturnType<typeof createClient>
+}
 export interface APIService {
   path: string
   _channel: string
   meta: ServiceMetadata | unknown
   service: Service<any>
   authenticate: (ownerAddress: string) => Promise<AuthenticationResult | void>
-  connect: (errorReporter: ErrorReporter, newClient?: Application<any>) => string | undefined
+  connect: (errorReporter: ErrorReporter, options?: ConnectOptions) => string | undefined
   fetch: (filters?: MarketFilterType | any) => Promise<any>
   _fetch: (filters?: MarketFilterType | any) => Promise<any>
   attachEvent: (name: string, callback: ServiceEventListener) => void
@@ -44,6 +47,8 @@ export const isResultPaginated = <T>(
     .data !== undefined
 
 export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
+  private _client: Application
+
   path!: string
 
   _channel!: string
@@ -60,6 +65,10 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
 
   set meta(meta: ServiceMetadata | unknown) {
     this._meta = isServiceMetadata(meta) ? meta : undefined
+  }
+
+  constructor(client: ReturnType<typeof createClient>) {
+    this._client = client
   }
 
   abstract _fetch: (filters?: MarketFilterType | any) => Promise<any>
@@ -85,12 +94,15 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
     return data
   }
 
-  connect = (errorReporter: ErrorReporter, newClient?: Application<any>) => {
-    const app = newClient || client
+  connect = (
+    errorReporter: ErrorReporter,
+    options?: ConnectOptions,
+  ): string | undefined => { // FIXME: that's a horrible return type
+    this._client = options?.client || this._client
     this.errorReporter = errorReporter
 
     try {
-      this.service = app.service(this.path)
+      this.service = this._client.service(this.path)
       return this.path
     } catch (error) {
       this.errorReporter({
@@ -102,17 +114,20 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
     }
   }
 
-  authenticate = (ownerAddress: string): Promise<AuthenticationResult | void> => client.authenticate({
-    strategy: 'anonymous',
-    channels: [this._channel],
-    ownerAddress,
-  }).catch((error) => {
-    this.errorReporter({
-      id: 'service-event-attach',
-      text: 'Error attempting to authenticate with the api.',
-      error,
+  authenticate = (
+    ownerAddress: string,
+  ): Promise<AuthenticationResult | void> => this._client
+    .authenticate({
+      strategy: 'anonymous',
+      channels: [this._channel],
+      ownerAddress,
+    }).catch((error) => {
+      this.errorReporter({
+        id: 'service-event-attach',
+        text: 'Error attempting to authenticate with the api.',
+        error,
+      })
     })
-  })
 
   attachEvent = (name: string, callback: ServiceEventListener) => {
     try {
