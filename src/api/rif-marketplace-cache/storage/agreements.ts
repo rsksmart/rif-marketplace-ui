@@ -9,6 +9,7 @@ import {
 } from './interfaces'
 import { availableTokens } from '../rns/common'
 import { SupportedToken } from '../rates/xr'
+import client from '../client'
 
 export const agreementsAddress: StorageServiceAddress = 'storage/v0/agreements'
 export const agreementsWSChannel: StorageWSChannel = 'agreements'
@@ -87,6 +88,8 @@ const mapFromTransport = ({
 export class StorageAgreementService extends AbstractAPIService
   implements StorageAPIService {
   path = agreementsAddress
+
+  constructor() { super(client) }
 
   _channel = agreementsWSChannel
 

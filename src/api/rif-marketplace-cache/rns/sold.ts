@@ -4,6 +4,7 @@ import { RnsFilter } from 'api/models/RnsFilter'
 import { SoldDomainTransport } from 'api/models/transports'
 import { RnsSoldDomain } from 'models/marketItems/DomainItem'
 import { parseToBigDecimal } from 'utils/parsers'
+import client from '../client'
 import {
   RnsServiceAddress, RnsAPIService, RnsChannels, availableTokens,
 } from './common'
@@ -37,6 +38,8 @@ export class SoldDomainsService
   extends AbstractAPIService
   implements RnsAPIService {
   path = soldDomainsAddress
+
+  constructor() { super(client) }
 
   _channel = soldDomainsChannel
 

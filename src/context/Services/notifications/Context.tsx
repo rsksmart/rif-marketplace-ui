@@ -83,7 +83,15 @@ export const Provider: FC = ({ children }) => {
 
       initialise()
     }
-  }, [service, attachEvent, errorReporter, isInitialised, dispatch, account, authenticate])
+  }, [
+    service,
+    authenticate,
+    attachEvent,
+    errorReporter,
+    isInitialised,
+    dispatch,
+    account,
+  ])
 
   // Fetch data
   useEffect(() => {

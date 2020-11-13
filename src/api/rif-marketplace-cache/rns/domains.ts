@@ -4,6 +4,7 @@ import { RnsFilter } from 'api/models/RnsFilter'
 import { DomainTransport } from 'api/models/transports'
 import { RnsDomain } from 'models/marketItems/DomainItem'
 import { parseToBigDecimal } from 'utils/parsers'
+import client from '../client'
 import {
   RnsServiceAddress, RnsAPIService, RnsChannels, availableTokens,
 } from './common'
@@ -38,6 +39,8 @@ export class DomainsService
   extends AbstractAPIService
   implements RnsAPIService {
   path = domainsAddress
+
+  constructor() { super(client) }
 
   _channel = domainsChannel
 
