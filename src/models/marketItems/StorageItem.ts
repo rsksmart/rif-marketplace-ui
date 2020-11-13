@@ -38,7 +38,7 @@ export type Agreement = Item & {
   monthlyFee: Big
   paymentToken: SupportedToken
   consumer: string
-  availableFunds: Big
+  withdrawableFunds: Big
   toBePayedOut: Big
 }
 
