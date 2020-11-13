@@ -37,6 +37,7 @@ const useActionButtonStyles = makeStyles(() => ({
 }))
 
 const TOTAL_SIZE_LIMIT = UNIT_PREFIX_POW2.GIGA
+const CID_PREFIX = /ipfs/
 
 const hashErroEndorment = (): JSX.Element => (
   <InputAdornment position="end">
@@ -84,7 +85,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
       payload: {
         size,
         unit,
-        hash,
+        hash: `${CID_PREFIX}${hash}`,
       },
     })
   }
@@ -173,7 +174,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
               onChange: setInfoHandle(setHash),
               error: isHashEmpty || !isValidCID,
               InputProps: {
-                startAdornment: <InputAdornment position="start">/ipfs/</InputAdornment>,
+                startAdornment: <InputAdornment position="start">{CID_PREFIX}</InputAdornment>,
                 endAdornment: isValidCID ? undefined : hashErroEndorment(),
               },
             }}
