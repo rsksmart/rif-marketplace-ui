@@ -123,6 +123,7 @@ const MyStoragePurchases: FC = () => {
 
   const renderDetailsActions = (): JSX.Element => (
     <RoundBtn
+      disabled={!Number(selectedAgreement?.withdrawableFunds)}
       onClick={
         (): void => {
           dispatch({
