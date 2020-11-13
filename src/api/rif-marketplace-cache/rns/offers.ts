@@ -5,6 +5,7 @@ import { OfferTransport } from 'api/models/transports'
 import { MinMaxFilter } from 'models/Filters'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import { convertToBigString, parseToBigDecimal, parseToInt } from 'utils/parsers'
+import client from '../client'
 import {
   availableTokens,
   RnsAPIService, RnsChannels, RnsServiceAddress,
@@ -66,6 +67,8 @@ const fetchPriceLimit = async (
 
 export class OffersService extends AbstractAPIService implements RnsAPIService {
   path = offersAddress
+
+  constructor() { super(client) }
 
   _channel = offersChannel
 

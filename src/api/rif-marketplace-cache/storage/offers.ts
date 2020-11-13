@@ -17,6 +17,7 @@ import {
   StorageWSChannel,
 } from './interfaces'
 import { MinMax } from './utils'
+import client from '../client'
 
 export const offersAddress: StorageServiceAddress = 'storage/v0/offers'
 export const offersWSChannel: StorageWSChannel = 'offers'
@@ -92,6 +93,8 @@ const fetchMinMaxLimit = async (
 export class StorageOffersService extends AbstractAPIService
   implements StorageAPIService {
   path = offersAddress
+
+  constructor() { super(client) }
 
   _channel = offersWSChannel
 

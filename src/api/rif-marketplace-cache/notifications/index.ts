@@ -3,6 +3,7 @@ import {
   AbstractAPIService, isResultPaginated, MapFromTransport,
 } from 'api/models/apiService'
 import { Big } from 'big.js'
+import client from '../client'
 import { Transport, NotificationItem, NotificationsAPI } from './interfaces'
 
 export const serviceAddress = 'notification' as const
@@ -25,6 +26,10 @@ export class NotificationsService
   extends AbstractAPIService
   implements NotificationsAPI {
   path = serviceAddress
+
+  constructor() {
+    super(client)
+  }
 
   _fetch = async (account: string): Promise<NotificationItem[]> => {
     const result: Paginated<Transport> = await this.service.find({

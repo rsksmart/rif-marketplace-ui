@@ -1,7 +1,9 @@
 import React, { FC } from 'react'
 import { Button } from '@rsksmart/rif-ui'
+/* eslint-disable-next-line import/no-unresolved */
+import { ButtonProps } from '@rsksmart/rif-ui/dist/components/atoms/Button'
 
-export interface SelectRowButtonProps {
+export interface SelectRowButtonProps extends ButtonProps {
   className?: string
   id: string
   handleSelect: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
