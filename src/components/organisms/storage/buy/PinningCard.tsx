@@ -175,7 +175,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
               error: isHashEmpty || !isValidCID,
               InputProps: {
                 startAdornment: <InputAdornment position="start">{CID_PREFIX}</InputAdornment>,
-                endAdornment: isValidCID ? undefined : hashErroEndorment(),
+                endAdornment: isValidCID ? undefined : hashErrorEndorment(),
               },
             }}
           />
