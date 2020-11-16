@@ -37,9 +37,9 @@ const useActionButtonStyles = makeStyles(() => ({
 }))
 
 const TOTAL_SIZE_LIMIT = UNIT_PREFIX_POW2.GIGA
-const CID_PREFIX = /ipfs/
+const CID_PREFIX = '/ipfs/'
 
-const hashErroEndorment = (): JSX.Element => (
+const hashErrorEndorment = (): JSX.Element => (
   <InputAdornment position="end">
     <Typography variant="caption" color="error">
       Invalid CID
