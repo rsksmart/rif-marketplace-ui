@@ -63,7 +63,7 @@
     "@testing-library/jest-dom": "^5.11.1",
     "@testing-library/react": "^11.0.2",
     "@testing-library/react-hooks": "^3.4.1",
-    "@testing-library/user-event": "^12.1.7",
+    "@testing-library/user-event": "^12.2.2",
     "@typechain/web3-v1": "^1.0.0",
     "@types/big.js": "^6.0.0",
     "@types/jest": "26.0.14",
