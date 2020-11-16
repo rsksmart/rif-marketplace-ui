@@ -1,124 +1,102 @@
 import Staking from '@rsksmart/rif-marketplace-storage/build/contracts/Staking.json'
-import Web3 from 'web3'
-import { Contract } from 'web3-eth-contract'
-import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
-import Logger from 'utils/Logger'
-import { convertToWeiString } from 'utils/parsers'
-import { ZERO_ADDRESS } from 'constants/strings'
-import { TransactionOptions } from './interfaces'
-import withWaitForReceipt from './utils'
-import { stakingAddress } from './config'
+import { AbiItem } from 'web3-utils'
+import Web3 from 'web3'
 
-const logger = Logger.getInstance()
+import { convertToWeiString } from 'utils/parsers'
+import { stakingAddress } from './config'
+import { TOKENS, TxOptions } from './interfaces'
+import ContractWithTokens from './wrappers/contract-using-tokens'
+
 export type StorageStakingContractErrorId = 'contract-storage-staking'
 
 const zeroBytes = '0x'.padEnd(64, '0')
 const extraGasPercentage = 1.3
 
-class StakingContract {
+class StakingContract extends ContractWithTokens {
   public static getInstance(web3: Web3): StakingContract {
     if (!StakingContract.instance) {
-      StakingContract.instance = new StakingContract(web3)
+      StakingContract.instance = new StakingContract(
+        web3,
+        new web3.eth.Contract(
+          Staking.abi as AbiItem[],
+          stakingAddress,
+        ),
+        [TOKENS.rbtc, TOKENS.rif],
+        'contract-storage-staking',
+      )
     }
     return StakingContract.instance
   }
 
   private static instance: StakingContract
 
-  private contract: Contract
-
-  private web3: Web3
-
-  private constructor(web3: Web3) {
-    this.contract = new web3.eth.Contract(
-      Staking.abi as AbiItem[],
-      stakingAddress,
-    )
-    this.web3 = web3
-  }
-
-  public stake = async (
+  public stake(
     amount: string | number,
-    token: string = ZERO_ADDRESS, // native token
-    txOptions: TransactionOptions,
-  ): Promise<TransactionReceipt> => {
-    const { from } = txOptions
-
+    txOptions: TxOptions,
+  ): Promise<TransactionReceipt> {
     if (amount < 0) {
       throw new Error('amount should greater then 0')
     }
 
-    const gasPrice = await this.web3.eth.getGasPrice()
-      .catch((error: Error) => {
-        logger.error('error getting gas price, error:', error)
-        throw error
-      })
-
+    const { tokenAddress } = this.getToken(txOptions.token)
     const amountWei = convertToWeiString(amount)
 
-    const stakeTask = this.contract.methods.stake(amountWei, token, zeroBytes)
-    const estimatedGas = await stakeTask.estimateGas({ from, gasPrice })
-    const gas = Math.floor(estimatedGas * extraGasPercentage)
-
-    return stakeTask.send(
-      {
-        from,
-        gas,
-        gasPrice,
-        value: amountWei,
-      },
-      withWaitForReceipt(this.web3),
-    )
-  }
-
-  public unstake = async (
-    amount: string | number,
-    token: string = ZERO_ADDRESS, // native token
-    txOptions: TransactionOptions,
-  ): Promise<TransactionReceipt> => {
-    const { from } = txOptions
-
-    if (amount < 0) {
-      throw new Error('amount should greater then 0')
-    }
-
-    const gasPrice = await this.web3.eth.getGasPrice()
-      .catch((error: Error) => {
-        logger.error('error getting gas price, error:', error)
-        throw error
-      })
-
-    const amountWei = convertToWeiString(amount)
-
-    const unstakeTask = this.contract.methods.unstake(
+    const stakeTx = this.contract.methods.stake(
       amountWei,
-      token,
+      tokenAddress,
       zeroBytes,
     )
-    const estimatedGas = await unstakeTask.estimateGas({ from, gasPrice })
-    const gas = Math.floor(estimatedGas * extraGasPercentage)
 
-    return unstakeTask.send({ from, gas, gasPrice }, withWaitForReceipt(this.web3))
+    return this.send(
+      stakeTx,
+      { ...txOptions, value: amount, gasMultiplier: extraGasPercentage },
+    )
   }
 
-  public totalStakedFor = (
+  public unstake(
+    amount: string | number,
+    txOptions: TxOptions,
+  ): Promise<TransactionReceipt> {
+    if (amount < 0) {
+      throw new Error('amount should greater then 0')
+    }
+
+    const { tokenAddress } = this.getToken(txOptions.token)
+    const amountWei = convertToWeiString(amount)
+
+    const unstakeTx = this.contract.methods.unstake(
+      amountWei,
+      tokenAddress,
+      zeroBytes,
+    )
+    return this.send(
+      unstakeTx,
+      { ...txOptions, value: amount, gasMultiplier: extraGasPercentage },
+    )
+  }
+
+  public totalStakedFor(
     account: string,
-    token: string = ZERO_ADDRESS, // native token
-    txOptions: TransactionOptions,
-  ): Promise<TransactionReceipt> => {
-    const { from } = txOptions
+    txOptions: TxOptions,
+  ): Promise<TransactionReceipt> {
+    const { tokenAddress } = this.getToken(txOptions.token)
 
-    return this.contract.methods.totalStakedFor(account, token).call({ from })
+    return this._call(
+      this.contract.methods.totalStakedFor(account, tokenAddress),
+      txOptions,
+    )
   }
 
-  public totalStaked = (
-    token: string = ZERO_ADDRESS, // native token
-    txOptions: TransactionOptions,
-  ): Promise<TransactionReceipt> => {
-    const { from } = txOptions
+  public totalStaked(
+    txOptions: TxOptions,
+  ): Promise<TransactionReceipt> {
+    const { tokenAddress } = this.getToken(txOptions.token)
 
-    return this.contract.methods.totalStaked(token).call({ from })
+    return this._call(
+      this.contract.methods.totalStaked(tokenAddress),
+      txOptions,
+    )
   }
 }
 
