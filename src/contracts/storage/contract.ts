@@ -2,7 +2,7 @@ import StorageManager
   from '@rsksmart/rif-marketplace-storage/build/contracts/StorageManager.json'
 import Web3 from 'web3'
 import { Contract } from 'web3-eth-contract'
-import { AbiItem, asciiToHex } from 'web3-utils'
+import { AbiItem } from 'web3-utils'
 import { TransactionReceipt } from 'web3-eth'
 import Logger from 'utils/Logger'
 import { ZERO_ADDRESS } from 'constants/strings'
@@ -102,7 +102,7 @@ class StorageContract {
     const newTask = this.contract.methods.depositFunds(
       token,
       amount,
-      [asciiToHex(dataReference)],
+      dataReference,
       provider,
     )
 
@@ -222,7 +222,6 @@ class StorageContract {
     },
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
-    const encodedDataReference = asciiToHex(dataReference)
     const { from } = txOptions
 
     const gasPrice = await this.web3.eth.getGasPrice()
@@ -233,7 +232,7 @@ class StorageContract {
 
     const weiAmounts = amounts.map(convertToWeiString)
     const withdrawFundsTask = await this.contract.methods
-      .withdrawFunds([encodedDataReference], provider, tokens, weiAmounts)
+      .withdrawFunds([dataReference], provider, tokens, weiAmounts)
 
     const estimatedGas = await withdrawFundsTask.estimateGas({ from, gasPrice })
       .catch((error: Error) => {
@@ -265,7 +264,6 @@ class StorageContract {
     },
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
-    const encodedDataReferences = dataReferences.map(asciiToHex)
     const { from } = txOptions
 
     const gasPrice = await this.web3.eth.getGasPrice()
@@ -275,7 +273,7 @@ class StorageContract {
       })
 
     const payoutFundsTask = await this.contract.methods
-      .payoutFunds([encodedDataReferences], [creatorOfAgreement], token, from)
+      .payoutFunds([dataReferences], [creatorOfAgreement], token, from)
 
     const estimatedGas = await payoutFundsTask.estimateGas({ from, gasPrice })
       .catch((error: Error) => {
