@@ -5,7 +5,6 @@ import {
 import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
 import React, { FC } from 'react'
-import { isEmpty } from 'utils/stringUtils'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 
 type Props = {
@@ -26,7 +25,6 @@ const PinEnterInfoTab: FC<Props> = ({
     <GridRow spacing={3}>
       <GridItem xs={12}>
         <TextField
-          error={isEmpty(size.value) || !parseFloat(size.value as string)}
           InputProps={{
             inputProps: { min: 1 },
             endAdornment: (
@@ -63,7 +61,6 @@ const PinEnterInfoTab: FC<Props> = ({
       </GridItem>
       <GridItem xs={12}>
         <TextField
-          error={isEmpty(hash.value)}
           type="string"
           id="hash"
           label="Hash"
@@ -71,6 +68,7 @@ const PinEnterInfoTab: FC<Props> = ({
           {...hash}
           fullWidth
         />
+
         <Typography variant="caption" color="secondary">
           You can find the hash of your file in your storage system (IPFS, SWARM)
         </Typography>

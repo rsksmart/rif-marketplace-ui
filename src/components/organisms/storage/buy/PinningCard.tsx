@@ -2,7 +2,7 @@ import React, {
   Dispatch, FC, useContext, useEffect, useState,
 } from 'react'
 import {
-  ButtonProps, CircularProgress, makeStyles,
+  ButtonProps, CircularProgress, InputAdornment, makeStyles, Typography,
 } from '@material-ui/core'
 import { colors } from '@rsksmart/rif-ui'
 import { Big } from 'big.js'
@@ -17,6 +17,7 @@ import { StorageCheckoutAction } from 'context/storage/buy/checkout'
 import { parseConvertBig } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import RoundBtn from 'components/atoms/RoundBtn'
+import { validateCID } from 'utils/stringUtils'
 import StoragePinTabs from './StoragePinTabs'
 
 type Props = {
@@ -36,6 +37,15 @@ const useActionButtonStyles = makeStyles(() => ({
 }))
 
 const TOTAL_SIZE_LIMIT = UNIT_PREFIX_POW2.GIGA
+const CID_PREFIX = '/ipfs/'
+
+const hashErrorEndorment = (): JSX.Element => (
+  <InputAdornment position="end">
+    <Typography variant="caption" color="error">
+      Invalid CID
+    </Typography>
+  </InputAdornment>
+)
 
 const PinningCard: FC<Props> = ({ dispatch }) => {
   const actionBtnClasses = useActionButtonStyles()
@@ -62,6 +72,10 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
   const [files, setFiles] = useState<File[]>([])
   const [uploadDisabled, setUploadDisabled] = useState(false)
 
+  const isHashEmpty = !hash
+  const isSizeEmpty = !(size && parseFloat(size))
+  const isValidCID = isHashEmpty ? false : validateCID(hash)
+
   const handlePinning = async (): Promise<void> => {
     // Pin
     await Promise.resolve()
@@ -71,7 +85,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
       payload: {
         size,
         unit,
-        hash,
+        hash: `${CID_PREFIX}${hash}`,
       },
     })
   }
@@ -90,7 +104,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
   const pinActionProps: ButtonProps = {
     children: 'Pin',
     onClick: handlePinning,
-    disabled: !(size && hash && unit),
+    disabled: isSizeEmpty || !isValidCID,
     classes: actionBtnClasses,
   }
   const uploadActionProps: ButtonProps = {
@@ -149,9 +163,21 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
       {isUpladed && !isDone
         ? (
           <PinEnterInfoTab
-            size={{ value: size, onChange: setInfoHandle(setSize) }}
-            hash={{ value: hash, onChange: setInfoHandle(setHash) }}
             unit={{ value: unit, onChange: setInfoHandle(setUnit) }}
+            size={{
+              value: size,
+              onChange: setInfoHandle(setSize),
+              error: isSizeEmpty,
+            }}
+            hash={{
+              value: hash,
+              onChange: setInfoHandle(setHash),
+              error: isHashEmpty || !isValidCID,
+              InputProps: {
+                startAdornment: <InputAdornment position="start">{CID_PREFIX}</InputAdornment>,
+                endAdornment: isValidCID ? undefined : hashErrorEndorment(),
+              },
+            }}
           />
         ) : (
           <PinUploaderTab

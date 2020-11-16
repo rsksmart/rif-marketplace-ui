@@ -45,6 +45,7 @@
     "@rsksmart/rif-marketplace-storage": "0.1.0-dev.6",
     "@rsksmart/rif-ui": "^0.4.1",
     "big.js": "^6.0.2",
+    "cids": "^1.0.2",
     "material-ui-dropzone": "^3.5.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
