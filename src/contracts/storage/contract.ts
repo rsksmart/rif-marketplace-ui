@@ -102,7 +102,7 @@ class StorageContract {
     const newTask = this.contract.methods.depositFunds(
       token,
       amount,
-      dataReference,
+      [dataReference],
       provider,
     )
 
