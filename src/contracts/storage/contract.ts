@@ -60,7 +60,7 @@ class StorageContract {
       sizeMB,
       billingPeriod,
       ZERO_ADDRESS,
-      0,
+      amount,
       [],
       [],
       ZERO_ADDRESS,
@@ -103,7 +103,7 @@ class StorageContract {
 
     const newTask = this.contract.methods.depositFunds(
       token,
-      0,
+      amount,
       encodedDataReference,
       provider,
     )
