@@ -1,11 +1,11 @@
 import Staking from '@rsksmart/rif-marketplace-storage/build/contracts/Staking.json'
-import { TransactionReceipt } from 'web3-eth'
-import { AbiItem } from 'web3-utils'
-import Web3 from 'web3'
 
 import { convertToWeiString } from 'utils/parsers'
+import Web3 from 'web3'
+import { TransactionReceipt } from 'web3-eth'
+import { AbiItem } from 'web3-utils'
 import { stakingAddress, StorageSupportedTokens } from '../config'
-import { TxOptions } from '../interfaces'
+import { TOKEN_TYPES, TxOptions } from '../interfaces'
 import { getTokens } from '../utils'
 import ContractWithTokens from '../wrappers/contract-using-tokens'
 
@@ -63,7 +63,7 @@ class StakingContract extends ContractWithTokens {
       throw new Error('amount should greater then 0')
     }
 
-    const { tokenAddress } = this.getToken(txOptions.token)
+    const { tokenAddress, type } = this.getToken(txOptions.token)
     const amountWei = convertToWeiString(amount)
 
     const unstakeTx = this.contract.methods.unstake(
@@ -73,7 +73,7 @@ class StakingContract extends ContractWithTokens {
     )
     return this.send(
       unstakeTx,
-      { ...txOptions, value: amount, gasMultiplier: extraGasPercentage },
+      { ...txOptions, value: type === TOKEN_TYPES.NATIVE ? 0 : amount, gasMultiplier: extraGasPercentage },
     )
   }
 
