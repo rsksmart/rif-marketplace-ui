@@ -4,14 +4,18 @@
             "rif": "0x67b5656d60a809915323bf2c40a8bef15a152e3e",
             "rnsDotRskOwner": "0x4bf749ec68270027C5910220CEAB30Cc284c7BA2",
             "marketplace": "0x12ae8689c3E889A0fC81f4E2ba9D6C5Bf358F392",
-            "storageManager": "0xeea2Fc1D255Fd28aA15c6c2324Ad40B03267f9c5",
-            "storageStaking": "0x7231ECd1355a60251eE56Bf81f987969fc9bAe29"
+            "storageManager": "0x8b3013089671aDDc15744D2F2725E7ea3D334939",
+            "storageStaking": "0x99750Da185B646E56DdBDc80dd3263e2166bcb3f"
         },
         "rnsManagerUrl": "http://localhost:3001",
-        "services": [
-            "rns",
-            "storage"
-        ]
+        "services": {
+            "rns": {
+                "tokens": ["rif"]
+            },
+            "storage": {
+                "tokens": ["rbtc", "rif"]
+            }
+        }
     },
     "rskmainnet": {
         "contractAddresses": {
@@ -20,9 +24,11 @@
             "marketplace": "0xa966Be39A13723d991dFA92B2B0CF6b0c7416eE5"
         },
         "rnsManagerUrl": "https://manager.rns.rifos.org",
-         "services": [
-            "rns"
-        ]
+         "services": {
+             "rns": {
+                 "tokens": ["rif"]
+             }
+         }
     },
     "rsktestnet": {
         "contractAddresses": {
@@ -33,9 +39,11 @@
             "storageStaking": "0x04274451015fD802c144f3CD549F71E9EAF70fe1"
         },
         "rnsManagerUrl": "https://testnet.manager.rns.rifos.org",
-        "services": [
-            "rns"
-        ]
+        "services": {
+            "rns": {
+                "tokens": ["rif"]
+            }
+        }
     },
     "rskstaging": {
         "contractAddresses": {
@@ -46,9 +54,13 @@
             "storageStaking": "0x976f2727d5eaC1eb1043aE48241008c071983bAC"
         },
         "rnsManagerUrl": "https://testnet.manager.rns.rifos.org",
-        "services": [
-            "rns",
-            "storage"
-        ]
+        "services": {
+            "rns": {
+                "tokens": ["rif"]
+            },
+            "storage": {
+                "tokens": ["rbtc", "rif"]
+            }
+        }
     }
 }
