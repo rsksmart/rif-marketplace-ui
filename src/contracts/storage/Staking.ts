@@ -4,9 +4,9 @@ import { AbiItem } from 'web3-utils'
 import Web3 from 'web3'
 
 import { convertToWeiString } from 'utils/parsers'
-import { stakingAddress } from './config'
-import { TOKENS, TxOptions } from './interfaces'
-import ContractWithTokens from './wrappers/contract-using-tokens'
+import { stakingAddress, StorageSupportedTokens } from '../config'
+import { TOKENS, TxOptions } from '../interfaces'
+import ContractWithTokens from '../wrappers/contract-using-tokens'
 
 export type StorageStakingContractErrorId = 'contract-storage-staking'
 
@@ -22,7 +22,7 @@ class StakingContract extends ContractWithTokens {
           Staking.abi as AbiItem[],
           stakingAddress,
         ),
-        [TOKENS.rbtc, TOKENS.rif],
+        StorageSupportedTokens.map((t) => TOKENS[t]),
         'contract-storage-staking',
       )
     }

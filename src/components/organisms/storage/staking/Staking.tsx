@@ -12,8 +12,7 @@ import AppContext, {
 import { UIError } from 'models/UIMessage'
 import Logger from 'utils/Logger'
 import Web3 from 'web3'
-import StakingContract from 'contracts/Staking'
-import StorageContract from 'contracts/storage'
+import { StakingContract, StorageContract } from 'contracts/storage'
 import {
   Props as StakingContextProps,
 } from 'context/Services/storage/staking/interfaces'

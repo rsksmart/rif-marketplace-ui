@@ -3,9 +3,9 @@ import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 import { AbiItem } from 'web3-utils'
 
-import { marketPlaceAddress } from './config'
-import { TransactionOptions } from './interfaces'
-import ContractBase from './wrappers/contract-base'
+import { marketPlaceAddress } from '../config'
+import { TransactionOptions } from '../interfaces'
+import ContractBase from '../wrappers/contract-base'
 
 export type MarketplaceContractErrorId = 'contract-marketplace-place' | 'contract-marketplace-unplace' | 'contract-marketplace-getPlacement'
 
