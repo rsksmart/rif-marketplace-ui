@@ -4,8 +4,8 @@ import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { StorageItem, StorageOffer } from 'models/marketItems/StorageItem'
 import { ZERO_ADDRESS } from 'constants/strings'
 import { ServiceOrder, ServiceState } from '../interfaces'
-import { OFFERS_ACTION } from './offers/offersActions'
-import { ContextName as OffersContextName } from './offers/OffersContext'
+import { OFFERS_ACTION } from './offers/actions'
+import { ContextName as OffersContextName } from './offers/Context'
 import { ContextName as AgreementContextName } from './agreements/interfaces'
 
 export type StorageContextNames = OffersContextName | AgreementContextName

@@ -13,10 +13,11 @@ import { MinMaxFilter } from 'models/Filters'
 import { UIError } from 'models/UIMessage'
 import { AvgBillingPriceService } from 'api/rif-marketplace-cache/storage/avg-billing-plan-price'
 import createWithContext from 'context/storeUtils/createWithContext'
+import { Web3Store } from '@rsksmart/rif-ui'
 import {
   storageOffersActions, StorageOffersPayload,
   StorageOffersReducer, StorageOffersAction,
-} from './offersActions'
+} from './actions'
 import { ServiceState } from '../../interfaces'
 import { StorageOrder } from '../interfaces'
 
@@ -92,6 +93,12 @@ export const Provider = ({ children }) => {
     limits,
   } = state as StorageOffersState
 
+  const {
+    state: {
+      account,
+    },
+  } = useContext(Web3Store)
+
   if (api && !api.service) {
     api.connect(errorReporterFactory(appDispatch))
   }
@@ -101,7 +108,7 @@ export const Provider = ({ children }) => {
   }
   // Initialise
   useEffect(() => {
-    if (api?.service && !isInitialised) {
+    if (api?.service && account && !isInitialised) {
       try {
         // attachEvent('updated', outdateTokenId(dispatch))
         // attachEvent('patched', outdateTokenId(dispatch))
@@ -113,13 +120,21 @@ export const Provider = ({ children }) => {
         //   payload: { refresh: true },
         // } as any)
         // setTimeout(() =>
+
+        dispatch({
+          type: 'FILTER',
+          payload: {
+            account,
+          },
+        })
+
         setIsInitialised(true)
         // , 0)
       } catch (e) {
         setIsInitialised(false)
       }
     }
-  }, [api, isInitialised, appDispatch])
+  }, [api, isInitialised, appDispatch, account])
 
   // (re)fetch limits upon refresh if initialised
   useEffect(() => {
@@ -192,7 +207,14 @@ export const Provider = ({ children }) => {
         } as any)
       }
     }
-  }, [api, apiAvgBillingPrice, isInitialised, needsRefresh, isLimitsSet, appDispatch])
+  }, [
+    api,
+    apiAvgBillingPrice,
+    isInitialised,
+    needsRefresh,
+    isLimitsSet,
+    appDispatch,
+  ])
 
   // Pre-fetch limits
   useEffect(() => {
@@ -234,7 +256,14 @@ export const Provider = ({ children }) => {
           } as any)
         })
     }
-  }, [isLimitsSet, isInitialised, filters, limits, api, appDispatch])
+  }, [
+    isLimitsSet,
+    isInitialised,
+    filters,
+    limits,
+    api,
+    appDispatch,
+  ])
 
   const value = { state, dispatch }
   return <Context.Provider value={value}>{children}</Context.Provider>

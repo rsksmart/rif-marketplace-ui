@@ -1,7 +1,7 @@
 import { ContextDispatch } from 'context/storeUtils/interfaces'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { StorageOrder } from '../interfaces'
-import { initialState, OffersListing, StorageOffersState } from './OffersContext'
+import { initialState, OffersListing, StorageOffersState } from './Context'
 
 export type OFFERS_ACTION = 'FILTER' | 'SET_LISTING' | 'REFRESH' | 'UPDATE_LIMITS' | 'SET_ORDER'
   | 'CLEAN_UP'

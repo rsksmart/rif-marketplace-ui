@@ -6,7 +6,7 @@ import { TableHeaders, MarketplaceItem } from 'components/templates/marketplace/
 import { BillingPlan } from 'models/marketItems/StorageItem'
 import { SelectRowButton, AddressItem } from 'components/molecules'
 import { StorageOffersContext, StorageOffersContextProps } from 'context/Services/storage/offers'
-import { OrderPayload } from 'context/Services/storage/offers/offersActions'
+import { OrderPayload } from 'context/Services/storage/offers/actions'
 import ItemWUnit from 'components/atoms/ItemWUnit'
 import ROUTES from 'routes'
 

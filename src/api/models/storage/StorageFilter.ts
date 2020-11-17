@@ -14,6 +14,7 @@ export interface StorageFiltersTransport extends MarketFilter {
 }
 
 export const mapToTransport = ({
+  account,
   periods,
   price,
   size: sizeGB,
@@ -33,4 +34,5 @@ export const mapToTransport = ({
   provider: {
     $like: provider,
   },
+  account,
 })

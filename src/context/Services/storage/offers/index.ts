@@ -2,7 +2,7 @@ import withContext, {
   Context,
   Provider,
   Props,
-} from './OffersContext'
+} from './Context'
 
 export {
   Context as StorageOffersContext,
