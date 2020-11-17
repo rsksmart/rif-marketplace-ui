@@ -2,7 +2,7 @@ import { Dispatch } from 'react'
 
 // STATE
 export type State = {
-  isWhitelistedProvider: boolean
+  isWhitelistedProvider?: boolean
 }
 
 // PAYLOAD
