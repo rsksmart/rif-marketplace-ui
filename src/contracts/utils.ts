@@ -36,13 +36,13 @@ const withWaitForReceipt = (web3: Web3) => (
   return waitForReceipt(response, web3)
 }
 
-export const getTokens = (supportedTokens: SupportedTokens[]): Token[] => {
-  return supportedTokens.map((t) => {
-    if (!TOKENS[t]) {
-      throw new Error(`Token ${t} not implemented`)
-    }
-    return TOKENS[t]
-  })
-}
+export const getTokens = (
+  supportedTokens: SupportedTokens[],
+): Token[] => supportedTokens.map((t) => {
+  if (!TOKENS[t]) {
+    throw new Error(`Token ${t} not implemented`)
+  }
+  return TOKENS[t]
+})
 
 export default withWaitForReceipt
