@@ -9,7 +9,7 @@ import { AddTxPayload } from 'context/Blockchain/blockchainActions'
 import BlockchainContext from 'context/Blockchain/BlockchainContext'
 import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
-import StorageContract from 'contracts/storage'
+import { StorageContract } from 'contracts/storage'
 import { UIError } from 'models/UIMessage'
 import React, {
   FC, useCallback, useContext, useEffect, useState,
