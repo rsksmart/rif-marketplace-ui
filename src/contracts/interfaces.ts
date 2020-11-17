@@ -70,6 +70,6 @@ export type TxOptions = TransactionOptions & {
 export const TOKENS: Record<SupportedTokens, Token> = {
   [SUPPORTED_TOKENS.RBTC]: { token: SUPPORTED_TOKENS.RBTC, type: TOKEN_TYPES.NATIVE, tokenAddress: ZERO_ADDRESS } as Token,
   [SUPPORTED_TOKENS.RIF]: {
-    token: SUPPORTED_TOKENS.RIF, type: TOKEN_TYPES.ERC20, tokenContract: RifERC20Contract, tokenAddress: rifTokenAddress,
+    token: RifERC20Contract.tokenName, type: RifERC20Contract.tokenType, tokenContract: RifERC20Contract, tokenAddress: RifERC20Contract.tokenAddress,
   },
 }

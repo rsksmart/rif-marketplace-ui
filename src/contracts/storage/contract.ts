@@ -71,7 +71,6 @@ class StorageContract extends ContractWithTokens {
       amount: string
       dataReference: string
       provider: string
-      token: SupportedTokens
     },
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
