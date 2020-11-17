@@ -1,5 +1,6 @@
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
+import { SupportedTokens, Token, TOKENS } from './interfaces'
 
 const TIMEOUT_LIMIT = 120000
 const POLLING_INTERVAL = 2000
@@ -33,6 +34,15 @@ const withWaitForReceipt = (web3: Web3) => (
 ): Promise<TransactionReceipt | never> => {
   if (err) return Promise.reject(err)
   return waitForReceipt(response, web3)
+}
+
+export const getTokens = (supportedTokens: SupportedTokens[]): Token[] => {
+  return supportedTokens.map((t) => {
+    if (!TOKENS[t]) {
+      throw new Error(`Token ${t} not implemented`)
+    }
+    return TOKENS[t]
+  })
 }
 
 export default withWaitForReceipt

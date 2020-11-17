@@ -5,8 +5,9 @@ import { AbiItem, asciiToHex } from 'web3-utils'
 
 import { storageAddress, StorageSupportedTokens } from '../config'
 import {
-  SUPPORTED_TOKENS, SupportedTokens, TOKENS, TxOptions,
+  SUPPORTED_TOKENS, SupportedTokens, TxOptions,
 } from '../interfaces'
+import { getTokens } from '../utils'
 import ContractWithTokens from '../wrappers/contract-using-tokens'
 import { encodeHash, prefixArray } from './utils'
 
@@ -21,7 +22,7 @@ class StorageContract extends ContractWithTokens {
               StorageManager.abi as AbiItem[],
               storageAddress,
         ),
-        StorageSupportedTokens.map((t) => TOKENS[t]),
+        getTokens(StorageSupportedTokens),
         'contract-storage',
       )
     }

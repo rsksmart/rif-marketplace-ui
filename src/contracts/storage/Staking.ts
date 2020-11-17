@@ -5,7 +5,8 @@ import Web3 from 'web3'
 
 import { convertToWeiString } from 'utils/parsers'
 import { stakingAddress, StorageSupportedTokens } from '../config'
-import { TOKENS, TxOptions } from '../interfaces'
+import { TxOptions } from '../interfaces'
+import { getTokens } from '../utils'
 import ContractWithTokens from '../wrappers/contract-using-tokens'
 
 export type StorageStakingContractErrorId = 'contract-storage-staking'
@@ -22,7 +23,7 @@ class StakingContract extends ContractWithTokens {
           Staking.abi as AbiItem[],
           stakingAddress,
         ),
-        StorageSupportedTokens.map((t) => TOKENS[t]),
+        getTokens(StorageSupportedTokens),
         'contract-storage-staking',
       )
     }
