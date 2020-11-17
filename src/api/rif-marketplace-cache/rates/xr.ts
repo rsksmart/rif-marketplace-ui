@@ -9,8 +9,8 @@ export const xrServiceAddress: XRServiceAddress = 'rates/v0'
 export type SupportedFiat = 'usd' | 'eur' | 'btc' | 'ars' | 'cny' | 'krw' | 'jpy';
 
 export const tokenDisplayNames: Record<SupportedTokens, string> = {
-  [SUPPORTED_TOKENS.RIF]: 'RIF',
-  [SUPPORTED_TOKENS.RBTC]: 'RBTC',
+  [SUPPORTED_TOKENS.rif]: 'RIF',
+  [SUPPORTED_TOKENS.rbtc]: 'RBTC',
 }
 
 export type XRItem = Partial<{

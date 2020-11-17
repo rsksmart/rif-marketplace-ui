@@ -6,7 +6,7 @@ import { initialState } from '../OfferEditContext'
 import { offerEditActions } from '../offerEditReducer'
 
 const mockedPlanItem: StorageBillingPlan = {
-  currency: SUPPORTED_TOKENS.RBTC,
+  currency: SUPPORTED_TOKENS.rbtc,
   internalId: 1,
   price: new Big(0.001),
   period: 'Daily',

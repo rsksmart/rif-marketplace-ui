@@ -82,7 +82,7 @@ describe('Storage OffersService', () => {
           .map<BillingPlan>((plan) => ({
             period: PeriodInSeconds[plan.period],
             price: parseToBigDecimal(plan.price),
-            currency: SUPPORTED_TOKENS.RBTC,
+            currency: SUPPORTED_TOKENS.rbtc,
           })),
         averagePrice: avgBillingPrice,
         peerId: 'QmYyQSo1c1Ym7orWxLYvCrM2EmxFTANf8wXmmE7DWjhx5N',

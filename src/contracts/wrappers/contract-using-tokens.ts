@@ -30,8 +30,8 @@ export class ContractWithTokens extends ContractBase {
     this.supportedTokens = supportedTokens
     this.name = name
     // Set default token
-    this._defaultToken = this._isCurrencySupported(SUPPORTED_TOKENS.RBTC)
-      ? SUPPORTED_TOKENS.RBTC
+    this._defaultToken = this._isCurrencySupported(SUPPORTED_TOKENS.rbtc)
+      ? SUPPORTED_TOKENS.rbtc
       : this.supportedTokens[0].token
   }
 

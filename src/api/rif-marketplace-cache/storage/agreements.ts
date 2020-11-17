@@ -15,7 +15,7 @@ export const agreementsWSChannel: StorageWSChannel = 'agreements'
 
 const getPaymentToken = (tokenAddress: string): SupportedTokens => {
   if (tokenAddress === ZERO_ADDRESS) {
-    return SUPPORTED_TOKENS.RBTC
+    return SUPPORTED_TOKENS.rbtc
   }
   return Object
     .entries(availableTokens)

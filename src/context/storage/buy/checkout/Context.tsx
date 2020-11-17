@@ -30,7 +30,7 @@ export const initialState: State = {
     location: '',
     total: new Big(0),
     billingPeriod: PeriodInSeconds.Daily,
-    token: SUPPORTED_TOKENS.RBTC,
+    token: SUPPORTED_TOKENS.rbtc,
   },
   auxiliary: {
     currencyOptions: [],

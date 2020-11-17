@@ -4,7 +4,7 @@ import { SUPPORTED_TOKENS } from '../../../../contracts/interfaces'
 
 const TEST_FIAT_SYMBOL = 'usd'
 const TEST_Q_FILTER = { fiatSymbol: TEST_FIAT_SYMBOL }
-const TEST_TOKEN = SUPPORTED_TOKENS.RBTC
+const TEST_TOKEN = SUPPORTED_TOKENS.rbtc
 const expectedFindOptions = {
   query: {
     $select: ['token', TEST_FIAT_SYMBOL],

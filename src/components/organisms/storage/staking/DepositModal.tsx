@@ -28,8 +28,8 @@ const DepositModal: FC<DepositModalProps> = ({
   totalStakedUSD, open, onClose, onDeposit, stakes,
 }) => {
   const classes = useStyles()
-  const currencyOptions: SupportedTokens[] = [SUPPORTED_TOKENS.RBTC, SUPPORTED_TOKENS.RIF]
-  const [selectedCurrency, setSelectedCurrency] = useState<SupportedTokens>(SUPPORTED_TOKENS.RBTC)
+  const currencyOptions: SupportedTokens[] = [SUPPORTED_TOKENS.rbtc, SUPPORTED_TOKENS.rif]
+  const [selectedCurrency, setSelectedCurrency] = useState<SupportedTokens>(SUPPORTED_TOKENS.rbtc)
   const [amountToStake, setAmountToStake] = useState<number | undefined>(undefined)
 
   useEffect(() => {

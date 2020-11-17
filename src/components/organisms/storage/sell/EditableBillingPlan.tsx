@@ -32,7 +32,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
 
   const editMode = !!billingPlan
   // TODO: remove hard-coded currency by default
-  const [currency, setCurrency] = useState<SupportedTokens>(billingPlan?.currency || SUPPORTED_TOKENS.RBTC)
+  const [currency, setCurrency] = useState<SupportedTokens>(billingPlan?.currency || SUPPORTED_TOKENS.rbtc)
   const [pricePerGb, setPricePerGb] = useState(billingPlan?.price.toString())
   const [period, setPeriod] = useState(billingPlan?.period || allBillingPeriods[0])
 

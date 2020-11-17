@@ -26,7 +26,7 @@ export const initialState: State = {
     endDate: '',
     periodsCount: 1,
     plan: {
-      currency: SUPPORTED_TOKENS.RBTC,
+      currency: SUPPORTED_TOKENS.rbtc,
       period: 'Daily',
       price: new Big(0),
     },

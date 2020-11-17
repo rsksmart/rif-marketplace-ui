@@ -42,7 +42,7 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
       .map<BillingPlan>((plan) => ({
         period: PeriodInSeconds[plan.period],
         price: parseToBigDecimal(plan.price, 18),
-        currency: SUPPORTED_TOKENS.RBTC,
+        currency: SUPPORTED_TOKENS.rbtc,
       })),
     averagePrice: averagePriceTransport,
     acceptedCurrencies,
