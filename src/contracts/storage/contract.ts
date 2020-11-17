@@ -103,7 +103,7 @@ class StorageContract {
 
     const newTask = this.contract.methods.depositFunds(
       token,
-      amount,
+      0,
       encodedDataReference,
       provider,
     )
@@ -116,12 +116,14 @@ class StorageContract {
     const gas = await newTask.estimateGas({
       from,
       gasPrice,
+      value: amount,
     })
 
     return newTask.send({
       from,
       gas,
       gasPrice,
+      value: amount,
     },
     withWaitForReceipt(this.web3))
   }
