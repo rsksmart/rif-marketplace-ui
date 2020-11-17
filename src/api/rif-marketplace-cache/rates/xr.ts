@@ -1,23 +1,22 @@
 import { Paginated } from '@feathersjs/feathers'
 import { AbstractAPIService, APIService, isResultPaginated } from 'api/models/apiService'
 import { Modify } from 'utils/typeUtils'
+import { SUPPORTED_TOKENS, SupportedTokens } from '../../../contracts/interfaces'
 
 export type XRServiceAddress = 'rates/v0'
 export const xrServiceAddress: XRServiceAddress = 'rates/v0'
 
 export type SupportedFiat = 'usd' | 'eur' | 'btc' | 'ars' | 'cny' | 'krw' | 'jpy';
 
-export const SUPPORTED_TOKENS = ['rif', 'rbtc'] as const
-export type SupportedToken = typeof SUPPORTED_TOKENS[number];
-export const tokenDisplayNames: Record<SupportedToken, string> = {
-  rif: 'RIF',
-  rbtc: 'RBTC',
+export const tokenDisplayNames: Record<SupportedTokens, string> = {
+  [SUPPORTED_TOKENS.RIF]: 'RIF',
+  [SUPPORTED_TOKENS.RBTC]: 'RBTC',
 }
 
 export type XRItem = Partial<{
   [F in SupportedFiat]: number
 }> & {
-  token: SupportedToken
+  token: SupportedTokens
 }
 
 export interface XRFilter {
@@ -44,6 +43,6 @@ export class XRService extends AbstractAPIService implements XRAPIService {
       ? results : { data: results }
     this.meta = metadata
 
-    return data.filter((item) => !!SUPPORTED_TOKENS.includes(item.token))
+    return data.filter((item) => !!SUPPORTED_TOKENS[item.token])
   }
 }

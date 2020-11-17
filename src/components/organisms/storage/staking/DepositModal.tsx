@@ -1,22 +1,20 @@
-import React, { FC, useEffect, useState } from 'react'
-import Typography from '@material-ui/core/Typography'
-import { Button, ModalDialogue } from '@rsksmart/rif-ui'
 import Box from '@material-ui/core/Box'
 import Divider from '@material-ui/core/Divider'
-import { Theme, makeStyles, createStyles } from '@material-ui/core/styles'
-import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import { Button, ModalDialogue } from '@rsksmart/rif-ui'
+import { StakedBalances as StakedBalancesProp } from 'api/rif-marketplace-cache/storage/stakes'
 import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
-import {
-  StakedBalances as StakedBalancesProp,
-} from 'api/rif-marketplace-cache/storage/stakes'
+import React, { FC, useEffect, useState } from 'react'
+import { SUPPORTED_TOKENS, SupportedTokens } from '../../../../contracts/interfaces'
 import StakedBalances from './StakedBalances'
 
 export interface DepositModalProps {
   totalStakedUSD: string
   open: boolean
   onClose: () => void
-  onDeposit: (amount: number, currency: SupportedToken) => void
+  onDeposit: (amount: number, currency: SupportedTokens) => void
   stakes: StakedBalancesProp
 }
 
@@ -30,8 +28,8 @@ const DepositModal: FC<DepositModalProps> = ({
   totalStakedUSD, open, onClose, onDeposit, stakes,
 }) => {
   const classes = useStyles()
-  const currencyOptions: SupportedToken[] = ['rbtc', 'rif']
-  const [selectedCurrency, setSelectedCurrency] = useState<SupportedToken>('rbtc')
+  const currencyOptions: SupportedTokens[] = [SUPPORTED_TOKENS.RBTC, SUPPORTED_TOKENS.RIF]
+  const [selectedCurrency, setSelectedCurrency] = useState<SupportedTokens>(SUPPORTED_TOKENS.RBTC)
   const [amountToStake, setAmountToStake] = useState<number | undefined>(undefined)
 
   useEffect(() => {
@@ -41,7 +39,7 @@ const DepositModal: FC<DepositModalProps> = ({
   const handleCurrencyChange = ({
     target: { value },
   }: React.ChangeEvent<{ name?: string, value: unknown }>): void => {
-    setSelectedCurrency(value as SupportedToken)
+    setSelectedCurrency(value as SupportedTokens)
   }
 
   const handleAmountChange = ({

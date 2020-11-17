@@ -19,6 +19,7 @@ import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
+import { SupportedTokens } from '../../../../contracts/interfaces'
 
 const logger = Logger.getInstance()
 
@@ -67,7 +68,7 @@ const StorageEditOfferPage: FC<{}> = () => {
         availableSizeMB,
         periods,
         prices,
-        tokens,
+        tokens as SupportedTokens[],
         peerId,
         { from: account },
       )

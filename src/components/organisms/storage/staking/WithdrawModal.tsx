@@ -1,23 +1,20 @@
-import React, { FC, useEffect, useState } from 'react'
-import Box from '@material-ui/core/Box'
-import Typography from '@material-ui/core/Typography'
-import { Button, ModalDialogue } from '@rsksmart/rif-ui'
 import {
   createStyles, Divider, makeStyles, Theme,
 } from '@material-ui/core'
-import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
-import AmountWithCurrencySelect
-  from 'components/molecules/AmountWithCurrencySelect'
+import Box from '@material-ui/core/Box'
+import Typography from '@material-ui/core/Typography'
+import { Button, ModalDialogue } from '@rsksmart/rif-ui'
+import { StakedBalances as StakedBalancesProp } from 'api/rif-marketplace-cache/storage/stakes'
+import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
-import {
-  StakedBalances as StakedBalancesProp,
-} from 'api/rif-marketplace-cache/storage/stakes'
+import React, { FC, useEffect, useState } from 'react'
+import { SUPPORTED_TOKENS, SupportedTokens } from '../../../../contracts/interfaces'
 import StakedBalances from './StakedBalances'
 
 export interface WithdrawModalProps {
   open: boolean
   onClose: () => void
-  onWithdraw: (amount: number, currency: SupportedToken) => void
+  onWithdraw: (amount: number, currency: SupportedTokens) => void
   canWithdraw: boolean
   totalStakedUSD: string
   stakes: StakedBalancesProp
@@ -33,8 +30,8 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
   open, onClose, onWithdraw, canWithdraw, totalStakedUSD, stakes,
 }) => {
   const classes = useStyles()
-  const currencyOptions: SupportedToken[] = ['rbtc', 'rif']
-  const [selectedCurrency, setSelectedCurrency] = useState<SupportedToken>('rbtc')
+  const currencyOptions: SupportedTokens[] = [SUPPORTED_TOKENS.RBTC, SUPPORTED_TOKENS.RIF]
+  const [selectedCurrency, setSelectedCurrency] = useState<SupportedTokens>(SUPPORTED_TOKENS.RBTC)
   const [amountToWithdraw, setAmountToWithdraw] = useState<number | undefined>(undefined)
 
   useEffect(() => {
@@ -44,7 +41,7 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
   const handleCurrencyChange = ({
     target: { value },
   }: React.ChangeEvent<{ name?: string, value: unknown }>): void => {
-    setSelectedCurrency(value as SupportedToken)
+    setSelectedCurrency(value as SupportedTokens)
   }
 
   const handleAmountChange = ({

@@ -1,6 +1,7 @@
 import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
 import { Big } from 'big.js'
 import { Item } from 'models/Market'
+import { SupportedTokens } from '../../contracts/interfaces'
 
 export type SubscriptionPeriod = 'Daily' | 'Weekly' | 'Monthly'
 export enum PeriodInSeconds {
@@ -12,7 +13,7 @@ export enum PeriodInSeconds {
 export interface BillingPlan {
   period: SubscriptionPeriod
   price: Big
-  currency: SupportedToken
+  currency: SupportedTokens
 }
 
 export interface StorageOffer extends Item {

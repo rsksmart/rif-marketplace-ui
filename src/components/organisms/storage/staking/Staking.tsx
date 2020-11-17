@@ -19,12 +19,12 @@ import {
 import StakingFab from 'components/molecules/storage/StakingFab'
 import withStakingContext, { StakingContext }
   from 'context/Services/storage/staking/Context'
-import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
 import RoundBtn from 'components/atoms/RoundBtn'
 import BlockchainContext,
 { BlockchainContextProps }
   from 'context/Blockchain/BlockchainContext'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
+import { SupportedTokens } from '../../../../contracts/interfaces'
 import DepositModal from './DepositModal'
 import WithdrawModal from './WithdrawModal'
 import StakingCard from './StakingCard'
@@ -120,7 +120,7 @@ const Staking: FC = () => {
   }
 
   const handleDeposit = async (
-    amount: number, currency: SupportedToken,
+    amount: number, currency: SupportedTokens,
   ): Promise<void> => {
     //  users won't reach this point without a web3 instance
     if (!web3) return
@@ -155,7 +155,7 @@ const Staking: FC = () => {
   }
 
   const handleWithdraw = async (
-    amount: number, currency: SupportedToken,
+    amount: number, currency: SupportedTokens,
   ): Promise<void> => {
     //  users won't reach this point without a web3 instance
     if (!web3) return

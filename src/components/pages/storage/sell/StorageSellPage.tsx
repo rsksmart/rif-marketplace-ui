@@ -22,6 +22,7 @@ import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper
 import RoundedCard from 'components/atoms/RoundedCard'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
 import Staking from 'components/organisms/storage/staking/Staking'
+import { SupportedTokens } from '../../../../contracts/interfaces'
 
 // TODO: discuss about wrapping the library and export it with this change
 Big.NE = -30
@@ -88,7 +89,7 @@ const StorageSellPage = () => {
         availableSizeMB,
         periods,
         prices,
-        tokens,
+        tokens as SupportedTokens[],
         peerId,
         { from: account },
       )
