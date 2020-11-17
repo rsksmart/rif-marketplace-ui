@@ -15,7 +15,7 @@ import { reducer } from './actions'
 import { Props, State } from './interfaces'
 
 export const initialState: State = {
-  isWhitelistedProvider: false,
+  isWhitelistedProvider: undefined,
 }
 
 export const Context = createContext<Props>({
