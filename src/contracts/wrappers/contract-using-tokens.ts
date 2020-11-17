@@ -92,7 +92,7 @@ export class ContractWithTokens extends ContractBase {
     }
 
     // Need token transaction
-    if (tokenToUse.type !== TOKEN_TYPES.NATIVE) {
+    if (tokenToUse.type !== TOKEN_TYPES.NATIVE && value) {
       const approveReceipt = await this._approveTokenTransfer(
         tokenToUse, { from, gasPrice, value },
       )
