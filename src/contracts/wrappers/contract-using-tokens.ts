@@ -76,31 +76,29 @@ export class ContractWithTokens extends ContractBase {
   }
 
   async send(tx: any, txOptions: TxOptions): Promise<TransactionReceipt> {
-    const {
-      from,
-      gas,
-      value,
-      gasPrice,
-      token,
-      onApprove,
-    } = await this._processOptions(tx, txOptions)
-
-    const tokenToUse = this.getToken(token)
+    const tokenToUse = this.getToken(txOptions.token)
 
     if (!this._isCurrencySupported(tokenToUse.token)) {
       throw new Error(`Token ${tokenToUse} is not supported by ${this.name} contract`)
     }
 
     // Need token transaction
-    if (tokenToUse.type !== TOKEN_TYPES.NATIVE && value) {
+    if (tokenToUse.type !== TOKEN_TYPES.NATIVE && txOptions.value) {
       const approveReceipt = await this._approveTokenTransfer(
-        tokenToUse, { from, gasPrice, value },
+        tokenToUse, { from: txOptions.from, gasPrice: txOptions.gasPrice, value: txOptions.value },
       )
 
-      if (onApprove) {
-        await onApprove(approveReceipt)
+      if (txOptions.onApprove) {
+        await txOptions.onApprove(approveReceipt)
       }
     }
+
+    const {
+      from,
+      gas,
+      value,
+      gasPrice,
+    } = await this._processOptions(tx, txOptions)
 
     return this._send(
       tx,

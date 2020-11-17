@@ -51,7 +51,7 @@ class StakingContract extends ContractWithTokens {
 
     return this.send(
       stakeTx,
-      { ...txOptions, value: amount, gasMultiplier: extraGasPercentage },
+      { ...txOptions, value: amountWei, gasMultiplier: extraGasPercentage },
     )
   }
 
