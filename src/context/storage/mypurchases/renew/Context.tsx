@@ -134,7 +134,7 @@ const Provider: FC = ({ children }) => {
           provider,
           token: networkConfig.contractAddresses[paymentToken],
         }
-        const storageContract = (await import('contracts/storage/contract')).default.getInstance(web3 as Web3)
+        const storageContract = (await import('contracts/storage')).default.getInstance(web3 as Web3)
 
         appDispatch({
           type: 'SET_IS_LOADING',

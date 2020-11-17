@@ -13,7 +13,7 @@ import { UIError } from 'models/UIMessage'
 import Logger from 'utils/Logger'
 import Web3 from 'web3'
 import StakingContract from 'contracts/Staking'
-import StorageContract from 'contracts/storage/contract'
+import StorageContract from 'contracts/storage'
 import {
   Props as StakingContextProps,
 } from 'context/Services/storage/staking/interfaces'
@@ -21,7 +21,6 @@ import StakingFab from 'components/molecules/storage/StakingFab'
 import withStakingContext, { StakingContext }
   from 'context/Services/storage/staking/Context'
 import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
-import { TokenAddressees } from 'context/Market/storage/interfaces'
 import RoundBtn from 'components/atoms/RoundBtn'
 import BlockchainContext,
 { BlockchainContextProps }
@@ -134,7 +133,7 @@ const Staking: FC = () => {
 
       const stakeContract = StakingContract.getInstance(web3 as Web3)
       const receipt = await stakeContract.stake(
-        amount, TokenAddressees[currency], { from: account },
+        amount, { token: currency, from: account },
       )
 
       if (receipt) {
@@ -168,7 +167,7 @@ const Staking: FC = () => {
       setWithdrawOpened(false)
       const stakeContract = StakingContract.getInstance(web3 as Web3)
       const receipt = await stakeContract.unstake(
-        amount, TokenAddressees[currency], { from: account },
+        amount, { token: currency, from: account },
       )
 
       if (receipt) {

@@ -5,7 +5,7 @@ import { AbiItem, asciiToHex } from 'web3-utils'
 
 import { storageAddress } from '../config'
 import {
-  SUPPORTED_TOKENS, SupportedTokens, TOKENS, TransactionOptions, TxOptions,
+  SUPPORTED_TOKENS, SupportedTokens, TOKENS, TxOptions,
 } from '../interfaces'
 import ContractWithTokens from '../wrappers/contract-using-tokens'
 import { encodeHash, prefixArray } from './utils'
@@ -117,8 +117,8 @@ class StorageContract extends ContractWithTokens {
   }
 
   public terminateOffer(
-    txOptions: TransactionOptions,
-  ): Promise<TxOptions> {
+    txOptions: TxOptions,
+  ): Promise<TransactionReceipt> {
     return this.send(
       this.contract.methods.terminateOffer(),
       { ...txOptions, token: SUPPORTED_TOKENS.RBTC }, // Can be used only with native token

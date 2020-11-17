@@ -2,12 +2,11 @@ import { TransactionReceipt } from 'web3-eth'
 import Web3 from 'web3'
 
 import { ZERO_ADDRESS } from '../constants/strings'
-import { rifTokenAddress } from './config'
 import { RifERC20Contract } from './tokens/rif'
 import { MarketplaceContractErrorId } from './Marketplace'
 import { RnsContractErrorId } from './Rns'
 import { StorageStakingContractErrorId } from './Staking'
-import { StorageContractErrorId } from './storage/contract'
+import { StorageContractErrorId } from './storage'
 import type { RifERC677ContractErrorId, RifERC20ContractErrorId } from './tokens/rif'
 
 export interface TransactionOptions {

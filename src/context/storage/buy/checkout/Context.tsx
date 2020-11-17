@@ -161,7 +161,7 @@ const Provider: FC = ({ children }) => {
             .toString(),
           token: TokenAddressees[token],
         }
-        const storageContract = (await import('contracts/storage/contract')).default.getInstance(web3 as Web3)
+        const storageContract = (await import('contracts/storage')).default.getInstance(web3 as Web3)
         appDispatch({
           type: 'SET_IS_LOADING',
           payload: {
