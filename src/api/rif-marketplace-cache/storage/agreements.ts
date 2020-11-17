@@ -1,31 +1,28 @@
-import { Big } from 'big.js'
 import { AbstractAPIService } from 'api/models/apiService'
 import { AgreementTransport } from 'api/models/storage/transports'
-import { Agreement, PeriodInSeconds, SubscriptionPeriod } from 'models/marketItems/StorageItem'
+import { Big } from 'big.js'
 import { ZERO_ADDRESS } from 'constants/strings'
+import { Agreement, PeriodInSeconds, SubscriptionPeriod } from 'models/marketItems/StorageItem'
 import { parseToBigDecimal } from 'utils/parsers'
+import { SUPPORTED_TOKENS, SupportedTokens } from '../../../contracts/interfaces'
+import { availableTokens } from '../rns/common'
 import {
   AgreementFilters, StorageAPIService, StorageServiceAddress, StorageWSChannel,
 } from './interfaces'
-import { availableTokens } from '../rns/common'
-import { SupportedToken } from '../rates/xr'
 
 export const agreementsAddress: StorageServiceAddress = 'storage/v0/agreements'
 export const agreementsWSChannel: StorageWSChannel = 'agreements'
 
-const getPaymentToken = (tokenAddress: string): SupportedToken => {
-  const tokenIsRbtc = tokenAddress === ZERO_ADDRESS
-  const tokenSymbol = Object.entries(availableTokens).reduce((acc, [symbol, addr]) => {
-    if (addr === tokenAddress) {
-      // eslint-disable-next-line no-param-reassign
-      acc = symbol as SupportedToken
-    }
-    return acc
-  }, '' as SupportedToken)
-
-  return tokenIsRbtc
-    ? 'rbtc'
-    : tokenSymbol
+const getPaymentToken = (tokenAddress: string): SupportedTokens => {
+  if (tokenAddress === ZERO_ADDRESS) {
+    return SUPPORTED_TOKENS.RBTC
+  }
+  return Object
+    .entries(availableTokens)
+    .reduce(
+      (acc, [symbol, addr]) => (addr === tokenAddress ? symbol as SupportedTokens : acc),
+          '' as SupportedTokens,
+    )
 }
 
 const calcMonthlyRate = (

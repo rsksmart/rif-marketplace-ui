@@ -1,29 +1,27 @@
-import React, {
-  createContext, FC,
-  useCallback,
-  useContext, useEffect, useMemo, useReducer, useState,
-} from 'react'
-import { useHistory } from 'react-router-dom'
-import Web3 from 'web3'
-import { Big } from 'big.js'
 import { Web3Store } from '@rsksmart/rif-ui'
-import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
+import { Big } from 'big.js'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
 import { TokenAddressees } from 'context/Services/storage/interfaces'
 import { StorageOffersContext } from 'context/Services/storage/offers'
+import createWithContext from 'context/storeUtils/createWithContext'
 import { BillingPlan, PeriodInSeconds, StorageOffer } from 'models/marketItems/StorageItem'
 import { UIError } from 'models/UIMessage'
+import React, {
+  createContext, FC, useCallback, useContext, useEffect, useMemo, useReducer, useState,
+} from 'react'
+import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
+import { calcRenewalDate, getShortDateString } from 'utils/dateUtils'
 import Logger from 'utils/Logger'
 import { convertToWeiString } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
-import createWithContext from 'context/storeUtils/createWithContext'
-import { calcRenewalDate, getShortDateString } from 'utils/dateUtils'
-import {
-  PinnedContent, Props, State, AsyncActions,
-} from './interfaces'
+import Web3 from 'web3'
+import { SUPPORTED_TOKENS, SupportedTokens } from '../../../../contracts/interfaces'
 import { reducer } from './actions'
+import {
+  AsyncActions, PinnedContent, Props, State,
+} from './interfaces'
 
 export const initialState: State = {
   order: {
@@ -32,7 +30,7 @@ export const initialState: State = {
     location: '',
     total: new Big(0),
     billingPeriod: PeriodInSeconds.Daily,
-    token: 'rbtc',
+    token: SUPPORTED_TOKENS.RBTC,
   },
   auxiliary: {
     currencyOptions: [],
@@ -116,7 +114,7 @@ const Provider: FC = ({ children }) => {
         system,
         location,
       } = listedItem
-      const currencies: SupportedToken[] = Array.from(
+      const currencies: SupportedTokens[] = Array.from(
         new Set(subscriptionOptions.map(
           (option: BillingPlan) => option.currency,
         )),
@@ -161,7 +159,7 @@ const Provider: FC = ({ children }) => {
             .toString(),
           token: TokenAddressees[token],
         }
-        const storageContract = (await import('contracts/storage')).default.getInstance(web3 as Web3)
+        const storageContract = (await import('contracts/storage')).default.StorageContract.getInstance(web3 as Web3)
         appDispatch({
           type: 'SET_IS_LOADING',
           payload: {

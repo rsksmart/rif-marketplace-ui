@@ -1,18 +1,17 @@
-import React, {
-  FC, useState, useContext,
-} from 'react'
-import InfoIcon from '@material-ui/icons/Info'
+import { MenuItem, TextField } from '@material-ui/core'
 import Grid from '@material-ui/core/Grid'
-import OfferEditContext from 'context/Market/storage/OfferEditContext'
-import { EditItemPayload, AddItemPayload } from 'context/Market/storage/offerEditActions'
-import { StorageBillingPlan } from 'context/Market/storage/interfaces'
-import { Button, TooltipIconButton } from '@rsksmart/rif-ui'
+import InfoIcon from '@material-ui/icons/Info'
 import SaveIcon from '@material-ui/icons/Save'
+import { Button, TooltipIconButton } from '@rsksmart/rif-ui'
+import Big from 'big.js'
 import CryptoPriceConverter from 'components/molecules/CryptoPriceConverter'
-import { TextField, MenuItem } from '@material-ui/core'
+import { StorageBillingPlan } from 'context/Market/storage/interfaces'
+import { AddItemPayload, EditItemPayload } from 'context/Market/storage/offerEditActions'
+import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { MarketCryptoRecord } from 'models/Market'
 import { SubscriptionPeriod } from 'models/marketItems/StorageItem'
-import Big from 'big.js'
+import React, { FC, useContext, useState } from 'react'
+import { SUPPORTED_TOKENS, SupportedTokens } from '../../../../contracts/interfaces'
 
 export interface EditableBillingPlanProps {
   onPlanAdded?: (billingPlan: StorageBillingPlan) => void
@@ -33,7 +32,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
 
   const editMode = !!billingPlan
   // TODO: remove hard-coded currency by default
-  const [currency, setCurrency] = useState(billingPlan?.currency || 'rbtc')
+  const [currency, setCurrency] = useState<SupportedTokens>(billingPlan?.currency || SUPPORTED_TOKENS.RBTC)
   const [pricePerGb, setPricePerGb] = useState(billingPlan?.price.toString())
   const [period, setPeriod] = useState(billingPlan?.period || allBillingPeriods[0])
 

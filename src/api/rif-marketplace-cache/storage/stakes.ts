@@ -1,7 +1,7 @@
 import { AbstractAPIService } from 'api/models/apiService'
 import { StakeTransport } from 'api/models/storage/transports'
 import { parseToBigDecimal } from 'utils/parsers'
-import { SupportedToken } from '../rates/xr'
+import { SupportedTokens } from '../../../contracts/interfaces'
 import {
   StakeAPIService,
   StakeFilters,
@@ -12,7 +12,7 @@ import {
 export const stakesAddress: StorageServiceAddress = 'storage/v0/stakes'
 export const stakesWSChannel: StorageWSChannel = 'stakes'
 
-export type StakedBalances = Record<SupportedToken, string>
+export type StakedBalances = Record<SupportedTokens, string>
 
 export type Staked = {
   stakedBalances: StakedBalances

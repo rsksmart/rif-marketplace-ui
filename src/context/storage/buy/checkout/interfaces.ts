@@ -1,13 +1,13 @@
 import { Big } from 'big.js'
-import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
 import { BillingPlan, StorageOffer, PeriodInSeconds } from 'models/marketItems/StorageItem'
 import { Dispatch } from 'react'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { Status } from 'components/templates/ProgressOverlay'
+import { SupportedTokens } from '../../../../contracts/interfaces'
 
 // STATE
 export type AuxiliaryState = {
-  currencyOptions: SupportedToken[]
+  currencyOptions: SupportedTokens[]
   currentRate: number
   endDate: string
   periodsCount: number
@@ -19,7 +19,7 @@ export type AuxiliaryState = {
 
 export type Order = Pick<StorageOffer, 'id' | 'system' | 'location'> & {
   billingPeriod: PeriodInSeconds
-  token: SupportedToken
+  token: SupportedTokens
   total: Big
 }
 

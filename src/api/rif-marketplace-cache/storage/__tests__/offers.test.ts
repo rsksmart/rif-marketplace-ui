@@ -1,17 +1,15 @@
-import { Big } from 'big.js'
 import { OfferTransport } from 'api/models/storage/transports'
 import mockFeathersService from 'api/test-utils/feathers'
+import { Big } from 'big.js'
+import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import {
-  StorageOffer,
-  BillingPlan,
-  PeriodInSeconds,
-  SubscriptionPeriod,
+  BillingPlan, PeriodInSeconds, StorageOffer, SubscriptionPeriod,
 } from 'models/marketItems/StorageItem'
 import { parseToBigDecimal } from 'utils/parsers'
-import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
-import { StorageOffersService } from '../offers'
+import { SUPPORTED_TOKENS } from '../../../../contracts/interfaces'
 import { StorageAPIService } from '../interfaces'
+import { StorageOffersService } from '../offers'
 
 const FAKE_OFFER_0: OfferTransport = {
   utilizedCapacity: '0',
@@ -84,7 +82,7 @@ describe('Storage OffersService', () => {
           .map<BillingPlan>((plan) => ({
             period: PeriodInSeconds[plan.period],
             price: parseToBigDecimal(plan.price),
-            currency: 'rbtc',
+            currency: SUPPORTED_TOKENS.RBTC,
           })),
         averagePrice: avgBillingPrice,
         peerId: 'QmYyQSo1c1Ym7orWxLYvCrM2EmxFTANf8wXmmE7DWjhx5N',

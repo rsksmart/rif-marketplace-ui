@@ -1,4 +1,3 @@
-import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
 import { Big } from 'big.js'
 import { Item } from 'models/Market'
 import { SupportedTokens } from '../../contracts/interfaces'
@@ -36,7 +35,7 @@ export type Agreement = Item & {
   subscriptionPrice: Big
   subscriptionPeriod: SubscriptionPeriod
   monthlyFee: Big
-  paymentToken: SupportedToken
+  paymentToken: SupportedTokens
   consumer: string
   availableFunds: Big
 }

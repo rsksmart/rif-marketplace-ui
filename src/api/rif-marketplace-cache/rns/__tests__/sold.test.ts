@@ -38,6 +38,7 @@ const MOCK_DOMAIN_TRANSPORT_ITEM_0: SoldDomainTransport = {
   txHash: 'mock_hash',
 }
 
+// @ts-ignore
 availableTokens.mockaddress = 'rif'
 
 const MOCK_TRANSPORT = [MOCK_DOMAIN_TRANSPORT_ITEM_0]

@@ -1,6 +1,5 @@
 import { Dispatch } from 'react'
 import { ContextState } from 'context/storeUtils/interfaces'
-import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
 import networkConfig from 'config'
 import {
   BillingPlan,
@@ -8,6 +7,7 @@ import {
   SubscriptionPeriod,
 } from 'models/marketItems/StorageItem'
 import { ZERO_ADDRESS } from 'constants/strings'
+import { SupportedTokens } from '../../../contracts/interfaces'
 import { OfferEditAction } from './offerEditActions'
 
 export interface StorageBillingPlan extends BillingPlan {
@@ -31,7 +31,7 @@ export interface OfferEditContextProps {
   dispatch: Dispatch<OfferEditAction>
 }
 
-export const TokenAddressees: Record<SupportedToken, string> = {
+export const TokenAddressees: Record<SupportedTokens, string> = {
   rbtc: ZERO_ADDRESS, // we are using zero address for native token is Storage Manager SC
   rif: networkConfig.contractAddresses.rif,
 }
