@@ -99,10 +99,12 @@ class StorageContract {
     },
     { from }: TransactionOptions,
   ): Promise<TransactionReceipt> => {
+    const encodedDataReference = encodeHash(dataReference)
+
     const newTask = this.contract.methods.depositFunds(
       token,
       amount,
-      [dataReference],
+      encodedDataReference,
       provider,
     )
 
@@ -230,9 +232,11 @@ class StorageContract {
         throw error
       })
 
+    const encodedDataReference = encodeHash(dataReference)
+
     const weiAmounts = amounts.map(convertToWeiString)
     const withdrawFundsTask = await this.contract.methods
-      .withdrawFunds([dataReference], provider, tokens, weiAmounts)
+      .withdrawFunds(encodedDataReference, provider, tokens, weiAmounts)
 
     const estimatedGas = await withdrawFundsTask.estimateGas({ from, gasPrice })
       .catch((error: Error) => {
@@ -265,6 +269,7 @@ class StorageContract {
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> => {
     const { from } = txOptions
+    const encodedDataReferences = dataReferences.map(encodeHash)
 
     const gasPrice = await this.web3.eth.getGasPrice()
       .catch((error: Error) => {
@@ -273,7 +278,7 @@ class StorageContract {
       })
 
     const payoutFundsTask = await this.contract.methods
-      .payoutFunds([dataReferences], [creatorOfAgreement], token, from)
+      .payoutFunds(encodedDataReferences, [creatorOfAgreement], token, from)
 
     const estimatedGas = await payoutFundsTask.estimateGas({ from, gasPrice })
       .catch((error: Error) => {
