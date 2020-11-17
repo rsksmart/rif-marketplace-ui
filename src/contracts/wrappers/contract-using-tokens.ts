@@ -76,6 +76,7 @@ export class ContractWithTokens extends ContractBase {
   }
 
   async send(tx: any, txOptions: TxOptions): Promise<TransactionReceipt> {
+    const { from, value } = txOptions
     const tokenToUse = this.getToken(txOptions.token)
 
     if (!this._isCurrencySupported(tokenToUse.token)) {
@@ -85,7 +86,7 @@ export class ContractWithTokens extends ContractBase {
     // Need token transaction
     if (tokenToUse.type !== TOKEN_TYPES.NATIVE && txOptions.value) {
       const approveReceipt = await this._approveTokenTransfer(
-        tokenToUse, { from: txOptions.from, gasPrice: txOptions.gasPrice, value: txOptions.value },
+        tokenToUse, { from, value },
       )
 
       if (txOptions.onApprove) {
@@ -94,9 +95,7 @@ export class ContractWithTokens extends ContractBase {
     }
 
     const {
-      from,
       gas,
-      value,
       gasPrice,
     } = await this._processOptions(tx, txOptions)
 

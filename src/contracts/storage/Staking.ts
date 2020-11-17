@@ -81,10 +81,8 @@ class StakingContract extends ContractWithTokens {
     account: string,
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
-    const { tokenAddress } = this.getToken(txOptions.token)
-
     return this._call(
-      this.contract.methods.totalStakedFor(account, tokenAddress),
+      this.contract.methods.totalStakedFor(account, this.getToken(txOptions.token).tokenAddress),
       txOptions,
     )
   }
@@ -92,10 +90,8 @@ class StakingContract extends ContractWithTokens {
   public totalStaked(
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
-    const { tokenAddress } = this.getToken(txOptions.token)
-
     return this._call(
-      this.contract.methods.totalStaked(tokenAddress),
+      this.contract.methods.totalStaked(this.getToken(txOptions.token).tokenAddress),
       txOptions,
     )
   }
