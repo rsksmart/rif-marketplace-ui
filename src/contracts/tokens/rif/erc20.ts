@@ -6,18 +6,12 @@ import ERC20 from '../../abi/ERC20.json'
 import { rifTokenAddress } from '../../config'
 import ContractBase from '../../wrappers/contract-base'
 import {
-  ERC20ContractI, SUPPORTED_TOKENS, TOKEN_TYPES, TransactionOptions,
+  ERC20ContractI, TransactionOptions,
 } from '../../interfaces'
 
 export type RifERC20ContractErrorId = 'contract-rif-getBalanceOf' | 'contract-rif-transferAndCall'
 
 export class RifERC20Contract extends ContractBase implements ERC20ContractI {
-  static tokenAddress: string = rifTokenAddress
-
-  static tokenName = SUPPORTED_TOKENS.RIF
-
-  static tokenType = TOKEN_TYPES.ERC20
-
   public static getInstance(web3: Web3): RifERC20Contract {
     if (!RifERC20Contract.instance) {
       RifERC20Contract.instance = new RifERC20Contract(web3)
