@@ -22,7 +22,7 @@ import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper
 import RoundedCard from 'components/atoms/RoundedCard'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
 import Staking from 'components/organisms/storage/staking/Staking'
-import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Services/storage/global'
+import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Services/storage'
 import NoWhitelistedProvider from 'components/molecules/storage/NoWhitelistedProvider'
 
 // TODO: discuss about wrapping the library and export it with this change
@@ -181,7 +181,7 @@ const StorageSellPage: FC = () => {
       </Typography>
       {
         Boolean(account)
-        && isWhitelistedProvider === false
+        && isWhitelistedProvider === false // we don't want to show the message on undefined
         && <NoWhitelistedProvider />
       }
       <RoundedCard color="primary" className={classes.stepperContainer}>

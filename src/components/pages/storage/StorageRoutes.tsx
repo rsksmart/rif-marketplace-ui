@@ -13,7 +13,7 @@ import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { getTabValueFromLocation } from 'utils/utils'
 import { AgreementsContextProvider } from 'context/Services/storage/agreements'
-import StorageContextProvider from 'context/Services/storage/global'
+import StorageContextProvider from 'context/Services/storage'
 import {
   StorageSellPage, StorageOffersPage, StorageMyOffersPage, StorageLandingPage,
 } from '.'

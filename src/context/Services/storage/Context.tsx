@@ -3,6 +3,7 @@ import AppContext, {
   AppContextProps,
   errorReporterFactory,
 } from 'context/App/AppContext'
+import { createReducer } from 'context/storeUtils/reducer'
 import StorageContract from 'contracts/storage/contract'
 import { UIError } from 'models/UIMessage'
 import React, {
@@ -11,11 +12,17 @@ import React, {
   useCallback, useContext, useEffect, useReducer,
 } from 'react'
 import Web3 from 'web3'
-import { reducer } from './actions'
+import actions from './actions'
 import { Props, State } from './interfaces'
 
+export const contextID = 'storage_global' as const
+export type ContextName = typeof contextID
+
 export const initialState: State = {
+  contextID,
   isWhitelistedProvider: undefined,
+  // contract: in a future refactor it would be good to have the instance
+  // of the StorageManager contract here
 }
 
 export const Context = createContext<Props>({
@@ -38,7 +45,10 @@ const Provider: FC = ({ children }) => {
     },
   } = useContext(Web3Store)
 
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(
+    createReducer(initialState, actions),
+    initialState,
+  )
 
   useEffect(() => {
     if (web3 && account) {
