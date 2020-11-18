@@ -9,6 +9,7 @@ import { StorageOffersContext, StorageOffersContextProps } from 'context/Service
 import { OrderPayload } from 'context/Services/storage/offers/offersActions'
 import ItemWUnit from 'components/atoms/ItemWUnit'
 import ROUTES from 'routes'
+import { Web3Store } from '@rsksmart/rif-ui'
 
 const headers: TableHeaders = {
   provider: 'Provider',
@@ -28,6 +29,11 @@ const StorageOffersPage: FC = () => {
     },
     dispatch,
   } = useContext<StorageOffersContextProps>(StorageOffersContext)
+  const {
+    state: {
+      account,
+    },
+  } = useContext(Web3Store)
 
   const collection = items
     .map<MarketplaceItem>((item) => {
@@ -35,6 +41,9 @@ const StorageOffersPage: FC = () => {
         id, system, availableSizeGB, averagePrice,
         subscriptionOptions, acceptedCurrencies,
       } = item
+
+      const isOwnAccount = account === id
+
       return {
         id,
         provider: <AddressItem value={id} />,
@@ -47,6 +56,7 @@ const StorageOffersPage: FC = () => {
         averagePrice: <ItemWUnit type="mediumPrimary" value={averagePrice.toString()} unit="USD" />,
         action1: <SelectRowButton
           id={id}
+          disabled={!account || isOwnAccount}
           handleSelect={(): void => {
             dispatch({
               type: 'SET_ORDER',
