@@ -25,6 +25,8 @@ import Staking from 'components/organisms/storage/staking/Staking'
 import { SupportedTokens } from 'contracts/interfaces'
 import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Services/storage'
 import NoWhitelistedProvider from 'components/molecules/storage/NoWhitelistedProvider'
+import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
+import { StorageOffer } from 'models/marketItems/StorageItem'
 
 // TODO: discuss about wrapping the library and export it with this change
 Big.NE = -30
@@ -57,7 +59,7 @@ const StorageSellPage: FC = () => {
   } = useContext(Web3Store)
   const { dispatch: bcDispatch } = useContext(BlockchainContext)
 
-  const { dispatch: appDispatch } = useContext(AppContext)
+  const { state: appState, dispatch: appDispatch } = useContext(AppContext)
   const reportError = useCallback((
     e: UIError,
   ) => errorReporterFactory(appDispatch)(e), [appDispatch])
@@ -84,11 +86,24 @@ const StorageSellPage: FC = () => {
         } as LoadingPayload,
       })
 
+      const storageOffersService = appState?.apis?.['storage/v0/offers'] as StorageOffersService
+      storageOffersService.connect(errorReporterFactory(appDispatch))
+
+      const currentOwnOffers = await storageOffersService.fetch({
+        nonActive: true,
+        provider: account,
+      })
+
+      const currentOwnOffer = currentOwnOffers
+        && currentOwnOffers[0] as StorageOffer
+
       setIsProcessing(true)
       const storageContract = StorageContract.getInstance(web3)
       const {
         availableSizeMB, periods, prices, tokens,
-      } = transformOfferDataForContract(availableSize, billingPlans)
+      } = transformOfferDataForContract(
+        availableSize, billingPlans, currentOwnOffer,
+      )
 
       const setOfferReceipt = await storageContract.setOffer(
         availableSizeMB,
