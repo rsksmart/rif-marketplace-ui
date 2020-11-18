@@ -18,6 +18,7 @@ export const mapToTransport = ({
   price,
   size: sizeGB,
   provider,
+  nonActive,
 }: StorageOffersFilters): StorageFiltersTransport => ({
   periods: Array.from(periods).map(
     (p: SubscriptionPeriod) => PeriodInSeconds[p],
@@ -33,4 +34,5 @@ export const mapToTransport = ({
   provider: {
     $like: provider,
   },
+  'non-active': nonActive,
 })
