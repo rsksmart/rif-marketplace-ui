@@ -10,7 +10,7 @@ import { UNIT_PREFIX_POW2 } from 'utils/utils'
 export interface StorageFiltersTransport extends MarketFilter {
   averagePrice?: MinMaxFilter
   totalCapacity?: MinMaxFilter
-  periods: PeriodInSeconds[]
+  periods?: PeriodInSeconds[]
 }
 
 export const mapToTransport = ({
@@ -20,19 +20,28 @@ export const mapToTransport = ({
   provider,
   nonActive,
 }: StorageOffersFilters): StorageFiltersTransport => ({
-  periods: Array.from(periods).map(
-    (p: SubscriptionPeriod) => PeriodInSeconds[p],
-  ),
-  averagePrice: {
-    min: price.min - 1,
-    max: price.max + 1,
-  },
-  totalCapacity: {
-    min: sizeGB.min * UNIT_PREFIX_POW2.KILO,
-    max: sizeGB.max * UNIT_PREFIX_POW2.KILO,
-  },
   provider: {
     $like: provider,
   },
   'non-active': nonActive,
+  periods:
+    periods
+      ? Array.from(periods).map(
+        (p: SubscriptionPeriod) => PeriodInSeconds[p],
+      )
+      : undefined,
+  averagePrice:
+    price
+      ? {
+        min: price.min - 1,
+        max: price.max + 1,
+      }
+      : undefined,
+  totalCapacity:
+    sizeGB
+      ? {
+        min: sizeGB.min * UNIT_PREFIX_POW2.KILO,
+        max: sizeGB.max * UNIT_PREFIX_POW2.KILO,
+      }
+      : undefined,
 })
