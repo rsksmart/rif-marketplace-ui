@@ -9,10 +9,10 @@ import Logger from 'utils/Logger'
 import { UIError } from 'models/UIMessage'
 import createWithContext from 'context/storeUtils/createWithContext'
 import { Web3Store } from '@rsksmart/rif-ui'
+import { storageAddress } from 'contracts/config'
 import { AsyncActions, Props, State } from './interfaces'
 import actions from './actions'
 import { StorageOffersContext, StorageOffersContextProps } from '../offers'
-import { storageAddress } from 'contracts/config'
 
 export const contextID = 'storage_upload' as const
 export type ContextName = typeof contextID
