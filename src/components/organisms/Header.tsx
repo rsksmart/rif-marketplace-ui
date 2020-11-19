@@ -69,10 +69,10 @@ const Headers: FC = () => {
   return (
     <>
       <RifHeader
-          hreflogo={ROUTES.LANDING}
-          itemsStart={headerItems}
-          itemsEnd={actionItems}
-          login={Login}
+        hreflogo={ROUTES.LANDING}
+        itemsStart={headerItems}
+        itemsEnd={actionItems}
+        login={Login}
       />
       <NotificationsPopover
         anchorEl={anchorNotificationsMenu}

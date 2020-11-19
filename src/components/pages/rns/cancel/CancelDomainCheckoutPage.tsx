@@ -243,10 +243,10 @@ const CancelDomainCheckoutPage = () => {
 
   return (
     <CheckoutPageTemplate
-        className="domains-checkout-page"
-        backButtonProps={{
-          backTo: 'domains',
-        }}
+      className="domains-checkout-page"
+      backButtonProps={{
+        backTo: 'domains',
+      }}
     >
       <Card
         className={classes.card}
