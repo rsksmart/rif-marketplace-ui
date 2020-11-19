@@ -92,6 +92,7 @@ describe('Storage OffersService', () => {
           utilizedCapacity, UNIT_PREFIX_POW2.KILO,
         ),
         totalCapacityGB: parseConvertBig(totalCapacity, UNIT_PREFIX_POW2.KILO),
+        isActive: true,
       }
 
       expect(actualReturnValue[0]).toStrictEqual(expectedOffers)

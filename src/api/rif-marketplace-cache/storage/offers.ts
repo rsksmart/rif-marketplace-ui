@@ -56,6 +56,7 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     totalCapacityGB: parseConvertBig(
       totalCapacityMB, UNIT_PREFIX_POW2.KILO,
     ),
+    isActive: Number(totalCapacityMB) > 0,
   }
   return offer
 }

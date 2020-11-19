@@ -25,6 +25,7 @@ export interface StorageOffer extends Item {
   acceptedCurrencies: string[]
   peerId: string
   totalCapacityGB: Big
+  isActive: boolean
 }
 
 export type Agreement = Item & {
