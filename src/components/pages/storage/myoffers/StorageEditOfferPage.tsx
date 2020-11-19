@@ -19,7 +19,7 @@ import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
-import { SupportedTokens } from '../../../../contracts/interfaces'
+import { SupportedTokens } from 'contracts/interfaces'
 
 const logger = Logger.getInstance()
 

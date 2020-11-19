@@ -24,7 +24,7 @@ import BlockchainContext,
 { BlockchainContextProps }
   from 'context/Blockchain/BlockchainContext'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
-import { SupportedTokens } from '../../../../contracts/interfaces'
+import { SupportedTokens } from 'contracts/interfaces'
 import DepositModal from './DepositModal'
 import WithdrawModal from './WithdrawModal'
 import StakingCard from './StakingCard'

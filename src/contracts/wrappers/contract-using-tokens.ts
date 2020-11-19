@@ -83,8 +83,10 @@ export class ContractWithTokens extends ContractBase {
       throw new Error(`Token ${tokenToUse} is not supported by ${this.name} contract`)
     }
 
+    const isNativeToken = tokenToUse.type === TOKEN_TYPES.NATIVE
+
     // Need token transaction
-    if (tokenToUse.type !== TOKEN_TYPES.NATIVE && txOptions.value) {
+    if (!isNativeToken && txOptions.value) {
       const approveReceipt = await this._approveTokenTransfer(
         tokenToUse, { from, value },
       )
@@ -104,7 +106,7 @@ export class ContractWithTokens extends ContractBase {
       {
         from,
         gas,
-        value: tokenToUse.type === TOKEN_TYPES.NATIVE ? value : 0, // If use native token(RBTC) send as usual
+        value: isNativeToken ? value : 0, // If use native token(RBTC) send as usual
         gasPrice,
       },
     )

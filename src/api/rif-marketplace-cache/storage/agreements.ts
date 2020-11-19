@@ -4,7 +4,7 @@ import { Big } from 'big.js'
 import { ZERO_ADDRESS } from 'constants/strings'
 import { Agreement, PeriodInSeconds, SubscriptionPeriod } from 'models/marketItems/StorageItem'
 import { parseToBigDecimal } from 'utils/parsers'
-import { SUPPORTED_TOKENS, SupportedTokens } from '../../../contracts/interfaces'
+import { SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
 import { availableTokens } from '../rns/common'
 import {
   AgreementFilters, StorageAPIService, StorageServiceAddress, StorageWSChannel,

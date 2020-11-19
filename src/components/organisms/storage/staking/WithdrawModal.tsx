@@ -8,7 +8,7 @@ import { StakedBalances as StakedBalancesProp } from 'api/rif-marketplace-cache/
 import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
 import React, { FC, useEffect, useState } from 'react'
-import { SUPPORTED_TOKENS, SupportedTokens } from '../../../../contracts/interfaces'
+import { SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
 import StakedBalances from './StakedBalances'
 
 export interface WithdrawModalProps {

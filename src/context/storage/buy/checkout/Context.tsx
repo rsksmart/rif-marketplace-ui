@@ -17,7 +17,7 @@ import Logger from 'utils/Logger'
 import { convertToWeiString } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import Web3 from 'web3'
-import { SUPPORTED_TOKENS, SupportedTokens } from '../../../../contracts/interfaces'
+import { SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
 import { reducer } from './actions'
 import {
   AsyncActions, PinnedContent, Props, State,
@@ -159,7 +159,10 @@ const Provider: FC = ({ children }) => {
             .toString(),
           token: TokenAddressees[token],
         }
-        const storageContract = (await import('contracts/storage')).default.StorageContract.getInstance(web3 as Web3)
+        const storageContract = (await import('contracts/storage'))
+          .default
+          .StorageContract
+          .getInstance(web3 as Web3)
         appDispatch({
           type: 'SET_IS_LOADING',
           payload: {

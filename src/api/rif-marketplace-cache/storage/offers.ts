@@ -9,7 +9,7 @@ import {
 } from 'models/marketItems/StorageItem'
 import { parseToBigDecimal } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
-import { SUPPORTED_TOKENS } from '../../../contracts/interfaces'
+import { SUPPORTED_TOKENS } from 'contracts/interfaces'
 import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
 import { MinMax } from './utils'
 

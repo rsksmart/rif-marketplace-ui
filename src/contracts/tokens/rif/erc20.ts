@@ -2,14 +2,17 @@ import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 import { AbiItem } from 'web3-utils'
 
-import ERC20 from '../../abi/ERC20.json'
-import { rifTokenAddress } from '../../config'
-import ContractBase from '../../wrappers/contract-base'
+import ERC20 from 'contracts/abi/ERC20.json'
+import { rifTokenAddress } from 'contracts/config'
+import ContractBase from 'contracts/wrappers/contract-base'
 import {
-  ERC20ContractI, TransactionOptions,
-} from '../../interfaces'
+  ERC20ContractI,
+  TransactionOptions,
+} from 'contracts/interfaces'
 
 export type RifERC20ContractErrorId = 'contract-rif-getBalanceOf' | 'contract-rif-transferAndCall'
+
+const gasMultiplier = 1.1
 
 export class RifERC20Contract extends ContractBase implements ERC20ContractI {
   public static getInstance(web3: Web3): RifERC20Contract {
@@ -41,7 +44,10 @@ export class RifERC20Contract extends ContractBase implements ERC20ContractI {
   ): Promise<TransactionReceipt> {
     return this._send(
       this.contract.methods.approve(contractAddress, amount),
-      { ...txOptions, gasMultiplier: 1.1 },
+      {
+        ...txOptions,
+        gasMultiplier,
+      },
     )
   }
 }

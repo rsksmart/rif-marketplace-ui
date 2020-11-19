@@ -7,7 +7,7 @@ import {
   SubscriptionPeriod,
 } from 'models/marketItems/StorageItem'
 import { ZERO_ADDRESS } from 'constants/strings'
-import { SupportedTokens } from '../../../contracts/interfaces'
+import { SupportedTokens } from 'contracts/interfaces'
 import { OfferEditAction } from './offerEditActions'
 
 export interface StorageBillingPlan extends BillingPlan {

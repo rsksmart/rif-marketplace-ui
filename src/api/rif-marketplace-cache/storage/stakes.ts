@@ -1,7 +1,7 @@
 import { AbstractAPIService } from 'api/models/apiService'
 import { StakeTransport } from 'api/models/storage/transports'
 import { parseToBigDecimal } from 'utils/parsers'
-import { SupportedTokens } from '../../../contracts/interfaces'
+import { SupportedTokens } from 'contracts/interfaces'
 import {
   StakeAPIService,
   StakeFilters,

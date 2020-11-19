@@ -3,7 +3,7 @@ import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 import { AbiItem, asciiToHex } from 'web3-utils'
 
-import { storageAddress, StorageSupportedTokens } from '../config'
+import { storageAddress, storageSupportedTokens } from '../config'
 import {
   SUPPORTED_TOKENS, SupportedTokens, TxOptions,
 } from '../interfaces'
@@ -12,6 +12,8 @@ import ContractWithTokens from '../wrappers/contract-using-tokens'
 import { encodeHash, prefixArray } from './utils'
 
 export type StorageContractErrorId = 'contract-storage'
+
+const gasMultiplier = 1.1
 
 class StorageContract extends ContractWithTokens {
   public static getInstance(web3: Web3): StorageContract {
@@ -22,7 +24,7 @@ class StorageContract extends ContractWithTokens {
               StorageManager.abi as AbiItem[],
               storageAddress,
         ),
-        getTokens(StorageSupportedTokens),
+        getTokens(storageSupportedTokens),
         'contract-storage',
       )
     }
@@ -47,7 +49,7 @@ class StorageContract extends ContractWithTokens {
     const dataReference = encodeHash(fileHash)
     const { tokenAddress } = this.getToken(txOptions.token)
 
-    const newAgreementTx = this.contract.methods.newAgreement(
+    const newAgreementTx = this.methods.newAgreement(
       dataReference,
       provider,
       sizeMB,
@@ -61,7 +63,10 @@ class StorageContract extends ContractWithTokens {
 
     return this.send(
       newAgreementTx,
-      { ...txOptions, value: amount },
+      {
+        ...txOptions,
+        value: amount,
+      },
     )
   }
 
@@ -76,7 +81,7 @@ class StorageContract extends ContractWithTokens {
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
     const { tokenAddress } = this.getToken(txOptions.token)
-    const depositTx = this.contract.methods.depositFunds(
+    const depositTx = this.methods.depositFunds(
       tokenAddress,
       amount,
       [asciiToHex(dataReference)],
@@ -85,7 +90,10 @@ class StorageContract extends ContractWithTokens {
 
     return this.send(
       depositTx,
-      { ...txOptions, value: amount },
+      {
+        ...txOptions,
+        value: amount,
+      },
     )
   }
 
@@ -103,7 +111,7 @@ class StorageContract extends ContractWithTokens {
     )
     const tokensAddresses = tokens.map((t) => this.getToken(t).tokenAddress)
 
-    const setOfferTx = await this.contract.methods.setOffer(
+    const setOfferTx = await this.methods.setOffer(
       capacityMB,
       billingPeriods,
       billingRbtcWeiPrices,
@@ -113,7 +121,11 @@ class StorageContract extends ContractWithTokens {
 
     return this.send(
       setOfferTx,
-      { ...txOptions, gasMultiplier: 1.1, token: SUPPORTED_TOKENS.rbtc }, // Can be used only with native token
+      {
+        ...txOptions,
+        gasMultiplier,
+        token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
+      },
     )
   }
 
@@ -121,8 +133,11 @@ class StorageContract extends ContractWithTokens {
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
     return this.send(
-      this.contract.methods.terminateOffer(),
-      { ...txOptions, token: SUPPORTED_TOKENS.rbtc }, // Can be used only with native token
+      this.methods.terminateOffer(),
+      {
+        ...txOptions,
+        token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
+      },
     )
   }
 
@@ -131,7 +146,7 @@ class StorageContract extends ContractWithTokens {
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
     return this._call(
-      this.contract.methods.hasUtilizedCapacity(account),
+      this.methods.hasUtilizedCapacity(account),
       txOptions,
     )
   }

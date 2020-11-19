@@ -28,7 +28,7 @@ class RNSContract extends ContractBase {
     tokenId: string,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> {
-    const approveTx = this.contract.methods.approve(
+    const approveTx = this.methods.approve(
       contractAddress, tokenId,
     )
     return this._send(approveTx, txOptions)
@@ -45,7 +45,7 @@ class RNSContract extends ContractBase {
 
   public getApproved = (tokenId: string, txOptions: TransactionOptions): Promise<Array<string>> => {
     const { from } = txOptions
-    return this.contract.methods.getApproved(tokenId).call({ from })
+    return this.methods.getApproved(tokenId).call({ from })
   }
 }
 

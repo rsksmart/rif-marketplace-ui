@@ -9,6 +9,8 @@ import ContractBase from '../wrappers/contract-base'
 
 export type MarketplaceContractErrorId = 'contract-marketplace-place' | 'contract-marketplace-unplace' | 'contract-marketplace-getPlacement'
 
+const gasMultiplier = 1.1
+
 class MarketplaceContract extends ContractBase {
   public static getInstance(web3: Web3): MarketplaceContract {
     if (!MarketplaceContract.instance) {
@@ -32,12 +34,15 @@ class MarketplaceContract extends ContractBase {
     price: string,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> {
-    const placeTx = this.contract.methods.place(
+    const placeTx = this.methods.place(
       tokenId, rifTokenAddress, this.web3.utils.toWei(price),
     )
     return this._send(
       placeTx,
-      { ...txOptions, gasMultiplier: 1.1 },
+      {
+        ...txOptions,
+        gasMultiplier,
+      },
     )
   }
 
@@ -46,10 +51,13 @@ class MarketplaceContract extends ContractBase {
     tokenId: string,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> {
-    const unplaceTx = this.contract.methods.unplace(tokenId)
+    const unplaceTx = this.methods.unplace(tokenId)
     return this._send(
       unplaceTx,
-      { ...txOptions, gasMultiplier: 1.1 },
+      {
+        ...txOptions,
+        gasMultiplier,
+      },
     )
   }
 
@@ -58,7 +66,7 @@ class MarketplaceContract extends ContractBase {
     txOptions: TransactionOptions,
   ): Promise<Array<string>> {
     const { from } = txOptions
-    return this.contract.methods.placement(tokenId).call({ from })
+    return this.methods.placement(tokenId).call({ from })
   }
 }
 

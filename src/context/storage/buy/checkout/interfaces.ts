@@ -3,7 +3,7 @@ import { BillingPlan, StorageOffer, PeriodInSeconds } from 'models/marketItems/S
 import { Dispatch } from 'react'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { Status } from 'components/templates/ProgressOverlay'
-import { SupportedTokens } from '../../../../contracts/interfaces'
+import { SupportedTokens } from 'contracts/interfaces'
 
 // STATE
 export type AuxiliaryState = {

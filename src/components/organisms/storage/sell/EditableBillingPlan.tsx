@@ -11,7 +11,7 @@ import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { MarketCryptoRecord } from 'models/Market'
 import { SubscriptionPeriod } from 'models/marketItems/StorageItem'
 import React, { FC, useContext, useState } from 'react'
-import { SUPPORTED_TOKENS, SupportedTokens } from '../../../../contracts/interfaces'
+import { SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
 
 export interface EditableBillingPlanProps {
   onPlanAdded?: (billingPlan: StorageBillingPlan) => void

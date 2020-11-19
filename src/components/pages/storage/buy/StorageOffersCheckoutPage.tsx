@@ -27,7 +27,7 @@ import withCheckoutContext, { ContextProps, initialState, StorageCheckoutContext
 import ROUTES from 'routes'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import RoundBtn from 'components/atoms/RoundBtn'
-import { SupportedTokens } from '../../../../contracts/interfaces'
+import { SupportedTokens } from 'contracts/interfaces'
 
 const useStyles = makeStyles((theme: Theme) => ({
   stepperCard: {

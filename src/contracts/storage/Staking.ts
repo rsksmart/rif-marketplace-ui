@@ -4,7 +4,7 @@ import { convertToWeiString } from 'utils/parsers'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 import { AbiItem } from 'web3-utils'
-import { stakingAddress, StorageSupportedTokens } from '../config'
+import { stakingAddress, storageSupportedTokens } from '../config'
 import { SUPPORTED_TOKENS, TxOptions } from '../interfaces'
 import { getTokens } from '../utils'
 import ContractWithTokens from '../wrappers/contract-using-tokens'
@@ -12,7 +12,7 @@ import ContractWithTokens from '../wrappers/contract-using-tokens'
 export type StorageStakingContractErrorId = 'contract-storage-staking'
 
 const zeroBytes = '0x'.padEnd(64, '0')
-const extraGasPercentage = 1.3
+const gasMultiplier = 1.3
 
 class StakingContract extends ContractWithTokens {
   public static getInstance(web3: Web3): StakingContract {
@@ -23,7 +23,7 @@ class StakingContract extends ContractWithTokens {
           Staking.abi as AbiItem[],
           stakingAddress,
         ),
-        getTokens(StorageSupportedTokens),
+        getTokens(storageSupportedTokens),
         'contract-storage-staking',
       )
     }
@@ -43,7 +43,7 @@ class StakingContract extends ContractWithTokens {
     const { tokenAddress } = this.getToken(txOptions.token)
     const amountWei = convertToWeiString(amount)
 
-    const stakeTx = this.contract.methods.stake(
+    const stakeTx = this.methods.stake(
       amountWei,
       tokenAddress,
       zeroBytes,
@@ -51,7 +51,11 @@ class StakingContract extends ContractWithTokens {
 
     return this.send(
       stakeTx,
-      { ...txOptions, value: amountWei, gasMultiplier: extraGasPercentage },
+      {
+        ...txOptions,
+        value: amountWei,
+        gasMultiplier,
+      },
     )
   }
 
@@ -66,14 +70,18 @@ class StakingContract extends ContractWithTokens {
     const { tokenAddress } = this.getToken(txOptions.token)
     const amountWei = convertToWeiString(amount)
 
-    const unstakeTx = this.contract.methods.unstake(
+    const unstakeTx = this.methods.unstake(
       amountWei,
       tokenAddress,
       zeroBytes,
     )
     return this.send(
       unstakeTx,
-      { ...txOptions, token: SUPPORTED_TOKENS.rbtc, gasMultiplier: extraGasPercentage }, // Can be used only with native token
+      {
+        ...txOptions,
+        token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
+        gasMultiplier,
+      },
     )
   }
 
@@ -81,8 +89,9 @@ class StakingContract extends ContractWithTokens {
     account: string,
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
+    const { tokenAddress } = this.getToken(txOptions.token)
     return this._call(
-      this.contract.methods.totalStakedFor(account, this.getToken(txOptions.token).tokenAddress),
+      this.methods.totalStakedFor(account, tokenAddress),
       txOptions,
     )
   }
@@ -90,8 +99,9 @@ class StakingContract extends ContractWithTokens {
   public totalStaked(
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
+    const { tokenAddress } = this.getToken(txOptions.token)
     return this._call(
-      this.contract.methods.totalStaked(this.getToken(txOptions.token).tokenAddress),
+      this.methods.totalStaked(tokenAddress),
       txOptions,
     )
   }

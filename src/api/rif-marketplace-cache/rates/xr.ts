@@ -1,7 +1,7 @@
 import { Paginated } from '@feathersjs/feathers'
 import { AbstractAPIService, APIService, isResultPaginated } from 'api/models/apiService'
 import { Modify } from 'utils/typeUtils'
-import { SUPPORTED_TOKENS, SupportedTokens } from '../../../contracts/interfaces'
+import { SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
 
 export type XRServiceAddress = 'rates/v0'
 export const xrServiceAddress: XRServiceAddress = 'rates/v0'

@@ -2,9 +2,9 @@ import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 import { Contract } from 'web3-eth-contract'
 
-import Logger from '../../utils/Logger'
-import { TxOptions } from '../interfaces'
-import withWaitForReceipt from '../utils'
+import Logger from 'utils/Logger'
+import { TxOptions } from 'contracts/interfaces'
+import withWaitForReceipt from 'contracts/utils'
 
 const logger = Logger.getInstance()
 
@@ -16,6 +16,10 @@ export class ContractBase {
   constructor(web3: Web3, contact: Contract) {
     this.contract = contact
     this.web3 = web3
+  }
+
+  public get methods(): Record<string, Function> {
+    return this.contract.methods
   }
 
   protected async _processOptions(

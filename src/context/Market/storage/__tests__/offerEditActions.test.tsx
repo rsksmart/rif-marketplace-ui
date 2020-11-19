@@ -1,5 +1,5 @@
 import { Big } from 'big.js'
-import { SUPPORTED_TOKENS } from '../../../../contracts/interfaces'
+import { SUPPORTED_TOKENS } from 'contracts/interfaces'
 import { StorageBillingPlan } from '../interfaces'
 import { AddItemPayload, SetAvailableSizePayload, SetCountryPayload } from '../offerEditActions'
 import { initialState } from '../OfferEditContext'

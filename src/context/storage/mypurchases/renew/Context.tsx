@@ -16,7 +16,7 @@ import { calcRenewalDate, getShortDateString } from 'utils/dateUtils'
 import Logger from 'utils/Logger'
 import { convertToWeiString, parseToBigDecimal } from 'utils/parsers'
 import Web3 from 'web3'
-import { SUPPORTED_TOKENS } from '../../../../contracts/interfaces'
+import { SUPPORTED_TOKENS } from 'contracts/interfaces'
 import { reducer } from './actions'
 import { AsyncActions, Props, State } from './interfaces'
 
@@ -133,7 +133,10 @@ const Provider: FC = ({ children }) => {
           provider,
           token: networkConfig.contractAddresses[paymentToken],
         }
-        const storageContract = (await import('contracts/storage')).default.StorageContract.getInstance(web3 as Web3)
+        const storageContract = (await import('contracts/storage'))
+          .default
+          .StorageContract
+          .getInstance(web3 as Web3)
 
         appDispatch({
           type: 'SET_IS_LOADING',

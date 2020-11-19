@@ -1,6 +1,6 @@
 import { Big } from 'big.js'
 import { Item } from 'models/Market'
-import { SupportedTokens } from '../../contracts/interfaces'
+import { SupportedTokens } from 'contracts/interfaces'
 
 export type SubscriptionPeriod = 'Daily' | 'Weekly' | 'Monthly'
 export enum PeriodInSeconds {

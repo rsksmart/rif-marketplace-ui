@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import GridItem from 'components/atoms/GridItem'
-import { SupportedTokens } from '../../contracts/interfaces'
+import { SupportedTokens } from 'contracts/interfaces'
 
 export type AmountWithCurrencySelectProps = {
   amountLabel?: string
