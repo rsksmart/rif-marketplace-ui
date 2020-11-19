@@ -136,7 +136,15 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
             >
               Edit offer
             </Button>
-            <Button variant="outlined" rounded color="primary" onClick={handleCancelOpen}>Cancel offer</Button>
+            <Button
+              variant="outlined"
+              rounded
+              color="primary"
+              onClick={handleCancelOpen}
+              disabled={!storageOffer.isActive}
+            >
+              Cancel offer
+            </Button>
             <CancelOfferDialogue
               open={cancelOfferOpen}
               onClose={handleCancelClose}

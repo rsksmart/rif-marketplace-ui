@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography'
 import { Web3Store } from '@rsksmart/rif-ui'
 import handProvidingFunds from 'assets/images/handProvidingFunds.svg'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
-import withOffersContext, { StorageOffersContext, StorageOffersContextProps } from 'context/Services/storage/offers'
 import OffersList from 'components/organisms/storage/myoffers/OffersList'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { StorageContract } from 'contracts/storage'
@@ -24,6 +23,7 @@ import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 import { SetOfferPayload } from 'context/Market/storage/offerEditActions'
 import { StorageOffer } from 'models/marketItems/StorageItem'
 import Staking from 'components/organisms/storage/staking/Staking'
+import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
 
 const useStyles = makeStyles((theme: Theme) => ({
   resultsContainer: {
@@ -38,17 +38,9 @@ const StorageMyOffersPage: FC = () => {
     state: { account, web3 },
   } = useContext(Web3Store)
   const {
-    state: {
-      loaders: { data: isLoadingItems },
-    },
+    state: appState,
     dispatch: appDispatch,
   } = useContext<AppContextProps>(AppContext)
-  const {
-    state: {
-      listing: { items },
-    },
-    dispatch,
-  } = useContext<StorageOffersContextProps>(StorageOffersContext)
   const {
     dispatch: editOfferDispatch,
   } = useContext<OfferEditContextProps>(OfferEditContext)
@@ -59,16 +51,25 @@ const StorageMyOffersPage: FC = () => {
 
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [items, setItems] = useState<StorageOffer[]>([])
+  const [isLoadingData, setIsLoadingData] = useState(true)
 
-  // filter by the current account
   useEffect(() => {
-    if (account) {
-      dispatch({
-        type: 'FILTER',
-        payload: { provider: account },
-      })
+    const getOwnOffers = async (): Promise<void> => {
+      const storageOffersService = appState?.apis?.['storage/v0/offers'] as StorageOffersService
+      storageOffersService.connect(errorReporterFactory(appDispatch))
+
+      const currentOwnOffers = await storageOffersService.fetch({
+        nonActive: true,
+        provider: account,
+      }) as StorageOffer[]
+
+      setItems(currentOwnOffers)
+      setIsLoadingData(false)
     }
-  }, [account, dispatch])
+
+    getOwnOffers()
+  }, [account, appDispatch, appState])
 
   useEffect(() => {
     if (isPendingConfirm && !isProcessing) { // Post-confirmations handle
@@ -153,7 +154,7 @@ const StorageMyOffersPage: FC = () => {
       </Grid>
       <OffersList
         items={items}
-        isLoading={isLoadingItems}
+        isLoading={isLoadingData}
         onCancelOffer={handleOfferCancel}
         onEditOffer={handleEditOffer}
       />
@@ -174,7 +175,7 @@ const StorageMyOffersPage: FC = () => {
 }
 
 export default WithLoginCard({
-  WrappedComponent: withOffersContext(StorageMyOffersPage),
+  WrappedComponent: StorageMyOffersPage,
   title: 'Connect your wallet to see your offers',
   contentText: 'Connect your wallet to get detailed information about your offers',
 })
