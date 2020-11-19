@@ -12,9 +12,10 @@ import ContractWithTokens from '../wrappers/contract-using-tokens'
 export type StorageStakingContractErrorId = 'contract-storage-staking'
 
 const zeroBytes = '0x'.padEnd(64, '0')
-const gasMultiplier = 1.3
 
 class StakingContract extends ContractWithTokens {
+  public static gasMultiplier = 1.3
+
   public static getInstance(web3: Web3): StakingContract {
     if (!StakingContract.instance) {
       StakingContract.instance = new StakingContract(
@@ -54,7 +55,7 @@ class StakingContract extends ContractWithTokens {
       {
         ...txOptions,
         value: amountWei,
-        gasMultiplier,
+        gasMultiplier: StakingContract.gasMultiplier,
       },
     )
   }
@@ -80,7 +81,7 @@ class StakingContract extends ContractWithTokens {
       {
         ...txOptions,
         token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
-        gasMultiplier,
+        gasMultiplier: StakingContract.gasMultiplier,
       },
     )
   }

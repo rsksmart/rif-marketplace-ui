@@ -13,9 +13,9 @@ import { encodeHash, prefixArray } from './utils'
 
 export type StorageContractErrorId = 'contract-storage'
 
-const gasMultiplier = 1.1
-
 class StorageContract extends ContractWithTokens {
+  public static gasMultiplier = 1.1
+
   public static getInstance(web3: Web3): StorageContract {
     if (!StorageContract.instance) {
       StorageContract.instance = new StorageContract(
@@ -123,7 +123,7 @@ class StorageContract extends ContractWithTokens {
       setOfferTx,
       {
         ...txOptions,
-        gasMultiplier,
+        gasMultiplier: StorageContract.gasMultiplier,
         token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
       },
     )

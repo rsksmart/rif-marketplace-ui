@@ -12,9 +12,9 @@ import {
 
 export type RifERC20ContractErrorId = 'contract-rif-getBalanceOf' | 'contract-rif-transferAndCall'
 
-const gasMultiplier = 1.1
-
 export class RifERC20Contract extends ContractBase implements ERC20ContractI {
+  public static gasMultiplier = 1.1
+
   public static getInstance(web3: Web3): RifERC20Contract {
     if (!RifERC20Contract.instance) {
       RifERC20Contract.instance = new RifERC20Contract(web3)
@@ -46,7 +46,7 @@ export class RifERC20Contract extends ContractBase implements ERC20ContractI {
       this.contract.methods.approve(contractAddress, amount),
       {
         ...txOptions,
-        gasMultiplier,
+        gasMultiplier: RifERC20Contract.gasMultiplier,
       },
     )
   }

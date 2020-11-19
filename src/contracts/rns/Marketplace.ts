@@ -9,9 +9,9 @@ import ContractBase from '../wrappers/contract-base'
 
 export type MarketplaceContractErrorId = 'contract-marketplace-place' | 'contract-marketplace-unplace' | 'contract-marketplace-getPlacement'
 
-const gasMultiplier = 1.1
-
 class MarketplaceContract extends ContractBase {
+  public static gasMultiplier = 1.1
+
   public static getInstance(web3: Web3): MarketplaceContract {
     if (!MarketplaceContract.instance) {
       MarketplaceContract.instance = new MarketplaceContract(
@@ -41,7 +41,7 @@ class MarketplaceContract extends ContractBase {
       placeTx,
       {
         ...txOptions,
-        gasMultiplier,
+        gasMultiplier: MarketplaceContract.gasMultiplier,
       },
     )
   }
@@ -56,7 +56,7 @@ class MarketplaceContract extends ContractBase {
       unplaceTx,
       {
         ...txOptions,
-        gasMultiplier,
+        gasMultiplier: MarketplaceContract.gasMultiplier,
       },
     )
   }

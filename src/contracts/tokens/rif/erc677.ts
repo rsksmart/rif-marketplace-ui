@@ -9,9 +9,9 @@ import { TransactionOptions } from 'contracts/interfaces'
 
 export type RifERC677ContractErrorId = 'contract-rif-getBalanceOf' | 'contract-rif-transferAndCall'
 
-const gasMultiplier = 1.1
-
 export class RifERC677Contract extends ContractBase {
+  public static gasMultiplier = 1.1
+
   public static getInstance(web3: Web3): RifERC677Contract {
     if (!RifERC677Contract.instance) {
       RifERC677Contract.instance = new RifERC677Contract(web3)
@@ -46,7 +46,7 @@ export class RifERC677Contract extends ContractBase {
       ),
       {
         ...txOptions,
-        gasMultiplier,
+        gasMultiplier: RifERC677Contract.gasMultiplier,
       },
     )
   }
