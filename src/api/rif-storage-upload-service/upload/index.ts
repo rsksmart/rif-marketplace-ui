@@ -11,6 +11,7 @@ export type StorageUploadArgs = {
   account: string
   peerId: string
   offerId: string
+  contractAddress: string
 }
 
 export type UploadAPIService = Modify<APIService, {
@@ -30,7 +31,7 @@ export default class UploadService
     _fetch = (): Promise<void> => Promise.resolve()
 
     post = async ({
-      files, account, offerId, peerId,
+      files, account, offerId, peerId, contractAddress,
     }: StorageUploadArgs): Promise<string> => {
       // TODO: the use of the propper client is commented out for now for bug: https://github.com/feathersjs/feathers/issues/1744#issuecomment-568015824
       // const data = await this.service.create(formData, {
@@ -48,6 +49,7 @@ export default class UploadService
       formData.append('offerId', offerId)
       formData.append('peerId', peerId)
       formData.append('account', account)
+      formData.append('contractAddress', contractAddress)
 
       const options = {
         method: 'POST',

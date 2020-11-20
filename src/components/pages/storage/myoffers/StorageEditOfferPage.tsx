@@ -9,7 +9,7 @@ import { AddTxPayload } from 'context/Blockchain/blockchainActions'
 import BlockchainContext from 'context/Blockchain/BlockchainContext'
 import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
-import StorageContract from 'contracts/storage/contract'
+import { StorageContract } from 'contracts/storage'
 import { UIError } from 'models/UIMessage'
 import React, {
   FC, useCallback, useContext, useEffect, useState,
@@ -19,6 +19,7 @@ import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
+import { SupportedTokens } from 'contracts/interfaces'
 
 const logger = Logger.getInstance()
 
@@ -67,7 +68,7 @@ const StorageEditOfferPage: FC<{}> = () => {
         availableSizeMB,
         periods,
         prices,
-        tokens,
+        tokens as SupportedTokens[],
         peerId,
         { from: account },
       )

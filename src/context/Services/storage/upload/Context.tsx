@@ -9,6 +9,7 @@ import Logger from 'utils/Logger'
 import { UIError } from 'models/UIMessage'
 import createWithContext from 'context/storeUtils/createWithContext'
 import { Web3Store } from '@rsksmart/rif-ui'
+import { storageAddress } from 'contracts/config'
 import { AsyncActions, Props, State } from './interfaces'
 import actions from './actions'
 import { StorageOffersContext, StorageOffersContextProps } from '../offers'
@@ -103,6 +104,7 @@ export const Provider: FC = ({ children }) => {
           account,
           peerId,
           offerId,
+          contractAddress: storageAddress,
         })
           .then((hash) => {
             dispatch({

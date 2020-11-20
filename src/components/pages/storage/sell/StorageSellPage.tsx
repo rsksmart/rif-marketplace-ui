@@ -5,7 +5,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button as RUIButton, Web3Store } from '@rsksmart/rif-ui'
 import Typography from '@material-ui/core/Typography'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
-import StorageContract from 'contracts/storage/contract'
+import { StorageContract } from 'contracts/storage'
 import Logger from 'utils/Logger'
 import { UIError } from 'models/UIMessage'
 import Login from 'components/atoms/Login'
@@ -22,6 +22,7 @@ import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper
 import RoundedCard from 'components/atoms/RoundedCard'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
 import Staking from 'components/organisms/storage/staking/Staking'
+import { SupportedTokens } from 'contracts/interfaces'
 import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Services/storage'
 import NoWhitelistedProvider from 'components/molecules/storage/NoWhitelistedProvider'
 
@@ -93,7 +94,7 @@ const StorageSellPage: FC = () => {
         availableSizeMB,
         periods,
         prices,
-        tokens,
+        tokens as SupportedTokens[],
         peerId,
         { from: account },
       )

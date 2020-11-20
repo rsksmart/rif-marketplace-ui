@@ -37,7 +37,7 @@ const RnsRoutes = () => {
   const { pathname } = useLocation()
 
   const { services } = networkConfig
-  const rnsEnabled = services && (services as string[]).includes('rns')
+  const rnsEnabled = services && services.rns
   const history = useHistory()
 
   useEffect(() => {

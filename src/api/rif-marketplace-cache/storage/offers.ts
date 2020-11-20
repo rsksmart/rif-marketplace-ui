@@ -1,21 +1,15 @@
 import { AbstractAPIService } from 'api/models/apiService'
-import {
-  StorageItem,
-  StorageOffer,
-  BillingPlan,
-  PeriodInSeconds,
-} from 'models/marketItems/StorageItem'
+import { mapToTransport } from 'api/models/storage/StorageFilter'
 import { BillingPlanTransport, OfferTransport } from 'api/models/storage/transports'
 import { parseConvertBig, parseToBigDecimal } from 'utils/parsers'
 import { MinMaxFilter } from 'models/Filters'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
-import { mapToTransport } from 'api/models/storage/StorageFilter'
-import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import {
-  StorageAPIService,
-  StorageServiceAddress,
-  StorageWSChannel,
-} from './interfaces'
+  BillingPlan, PeriodInSeconds, StorageItem, StorageOffer,
+} from 'models/marketItems/StorageItem'
+import { UNIT_PREFIX_POW2 } from 'utils/utils'
+import { SUPPORTED_TOKENS } from 'contracts/interfaces'
+import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
 import { MinMax } from './utils'
 import client from '../client'
 
@@ -51,7 +45,7 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
       .map<BillingPlan>((plan) => ({
         period: PeriodInSeconds[plan.period],
         price: parseToBigDecimal(plan.price, 18),
-        currency: 'rbtc',
+        currency: SUPPORTED_TOKENS.rbtc,
       })),
     averagePrice: averagePriceTransport,
     acceptedCurrencies,

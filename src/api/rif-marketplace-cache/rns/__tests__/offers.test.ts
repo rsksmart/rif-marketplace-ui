@@ -34,6 +34,7 @@ const MOCK_FILTERS: RnsFilter = {
   },
 }
 
+// @ts-ignore
 availableTokens.mockaddress = 'rif'
 
 const expectedDomains: RnsDomainOffer[] = [

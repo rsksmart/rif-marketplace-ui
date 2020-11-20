@@ -3,9 +3,8 @@ import AddressItem from 'components/molecules/AddressItem'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
-import MarketplaceContract from 'contracts/Marketplace'
-import RIFContract from 'contracts/Rif'
-import RNSContract from 'contracts/Rns'
+import { Marketplace as MarketplaceContract, Rns as RNSContract } from 'contracts/rns'
+import RIFContract from 'contracts/tokens/rif/erc677'
 import { UIError } from 'models/UIMessage'
 import React, {
   FC, useCallback, useContext, useEffect, useState,

@@ -54,7 +54,7 @@ const logger = Logger.getInstance()
 const StorageRoutes: FC = () => {
   const { pathname } = useLocation()
   const { services } = networkConfig
-  const storageEnabled = services && (services as string[]).includes('storage')
+  const storageEnabled = services && services.storage
   const history = useHistory()
 
   useEffect(() => {
