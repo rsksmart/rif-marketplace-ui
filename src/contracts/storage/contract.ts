@@ -190,6 +190,12 @@ class StorageContract {
       )
   }
 
+  public isWhitelistedProvider = (
+    account: string,
+  ): Promise<TransactionReceipt> => this.contract.methods
+    .isWhitelistedProvider(account)
+    .call({ account })
+
   public hasUtilizedCapacity = async (
     account: string,
     txOptions: TransactionOptions,

@@ -27,6 +27,7 @@ import BlockchainContext,
 { BlockchainContextProps }
   from 'context/Blockchain/BlockchainContext'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
+import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Services/storage'
 import DepositModal from './DepositModal'
 import WithdrawModal from './WithdrawModal'
 import StakingCard from './StakingCard'
@@ -106,6 +107,9 @@ const Staking: FC = () => {
       totalStakedUSD,
     },
   } = useContext<StakingContextProps>(StakingContext)
+  const {
+    state: { isWhitelistedProvider },
+  } = useContext<StorageGlobalContextProps>(StorageGlobalContext)
 
   const [isExpanded, setIsExpanded] = useState(false)
   const [canWithdraw, setCanWithdraw] = useState(false)
@@ -115,6 +119,8 @@ const Staking: FC = () => {
   const [txCompleteMsg, setTxCompleteMsg] = useState('')
   const [processingTx, setProcessingTx] = useState(false)
   const [txOperationDone, setTxOperationDone] = useState(false)
+
+  const isEnabled = account && isWhitelistedProvider
 
   const handleTxCompletedClose = (): void => {
     setProcessingTx(false)
@@ -226,7 +232,7 @@ const Staking: FC = () => {
           </div>
         </Grow>
         <StakingFab
-          disabled={!account}
+          disabled={!isEnabled}
           className={classes.stakingIcon}
           onClick={handleExpandClick}
         />

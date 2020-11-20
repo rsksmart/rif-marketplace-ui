@@ -13,6 +13,7 @@ import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { getTabValueFromLocation } from 'utils/utils'
 import { AgreementsContextProvider } from 'context/Services/storage/agreements'
+import StorageContextProvider from 'context/Services/storage'
 import {
   StorageSellPage, StorageOffersPage, StorageMyOffersPage, StorageLandingPage,
 } from '.'
@@ -83,88 +84,90 @@ const StorageRoutes: FC = () => {
           )(pathname)}
           tabs={TABS}
         >
-          <Switch>
-            <Route path={ROUTES.STORAGE.BUY.BASE}>
-              <StorageOffersContextProvider>
-                <Switch>
-                  <Redirect
-                    exact
-                    from={ROUTES.STORAGE.BUY.BASE}
-                    to={ROUTES.STORAGE.BUY.LISTING}
-                  />
-                  <Route
-                    exact
-                    path={ROUTES.STORAGE.BUY.LISTING}
-                    component={StorageOffersPage}
-                  />
-                  <Route
-                    exact
-                    path={ROUTES.STORAGE.BUY.CHECKOUT}
-                    component={StorageOffersCheckoutPage}
-                  />
-                  <Route component={NotFound} />
-                </Switch>
-              </StorageOffersContextProvider>
-            </Route>
-            <Route exact path={ROUTES.STORAGE.SELL.BASE}>
-              <OfferEditContextProvider>
-                <StorageSellPage />
-              </OfferEditContextProvider>
-            </Route>
-            <Route
-              exact
-              path={ROUTES.STORAGE.SELL.DONE}
-              component={StorageSellDone}
-            />
-            <Route path={ROUTES.STORAGE.MYOFFERS.BASE}>
-              <OfferEditContextProvider>
-                <Switch>
-                  <Route
-                    exact
-                    path={ROUTES.STORAGE.MYOFFERS.BASE}
-                    component={StorageMyOffersPage}
-                  />
-                  <Route
-                    exact
-                    path={ROUTES.STORAGE.MYOFFERS.EDIT.BASE}
-                    component={StorageEditOfferPage}
-                  />
-                </Switch>
-              </OfferEditContextProvider>
+          <StorageContextProvider>
+            <Switch>
+              <Route path={ROUTES.STORAGE.BUY.BASE}>
+                <StorageOffersContextProvider>
+                  <Switch>
+                    <Redirect
+                      exact
+                      from={ROUTES.STORAGE.BUY.BASE}
+                      to={ROUTES.STORAGE.BUY.LISTING}
+                    />
+                    <Route
+                      exact
+                      path={ROUTES.STORAGE.BUY.LISTING}
+                      component={StorageOffersPage}
+                    />
+                    <Route
+                      exact
+                      path={ROUTES.STORAGE.BUY.CHECKOUT}
+                      component={StorageOffersCheckoutPage}
+                    />
+                    <Route component={NotFound} />
+                  </Switch>
+                </StorageOffersContextProvider>
+              </Route>
+              <Route exact path={ROUTES.STORAGE.SELL.BASE}>
+                <OfferEditContextProvider>
+                  <StorageSellPage />
+                </OfferEditContextProvider>
+              </Route>
               <Route
                 exact
-                path={ROUTES.STORAGE.MYOFFERS.CANCEL.DONE}
-                component={StorageMyOffersCancelled}
+                path={ROUTES.STORAGE.SELL.DONE}
+                component={StorageSellDone}
               />
-              <Route
-                exact
-                path={ROUTES.STORAGE.MYOFFERS.EDIT.DONE}
-                component={StorageEditOfferDone}
-              />
-            </Route>
-            <Route path={ROUTES.STORAGE.MYPURCHASES.BASE}>
-              <AgreementsContextProvider>
-                <Switch>
-                  <Redirect
-                    exact
-                    from={ROUTES.STORAGE.MYPURCHASES.BASE}
-                    to={ROUTES.STORAGE.MYPURCHASES.LISTING}
-                  />
-                  <Route
-                    exact
-                    path={ROUTES.STORAGE.MYPURCHASES.LISTING}
-                    component={MyStoragePurchases}
-                  />
-                  <Route
-                    exact
-                    path={ROUTES.STORAGE.MYPURCHASES.RENEW}
-                    component={RenewAgreement}
-                  />
-                </Switch>
-              </AgreementsContextProvider>
-            </Route>
-            <Route component={NotFound} />
-          </Switch>
+              <Route path={ROUTES.STORAGE.MYOFFERS.BASE}>
+                <OfferEditContextProvider>
+                  <Switch>
+                    <Route
+                      exact
+                      path={ROUTES.STORAGE.MYOFFERS.BASE}
+                      component={StorageMyOffersPage}
+                    />
+                    <Route
+                      exact
+                      path={ROUTES.STORAGE.MYOFFERS.EDIT.BASE}
+                      component={StorageEditOfferPage}
+                    />
+                  </Switch>
+                </OfferEditContextProvider>
+                <Route
+                  exact
+                  path={ROUTES.STORAGE.MYOFFERS.CANCEL.DONE}
+                  component={StorageMyOffersCancelled}
+                />
+                <Route
+                  exact
+                  path={ROUTES.STORAGE.MYOFFERS.EDIT.DONE}
+                  component={StorageEditOfferDone}
+                />
+              </Route>
+              <Route path={ROUTES.STORAGE.MYPURCHASES.BASE}>
+                <AgreementsContextProvider>
+                  <Switch>
+                    <Redirect
+                      exact
+                      from={ROUTES.STORAGE.MYPURCHASES.BASE}
+                      to={ROUTES.STORAGE.MYPURCHASES.LISTING}
+                    />
+                    <Route
+                      exact
+                      path={ROUTES.STORAGE.MYPURCHASES.LISTING}
+                      component={MyStoragePurchases}
+                    />
+                    <Route
+                      exact
+                      path={ROUTES.STORAGE.MYPURCHASES.RENEW}
+                      component={RenewAgreement}
+                    />
+                  </Switch>
+                </AgreementsContextProvider>
+              </Route>
+              <Route component={NotFound} />
+            </Switch>
+          </StorageContextProvider>
         </TabsTemplate>
       </Switch>
     )
