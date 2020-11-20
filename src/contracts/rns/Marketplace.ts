@@ -20,6 +20,7 @@ class MarketplaceContract extends ContractBase {
             RNSSimplePlacementsV1.abi as AbiItem[],
             marketPlaceAddress,
         ),
+        'marketplace-contract',
       )
     }
     return MarketplaceContract.instance

@@ -26,7 +26,7 @@ export class RifERC20Contract extends ContractBase implements ERC20ContractI {
 
   private constructor(web3: Web3) {
     const { abi: ERC20Abi } = ERC20 as { abi: AbiItem[] }
-    super(web3, new web3.eth.Contract(ERC20Abi, rifTokenAddress))
+    super(web3, new web3.eth.Contract(ERC20Abi, rifTokenAddress), 'rif-erc20-contract')
   }
 
   public getBalanceOf(

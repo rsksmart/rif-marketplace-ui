@@ -15,6 +15,7 @@ class RNSContract extends ContractBase {
       RNSContract.instance = new RNSContract(
         web3,
         new web3.eth.Contract(ERC721.abi as AbiItem[], rnsAddress),
+        'rns-contract',
       )
     }
     return RNSContract.instance

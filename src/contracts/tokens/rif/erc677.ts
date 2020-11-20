@@ -22,7 +22,7 @@ export class RifERC677Contract extends ContractBase {
   private static instance: RifERC677Contract
 
   private constructor(web3: Web3) {
-    super(web3, new web3.eth.Contract(ERC677.abi as AbiItem[], rifTokenAddress))
+    super(web3, new web3.eth.Contract(ERC677.abi as AbiItem[], rifTokenAddress), 'rif-erc677-contract')
   }
 
   public getBalanceOf(
