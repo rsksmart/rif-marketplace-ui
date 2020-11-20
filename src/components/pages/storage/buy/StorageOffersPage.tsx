@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react'
+import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import StorageFilters from 'components/organisms/filters/storage/StorageFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
@@ -10,6 +10,8 @@ import { OrderPayload } from 'context/Services/storage/offers/offersActions'
 import ItemWUnit from 'components/atoms/ItemWUnit'
 import ROUTES from 'routes'
 import { Web3Store } from '@rsksmart/rif-ui'
+import AppContext from 'context/App/AppContext'
+import { STORAGE_DISCLAIMER_MSG } from 'constants/strings'
 
 const headers: TableHeaders = {
   provider: 'Provider',
@@ -34,6 +36,25 @@ const StorageOffersPage: FC = () => {
       account,
     },
   } = useContext(Web3Store)
+  const {
+    dispatch: appDispatch,
+  } = useContext(AppContext)
+
+  useEffect(() => {
+    appDispatch({
+      type: 'SET_ALERT',
+      payload: {
+        message: STORAGE_DISCLAIMER_MSG,
+      },
+    })
+  }, [appDispatch])
+
+  useEffect(() => (): void => {
+    appDispatch({
+      type: 'HIDE_ALERT',
+      payload: {},
+    })
+  }, [appDispatch])
 
   const collection = items
     .map<MarketplaceItem>((item) => {
