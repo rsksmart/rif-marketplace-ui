@@ -26,6 +26,7 @@ import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
 import withCheckoutContext, { ContextProps, initialState, StorageCheckoutContext } from 'context/storage/buy/checkout'
 import ROUTES from 'routes'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
+import WithLoginCard from 'components/hoc/WithLoginCard'
 import RoundBtn from 'components/atoms/RoundBtn'
 import { SupportedTokens } from 'contracts/interfaces'
 
@@ -253,4 +254,9 @@ const StorageOffersCheckoutPage: FC = () => {
     </CheckoutPageTemplate>
   )
 }
-export default withCheckoutContext(StorageOffersCheckoutPage)
+
+export default WithLoginCard({
+  WrappedComponent: withCheckoutContext(StorageOffersCheckoutPage),
+  title: 'Connect your wallet to pin/upload files',
+  contentText: 'Connect your wallet in order to upload files to IPFS or pin existing uploads.',
+})

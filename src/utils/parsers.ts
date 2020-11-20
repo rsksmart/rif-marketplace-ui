@@ -1,4 +1,5 @@
 import { Big, BigSource } from 'big.js'
+import { UNIT_PREFIX_POW2 } from './utils'
 
 export const parseToBigDecimal = (
   src: BigSource,
@@ -25,3 +26,7 @@ export const convertToBigString = (
 export const convertToWeiString = (
   src: BigSource,
 ): string => parseToBigDecimal(src, -18).round(0).toFixed(0)
+
+export const parseConvertBig = (
+  source: BigSource, rate: UNIT_PREFIX_POW2,
+): Big => new Big(source).div(rate)

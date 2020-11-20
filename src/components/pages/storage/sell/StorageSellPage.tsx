@@ -1,5 +1,5 @@
 import React, {
-  useContext, useCallback, useState, useEffect,
+  useContext, useCallback, useState, useEffect, FC,
 } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button as RUIButton, Web3Store } from '@rsksmart/rif-ui'
@@ -23,6 +23,8 @@ import RoundedCard from 'components/atoms/RoundedCard'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
 import Staking from 'components/organisms/storage/staking/Staking'
 import { SupportedTokens } from 'contracts/interfaces'
+import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Services/storage'
+import NoWhitelistedProvider from 'components/molecules/storage/NoWhitelistedProvider'
 
 // TODO: discuss about wrapping the library and export it with this change
 Big.NE = -30
@@ -39,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const StorageSellPage = () => {
+const StorageSellPage: FC = () => {
   const {
     state: {
       billingPlans, availableSize, peerId, system,
@@ -59,6 +61,9 @@ const StorageSellPage = () => {
   const reportError = useCallback((
     e: UIError,
   ) => errorReporterFactory(appDispatch)(e), [appDispatch])
+  const {
+    state: { isWhitelistedProvider },
+  } = useContext<StorageGlobalContextProps>(StorageGlobalContext)
 
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -142,6 +147,7 @@ const StorageSellPage = () => {
     && availableSize
     && system
     && peerId
+    && isWhitelistedProvider
 
   const endHandler = account
     ? (
@@ -174,6 +180,11 @@ const StorageSellPage = () => {
       <Typography gutterBottom color="secondary" variant="subtitle1">
         Fill out the fields below to list your storage service. All the information provided is meant to be true and correct.
       </Typography>
+      {
+        Boolean(account)
+        && isWhitelistedProvider === false // we don't want to show the message on undefined
+        && <NoWhitelistedProvider />
+      }
       <RoundedCard color="primary" className={classes.stepperContainer}>
         <EditOfferStepper endHandler={endHandler} />
       </RoundedCard>

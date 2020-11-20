@@ -1,5 +1,6 @@
 import { ServiceMap } from 'api/models/apiService'
 import { ConfirmationsService } from 'api/rif-marketplace-cache/blockchain/confirmations'
+import { NotificationsService } from 'api/rif-marketplace-cache/notifications'
 import { XRService } from 'api/rif-marketplace-cache/rates/xr'
 import { DomainsService } from 'api/rif-marketplace-cache/rns/domains'
 import { OffersService } from 'api/rif-marketplace-cache/rns/offers'
@@ -7,6 +8,7 @@ import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
 import { StorageAgreementService } from 'api/rif-marketplace-cache/storage/agreements'
 import { AvgBillingPriceService } from 'api/rif-marketplace-cache/storage/avg-billing-plan-price'
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
+import UploadService from 'api/rif-storage-upload-service/upload'
 import { ContextActions, ContextReducer, ContextState } from 'context/storeUtils/interfaces'
 import storeReducerFactory from 'context/storeUtils/reducer'
 import {
@@ -38,6 +40,7 @@ export interface AppContextProps {
 export const initialState: AppState = {
   contextID: 'app',
   apis: {
+    notification: new NotificationsService(),
     confirmations: new ConfirmationsService(),
     'rns/v0/offers': new OffersService(),
     'rns/v0/domains': new DomainsService(),
@@ -47,6 +50,7 @@ export const initialState: AppState = {
     'storage/v0/avgBillingPrice': new AvgBillingPriceService(),
     'storage/v0/agreements': new StorageAgreementService(),
     'storage/v0/stakes': new StakesService(),
+    upload: new UploadService(),
   },
   messages: {},
   loaders: {

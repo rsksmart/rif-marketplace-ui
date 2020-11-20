@@ -2,6 +2,7 @@ import { AbstractAPIService } from 'api/models/apiService'
 import { mapToTransport } from 'api/models/storage/StorageFilter'
 import { BillingPlanTransport, OfferTransport } from 'api/models/storage/transports'
 import { Big } from 'big.js'
+import { parseConvertBig, parseToBigDecimal } from 'utils/parsers'
 import { MinMaxFilter } from 'models/Filters'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import {
@@ -12,6 +13,7 @@ import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { SUPPORTED_TOKENS } from 'contracts/interfaces'
 import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
 import { MinMax } from './utils'
+import client from '../client'
 
 export const offersAddress: StorageServiceAddress = 'storage/v0/offers'
 export const offersWSChannel: StorageWSChannel = 'offers'
@@ -25,13 +27,16 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     acceptedCurrencies,
     peerId,
     utilizedCapacity: utilizedCapacityMB,
+    totalCapacity: totalCapacityMB,
   } = offerTransport
 
   const offer: StorageOffer = {
     id: provider,
     location: 'UK',
     system: 'IPFS',
-    availableSizeGB: new Big(availableCapacityMB).div(UNIT_PREFIX_POW2.KILO),
+    availableSizeGB: parseConvertBig(
+      availableCapacityMB, UNIT_PREFIX_POW2.KILO,
+    ),
     subscriptionOptions: plans
       .sort(
         (a: BillingPlanTransport, b: BillingPlanTransport) => (
@@ -47,7 +52,12 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     averagePrice: averagePriceTransport,
     acceptedCurrencies,
     peerId,
-    utilizedCapacityGB: new Big(utilizedCapacityMB).div(UNIT_PREFIX_POW2.KILO),
+    utilizedCapacityGB: parseConvertBig(
+      utilizedCapacityMB, UNIT_PREFIX_POW2.KILO,
+    ),
+    totalCapacityGB: parseConvertBig(
+      totalCapacityMB, UNIT_PREFIX_POW2.KILO,
+    ),
   }
   return offer
 }
@@ -79,6 +89,8 @@ const fetchMinMaxLimit = async (
 export class StorageOffersService extends AbstractAPIService
   implements StorageAPIService {
   path = offersAddress
+
+  constructor() { super(client) }
 
   _channel = offersWSChannel
 

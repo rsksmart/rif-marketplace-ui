@@ -1,6 +1,5 @@
-import { Dispatch } from 'react'
 import { Agreement } from 'models/marketItems/StorageItem'
-import { ContextState } from 'context/storeUtils/interfaces'
+import { ContextProps, ContextState } from 'context/storeUtils/interfaces'
 import { AgreementFilters } from 'api/rif-marketplace-cache/storage/interfaces'
 
 // STATE
@@ -36,7 +35,4 @@ export type ActionFunctions = {
 }
 
 // PROPS
-export type Props = {
-  state: State
-  dispatch: Dispatch<Action>
-}
+export type Props = ContextProps<State, Action>

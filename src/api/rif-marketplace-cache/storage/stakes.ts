@@ -1,6 +1,7 @@
 import { AbstractAPIService } from 'api/models/apiService'
 import { StakeTransport } from 'api/models/storage/transports'
 import { parseToBigDecimal } from 'utils/parsers'
+import client from '../client'
 import { SupportedTokens } from 'contracts/interfaces'
 import {
   StakeAPIService,
@@ -39,6 +40,8 @@ export const mapFromTransport = (stakeTransport: StakeTransport): Staked => {
 export class StakesService extends AbstractAPIService
   implements StakeAPIService {
   path = stakesAddress
+
+  constructor() { super(client) }
 
   _channel = stakesWSChannel
 

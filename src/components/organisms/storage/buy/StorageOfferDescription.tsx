@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+import { Big } from 'big.js'
 import { Box, makeStyles, Typography } from '@material-ui/core'
 import { shortenString } from '@rsksmart/rif-ui'
 import GridItem from 'components/atoms/GridItem'
@@ -80,7 +81,7 @@ const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
                 <GridItem xs={4} classes={itemClasses}>
                   <LabelWithValue
                     label="Size:"
-                    value={`${contentSize} ${UNIT_PREFIX_POW2[contentSizeUnit][0]}B`}
+                    value={`${Big(contentSize).toPrecision(6)} ${UNIT_PREFIX_POW2[contentSizeUnit][0]}B`}
                   />
                 </GridItem>
               </GridRow>

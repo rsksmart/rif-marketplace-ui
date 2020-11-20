@@ -16,8 +16,12 @@ const useStyles = makeStyles(() => createStyles({
     fontSize: fonts.size.normal,
   },
   previewChip: {
-    minWidth: '160px',
-    maxWidth: '210px',
+    minWidth: '190px',
+    maxWidth: '190px',
+  },
+  previewGrid: {
+    maxHeight: '200px',
+    overflow: 'auto',
   },
 }))
 const PinUploaderTab: FC<DropzoneAreaProps> = (props) => {
@@ -31,7 +35,13 @@ const PinUploaderTab: FC<DropzoneAreaProps> = (props) => {
         showPreviews
         showPreviewsInDropzone={false}
         useChipsForPreview
-        previewGridProps={{ container: { spacing: 1, direction: 'row' } }}
+        previewGridProps={{
+          container: {
+            spacing: 1,
+            direction: 'row',
+            classes: { root: classes.previewGrid },
+          },
+        }}
         previewChipProps={{ classes: { root: classes.previewChip } }}
         previewText="Selected files"
       />

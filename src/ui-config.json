@@ -2,10 +2,10 @@
     "ganache": {
         "contractAddresses": {
             "rif": "0x67b5656d60a809915323bf2c40a8bef15a152e3e",
-            "rnsDotRskOwner": "0x4bf749ec68270027C5910220CEAB30Cc284c7BA2",
-            "marketplace": "0x12ae8689c3E889A0fC81f4E2ba9D6C5Bf358F392",
-            "storageManager": "0xeea2Fc1D255Fd28aA15c6c2324Ad40B03267f9c5",
-            "storageStaking": "0x7231ECd1355a60251eE56Bf81f987969fc9bAe29"
+            "rnsDotRskOwner": "0x26b4AFb60d6C903165150C6F0AA14F8016bE4aec",
+            "marketplace": "0xeF391648603DCb012e30eF706452b3DfF6466dE8",
+            "storageManager": "0xDDb64fE46a91D46ee29420539FC25FD07c5FEa3E",
+            "storageStaking": "0x4339316e04CFfB5961D1c41fEF8E44bfA2A7fBd1"
         },
         "rnsManagerUrl": "http://localhost:3001",
         "services": {
@@ -50,8 +50,8 @@
             "rif": "0x19f64674D8a5b4e652319F5e239EFd3bc969a1FE",
             "rnsDotRskOwner": "0xca0a477e19bac7e0e172ccfd2e3c28a7200bdb71",
             "marketplace": "0x978908db72E43DB49A80c74A1383Bd5b3e832c46",
-            "storageManager": "0x2e851dD35163fb4FFc6a8D0aDe95D4f8B8D4BCEa",
-            "storageStaking": "0x976f2727d5eaC1eb1043aE48241008c071983bAC"
+            "storageManager": "0xEaEff4a8A8622B7520eE34f4CC2e50f1e58411C0",
+            "storageStaking": "0xB45BbC3B983E9d60c131F177831e911043a36b6f"
         },
         "rnsManagerUrl": "https://testnet.manager.rns.rifos.org",
         "services": {

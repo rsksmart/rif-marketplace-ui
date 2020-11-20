@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { FC, useContext, useState } from 'react'
 import InfoIcon from '@material-ui/icons/Info'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
@@ -14,7 +14,7 @@ import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 import { SetAvailableSizePayload, SetPeerIdPayload } from 'context/Market/storage/offerEditActions'
 
-const GeneralFeatures = () => {
+const GeneralFeatures: FC = () => {
   const {
     state: {
       availableSize, system, peerId, originalOffer,
@@ -22,10 +22,10 @@ const GeneralFeatures = () => {
   } = useContext<OfferEditContextProps>(OfferEditContext)
 
   const [modalPeerIdOpened, setModalPeerIdOpened] = useState(false)
-  const handleModalOpen = () => setModalPeerIdOpened(true)
-  const handleModalClose = () => setModalPeerIdOpened(false)
+  const handleModalOpen = (): void => setModalPeerIdOpened(true)
+  const handleModalClose = (): void => setModalPeerIdOpened(false)
 
-  const onSizeChange = ({ target: { value } }) => {
+  const onSizeChange = ({ target: { value } }): void => {
     dispatch({
       type: 'SET_AVAILABLE_SIZE',
       payload: {
@@ -34,7 +34,7 @@ const GeneralFeatures = () => {
     })
   }
 
-  const onPeerIdChange = ({ target: { value } }) => {
+  const onPeerIdChange = ({ target: { value } }): void => {
     dispatch({
       type: 'SET_PEER_ID',
       payload: {
@@ -72,10 +72,16 @@ const GeneralFeatures = () => {
               id="available-size"
               value={availableSize.toString()}
               onChange={onSizeChange}
+              error={availableSize <= 0}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <Typography variant="caption" color="primary">GB</Typography>
+                    <Typography
+                      variant="caption"
+                      color="primary"
+                    >
+                      GB
+                    </Typography>
                   </InputAdornment>
                 ),
                 inputProps: {
@@ -89,7 +95,9 @@ const GeneralFeatures = () => {
             />
           </Grid>
           <Grid item xs={2}>
-            <Tooltip title="Different buyers can hire portions of the total size.">
+            <Tooltip
+              title="Different buyers can hire portions of the total size."
+            >
               <InfoIcon color="secondary" />
             </Tooltip>
           </Grid>
@@ -109,8 +117,17 @@ const GeneralFeatures = () => {
         />
       </Grid>
       <Grid item xs={4} md={2}>
-        <Button onClick={handleModalOpen} color="primary" rounded>Get Peer ID</Button>
-        <PinnerInstructionsModal open={modalPeerIdOpened} onClose={handleModalClose} />
+        <Button
+          onClick={handleModalOpen}
+          color="primary"
+          rounded
+        >
+          Get Peer ID
+        </Button>
+        <PinnerInstructionsModal
+          open={modalPeerIdOpened}
+          onClose={handleModalClose}
+        />
       </Grid>
     </Grid>
   )

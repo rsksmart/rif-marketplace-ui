@@ -1,6 +1,21 @@
+import CID from 'cids'
+
 export const isEmpty = (
   text: string | unknown,
 ): boolean => !text || !String(text).trim()
 
-// FIXME: Remove if not used (?)
-export const mayBePluralize = (count, noun, suffix = 's'): string => `${count} ${noun}${count !== 1 ? suffix : ''}`
+export const validateCID = (
+  cid: string,
+  errorHandle?: (e: Error) => unknown,
+): boolean => {
+  try {
+    CID.validateCID(new CID(cid))
+
+    return true
+  } catch (e) {
+    if (errorHandle) {
+      errorHandle(e)
+    }
+    return false
+  }
+}

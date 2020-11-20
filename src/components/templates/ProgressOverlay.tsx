@@ -18,7 +18,7 @@ const useStyle = makeStyles(() => ({
     width: '100vw',
     top: 0,
     left: 0,
-    zIndex: 999,
+    zIndex: 9999,
   },
 }))
 
