@@ -75,19 +75,20 @@ const StorageOffersPage: FC = () => {
         )).join(' - '),
         availableCurrencies: acceptedCurrencies.join(' - ').toUpperCase(),
         averagePrice: <ItemWUnit type="mediumPrimary" value={averagePrice.toString()} unit="USD" />,
-        action1: <SelectRowButton
-          id={id}
-          disabled={!account || isOwnAccount}
-          handleSelect={(): void => {
-            dispatch({
-              type: 'SET_ORDER',
-              payload: {
-                item,
-              } as OrderPayload,
-            })
-            history.push(ROUTES.STORAGE.BUY.CHECKOUT)
-          }}
-        />,
+        action1: isOwnAccount ? 'your offer' : (
+          <SelectRowButton
+            id={id}
+            handleSelect={(): void => {
+              dispatch({
+                type: 'SET_ORDER',
+                payload: {
+                  item,
+                } as OrderPayload,
+              })
+              history.push(ROUTES.STORAGE.BUY.CHECKOUT)
+            }}
+          />
+        ),
       }
     })
 
