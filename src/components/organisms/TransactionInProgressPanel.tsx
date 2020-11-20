@@ -7,6 +7,7 @@ import React, {
   FC, useContext, useEffect,
 } from 'react'
 import BlockchainContext, { BlockchainContextProps } from 'context/Blockchain/BlockchainContext'
+import OverlaidPageTemplate from 'components/templates/OverlaidPageTemplate'
 
 export interface TransactionInProgressPanelProps {
   text: string
@@ -25,17 +26,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     alignContent: 'center',
     alignItems: 'center',
     textAlign: 'center',
-  },
-  container: {
-    background: 'rgba(275, 275, 275, 0.8)',
-    display: 'flex',
-    height: '100%',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    position: 'absolute',
-    width: '100%',
-    top: 0,
-    left: 0,
   },
 }))
 
@@ -78,9 +68,9 @@ const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
 
   if (overlayed) {
     return (
-      <div className={classes.container}>
+      <OverlaidPageTemplate>
         {panelContent}
-      </div>
+      </OverlaidPageTemplate>
     )
   }
   return panelContent
