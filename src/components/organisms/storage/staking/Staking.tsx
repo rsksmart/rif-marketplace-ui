@@ -12,21 +12,19 @@ import AppContext, {
 import { UIError } from 'models/UIMessage'
 import Logger from 'utils/Logger'
 import Web3 from 'web3'
-import StakingContract from 'contracts/Staking'
-import StorageContract from 'contracts/storage/contract'
+import { StakingContract, StorageContract } from 'contracts/storage'
 import {
   Props as StakingContextProps,
 } from 'context/Services/storage/staking/interfaces'
 import StakingFab from 'components/molecules/storage/StakingFab'
 import withStakingContext, { StakingContext }
   from 'context/Services/storage/staking/Context'
-import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
-import { TokenAddressees } from 'context/Market/storage/interfaces'
 import RoundBtn from 'components/atoms/RoundBtn'
 import BlockchainContext,
 { BlockchainContextProps }
   from 'context/Blockchain/BlockchainContext'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
+import { SupportedTokens } from 'contracts/interfaces'
 import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Services/storage'
 import DepositModal from './DepositModal'
 import WithdrawModal from './WithdrawModal'
@@ -128,7 +126,7 @@ const Staking: FC = () => {
   }
 
   const handleDeposit = async (
-    amount: number, currency: SupportedToken,
+    amount: number, currency: SupportedTokens,
   ): Promise<void> => {
     //  users won't reach this point without a web3 instance
     if (!web3) return
@@ -140,7 +138,7 @@ const Staking: FC = () => {
 
       const stakeContract = StakingContract.getInstance(web3 as Web3)
       const receipt = await stakeContract.stake(
-        amount, TokenAddressees[currency], { from: account },
+        amount, { token: currency, from: account },
       )
 
       if (receipt) {
@@ -163,7 +161,7 @@ const Staking: FC = () => {
   }
 
   const handleWithdraw = async (
-    amount: number, currency: SupportedToken,
+    amount: number, currency: SupportedTokens,
   ): Promise<void> => {
     //  users won't reach this point without a web3 instance
     if (!web3) return
@@ -174,7 +172,7 @@ const Staking: FC = () => {
       setWithdrawOpened(false)
       const stakeContract = StakingContract.getInstance(web3 as Web3)
       const receipt = await stakeContract.unstake(
-        amount, TokenAddressees[currency], { from: account },
+        amount, { token: currency, from: account },
       )
 
       if (receipt) {

@@ -1,23 +1,22 @@
-import React, {
-  createContext, FC,
-  useCallback,
-  useContext, useEffect, useMemo, useReducer, useState,
-} from 'react'
-import { useHistory } from 'react-router-dom'
 import { Web3Store } from '@rsksmart/rif-ui'
-import Web3 from 'web3'
 import Big from 'big.js'
-import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import networkConfig from 'config'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
+import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
+import AgreementsContext, { AgreementContextProps } from 'context/Services/storage/agreements'
 import createWithContext from 'context/storeUtils/createWithContext'
 import { BillingPlan } from 'models/marketItems/StorageItem'
 import { UIError } from 'models/UIMessage'
+import React, {
+  createContext, FC, useCallback, useContext, useEffect, useMemo, useReducer, useState,
+} from 'react'
+import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
+import { calcRenewalDate, getShortDateString } from 'utils/dateUtils'
 import Logger from 'utils/Logger'
 import { convertToWeiString, parseToBigDecimal } from 'utils/parsers'
-import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
-import AgreementsContext, { AgreementContextProps } from 'context/Services/storage/agreements'
-import { calcRenewalDate, getShortDateString } from 'utils/dateUtils'
+import Web3 from 'web3'
+import { SUPPORTED_TOKENS } from 'contracts/interfaces'
 import { reducer } from './actions'
 import { AsyncActions, Props, State } from './interfaces'
 
@@ -27,7 +26,7 @@ export const initialState: State = {
     endDate: '',
     periodsCount: 1,
     plan: {
-      currency: 'rbtc',
+      currency: SUPPORTED_TOKENS.rbtc,
       period: 'Daily',
       price: new Big(0),
     },
@@ -134,7 +133,10 @@ const Provider: FC = ({ children }) => {
           provider,
           token: networkConfig.contractAddresses[paymentToken],
         }
-        const storageContract = (await import('contracts/storage/contract')).default.getInstance(web3 as Web3)
+        const storageContract = (await import('contracts/storage'))
+          .default
+          .StorageContract
+          .getInstance(web3 as Web3)
 
         appDispatch({
           type: 'SET_IS_LOADING',

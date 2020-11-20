@@ -1,7 +1,6 @@
 import { Web3Store } from '@rsksmart/rif-ui'
 import { LoadingPayload } from 'context/App/appActions'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
-import { TokenAddressees } from 'context/Market/storage/interfaces'
 import createWithContext from 'context/storeUtils/createWithContext'
 import { UIError } from 'models/UIMessage'
 import React, {
@@ -53,7 +52,10 @@ const Provider: FC = ({ children }) => {
     if (web3 && account && agreement) {
       const withdraw = async (): Promise<void> => {
         const { id } = agreement
-        const storageContract = (await import('contracts/storage/contract')).default.getInstance(web3 as Web3)
+        const storageContract = (await import('contracts/storage'))
+          .default
+          .StorageContract
+          .getInstance(web3 as Web3)
 
         appDispatch({
           type: 'SET_IS_LOADING',
@@ -73,7 +75,7 @@ const Provider: FC = ({ children }) => {
               amounts: ['0'], // using 0 withdraws the max amount available
               dataReference: agreement.dataReference,
               provider: agreement.provider,
-              tokens: [TokenAddressees[agreement.paymentToken]],
+              tokens: [agreement.paymentToken],
             },
             { from: account },
           ).catch((error) => {

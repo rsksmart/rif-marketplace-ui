@@ -4,7 +4,7 @@ import AppContext, {
   errorReporterFactory,
 } from 'context/App/AppContext'
 import { createReducer } from 'context/storeUtils/reducer'
-import StorageContract from 'contracts/storage/contract'
+import { StorageContract } from 'contracts/storage'
 import { UIError } from 'models/UIMessage'
 import React, {
   createContext,

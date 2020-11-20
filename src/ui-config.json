@@ -8,10 +8,14 @@
             "storageStaking": "0x4339316e04CFfB5961D1c41fEF8E44bfA2A7fBd1"
         },
         "rnsManagerUrl": "http://localhost:3001",
-        "services": [
-            "rns",
-            "storage"
-        ]
+        "services": {
+            "rns": {
+                "tokens": ["rif"]
+            },
+            "storage": {
+                "tokens": ["rbtc", "rif"]
+            }
+        }
     },
     "rskmainnet": {
         "contractAddresses": {
@@ -20,9 +24,11 @@
             "marketplace": "0xa966Be39A13723d991dFA92B2B0CF6b0c7416eE5"
         },
         "rnsManagerUrl": "https://manager.rns.rifos.org",
-         "services": [
-            "rns"
-        ]
+         "services": {
+             "rns": {
+                 "tokens": ["rif"]
+             }
+         }
     },
     "rsktestnet": {
         "contractAddresses": {
@@ -33,9 +39,11 @@
             "storageStaking": "0x04274451015fD802c144f3CD549F71E9EAF70fe1"
         },
         "rnsManagerUrl": "https://testnet.manager.rns.rifos.org",
-        "services": [
-            "rns"
-        ]
+        "services": {
+            "rns": {
+                "tokens": ["rif"]
+            }
+        }
     },
     "rskstaging": {
         "contractAddresses": {
@@ -46,9 +54,13 @@
             "storageStaking": "0xB45BbC3B983E9d60c131F177831e911043a36b6f"
         },
         "rnsManagerUrl": "https://testnet.manager.rns.rifos.org",
-        "services": [
-            "rns",
-            "storage"
-        ]
+        "services": {
+            "rns": {
+                "tokens": ["rif"]
+            },
+            "storage": {
+                "tokens": ["rbtc", "rif"]
+            }
+        }
     }
 }

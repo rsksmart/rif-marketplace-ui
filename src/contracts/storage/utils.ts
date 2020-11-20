@@ -1,6 +1,5 @@
 import {
   StorageBillingPlan,
-  TokenAddressees,
 } from 'context/Market/storage/interfaces'
 import {
   BillingPlan,
@@ -97,7 +96,7 @@ export const transformOfferDataForContract = (
       return {
         prices: [...acc.prices, [weiPrice]],
         periods: [...acc.periods, [PeriodInSeconds[period]]],
-        tokens: [...acc.tokens, TokenAddressees[currency]],
+        tokens: [...acc.tokens, currency],
       }
     },
     { prices: [], periods: [], tokens: [] } as any,

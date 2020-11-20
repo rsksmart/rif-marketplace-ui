@@ -9,7 +9,7 @@ import {
 
   Typography,
 } from '@material-ui/core'
-import { SupportedToken, tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
+import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
@@ -28,6 +28,7 @@ import ROUTES from 'routes'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import RoundBtn from 'components/atoms/RoundBtn'
+import { SupportedTokens } from 'contracts/interfaces'
 
 const useStyles = makeStyles((theme: Theme) => ({
   stepperCard: {
@@ -121,7 +122,7 @@ const StorageOffersCheckoutPage: FC = () => {
       id="currency"
       value={selectedCurrency}
       options={currencyOptions
-        .map((symbol: SupportedToken) => tokenDisplayNames[symbol])}
+        .map((symbol: SupportedTokens) => tokenDisplayNames[symbol])}
       onChange={changeCurrencyHandle}
       disabled={currencyOptions.length <= 1}
     />,

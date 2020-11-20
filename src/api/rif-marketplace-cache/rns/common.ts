@@ -8,7 +8,7 @@ import {
   RnsSoldDomain,
 } from 'models/marketItems/DomainItem'
 import { Modify } from 'utils/typeUtils'
-import { SUPPORTED_TOKENS } from '../rates/xr'
+import { SUPPORTED_TOKENS } from '../../../contracts/interfaces'
 
 export type RnsServiceAddress = 'rns/v0/offers' | 'rns/v0/domains' | 'rns/v0/sold'
 export type RnsChannels = 'domains' | 'sold' | 'offers'
@@ -26,8 +26,7 @@ export type RnsAPIService = Modify<
 
 export const isSupportedToken = (
   token: string,
-): boolean => (SUPPORTED_TOKENS as readonly string[])
-  .includes(token)
+): boolean => SUPPORTED_TOKENS[token]
 
 const { contractAddresses } = network
 contractAddresses.rbtc = ZERO_ADDRESS
