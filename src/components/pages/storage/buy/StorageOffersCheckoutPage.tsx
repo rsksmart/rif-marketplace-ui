@@ -30,6 +30,7 @@ import WithLoginCard from 'components/hoc/WithLoginCard'
 import RoundBtn from 'components/atoms/RoundBtn'
 import { SupportedTokens } from 'contracts/interfaces'
 import { Web3Store } from '@rsksmart/rif-ui'
+import { SupportedTokens } from 'contracts/interfaces'
 
 const useStyles = makeStyles((theme: Theme) => ({
   stepperCard: {
