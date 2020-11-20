@@ -1,6 +1,5 @@
 import { OfferTransport } from 'api/models/storage/transports'
 import mockFeathersService from 'api/test-utils/feathers'
-import { Big } from 'big.js'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import {
   BillingPlan, PeriodInSeconds, StorageOffer, SubscriptionPeriod,

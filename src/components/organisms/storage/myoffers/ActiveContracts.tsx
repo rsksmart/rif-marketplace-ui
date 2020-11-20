@@ -14,7 +14,6 @@ import React, {
 import RoundBtn from 'components/atoms/RoundBtn'
 import { Web3Store } from '@rsksmart/rif-ui'
 import Logger from 'utils/Logger'
-import { TokenAddressees } from 'context/Market/storage/interfaces'
 import Web3 from 'web3'
 import AppContext, { errorReporterFactory } from 'context/App/AppContext'
 import { UIError } from 'models/UIMessage'
@@ -85,15 +84,17 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
       })
 
       setProcessingTx(true)
-      const storageContract = (await import('contracts/storage/contract'))
-        .default.getInstance(web3 as Web3)
+      const storageContract = (await import('contracts/storage'))
+        .default
+        .StorageContract
+        .getInstance(web3 as Web3)
 
       const withdrawFundsReceipt = await storageContract
         .payoutFunds(
           {
             creatorOfAgreement: agreement.consumer,
             dataReferences: [agreement.dataReference],
-            token: TokenAddressees[agreement.paymentToken],
+            token: agreement.paymentToken,
           },
           { from: account },
         )

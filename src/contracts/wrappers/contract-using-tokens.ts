@@ -14,8 +14,6 @@ import {
 import ContractBase from './contract-base'
 
 export class ContractWithTokens extends ContractBase {
-  public readonly name?: string
-
   private readonly supportedTokens: Token[]
 
   private _defaultToken: SupportedTokens
@@ -26,9 +24,8 @@ export class ContractWithTokens extends ContractBase {
     supportedTokens: Token[],
     name?: string,
   ) {
-    super(web3, contract)
+    super(web3, contract, name)
     this.supportedTokens = supportedTokens
-    this.name = name
     // Set default token
     this._defaultToken = this._isCurrencySupported(SUPPORTED_TOKENS.rbtc)
       ? SUPPORTED_TOKENS.rbtc

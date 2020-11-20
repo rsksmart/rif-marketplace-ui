@@ -12,7 +12,6 @@ import { MarketCryptoRecord } from 'models/Market'
 import { SubscriptionPeriod } from 'models/marketItems/StorageItem'
 import React, { FC, useContext, useState } from 'react'
 import { SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
-import { SupportedToken } from 'api/rif-marketplace-cache/rates/xr'
 
 export interface EditableBillingPlanProps {
   onPlanAdded?: (billingPlan: StorageBillingPlan) => void

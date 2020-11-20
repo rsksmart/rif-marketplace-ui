@@ -1,14 +1,13 @@
 import StorageManager from '@rsksmart/rif-marketplace-storage/build/contracts/StorageManager.json'
+import { convertToWeiString } from 'utils/parsers'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
-import { AbiItem, asciiToHex } from 'web3-utils'
+import { AbiItem } from 'web3-utils'
 
-import { storageAddress, storageSupportedTokens } from '../config'
-import {
-  SUPPORTED_TOKENS, SupportedTokens, TxOptions,
-} from '../interfaces'
-import { getTokens } from '../utils'
-import ContractWithTokens from '../wrappers/contract-using-tokens'
+import { storageAddress, storageSupportedTokens } from 'contracts/config'
+import { SUPPORTED_TOKENS, SupportedTokens, TxOptions } from 'contracts/interfaces'
+import { getTokens } from 'contracts/utils'
+import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
 import { encodeHash, prefixArray } from './utils'
 
 export type StorageContractErrorId = 'contract-storage'
@@ -81,10 +80,12 @@ class StorageContract extends ContractWithTokens {
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
     const { tokenAddress } = this.getToken(txOptions.token)
+    const encodedDataReference = encodeHash(dataReference)
+
     const depositTx = this.methods.depositFunds(
       tokenAddress,
       amount,
-      [asciiToHex(dataReference)],
+      encodedDataReference,
       provider,
     )
 
@@ -129,6 +130,74 @@ class StorageContract extends ContractWithTokens {
     )
   }
 
+  public withdrawFunds(
+    {
+      dataReference,
+      provider,
+      tokens,
+      amounts,
+    }: {
+        dataReference: string
+        provider: string
+        tokens: SupportedTokens[]
+        amounts: string[]
+      },
+    txOptions: TxOptions,
+  ): Promise<TransactionReceipt> {
+    const encodedDataReference = encodeHash(dataReference)
+    const tokensAddresses = tokens.map((t: SupportedTokens) => this.getToken(t).tokenAddress)
+    const weiAmounts = amounts.map(convertToWeiString)
+    const withdrawFundsTx = this.methods
+      .withdrawFunds(encodedDataReference, provider, tokensAddresses, weiAmounts)
+
+    return this.send(
+      withdrawFundsTx,
+      {
+        ...txOptions,
+        gasMultiplier: StorageContract.gasMultiplier,
+        token: SUPPORTED_TOKENS.rbtc, // Native token only
+      },
+    )
+  }
+
+  public payoutFunds(
+    {
+      creatorOfAgreement,
+      dataReferences = [],
+      token,
+    }: {
+        creatorOfAgreement: string
+        dataReferences: string[]
+        token: SupportedTokens
+      },
+    txOptions: TxOptions,
+  ): Promise<TransactionReceipt> {
+    const { from } = txOptions
+    const encodedDataReferences = dataReferences.map(encodeHash)
+    const { tokenAddress } = this.getToken(token)
+
+    const payoutFundsTx = this.contract.methods
+      .payoutFunds(
+        encodedDataReferences,
+        [creatorOfAgreement],
+        tokenAddress,
+        from,
+      )
+
+    return this.send(
+      payoutFundsTx,
+      {
+        ...txOptions,
+        gasMultiplier: StorageContract.gasMultiplier,
+        token: SUPPORTED_TOKENS.rbtc, // Native token only
+      },
+    )
+  }
+
+  /**
+   * Static calls
+   */
+
   public terminateOffer(
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
@@ -148,6 +217,19 @@ class StorageContract extends ContractWithTokens {
     return this._call(
       this.methods.hasUtilizedCapacity(account),
       txOptions,
+    )
+  }
+
+  public isWhitelistedProvider(
+    account: string,
+    txOptions: TxOptions = {},
+  ): Promise<TransactionReceipt> {
+    return this._call(
+      this.methods.isWhitelistedProvider(account),
+      {
+        ...txOptions,
+        from: account,
+      },
     )
   }
 }

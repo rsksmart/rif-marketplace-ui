@@ -1,17 +1,16 @@
 import Staking from '@rsksmart/rif-marketplace-storage/build/contracts/Staking.json'
-
 import { convertToWeiString } from 'utils/parsers'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 import { AbiItem } from 'web3-utils'
-import { stakingAddress, storageSupportedTokens } from '../config'
-import { SUPPORTED_TOKENS, TxOptions } from '../interfaces'
-import { getTokens } from '../utils'
-import ContractWithTokens from '../wrappers/contract-using-tokens'
+
+import { ZERO_BYTES } from 'constants/strings'
+import { stakingAddress, storageSupportedTokens } from 'contracts/config'
+import { SUPPORTED_TOKENS, TxOptions } from 'contracts/interfaces'
+import { getTokens } from 'contracts/utils'
+import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
 
 export type StorageStakingContractErrorId = 'contract-storage-staking'
-
-const zeroBytes = '0x'.padEnd(64, '0')
 
 class StakingContract extends ContractWithTokens {
   public static gasMultiplier = 1.3
@@ -47,7 +46,7 @@ class StakingContract extends ContractWithTokens {
     const stakeTx = this.methods.stake(
       amountWei,
       tokenAddress,
-      zeroBytes,
+      ZERO_BYTES,
     )
 
     return this.send(
@@ -74,7 +73,7 @@ class StakingContract extends ContractWithTokens {
     const unstakeTx = this.methods.unstake(
       amountWei,
       tokenAddress,
-      zeroBytes,
+      ZERO_BYTES,
     )
     return this.send(
       unstakeTx,

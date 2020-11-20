@@ -1,14 +1,12 @@
 import { AbstractAPIService } from 'api/models/apiService'
 import { mapToTransport } from 'api/models/storage/StorageFilter'
 import { BillingPlanTransport, OfferTransport } from 'api/models/storage/transports'
-import { Big } from 'big.js'
 import { parseConvertBig, parseToBigDecimal } from 'utils/parsers'
 import { MinMaxFilter } from 'models/Filters'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import {
   BillingPlan, PeriodInSeconds, StorageItem, StorageOffer,
 } from 'models/marketItems/StorageItem'
-import { parseToBigDecimal } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { SUPPORTED_TOKENS } from 'contracts/interfaces'
 import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'

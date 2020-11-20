@@ -1,7 +1,6 @@
 import { AbstractAPIService } from 'api/models/apiService'
 import { StakeTransport } from 'api/models/storage/transports'
 import { parseToBigDecimal } from 'utils/parsers'
-import client from '../client'
 import { SupportedTokens } from 'contracts/interfaces'
 import {
   StakeAPIService,
@@ -9,6 +8,7 @@ import {
   StorageServiceAddress,
   StorageWSChannel,
 } from './interfaces'
+import client from '../client'
 
 export const stakesAddress: StorageServiceAddress = 'storage/v0/stakes'
 export const stakesWSChannel: StorageWSChannel = 'stakes'

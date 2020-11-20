@@ -9,11 +9,14 @@ import withWaitForReceipt from 'contracts/utils'
 const logger = Logger.getInstance()
 
 export class ContractBase {
+  protected readonly name?: string
+
   protected readonly contract: Contract
 
   protected readonly web3: Web3
 
-  constructor(web3: Web3, contact: Contract) {
+  constructor(web3: Web3, contact: Contract, name?: string) {
+    this.name = name
     this.contract = contact
     this.web3 = web3
   }
@@ -32,7 +35,7 @@ export class ContractBase {
     if (!gasPrice) {
       gasPrice = await this.web3.eth.getGasPrice()
         .catch((error: Error) => {
-          logger.error('error getting gas price, error:', error)
+          logger.error(`(${this.name}): error getting gas price, error:`, error)
           throw error
         })
     }
