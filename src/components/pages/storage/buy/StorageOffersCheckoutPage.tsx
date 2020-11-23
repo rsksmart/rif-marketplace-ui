@@ -29,6 +29,7 @@ import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import RoundBtn from 'components/atoms/RoundBtn'
 import { SupportedTokens } from 'contracts/interfaces'
+import { Web3Store } from '@rsksmart/rif-ui'
 
 const useStyles = makeStyles((theme: Theme) => ({
   stepperCard: {
@@ -77,6 +78,13 @@ const StorageOffersCheckoutPage: FC = () => {
   } = useContext<ContextProps>(StorageCheckoutContext)
 
   const {
+    state: {
+      account,
+    },
+  } = useContext(Web3Store)
+
+  const {
+    id,
     token,
     total,
   } = order
@@ -90,7 +98,7 @@ const StorageOffersCheckoutPage: FC = () => {
 
   const changePlanHandle = ({
     target: { value },
-  }: React.ChangeEvent<{ name?: string, value: unknown}>): void => dispatch({
+  }: React.ChangeEvent<{ name?: string, value: unknown }>): void => dispatch({
     type: 'SET_AUXILIARY',
     payload: {
       selectedPlan: value as number,
@@ -196,17 +204,17 @@ const StorageOffersCheckoutPage: FC = () => {
         <GridColumn alignContent="center">
           <GridItem>
             {pinned && orderConfigTB && (
-            <StoragePurchaseCard
-              details={orderConfigTB}
-              submitProps={{
-                onClick: createAgreement,
-                children: 'Buy',
-              }}
-              title="Configuring storage plan"
-            />
+              <StoragePurchaseCard
+                details={orderConfigTB}
+                submitProps={{
+                  onClick: createAgreement,
+                  children: 'Buy',
+                }}
+                title="Configuring storage plan"
+              />
             )}
             {!pinned && (
-            <PinningCard dispatch={dispatch} />
+              <PinningCard dispatch={dispatch} />
             )}
           </GridItem>
         </GridColumn>
@@ -221,6 +229,20 @@ const StorageOffersCheckoutPage: FC = () => {
     ROUTES.STORAGE.BUY.BASE,
   )
 
+  if (id.toLowerCase() === account?.toLowerCase()) {
+    setTimeout(navToStorageBase, 3000)
+    return (
+      <CheckoutPageTemplate
+        className="storage-checkout-page"
+        backButtonProps={{
+          backTo: 'offers',
+        }}
+      >
+        You cannot buy your own storage. Redirecting to offers list...
+      </CheckoutPageTemplate>
+    )
+  }
+
   return (
     <CheckoutPageTemplate
       className="storage-checkout-page"
@@ -230,12 +252,17 @@ const StorageOffersCheckoutPage: FC = () => {
     >
       <GridColumn>
         <GridItem>
-          {order && pinned && <StorageOrderDescription order={{ ...order, ...pinned }} />}
+          {order && pinned
+            && (
+            <StorageOrderDescription
+              order={{ ...order, ...pinned }}
+            />
+            )}
         </GridItem>
         {/* STEPPER */}
-        { renderStepper() }
+        {renderStepper()}
         {/* CONTENT */}
-        { renderContent() }
+        {renderContent()}
       </GridColumn>
       <ProgressOverlay
         title="Creating agreement!"
