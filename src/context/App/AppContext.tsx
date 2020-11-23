@@ -30,6 +30,10 @@ export interface AppState extends ContextState {
   loaders: LoaderMap
   messages: Partial<MessageMap>
   apis: ServiceMap
+  alertPanel: {
+    display: boolean
+    message: string
+  }
 }
 
 export interface AppContextProps {
@@ -58,6 +62,10 @@ export const initialState: AppState = {
     data: false,
     filters: false,
     other: false,
+  },
+  alertPanel: {
+    display: false,
+    message: '',
   },
 }
 
