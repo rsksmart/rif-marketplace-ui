@@ -1,3 +1,7 @@
+import { shortenString } from '@rsksmart/rif-ui'
+import { networkId } from 'config'
+import { toChecksumAddress } from 'web3-utils'
+
 export const getURLParamByName = (
   url: string, param: string,
 ): string | undefined => {
@@ -9,3 +13,7 @@ export const getURLParamByName = (
 export const isEmpty = (
   text: string | unknown,
 ): boolean => !(text && String(text).trim())
+
+export const shortChecksumAddress = (address: string): string => shortenString(
+  toChecksumAddress(address, networkId),
+)
