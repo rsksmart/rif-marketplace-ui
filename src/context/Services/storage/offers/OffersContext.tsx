@@ -12,6 +12,7 @@ import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { MinMaxFilter } from 'models/Filters'
 import { UIError } from 'models/UIMessage'
 import { AvgBillingPriceService } from 'api/rif-marketplace-cache/storage/avg-billing-plan-price'
+import { AvailableCapacityService } from 'api/rif-marketplace-cache/storage/available-size'
 import createWithContext from 'context/storeUtils/createWithContext'
 import {
   storageOffersActions, StorageOffersPayload,
@@ -84,6 +85,7 @@ export const Provider = ({ children }) => {
   }: AppContextProps = useContext(AppContext)
   const api = appState?.apis?.['storage/v0/offers'] as StorageOffersService
   const apiAvgBillingPrice = appState?.apis?.['storage/v0/avgBillingPrice'] as AvgBillingPriceService
+  const apiAvailableCapacity = appState?.apis?.['storage/v0/availableCapacity'] as AvailableCapacityService
 
   const [state, dispatch] = useReducer(reducer, initialState)
   const {
@@ -98,6 +100,10 @@ export const Provider = ({ children }) => {
 
   if (apiAvgBillingPrice && !apiAvgBillingPrice.service) {
     apiAvgBillingPrice.connect(errorReporterFactory(appDispatch))
+  }
+
+  if (apiAvailableCapacity && !apiAvailableCapacity.service) {
+    apiAvailableCapacity.connect(errorReporterFactory(appDispatch))
   }
   // Initialise
   useEffect(() => {
@@ -133,7 +139,7 @@ export const Provider = ({ children }) => {
       } as any)
       try {
         Promise.all([
-          api.fetchSizeLimits()
+          apiAvailableCapacity.fetchSizeLimits()
             .then((size: MinMaxFilter) => {
               dispatch({
                 type: 'UPDATE_LIMITS',
@@ -192,7 +198,7 @@ export const Provider = ({ children }) => {
         } as any)
       }
     }
-  }, [api, apiAvgBillingPrice, isInitialised, needsRefresh, isLimitsSet, appDispatch])
+  }, [apiAvailableCapacity, apiAvgBillingPrice, isInitialised, needsRefresh, isLimitsSet, appDispatch])
 
   // Pre-fetch limits
   useEffect(() => {
