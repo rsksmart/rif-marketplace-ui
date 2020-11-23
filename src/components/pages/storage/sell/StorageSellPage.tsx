@@ -179,8 +179,14 @@ const StorageSellPage: FC = () => {
         {
           !!isSubmitEnabled
           && (
-            <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
-              Your wallet will open and you will be asked to confirm the transaction for listing your service.
+            <Typography
+              gutterBottom
+              color="secondary"
+              variant="subtitle1"
+              align="center"
+            >
+              {`Your wallet will open and you will be asked
+               to confirm the transaction for listing your service.`}
             </Typography>
           )
         }
@@ -191,9 +197,12 @@ const StorageSellPage: FC = () => {
   return (
     <CenteredPageTemplate>
       <Staking />
-      <Typography gutterBottom variant="h5" color="primary">List your storage service</Typography>
+      <Typography gutterBottom variant="h5" color="primary">
+        List your storage service
+      </Typography>
       <Typography gutterBottom color="secondary" variant="subtitle1">
-        Fill out the fields below to list your storage service. All the information provided is meant to be true and correct.
+        {`Fill out the fields below to list your storage service. 
+        All the information provided is meant to be true and correct.`}
       </Typography>
       {
         Boolean(account)
@@ -210,7 +219,7 @@ const StorageSellPage: FC = () => {
             {...{ isPendingConfirm, onProcessingComplete }}
             text="Listing your offer!"
             progMsg="The waiting period is required to securely list your storage offer.
-             Please do not close this tab until the process has finished."
+            Please do not close this tab until the process has finished."
             overlayed
           />
         )

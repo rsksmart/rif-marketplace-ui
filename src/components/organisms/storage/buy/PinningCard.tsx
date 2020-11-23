@@ -171,7 +171,9 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
             }}
             hash={{
               value: hash,
-              onChange: setInfoHandle(setHash),
+              onChange: ({ target: { value } }): void => {
+                setHash(value.replace(/^(\/*ipfs\/)/, ''))
+              },
               error: isHashEmpty || !isValidCID,
               InputProps: {
                 startAdornment: <InputAdornment position="start">{CID_PREFIX}</InputAdornment>,
