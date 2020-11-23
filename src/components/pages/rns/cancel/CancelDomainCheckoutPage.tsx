@@ -7,7 +7,7 @@ import {
   ShortenTextTooltip,
 } from '@rsksmart/rif-ui'
 import Box from '@material-ui/core/Box'
-import AddressItem from 'components/molecules/AddressItem'
+import RifAddress from 'components/molecules/RifAddress'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
@@ -25,6 +25,8 @@ import Logger from 'utils/Logger'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { UIError } from 'models/UIMessage'
 import { LoadingPayload } from 'context/App/appActions'
+import { shortChecksumAddress } from 'utils/stringUtils'
+import { toChecksumAddress } from 'web3-utils'
 
 const logger = Logger.getInstance()
 
@@ -137,7 +139,7 @@ const CancelDomainCheckoutPage = () => {
 
   const displayName = name
     ? <ShortenTextTooltip value={name} maxLength={30} />
-    : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+    : <RifAddress pretext="Unknown RNS:" value={tokenId} />
 
   const details = {
     NAME: displayName,
@@ -237,15 +239,15 @@ const CancelDomainCheckoutPage = () => {
   }
 
   const cancelingNameTitle = name
-    ? shortenString(name, 30, 25)
-    : shortenString(tokenId)
+    ? shortenString(toChecksumAddress(name), 30, 25)
+    : shortChecksumAddress(tokenId)
 
   return (
     <CheckoutPageTemplate
-      className="domains-checkout-page"
-      backButtonProps={{
-        backTo: 'domains',
-      }}
+        className="domains-checkout-page"
+        backButtonProps={{
+          backTo: 'domains',
+        }}
     >
       <Card
         className={classes.card}

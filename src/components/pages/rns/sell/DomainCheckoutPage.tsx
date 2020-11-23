@@ -2,12 +2,13 @@ import {
   Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, MenuItem, Select, Table, TableBody, TableCell, TableRow, Theme, Typography,
 } from '@material-ui/core'
 import {
-  Button, colors, shortenString, UnitsInput, validatedNumber, Web3Store,
+  Button, colors, UnitsInput, validatedNumber, Web3Store,
   ShortenTextTooltip,
+  shortenString,
 } from '@rsksmart/rif-ui'
 import Box from '@material-ui/core/Box'
 import ItemWUnit from 'components/atoms/ItemWUnit'
-import AddressItem from 'components/molecules/AddressItem'
+import RifAddress from 'components/molecules/RifAddress'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
@@ -26,6 +27,8 @@ import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/A
 import { UIError } from 'models/UIMessage'
 import { LoadingPayload } from 'context/App/appActions'
 import { rifTokenAddress, marketPlaceAddress } from 'contracts/config'
+import { shortChecksumAddress } from 'utils/stringUtils'
+import { toChecksumAddress } from 'web3-utils'
 
 const logger = Logger.getInstance()
 
@@ -259,11 +262,11 @@ const DomainsCheckoutPage: FC<{}> = () => {
 
   const displayName = name
     ? <ShortenTextTooltip value={name} maxLength={30} />
-    : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+    : <RifAddress pretext="Unknown RNS:" value={tokenId} />
 
   const listingNameTitle = name
-    ? shortenString(name, 30, 25)
-    : shortenString(tokenId)
+    ? shortenString(toChecksumAddress(name), 30, 25)
+    : shortChecksumAddress(tokenId)
 
   const onProcessingComplete = () => {
     dispatch({
@@ -276,11 +279,11 @@ const DomainsCheckoutPage: FC<{}> = () => {
 
   return (
     <CheckoutPageTemplate
-      isProcessing={order.isProcessing}
-      className="domains-checkout-page"
-      backButtonProps={{
-        backTo: 'domains',
-      }}
+        isProcessing={order.isProcessing}
+        className="domains-checkout-page"
+        backButtonProps={{
+          backTo: 'domains',
+        }}
     >
       <Card
         className={classes.card}

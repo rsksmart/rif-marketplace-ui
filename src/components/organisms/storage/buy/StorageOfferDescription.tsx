@@ -1,12 +1,12 @@
 import React, { FC } from 'react'
 import { Big } from 'big.js'
 import { Box, makeStyles, Typography } from '@material-ui/core'
-import { shortenString } from '@rsksmart/rif-ui'
 import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
 import LabelWithValue from 'components/atoms/LabelWithValue'
 import { StorageCheckoutOrder, StoragePinnedContent } from 'context/storage/buy/checkout'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
+import { shortChecksumAddress } from 'utils/stringUtils'
 
 type Props = StorageCheckoutOrder & StoragePinnedContent
 
@@ -45,7 +45,7 @@ const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
             <GridItem xs={4} classes={itemClasses}>
               <LabelWithValue
                 label="Name:"
-                value={shortenString(id)}
+                value={shortChecksumAddress(id)}
               />
             </GridItem>
             <GridItem xs={4} classes={itemClasses}>
@@ -75,7 +75,7 @@ const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
 
                   <LabelWithValue
                     label="Hash:"
-                    value={shortenString(contentHash)}
+                    value={shortChecksumAddress(contentHash)}
                   />
                 </GridItem>
                 <GridItem xs={4} classes={itemClasses}>
