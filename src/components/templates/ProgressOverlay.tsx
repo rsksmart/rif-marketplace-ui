@@ -1,26 +1,11 @@
-import { makeStyles } from '@material-ui/core'
 import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
 import { JobDoneBox } from 'components/molecules'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import React, { FC } from 'react'
+import OverlaidPageTemplate from './OverlaidPageTemplate'
 
 import TxCompletePageTemplate from './TxCompletePageTemplate'
-
-const useStyle = makeStyles(() => ({
-  progressContainer: {
-    background: 'rgba(275, 275, 275, 0.8)',
-    display: 'flex',
-    height: '100vh',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    position: 'fixed',
-    width: '100vw',
-    top: 0,
-    left: 0,
-    zIndex: 9999,
-  },
-}))
 
 export type Status = {
   inProgress?: boolean
@@ -40,11 +25,9 @@ const ProgressOverlay: FC<Props> = ({
   title,
   doneMsg,
 }) => {
-  const classes = useStyle()
-
   if (inProgress || isDone) {
     return (
-      <div className={classes.progressContainer}>
+      <OverlaidPageTemplate>
         {
           inProgress && (
             <TransactionInProgressPanel
@@ -72,7 +55,7 @@ const ProgressOverlay: FC<Props> = ({
             </TxCompletePageTemplate>
           )
         }
-      </div>
+      </OverlaidPageTemplate>
     )
   }
   return null
