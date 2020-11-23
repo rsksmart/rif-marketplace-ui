@@ -8,6 +8,7 @@ export type StorageServiceAddress =
   | 'storage/v0/avgBillingPrice'
   | 'storage/v0/stakes'
   | 'storage/v0/agreements'
+  | 'storage/v0/availableCapacity'
 export type StorageWSChannel = 'offers' | 'agreements' | 'stakes'
 
 export type StorageAPIService = Modify<
