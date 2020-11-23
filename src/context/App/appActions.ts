@@ -9,6 +9,8 @@ export type APP_ACTION =
   | 'SET_MESSAGE'
   | 'REMOVE_MESSAGE'
   | 'SET_AWAITING_CONFIRMATIONS'
+  | 'SET_ALERT'
+  | 'HIDE_ALERT'
 
 export interface LoadingPayload {
   readonly id: LoaderId
@@ -26,10 +28,15 @@ export type RemoveMessagePayload = {
   id: MessageId
 }
 
+export type SetAlertPayload = {
+  message: string
+}
+
 export type AppPayload = LoadingPayload |
   MessagePayload |
   ErrorMessagePayload |
-  RemoveMessagePayload
+  RemoveMessagePayload |
+  SetAlertPayload | {}
 
 export type AppAction = ContextDispatch<APP_ACTION, AppPayload>
 
@@ -41,6 +48,8 @@ type AppActions = {
   SET_IS_LOADING: AppReducer<LoadingPayload>
   SET_MESSAGE: AppReducer<MessagePayload | ErrorMessagePayload>
   REMOVE_MESSAGE: AppReducer<RemoveMessagePayload>
+  SET_ALERT: AppReducer<SetAlertPayload>
+  HIDE_ALERT: AppReducer<{}>
 }
 
 const LOADING_MSG_ID = 'loading'
@@ -93,4 +102,18 @@ export const appActions: AppActions = {
       messages: messagesCopy,
     }
   },
+  SET_ALERT: (state, { message }: SetAlertPayload) => ({
+    ...state,
+    alertPanel: {
+      display: true,
+      message,
+    },
+  }),
+  HIDE_ALERT: (state, _) => ({
+    ...state,
+    alertPanel: {
+      display: false,
+      message: '',
+    },
+  }),
 }
