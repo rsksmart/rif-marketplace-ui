@@ -44,7 +44,6 @@ const StorageEditOfferPage: FC<{}> = () => {
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
 
-  // TODO: optimize to check what was edited and so send txs only to edit that info to save gas
   const handleEditOffer = async () => {
     // without a web3 instance the submit action would be disabled
     if (!web3) return
@@ -62,7 +61,11 @@ const StorageEditOfferPage: FC<{}> = () => {
       const storageContract = StorageContract.getInstance(web3)
       const {
         availableSizeMB, periods, prices, tokens,
-      } = transformOfferDataForContract(availableSize, billingPlans, originalOffer)
+      } = transformOfferDataForContract(
+        availableSize,
+        billingPlans,
+        originalOffer,
+      )
 
       const setOfferReceipt = await storageContract.setOffer(
         availableSizeMB,
@@ -99,7 +102,7 @@ const StorageEditOfferPage: FC<{}> = () => {
     }
   }
 
-  const onProcessingComplete = () => {
+  const onProcessingComplete = (): void => {
     setIsProcessing(false)
   }
 
@@ -117,8 +120,14 @@ const StorageEditOfferPage: FC<{}> = () => {
       {
         isSubmitEnabled
         && (
-          <Typography gutterBottom color="secondary" variant="subtitle1" align="center">
-            Your wallet will open and you will be asked to confirm the transaction for listing your service.
+          <Typography
+            gutterBottom
+            color="secondary"
+            variant="subtitle1"
+            align="center"
+          >
+            {`Your wallet will open and you will be asked to confirm
+             the transaction for listing your service.`}
           </Typography>
         )
       }
@@ -128,7 +137,8 @@ const StorageEditOfferPage: FC<{}> = () => {
   return (
     <CenteredPageTemplate
       title="Edit your storage offer"
-      subtitle="Fill out the fields below to edit your storage offer. All the information provided is meant to be true and correct."
+      subtitle={`Fill out the fields below to edit your storage offer. 
+      All the information provided is meant to be true and correct.`}
     >
       <RoundedCard color="primary">
         <EditOfferStepper endHandler={endHandler} />
