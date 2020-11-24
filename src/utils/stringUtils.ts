@@ -19,3 +19,11 @@ export const validateCID = (
     return false
   }
 }
+
+export const getURLParamByName = (
+  url: string, param: string,
+): string | undefined => {
+  const rgx = `^(?:\\?*${param}=)(\\w*)`
+  const match = url.match(rgx)
+  return match?.find((_, i) => i === 1)
+}
