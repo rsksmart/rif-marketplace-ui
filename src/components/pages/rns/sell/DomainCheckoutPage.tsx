@@ -279,11 +279,11 @@ const DomainsCheckoutPage: FC<{}> = () => {
 
   return (
     <CheckoutPageTemplate
-        isProcessing={order.isProcessing}
-        className="domains-checkout-page"
-        backButtonProps={{
-          backTo: 'domains',
-        }}
+      isProcessing={order.isProcessing}
+      className="domains-checkout-page"
+      backButtonProps={{
+        backTo: 'domains',
+      }}
     >
       <Card
         className={classes.card}
