@@ -1,7 +1,7 @@
 import { Big } from 'big.js'
 import { SUPPORTED_TOKENS } from 'contracts/interfaces'
 import { StorageBillingPlan } from '../interfaces'
-import { AddItemPayload, SetAvailableSizePayload, SetCountryPayload } from '../offerEditActions'
+import { AddItemPayload, SetTotalCapacityPayload, SetCountryPayload } from '../offerEditActions'
 import { initialState } from '../OfferEditContext'
 import { offerEditActions } from '../offerEditReducer'
 
@@ -46,13 +46,13 @@ describe('StorageOfferEditContext', () => {
       const { country } = offerEditActions.SET_COUNTRY(initialState, payload)
       expect(country).toBe(expectedCountry)
     })
-    describe('SET_AVAILABLE_SIZE', () => {
+    describe('SET_TOTAL_CAPACITY', () => {
       const expectedSize = 10
-      const payload: SetAvailableSizePayload = {
-        availableSize: expectedSize,
+      const payload: SetTotalCapacityPayload = {
+        totalCapacity: expectedSize,
       }
-      const { availableSize } = offerEditActions.SET_AVAILABLE_SIZE(initialState, payload)
-      expect(availableSize).toBe(expectedSize)
+      const { totalCapacity } = offerEditActions.SET_TOTAL_CAPACITY(initialState, payload)
+      expect(totalCapacity).toBe(expectedSize)
     })
   })
 })

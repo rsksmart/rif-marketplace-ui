@@ -53,11 +53,11 @@ export function encodeHash(hash: string): string[] {
 }
 
 export const transformOfferDataForContract = (
-  availableSizeGB: number,
+  totalCapacityGB: Big,
   billingPlans: StorageBillingPlan[],
   originalOffer?: StorageOffer,
 ): OfferContractData => {
-  const availableSizeMB = new Big(availableSizeGB)
+  const totalCapacityMB = totalCapacityGB
     .mul(UNIT_PREFIX_POW2.KILO)
     .toString()
 
@@ -68,7 +68,7 @@ export const transformOfferDataForContract = (
     const difference = originalOffer.subscriptionOptions.filter(
       (originalSub) => !resultsBillingPlan.some(
         (newSub) => originalSub.period === newSub.period
-            && originalSub.currency === newSub.currency,
+          && originalSub.currency === newSub.currency,
       ),
     )
 
@@ -102,7 +102,7 @@ export const transformOfferDataForContract = (
     { prices: [], periods: [], tokens: [] } as any,
   )
   return {
-    availableSizeMB,
+    totalCapacityMB,
     prices,
     periods,
     tokens,

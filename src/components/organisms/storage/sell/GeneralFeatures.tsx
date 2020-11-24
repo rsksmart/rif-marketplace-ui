@@ -1,3 +1,4 @@
+import Big from 'big.js'
 import React, { FC, useContext, useState } from 'react'
 import InfoIcon from '@material-ui/icons/Info'
 import Grid from '@material-ui/core/Grid'
@@ -12,14 +13,15 @@ import {
 import PinnerInstructionsModal from 'components/organisms/storage/sell/PinnerInstructionsModal'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { OfferEditContextProps } from 'context/Market/storage/interfaces'
-import { SetAvailableSizePayload, SetPeerIdPayload } from 'context/Market/storage/offerEditActions'
+import { SetTotalCapacityPayload, SetPeerIdPayload } from 'context/Market/storage/offerEditActions'
 
 const GeneralFeatures: FC = () => {
   const {
     state: {
-      availableSize, system, peerId, originalOffer,
+      totalCapacity, system, peerId, originalOffer,
     }, dispatch,
   } = useContext<OfferEditContextProps>(OfferEditContext)
+  const utilizedCapacityGB = Number(originalOffer?.utilizedCapacityGB) || 0
 
   const [modalPeerIdOpened, setModalPeerIdOpened] = useState(false)
   const handleModalOpen = (): void => setModalPeerIdOpened(true)
@@ -27,10 +29,10 @@ const GeneralFeatures: FC = () => {
 
   const onSizeChange = ({ target: { value } }): void => {
     dispatch({
-      type: 'SET_AVAILABLE_SIZE',
+      type: 'SET_TOTAL_CAPACITY',
       payload: {
-        availableSize: validatedNumber(value),
-      } as SetAvailableSizePayload,
+        totalCapacity: Big(validatedNumber(Number(value))),
+      } as SetTotalCapacityPayload,
     })
   }
 
@@ -68,11 +70,11 @@ const GeneralFeatures: FC = () => {
               required
               fullWidth
               type="number"
-              label="Available Size"
-              id="available-size"
-              value={availableSize.toString()}
+              label="Listed Size"
+              id="listed-size"
+              value={totalCapacity.toString()}
               onChange={onSizeChange}
-              error={availableSize <= 0}
+              error={Number(totalCapacity) <= utilizedCapacityGB}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">

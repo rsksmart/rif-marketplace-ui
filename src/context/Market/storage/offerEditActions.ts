@@ -1,3 +1,4 @@
+import Big from 'big.js'
 import { ContextDispatch, ContextPayload } from 'context/storeUtils/interfaces'
 import { StorageOffer } from 'models/marketItems/StorageItem'
 import { StorageBillingPlan } from './interfaces'
@@ -9,7 +10,7 @@ export type OFFER_EDIT_ACTION =
   | 'REMOVE_ITEM'
   | 'EDIT_ITEM'
   | 'SET_COUNTRY'
-  | 'SET_AVAILABLE_SIZE'
+  | 'SET_TOTAL_CAPACITY'
   | 'SET_PEER_ID'
   | 'SET_OFFER'
 
@@ -19,7 +20,7 @@ export type OfferEditActions = {
   REMOVE_ITEM: OfferEditReducer<RemoveItemPayload>
   EDIT_ITEM: OfferEditReducer<EditItemPayload>
   SET_COUNTRY: OfferEditReducer<SetCountryPayload>
-  SET_AVAILABLE_SIZE: OfferEditReducer<SetAvailableSizePayload>
+  SET_TOTAL_CAPACITY: OfferEditReducer<SetTotalCapacityPayload>
   SET_PEER_ID: OfferEditReducer<SetPeerIdPayload>
   SET_OFFER: OfferEditReducer<SetOfferPayload>
 }
@@ -32,8 +33,8 @@ export interface RemoveItemPayload {
 
 export type EditItemPayload = AddItemPayload & RemoveItemPayload
 
-export interface SetAvailableSizePayload {
-  availableSize: number
+export interface SetTotalCapacityPayload {
+  totalCapacity: Big
 }
 
 export interface SetCountryPayload {
@@ -51,7 +52,7 @@ export type OfferEditPayload =
   | AddItemPayload
   | RemoveItemPayload
   | EditItemPayload
-  | SetAvailableSizePayload
+  | SetTotalCapacityPayload
   | SetCountryPayload
   | SetPeerIdPayload
   | SetOfferPayload
