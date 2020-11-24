@@ -17,7 +17,7 @@ import { StorageCheckoutAction } from 'context/storage/buy/checkout'
 import { parseConvertBig } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import RoundBtn from 'components/atoms/RoundBtn'
-import { validateCID } from 'utils/stringUtils'
+import { validateCID } from 'utils/cidUtils'
 import StoragePinTabs from './StoragePinTabs'
 
 type Props = {
