@@ -30,14 +30,17 @@ const EditOfferStepper: FC<EditOfferStepperProps> = ({ endHandler }) => {
   const classes = useStyles()
   const [activeStep, setActiveStep] = useState(0)
   const {
-    state: { availableSize, system, peerId },
+    state: {
+      totalCapacity, system, peerId, originalOffer,
+    },
   } = useContext<OfferEditContextProps>(OfferEditContext)
 
   const handleNext = (): void => setActiveStep(1)
   const handleBack = (): void => setActiveStep(0)
 
-  const nextIsDisabled = !availableSize
-    || availableSize <= 0
+  const minCapacity = Number(originalOffer?.utilizedCapacityGB) || 0
+  const nextIsDisabled = !totalCapacity
+    || Number(totalCapacity) <= minCapacity
     || !system
     || !peerId
 

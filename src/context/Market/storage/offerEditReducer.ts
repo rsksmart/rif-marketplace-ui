@@ -4,7 +4,7 @@ import {
   AddItemPayload,
   RemoveItemPayload,
   EditItemPayload,
-  SetAvailableSizePayload,
+  SetTotalCapacityPayload,
   SetCountryPayload,
   SetPeerIdPayload,
   OfferEditActions,
@@ -74,12 +74,12 @@ export const offerEditActions: OfferEditActions = {
       usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newBillingPlans),
     }
   },
-  SET_AVAILABLE_SIZE: (
+  SET_TOTAL_CAPACITY: (
     state: OfferEditState,
-    { availableSize }: SetAvailableSizePayload,
+    { totalCapacity }: SetTotalCapacityPayload,
   ) => ({
     ...state,
-    availableSize,
+    totalCapacity,
   }),
   SET_COUNTRY: (state: OfferEditState, { country }: SetCountryPayload) => ({
     ...state,
@@ -91,7 +91,7 @@ export const offerEditActions: OfferEditActions = {
   }),
   SET_OFFER: (state: OfferEditState, payload: SetOfferPayload) => {
     const {
-      availableSizeGB,
+      totalCapacityGB,
       location,
       peerId,
       subscriptionOptions,
@@ -107,8 +107,7 @@ export const offerEditActions: OfferEditActions = {
     )
     return {
       ...state,
-      // TODO: use big instead of number for available size
-      availableSize: Number(availableSizeGB),
+      totalCapacity: totalCapacityGB,
       peerId,
       country: location,
       billingPlans: newBillingPlans,

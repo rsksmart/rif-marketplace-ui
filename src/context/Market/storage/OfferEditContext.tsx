@@ -1,4 +1,5 @@
 import React, { FC, useReducer } from 'react'
+import Big from 'big.js'
 import { ContextActions, ContextReducer } from 'context/storeUtils/interfaces'
 import storeReducerFactory from 'context/storeUtils/reducer'
 import { SubscriptionPeriod } from 'models/marketItems/StorageItem'
@@ -15,7 +16,7 @@ const billingPeriods: SubscriptionPeriod[] = ['Daily', 'Weekly', 'Monthly']
 export const initialState: OfferEditState = {
   contextID: 'storage_offer_edit',
   system: 'IPFS',
-  availableSize: 1,
+  totalCapacity: new Big(1),
   country: '',
   internalCounter: 1,
   peerId: '',

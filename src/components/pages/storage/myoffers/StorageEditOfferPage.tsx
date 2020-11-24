@@ -33,7 +33,7 @@ const StorageEditOfferPage: FC<{}> = () => {
   const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
   const {
     state: {
-      originalOffer, billingPlans, availableSize, peerId,
+      originalOffer, billingPlans, totalCapacity, peerId,
     },
   } = useContext<OfferEditContextProps>(OfferEditContext)
 
@@ -60,15 +60,15 @@ const StorageEditOfferPage: FC<{}> = () => {
       setIsProcessing(true)
       const storageContract = StorageContract.getInstance(web3)
       const {
-        availableSizeMB, periods, prices, tokens,
+        totalCapacityMB, periods, prices, tokens,
       } = transformOfferDataForContract(
-        availableSize,
+        totalCapacity,
         billingPlans,
         originalOffer,
       )
 
       const setOfferReceipt = await storageContract.setOffer(
-        availableSizeMB,
+        totalCapacityMB,
         periods,
         prices,
         tokens as SupportedTokens[],
@@ -113,7 +113,7 @@ const StorageEditOfferPage: FC<{}> = () => {
     }
   }, [isPendingConfirm, history, isProcessing])
 
-  const isSubmitEnabled = !!(billingPlans.length && availableSize)
+  const isSubmitEnabled = !!(billingPlans.length && totalCapacity)
   const endHandler = (
     <>
       <Button disabled={!isSubmitEnabled} color="primary" variant="contained" rounded onClick={handleEditOffer}>Edit offer</Button>

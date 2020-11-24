@@ -8,6 +8,7 @@ import {
 } from 'models/marketItems/StorageItem'
 import { ZERO_ADDRESS } from 'constants/strings'
 import { SupportedTokens } from 'contracts/interfaces'
+import Big from 'big.js'
 import { OfferEditAction } from './offerEditActions'
 
 export interface StorageBillingPlan extends BillingPlan {
@@ -16,7 +17,7 @@ export interface StorageBillingPlan extends BillingPlan {
 
 export interface OfferEditState extends ContextState {
   system: string
-  availableSize: number
+  totalCapacity: Big
   country: string
   billingPlans: StorageBillingPlan[]
   internalCounter: number // counter to assign unique ids to billingPlans, this counter only sums up

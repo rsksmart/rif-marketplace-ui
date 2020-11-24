@@ -27,6 +27,7 @@ import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Service
 import NoWhitelistedProvider from 'components/molecules/storage/NoWhitelistedProvider'
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
 import { StorageOffer } from 'models/marketItems/StorageItem'
+import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 
 // TODO: discuss about wrapping the library and export it with this change
 Big.NE = -30
@@ -46,10 +47,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 const StorageSellPage: FC = () => {
   const {
     state: {
-      billingPlans, availableSize, peerId, system,
+      billingPlans, totalCapacity, peerId, system,
     },
     dispatch,
-  } = useContext(OfferEditContext)
+  } = useContext<OfferEditContextProps>(OfferEditContext)
 
   const {
     state: {
@@ -100,13 +101,13 @@ const StorageSellPage: FC = () => {
       setIsProcessing(true)
       const storageContract = StorageContract.getInstance(web3)
       const {
-        availableSizeMB, periods, prices, tokens,
+        totalCapacityMB, periods, prices, tokens,
       } = transformOfferDataForContract(
-        availableSize, billingPlans, currentOwnOffer,
+        totalCapacity, billingPlans, currentOwnOffer,
       )
 
       const setOfferReceipt = await storageContract.setOffer(
-        availableSizeMB,
+        totalCapacityMB,
         periods,
         prices,
         tokens as SupportedTokens[],
@@ -159,7 +160,7 @@ const StorageSellPage: FC = () => {
   }, [dispatch])
 
   const isSubmitEnabled = billingPlans.length
-    && availableSize
+    && Number(totalCapacity)
     && system
     && peerId
     && isWhitelistedProvider

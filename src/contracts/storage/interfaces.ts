@@ -1,5 +1,5 @@
 export interface OfferContractData {
-  availableSizeMB: string
+  totalCapacityMB: string
   periods: number[][]
   prices: string[][]
   tokens: string[]
