@@ -83,9 +83,9 @@ export const Provider = ({ children }) => {
     state: appState,
     dispatch: appDispatch,
   }: AppContextProps = useContext(AppContext)
-  const api = appState?.apis?.['storage/v0/offers'] as StorageOffersService
-  const apiAvgBillingPrice = appState?.apis?.['storage/v0/avgBillingPrice'] as AvgBillingPriceService
-  const apiAvailableCapacity = appState?.apis?.['storage/v0/availableCapacity'] as AvailableCapacityService
+  const api = appState.apis['storage/v0/offers'] as StorageOffersService
+  const apiAvgBillingPrice = appState.apis['storage/v0/avgBillingPrice'] as AvgBillingPriceService
+  const apiAvailableCapacity = appState.apis['storage/v0/availableCapacity'] as AvailableCapacityService
 
   const [state, dispatch] = useReducer(reducer, initialState)
   const {
@@ -94,17 +94,20 @@ export const Provider = ({ children }) => {
     limits,
   } = state as StorageOffersState
 
-  if (api && !api.service) {
-    api.connect(errorReporterFactory(appDispatch))
+  const errorReporterInstance = errorReporterFactory(appDispatch)
+
+  if (!api.service) {
+    api.connect(errorReporterInstance)
   }
 
-  if (apiAvgBillingPrice && !apiAvgBillingPrice.service) {
-    apiAvgBillingPrice.connect(errorReporterFactory(appDispatch))
+  if (!apiAvgBillingPrice.service) {
+    apiAvgBillingPrice.connect(errorReporterInstance)
   }
 
-  if (apiAvailableCapacity && !apiAvailableCapacity.service) {
-    apiAvailableCapacity.connect(errorReporterFactory(appDispatch))
+  if (!apiAvailableCapacity.service) {
+    apiAvailableCapacity.connect(errorReporterInstance)
   }
+
   // Initialise
   useEffect(() => {
     if (api?.service && !isInitialised) {
