@@ -17,7 +17,7 @@ export class AvailableCapacityService
   _fetch = (): Promise<[number, number]> => this.service.find()
 
   fetchSizeLimits = async (): Promise<MinMaxFilter> => {
-    // this 1 arg is required by service interface, but it's not actually used
+    // 1 arg is required by service interface but not used
     const { min: minMB, max: maxMB } = await this.service.get(1)
     return {
       min: minMB / UNIT_PREFIX_POW2.KILO,
