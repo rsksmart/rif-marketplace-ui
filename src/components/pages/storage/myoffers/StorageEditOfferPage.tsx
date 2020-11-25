@@ -20,6 +20,7 @@ import Logger from 'utils/Logger'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
 import { SupportedTokens } from 'contracts/interfaces'
+import { StorageOffer } from 'models/marketItems/StorageItem'
 
 const logger = Logger.getInstance()
 
@@ -59,12 +60,15 @@ const StorageEditOfferPage: FC<{}> = () => {
 
       setIsProcessing(true)
       const storageContract = StorageContract.getInstance(web3)
+
+      const { subscriptionOptions } = originalOffer as StorageOffer
       const {
         totalCapacityMB, periods, prices, tokens,
       } = transformOfferDataForContract(
         totalCapacity,
         billingPlans,
-        originalOffer,
+        subscriptionOptions,
+        // originalOffer,
       )
 
       const setOfferReceipt = await storageContract.setOffer(
