@@ -68,7 +68,6 @@ const StorageEditOfferPage: FC<{}> = () => {
         totalCapacity,
         billingPlans,
         subscriptionOptions,
-        // originalOffer,
       )
 
       const setOfferReceipt = await storageContract.setOffer(

@@ -54,7 +54,6 @@ export function encodeHash(hash: string): string[] {
 export const transformOfferDataForContract = (
   totalCapacityGB: Big,
   billingPlans: StorageBillingPlan[],
-  // originalOffer?: StorageOffer,
   originalSubOptions?: StorageBillingPlan[],
 ): OfferContractData => {
   const totalCapacityMB = totalCapacityGB
