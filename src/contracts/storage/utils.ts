@@ -4,7 +4,6 @@ import {
 import {
   BillingPlan,
   PeriodInSeconds,
-  StorageOffer,
 } from 'models/marketItems/StorageItem'
 import { convertToWeiString } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
@@ -55,7 +54,8 @@ export function encodeHash(hash: string): string[] {
 export const transformOfferDataForContract = (
   totalCapacityGB: Big,
   billingPlans: StorageBillingPlan[],
-  originalOffer?: StorageOffer,
+  // originalOffer?: StorageOffer,
+  originalSubOptions?: StorageBillingPlan[],
 ): OfferContractData => {
   const totalCapacityMB = totalCapacityGB
     .mul(UNIT_PREFIX_POW2.KILO)
@@ -63,9 +63,9 @@ export const transformOfferDataForContract = (
 
   const resultsBillingPlan = [...billingPlans]
 
-  if (originalOffer) {
+  if (originalSubOptions) {
     // gets the billing plans with period or currency no longer in the offer
-    const difference = originalOffer.subscriptionOptions.filter(
+    const difference = originalSubOptions.filter(
       (originalSub) => !resultsBillingPlan.some(
         (newSub) => originalSub.period === newSub.period
           && originalSub.currency === newSub.currency,

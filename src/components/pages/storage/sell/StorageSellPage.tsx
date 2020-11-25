@@ -95,7 +95,7 @@ const StorageSellPage: FC = () => {
         provider: account,
       })
 
-      const currentOwnOffer = currentOwnOffers
+      const { subscriptionOptions } = currentOwnOffers
         && currentOwnOffers[0] as StorageOffer
 
       setIsProcessing(true)
@@ -103,7 +103,7 @@ const StorageSellPage: FC = () => {
       const {
         totalCapacityMB, periods, prices, tokens,
       } = transformOfferDataForContract(
-        totalCapacity, billingPlans, currentOwnOffer,
+        totalCapacity, billingPlans, subscriptionOptions,
       )
 
       const setOfferReceipt = await storageContract.setOffer(
