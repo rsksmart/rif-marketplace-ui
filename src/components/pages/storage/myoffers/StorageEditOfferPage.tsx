@@ -117,7 +117,7 @@ const StorageEditOfferPage: FC<{}> = () => {
     }
   }, [isPendingConfirm, history, isProcessing])
 
-  const isSubmitEnabled = !!(billingPlans.length && totalCapacity)
+  const isSubmitEnabled = Boolean(billingPlans.length && totalCapacity)
   const endHandler = (
     <>
       <Button disabled={!isSubmitEnabled} color="primary" variant="contained" rounded onClick={handleEditOffer}>Edit offer</Button>
