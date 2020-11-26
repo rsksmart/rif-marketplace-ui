@@ -1,7 +1,9 @@
-import React, { useReducer } from 'react'
+import React, { FC, useReducer } from 'react'
 import { ContextActions, ContextReducer } from 'context/storeUtils/interfaces'
 import storeReducerFactory from 'context/storeUtils/reducer'
 import { SubscriptionPeriod } from 'models/marketItems/StorageItem'
+import { useLocation } from 'react-router-dom'
+import { getURLParamByName, isEmpty } from 'utils/stringUtils'
 import { OfferEditState, OfferEditContextProps } from './interfaces'
 import { offerEditActions, OfferEditReducer } from './offerEditReducer'
 import { OfferEditPayload } from './offerEditActions'
@@ -26,7 +28,13 @@ export const initialState: OfferEditState = {
 const OfferEditContext = React.createContext({} as OfferEditContextProps | any)
 const offerEditReducer: OfferEditReducer<OfferEditPayload> | ContextReducer = storeReducerFactory(initialState, offerEditActions as unknown as ContextActions)
 
-export const OfferEditContextProvider = ({ children }) => {
+export const OfferEditContextProvider: FC = ({ children }) => {
+  const { search } = useLocation()
+
+  if (!isEmpty(search)) {
+    initialState.peerId = getURLParamByName(search, 'peerId') ?? initialState.peerId
+  }
+
   const [state, dispatch] = useReducer(offerEditReducer, initialState)
 
   const value = { state, dispatch }
