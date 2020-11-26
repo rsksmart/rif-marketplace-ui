@@ -8,6 +8,8 @@ import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import { getShortDateString } from 'utils/dateUtils'
+import { CopyTextTooltip, shortenString } from '@rsksmart/rif-ui'
+import { Typography } from '@material-ui/core'
 
 export type AgreementView = {
   title: JSX.Element
@@ -62,7 +64,8 @@ const getCoreItemFields = (
       divider=" "
     />
   )
-  const idValue = <AddressItem value={id} />
+  const idDisplay = <Typography>{shortenString(id)}</Typography>
+  const idValue = <CopyTextTooltip fullText={id} displayElement={idDisplay} />
 
   return {
     HASH: <AddressItem value={dataReference} />,
