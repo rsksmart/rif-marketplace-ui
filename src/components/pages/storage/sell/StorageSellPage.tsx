@@ -93,17 +93,14 @@ const StorageSellPage: FC = () => {
       const currentOwnOffers = await storageOffersService.fetch({
         nonActive: true,
         provider: account,
-      })
-
-      const { subscriptionOptions } = currentOwnOffers
-        && currentOwnOffers[0] as StorageOffer
+      }) as StorageOffer[]
 
       setIsProcessing(true)
       const storageContract = StorageContract.getInstance(web3)
       const {
         totalCapacityMB, periods, prices, tokens,
       } = transformOfferDataForContract(
-        totalCapacity, billingPlans, subscriptionOptions,
+        totalCapacity, billingPlans, currentOwnOffers[0]?.subscriptionOptions,
       )
 
       const setOfferReceipt = await storageContract.setOffer(
