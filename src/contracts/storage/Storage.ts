@@ -123,8 +123,8 @@ class StorageContract extends ContractWithTokens {
     return this.send(
       setOfferTx,
       {
-        ...txOptions,
         gasMultiplier: StorageContract.gasMultiplier,
+        ...txOptions,
         token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
       },
     )
@@ -153,8 +153,8 @@ class StorageContract extends ContractWithTokens {
     return this.send(
       withdrawFundsTx,
       {
-        ...txOptions,
         gasMultiplier: StorageContract.gasMultiplier,
+        ...txOptions,
         token: SUPPORTED_TOKENS.rbtc, // Native token only
       },
     )
@@ -187,8 +187,8 @@ class StorageContract extends ContractWithTokens {
     return this.send(
       payoutFundsTx,
       {
-        ...txOptions,
         gasMultiplier: StorageContract.gasMultiplier,
+        ...txOptions,
         token: SUPPORTED_TOKENS.rbtc, // Native token only
       },
     )

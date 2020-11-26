@@ -45,8 +45,8 @@ export class RifERC20Contract extends ContractBase implements ERC20ContractI {
     return this._send(
       this.contract.methods.approve(contractAddress, amount),
       {
-        ...txOptions,
         gasMultiplier: RifERC20Contract.gasMultiplier,
+        ...txOptions,
       },
     )
   }
