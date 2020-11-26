@@ -1,12 +1,10 @@
 import React, { FC } from 'react'
 import { Account, Web3Provider } from '@rsksmart/rif-ui'
+import { networkId, networkName } from 'config'
 
 export interface LoginProps {
   modalInitiallyOpened?: boolean
 }
-
-const requiredNetworkId: number = Number(process.env.REACT_APP_REQUIRED_NETWORK_ID) || 8545
-const requiredNetworkName = process.env.REACT_APP_REQUIRED_NETWORK_NAME || 'Localhost 8545'
 
 const Login: FC<LoginProps> = ({ modalInitiallyOpened = false }) => {
   const onNetworkMismatchMessage = 'You are on the wrong network.'
@@ -19,17 +17,17 @@ const Login: FC<LoginProps> = ({ modalInitiallyOpened = false }) => {
           web3={web3}
           account={account}
           setProvider={setProvider}
-          requiredNetworkId={requiredNetworkId}
+          requiredNetworkId={networkId}
           networkInfo={networkInfo}
-          requiredNetworkName={requiredNetworkName}
+          requiredNetworkName={networkName}
           onNetworkMismatchMessage={
-            requiredNetworkName
-              ? `${onNetworkMismatchMessage} Please, connect to ${requiredNetworkName}.`
+            networkName
+              ? `${onNetworkMismatchMessage} Please, connect to ${networkName}.`
               : onNetworkMismatchMessage
           }
           noNetworkMessage={
-            requiredNetworkName
-              ? `${noNetworkMessage} Please, connect to ${requiredNetworkName}.`
+            networkName
+              ? `${noNetworkMessage} Please, connect to ${networkName}.`
               : noNetworkMessage
           }
           availableProviders={availableProviders}

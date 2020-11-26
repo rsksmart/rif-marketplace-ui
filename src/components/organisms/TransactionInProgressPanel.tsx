@@ -2,12 +2,12 @@ import {
   CircularProgress, createStyles, makeStyles, Theme,
 } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography'
-import { shortenString } from '@rsksmart/rif-ui'
 import React, {
   FC, useContext, useEffect,
 } from 'react'
 import BlockchainContext, { BlockchainContextProps } from 'context/Blockchain/BlockchainContext'
 import OverlaidPageTemplate from 'components/templates/OverlaidPageTemplate'
+import { shortChecksumAddress } from 'utils/stringUtils'
 
 export interface TransactionInProgressPanelProps {
   text: string
@@ -59,8 +59,8 @@ const TransactionInProgressPanel: FC<TransactionInProgressPanelProps> = ({
   const panelContent = (
     <div className={classes.content}>
       <Typography>{text}</Typography>
-      {txHash && !currentCount && <Typography>{`Transaction ${shortenString(txHash)} is waiting for the first confirmation.`}</Typography>}
-      {txHash && currentCount && <Typography>{`Transaction ${shortenString(txHash)} is waiting for confirmation ${currentCount + 1} of ${targetCount}.`}</Typography>}
+      {txHash && !currentCount && <Typography>{`Transaction ${shortChecksumAddress(txHash)} is waiting for the first confirmation.`}</Typography>}
+      {txHash && currentCount && <Typography>{`Transaction ${shortChecksumAddress(txHash)} is waiting for confirmation ${currentCount + 1} of ${targetCount}.`}</Typography>}
       <CircularProgress />
       <Typography>{progMsg}</Typography>
     </div>

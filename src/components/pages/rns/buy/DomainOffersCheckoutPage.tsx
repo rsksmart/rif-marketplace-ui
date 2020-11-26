@@ -1,5 +1,5 @@
 import Login from 'components/atoms/Login'
-import AddressItem from 'components/molecules/AddressItem'
+import RifAddress from 'components/molecules/RifAddress'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
@@ -25,12 +25,15 @@ import {
 } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography'
 import {
-  Button, colors, shortenString, Web3Store,
+  Button, colors, Web3Store,
   ShortenTextTooltip,
+  shortenString,
 } from '@rsksmart/rif-ui'
 
 import { parseToBigDecimal } from 'utils/parsers'
 import { marketPlaceAddress } from 'contracts/config'
+import { shortChecksumAddress } from 'utils/stringUtils'
+import { toChecksumAddress } from 'web3-utils'
 
 const logger = Logger.getInstance()
 
@@ -204,11 +207,11 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
 
   const displayName = domainName
     ? <ShortenTextTooltip value={domainName} maxLength={30} />
-    : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+    : <RifAddress pretext="Unknown RNS:" value={tokenId} />
 
   const details = {
     NAME: displayName,
-    SELLER: <AddressItem value={ownerAddress} />,
+    SELLER: <RifAddress value={ownerAddress} />,
     'RENEWAL DATE': expirationDate.toLocaleDateString(),
     PRICE: PriceCell,
   }
@@ -320,8 +323,8 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   }
 
   const buyingNameTitle = domainName
-    ? shortenString(domainName, 30, 25)
-    : shortenString(tokenId)
+    ? shortenString(toChecksumAddress(domainName), 30, 25)
+    : shortChecksumAddress(tokenId)
 
   return (
     <CheckoutPageTemplate

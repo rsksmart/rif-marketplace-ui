@@ -1,8 +1,8 @@
 import { HashInfoPayload, MessageCodesEnum, NotificationItem } from 'api/rif-marketplace-cache/notifications/interfaces'
 import { getShortDateString } from 'utils/dateUtils'
-import { shortenString } from '@rsksmart/rif-ui'
 import React, { FC } from 'react'
 import { Box, Typography } from '@material-ui/core'
+import { shortChecksumAddress } from 'utils/stringUtils'
 
 export type NotificationMessageProps = {
   notification: NotificationItem
@@ -27,7 +27,7 @@ const NotificationMessage: FC<NotificationMessageProps> = (
         <Box mr={1} display="inline">
           <Typography variant="caption" color="textPrimary">{`${getShortDateString(new Date(timestamp))} - `}</Typography>
           <Typography variant="caption">{'New agreement '}</Typography>
-          <Typography variant="caption" color="primary">{` ${shortenString(agreementReference)} `}</Typography>
+          <Typography variant="caption" color="primary">{` ${shortChecksumAddress(agreementReference)} `}</Typography>
           <Typography variant="caption">{' created.'}</Typography>
         </Box>
       )
@@ -36,7 +36,7 @@ const NotificationMessage: FC<NotificationMessageProps> = (
         <Box mr={1} display="inline">
           <Typography variant="caption" color="textPrimary">{`${getShortDateString(new Date(timestamp))} - `}</Typography>
           <Typography variant="caption">{'Agreement '}</Typography>
-          <Typography variant="caption" color="primary">{` ${shortenString(agreementReference)} `}</Typography>
+          <Typography variant="caption" color="primary">{` ${shortChecksumAddress(agreementReference)} `}</Typography>
           <Typography variant="caption">{' expired.'}</Typography>
         </Box>
       )
@@ -46,7 +46,7 @@ const NotificationMessage: FC<NotificationMessageProps> = (
           <Typography variant="caption" color="textPrimary">{`${getShortDateString(new Date(timestamp))} - `}</Typography>
           <Typography variant="caption">{'Size limit exceeded for agreement '}</Typography>
           <Typography variant="caption" color="primary">
-            {` ${shortenString(agreementReference)}.`}
+            {` ${shortChecksumAddress(agreementReference)}.`}
           </Typography>
         </Box>
       )
@@ -55,7 +55,7 @@ const NotificationMessage: FC<NotificationMessageProps> = (
         <Box mr={1} display="inline">
           <Typography variant="caption" color="textPrimary">{`${getShortDateString(new Date(timestamp))} - `}</Typography>
           <Typography variant="caption">{'Hash '}</Typography>
-          <Typography variant="caption" color="primary">{` ${shortenString(hash)} `}</Typography>
+          <Typography variant="caption" color="primary">{` ${shortChecksumAddress(hash)} `}</Typography>
           <Typography variant="caption">{' successfully pinned.'}</Typography>
         </Box>
       )
