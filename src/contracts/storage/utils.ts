@@ -58,6 +58,7 @@ export const transformOfferDataForContract = (
 ): OfferContractData => {
   const totalCapacityMB = totalCapacityGB
     .mul(UNIT_PREFIX_POW2.KILO)
+    .round(0, 0) // RoundingMode 0 = Down
     .toString()
 
   const resultsBillingPlan = [...billingPlans]
