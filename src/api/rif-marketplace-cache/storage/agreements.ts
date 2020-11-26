@@ -21,7 +21,7 @@ const getPaymentToken = (tokenAddress: string): SupportedTokens => {
   return Object
     .entries(availableTokens)
     .reduce(
-      (acc, [symbol, addr]) => (addr === tokenAddress ? symbol as SupportedTokens : acc),
+      (acc, [addr, symbol]) => (addr === tokenAddress ? symbol as SupportedTokens : acc),
           '' as SupportedTokens,
     )
 }
@@ -75,7 +75,7 @@ const mapFromTransport = ({
     size: contentSize,
     subscriptionPeriod: PeriodInSeconds[billingPeriod] as SubscriptionPeriod,
     title: '',
-    paymentToken: getPaymentToken(tokenAddress),
+    paymentToken: getPaymentToken(tokenAddress.toLowerCase()),
     consumer,
     withdrawableFunds,
     toBePayedOut: parseToBigDecimal(toBePayedOut, 18),
