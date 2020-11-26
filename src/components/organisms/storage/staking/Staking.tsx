@@ -138,7 +138,14 @@ const Staking: FC = () => {
 
       const stakeContract = StakingContract.getInstance(web3 as Web3)
       const receipt = await stakeContract.stake(
-        amount, { token: currency, from: account },
+        amount,
+        {
+          token: currency,
+          from: account,
+          ...parseFloat(totalStakedUSD) > 0
+            ? {}
+            : { gasMultiplier: 1.8 },
+        },
       )
 
       if (receipt) {

@@ -45,8 +45,8 @@ export class RifERC677Contract extends ContractBase {
         contractAddress, tokenPrice, tokenId,
       ),
       {
-        ...txOptions,
         gasMultiplier: RifERC677Contract.gasMultiplier,
+        ...txOptions,
       },
     )
   }
