@@ -41,11 +41,11 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
           parseInt(a.period, 10) - parseInt(b.period, 10)
         ),
       )
-      .filter((plan) => !!PeriodInSeconds[plan.period])
+      .filter((plan) => Boolean(PeriodInSeconds[plan.period]))
       .map<BillingPlan>((plan) => ({
         period: PeriodInSeconds[plan.period],
         price: parseToBigDecimal(plan.price, 18),
-        currency: SUPPORTED_TOKENS.rbtc,
+        currency: SUPPORTED_TOKENS[plan.rateId],
       })),
     averagePrice: averagePriceTransport,
     acceptedCurrencies,
