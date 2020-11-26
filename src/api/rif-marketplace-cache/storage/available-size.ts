@@ -17,7 +17,6 @@ export class AvailableCapacityService
   _fetch = (): Promise<[number, number]> => this.service.find()
 
   fetchSizeLimits = async (): Promise<MinMaxFilter> => {
-
     const {
       min: minMB,
       max: maxMB,
