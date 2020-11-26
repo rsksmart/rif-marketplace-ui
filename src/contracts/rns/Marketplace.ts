@@ -41,8 +41,8 @@ class MarketplaceContract extends ContractBase {
     return this._send(
       placeTx,
       {
-        ...txOptions,
         gasMultiplier: MarketplaceContract.gasMultiplier,
+        ...txOptions,
       },
     )
   }
@@ -56,8 +56,8 @@ class MarketplaceContract extends ContractBase {
     return this._send(
       unplaceTx,
       {
-        ...txOptions,
         gasMultiplier: MarketplaceContract.gasMultiplier,
+        ...txOptions,
       },
     )
   }
