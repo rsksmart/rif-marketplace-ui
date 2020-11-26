@@ -52,9 +52,9 @@ class StakingContract extends ContractWithTokens {
     return this.send(
       stakeTx,
       {
+        gasMultiplier: StakingContract.gasMultiplier,
         ...txOptions,
         value: amountWei,
-        gasMultiplier: StakingContract.gasMultiplier,
       },
     )
   }
@@ -78,9 +78,9 @@ class StakingContract extends ContractWithTokens {
     return this.send(
       unstakeTx,
       {
+        gasMultiplier: StakingContract.gasMultiplier,
         ...txOptions,
         token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
-        gasMultiplier: StakingContract.gasMultiplier,
       },
     )
   }
