@@ -144,7 +144,7 @@ const Staking: FC = () => {
           from: account,
           ...parseFloat(totalStakedUSD) > 0
             ? {}
-            : { gasMultiplier: 3 },
+            : { gasMultiplier: 1.8 },
         },
       )
 
