@@ -2,9 +2,11 @@ export interface BillingPlanTransport {
   id: number
   period: string
   price: string
+  rateId: string
   offerId: string
   createdAt: string
   updatedAt: string
+  tokenAddress: string
 }
 
 export interface OfferTransport {

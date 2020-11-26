@@ -1,8 +1,5 @@
-import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
-import networkConfig from 'config'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { StorageItem, StorageOffer } from 'models/marketItems/StorageItem'
-import { ZERO_ADDRESS } from 'constants/strings'
 import { ContextState } from 'context/storeUtils/interfaces'
 import { Dispatch } from 'react'
 import { ServiceOrder, ServiceState } from '../interfaces'
@@ -23,10 +20,6 @@ export type StorageState = ServiceState<StorageItem> & {
 
 export type STORAGE_ACTION = OFFERS_ACTION
 
-export const TokenAddressees = {
-  [tokenDisplayNames.rbtc]: ZERO_ADDRESS, // we are using zero address for native token is Storage Manager SC
-  [tokenDisplayNames.rif]: networkConfig.contractAddresses.rif,
-}
 export type PinnedContent = {
   contentName: string
   contentSize: string

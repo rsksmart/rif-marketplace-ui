@@ -28,6 +28,8 @@ const FAKE_OFFER_0: OfferTransport = {
       offerId: '0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1',
       createdAt: '2020-08-10T14:11:32.680Z',
       updatedAt: '2020-08-10T14:11:32.680Z',
+      rateId: 'rif',
+      tokenAddress: 'FAKE_RIF_ADDRESS',
     },
   ],
 }
@@ -84,7 +86,7 @@ describe('Storage OffersService', () => {
           .map<BillingPlan>((plan) => ({
             period: PeriodInSeconds[plan.period],
             price: parseToBigDecimal(plan.price),
-            currency: SUPPORTED_TOKENS.rbtc,
+            currency: SUPPORTED_TOKENS.rif,
           })),
         averagePrice: avgBillingPrice,
         peerId: 'QmYyQSo1c1Ym7orWxLYvCrM2EmxFTANf8wXmmE7DWjhx5N',
