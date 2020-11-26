@@ -21,7 +21,7 @@ const GeneralFeatures: FC = () => {
       totalCapacity, system, peerId, originalOffer,
     }, dispatch,
   } = useContext<OfferEditContextProps>(OfferEditContext)
-  const utilizedCapacityGB = Number(originalOffer?.utilizedCapacityGB) || 0
+  const utilizedCapacityGB = originalOffer?.utilizedCapacityGB.toNumber() || 0
 
   const [modalPeerIdOpened, setModalPeerIdOpened] = useState(false)
   const handleModalOpen = (): void => setModalPeerIdOpened(true)
