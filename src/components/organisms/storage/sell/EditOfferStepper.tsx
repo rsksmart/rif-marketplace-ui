@@ -38,9 +38,10 @@ const EditOfferStepper: FC<EditOfferStepperProps> = ({ endHandler }) => {
   const handleNext = (): void => setActiveStep(1)
   const handleBack = (): void => setActiveStep(0)
 
-  const minCapacity = Number(originalOffer?.utilizedCapacityGB) || 0
-  const nextIsDisabled = !totalCapacity
-    || Number(totalCapacity) <= minCapacity
+  const minCapacity = originalOffer?.utilizedCapacityGB.toNumber() || 0
+  const totalCapacityNumber = totalCapacity.toNumber()
+  const nextIsDisabled = !totalCapacityNumber
+    || totalCapacityNumber <= minCapacity
     || !system
     || !peerId
 
