@@ -2,7 +2,6 @@ import { Web3Store } from '@rsksmart/rif-ui'
 import { Big } from 'big.js'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
-import { TokenAddressees } from 'context/Services/storage/interfaces'
 import { StorageOffersContext } from 'context/Services/storage/offers'
 import createWithContext from 'context/storeUtils/createWithContext'
 import { BillingPlan, PeriodInSeconds, StorageOffer } from 'models/marketItems/StorageItem'
@@ -17,7 +16,7 @@ import Logger from 'utils/Logger'
 import { convertToWeiString } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import Web3 from 'web3'
-import { SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
+import { SUPPORTED_TOKENS, SupportedTokens, TxOptions } from 'contracts/interfaces'
 import { reducer } from './actions'
 import {
   AsyncActions, PinnedContent, Props, State,
@@ -157,8 +156,13 @@ const Provider: FC = ({ children }) => {
             .div(UNIT_PREFIX_POW2.MEGA)
             .round(0)
             .toString(),
-          token: TokenAddressees[token],
+          token: SUPPORTED_TOKENS[token],
         }
+        const txOptions: TxOptions = {
+          from: account,
+          token: SUPPORTED_TOKENS[token],
+        }
+
         const storageContract = (await import('contracts/storage'))
           .default
           .StorageContract
@@ -176,7 +180,7 @@ const Provider: FC = ({ children }) => {
           payload: { inProgress: true },
         })
         const receipt = await storageContract
-          .newAgreement(agreement, { from: account })
+          .newAgreement(agreement, txOptions)
           .catch((error) => {
             reportError(new UIError({
               error,
