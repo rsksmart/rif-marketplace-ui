@@ -4,7 +4,7 @@ import { Contract } from 'web3-eth-contract'
 
 import Logger from 'utils/Logger'
 import { TxOptions } from 'contracts/interfaces'
-import withWaitForReceipt from 'contracts/utils'
+import waitForReceipt from 'contracts/utils'
 
 const logger = Logger.getInstance()
 
@@ -66,15 +66,27 @@ export class ContractBase {
       gasPrice,
     } = await this._processOptions(tx, txOptions)
 
-    return tx.send(
-      {
-        from,
-        gas,
-        value,
-        gasPrice,
-      },
-      withWaitForReceipt(this.web3),
-    )
+    const txReceipt = await new Promise<TransactionReceipt>((resolve, reject) => {
+      tx.send(
+        {
+          from,
+          gas,
+          value,
+          gasPrice,
+        },
+        async (err, txHash) => {
+          try {
+            if (err) throw err
+            const receipt = await waitForReceipt(txHash, this.web3)
+            return resolve(receipt)
+          } catch (e) {
+            return reject(e)
+          }
+        },
+      )
+    })
+
+    return txReceipt
   }
 
   protected async _call(

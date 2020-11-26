@@ -29,13 +29,6 @@ function waitForReceipt(
   })
 }
 
-const withWaitForReceipt = (web3: Web3) => (
-  err, response,
-): Promise<TransactionReceipt | never> => {
-  if (err) return Promise.reject(err)
-  return waitForReceipt(response, web3)
-}
-
 export const getTokens = (
   supportedTokens: SupportedTokens[],
 ): Token[] => supportedTokens.map((t) => {
@@ -45,4 +38,4 @@ export const getTokens = (
   return TOKENS[t]
 })
 
-export default withWaitForReceipt
+export default waitForReceipt
