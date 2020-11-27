@@ -1,4 +1,5 @@
 import { Dispatch } from 'react'
+import { Big } from 'big.js'
 import { Status } from 'components/templates/ProgressOverlay'
 import { ContextState } from 'context/storeUtils/interfaces'
 import { UploadResponse } from 'api/rif-storage-upload-service/upload/interfaces'
@@ -27,12 +28,16 @@ export type Actions = {
   SET_STATUS: (state: State, payload: StatusPayload) => State
 }
 
-export type AsyncAction = {
-  (args?: any): Promise<void>
+export type AsyncAction<ARGS, RETURN> = {
+  (args: ARGS): Promise<RETURN>
 }
 
+export type UploadFilesAction = AsyncAction<File[], void>
+export type GetFileSizeAction = AsyncAction<string, Big>
+
 export type AsyncActions = {
-  uploadFiles: AsyncAction
+  uploadFiles: UploadFilesAction
+  getFileSize: GetFileSizeAction
 }
 
 // PROPS
