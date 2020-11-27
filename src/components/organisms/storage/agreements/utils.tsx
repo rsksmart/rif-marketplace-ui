@@ -55,7 +55,7 @@ const getCoreItemFields = (
   )
   const feeValue = (
     <CombinedPriceCell
-      price={monthlyFee.toPrecision(2)}
+      price={monthlyFee.toString()}
       priceFiat={currency && monthlyFee.times(currency.rate).toPrecision(3)}
       currency={currency && currency.displayName}
       currencyFiat={currentFiat.displayName}
