@@ -5,13 +5,14 @@ import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
 import RoundBtn from 'components/atoms/RoundBtn'
 import DoneIcon from '@material-ui/icons/Done'
+import { UploadResponse } from 'api/rif-storage-upload-service/upload/interfaces'
 
 type Props = ButtonProps & {
-  uploadedHash?: string
+  uploadResponse?: UploadResponse
 }
 
 const StorageUploaded: FC<Props> = ({
-  uploadedHash,
+  uploadResponse,
   ...pinActionProps
 }) => (
   <GridColumn
@@ -28,7 +29,7 @@ const StorageUploaded: FC<Props> = ({
       <Typography variant="subtitle1" color="secondary">The hash of your upload is:</Typography>
     </GridItem>
     <GridItem>
-      <Typography variant="caption" color="secondary">{uploadedHash}</Typography>
+      <Typography variant="caption" color="secondary">{uploadResponse?.fileHash}</Typography>
     </GridItem>
     <RoundBtn
       {...pinActionProps}

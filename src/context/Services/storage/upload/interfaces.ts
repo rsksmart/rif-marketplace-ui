@@ -1,17 +1,18 @@
 import { Dispatch } from 'react'
 import { Status } from 'components/templates/ProgressOverlay'
 import { ContextState } from 'context/storeUtils/interfaces'
+import { UploadResponse } from 'api/rif-storage-upload-service/upload/interfaces'
 
 // STATE
 export type State = ContextState & {
   status: Status & {
-    hash?: string
+    uploadResponse?: UploadResponse
   }
 }
 
 // PAYLOAD
 type StatusPayload = Status & {
-  hash?: string
+  uploadResponse?: UploadResponse
 }
 
 // ACTIONS
