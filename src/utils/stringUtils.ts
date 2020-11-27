@@ -1,6 +1,6 @@
 import { shortenString } from '@rsksmart/rif-ui'
 import { networkId } from 'config'
-import { toChecksumAddress } from 'web3-utils'
+import { toChecksumAddress } from 'rskjs-util'
 
 export const getURLParamByName = (
   url: string, param: string,
