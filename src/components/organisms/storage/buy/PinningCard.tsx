@@ -53,7 +53,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
   const {
     state: {
       status: {
-        hash: uploadedHash,
+        uploadResponse,
         inProgress,
         isDone,
       },
@@ -90,11 +90,19 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     })
   }
 
+  const setUploadSize = (totalB: Big): void => {
+    setSizeB(totalB)
+    const sizeUnit = totalB.div(unit)
+    setSize(sizeUnit.toString())
+  }
+
   useEffect(() => {
-    if (uploadedHash) {
-      setHash(uploadedHash)
+    if (uploadResponse) {
+      const { fileHash, fileSize } = uploadResponse
+      setHash(fileHash)
+      setUploadSize(new Big(fileSize))
     }
-  }, [uploadedHash])
+  }, [uploadResponse])
 
   const handleUpload = (): void => {
     if (files.length) {
@@ -128,7 +136,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     }
 
     if (isDone) {
-      return <StorageUploaded {...{ uploadedHash, ...pinActionProps }} />
+      return <StorageUploaded {...{ uploadResponse, ...pinActionProps }} />
     }
     return (
       <StorageUploadAction
@@ -187,11 +195,9 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
               const totalB = new Big(addedFiles.reduce((
                 acc, file,
               ) => acc + file.size, 0))
-              setSizeB(totalB)
-              const sizeUnit = totalB.div(unit)
+              setUploadSize(totalB)
               setUploadDisabled(!!addedFiles.length
                 && totalB.gt(TOTAL_SIZE_LIMIT))
-              setSize(sizeUnit.toString())
               setFiles(addedFiles)
             }}
             filesLimit={666 * 666 * 666}

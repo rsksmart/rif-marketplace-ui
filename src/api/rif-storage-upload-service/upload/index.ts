@@ -1,23 +1,9 @@
-import { AbstractAPIService, APIService } from 'api/models/apiService'
+import { AbstractAPIService } from 'api/models/apiService'
 import { UIError } from 'models/UIMessage'
-import { Modify } from 'utils/typeUtils'
 import client, { UPLOAD_ADDRESS } from '../client'
-
-export const serviceAddress = 'upload' as const
-export type ServiceAddress = typeof serviceAddress
-
-export type StorageUploadArgs = {
-  files: File[]
-  account: string
-  peerId: string
-  offerId: string
-  contractAddress: string
-}
-
-export type UploadAPIService = Modify<APIService, {
-  path: ServiceAddress
-  post: (args: StorageUploadArgs) => Promise<unknown>
-}>
+import {
+  serviceAddress, StorageUploadArgs, UploadAPIService, UploadResponse,
+} from './interfaces'
 
 export default class UploadService
   extends AbstractAPIService
@@ -32,7 +18,7 @@ export default class UploadService
 
     post = async ({
       files, account, offerId, peerId, contractAddress,
-    }: StorageUploadArgs): Promise<string> => {
+    }: StorageUploadArgs): Promise<UploadResponse> => {
       // TODO: the use of the propper client is commented out for now for bug: https://github.com/feathersjs/feathers/issues/1744#issuecomment-568015824
       // const data = await this.service.create(formData, {
       //   headers: {
@@ -67,8 +53,8 @@ export default class UploadService
           id: 'service-post',
         })
       }
-      const data = await response.json()
+      const data: UploadResponse = await response.json()
 
-      return data.fileHash
+      return data
     }
 }

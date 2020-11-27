@@ -4,7 +4,7 @@ import React, {
 } from 'react'
 import { createReducer } from 'context/storeUtils/reducer'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
-import { UploadAPIService } from 'api/rif-storage-upload-service/upload'
+import { UploadResponse, UploadAPIService } from 'api/rif-storage-upload-service/upload/interfaces'
 import Logger from 'utils/Logger'
 import { UIError } from 'models/UIMessage'
 import createWithContext from 'context/storeUtils/createWithContext'
@@ -106,15 +106,15 @@ export const Provider: FC = ({ children }) => {
           offerId,
           contractAddress: storageAddress,
         })
-          .then((hash) => {
+          .then((uploadResponse: UploadResponse) => {
             dispatch({
               type: 'SET_STATUS',
               payload: {
                 isDone: true,
-                hash,
+                uploadResponse,
               },
             })
-            Logger.getInstance().debug('Server replied with hash:', hash)
+            Logger.getInstance().debug('Upload server replied with:', uploadResponse)
           }).catch((error) => {
             reportError(new UIError({
               error,
