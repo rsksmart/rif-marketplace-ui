@@ -69,10 +69,10 @@ const StorageFilters = (): JSX.Element => {
     labelText: SubscriptionPeriod
     id: SubscriptionPeriod
   }>[] = [
-      { labelText: 'Daily', id: 'Daily', onChange: onPlanChange('Daily') },
-      { labelText: 'Weekly', id: 'Weekly', onChange: onPlanChange('Weekly') },
-      { labelText: 'Monthly', id: 'Monthly', onChange: onPlanChange('Monthly') },
-    ]
+    { labelText: 'Daily', id: 'Daily', onChange: onPlanChange('Daily') },
+    { labelText: 'Weekly', id: 'Weekly', onChange: onPlanChange('Weekly') },
+    { labelText: 'Monthly', id: 'Monthly', onChange: onPlanChange('Monthly') },
+  ]
 
   return (
     <>
