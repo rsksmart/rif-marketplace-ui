@@ -154,7 +154,7 @@ const Provider: FC = ({ children }) => {
           provider,
           sizeMB: Big(size).mul(unit)
             .div(UNIT_PREFIX_POW2.MEGA)
-            .round(0)
+            .round(0, 3)
             .toString(),
           token: SUPPORTED_TOKENS[token],
         }
