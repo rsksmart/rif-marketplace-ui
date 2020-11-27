@@ -2,6 +2,7 @@ import React, {
   createContext, FC, useContext,
   useEffect, useMemo, useReducer, useState,
 } from 'react'
+import { Big } from 'big.js'
 import { createReducer } from 'context/storeUtils/reducer'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { UploadResponse, UploadAPIService } from 'api/rif-storage-upload-service/upload/interfaces'
@@ -10,7 +11,9 @@ import { UIError } from 'models/UIMessage'
 import createWithContext from 'context/storeUtils/createWithContext'
 import { Web3Store } from '@rsksmart/rif-ui'
 import { storageAddress } from 'contracts/config'
-import { AsyncActions, Props, State } from './interfaces'
+import {
+  AsyncActions, GetFileSizeAction, Props, State, UploadFilesAction,
+} from './interfaces'
 import actions from './actions'
 import { StorageOffersContext, StorageOffersContextProps } from '../offers'
 
@@ -22,23 +25,22 @@ export const initialState: State = {
   status: {},
 }
 
+const initialAsyncActions: AsyncActions = {
+  uploadFiles: (): Promise<void> => Promise.resolve(),
+  getFileSize: (): Promise<Big> => Promise.resolve(Big(0)),
+}
+
 export const Context = createContext<Props>({
   state: initialState,
   dispatch: () => undefined,
-  asyncActions: {
-    uploadFiles: (): Promise<void> => Promise.resolve(),
-  },
+  asyncActions: initialAsyncActions,
 })
-
-const initialAsyncActions: AsyncActions = {
-  uploadFiles: (): Promise<void> => Promise.resolve(),
-}
 
 export const Provider: FC = ({ children }) => {
   const {
     state: {
       apis: {
-        upload: api,
+        upload: uploadApi,
       },
     },
     dispatch: appDispatch,
@@ -47,7 +49,8 @@ export const Provider: FC = ({ children }) => {
     service,
     connect,
     post,
-  } = api as UploadAPIService
+    fetch,
+  } = uploadApi as UploadAPIService
   const {
     state: {
       order: offer,
@@ -82,7 +85,7 @@ export const Provider: FC = ({ children }) => {
           peerId,
         },
       } = offer
-      const uploadFiles = (files: File[]): Promise<void> => {
+      const uploadFiles: UploadFilesAction = (files) => {
         appDispatch({
           type: 'SET_IS_LOADING',
           payload: {
@@ -137,14 +140,55 @@ export const Provider: FC = ({ children }) => {
           }))
       }
 
+      const getFileSize: GetFileSizeAction = (fileHash) => {
+        appDispatch({
+          type: 'SET_IS_LOADING',
+          payload: {
+            isLoading: true,
+            id: 'contract',
+            message: `Fetching size of ${fileHash}...`,
+          },
+        })
+        dispatch({
+          type: 'SET_STATUS',
+          payload: {
+            inProgress: true,
+          },
+        })
+
+        return fetch(fileHash)
+          .catch((error) => {
+            reportError(new UIError({
+              error,
+              id: 'service-post',
+              text: 'Could not upload files.',
+            }))
+            return Big(0)
+          }).finally(() => {
+            appDispatch({
+              type: 'SET_IS_LOADING',
+              payload: {
+                isLoading: false,
+                id: 'contract',
+              },
+            })
+            dispatch({
+              type: 'SET_STATUS',
+              payload: { inProgress: false },
+            })
+          })
+      }
+
       setAsyncActions({
         uploadFiles,
+        getFileSize,
       })
     }
   }, [
     service,
     appDispatch,
     post,
+    fetch,
     reportError,
     account,
     offer,

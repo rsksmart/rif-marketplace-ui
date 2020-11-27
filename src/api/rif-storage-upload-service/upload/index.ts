@@ -1,9 +1,13 @@
+import { Big } from 'big.js'
 import { AbstractAPIService } from 'api/models/apiService'
 import { UIError } from 'models/UIMessage'
 import client, { UPLOAD_ADDRESS } from '../client'
 import {
+  FileSizeResponse,
   serviceAddress, StorageUploadArgs, UploadAPIService, UploadResponse,
 } from './interfaces'
+
+const FILE_SIZE_SERVICE_ADDR = 'fileSize'
 
 export default class UploadService
   extends AbstractAPIService
@@ -14,7 +18,20 @@ export default class UploadService
       super(client)
     }
 
-    _fetch = (): Promise<void> => Promise.resolve()
+    _fetch = async (fileHash: string): Promise<Big> => {
+      const response = await fetch(`${UPLOAD_ADDRESS}/${FILE_SIZE_SERVICE_ADDR}?hash=/ipfs/${fileHash}`)
+
+      if (response.status !== 200) {
+        throw new UIError({
+          error: new Error(await response.json()),
+          text: `Error: Could not get file size for ${fileHash}:`,
+          id: 'service-post',
+        })
+      }
+      const size: FileSizeResponse = await response.json()
+
+      return Big(size.fileSizeBytes)
+    }
 
     post = async ({
       files, account, offerId, peerId, contractAddress,

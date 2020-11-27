@@ -1,7 +1,6 @@
 import { Big } from 'big.js'
 import { BillingPlan, StorageOffer, PeriodInSeconds } from 'models/marketItems/StorageItem'
 import { Dispatch } from 'react'
-import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { Status } from 'components/templates/ProgressOverlay'
 import { SupportedTokens } from 'contracts/interfaces'
 
@@ -24,8 +23,7 @@ export type Order = Pick<StorageOffer, 'id' | 'system' | 'location'> & {
 }
 
 export type PinnedContent = {
-  size: string
-  unit: UNIT_PREFIX_POW2
+  size: Big
   hash: string
 }
 
