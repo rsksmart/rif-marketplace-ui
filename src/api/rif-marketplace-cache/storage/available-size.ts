@@ -22,8 +22,8 @@ export class AvailableCapacityService
       max: maxMB,
     } = await this.service.get(1) // 1 isn't used but required by service iface
     return {
-      min: minMB / UNIT_PREFIX_POW2.KILO,
-      max: maxMB / UNIT_PREFIX_POW2.KILO,
+      min: Math.floor(minMB / UNIT_PREFIX_POW2.KILO),
+      max: Math.ceil(maxMB / UNIT_PREFIX_POW2.KILO),
     }
   }
 }
