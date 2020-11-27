@@ -9,6 +9,8 @@ import { Modify } from 'utils/typeUtils'
 import SearchFilter from '../SearchFilter'
 import RangeFilter from '../RangeFilter'
 
+const SIZE_STEP = 0.01
+
 const StorageFilters = (): JSX.Element => {
   const {
     state: {
@@ -88,6 +90,7 @@ const StorageFilters = (): JSX.Element => {
         edgeValues={sizeLimits}
         unit="GB"
         handleChange={onSizeChange}
+        step={SIZE_STEP}
       />
       <RangeFilter
         title="Price"
