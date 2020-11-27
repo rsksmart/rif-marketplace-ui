@@ -9,6 +9,8 @@ import { Modify } from 'utils/typeUtils'
 import SearchFilter from '../SearchFilter'
 import RangeFilter from '../RangeFilter'
 
+const SIZE_STEP = 0.01
+
 const StorageFilters = (): JSX.Element => {
   const {
     state: {
@@ -67,10 +69,10 @@ const StorageFilters = (): JSX.Element => {
     labelText: SubscriptionPeriod
     id: SubscriptionPeriod
   }>[] = [
-    { labelText: 'Daily', id: 'Daily', onChange: onPlanChange('Daily') },
-    { labelText: 'Weekly', id: 'Weekly', onChange: onPlanChange('Weekly') },
-    { labelText: 'Monthly', id: 'Monthly', onChange: onPlanChange('Monthly') },
-  ]
+      { labelText: 'Daily', id: 'Daily', onChange: onPlanChange('Daily') },
+      { labelText: 'Weekly', id: 'Weekly', onChange: onPlanChange('Weekly') },
+      { labelText: 'Monthly', id: 'Monthly', onChange: onPlanChange('Monthly') },
+    ]
 
   return (
     <>
@@ -88,6 +90,7 @@ const StorageFilters = (): JSX.Element => {
         edgeValues={sizeLimits}
         unit="GB"
         handleChange={onSizeChange}
+        step={SIZE_STEP}
       />
       <RangeFilter
         title="Price"
