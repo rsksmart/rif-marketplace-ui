@@ -1,23 +1,13 @@
-import { AbstractAPIService, APIService } from 'api/models/apiService'
+import { Big } from 'big.js'
+import { AbstractAPIService } from 'api/models/apiService'
 import { UIError } from 'models/UIMessage'
-import { Modify } from 'utils/typeUtils'
 import client, { UPLOAD_ADDRESS } from '../client'
+import {
+  FileSizeResponse,
+  serviceAddress, StorageUploadArgs, UploadAPIService, UploadResponse,
+} from './interfaces'
 
-export const serviceAddress = 'upload' as const
-export type ServiceAddress = typeof serviceAddress
-
-export type StorageUploadArgs = {
-  files: File[]
-  account: string
-  peerId: string
-  offerId: string
-  contractAddress: string
-}
-
-export type UploadAPIService = Modify<APIService, {
-  path: ServiceAddress
-  post: (args: StorageUploadArgs) => Promise<unknown>
-}>
+const FILE_SIZE_SERVICE_ADDR = 'fileSize'
 
 export default class UploadService
   extends AbstractAPIService
@@ -28,11 +18,24 @@ export default class UploadService
       super(client)
     }
 
-    _fetch = (): Promise<void> => Promise.resolve()
+    _fetch = async (fileHash: string): Promise<Big> => {
+      const response = await fetch(`${UPLOAD_ADDRESS}/${FILE_SIZE_SERVICE_ADDR}?hash=/ipfs/${fileHash}`)
+
+      if (response.status !== 200) {
+        throw new UIError({
+          error: new Error(await response.json()),
+          text: `Error: Could not get file size for ${fileHash}:`,
+          id: 'service-post',
+        })
+      }
+      const { fileSizeBytes }: FileSizeResponse = await response.json()
+
+      return Big(fileSizeBytes)
+    }
 
     post = async ({
       files, account, offerId, peerId, contractAddress,
-    }: StorageUploadArgs): Promise<string> => {
+    }: StorageUploadArgs): Promise<UploadResponse> => {
       // TODO: the use of the propper client is commented out for now for bug: https://github.com/feathersjs/feathers/issues/1744#issuecomment-568015824
       // const data = await this.service.create(formData, {
       //   headers: {
@@ -67,8 +70,6 @@ export default class UploadService
           id: 'service-post',
         })
       }
-      const data = await response.json()
-
-      return data.fileHash
+      return response.json()
     }
 }

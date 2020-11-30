@@ -18,16 +18,14 @@ import { parseConvertBig } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import RoundBtn from 'components/atoms/RoundBtn'
 import { validateCID } from 'utils/cidUtils'
+import { UploadResponse } from 'api/rif-storage-upload-service/upload/interfaces'
 import StoragePinTabs from './StoragePinTabs'
+
+const UNIT = UNIT_PREFIX_POW2.MEGA
+const UNIT_BYTES = `${UNIT_PREFIX_POW2[UNIT][0]}B`
 
 type Props = {
     dispatch: Dispatch<StorageCheckoutAction>
-}
-
-function setInfoHandle<T>(
-  setterFn: React.Dispatch<React.SetStateAction<T>>,
-) {
-  return ({ target: { value } }): void => setterFn(value as T)
 }
 
 const useActionButtonStyles = makeStyles(() => ({
@@ -53,48 +51,68 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
   const {
     state: {
       status: {
-        hash: uploadedHash,
+        uploadResponse,
         inProgress,
         isDone,
       },
     },
     asyncActions: {
       uploadFiles,
+      getFileSize,
     },
   } = useContext(StorageUploadContext)
 
   // TODO: extract into context
   const [isUpladed, setIsUploaded] = useState(false)
-  const [size, setSize] = useState('')
-  const [sizeB, setSizeB] = useState(Big(0))
+  const [size, setSize] = useState(Big(0))
   const [hash, setHash] = useState('')
-  const [unit, setUnit] = useState<UNIT_PREFIX_POW2>(UNIT_PREFIX_POW2.MEGA)
   const [files, setFiles] = useState<File[]>([])
   const [uploadDisabled, setUploadDisabled] = useState(false)
 
   const isHashEmpty = !hash
-  const isSizeEmpty = !(size && parseFloat(size))
   const isValidCID = isHashEmpty ? false : validateCID(hash)
+  const sizeUnit = size.div(UNIT)
+  const hasSize = size.gt(0)
 
-  const handlePinning = async (): Promise<void> => {
-    // Pin
-    await Promise.resolve()
+  const getSize = async (): Promise<void> => {
+    const fileSize = await getFileSize(hash)
+
+    if (fileSize) setSize(fileSize)
+  }
+
+  const handlePinning = (): void => {
     // Update context
     dispatch({
       type: 'SET_PINNED',
       payload: {
         size,
-        unit,
         hash: `${CID_PREFIX}${hash}`,
       },
     })
   }
 
+  const onHashChange = ({ target: { value } }): void => {
+    setHash(value.replace(/^(\/*ipfs\/)/, ''))
+  }
+
+  const onFilesChange = (addedFiles: File[]): void => {
+    const totalB = new Big(addedFiles.reduce((
+      acc, file,
+    ) => acc + file.size, 0))
+
+    setSize(totalB)
+    setUploadDisabled(!!addedFiles.length
+                && totalB.gt(TOTAL_SIZE_LIMIT))
+    setFiles(addedFiles)
+  }
+
   useEffect(() => {
-    if (uploadedHash) {
-      setHash(uploadedHash)
+    if (uploadResponse) {
+      const { fileHash, fileSize } = uploadResponse
+      setHash(fileHash)
+      setSize(new Big(fileSize))
     }
-  }, [uploadedHash])
+  }, [uploadResponse])
 
   const handleUpload = (): void => {
     if (files.length) {
@@ -102,17 +120,24 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     }
   }
   const pinActionProps: ButtonProps = {
-    children: 'Pin',
-    onClick: handlePinning,
-    disabled: isSizeEmpty || !isValidCID,
+    children: !hasSize ? 'Get size' : 'Pin',
+    onClick: !hasSize ? getSize : handlePinning,
+    disabled: !isValidCID,
     classes: actionBtnClasses,
   }
   const uploadActionProps: ButtonProps = {
-    children: `Upload ${parseFloat(size) ? `${`${Big(size).toFixed(3)} ${UNIT_PREFIX_POW2[unit][0]}B`}` : ''}`,
+    children: `Upload ${hasSize ? `${sizeUnit.toFixed(3)} ${UNIT_BYTES}` : ''}`,
     onClick: handleUpload,
     disabled: uploadDisabled,
     classes: actionBtnClasses,
   }
+
+  const sizeOverLimitMB = uploadDisabled
+    && hasSize
+    && parseConvertBig(
+      size.minus(TOTAL_SIZE_LIMIT),
+      UNIT_PREFIX_POW2.MEGA,
+    ).toFixed(3)
 
   const renderUploadProgress = (): JSX.Element => {
     if (inProgress) {
@@ -128,13 +153,11 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     }
 
     if (isDone) {
-      return <StorageUploaded {...{ uploadedHash, ...pinActionProps }} />
+      return <StorageUploaded {...{ uploadResponse: uploadResponse as UploadResponse, ...pinActionProps }} />
     }
     return (
       <StorageUploadAction
-        sizeOverLimitMB={Boolean(uploadDisabled && size)
-          && parseConvertBig(sizeB.minus(TOTAL_SIZE_LIMIT),
-            UNIT_PREFIX_POW2.MEGA).toFixed(3)}
+        sizeOverLimitMB={sizeOverLimitMB}
         maxSizeMB={parseConvertBig(TOTAL_SIZE_LIMIT,
           UNIT_PREFIX_POW2.MEGA).toString()}
         classes={actionBtnClasses}
@@ -160,20 +183,16 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
       )}
       Actions={isUpladed ? renderPinBtn : renderUploadProgress}
     >
-      {isUpladed && !isDone
+      {isUpladed
         ? (
           <PinEnterInfoTab
-            unit={{ value: unit, onChange: setInfoHandle(setUnit) }}
+            unit={UNIT_BYTES}
             size={{
-              value: size,
-              onChange: setInfoHandle(setSize),
-              error: isSizeEmpty,
+              value: sizeUnit,
             }}
             hash={{
               value: hash,
-              onChange: ({ target: { value } }): void => {
-                setHash(value.replace(/^(\/*ipfs\/)/, ''))
-              },
+              onChange: onHashChange,
               error: isHashEmpty || !isValidCID,
               InputProps: {
                 startAdornment: <InputAdornment position="start">{CID_PREFIX}</InputAdornment>,
@@ -183,19 +202,9 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
           />
         ) : (
           <PinUploaderTab
-            onChange={(addedFiles): void => {
-              const totalB = new Big(addedFiles.reduce((
-                acc, file,
-              ) => acc + file.size, 0))
-              setSizeB(totalB)
-              const sizeUnit = totalB.div(unit)
-              setUploadDisabled(!!addedFiles.length
-                && totalB.gt(TOTAL_SIZE_LIMIT))
-              setSize(sizeUnit.toString())
-              setFiles(addedFiles)
-            }}
+            onChange={onFilesChange}
             filesLimit={666 * 666 * 666}
-            maxFileSize={Big(TOTAL_SIZE_LIMIT).minus(sizeB).toNumber()}
+            maxFileSize={Big(TOTAL_SIZE_LIMIT).minus(size).toNumber()}
           />
         )}
     </RifCard>

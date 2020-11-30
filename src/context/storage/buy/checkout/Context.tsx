@@ -144,7 +144,6 @@ const Provider: FC = ({ children }) => {
         } = order
         const {
           size,
-          unit,
           hash: fileHash,
         } = pinned as PinnedContent
         const agreement = {
@@ -152,7 +151,7 @@ const Provider: FC = ({ children }) => {
           billingPeriod,
           fileHash,
           provider,
-          sizeMB: Big(size).mul(unit)
+          sizeMB: Big(size)
             .div(UNIT_PREFIX_POW2.MEGA)
             .round(0, 3)
             .toString(),
@@ -238,7 +237,6 @@ const Provider: FC = ({ children }) => {
       const newRate = crypto[newToken]?.rate
 
       const pinnedSizeMB = Big(pinned.size)
-        .mul(pinned.unit)
         .div(UNIT_PREFIX_POW2.MEGA)
         .round(0, 3) // RoundingMode.RoundUp - can't use the enum for ts(2748); Rounding up for cannot process fractions of a MB
 

@@ -22,7 +22,6 @@ const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
 
   const {
     size: contentSize,
-    unit: contentSizeUnit,
     hash: contentHash,
     id,
     system,
@@ -57,7 +56,7 @@ const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
           </GridRow>
         </GridItem>
       </GridRow>
-      {contentHash && contentSize && contentSizeUnit
+      {contentHash && contentSize
         ? (
           <GridRow spacing={3}>
             <GridItem xs={3}>
@@ -81,7 +80,7 @@ const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
                 <GridItem xs={4} classes={itemClasses}>
                   <LabelWithValue
                     label="Size:"
-                    value={`${Big(contentSize).toPrecision(6)} ${UNIT_PREFIX_POW2[contentSizeUnit][0]}B`}
+                    value={`${Big(contentSize).div(UNIT_PREFIX_POW2.MEGA).toPrecision(6)} MB`}
                   />
                 </GridItem>
               </GridRow>
