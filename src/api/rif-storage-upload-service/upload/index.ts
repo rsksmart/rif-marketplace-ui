@@ -28,9 +28,9 @@ export default class UploadService
           id: 'service-post',
         })
       }
-      const size: FileSizeResponse = await response.json()
+      const { fileSizeBytes }: FileSizeResponse = await response.json()
 
-      return Big(size.fileSizeBytes)
+      return Big(fileSizeBytes)
     }
 
     post = async ({
@@ -70,8 +70,6 @@ export default class UploadService
           id: 'service-post',
         })
       }
-      const data: UploadResponse = await response.json()
-
-      return data
+      return response.json()
     }
 }
