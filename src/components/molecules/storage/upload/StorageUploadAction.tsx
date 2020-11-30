@@ -7,7 +7,7 @@ import { Typography } from '@material-ui/core'
 import { ButtonProps } from '@rsksmart/rif-ui/dist/components/atoms/Button'
 
 type Props = ButtonProps & {
-  sizeOverLimitMB: string | false | undefined
+  sizeOverLimitMB: string | false
   maxSizeMB: string
 }
 const StorageUploadAction: FC<Props> = ({

@@ -18,6 +18,7 @@ import { parseConvertBig } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import RoundBtn from 'components/atoms/RoundBtn'
 import { validateCID } from 'utils/cidUtils'
+import { UploadResponse } from 'api/rif-storage-upload-service/upload/interfaces'
 import StoragePinTabs from './StoragePinTabs'
 
 const UNIT = UNIT_PREFIX_POW2.MEGA
@@ -79,9 +80,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     if (fileSize) setSize(fileSize)
   }
 
-  const handlePinning = async (): Promise<void> => {
-    // Pin
-    await Promise.resolve()
+  const handlePinning = (): void => {
     // Update context
     dispatch({
       type: 'SET_PINNED',
@@ -90,6 +89,21 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
         hash: `${CID_PREFIX}${hash}`,
       },
     })
+  }
+
+  const onHashChange = ({ target: { value } }): void => {
+    setHash(value.replace(/^(\/*ipfs\/)/, ''))
+  }
+
+  const onFilesChange = (addedFiles: File[]): void => {
+    const totalB = new Big(addedFiles.reduce((
+      acc, file,
+    ) => acc + file.size, 0))
+
+    setSize(totalB)
+    setUploadDisabled(!!addedFiles.length
+                && totalB.gt(TOTAL_SIZE_LIMIT))
+    setFiles(addedFiles)
   }
 
   useEffect(() => {
@@ -118,6 +132,13 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     classes: actionBtnClasses,
   }
 
+  const sizeOverLimitMB = uploadDisabled
+    && hasSize
+    && parseConvertBig(
+      size.minus(TOTAL_SIZE_LIMIT),
+      UNIT_PREFIX_POW2.MEGA,
+    ).toFixed(3)
+
   const renderUploadProgress = (): JSX.Element => {
     if (inProgress) {
       return (
@@ -132,16 +153,11 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     }
 
     if (isDone) {
-      return <StorageUploaded {...{ uploadResponse, ...pinActionProps }} />
+      return <StorageUploaded {...{ uploadResponse: uploadResponse as UploadResponse, ...pinActionProps }} />
     }
     return (
       <StorageUploadAction
-        sizeOverLimitMB={uploadDisabled
-          && hasSize
-          && parseConvertBig(
-            size.minus(TOTAL_SIZE_LIMIT),
-            UNIT_PREFIX_POW2.MEGA,
-          ).toFixed(3)}
+        sizeOverLimitMB={sizeOverLimitMB}
         maxSizeMB={parseConvertBig(TOTAL_SIZE_LIMIT,
           UNIT_PREFIX_POW2.MEGA).toString()}
         classes={actionBtnClasses}
@@ -176,9 +192,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
             }}
             hash={{
               value: hash,
-              onChange: ({ target: { value } }): void => {
-                setHash(value.replace(/^(\/*ipfs\/)/, ''))
-              },
+              onChange: onHashChange,
               error: isHashEmpty || !isValidCID,
               InputProps: {
                 startAdornment: <InputAdornment position="start">{CID_PREFIX}</InputAdornment>,
@@ -188,15 +202,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
           />
         ) : (
           <PinUploaderTab
-            onChange={(addedFiles): void => {
-              const totalB = new Big(addedFiles.reduce((
-                acc, file,
-              ) => acc + file.size, 0))
-              setSize(totalB)
-              setUploadDisabled(!!addedFiles.length
-                && totalB.gt(TOTAL_SIZE_LIMIT))
-              setFiles(addedFiles)
-            }}
+            onChange={onFilesChange}
             filesLimit={666 * 666 * 666}
             maxFileSize={Big(TOTAL_SIZE_LIMIT).minus(size).toNumber()}
           />
