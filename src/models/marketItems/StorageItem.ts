@@ -33,7 +33,7 @@ export type Agreement = Item & {
   provider: string
   dataReference: string
   size: Big
-  renewalDate: Date
+  renewalDate?: Date
   subscriptionPrice: Big
   subscriptionPeriod: SubscriptionPeriod
   monthlyFee: Big
@@ -41,6 +41,8 @@ export type Agreement = Item & {
   consumer: string
   withdrawableFunds: Big
   toBePayedOut: Big
+  expiresInSeconds: number
+  isActive: boolean
 }
 
 export type StorageItem = StorageOffer
