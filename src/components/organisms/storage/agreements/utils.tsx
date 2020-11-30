@@ -69,7 +69,7 @@ const getCoreItemFields = (
     title: idValue,
     'PRICE/GB': feeValue,
     AMOUNT: sizeValue,
-    'RENEWAL DATE': getShortDateString(renewalDate),
+    'RENEWAL DATE': renewalDate ? getShortDateString(renewalDate) : 'Expired',
     'SUBSCRIPTION PERIOD': subscriptionPeriod,
     CURRENCY: tokenDisplayNames[paymentToken],
     SYSTEM: 'IPFS',
@@ -89,7 +89,7 @@ export const createCustomerItemFields = (
 ): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
   const agreementInfo = getCoreItemFields(agreement, crypto, currentFiat)
   const {
-    id, provider, withdrawableFunds, paymentToken,
+    id, provider, withdrawableFunds, paymentToken, expiresInSeconds, isActive,
   } = agreement
   const providerValue = <AddressItem value={provider} />
   const withdrawableFundsValue = (
@@ -112,6 +112,7 @@ export const createCustomerItemFields = (
     renew: (
       <SelectRowButton
         id={id}
+        disabled={!expiresInSeconds || !isActive}
         handleSelect={(event): void => {
           onItemRenew(event, agreement)
         }}
