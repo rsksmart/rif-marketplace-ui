@@ -61,6 +61,7 @@ export const Provider: FC = ({ children }) => {
   useEffect(() => {
     if (service && !isInitialised && account) {
       const initialise = async (): Promise<void> => {
+        try {
           await authenticate(account)
           // Set up WS events here
           attachEvent('updated', onEvent)
