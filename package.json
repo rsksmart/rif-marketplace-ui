@@ -36,7 +36,7 @@
     "@feathersjs/feathers": "4.5.10",
     "@feathersjs/rest-client": "4.5.10",
     "@feathersjs/socketio-client": "4.5.10",
-    "@material-ui/core": "4.11.0",
+    "@material-ui/core": "4.11.1",
     "@material-ui/icons": "4.9.1",
     "@material-ui/lab": "4.0.0-alpha.56",
     "@rsksmart/erc677": "1.0.2",
