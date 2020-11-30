@@ -1,4 +1,5 @@
-import { AbstractAPIService } from 'api/models/apiService'
+import { Big } from 'big.js'
+import { AbstractAPIService, isResultPaginated } from 'api/models/apiService'
 import { mapToTransport } from 'api/models/storage/StorageFilter'
 import { BillingPlanTransport, OfferTransport } from 'api/models/storage/transports'
 import { parseConvertBig, parseToBigDecimal } from 'utils/parsers'
@@ -9,6 +10,7 @@ import {
 } from 'models/marketItems/StorageItem'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { SUPPORTED_TOKENS } from 'contracts/interfaces'
+import { Paginated } from '@feathersjs/feathers'
 import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
 import { MinMax } from './utils'
 import client from '../client'
@@ -28,13 +30,15 @@ const mapFromTransport = (offerTransport: OfferTransport): StorageOffer => {
     totalCapacity: totalCapacityMB,
   } = offerTransport
 
+  const availableCapacityGB = parseConvertBig(
+    availableCapacityMB, UNIT_PREFIX_POW2.KILO,
+  )
+
   const offer: StorageOffer = {
     id: provider,
     location: 'UK',
     system: 'IPFS',
-    availableSizeGB: parseConvertBig(
-      availableCapacityMB, UNIT_PREFIX_POW2.KILO,
-    ),
+    availableSizeGB: availableCapacityGB.lt(0) ? Big(0) : availableCapacityGB,
     subscriptionOptions: plans
       .sort(
         (a: BillingPlanTransport, b: BillingPlanTransport) => (
@@ -95,9 +99,13 @@ export class StorageOffersService extends AbstractAPIService
 
   _fetch = async (filters: StorageOffersFilters): Promise<StorageItem[]> => {
     const query = filters && mapToTransport(filters)
-    const result = await this.service.find({ query })
+    const result: Paginated<OfferTransport> = await this.service.find({ query })
 
-    return result.map(mapFromTransport)
+    const { data, ...metadata } = isResultPaginated(result)
+      ? result : { data: result }
+    this.meta = metadata
+
+    return data.map(mapFromTransport)
   }
 
   fetchSizeLimits = async (): Promise<MinMaxFilter> => {
