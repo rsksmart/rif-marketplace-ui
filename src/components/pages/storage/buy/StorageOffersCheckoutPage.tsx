@@ -25,11 +25,11 @@ import ProgressOverlay from 'components/templates/ProgressOverlay'
 import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
 import withCheckoutContext, { ContextProps, initialState, StorageCheckoutContext } from 'context/storage/buy/checkout'
 import ROUTES from 'routes'
-import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import RoundBtn from 'components/atoms/RoundBtn'
 import { SupportedTokens } from 'contracts/interfaces'
 import { Web3Store } from '@rsksmart/rif-ui'
+import { UNIT_PREFIX_POW2 } from 'utils/utils'
 
 const useStyles = makeStyles((theme: Theme) => ({
   stepperCard: {
@@ -125,7 +125,7 @@ const StorageOffersCheckoutPage: FC = () => {
     />
   ))
   const orderConfigTB: StoragePurchaseCardDetails | undefined = pinned && {
-    'CONTENT SIZE': `${pinned.size?.replace(/[a-zA-Z]+/g, '')} ${UNIT_PREFIX_POW2[pinned.unit][0]}B`,
+    'CONTENT SIZE': `${pinned.size.div(UNIT_PREFIX_POW2.MEGA)} MB`,
     'CURRENCY TO PAY': <RifSelect<string>
       id="currency"
       value={selectedCurrency}
