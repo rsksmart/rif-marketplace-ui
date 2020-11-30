@@ -133,6 +133,7 @@ const ExpandableOffer: FC<ExpandableOfferProps> = ({
               color="primary"
               rounded
               onClick={onEditOffer}
+              disabled={!storageOffer.isActive}
             >
               Edit offer
             </Button>
