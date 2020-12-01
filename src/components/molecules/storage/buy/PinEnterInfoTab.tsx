@@ -1,16 +1,15 @@
 import {
   TextFieldProps, Typography, TextField,
-  InputAdornment, MenuItem, SelectProps, Select,
+  InputAdornment,
 } from '@material-ui/core'
 import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
 import React, { FC } from 'react'
-import { UNIT_PREFIX_POW2 } from 'utils/utils'
 
 type Props = {
     size: TextFieldProps
     hash: TextFieldProps
-    unit: SelectProps
+    unit: string
 }
 
 const PinEnterInfoTab: FC<Props> = ({
@@ -25,26 +24,12 @@ const PinEnterInfoTab: FC<Props> = ({
     <GridRow spacing={3}>
       <GridItem xs={12}>
         <TextField
+          disabled
           InputProps={{
             inputProps: { min: 1 },
             endAdornment: (
               <InputAdornment position="end">
-                <Select
-                  required
-                  defaultValue={UNIT_PREFIX_POW2.MEGA}
-                  {...unit}
-                >
-                  <MenuItem
-                    value={UNIT_PREFIX_POW2.MEGA}
-                  >
-                    MB
-                  </MenuItem>
-                  <MenuItem
-                    value={UNIT_PREFIX_POW2.GIGA}
-                  >
-                    GB
-                  </MenuItem>
-                </Select>
+                {unit}
               </InputAdornment>
             ),
           }}
@@ -56,7 +41,15 @@ const PinEnterInfoTab: FC<Props> = ({
           fullWidth
         />
         <Typography variant="caption" color="secondary">
-          Content size will always ROUND UP to the nearest MB integer.
+          Content size will always round
+          {' '}
+          <b>UP</b>
+          {' '}
+          to the nearest
+          {' '}
+          {unit}
+          {' '}
+          integer.
         </Typography>
       </GridItem>
       <GridItem xs={12}>
