@@ -19,7 +19,7 @@ const headers: TableHeaders = {
   availableSize: 'Available Size',
   availableCurrencies: 'Currency',
   subscriptionOptions: 'Subscription Period',
-  averagePrice: 'Price/GB/Month',
+  averagePrice: 'Price/GB/Month (AVG)',
   action1: '',
 }
 
