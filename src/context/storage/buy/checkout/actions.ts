@@ -1,5 +1,6 @@
 import { recursiveDiff } from 'context/storeUtils/recursiveDiff'
 import Logger from 'utils/Logger'
+import { initialState } from './Context'
 import {
   Actions, AuxiliaryState, InitialisePayload, Order,
   PinnedContent, Action, State, StatusPayload,
@@ -14,8 +15,8 @@ export const actions: Actions = {
     auxiliary: {
       ...state.auxiliary,
       selectedCurrency,
-      selectedPlan: 0,
-      periodsCount: 0,
+      selectedPlan: initialState.auxiliary.selectedPlan,
+      periodsCount: initialState.auxiliary.periodsCount,
     },
   }),
   SET_AUXILIARY: (state: State, payload: Partial<AuxiliaryState>): State => ({
