@@ -20,7 +20,6 @@ import { LoadingPayload } from 'context/App/appActions'
 import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper'
 import RoundedCard from 'components/atoms/RoundedCard'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
-import Staking from 'components/organisms/storage/staking/Staking'
 import { SupportedTokens } from 'contracts/interfaces'
 import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Services/storage'
 import NoWhitelistedProvider from 'components/molecules/storage/NoWhitelistedProvider'
@@ -43,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const OfferCreationPage: FC = () => {
+const OfferCreation: FC = () => {
   const {
     state: {
       billingPlans, totalCapacity, peerId, system,
@@ -193,7 +192,6 @@ const OfferCreationPage: FC = () => {
 
   return (
     <>
-      <Staking />
       <Typography gutterBottom variant="h5" color="primary">
         List your storage service
       </Typography>
@@ -225,4 +223,4 @@ const OfferCreationPage: FC = () => {
   )
 }
 
-export default WithSpinner(OfferCreationPage)
+export default WithSpinner(OfferCreation)

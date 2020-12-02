@@ -1,4 +1,3 @@
-import Typography from '@material-ui/core/Typography'
 import React, {
   FC, useContext, useEffect, useState,
 } from 'react'
@@ -8,9 +7,11 @@ import { OfferEditContextProvider } from 'context/Market/storage/OfferEditContex
 import { StorageOffer } from 'models/marketItems/StorageItem'
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
-import OfferCreationPage from './OfferCreationPage'
+import Staking from 'components/organisms/storage/staking/Staking'
+import OfferCreation from '../../../organisms/storage/sell/OfferCreation'
+import NoMultipleOffersCard from '../../../organisms/storage/sell/NoMultipleOffersCard'
 
-const Wrapper: FC = () => {
+const PageWrapper: FC = () => {
   const {
     state: {
       account,
@@ -41,26 +42,22 @@ const Wrapper: FC = () => {
     }
   }, [account, appDispatch, appState])
 
-  const renderContent = (): JSX.Element => (
-    ownOffer
-      ? (
-        <Typography>
-          Creation of multiple offers is not supported yet.
-          You can edit your current offer on &quot;My Offers&quot; section
-        </Typography>
-      )
-      : (
-        <OfferEditContextProvider>
-          <OfferCreationPage isLoading={isLoadingOffer} />
-        </OfferEditContextProvider>
-      )
-  )
+  if (ownOffer) {
+    return (
+      <CenteredPageTemplate>
+        <NoMultipleOffersCard />
+      </CenteredPageTemplate>
+    )
+  }
 
   return (
     <CenteredPageTemplate>
-      {renderContent()}
+      <Staking />
+      <OfferEditContextProvider>
+        <OfferCreation isLoading={isLoadingOffer} />
+      </OfferEditContextProvider>
     </CenteredPageTemplate>
   )
 }
 
-export default Wrapper
+export default PageWrapper
