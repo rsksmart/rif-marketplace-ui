@@ -1,6 +1,6 @@
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import TitledRoundedCard from 'components/molecules/TitledRoundedCard'
 import React, { FC } from 'react'
 import RoundBtn from 'components/atoms/RoundBtn'
@@ -9,13 +9,7 @@ import ROUTES from 'routes'
 import { Box } from '@material-ui/core'
 import { colors } from '@rsksmart/rif-ui'
 
-const useStyles = makeStyles((theme: Theme) => ({
-  roundedCard: {
-    maxWidth: theme.spacing(70),
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: '90%',
-    },
-  },
+const useStyles = makeStyles(() => ({
   myOffersLink: {
     color: colors.gray4,
   },
@@ -34,7 +28,7 @@ const NoMultipleOffersCard: FC = () => {
       <TitledRoundedCard
         title="Multiple offers is not supported yet"
         titleProps={{ variant: 'h6', color: 'primary' }}
-        roundedCardProps={{ color: 'secondary', className: classes.roundedCard }}
+        roundedCardProps={{ color: 'secondary' }}
       >
         <Grid item xs={12}>
           <Typography
