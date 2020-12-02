@@ -10,15 +10,23 @@ export const actions: Actions = {
   CHANGE_CURRENCY: (
     state: State,
     { index: selectedCurrency }: { index: number },
-  ): State => ({
-    ...state,
-    auxiliary: {
-      ...state.auxiliary,
-      selectedCurrency,
-      selectedPlan: initialState.auxiliary.selectedPlan,
-      periodsCount: initialState.auxiliary.periodsCount,
-    },
-  }),
+  ): State => {
+    const {
+      auxiliary: {
+        selectedPlan,
+        periodsCount,
+      },
+    } = initialState
+    return {
+      ...state,
+      auxiliary: {
+        ...state.auxiliary,
+        selectedCurrency,
+        selectedPlan,
+        periodsCount,
+      },
+    }
+  },
   SET_AUXILIARY: (state: State, payload: Partial<AuxiliaryState>): State => ({
     ...state,
     auxiliary: {
