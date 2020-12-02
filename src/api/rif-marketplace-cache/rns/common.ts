@@ -1,6 +1,6 @@
 import { APIService } from 'api/models/apiService'
 import { RnsFilter } from 'api/models/RnsFilter'
-import network from 'blockchain/config'
+import network from 'config'
 import { ZERO_ADDRESS } from 'constants/strings'
 import {
   RnsDomain,
