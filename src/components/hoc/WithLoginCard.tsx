@@ -1,19 +1,9 @@
 import React, { useContext } from 'react'
-import { makeStyles, Theme } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import { Web3Store } from '@rsksmart/rif-ui'
 import Login from 'components/atoms/Login'
 import TitledRoundedCard from 'components/molecules/TitledRoundedCard'
-
-const useStyles = makeStyles((theme: Theme) => ({
-  roundedCard: {
-    maxWidth: theme.spacing(70),
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: '90%',
-    },
-  },
-}))
 
 const WithLoginCard = ({
   WrappedComponent,
@@ -25,7 +15,6 @@ const WithLoginCard = ({
     const {
       state: { account },
     } = useContext(Web3Store)
-    const classes = useStyles()
 
     if (account) return <WrappedComponent {...props} />
     return (
@@ -33,7 +22,7 @@ const WithLoginCard = ({
         <TitledRoundedCard
           title={title}
           titleProps={{ variant: 'h6', color: 'primary' }}
-          roundedCardProps={{ color: 'secondary', className: classes.roundedCard }}
+          roundedCardProps={{ color: 'secondary' }}
         >
           <>
             <Grid item xs={12}>

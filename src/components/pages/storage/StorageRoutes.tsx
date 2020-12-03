@@ -1,10 +1,11 @@
-/* eslint-disable-next-line import/no-unresolved */
-import { StyledNavTabProps } from '@rsksmart/rif-ui/dist/components/atoms/StyledNavTab'
+/* eslint-disable import/no-unresolved */
+import {
+  StyledNavTabProps,
+} from '@rsksmart/rif-ui/dist/components/atoms/StyledNavTab'
 import React, { FC, useEffect } from 'react'
 import {
   Redirect, Route, Switch, useHistory, useLocation,
 } from 'react-router-dom'
-
 import TabsTemplate from 'components/templates/TabsTemplate'
 import networkConfig from 'config'
 import { OfferEditContextProvider } from 'context/Market/storage/OfferEditContext'
@@ -15,7 +16,7 @@ import { getTabValueFromLocation } from 'utils/utils'
 import { AgreementsContextProvider } from 'context/Services/storage/agreements'
 import StorageContextProvider from 'context/Services/storage'
 import {
-  StorageSellPage, StorageOffersPage, StorageMyOffersPage, StorageLandingPage,
+  StorageOffersPage, StorageMyOffersPage, StorageLandingPage, StorageSellPage,
 } from '.'
 import { NotFound } from '..'
 import StorageSellDone from './sell/StorageSellDone'
@@ -109,9 +110,7 @@ const StorageRoutes: FC = () => {
                 </StorageOffersContextProvider>
               </Route>
               <Route exact path={ROUTES.STORAGE.SELL.BASE}>
-                <OfferEditContextProvider>
-                  <StorageSellPage />
-                </OfferEditContextProvider>
+                <StorageSellPage />
               </Route>
               <Route
                 exact

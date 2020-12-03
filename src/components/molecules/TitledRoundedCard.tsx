@@ -14,6 +14,9 @@ export interface TitledRoundedCardProps {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     maxWidth: theme.spacing(70),
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: '90%',
+    },
   },
   titleContainer: {
     padding: theme.spacing(3),

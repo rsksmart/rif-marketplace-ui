@@ -2,7 +2,7 @@ import React, {
   useContext, useCallback, useState, useEffect, FC,
 } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { Button as RUIButton, Web3Store } from '@rsksmart/rif-ui'
+import { Button as RUIButton, Web3Store, WithSpinner } from '@rsksmart/rif-ui'
 import Typography from '@material-ui/core/Typography'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { StorageContract } from 'contracts/storage'
@@ -17,11 +17,9 @@ import TransactionInProgressPanel from 'components/organisms/TransactionInProgre
 import { AddTxPayload } from 'context/Blockchain/blockchainActions'
 import BlockchainContext from 'context/Blockchain/BlockchainContext'
 import { LoadingPayload } from 'context/App/appActions'
-import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper'
 import RoundedCard from 'components/atoms/RoundedCard'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
-import Staking from 'components/organisms/storage/staking/Staking'
 import { SupportedTokens } from 'contracts/interfaces'
 import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Services/storage'
 import NoWhitelistedProvider from 'components/molecules/storage/NoWhitelistedProvider'
@@ -44,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const StorageSellPage: FC = () => {
+const OfferCreation: FC = () => {
   const {
     state: {
       billingPlans, totalCapacity, peerId, system,
@@ -193,8 +191,7 @@ const StorageSellPage: FC = () => {
     : <Login />
 
   return (
-    <CenteredPageTemplate>
-      <Staking />
+    <>
       <Typography gutterBottom variant="h5" color="primary">
         List your storage service
       </Typography>
@@ -222,8 +219,8 @@ const StorageSellPage: FC = () => {
           />
         )
       }
-    </CenteredPageTemplate>
+    </>
   )
 }
 
-export default StorageSellPage
+export default WithSpinner(OfferCreation)
