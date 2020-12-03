@@ -1,18 +1,18 @@
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { PeriodInSeconds, SubscriptionPeriod } from 'models/marketItems/StorageItem'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
-import StorageFiltersTransport from '../StorageFiltersTransport'
+import OfferFiltersTransport from '../OfferFiltersTransport'
 
 const FAKE_FILTERS: StorageOffersFilters = {
-  active: true,
+  withInactive: true,
   periods: new Set(['Daily' as SubscriptionPeriod]),
   provider: 'FakeProvider',
   size: { min: 5, max: 10 },
   price: { min: 5, max: 10 },
 }
 
-const EXPECTED_OBJECT: StorageFiltersTransport = {
-  active: FAKE_FILTERS.active,
+const EXPECTED_OBJECT: OfferFiltersTransport = {
+  withInactive: FAKE_FILTERS.withInactive,
   periods: Array.from(FAKE_FILTERS.periods as Set<SubscriptionPeriod>)
     .map((p) => PeriodInSeconds[p]),
   averagePrice: {
@@ -33,31 +33,31 @@ const testProperty = <TObject, K extends keyof TObject>(
   expectedValue: TObject[K],
 ): void => {
   test(`should contain correct property: ${key}`, () => {
-    expect(testObject[key]).toEqual(expectedValue)
+    expect(testObject[key]).toStrictEqual(expectedValue)
   })
 }
 
-describe('StorageFiltersTransport', () => {
-  let storageFiltersTransport: StorageFiltersTransport
+describe('OfferFiltersTransport', () => {
+  let offerFiltersTransport: OfferFiltersTransport
 
   describe('constructor', () => {
     beforeEach(() => {
-      storageFiltersTransport = new StorageFiltersTransport(FAKE_FILTERS)
+      offerFiltersTransport = new OfferFiltersTransport(FAKE_FILTERS)
     })
     test('should accept StorageOffersFilters as args', () => {
-      expect(storageFiltersTransport).not.toBeUndefined()
+      expect(offerFiltersTransport).not.toBeUndefined()
     })
 
     test('should contain correct property: active', () => {
-      const expectedPropertyValue = FAKE_FILTERS.active
+      const expectedPropertyValue = FAKE_FILTERS.withInactive
 
-      expect(storageFiltersTransport.active).toBe(expectedPropertyValue)
+      expect(offerFiltersTransport.withInactive).toBe(expectedPropertyValue)
     })
 
-    storageFiltersTransport = new StorageFiltersTransport(FAKE_FILTERS)
+    offerFiltersTransport = new OfferFiltersTransport(FAKE_FILTERS)
     Object.keys(EXPECTED_OBJECT).forEach((key) => testProperty(
-      storageFiltersTransport,
-      key as keyof StorageFiltersTransport,
+      offerFiltersTransport,
+      key as keyof OfferFiltersTransport,
       EXPECTED_OBJECT[key],
     ))
   })

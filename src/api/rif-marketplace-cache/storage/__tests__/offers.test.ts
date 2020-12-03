@@ -1,16 +1,15 @@
+/* eslint-disable no-underscore-dangle */
+import { AbstractAPIService } from 'api/models/apiService'
+import OfferFiltersTransport from 'api/models/storage/OfferFiltersTransport'
 import { OfferTransport } from 'api/models/storage/transports'
 import mockFeathersService from 'api/test-utils/feathers'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
-import {
-  BillingPlan, PeriodInSeconds, StorageOffer, SubscriptionPeriod,
-} from 'models/marketItems/StorageItem'
-import { parseConvertBig, parseToBigDecimal } from 'utils/parsers'
-import { UNIT_PREFIX_POW2 } from 'utils/utils'
-import { SUPPORTED_TOKENS } from '../../../../contracts/interfaces'
+import { StorageOffer, SubscriptionPeriod } from 'models/marketItems/StorageItem'
 import { StorageAPIService } from '../interfaces'
 import { StorageOffersService } from '../offers'
+import { mapOfferFromTransport } from '../utils'
 
-const FAKE_OFFER_0: OfferTransport = {
+const MOCK_ITEM_0: OfferTransport = {
   utilizedCapacity: '0',
   availableCapacity: '1073741824',
   provider: '0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1',
@@ -34,7 +33,7 @@ const FAKE_OFFER_0: OfferTransport = {
   ],
 }
 
-const FAKE_TRANSPORT = [FAKE_OFFER_0]
+const MOCK_RESPONSE: OfferTransport[] = [MOCK_ITEM_0]
 
 let offersService: StorageAPIService
 
@@ -44,13 +43,32 @@ describe('Storage OffersService', () => {
     offersService.errorReporter = jest.fn()
   })
 
+  test('should be an instance of AbstractAPIService', () => {
+    expect(offersService).toBeInstanceOf(AbstractAPIService)
+  })
+
+  describe('path', () => {
+    test('should be a string', () => {
+      expect(offersService.path).toBeTruthy()
+      expect(typeof offersService.path).toBe('string')
+    })
+  })
+
+  describe('_channel', () => {
+    test('should be a string', () => {
+      expect(offersService._channel).toBeTruthy()
+      expect(typeof offersService._channel).toBe('string')
+    })
+  })
+
   describe('_fetch via super.fetch', () => {
     beforeEach(() => {
-      offersService.service = mockFeathersService(FAKE_TRANSPORT)
+      offersService.service = mockFeathersService(MOCK_RESPONSE)
     })
 
-    test('should return StorageOffer[] on success', async () => {
-      const filters: Partial<StorageOffersFilters> = {
+    test('should call find with filters', async () => {
+      const serviceFindSpy = jest.spyOn(offersService.service, 'find')
+      const filters: StorageOffersFilters = {
         price: {
           min: 4,
           max: 6,
@@ -61,43 +79,19 @@ describe('Storage OffersService', () => {
         },
         periods: new Set<SubscriptionPeriod>(['Daily']),
       }
-      const actualReturnValue: StorageOffer[] = await offersService.fetch(
-        filters,
-      )
-      const {
-        provider,
-        availableCapacity,
-        avgBillingPrice,
-        plans,
-        acceptedCurrencies,
-        utilizedCapacity,
-        totalCapacity,
-      } = FAKE_OFFER_0
-      const expectedOffers: StorageOffer = {
-        id: provider,
-        location: 'UK',
-        acceptedCurrencies,
-        system: 'IPFS',
-        availableSizeGB: parseConvertBig(
-          availableCapacity, UNIT_PREFIX_POW2.KILO,
-        ),
-        subscriptionOptions: plans
-          .filter((plan) => !!PeriodInSeconds[plan.period])
-          .map<BillingPlan>((plan) => ({
-            period: PeriodInSeconds[plan.period],
-            price: parseToBigDecimal(plan.price),
-            currency: SUPPORTED_TOKENS.rif,
-          })),
-        averagePrice: avgBillingPrice,
-        peerId: 'QmYyQSo1c1Ym7orWxLYvCrM2EmxFTANf8wXmmE7DWjhx5N',
-        utilizedCapacityGB: parseConvertBig(
-          utilizedCapacity, UNIT_PREFIX_POW2.KILO,
-        ),
-        totalCapacityGB: parseConvertBig(totalCapacity, UNIT_PREFIX_POW2.KILO),
-        isActive: true,
-      }
+      const expectedQuery = new OfferFiltersTransport(filters)
 
-      expect(actualReturnValue[0]).toStrictEqual(expectedOffers)
+      await offersService.fetch(filters)
+      expect(serviceFindSpy).toBeCalledWith({ query: expectedQuery })
+    })
+
+    test('should return StorageOffer[] on success', async () => {
+      const actualOffers: StorageOffer[] = await offersService.fetch({})
+
+      const expectedOffers: StorageOffer[] = MOCK_RESPONSE
+        .map(mapOfferFromTransport)
+
+      expect(actualOffers).toStrictEqual(expectedOffers)
     })
   })
 })

@@ -6,7 +6,7 @@ import {
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 
-export default class StorageFiltersTransport {
+export default class OfferFiltersTransport {
   averagePrice?: MinMaxFilter
 
   totalCapacity?: MinMaxFilter
