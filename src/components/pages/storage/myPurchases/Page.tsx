@@ -2,6 +2,7 @@ import React, {
   FC, useContext, useEffect, useState,
 } from 'react'
 import {
+  Grid,
   makeStyles, TableContainer, Typography,
 } from '@material-ui/core'
 import RoundedCard from 'components/atoms/RoundedCard'
@@ -121,22 +122,34 @@ const MyStoragePurchases: FC = () => {
     },
   )
 
-  const renderDetailsActions = (): JSX.Element => (
-    <RoundBtn
-      disabled={!Number(selectedAgreement?.withdrawableFunds)}
-      onClick={
-        (): void => {
-          dispatch({
-            type: 'SET_AGREEMENT',
-            payload: selectedAgreement as Agreement,
-          })
-          withdrawAction()
+  const renderDetailsActions = (): JSX.Element => {
+    const isEnabled = Boolean(selectedAgreement?.withdrawableFunds.toNumber())
+    return (
+      <Grid container justify="center">
+        <RoundBtn
+          disabled={!isEnabled}
+          onClick={
+            (): void => {
+              dispatch({
+                type: 'SET_AGREEMENT',
+                payload: selectedAgreement as Agreement,
+              })
+              withdrawAction()
+            }
+          }
+        >
+          Withdraw funds
+        </RoundBtn>
+        {
+          isEnabled && (
+            <Typography variant="caption" color="secondary" align="center">
+              Withdrawing your funds would terminate the agreement
+            </Typography>
+          )
         }
-      }
-    >
-      Withdraw all funds
-    </RoundBtn>
-  )
+      </Grid>
+    )
+  }
 
   const handleTxCompletedClose = (): void => {
     dispatch({

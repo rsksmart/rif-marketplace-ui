@@ -22,7 +22,7 @@ const getPaymentToken = (tokenAddress: string): SupportedTokens => {
     .entries(availableTokens)
     .reduce(
       (acc, [addr, symbol]) => (addr === tokenAddress ? symbol as SupportedTokens : acc),
-          '' as SupportedTokens,
+      '' as SupportedTokens,
     )
 }
 
@@ -52,23 +52,29 @@ const mapFromTransport = ({
   availableFunds,
   toBePayedOut,
   periodsSinceLastPayout,
+  isActive,
 }: AgreementTransport): Agreement => {
-  const miliesToDeath = parseInt(expiresIn, 10) * 1000
+  const expiresInSeconds = parseInt(expiresIn, 10)
   const contentSize = new Big(size)
 
   // periodsSinceLastPayout comes floored, so we add the current period
   const unpaidPeriods = new Big(Number(periodsSinceLastPayout) + 1)
   const priceOfUnpaidPeriods = unpaidPeriods
     .times(calcPeriodPrice(contentSize, billingPrice))
-  const withdrawableFunds = parseToBigDecimal(availableFunds, 18)
-    .minus(priceOfUnpaidPeriods)
+  const withdrawableFunds = expiresInSeconds
+    ? parseToBigDecimal(availableFunds, 18).minus(priceOfUnpaidPeriods)
+    : Big(0)
 
   return {
     id: agreementReference,
+    isActive,
     provider: offerId,
     dataReference,
     subscriptionPrice: new Big(billingPrice),
-    renewalDate: new Date(Date.now() + miliesToDeath),
+    expiresInSeconds,
+    renewalDate: expiresInSeconds
+      ? new Date(Date.now() + expiresInSeconds * 1000)
+      : undefined,
     monthlyFee: parseToBigDecimal(
       calcMonthlyRate(billingPrice, billingPeriod).times(contentSize), 18,
     ),
