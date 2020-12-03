@@ -1,6 +1,6 @@
 import { Big } from 'big.js'
 import { AbstractAPIService, isResultPaginated } from 'api/models/apiService'
-import { mapToTransport } from 'api/models/storage/StorageFilter'
+import StorageFiltersTransport from 'api/models/storage/StorageFiltersTransport'
 import { BillingPlanTransport, OfferTransport } from 'api/models/storage/transports'
 import { parseConvertBig, parseToBigDecimal } from 'utils/parsers'
 import { MinMaxFilter } from 'models/Filters'
@@ -98,7 +98,7 @@ export class StorageOffersService extends AbstractAPIService
   _channel = offersWSChannel
 
   _fetch = async (filters: StorageOffersFilters): Promise<StorageItem[]> => {
-    const query = filters && mapToTransport(filters)
+    const query = filters && new StorageFiltersTransport(filters)
     const result: Paginated<OfferTransport> = await this.service.find({ query })
 
     const { data, ...metadata } = isResultPaginated(result)
