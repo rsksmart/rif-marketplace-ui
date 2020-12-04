@@ -6,7 +6,7 @@ import { AbiItem } from 'web3-utils'
 
 import { storageAddress, storageSupportedTokens } from 'contracts/config'
 import { SUPPORTED_TOKENS, SupportedTokens, TxOptions } from 'contracts/interfaces'
-import { getTokens } from 'contracts/utils'
+import { getTokens } from 'utils/tokenUtils'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
 import { encodeHash, prefixArray } from './utils'
 
