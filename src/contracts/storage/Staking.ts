@@ -7,7 +7,7 @@ import { AbiItem } from 'web3-utils'
 import { ZERO_BYTES } from 'constants/strings'
 import { stakingAddress, storageSupportedTokens } from 'contracts/config'
 import { SUPPORTED_TOKENS, TxOptions } from 'contracts/interfaces'
-import { getTokens } from 'contracts/utils'
+import { getTokens } from 'utils/tokenUtils'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
 
 export type StorageStakingContractErrorId = 'contract-storage-staking'

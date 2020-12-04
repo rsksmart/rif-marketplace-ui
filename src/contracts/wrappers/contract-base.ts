@@ -4,7 +4,7 @@ import { Contract } from 'web3-eth-contract'
 
 import Logger from 'utils/Logger'
 import { TxOptions } from 'contracts/interfaces'
-import waitForReceipt from 'contracts/utils'
+import waitForReceipt from 'contracts/utils/waitForReceipt'
 
 const logger = Logger.getInstance()
 
