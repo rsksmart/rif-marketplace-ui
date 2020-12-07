@@ -60,7 +60,7 @@ const StorageMyOffersPage: FC = () => {
       storageOffersService.connect(errorReporterFactory(appDispatch))
 
       const currentOwnOffers = await storageOffersService.fetch({
-        nonActive: true,
+        withInactive: true,
         provider: account,
       }) as StorageOffer[]
 

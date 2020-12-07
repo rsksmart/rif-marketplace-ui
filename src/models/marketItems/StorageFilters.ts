@@ -7,5 +7,5 @@ export interface StorageOffersFilters extends MarketFilter {
     size?: MinMaxFilter // total capacity. NOT available capacity!
     periods?: Set<SubscriptionPeriod>
     provider?: string
-    nonActive?: boolean
+    withInactive?: boolean
 }
