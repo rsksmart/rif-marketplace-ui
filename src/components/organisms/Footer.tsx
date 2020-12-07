@@ -41,7 +41,7 @@ const Footer: FC = () => {
         ],
       },
       {
-        title: 'RIF Marketplace',
+        title: 'Marketplace',
         links: [
           {
             title: 'Roadmap',
