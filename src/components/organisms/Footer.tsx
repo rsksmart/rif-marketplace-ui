@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Footer as RUIFooter } from '@rsksmart/rif-ui'
 /* eslint-disable-next-line import/no-unresolved */
 import { FooterProps } from '@rsksmart/rif-ui/dist/components/organisms/Footer'
+import { appVersion } from 'config'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -10,7 +11,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const Footer = () => {
+const Footer: FC = () => {
   const classes = useStyles()
 
   const footerProps: FooterProps = {
@@ -65,6 +66,12 @@ const Footer = () => {
       {
         title: 'Developers',
         links: [
+          {
+            title: `Version ${appVersion}`,
+            to: `https://github.com/rsksmart/rif-marketplace-ui/releases/tag/v${appVersion}`,
+            target: '_blank',
+            isExternal: true,
+          },
           {
             title: 'Setup Guide',
             to: 'https://github.com/rsksmart/rif-marketplace-dev/blob/master/README.md',
