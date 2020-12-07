@@ -9,3 +9,5 @@ export const networkName = process.env.REACT_APP_REQUIRED_NETWORK_NAME
     || 'Localhost 8545'
 
 export default uiConfig[network]
+
+export const appVersion = process.env.REACT_APP_VERSION
