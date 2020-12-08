@@ -208,7 +208,6 @@ const Provider: FC = ({ children }) => {
             text: customMessage || 'Could not create new agreement.',
           }))
           Logger.getInstance().error('Error while creating new agreement: ', error)
-        } finally {
           dispatch({
             type: 'SET_STATUS',
             payload: {
