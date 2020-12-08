@@ -51,7 +51,7 @@ const initialAsyncActions: AsyncActions = {
 export const Context = createContext<Props>({
   state: initialState,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  dispatch: () => {},
+  dispatch: () => { },
   asyncActions: initialAsyncActions,
 })
 
@@ -178,26 +178,21 @@ const Provider: FC = ({ children }) => {
           type: 'SET_STATUS',
           payload: { inProgress: true },
         })
-        const receipt = await storageContract
-          .newAgreement(agreement, txOptions)
-          .catch((error) => {
-            reportError(new UIError({
-              error,
-              id: 'contract-storage',
-              text: 'Could not create new agreement.',
-            }))
-            Logger.getInstance().error('Error while creating new agreement:', error)
+        try {
+          appDispatch({
+            type: 'SET_IS_LOADING',
+            payload: {
+              isLoading: false,
+              id: 'contract',
+            },
           })
 
-        appDispatch({
-          type: 'SET_IS_LOADING',
-          payload: {
-            isLoading: false,
-            id: 'contract',
-          },
-        })
+          const receipt = await storageContract
+            .newAgreement(agreement, txOptions)
 
-        if (receipt) {
+          if (!receipt) {
+            throw new Error('Did not receive the recipt from the storage contract.')
+          }
           dispatch({
             type: 'SET_STATUS',
             payload: {
@@ -205,18 +200,21 @@ const Provider: FC = ({ children }) => {
             },
           })
           Logger.getInstance().debug('Agreement receipt:', receipt)
-        } else {
+        } catch (error) {
+          const { customMessage } = error
+          reportError(new UIError({
+            error,
+            id: 'contract-storage',
+            text: customMessage || 'Could not create new agreement.',
+          }))
+          Logger.getInstance().error('Error while creating new agreement: ', error)
+        } finally {
           dispatch({
             type: 'SET_STATUS',
             payload: {
               inProgress: false,
             },
           })
-          reportError(new UIError({
-            error: new Error('Did not receive the recipt from the storage contract.'),
-            id: 'contract-storage',
-            text: 'Could not create new agreement.',
-          }))
         }
       }
       setAsyncActions({ createAgreement })

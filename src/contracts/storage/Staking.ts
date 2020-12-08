@@ -9,6 +9,9 @@ import { stakingAddress, storageSupportedTokens } from 'contracts/config'
 import { SUPPORTED_TOKENS, TxOptions } from 'contracts/interfaces'
 import { getTokens } from 'utils/tokenUtils'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
+import Big from 'big.js'
+import CustomError from 'models/CustomError'
+import { validateBalance } from 'contracts/utils/accountBalance'
 
 export type StorageStakingContractErrorId = 'contract-storage-staking'
 
@@ -32,16 +35,21 @@ class StakingContract extends ContractWithTokens {
 
   private static instance: StakingContract
 
-  public stake(
+  public async stake(
     amount: string | number,
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
-    if (amount < 0) {
-      throw new Error('amount should greater then 0')
+    if (Big(amount).lte(Big(0))) {
+      throw new CustomError('The amount to stake should be greater then 0.')
     }
 
-    const { tokenAddress } = this.getToken(txOptions.token)
+    const { from: account, token } = txOptions
+    const { tokenAddress } = this.getToken(token)
     const amountWei = convertToWeiString(amount)
+
+    await validateBalance({
+      web3: this.web3, minAmountWei: amountWei, account, token,
+    })
 
     const stakeTx = this.methods.stake(
       amountWei,

@@ -157,10 +157,11 @@ const Staking: FC = () => {
       }
     } catch (error) {
       logger.error('error depositing funds', error)
+      const { customMessage } = error
       reportError(new UIError({
         error,
         id: 'contract-storage-staking',
-        text: 'Could not stake funds.',
+        text: customMessage || 'Could not stake funds.',
       }))
     } finally {
       setProcessingTx(false)
