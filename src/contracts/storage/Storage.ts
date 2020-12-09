@@ -8,6 +8,7 @@ import { storageAddress, storageSupportedTokens } from 'contracts/config'
 import { SUPPORTED_TOKENS, SupportedTokens, TxOptions } from 'contracts/interfaces'
 import { getTokens } from 'utils/tokenUtils'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
+import { validateBalance } from 'contracts/utils/accountBalance'
 import { encodeHash, prefixArray } from './utils'
 
 export type StorageContractErrorId = 'contract-storage'
@@ -20,8 +21,8 @@ class StorageContract extends ContractWithTokens {
       StorageContract.instance = new StorageContract(
         web3,
         new web3.eth.Contract(
-              StorageManager.abi as AbiItem[],
-              storageAddress,
+          StorageManager.abi as AbiItem[],
+          storageAddress,
         ),
         getTokens(storageSupportedTokens),
         'contract-storage',
@@ -32,21 +33,27 @@ class StorageContract extends ContractWithTokens {
 
   private static instance: StorageContract
 
-  public newAgreement(
+  public async newAgreement(
     details: {
-        fileHash: string
-        provider: string
-        sizeMB: string
-        billingPeriod: number
-        amount: string
-      },
+      fileHash: string
+      provider: string
+      sizeMB: string
+      billingPeriod: number
+      amount: string
+    },
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
     const {
       fileHash, provider, sizeMB, billingPeriod, amount,
     } = details
     const dataReference = encodeHash(fileHash)
-    const { tokenAddress } = this.getToken(txOptions.token)
+    const { from: account, token } = txOptions
+
+    await validateBalance({
+      web3: this.web3, token, account, minAmountWei: amount,
+    })
+
+    const { tokenAddress } = this.getToken(token)
 
     const newAgreementTx = this.methods.newAgreement(
       dataReference,
@@ -73,10 +80,10 @@ class StorageContract extends ContractWithTokens {
     {
       amount, dataReference, provider,
     }: {
-        amount: string
-        dataReference: string
-        provider: string
-      },
+      amount: string
+      dataReference: string
+      provider: string
+    },
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
     const { tokenAddress } = this.getToken(txOptions.token)
@@ -137,11 +144,11 @@ class StorageContract extends ContractWithTokens {
       tokens,
       amounts,
     }: {
-        dataReference: string
-        provider: string
-        tokens: SupportedTokens[]
-        amounts: string[]
-      },
+      dataReference: string
+      provider: string
+      tokens: SupportedTokens[]
+      amounts: string[]
+    },
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
     const encodedDataReference = encodeHash(dataReference)
@@ -166,10 +173,10 @@ class StorageContract extends ContractWithTokens {
       dataReferences = [],
       token,
     }: {
-        creatorOfAgreement: string
-        dataReferences: string[]
-        token: SupportedTokens
-      },
+      creatorOfAgreement: string
+      dataReferences: string[]
+      token: SupportedTokens
+    },
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
     const { from } = txOptions
