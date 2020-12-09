@@ -63,7 +63,7 @@ const StorageOffersPage: FC = () => {
         subscriptionOptions, acceptedCurrencies,
       } = item
 
-      const isOwnAccount = account === id
+      const isOwnAccount = account?.toLowerCase() === id.toLowerCase()
 
       return {
         id,
