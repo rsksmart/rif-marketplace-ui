@@ -73,6 +73,8 @@ export class ContractWithTokens extends ContractBase {
   }
 
   async send(tx: any, txOptions: TxOptions): Promise<TransactionReceipt> {
+    // eslint-disable-next-line no-param-reassign
+    txOptions.from = txOptions.from?.toLowerCase()
     const { from, value } = txOptions
     const tokenToUse = this.getToken(txOptions.token)
 
