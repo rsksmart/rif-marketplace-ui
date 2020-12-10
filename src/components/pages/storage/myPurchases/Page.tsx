@@ -28,6 +28,7 @@ import {
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import withWithdrawContext, { StorageWithdrawContext, StorageWithdrawContextProps } from 'context/storage/mypurchases/withdraw'
+import GridRow from 'components/atoms/GridRow'
 
 const useTitleStyles = makeStyles(() => ({
   root: {
@@ -175,7 +176,7 @@ const MyStoragePurchases: FC = () => {
               Active contracts
             </Typography>
           </GridItem>
-          <GridItem>
+          <GridRow>
             <TableContainer>
               <Marketplace
                 headers={headers}
@@ -183,7 +184,7 @@ const MyStoragePurchases: FC = () => {
                 items={items}
               />
             </TableContainer>
-          </GridItem>
+          </GridRow>
         </GridColumn>
       </RoundedCard>
 
