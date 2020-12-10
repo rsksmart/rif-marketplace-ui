@@ -151,7 +151,7 @@ const Provider: FC = ({ children }) => {
           payload: { inProgress: true },
         })
         const receipt = await storageContract
-          .depositFunds(fundsDeposit, { from: account })
+          .depositFunds(fundsDeposit, { from: account, token: paymentToken })
           .catch((error) => {
             reportError(new UIError({
               error,
