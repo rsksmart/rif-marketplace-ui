@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@feathersjs/authentication": "4.5.10",
-    "@feathersjs/authentication-client": "4.5.10",
+    "@feathersjs/authentication-client": "4.5.11",
     "@feathersjs/feathers": "4.5.10",
     "@feathersjs/rest-client": "4.5.10",
     "@feathersjs/socketio-client": "4.5.10",
