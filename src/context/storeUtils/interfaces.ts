@@ -5,6 +5,7 @@ import { ContextName as AppContextName } from 'context/App/AppContext'
 import { ContextName as StorageEditOfferContextName } from 'context/Market/storage/OfferEditContext'
 import { ContextName as NotificationsContextName } from 'context/Services/notifications/interfaces'
 import { ContextName as StorageUploadContextName } from 'context/Services/storage/upload/Context'
+import { ContextName as ConfirmationsContextName } from 'context/Confirmations/Context'
 import { MARKET_ACTION } from 'context/Market/marketActions'
 import { APP_ACTION } from 'context/App/appActions'
 import { BLOCKCHAIN_ACTION } from 'context/Blockchain/blockchainActions'
@@ -22,6 +23,7 @@ export type AvailableContexts =
   | StorageEditOfferContextName
   | NotificationsContextName
   | StorageUploadContextName
+  | ConfirmationsContextName
 
 export interface ContextPayload {
   [key: string]: any // TODO: make into [K in keyof T]: any where T is ContextState
@@ -37,7 +39,7 @@ export type ContextActionType =
 export interface ContextDispatch<
   T extends ContextActionType,
   P extends ContextPayload
-> {
+  > {
   readonly type: T
   readonly payload: P
 }
