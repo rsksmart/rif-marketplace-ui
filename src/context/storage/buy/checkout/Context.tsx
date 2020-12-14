@@ -17,6 +17,7 @@ import { convertToWeiString } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import Web3 from 'web3'
 import { SUPPORTED_TOKENS, SupportedTokens, TxOptions } from 'contracts/interfaces'
+import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
 import { reducer } from './actions'
 import {
   AsyncActions, PinnedContent, Props, State,
@@ -84,6 +85,10 @@ const Provider: FC = ({ children }) => {
       order: listedOffer,
     },
   } = useContext(StorageOffersContext)
+
+  const {
+    dispatch: confirmationsDispatch,
+  } = useContext<ConfirmationsContextProps>(ConfirmationsContext)
   const listedItem: StorageOffer | undefined = listedOffer?.item
 
   const [isInitialised, setIsInitialised] = useState(false)
@@ -193,6 +198,13 @@ const Provider: FC = ({ children }) => {
           if (!receipt) {
             throw new Error('Did not receive the recipt from the storage contract.')
           }
+          confirmationsDispatch({
+            type: 'NEW_REQUEST',
+            payload: {
+              contractAction: 'AGREEMENT_NEW',
+              txHash: receipt.transactionHash,
+            },
+          })
           dispatch({
             type: 'SET_STATUS',
             payload: {
@@ -218,7 +230,10 @@ const Provider: FC = ({ children }) => {
       }
       setAsyncActions({ createAgreement })
     }
-  }, [web3, account, appDispatch, history, order, pinned, reportError])
+  }, [
+    web3, account, appDispatch, history, order, pinned, reportError,
+    confirmationsDispatch,
+  ])
 
   // Sets plans and currency related states
   useEffect(() => {

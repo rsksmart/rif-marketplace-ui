@@ -8,7 +8,6 @@ import { createReducer } from 'context/storeUtils/reducer'
 import React, {
   createContext, FC, useContext, useEffect, useMemo, useReducer, useState,
 } from 'react'
-import Logger from 'utils/Logger'
 import actions from './actions'
 import { Props, State } from './interfaces'
 
@@ -17,18 +16,13 @@ export type ContextName = typeof contextID
 
 export const initialState: State = {
   contextID,
-  txHashServiceMap: {
-    Agreements: undefined,
-    Staking: undefined,
-  },
+  confirmations: {},
 }
 
 export const Context = createContext<Props>({
   state: initialState,
   dispatch: () => undefined,
 })
-
-const logger = Logger.getInstance()
 
 export const Provider: FC = ({ children }) => {
   const {
@@ -64,19 +58,18 @@ export const Provider: FC = ({ children }) => {
     connect(errorReporter)
   }
 
-  const onConfirmationEvent = (event: ConfirmationTransport): void => { // type ConfirmationsTransport
-    logger.info('****************************************************************')
-    logger.info('new confirmation: ', { event })
-    logger.info('****************************************************************')
-  }
-
   // Initialise
   useEffect(() => {
     if (service && !isInitialised && account) {
       const initialise = async (): Promise<void> => {
         try {
           await authenticate(account)
-          attachEvent('newConfirmation', (event) => onConfirmationEvent(event))
+          attachEvent('newConfirmation', (confirmation: ConfirmationTransport): void => {
+            dispatch({
+              type: 'NEW_CONFIRMATION',
+              payload: confirmation,
+            })
+          })
           setIsInitialised(true)
         } catch (e) {
           errorReporter({
@@ -84,7 +77,6 @@ export const Provider: FC = ({ children }) => {
             id: 'service-connection',
             text: 'Error while initialising confirmations service.',
           })
-          setIsInitialised(false)
         }
       }
 
