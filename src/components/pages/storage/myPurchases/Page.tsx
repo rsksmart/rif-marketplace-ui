@@ -29,6 +29,8 @@ import WithLoginCard from 'components/hoc/WithLoginCard'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import withWithdrawContext, { StorageWithdrawContext, StorageWithdrawContextProps } from 'context/storage/mypurchases/withdraw'
 import GridRow from 'components/atoms/GridRow'
+import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
+import getConfirmationsFor from 'context/Confirmations/utils'
 
 const useTitleStyles = makeStyles(() => ({
   root: {
@@ -70,6 +72,16 @@ const MyStoragePurchases: FC = () => {
       withdraw: withdrawAction,
     },
   } = useContext<StorageWithdrawContextProps>(StorageWithdrawContext)
+
+  const {
+    state: {
+      confirmations,
+    },
+  } = useContext<ConfirmationsContextProps>(ConfirmationsContext)
+
+  const newAgreementsConfsCount = getConfirmationsFor(
+    'AGREEMENT_NEW', confirmations,
+  ).length
 
   const [
     itemDetails,
@@ -164,6 +176,15 @@ const MyStoragePurchases: FC = () => {
 
   return (
     <CenteredPageTemplate>
+      {
+        Boolean(newAgreementsConfsCount)
+        && (
+          <Typography>
+            {`Waiting confirmations for
+             ${newAgreementsConfsCount} new agreement(s)`}
+          </Typography>
+        )
+      }
       <RoundedCard color="secondary">
         <GridColumn>
           <GridItem>

@@ -4,36 +4,53 @@ import {
 } from 'api/rif-marketplace-cache/blockchain/confirmations'
 import { Dispatch } from 'react'
 
-// TODO: put here all events refered to agreements so we only check that entry
-//  of the dictionary when an event of that type comes - will improve performance
-type AgreementsEvents = ''
+type AgreementContractAction = 'AGREEMENT_NEW' | 'AGREEMENT_WITHDRAW' | 'AGREEMENT_PAYOUT'
+type StakingContractAction = 'STAKING_STAKE' | 'STAKING_UNSTAKE'
 
-export type ServiceAwaiting = 'Agreements' | 'Staking'
+export type ContractAction =
+  | AgreementContractAction
+  | StakingContractAction
 
-type ServiceConfirmations = {
-  txHash: string
+export type AgreementWithdrawData = {
+  agreementReference: string
+}
+
+export type AgreementPayoutData = {
+  agreementReference: string
+}
+
+export type AgreementContractData =
+  | AgreementWithdrawData
+  | AgreementPayoutData
+
+export type ContractActionData =
+  | AgreementContractData
+
+export type TxHash = string
+
+export type ConfirmationData = {
+  contractAction: ContractAction
   currentCount: number
-  targetCount: number
+  targetCount?: number
+  contractActionData?: ContractActionData
 }
 
-type AgreementConfirmations = ServiceConfirmations & {
-  agreementId: string
-}
-
-type StakingConfirmations = ServiceConfirmations
-
-export type ServiceConfsMap = Record<
-  ServiceAwaiting,
-  undefined | AgreementConfirmations | StakingConfirmations
+export type ConfirmationsRecord = Record<
+  TxHash, ConfirmationData
 >
 
 // STATE
 export type State = ContextState & {
-  txHashServiceMap: ServiceConfsMap
+  confirmations: ConfirmationsRecord
 }
 
 // PAYLOAD
-type NewConfirmationPayload = ConfirmationTransport
+export type NewConfirmationPayload = ConfirmationTransport
+export type NewRequestPayload = {
+  txHash: string
+  contractAction: ContractAction
+  contractActionData?: ContractActionData
+}
 
 // ACTIONS
 export type Action = (
@@ -41,10 +58,15 @@ export type Action = (
     type: 'NEW_CONFIRMATION'
     payload: NewConfirmationPayload
   }
+  | {
+    type: 'NEW_REQUEST'
+    payload: NewRequestPayload
+  }
 )
 
 export type Actions = {
   NEW_CONFIRMATION: (state: State, payload: NewConfirmationPayload) => State
+  NEW_REQUEST: (state: State, payload: NewRequestPayload) => State
 }
 
 // PROPS

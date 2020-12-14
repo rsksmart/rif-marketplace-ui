@@ -1,29 +1,47 @@
-import Logger from 'utils/Logger'
-import { Actions } from './interfaces'
-
-const logger = Logger.getInstance()
+import {
+  Actions, NewConfirmationPayload, NewRequestPayload, State,
+} from './interfaces'
 
 const actions: Actions = {
-  NEW_CONFIRMATION: (state, payload) => {
-    const {
-      transactionHash,
-      targetConfirmation,
-      confirmations,
-      event,
-    } = payload
-    const stateCopy = { ...state }
-    // TODO:
-    // - chequear si existe, si no crearla
-    // - si llega al target borrar el txHash del diccionario
-    // - chequear si conviene usar event as eventName para llevar mapeo de servicios que esperan confs, puede mejorar performance
-    logger.info('newConfirmation dispatched: ', { event })
-    stateCopy.txHashServiceMap[transactionHash] = {
-      ...state.txHashServiceMap[transactionHash],
-      currentCount: confirmations,
-      targetCount: targetConfirmation, // could be unnecessary if already set, but at the beginning it's needed
+  NEW_CONFIRMATION: (state: State, {
+    transactionHash, targetConfirmation, confirmations: confirmationsCount,
+  }: NewConfirmationPayload) => {
+    const { confirmations } = state
+    const confirmationsCopy = { ...confirmations }
+    const confirmationRecord = confirmationsCopy[transactionHash]
+
+    if (!confirmationRecord) { // this conf is not being tracked
+      return { ...state }
     }
-    return stateCopy
+
+    if (confirmationsCount >= targetConfirmation) {
+      delete confirmationsCopy[transactionHash]
+    } else {
+      confirmationRecord.currentCount = confirmationsCount
+      confirmationRecord.targetCount = targetConfirmation
+    }
+    return {
+      ...state,
+      confirmations: confirmationsCopy,
+    }
   },
+  NEW_REQUEST: (state: State, {
+    txHash,
+    contractAction,
+    contractActionData,
+  }: NewRequestPayload) => (
+    {
+      ...state,
+      confirmations: {
+        ...state.confirmations,
+        [txHash]: {
+          currentCount: 0,
+          contractAction,
+          contractActionData,
+        },
+      },
+    }
+  ),
 }
 
 export default actions
