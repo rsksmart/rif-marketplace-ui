@@ -29,6 +29,7 @@ export const Provider: FC = ({ children }) => {
   } = useContext<AppContextProps>(AppContext)
 
   const [isInitialised, setIsInitialised] = useState(false)
+  const [needsRefresh, setNeedsRefresh] = useState(true)
 
   const [state, dispatch] = useReducer(
     createReducer(initialState, actions),
@@ -47,7 +48,11 @@ export const Provider: FC = ({ children }) => {
     if (api.service && !isInitialised) {
       try {
         // Set up WS events here
-
+        const { attachEvent } = api
+        attachEvent('updated', () => setNeedsRefresh(true))
+        attachEvent('patched', () => setNeedsRefresh(true))
+        attachEvent('created', () => setNeedsRefresh(true))
+        attachEvent('removed', () => setNeedsRefresh(true))
         setIsInitialised(true)
       } catch (e) {
         setIsInitialised(false)
@@ -57,7 +62,7 @@ export const Provider: FC = ({ children }) => {
 
   // Fetch data
   useEffect(() => {
-    if (isInitialised && filters) {
+    if (isInitialised && filters && needsRefresh) {
       appDispatch({
         type: 'SET_IS_LOADING',
         payload: {
@@ -71,6 +76,7 @@ export const Provider: FC = ({ children }) => {
             type: 'SET_LISTING',
             payload: items,
           })
+          setNeedsRefresh(false)
         })
         .finally(() => {
           appDispatch({
@@ -82,7 +88,7 @@ export const Provider: FC = ({ children }) => {
           })
         })
     }
-  }, [isInitialised, api, filters, appDispatch])
+  }, [isInitialised, api, filters, appDispatch, needsRefresh])
 
   // Finalise
   const value = useMemo(() => ({
