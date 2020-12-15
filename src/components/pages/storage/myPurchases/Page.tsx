@@ -31,6 +31,7 @@ import withWithdrawContext, { StorageWithdrawContext, StorageWithdrawContextProp
 import GridRow from 'components/atoms/GridRow'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
 import getConfirmationsFor from 'context/Confirmations/utils'
+import InfoBar from 'components/molecules/InfoBar'
 
 const useTitleStyles = makeStyles(() => ({
   root: {
@@ -179,10 +180,12 @@ const MyStoragePurchases: FC = () => {
       {
         Boolean(newAgreementsConfsCount)
         && (
-          <Typography>
-            {`Waiting confirmations for
-             ${newAgreementsConfsCount} new agreement(s)`}
-          </Typography>
+          <InfoBar
+            isVisible
+            type="info"
+            text={`Waiting confirmations for
+            ${newAgreementsConfsCount} new agreement(s)`}
+          />
         )
       }
       <RoundedCard color="secondary">
