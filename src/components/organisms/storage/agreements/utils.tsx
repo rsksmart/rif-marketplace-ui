@@ -76,21 +76,16 @@ const getCoreItemFields = (
   }
 }
 
-export const createCustomerItemFields = (
-  agreements: Agreement[],
+export const getCustomerViewFrom = (
+  agreement: Agreement,
   crypto: MarketCryptoRecord,
   currentFiat: MarketFiat,
-  onItemRenew: (event, agreement: Agreement) => void,
-  onItemSelect: (
-    event,
-    agreementView: (AgreementCustomerView),
-    agreement: Agreement
-  ) => void,
-): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
+): AgreementCustomerView => {
   const agreementInfo = getCoreItemFields(agreement, crypto, currentFiat)
   const {
-    id, provider, withdrawableFunds, paymentToken, expiresInSeconds, isActive,
+    provider, paymentToken, withdrawableFunds,
   } = agreement
+
   const providerValue = <AddressItem value={provider} />
   const withdrawableFundsValue = (
     <ItemWUnit
@@ -102,13 +97,36 @@ export const createCustomerItemFields = (
 
   return {
     ...agreementInfo,
+    PROVIDER: providerValue,
+    'WITHDRAWABLE FUNDS': withdrawableFundsValue,
+  } as AgreementCustomerView
+}
+
+export const createCustomerItemFields = (
+  agreements: Agreement[],
+  crypto: MarketCryptoRecord,
+  currentFiat: MarketFiat,
+  onItemRenew: (event, agreement: Agreement) => void,
+  onItemSelect: (
+    event,
+    agreementView: (AgreementCustomerView),
+    agreement: Agreement
+  ) => void,
+): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
+  const {
+    id, expiresInSeconds, isActive,
+  } = agreement
+  const customerView = getCustomerViewFrom(agreement, crypto, currentFiat)
+
+  return {
+    ...customerView,
     id,
-    provider: providerValue,
-    contentSize: agreementInfo.AMOUNT,
-    renewalDate: agreementInfo['RENEWAL DATE'],
-    subscriptionPeriod: agreementInfo['SUBSCRIPTION PERIOD'],
-    monthlyFee: agreementInfo['PRICE/GB'],
-    withdrawableFunds: withdrawableFundsValue,
+    provider: customerView.PROVIDER,
+    contentSize: customerView.AMOUNT,
+    renewalDate: customerView['RENEWAL DATE'],
+    subscriptionPeriod: customerView['SUBSCRIPTION PERIOD'],
+    monthlyFee: customerView['PRICE/GB'],
+    withdrawableFunds: customerView['WITHDRAWABLE FUNDS'],
     renew: (
       <SelectRowButton
         id={id}
@@ -124,12 +142,7 @@ export const createCustomerItemFields = (
       <SelectRowButton
         id={id}
         handleSelect={(event): void => onItemSelect(
-          event, {
-            ...agreementInfo,
-            PROVIDER: providerValue,
-            'WITHDRAWABLE FUNDS': withdrawableFundsValue,
-          } as AgreementCustomerView,
-          agreement,
+          event, customerView, agreement,
         )}
       >
         View
