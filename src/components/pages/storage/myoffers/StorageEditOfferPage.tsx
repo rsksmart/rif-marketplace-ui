@@ -22,6 +22,7 @@ import { transformOfferDataForContract } from 'contracts/storage/utils'
 import { SupportedTokens } from 'contracts/interfaces'
 import { StorageOffer } from 'models/marketItems/StorageItem'
 import Web3 from 'web3'
+import { UNIT_PREFIX_POW2 } from '../../../../utils/utils'
 
 const logger = Logger.getInstance()
 
@@ -54,7 +55,7 @@ const StorageEditOfferPage: FC<{}> = () => {
       (plan) => !current.find(
         (p) => p.currency === plan.currency
               && p.period === plan.period
-              && p.price === plan.price,
+              && p.price.toString() === plan.price.toString(),
       ),
     )
   }
@@ -73,7 +74,11 @@ const StorageEditOfferPage: FC<{}> = () => {
 
     const isPlanChange = isBillingPlansChanges(
       billingPlans,
-      originalOffer?.subscriptionOptions as StorageBillingPlan[],
+      originalOffer
+          ?.subscriptionOptions
+          .map(
+              (p) => ({ ...p, price: p.price.mul(UNIT_PREFIX_POW2.KILO) })
+          ) as StorageBillingPlan[],
     )
     const isCapacityChange = originalOffer?.totalCapacityGB !== totalCapacity
 
