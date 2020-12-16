@@ -105,10 +105,46 @@ class StorageContract extends ContractWithTokens {
     )
   }
 
+  public setTotalCapacity(
+    capacityMB: string,
+    txOptions: TxOptions,
+  ): Promise<TransactionReceipt> {
+    return this.send(
+      this.methods.setTotalCapacity(capacityMB),
+      {
+        gasMultiplier: StorageContract.gasMultiplier,
+        ...txOptions,
+        token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
+      },
+    )
+  }
+
+  public setBillingPlans(
+    billingPeriods: number[][],
+    billingWeiPrices: string[][],
+    tokens: SupportedTokens[],
+    txOptions: TxOptions,
+  ): Promise<TransactionReceipt> {
+    const tokensAddresses = tokens.map((t) => this.getToken(t).tokenAddress)
+
+    return this.send(
+      this.methods.setBillingPlans(
+        billingPeriods,
+        billingWeiPrices,
+        tokensAddresses,
+      ),
+      {
+        gasMultiplier: StorageContract.gasMultiplier,
+        ...txOptions,
+        token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
+      },
+    )
+  }
+
   public async setOffer(
     capacityMB: string,
     billingPeriods: number[][],
-    billingRbtcWeiPrices: string[][],
+    billingWeiPrices: string[][],
     tokens: SupportedTokens[],
     peerId: string,
     txOptions: TxOptions,
@@ -122,7 +158,7 @@ class StorageContract extends ContractWithTokens {
     const setOfferTx = await this.methods.setOffer(
       capacityMB,
       billingPeriods,
-      billingRbtcWeiPrices,
+      billingWeiPrices,
       tokensAddresses,
       prefixedMsg,
     )
