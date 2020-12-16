@@ -1,6 +1,8 @@
 import { Web3Store } from '@rsksmart/rif-ui'
 import { LoadingPayload } from 'context/App/appActions'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
+import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
+import { AgreementWithdrawData } from 'context/Confirmations/interfaces'
 import createWithContext from 'context/storeUtils/createWithContext'
 import { UIError } from 'models/UIMessage'
 import React, {
@@ -41,6 +43,10 @@ const Provider: FC = ({ children }) => {
       account,
     },
   } = useContext(Web3Store)
+
+  const {
+    dispatch: confirmationsDispatch,
+  } = useContext<ConfirmationsContextProps>(ConfirmationsContext)
 
   const [asyncActions, setAsyncActions] = useState(initialAsyncActions)
 
@@ -96,6 +102,16 @@ const Provider: FC = ({ children }) => {
         })
 
         if (withdrawFundsReceipt) {
+          confirmationsDispatch({
+            type: 'NEW_REQUEST',
+            payload: {
+              contractAction: 'AGREEMENT_WITHDRAW',
+              txHash: withdrawFundsReceipt.transactionHash,
+              contractActionData: {
+                agreementId: id,
+              } as AgreementWithdrawData,
+            },
+          })
           dispatch({
             type: 'SET_STATUS',
             payload: {
@@ -119,7 +135,10 @@ const Provider: FC = ({ children }) => {
       }
       setAsyncActions({ withdraw })
     }
-  }, [web3, account, appDispatch, reportError, agreement])
+  }, [
+    web3, account, appDispatch, reportError, agreement,
+    confirmationsDispatch,
+  ])
 
   const value = useMemo(() => ({
     state,
