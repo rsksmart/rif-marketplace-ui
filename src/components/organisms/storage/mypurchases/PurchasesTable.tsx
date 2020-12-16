@@ -5,6 +5,8 @@ import Typography from '@material-ui/core/Typography'
 import RoundBtn from 'components/atoms/RoundBtn'
 import Marketplace from 'components/templates/marketplace/Marketplace'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
+import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
+import getConfirmationsFor from 'context/Confirmations/utils'
 import MarketContext from 'context/Market/MarketContext'
 import withWithdrawContext, { StorageWithdrawContext, StorageWithdrawContextProps } from 'context/storage/mypurchases/withdraw'
 import { Agreement } from 'models/marketItems/StorageItem'
@@ -50,6 +52,13 @@ const PurchasesTable: FC<PurchasesProps> = (
       withdraw: withdrawAction,
     },
   } = useContext<StorageWithdrawContextProps>(StorageWithdrawContext)
+
+  const {
+    state: {
+      confirmations,
+    },
+  } = useContext<ConfirmationsContextProps>(ConfirmationsContext)
+
   const [
     itemDetails,
     setItemDetails,
@@ -73,6 +82,10 @@ const PurchasesTable: FC<PurchasesProps> = (
       </Typography>
     )
   }
+
+  const withdrawConfirmationCount = getConfirmationsFor(
+    'AGREEMENT_WITHDRAW', confirmations,
+  ).length
 
   const headers = {
     title: 'Title',
@@ -144,7 +157,7 @@ const PurchasesTable: FC<PurchasesProps> = (
       <TableContainer>
         <Marketplace
           headers={headers}
-          isLoading={false}
+          isLoading={Boolean(withdrawConfirmationCount)}
           items={items}
         />
       </TableContainer>

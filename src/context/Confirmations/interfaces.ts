@@ -12,11 +12,11 @@ export type ContractAction =
   | StakingContractAction
 
 export type AgreementWithdrawData = {
-  agreementReference: string
+  agreementId: string
 }
 
 export type AgreementPayoutData = {
-  agreementReference: string
+  agreementId: string
 }
 
 export type AgreementContractData =
