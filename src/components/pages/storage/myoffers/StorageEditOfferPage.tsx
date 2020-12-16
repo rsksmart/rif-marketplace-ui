@@ -7,7 +7,7 @@ import { LoadingPayload } from 'context/App/appActions'
 import AppContext, { errorReporterFactory } from 'context/App/AppContext'
 import { AddTxPayload } from 'context/Blockchain/blockchainActions'
 import BlockchainContext from 'context/Blockchain/BlockchainContext'
-import { OfferEditContextProps } from 'context/Market/storage/interfaces'
+import { OfferEditContextProps, StorageBillingPlan } from 'context/Market/storage/interfaces'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { StorageContract } from 'contracts/storage'
 import { UIError } from 'models/UIMessage'
@@ -21,6 +21,7 @@ import TransactionInProgressPanel from 'components/organisms/TransactionInProgre
 import { transformOfferDataForContract } from 'contracts/storage/utils'
 import { SupportedTokens } from 'contracts/interfaces'
 import { StorageOffer } from 'models/marketItems/StorageItem'
+import Web3 from 'web3'
 
 const logger = Logger.getInstance()
 
@@ -45,6 +46,63 @@ const StorageEditOfferPage: FC<{}> = () => {
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
 
+  const isBillingPlansChanges = (current: StorageBillingPlan[], previous: StorageBillingPlan[]): boolean => {
+    if (current.length !== previous.length) {
+      return true
+    }
+    return previous.some(
+      (plan) => !current.find(
+        (p) => p.currency === plan.currency
+              && p.period === plan.period
+              && p.price === plan.price,
+      ),
+    )
+  }
+
+  const makeUpdateOfferTx = () => {
+    const storageContract = StorageContract.getInstance(web3 as Web3)
+
+    const { subscriptionOptions } = originalOffer as StorageOffer
+    const {
+      totalCapacityMB, periods, prices, tokens,
+    } = transformOfferDataForContract(
+      totalCapacity,
+      billingPlans,
+      subscriptionOptions,
+    )
+
+    const isPlanChange = isBillingPlansChanges(
+      billingPlans,
+      originalOffer?.subscriptionOptions as StorageBillingPlan[],
+    )
+    const isCapacityChange = originalOffer?.totalCapacityGB !== totalCapacity
+
+    if (isCapacityChange && !isPlanChange) {
+      return storageContract.setTotalCapacity(
+        totalCapacityMB,
+        { from: account },
+      )
+    }
+
+    if (isPlanChange && !isCapacityChange) {
+      return storageContract.setBillingPlans(
+        periods,
+        prices,
+          tokens as SupportedTokens[],
+          { from: account },
+      )
+    }
+
+    return storageContract.setOffer(
+      totalCapacityMB,
+      periods,
+      prices,
+      tokens as SupportedTokens[],
+      peerId,
+      { from: account },
+    )
+  }
+
   const handleEditOffer = async () => {
     // without a web3 instance the submit action would be disabled
     if (!web3) return
@@ -59,25 +117,8 @@ const StorageEditOfferPage: FC<{}> = () => {
       } as any)
 
       setIsProcessing(true)
-      const storageContract = StorageContract.getInstance(web3)
 
-      const { subscriptionOptions } = originalOffer as StorageOffer
-      const {
-        totalCapacityMB, periods, prices, tokens,
-      } = transformOfferDataForContract(
-        totalCapacity,
-        billingPlans,
-        subscriptionOptions,
-      )
-
-      const setOfferReceipt = await storageContract.setOffer(
-        totalCapacityMB,
-        periods,
-        prices,
-        tokens as SupportedTokens[],
-        peerId,
-        { from: account },
-      )
+      const setOfferReceipt = await makeUpdateOfferTx()
       logger.info('setOffer receipt: ', setOfferReceipt)
 
       bcDispatch({
