@@ -18,7 +18,7 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
-import { transformOfferDataForContract } from 'contracts/storage/utils'
+import { isBillingPlansChanges, transformOfferDataForContract } from 'contracts/storage/utils'
 import { SupportedTokens } from 'contracts/interfaces'
 import { StorageOffer } from 'models/marketItems/StorageItem'
 import Web3 from 'web3'
@@ -46,19 +46,6 @@ const StorageEditOfferPage: FC<{}> = () => {
 
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
-
-  const isBillingPlansChanges = (current: StorageBillingPlan[], previous: StorageBillingPlan[]): boolean => {
-    if (current.length !== previous.length) {
-      return true
-    }
-    return previous.some(
-      (plan) => !current.find(
-        (p) => p.currency === plan.currency
-              && p.period === plan.period
-              && p.price.toString() === plan.price.toString(),
-      ),
-    )
-  }
 
   const makeUpdateOfferTx = () => {
     const storageContract = StorageContract.getInstance(web3 as Web3)
@@ -123,13 +110,13 @@ const StorageEditOfferPage: FC<{}> = () => {
 
       setIsProcessing(true)
 
-      const setOfferReceipt = await makeUpdateOfferTx()
-      logger.info('setOffer receipt: ', setOfferReceipt)
+      const updateOfferReceipt = await makeUpdateOfferTx()
+      logger.info('setOffer receipt: ', updateOfferReceipt)
 
       bcDispatch({
         type: 'SET_TX_HASH',
         payload: {
-          txHash: setOfferReceipt.transactionHash,
+          txHash: updateOfferReceipt.transactionHash,
         } as AddTxPayload,
       })
       setIsPendingConfirm(true)
