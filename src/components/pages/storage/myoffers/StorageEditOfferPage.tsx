@@ -18,7 +18,7 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
-import { isBillingPlansChanges, transformOfferDataForContract } from 'contracts/storage/utils'
+import { isBillingPlansChanged, transformOfferDataForContract } from 'contracts/storage/utils'
 import { SupportedTokens } from 'contracts/interfaces'
 import { StorageOffer } from 'models/marketItems/StorageItem'
 import Web3 from 'web3'
@@ -59,7 +59,7 @@ const StorageEditOfferPage: FC<{}> = () => {
       subscriptionOptions,
     )
 
-    const isPlanChange = isBillingPlansChanges(
+    const isPlanChange = isBillingPlansChanged(
       billingPlans,
       originalOffer
           ?.subscriptionOptions

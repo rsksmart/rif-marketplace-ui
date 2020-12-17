@@ -109,7 +109,10 @@ export const transformOfferDataForContract = (
   }
 }
 
-export const isBillingPlansChanges = (current: StorageBillingPlan[], previous: StorageBillingPlan[]): boolean => {
+export const isBillingPlansChanged = (
+  current: StorageBillingPlan[],
+  previous: StorageBillingPlan[],
+): boolean => {
   if (current.length !== previous.length) {
     return true
   }
