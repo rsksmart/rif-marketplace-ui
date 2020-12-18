@@ -48,6 +48,16 @@ const StorageEditOfferPage: FC<{}> = () => {
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
 
+  const isPlanChange = isBillingPlansChanged(
+    billingPlans,
+    originalOffer
+        ?.subscriptionOptions
+        .map(
+            (p) => ({ ...p, price: p.price.mul(UNIT_PREFIX_POW2.KILO) })
+        ) as StorageBillingPlan[],
+  )
+  const isCapacityChange = originalOffer?.totalCapacityGB !== totalCapacity
+
   const makeUpdateOfferTx = () => {
     const storageContract = StorageContract.getInstance(web3 as Web3)
 
@@ -59,16 +69,6 @@ const StorageEditOfferPage: FC<{}> = () => {
       billingPlans,
       subscriptionOptions,
     )
-
-    const isPlanChange = isBillingPlansChanged(
-      billingPlans,
-      originalOffer
-          ?.subscriptionOptions
-          .map(
-              (p) => ({ ...p, price: p.price.mul(UNIT_PREFIX_POW2.KILO) })
-          ) as StorageBillingPlan[],
-    )
-    const isCapacityChange = originalOffer?.totalCapacityGB !== totalCapacity
 
     if (isCapacityChange && !isPlanChange) {
       return storageContract.setTotalCapacity(
@@ -150,7 +150,7 @@ const StorageEditOfferPage: FC<{}> = () => {
     }
   }, [isPendingConfirm, history, isProcessing])
 
-  const isSubmitEnabled = Boolean(billingPlans.length && totalCapacity)
+  const isSubmitEnabled = Boolean(billingPlans.length && totalCapacity && (isPlanChange || isCapacityChange))
   const endHandler = (
     <>
       <Button disabled={!isSubmitEnabled} color="primary" variant="contained" rounded onClick={handleEditOffer}>Edit offer</Button>
