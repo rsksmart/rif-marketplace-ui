@@ -1,3 +1,4 @@
+import { TransactionReceipt } from 'web3-eth'
 import Typography from '@material-ui/core/Typography'
 import { Button, Web3Store } from '@rsksmart/rif-ui'
 import RoundedCard from 'components/atoms/RoundedCard'
@@ -58,7 +59,7 @@ const StorageEditOfferPage: FC<{}> = () => {
   )
   const isCapacityChange = originalOffer?.totalCapacityGB !== totalCapacity
 
-  const makeUpdateOfferTx = () => {
+  const makeUpdateOfferTx = (): Promise<TransactionReceipt> => {
     const storageContract = StorageContract.getInstance(web3 as Web3)
 
     const { subscriptionOptions } = originalOffer as StorageOffer
