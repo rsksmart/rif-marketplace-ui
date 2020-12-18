@@ -8,6 +8,8 @@ import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import { getShortDateString } from 'utils/dateUtils'
+import { Spinner } from '@rsksmart/rif-ui'
+import { AgreementWithdrawData, ConfirmationData } from 'context/Confirmations/interfaces'
 
 export type AgreementView = {
   title: JSX.Element
@@ -112,11 +114,18 @@ export const createCustomerItemFields = (
     agreementView: (AgreementCustomerView),
     agreement: Agreement
   ) => void,
+  withdrawConfirmations: ConfirmationData[],
 ): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
   const {
     id, expiresInSeconds, isActive,
   } = agreement
   const customerView = getCustomerViewFrom(agreement, crypto, currentFiat)
+
+  const isProcessingWithdrawConfs = withdrawConfirmations.some(
+    ({ contractActionData }) => (
+      (contractActionData as AgreementWithdrawData).agreementId === id
+    ),
+  )
 
   return {
     ...customerView,
@@ -127,27 +136,31 @@ export const createCustomerItemFields = (
     subscriptionPeriod: customerView['SUBSCRIPTION PERIOD'],
     monthlyFee: customerView['PRICE/GB'],
     withdrawableFunds: customerView['WITHDRAWABLE FUNDS'],
-    renew: (
-      <SelectRowButton
-        id={id}
-        disabled={!expiresInSeconds || !isActive}
-        handleSelect={(event): void => {
-          onItemRenew(event, agreement)
-        }}
-      >
-        Renew
-      </SelectRowButton>
-    ),
-    view: (
-      <SelectRowButton
-        id={id}
-        handleSelect={(event): void => onItemSelect(
-          event, customerView, agreement,
-        )}
-      >
-        View
-      </SelectRowButton>
-    ),
+    renew: isProcessingWithdrawConfs
+      ? <Spinner />
+      : (
+        <SelectRowButton
+          id={id}
+          disabled={!expiresInSeconds || !isActive}
+          handleSelect={(event): void => {
+            onItemRenew(event, agreement)
+          }}
+        >
+          Renew
+        </SelectRowButton>
+      ),
+    view: isProcessingWithdrawConfs
+      ? <></>
+      : (
+        <SelectRowButton
+          id={id}
+          handleSelect={(event): void => onItemSelect(
+            event, customerView, agreement,
+          )}
+        >
+          View
+        </SelectRowButton>
+      ),
   }
 })
 

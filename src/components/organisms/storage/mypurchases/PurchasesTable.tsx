@@ -83,9 +83,9 @@ const PurchasesTable: FC<PurchasesProps> = (
     )
   }
 
-  const withdrawConfirmationCount = getConfirmationsFor(
+  const withdrawConfirmations = getConfirmationsFor(
     'AGREEMENT_WITHDRAW', confirmations,
-  ).length
+  )
 
   const headers = {
     title: 'Title',
@@ -112,7 +112,9 @@ const PurchasesTable: FC<PurchasesProps> = (
         payload: agreement,
       })
     },
+    withdrawConfirmations,
   )
+
   const modalActions = (): JSX.Element => {
     const isEnabled = Boolean(selectedAgreement?.withdrawableFunds.toNumber())
     return (
@@ -157,7 +159,7 @@ const PurchasesTable: FC<PurchasesProps> = (
       <TableContainer>
         <Marketplace
           headers={headers}
-          isLoading={Boolean(withdrawConfirmationCount)}
+          isLoading={false}
           items={items}
         />
       </TableContainer>
