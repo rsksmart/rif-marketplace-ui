@@ -8,6 +8,7 @@ import { NotificationsContextProvider } from 'context/Services/notifications'
 import React, { FC, useContext } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
+import { ConfirmationsContextProvider } from 'context/Confirmations'
 import Footer from './organisms/Footer'
 import Routes from './Routes'
 import AlertPanel from './organisms/AlertPanel'
@@ -58,6 +59,7 @@ const Market: FC = () => {
   }
 
   const orderedProviders = [
+    ConfirmationsContextProvider,
     NotificationsContextProvider,
     BlockchainContextProvider,
     MarketContextProvider,
