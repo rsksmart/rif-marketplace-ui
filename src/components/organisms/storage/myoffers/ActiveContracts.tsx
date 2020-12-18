@@ -181,7 +181,7 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
       />
       <ProgressOverlay
         isDone={txOperationDone}
-        doneMsg="Your funds have been withdrawed!"
+        doneMsg="Your funds have been withdrawn!"
         inProgress={processingTx}
         buttons={[
           <RoundBtn

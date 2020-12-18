@@ -175,7 +175,7 @@ const PurchasesTable: FC<PurchasesProps> = (
       />
       <ProgressOverlay
         isDone={isDone}
-        doneMsg="Your funds have been withdrawed!"
+        doneMsg="Your funds have been withdrawn!"
         inProgress={inProgress}
         buttons={[
           <RoundBtn
