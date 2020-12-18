@@ -15,3 +15,5 @@ export const isBillingPlansChanged = (
     ),
   )
 }
+
+export default { isBillingPlansChanged }
