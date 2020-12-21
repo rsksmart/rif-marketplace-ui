@@ -19,6 +19,9 @@ import AppContext, { errorReporterFactory } from 'context/App/AppContext'
 import { UIError } from 'models/UIMessage'
 import { LoadingPayload } from 'context/App/appActions'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
+import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
+import { AgreementUpdateData } from 'context/Confirmations/interfaces'
+import useConfirmations from 'hooks/useConfirmations'
 import DetailsModal from '../agreements/DetailsModal'
 
 export type ActiveContractsProps = {
@@ -43,6 +46,9 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
   const reportError = useCallback((
     e: UIError,
   ) => errorReporterFactory(appDispatch)(e), [appDispatch])
+  const {
+    dispatch: confirmationsDispatch,
+  } = useContext<ConfirmationsContextProps>(ConfirmationsContext)
 
   const [processingTx, setProcessingTx] = useState(false)
   const [txOperationDone, setTxOperationDone] = useState(false)
@@ -58,6 +64,8 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
       setItemDetails(undefined)
     }
   }, [txOperationDone, itemDetails])
+
+  const payoutConfirmations = useConfirmations(['AGREEMENT_PAYOUT'])
 
   if (!agreements.length) {
     return (
@@ -89,7 +97,7 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
         .StorageContract
         .getInstance(web3 as Web3)
 
-      const withdrawFundsReceipt = await storageContract
+      const payoutFundsReceipt = await storageContract
         .payoutFunds(
           {
             creatorOfAgreement: agreement.consumer,
@@ -98,10 +106,20 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
           },
           { from: account },
         )
-      logger.debug('receipt: ', { withdrawFundsReceipt })
+      logger.debug('receipt: ', { payoutFundsReceipt })
 
-      if (withdrawFundsReceipt) {
+      if (payoutFundsReceipt) {
         setTxOperationDone(true)
+        confirmationsDispatch({
+          type: 'NEW_REQUEST',
+          payload: {
+            contractAction: 'AGREEMENT_PAYOUT',
+            txHash: payoutFundsReceipt.transactionHash,
+            contractActionData: {
+              agreementId: agreement.id,
+            } as AgreementUpdateData,
+          },
+        })
       }
     } catch (error) {
       logger.error('error withdrawing provider funds', error)
@@ -139,6 +157,7 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
       setItemDetails(agreementView as AgreementProviderView)
       setSelectedAgreement(agreement)
     },
+    payoutConfirmations,
   )
 
   const headers = {
