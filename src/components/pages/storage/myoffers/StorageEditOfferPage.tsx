@@ -8,7 +8,7 @@ import { LoadingPayload } from 'context/App/appActions'
 import AppContext, { errorReporterFactory } from 'context/App/AppContext'
 import { AddTxPayload } from 'context/Blockchain/blockchainActions'
 import BlockchainContext from 'context/Blockchain/BlockchainContext'
-import { OfferEditContextProps, StorageBillingPlan } from 'context/Market/storage/interfaces'
+import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { StorageContract } from 'contracts/storage'
 import { UIError } from 'models/UIMessage'
@@ -21,10 +21,9 @@ import Logger from 'utils/Logger'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
 import { SupportedTokens } from 'contracts/interfaces'
-import { StorageOffer } from 'models/marketItems/StorageItem'
+import { BillingPlan, StorageOffer } from 'models/marketItems/StorageItem'
 import Web3 from 'web3'
-import { UNIT_PREFIX_POW2 } from 'utils/utils'
-import { isBillingPlansChanged } from 'components/pages/storage/myoffers/utils'
+import { isBillingPlansChange } from 'components/pages/storage/myoffers/utils'
 
 const logger = Logger.getInstance()
 
@@ -49,13 +48,9 @@ const StorageEditOfferPage: FC<{}> = () => {
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
 
-  const isPlanChange = isBillingPlansChanged(
-    billingPlans,
-    originalOffer
-        ?.subscriptionOptions
-        .map(
-            (p) => ({ ...p, price: p.price.mul(UNIT_PREFIX_POW2.KILO) })
-        ) as StorageBillingPlan[],
+  const isPlansChange = isBillingPlansChange(
+    billingPlans as BillingPlan[],
+    originalOffer?.subscriptionOptions as BillingPlan[],
   )
   const isCapacityChange = originalOffer?.totalCapacityGB !== totalCapacity
 
@@ -71,19 +66,19 @@ const StorageEditOfferPage: FC<{}> = () => {
       subscriptionOptions,
     )
 
-    if (isCapacityChange && !isPlanChange) {
+    if (isCapacityChange && !isPlansChange) {
       return storageContract.setTotalCapacity(
         totalCapacityMB,
         { from: account },
       )
     }
 
-    if (isPlanChange && !isCapacityChange) {
+    if (isPlansChange && !isCapacityChange) {
       return storageContract.setBillingPlans(
         periods,
         prices,
-          tokens as SupportedTokens[],
-          { from: account },
+        tokens as SupportedTokens[],
+        { from: account },
       )
     }
 
@@ -97,7 +92,7 @@ const StorageEditOfferPage: FC<{}> = () => {
     )
   }
 
-  const handleEditOffer = async () => {
+  const handleEditOffer = async (): Promise<void> => {
     // without a web3 instance the submit action would be disabled
     if (!web3) return
     try {
@@ -151,7 +146,7 @@ const StorageEditOfferPage: FC<{}> = () => {
     }
   }, [isPendingConfirm, history, isProcessing])
 
-  const isSubmitEnabled = Boolean(billingPlans.length && totalCapacity && (isPlanChange || isCapacityChange))
+  const isSubmitEnabled = Boolean(billingPlans.length && totalCapacity && (isPlansChange || isCapacityChange))
   const endHandler = (
     <>
       <Button disabled={!isSubmitEnabled} color="primary" variant="contained" rounded onClick={handleEditOffer}>Edit offer</Button>

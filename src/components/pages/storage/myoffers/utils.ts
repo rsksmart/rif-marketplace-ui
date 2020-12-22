@@ -1,8 +1,8 @@
-import { StorageBillingPlan } from 'context/Market/storage/interfaces'
+import { BillingPlan } from 'models/marketItems/StorageItem'
 
-export const isBillingPlansChanged = (
-  current: StorageBillingPlan[],
-  previous: StorageBillingPlan[],
+export const isBillingPlansChange = (
+  current: BillingPlan[],
+  previous: BillingPlan[],
 ): boolean => {
   if (current.length !== previous.length) {
     return true
@@ -16,4 +16,4 @@ export const isBillingPlansChanged = (
   )
 }
 
-export default { isBillingPlansChanged }
+export default { isBillingPlansChange }
