@@ -136,7 +136,7 @@ const PurchasesTable: FC<PurchasesProps> = (
         {
           isEnabled && (
             <Typography variant="caption" color="secondary" align="center">
-              Withdrawing your funds would terminate the agreement
+              Withdrawing your funds would terminate the agreement at the end of your current period
             </Typography>
           )
         }
