@@ -50,7 +50,7 @@ const StorageEditOfferPage: FC<{}> = () => {
 
   const isPlansChange = isBillingPlansChange(
     billingPlans as BillingPlan[],
-    originalOffer?.subscriptionOptions as BillingPlan[],
+    originalOffer?.subscriptionOptions as BillingPlan[] || [],
   )
   const isCapacityChange = originalOffer?.totalCapacityGB.toString() !== totalCapacity.toString()
 
