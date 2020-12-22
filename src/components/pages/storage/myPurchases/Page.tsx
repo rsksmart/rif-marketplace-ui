@@ -57,7 +57,7 @@ const MyStoragePurchases: FC = () => {
   } = useContext<ConfirmationsContextProps>(ConfirmationsContext)
 
   const newAgreementsConfsCount = getConfirmationsFor(
-    'AGREEMENT_NEW', confirmations,
+    ['AGREEMENT_NEW'], confirmations,
   ).length
 
   // filters agreements by current account

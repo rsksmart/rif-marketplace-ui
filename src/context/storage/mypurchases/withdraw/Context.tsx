@@ -2,7 +2,7 @@ import { Web3Store } from '@rsksmart/rif-ui'
 import { LoadingPayload } from 'context/App/appActions'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
-import { AgreementWithdrawData } from 'context/Confirmations/interfaces'
+import { AgreementUpdateData } from 'context/Confirmations/interfaces'
 import createWithContext from 'context/storeUtils/createWithContext'
 import { UIError } from 'models/UIMessage'
 import React, {
@@ -109,7 +109,7 @@ const Provider: FC = ({ children }) => {
               txHash: withdrawFundsReceipt.transactionHash,
               contractActionData: {
                 agreementId: id,
-              } as AgreementWithdrawData,
+              } as AgreementUpdateData,
             },
           })
           dispatch({

@@ -83,8 +83,8 @@ const PurchasesTable: FC<PurchasesProps> = (
     )
   }
 
-  const withdrawConfirmations = getConfirmationsFor(
-    'AGREEMENT_WITHDRAW', confirmations,
+  const withdrawAndRenewConfs = getConfirmationsFor(
+    ['AGREEMENT_WITHDRAW', 'AGREEMENT_RENEW'], confirmations,
   )
 
   const headers = {
@@ -112,7 +112,7 @@ const PurchasesTable: FC<PurchasesProps> = (
         payload: agreement,
       })
     },
-    withdrawConfirmations,
+    withdrawAndRenewConfs,
   )
 
   const modalActions = (): JSX.Element => {
