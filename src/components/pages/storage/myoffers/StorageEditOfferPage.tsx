@@ -52,7 +52,7 @@ const StorageEditOfferPage: FC<{}> = () => {
     billingPlans as BillingPlan[],
     originalOffer?.subscriptionOptions as BillingPlan[],
   )
-  const isCapacityChange = originalOffer?.totalCapacityGB !== totalCapacity
+  const isCapacityChange = originalOffer?.totalCapacityGB.toString() !== totalCapacity.toString()
 
   const makeUpdateOfferTx = (): Promise<TransactionReceipt> => {
     const storageContract = StorageContract.getInstance(web3 as Web3)
