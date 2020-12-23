@@ -2,12 +2,17 @@ import Box from '@material-ui/core/Box'
 import Divider from '@material-ui/core/Divider'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import { Button, ModalDialogue } from '@rsksmart/rif-ui'
+import { Button, ModalDialogue, Web3Store } from '@rsksmart/rif-ui'
 import { StakedBalances as StakedBalancesProp } from 'api/rif-marketplace-cache/storage/stakes'
 import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
-import React, { FC, useEffect, useState } from 'react'
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react'
 import { SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
+import Big from 'big.js'
+import { getBalance } from 'contracts/utils/accountBalance'
+import { convertToWeiString } from 'utils/parsers'
 import StakedBalances from './StakedBalances'
 
 export interface DepositModalProps {
@@ -29,17 +34,35 @@ const DepositModal: FC<DepositModalProps> = ({
 }) => {
   const classes = useStyles()
   const currencyOptions: SupportedTokens[] = [SUPPORTED_TOKENS.rbtc, SUPPORTED_TOKENS.rif]
-  const [selectedCurrency, setSelectedCurrency] = useState<SupportedTokens>(SUPPORTED_TOKENS.rbtc)
+  const [selectedToken, setSelectedToken] = useState<SupportedTokens>(SUPPORTED_TOKENS.rbtc)
   const [amountToStake, setAmountToStake] = useState<number | undefined>(undefined)
+  const [accountWeiBalance, setAccountWeiBalance] = useState(Big(0))
+
+  const {
+    state: {
+      account,
+      web3,
+    },
+  } = useContext(Web3Store)
 
   useEffect(() => {
     setAmountToStake(undefined)
   }, [open])
 
+  useEffect(() => {
+    if (account && web3) {
+      const calculateBalance = async (): Promise<void> => {
+        const balance = await getBalance(web3, account, selectedToken)
+        setAccountWeiBalance(Big(balance))
+      }
+      calculateBalance()
+    }
+  }, [account, web3, selectedToken])
+
   const handleCurrencyChange = ({
     target: { value },
   }: React.ChangeEvent<{ name?: string, value: unknown }>): void => {
-    setSelectedCurrency(value as SupportedTokens)
+    setSelectedToken(value as SupportedTokens)
   }
 
   const handleAmountChange = ({
@@ -49,8 +72,14 @@ const DepositModal: FC<DepositModalProps> = ({
   }
 
   const handleDeposit = (): void => onDeposit(
-    Number(amountToStake), selectedCurrency,
+    Number(amountToStake), selectedToken,
   )
+
+  const isPositiveAmount = amountToStake && amountToStake > 0
+  const enoughFunds = amountToStake
+    && Big(convertToWeiString(amountToStake)).lte(accountWeiBalance)
+
+  const isValidAmount = isPositiveAmount && enoughFunds
 
   const actions: JSX.Element = (
     <Button
@@ -58,7 +87,7 @@ const DepositModal: FC<DepositModalProps> = ({
       rounded
       variant="contained"
       onClick={handleDeposit}
-      disabled={!amountToStake || amountToStake <= 0}
+      disabled={!isValidAmount}
     >
       Stake Funds
     </Button>
@@ -107,9 +136,17 @@ const DepositModal: FC<DepositModalProps> = ({
           onAmountChange={handleAmountChange}
           onCurrencyChange={handleCurrencyChange}
           currencyOptions={currencyOptions}
-          selectedCurrency={selectedCurrency}
+          selectedCurrency={selectedToken}
           amountLabel="Amount to stake"
         />
+        {
+          isPositiveAmount && !enoughFunds
+          && (
+            <Typography color="error" align="center">
+              {`You do not have enough ${selectedToken.toUpperCase()}`}
+            </Typography>
+          )
+        }
       </CenteredContent>
     </ModalDialogue>
   )
