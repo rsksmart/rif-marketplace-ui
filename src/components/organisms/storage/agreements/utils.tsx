@@ -8,6 +8,8 @@ import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import { getShortDateString } from 'utils/dateUtils'
+import { Spinner } from '@rsksmart/rif-ui'
+import { AgreementWithdrawData, ConfirmationData } from 'context/Confirmations/interfaces'
 
 export type AgreementView = {
   title: JSX.Element
@@ -76,21 +78,16 @@ const getCoreItemFields = (
   }
 }
 
-export const createCustomerItemFields = (
-  agreements: Agreement[],
+export const getCustomerViewFrom = (
+  agreement: Agreement,
   crypto: MarketCryptoRecord,
   currentFiat: MarketFiat,
-  onItemRenew: (event, agreement: Agreement) => void,
-  onItemSelect: (
-    event,
-    agreementView: (AgreementCustomerView),
-    agreement: Agreement
-  ) => void,
-): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
+): AgreementCustomerView => {
   const agreementInfo = getCoreItemFields(agreement, crypto, currentFiat)
   const {
-    id, provider, withdrawableFunds, paymentToken, expiresInSeconds, isActive,
+    provider, paymentToken, withdrawableFunds,
   } = agreement
+
   const providerValue = <AddressItem value={provider} />
   const withdrawableFundsValue = (
     <ItemWUnit
@@ -102,39 +99,68 @@ export const createCustomerItemFields = (
 
   return {
     ...agreementInfo,
+    PROVIDER: providerValue,
+    'WITHDRAWABLE FUNDS': withdrawableFundsValue,
+  } as AgreementCustomerView
+}
+
+export const createCustomerItemFields = (
+  agreements: Agreement[],
+  crypto: MarketCryptoRecord,
+  currentFiat: MarketFiat,
+  onItemRenew: (event, agreement: Agreement) => void,
+  onItemSelect: (
+    event,
+    agreementView: (AgreementCustomerView),
+    agreement: Agreement
+  ) => void,
+  withdrawConfirmations: ConfirmationData[],
+): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
+  const {
+    id, expiresInSeconds, isActive,
+  } = agreement
+  const customerView = getCustomerViewFrom(agreement, crypto, currentFiat)
+
+  const isProcessingWithdrawConfs = withdrawConfirmations.some(
+    ({ contractActionData }) => (
+      (contractActionData as AgreementWithdrawData).agreementId === id
+    ),
+  )
+
+  return {
+    ...customerView,
     id,
-    provider: providerValue,
-    contentSize: agreementInfo.AMOUNT,
-    renewalDate: agreementInfo['RENEWAL DATE'],
-    subscriptionPeriod: agreementInfo['SUBSCRIPTION PERIOD'],
-    monthlyFee: agreementInfo['PRICE/GB'],
-    withdrawableFunds: withdrawableFundsValue,
-    renew: (
-      <SelectRowButton
-        id={id}
-        disabled={!expiresInSeconds || !isActive}
-        handleSelect={(event): void => {
-          onItemRenew(event, agreement)
-        }}
-      >
-        Renew
-      </SelectRowButton>
-    ),
-    view: (
-      <SelectRowButton
-        id={id}
-        handleSelect={(event): void => onItemSelect(
-          event, {
-            ...agreementInfo,
-            PROVIDER: providerValue,
-            'WITHDRAWABLE FUNDS': withdrawableFundsValue,
-          } as AgreementCustomerView,
-          agreement,
-        )}
-      >
-        View
-      </SelectRowButton>
-    ),
+    provider: customerView.PROVIDER,
+    contentSize: customerView.AMOUNT,
+    renewalDate: customerView['RENEWAL DATE'],
+    subscriptionPeriod: customerView['SUBSCRIPTION PERIOD'],
+    monthlyFee: customerView['PRICE/GB'],
+    withdrawableFunds: customerView['WITHDRAWABLE FUNDS'],
+    renew: isProcessingWithdrawConfs
+      ? <Spinner />
+      : (
+        <SelectRowButton
+          id={id}
+          disabled={!expiresInSeconds || !isActive}
+          handleSelect={(event): void => {
+            onItemRenew(event, agreement)
+          }}
+        >
+          Renew
+        </SelectRowButton>
+      ),
+    view: isProcessingWithdrawConfs
+      ? <></>
+      : (
+        <SelectRowButton
+          id={id}
+          handleSelect={(event): void => onItemSelect(
+            event, customerView, agreement,
+          )}
+        >
+          View
+        </SelectRowButton>
+      ),
   }
 })
 
