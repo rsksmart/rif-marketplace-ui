@@ -45,7 +45,7 @@ export function prefixArray(
 
 export function encodeHash(hash: string): string[] {
   if (hash.length <= 32) {
-    return [asciiToHex(hash)]
+    return [asciiToHex(hash).padEnd(66, '0')]
   }
 
   return [asciiToHex(hash.slice(0, 32)), ...encodeHash(hash.slice(32))]
