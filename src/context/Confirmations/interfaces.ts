@@ -4,24 +4,23 @@ import {
 } from 'api/rif-marketplace-cache/blockchain/confirmations'
 import { Dispatch } from 'react'
 
-type AgreementContractAction = 'AGREEMENT_NEW' | 'AGREEMENT_WITHDRAW' | 'AGREEMENT_PAYOUT'
+type AgreementContractAction =
+  | 'AGREEMENT_NEW'
+  | 'AGREEMENT_WITHDRAW'
+  | 'AGREEMENT_PAYOUT'
+  | 'AGREEMENT_RENEW'
 type StakingContractAction = 'STAKING_STAKE' | 'STAKING_UNSTAKE'
 
 export type ContractAction =
   | AgreementContractAction
   | StakingContractAction
 
-export type AgreementWithdrawData = {
-  agreementId: string
-}
-
-export type AgreementPayoutData = {
+export type AgreementUpdateData = { // used for withdraw, payout and renew
   agreementId: string
 }
 
 export type AgreementContractData =
-  | AgreementWithdrawData
-  | AgreementPayoutData
+  | AgreementUpdateData
 
 export type ContractActionData =
   | AgreementContractData

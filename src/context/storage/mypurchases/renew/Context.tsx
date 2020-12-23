@@ -17,6 +17,8 @@ import Logger from 'utils/Logger'
 import { convertToWeiString, parseToBigDecimal } from 'utils/parsers'
 import Web3 from 'web3'
 import { SUPPORTED_TOKENS } from 'contracts/interfaces'
+import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
+import { AgreementUpdateData } from 'context/Confirmations/interfaces'
 import { reducer } from './actions'
 import { AsyncActions, Props, State } from './interfaces'
 
@@ -80,6 +82,9 @@ const Provider: FC = ({ children }) => {
       account,
     },
   } = useContext(Web3Store)
+  const {
+    dispatch: confirmationsDispatch,
+  } = useContext<ConfirmationsContextProps>(ConfirmationsContext)
 
   const [isInitialised, setIsInitialised] = useState(false)
   const [asyncActions, setAsyncActions] = useState(initialAsyncActions)
@@ -176,6 +181,16 @@ const Provider: FC = ({ children }) => {
               isDone: true,
             },
           })
+          confirmationsDispatch({
+            type: 'NEW_REQUEST',
+            payload: {
+              txHash: receipt.transactionHash,
+              contractAction: 'AGREEMENT_RENEW',
+              contractActionData: {
+                agreementId: id,
+              } as AgreementUpdateData,
+            },
+          })
           Logger.getInstance().debug('Agreement receipt:', receipt)
         } else {
           dispatch({
@@ -193,7 +208,7 @@ const Provider: FC = ({ children }) => {
       }
       setAsyncActions({ renewAgreement })
     }
-  }, [web3, account, appDispatch, order, reportError])
+  }, [web3, account, appDispatch, order, reportError, confirmationsDispatch])
 
   // Sets current exchange rate and fiat
   const paymentToken = order?.paymentToken
