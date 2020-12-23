@@ -28,7 +28,6 @@ import { UIError } from 'models/UIMessage'
 import { LoadingPayload } from 'context/App/appActions'
 import { rifTokenAddress, marketPlaceAddress } from 'contracts/config'
 import { shortChecksumAddress } from 'utils/stringUtils'
-import { toChecksumAddress } from 'web3-utils'
 
 const logger = Logger.getInstance()
 
@@ -265,7 +264,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
     : <RifAddress pretext="Unknown RNS:" value={tokenId} />
 
   const listingNameTitle = name
-    ? shortenString(toChecksumAddress(name), 30, 25)
+    ? shortenString(name, 30, 25)
     : shortChecksumAddress(tokenId)
 
   const onProcessingComplete = () => {
