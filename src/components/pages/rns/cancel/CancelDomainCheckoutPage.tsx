@@ -26,7 +26,6 @@ import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/A
 import { UIError } from 'models/UIMessage'
 import { LoadingPayload } from 'context/App/appActions'
 import { shortChecksumAddress } from 'utils/stringUtils'
-import { toChecksumAddress } from 'web3-utils'
 
 const logger = Logger.getInstance()
 
@@ -239,7 +238,7 @@ const CancelDomainCheckoutPage = () => {
   }
 
   const cancelingNameTitle = name
-    ? shortenString(toChecksumAddress(name), 30, 25)
+    ? shortenString(name, 30, 25)
     : shortChecksumAddress(tokenId)
 
   return (

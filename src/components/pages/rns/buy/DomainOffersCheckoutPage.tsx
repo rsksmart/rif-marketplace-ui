@@ -33,7 +33,6 @@ import {
 import { parseToBigDecimal } from 'utils/parsers'
 import { marketPlaceAddress } from 'contracts/config'
 import { shortChecksumAddress } from 'utils/stringUtils'
-import { toChecksumAddress } from 'web3-utils'
 
 const logger = Logger.getInstance()
 
@@ -323,7 +322,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   }
 
   const buyingNameTitle = domainName
-    ? shortenString(toChecksumAddress(domainName), 30, 25)
+    ? shortenString(domainName, 30, 25)
     : shortChecksumAddress(tokenId)
 
   return (
