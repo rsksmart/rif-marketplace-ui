@@ -1,8 +1,18 @@
 import React, { FC } from 'react'
-import { withStyles } from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
+import { makeStyles } from '@material-ui/core/styles'
 import { colors, fonts } from '@rsksmart/rif-ui'
 
-const styles = {
+type ItemWUnitProps = {
+  type: 'normalGrey' | 'mediumPrimary'
+  value: string
+  unit: string
+}
+
+const useStyles = makeStyles(() => ({
+  priceItem: {
+    whiteSpace: 'nowrap',
+  },
   mediumPrimary: {
     color: colors.primary,
     fontSize: fonts.size.medium,
@@ -11,20 +21,15 @@ const styles = {
     color: colors.gray3,
     fontSize: fonts.size.normal,
   },
+}))
+
+const ItemWUnit: FC<ItemWUnitProps> = ({ type, value, unit }) => {
+  const classes = useStyles()
+  return (
+    <Typography className={`${classes.priceItem} ${classes[type]}`}>
+      {`${value} ${unit}`}
+    </Typography>
+  )
 }
 
-interface StylesProps {
-  classes: Record<keyof typeof styles, string>
-}
-
-export interface ItemWUnitProps extends StylesProps {
-  type: keyof typeof styles
-  value: string
-  unit: string
-}
-
-const ItemWUnit: FC<ItemWUnitProps> = ({
-  type, value, unit, classes,
-}) => <span className={`price_item ${classes[type]}`}>{`${value} ${unit}`}</span>
-
-export default withStyles(styles)(ItemWUnit)
+export default ItemWUnit
