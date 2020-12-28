@@ -8,9 +8,7 @@ import { availableTokens } from '../common'
 
 const MOCK_OFFER_0: OfferTransport = {
   domain: {
-    expiration: {
-      date: 'Wed Jul 29 2021',
-    },
+    expirationDate: 'Wed Jul 29 2021',
     name: 'fake_name',
     owner: {
       address: 'fake_addr',
@@ -40,7 +38,7 @@ availableTokens.mockaddress = 'rif'
 const expectedDomains: RnsDomainOffer[] = [
   {
     domainName: MOCK_OFFER_0.domain.name,
-    expirationDate: new Date(MOCK_OFFER_0.domain.expiration.date),
+    expirationDate: new Date(MOCK_OFFER_0.domain.expirationDate),
     id: MOCK_OFFER_0.offerId,
     ownerAddress: MOCK_OFFER_0.ownerAddress,
     paymentToken: availableTokens[MOCK_OFFER_0.paymentToken.toLowerCase()],
