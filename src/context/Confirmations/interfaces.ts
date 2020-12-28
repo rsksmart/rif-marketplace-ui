@@ -10,10 +10,12 @@ type AgreementContractAction =
   | 'AGREEMENT_PAYOUT'
   | 'AGREEMENT_RENEW'
 type StakingContractAction = 'STAKING_STAKE' | 'STAKING_UNSTAKE'
+type OfferContractAction = 'NEW_OFFER' | 'EDIT_OFFER' | 'CANCEL_OFFER'
 
 export type ContractAction =
   | AgreementContractAction
   | StakingContractAction
+  | OfferContractAction
 
 export type AgreementUpdateData = { // used for withdraw, payout and renew
   agreementId: string
