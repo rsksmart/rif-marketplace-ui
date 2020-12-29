@@ -19,7 +19,6 @@ import {
   StorageOffersPage, StorageMyOffersPage, StorageLandingPage, StorageSellPage,
 } from '.'
 import { NotFound } from '..'
-import StorageSellDone from './sell/StorageSellDone'
 import StorageOffersCheckoutPage from './buy/StorageOffersCheckoutPage'
 import StorageEditOfferPage from './myoffers/StorageEditOfferPage'
 import MyStoragePurchases from './myPurchases/Page'
@@ -110,11 +109,6 @@ const StorageRoutes: FC = () => {
               <Route exact path={ROUTES.STORAGE.SELL.BASE}>
                 <StorageSellPage />
               </Route>
-              <Route
-                exact
-                path={ROUTES.STORAGE.SELL.DONE}
-                component={StorageSellDone}
-              />
               <Route path={ROUTES.STORAGE.MYOFFERS.BASE}>
                 <OfferEditContextProvider>
                   <Switch>
