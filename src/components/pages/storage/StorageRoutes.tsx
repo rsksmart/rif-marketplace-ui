@@ -119,7 +119,7 @@ const StorageRoutes: FC = () => {
                     />
                     <Route
                       exact
-                      path={ROUTES.STORAGE.MYOFFERS.EDIT.BASE}
+                      path={ROUTES.STORAGE.MYOFFERS.EDIT}
                       component={StorageEditOfferPage}
                     />
                   </Switch>
