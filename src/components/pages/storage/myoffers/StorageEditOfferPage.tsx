@@ -1,3 +1,4 @@
+import { TransactionReceipt } from 'web3-eth'
 import Typography from '@material-ui/core/Typography'
 import { Button, Web3Store } from '@rsksmart/rif-ui'
 import RoundedCard from 'components/atoms/RoundedCard'
@@ -20,7 +21,9 @@ import Logger from 'utils/Logger'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
 import { SupportedTokens } from 'contracts/interfaces'
-import { StorageOffer } from 'models/marketItems/StorageItem'
+import { BillingPlan, StorageOffer } from 'models/marketItems/StorageItem'
+import Web3 from 'web3'
+import { isBillingPlansChange } from 'components/pages/storage/myoffers/utils'
 
 const logger = Logger.getInstance()
 
@@ -45,7 +48,51 @@ const StorageEditOfferPage: FC<{}> = () => {
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
 
-  const handleEditOffer = async () => {
+  const isPlansChange = isBillingPlansChange(
+    billingPlans as BillingPlan[],
+    originalOffer?.subscriptionOptions as BillingPlan[] || [],
+  )
+  const isCapacityChange = originalOffer?.totalCapacityGB.toString() !== totalCapacity.toString()
+
+  const makeUpdateOfferTx = (): Promise<TransactionReceipt> => {
+    const storageContract = StorageContract.getInstance(web3 as Web3)
+
+    const { subscriptionOptions } = originalOffer as StorageOffer
+    const {
+      totalCapacityMB, periods, prices, tokens,
+    } = transformOfferDataForContract(
+      totalCapacity,
+      billingPlans,
+      subscriptionOptions,
+    )
+
+    if (isCapacityChange && !isPlansChange) {
+      return storageContract.setTotalCapacity(
+        totalCapacityMB,
+        { from: account },
+      )
+    }
+
+    if (isPlansChange && !isCapacityChange) {
+      return storageContract.setBillingPlans(
+        periods,
+        prices,
+        tokens as SupportedTokens[],
+        { from: account },
+      )
+    }
+
+    return storageContract.setOffer(
+      totalCapacityMB,
+      periods,
+      prices,
+      tokens as SupportedTokens[],
+      peerId,
+      { from: account },
+    )
+  }
+
+  const handleEditOffer = async (): Promise<void> => {
     // without a web3 instance the submit action would be disabled
     if (!web3) return
     try {
@@ -59,31 +106,14 @@ const StorageEditOfferPage: FC<{}> = () => {
       } as any)
 
       setIsProcessing(true)
-      const storageContract = StorageContract.getInstance(web3)
 
-      const { subscriptionOptions } = originalOffer as StorageOffer
-      const {
-        totalCapacityMB, periods, prices, tokens,
-      } = transformOfferDataForContract(
-        totalCapacity,
-        billingPlans,
-        subscriptionOptions,
-      )
-
-      const setOfferReceipt = await storageContract.setOffer(
-        totalCapacityMB,
-        periods,
-        prices,
-        tokens as SupportedTokens[],
-        peerId,
-        { from: account },
-      )
-      logger.info('setOffer receipt: ', setOfferReceipt)
+      const updateOfferReceipt = await makeUpdateOfferTx()
+      logger.info('setOffer receipt: ', updateOfferReceipt)
 
       bcDispatch({
         type: 'SET_TX_HASH',
         payload: {
-          txHash: setOfferReceipt.transactionHash,
+          txHash: updateOfferReceipt.transactionHash,
         } as AddTxPayload,
       })
       setIsPendingConfirm(true)
@@ -116,7 +146,7 @@ const StorageEditOfferPage: FC<{}> = () => {
     }
   }, [isPendingConfirm, history, isProcessing])
 
-  const isSubmitEnabled = Boolean(billingPlans.length && totalCapacity)
+  const isSubmitEnabled = Boolean(billingPlans.length && totalCapacity && (isPlansChange || isCapacityChange))
   const endHandler = (
     <>
       <Button disabled={!isSubmitEnabled} color="primary" variant="contained" rounded onClick={handleEditOffer}>Edit offer</Button>
