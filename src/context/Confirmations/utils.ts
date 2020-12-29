@@ -3,18 +3,18 @@ import {
 } from './interfaces'
 
 type GetConfirmationsFor = (
-  contractAction: ContractAction,
+  contractActions: ContractAction[],
   confirmations: ConfirmationsRecord
 ) => ConfirmationData[]
 
 const getConfirmationsFor: GetConfirmationsFor = (
-  contractAction,
+  contractActions,
   confirmations,
 ) => (
   Object.values(confirmations).filter(
     ({
       contractAction: confContractAction,
-    }) => confContractAction === contractAction,
+    }) => contractActions.some((conf) => conf === confContractAction),
   )
 )
 
