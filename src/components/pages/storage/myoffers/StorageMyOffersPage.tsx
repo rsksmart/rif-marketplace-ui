@@ -122,7 +122,7 @@ const StorageMyOffersPage: FC = () => {
       type: 'SET_OFFER',
       payload: offer as SetOfferPayload,
     })
-    history.push(ROUTES.STORAGE.MYOFFERS.EDIT.BASE)
+    history.push(ROUTES.STORAGE.MYOFFERS.EDIT)
   }
 
   return (
