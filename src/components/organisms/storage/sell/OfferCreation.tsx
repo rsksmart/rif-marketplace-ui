@@ -205,7 +205,7 @@ const OfferCreation: FC = () => {
         && <NoWhitelistedProvider />
       }
       <RoundedCard color="primary" className={classes.stepperContainer}>
-        <EditOfferStepper endHandler={endHandler} />
+        <EditOfferStepper isLoading={false} endHandler={endHandler} />
       </RoundedCard>
       {
         isProcessing

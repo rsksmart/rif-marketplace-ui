@@ -6,7 +6,7 @@ import Stepper from '@material-ui/core/Stepper'
 import Step from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
 import StepContent from '@material-ui/core/StepContent'
-import { Button } from '@rsksmart/rif-ui'
+import { Button, WithSpinner } from '@rsksmart/rif-ui'
 import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import GeneralFeatures from './GeneralFeatures'
@@ -89,4 +89,4 @@ const EditOfferStepper: FC<EditOfferStepperProps> = ({ endHandler }) => {
   )
 }
 
-export default EditOfferStepper
+export default WithSpinner(EditOfferStepper)

@@ -22,7 +22,6 @@ import { NotFound } from '..'
 import StorageSellDone from './sell/StorageSellDone'
 import StorageOffersCheckoutPage from './buy/StorageOffersCheckoutPage'
 import StorageEditOfferPage from './myoffers/StorageEditOfferPage'
-import StorageEditOfferDone from './myoffers/StorageEditOfferDone'
 import MyStoragePurchases from './myPurchases/Page'
 import RenewAgreement from './myPurchases/RenewAgreement'
 
@@ -131,11 +130,6 @@ const StorageRoutes: FC = () => {
                     />
                   </Switch>
                 </OfferEditContextProvider>
-                <Route
-                  exact
-                  path={ROUTES.STORAGE.MYOFFERS.EDIT.DONE}
-                  component={StorageEditOfferDone}
-                />
               </Route>
               <Route path={ROUTES.STORAGE.MYPURCHASES.BASE}>
                 <AgreementsContextProvider>

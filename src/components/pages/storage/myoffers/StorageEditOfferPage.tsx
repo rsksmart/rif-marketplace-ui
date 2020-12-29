@@ -4,26 +4,27 @@ import { Button, Web3Store } from '@rsksmart/rif-ui'
 import RoundedCard from 'components/atoms/RoundedCard'
 import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
-import { LoadingPayload } from 'context/App/appActions'
 import AppContext, { errorReporterFactory } from 'context/App/AppContext'
-import { AddTxPayload } from 'context/Blockchain/blockchainActions'
-import BlockchainContext from 'context/Blockchain/BlockchainContext'
 import { OfferEditContextProps } from 'context/Market/storage/interfaces'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { StorageContract } from 'contracts/storage'
 import { UIError } from 'models/UIMessage'
 import React, {
-  FC, useCallback, useContext, useEffect, useState,
+  FC, useCallback, useContext, useState,
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
-import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
 import { SupportedTokens } from 'contracts/interfaces'
 import { BillingPlan, StorageOffer } from 'models/marketItems/StorageItem'
 import Web3 from 'web3'
 import { isBillingPlansChange } from 'components/pages/storage/myoffers/utils'
+import { NewRequestPayload } from 'context/Confirmations/interfaces'
+import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
+import ProgressOverlay from 'components/templates/ProgressOverlay'
+import RoundBtn from 'components/atoms/RoundBtn'
+import useConfirmations from 'hooks/useConfirmations'
 
 const logger = Logger.getInstance()
 
@@ -32,7 +33,6 @@ const StorageEditOfferPage: FC<{}> = () => {
   const {
     state: { account, web3 },
   } = useContext(Web3Store)
-  const { dispatch: bcDispatch } = useContext(BlockchainContext)
   const { dispatch: appDispatch } = useContext(AppContext)
   const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
   const {
@@ -40,13 +40,20 @@ const StorageEditOfferPage: FC<{}> = () => {
       originalOffer, billingPlans, totalCapacity, peerId,
     },
   } = useContext<OfferEditContextProps>(OfferEditContext)
+  const {
+    dispatch: confirmationsDispatch,
+  } = useContext<ConfirmationsContextProps>(ConfirmationsContext)
 
   if (!originalOffer || !account) {
     history.replace(ROUTES.STORAGE.MYOFFERS.BASE)
   }
 
-  const [isPendingConfirm, setIsPendingConfirm] = useState(false)
-  const [isProcessing, setIsProcessing] = useState(false)
+  const currentConfs = useConfirmations(
+    ['CANCEL_OFFER', 'EDIT_OFFER', 'NEW_OFFER'],
+  )
+
+  const [txIsDone, setTxIsDone] = useState(false)
+  const [txIsInProgress, setTxIsInProgress] = useState(false)
 
   const isPlansChange = isBillingPlansChange(
     billingPlans as BillingPlan[],
@@ -93,60 +100,38 @@ const StorageEditOfferPage: FC<{}> = () => {
   }
 
   const handleEditOffer = async (): Promise<void> => {
-    // without a web3 instance the submit action would be disabled
-    if (!web3) return
     try {
-      appDispatch({
-        type: 'SET_IS_LOADING',
-        payload: {
-          isLoading: true,
-          id: 'contract',
-          message: 'Updating your offer...',
-        } as LoadingPayload,
-      } as any)
-
-      setIsProcessing(true)
-
+      setTxIsInProgress(true)
       const updateOfferReceipt = await makeUpdateOfferTx()
-      logger.info('setOffer receipt: ', updateOfferReceipt)
+      logger.debug('updateOffer receipt: ', updateOfferReceipt)
 
-      bcDispatch({
-        type: 'SET_TX_HASH',
-        payload: {
-          txHash: updateOfferReceipt.transactionHash,
-        } as AddTxPayload,
-      })
-      setIsPendingConfirm(true)
+      if (updateOfferReceipt) {
+        confirmationsDispatch({
+          type: 'NEW_REQUEST',
+          payload: {
+            contractAction: 'EDIT_OFFER',
+            txHash: updateOfferReceipt.transactionHash,
+          } as NewRequestPayload,
+        })
+        setTxIsDone(true)
+      }
     } catch (error) {
       reportError(new UIError({
         error,
         id: 'contract-storage',
-        text: 'Could not set the offer in the contract.',
+        text: 'Could not edit the offer in the contract.',
       }))
-      setIsProcessing(false)
     } finally {
-      appDispatch({
-        type: 'SET_IS_LOADING',
-        payload: {
-          isLoading: false,
-          id: 'contract',
-        } as LoadingPayload,
-      } as any)
+      setTxIsInProgress(false)
     }
   }
 
   const onProcessingComplete = (): void => {
-    setIsProcessing(false)
+    history.push(ROUTES.STORAGE.MYOFFERS.BASE)
   }
 
-  useEffect(() => {
-    if (isPendingConfirm && !isProcessing) {
-      // Post-confirmations handle
-      history.replace(ROUTES.STORAGE.MYOFFERS.EDIT.DONE)
-    }
-  }, [isPendingConfirm, history, isProcessing])
-
-  const isSubmitEnabled = Boolean(billingPlans.length && totalCapacity && (isPlansChange || isCapacityChange))
+  const isSubmitEnabled = Boolean(billingPlans.length && totalCapacity
+    && (isPlansChange || isCapacityChange))
   const endHandler = (
     <>
       <Button disabled={!isSubmitEnabled} color="primary" variant="contained" rounded onClick={handleEditOffer}>Edit offer</Button>
@@ -174,20 +159,24 @@ const StorageEditOfferPage: FC<{}> = () => {
       All the information provided is meant to be true and correct.`}
     >
       <RoundedCard color="primary">
-        <EditOfferStepper endHandler={endHandler} />
+        <EditOfferStepper
+          isLoading={Boolean(currentConfs.length)}
+          endHandler={endHandler}
+        />
       </RoundedCard>
-      {
-        isProcessing
-        && (
-          <TransactionInProgressPanel
-            {...{ isPendingConfirm, onProcessingComplete }}
-            text="Updating your offer!"
-            progMsg="The waiting period is required to securely update your offer.
-             Please do not close this tab until the process has finished."
-            overlayed
-          />
-        )
-      }
+      <ProgressOverlay
+        isDone={txIsDone}
+        inProgress={txIsInProgress}
+        title="Updating your storage offer"
+        doneMsg="Your storage offer has been updated"
+        buttons={[
+          <RoundBtn
+            onClick={onProcessingComplete}
+          >
+            Check your offer
+          </RoundBtn>,
+        ]}
+      />
     </CenteredPageTemplate>
   )
 }
