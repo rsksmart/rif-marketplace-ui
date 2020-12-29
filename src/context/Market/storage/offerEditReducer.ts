@@ -114,7 +114,10 @@ export const offerEditActions: OfferEditActions = {
       system,
       usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newBillingPlans),
       internalCounter: newBillingPlans.length + 1,
-      originalOffer: { ...payload },
+      originalOffer: {
+        ...payload,
+        subscriptionOptions: newBillingPlans,
+      },
     }
   },
 }
