@@ -5,10 +5,9 @@ import Typography from '@material-ui/core/Typography'
 import RoundBtn from 'components/atoms/RoundBtn'
 import Marketplace from 'components/templates/marketplace/Marketplace'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
-import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
-import getConfirmationsFor from 'context/Confirmations/utils'
 import MarketContext from 'context/Market/MarketContext'
 import withWithdrawContext, { StorageWithdrawContext, StorageWithdrawContextProps } from 'context/storage/mypurchases/withdraw'
+import useConfirmations from 'hooks/useConfirmations'
 import { Agreement } from 'models/marketItems/StorageItem'
 import React, {
   FC, useContext, useEffect, useState,
@@ -53,16 +52,14 @@ const PurchasesTable: FC<PurchasesProps> = (
     },
   } = useContext<StorageWithdrawContextProps>(StorageWithdrawContext)
 
-  const {
-    state: {
-      confirmations,
-    },
-  } = useContext<ConfirmationsContextProps>(ConfirmationsContext)
-
   const [
     itemDetails,
     setItemDetails,
   ] = useState<AgreementCustomerView | undefined>(undefined)
+
+  const withdrawAndRenewConfs = useConfirmations(
+    ['AGREEMENT_WITHDRAW', 'AGREEMENT_RENEW'],
+  )
 
   useEffect(() => {
     // hides modal on tx operation done
@@ -82,10 +79,6 @@ const PurchasesTable: FC<PurchasesProps> = (
       </Typography>
     )
   }
-
-  const withdrawAndRenewConfs = getConfirmationsFor(
-    ['AGREEMENT_WITHDRAW', 'AGREEMENT_RENEW'], confirmations,
-  )
 
   const headers = {
     title: 'Title',
