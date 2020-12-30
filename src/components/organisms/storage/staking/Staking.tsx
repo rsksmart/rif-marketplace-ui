@@ -128,8 +128,6 @@ const Staking: FC = () => {
   const handleDeposit = async (
     amount: number, currency: SupportedTokens,
   ): Promise<void> => {
-    //  users won't reach this point without a web3 instance
-    if (!web3) return
     try {
       setTxInProgressMessage(stakeInProgressMsg)
       setProcessingTx(true)

@@ -19,13 +19,10 @@ import ROUTES from 'routes'
 import { Agreement } from 'models/marketItems/StorageItem'
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import GridRow from 'components/atoms/GridRow'
-import {
-  ConfirmationsContext, ConfirmationsContextProps,
-} from 'context/Confirmations'
-import getConfirmationsFor from 'context/Confirmations/utils'
 import InfoBar from 'components/molecules/InfoBar'
 import PurchasesTable from 'components/organisms/storage/mypurchases/PurchasesTable'
 import AppContext, { AppContextProps } from 'context/App/AppContext'
+import useConfirmations from 'hooks/useConfirmations'
 
 const useTitleStyles = makeStyles(() => ({
   root: {
@@ -50,15 +47,7 @@ const MyStoragePurchases: FC = () => {
     state: { loaders: { data: isLoadingData } },
   } = useContext<AppContextProps>(AppContext)
 
-  const {
-    state: {
-      confirmations,
-    },
-  } = useContext<ConfirmationsContextProps>(ConfirmationsContext)
-
-  const newAgreementsConfsCount = getConfirmationsFor(
-    'AGREEMENT_NEW', confirmations,
-  ).length
+  const newAgreementsConfsCount = useConfirmations(['AGREEMENT_NEW']).length
 
   // filters agreements by current account
   useEffect(() => {

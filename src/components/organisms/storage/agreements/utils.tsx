@@ -9,7 +9,7 @@ import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import { getShortDateString } from 'utils/dateUtils'
 import { Spinner } from '@rsksmart/rif-ui'
-import { AgreementWithdrawData, ConfirmationData } from 'context/Confirmations/interfaces'
+import { AgreementUpdateData, ConfirmationData } from 'context/Confirmations/interfaces'
 
 export type AgreementView = {
   title: JSX.Element
@@ -114,16 +114,16 @@ export const createCustomerItemFields = (
     agreementView: (AgreementCustomerView),
     agreement: Agreement
   ) => void,
-  withdrawConfirmations: ConfirmationData[],
+  withdrawAndRenewConfs: ConfirmationData[],
 ): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
   const {
     id, expiresInSeconds, isActive,
   } = agreement
   const customerView = getCustomerViewFrom(agreement, crypto, currentFiat)
 
-  const isProcessingWithdrawConfs = withdrawConfirmations.some(
+  const isProcessingConfs = withdrawAndRenewConfs.some(
     ({ contractActionData }) => (
-      (contractActionData as AgreementWithdrawData).agreementId === id
+      (contractActionData as AgreementUpdateData).agreementId === id
     ),
   )
 
@@ -136,7 +136,7 @@ export const createCustomerItemFields = (
     subscriptionPeriod: customerView['SUBSCRIPTION PERIOD'],
     monthlyFee: customerView['PRICE/GB'],
     withdrawableFunds: customerView['WITHDRAWABLE FUNDS'],
-    renew: isProcessingWithdrawConfs
+    renew: isProcessingConfs
       ? <Spinner />
       : (
         <SelectRowButton
@@ -149,7 +149,7 @@ export const createCustomerItemFields = (
           Renew
         </SelectRowButton>
       ),
-    view: isProcessingWithdrawConfs
+    view: isProcessingConfs
       ? <></>
       : (
         <SelectRowButton
