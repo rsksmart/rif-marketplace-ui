@@ -1,5 +1,5 @@
 import Big from 'big.js'
-import React, { FC, useContext, useState } from 'react'
+import React, { FC, useState } from 'react'
 import InfoIcon from '@material-ui/icons/Info'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
@@ -8,41 +8,37 @@ import MenuItem from '@material-ui/core/MenuItem'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import Tooltip from '@material-ui/core/Tooltip'
 import {
-  Button, colors, validatedNumber,
+  Button, colors,
 } from '@rsksmart/rif-ui'
 import PinnerInstructionsModal from 'components/organisms/storage/sell/PinnerInstructionsModal'
-import OfferEditContext from 'context/Market/storage/OfferEditContext'
-import { OfferEditContextProps } from 'context/Market/storage/interfaces'
-import { SetTotalCapacityPayload, SetPeerIdPayload } from 'context/Market/storage/offerEditActions'
+import { StorageOffer } from 'models/marketItems/StorageItem'
 
-const GeneralFeatures: FC = () => {
-  const {
-    state: {
-      totalCapacity, system, peerId, originalOffer,
-    }, dispatch,
-  } = useContext<OfferEditContextProps>(OfferEditContext)
+type GeneralFeaturesProps = {
+  originalOffer?: StorageOffer
+  peerId: string
+  totalCapacity: Big
+  system: string
+  onPeerIdChange: (value: string) => void
+  onSizeChange: (value: string) => void
+}
+
+const GeneralFeatures: FC<GeneralFeaturesProps> = (
+  {
+    originalOffer, onPeerIdChange, onSizeChange, peerId, totalCapacity, system,
+  },
+) => {
   const utilizedCapacityGB = originalOffer?.utilizedCapacityGB.toNumber() || 0
 
   const [modalPeerIdOpened, setModalPeerIdOpened] = useState(false)
   const handleModalOpen = (): void => setModalPeerIdOpened(true)
   const handleModalClose = (): void => setModalPeerIdOpened(false)
 
-  const onSizeChange = ({ target: { value } }): void => {
-    dispatch({
-      type: 'SET_TOTAL_CAPACITY',
-      payload: {
-        totalCapacity: Big(validatedNumber(Number(value))),
-      } as SetTotalCapacityPayload,
-    })
+  const handleSizeChange = ({ target: { value } }): void => {
+    onSizeChange(value as string)
   }
 
-  const onPeerIdChange = ({ target: { value } }): void => {
-    dispatch({
-      type: 'SET_PEER_ID',
-      payload: {
-        peerId: value,
-      } as SetPeerIdPayload,
-    })
+  const handlePeerIdChange = ({ target: { value } }): void => {
+    onPeerIdChange(value as string)
   }
 
   return (
@@ -73,7 +69,7 @@ const GeneralFeatures: FC = () => {
               label="Listed Size"
               id="listed-size"
               value={totalCapacity.toString()}
-              onChange={onSizeChange}
+              onChange={handleSizeChange}
               error={Number(totalCapacity) <= utilizedCapacityGB}
               InputProps={{
                 endAdornment: (
@@ -112,7 +108,7 @@ const GeneralFeatures: FC = () => {
           label="Peer ID"
           id="peer-id"
           value={peerId}
-          onChange={onPeerIdChange}
+          onChange={handlePeerIdChange}
           placeholder="Paste here your Peer ID"
           inputProps={{ style: { textAlign: 'center' } }}
           disabled={Boolean(originalOffer)}
