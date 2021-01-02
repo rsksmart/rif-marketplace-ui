@@ -199,11 +199,18 @@ export const createProviderItemFields = (
     agreementView: (AgreementProviderView),
     agreement: Agreement,
   ) => void,
+  payoutConfirmations: ConfirmationData[],
 ): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
   const providerView = getProviderViewFrom(agreement, crypto, currentFiat)
   const {
     id,
   } = agreement
+
+  const isProcessingPayoutConfs = payoutConfirmations.some(
+    ({ contractActionData }) => (
+      (contractActionData as AgreementUpdateData).agreementId === id
+    ),
+  )
 
   return {
     ...providerView,
@@ -214,26 +221,30 @@ export const createProviderItemFields = (
     subscriptionPeriod: providerView['SUBSCRIPTION PERIOD'],
     monthlyFee: providerView['PRICE/GB'],
     toBePayedOut: providerView['AVAILABLE FUNDS'],
-    withdraw: (
-      <SelectRowButton
-        id={id}
-        handleSelect={(event): void => {
-          onItemWithdraw(event, agreement)
-        }}
-        disabled={Number(agreement.toBePayedOut) <= 0}
-      >
-        Withdraw
-      </SelectRowButton>
-    ),
-    view: (
-      <SelectRowButton
-        id={id}
-        handleSelect={(event): void => onItemSelect(
-          event, providerView, agreement,
-        )}
-      >
-        View
-      </SelectRowButton>
-    ),
+    withdraw: isProcessingPayoutConfs
+      ? <Spinner />
+      : (
+        <SelectRowButton
+          id={id}
+          handleSelect={(event): void => {
+            onItemWithdraw(event, agreement)
+          }}
+          disabled={Number(agreement.toBePayedOut) <= 0}
+        >
+          Withdraw
+        </SelectRowButton>
+      ),
+    view: isProcessingPayoutConfs
+      ? <></>
+      : (
+        <SelectRowButton
+          id={id}
+          handleSelect={(event): void => onItemSelect(
+            event, providerView, agreement,
+          )}
+        >
+          View
+        </SelectRowButton>
+      ),
   }
 })

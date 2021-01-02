@@ -10,12 +10,8 @@ import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import OffersList from 'components/organisms/storage/myoffers/OffersList'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { StorageContract } from 'contracts/storage'
-import BlockchainContext from 'context/Blockchain/BlockchainContext'
-import { AddTxPayload } from 'context/Blockchain/blockchainActions'
-import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import ROUTES from 'routes'
 import { useHistory } from 'react-router-dom'
-import { LoadingPayload } from 'context/App/appActions'
 import { UIError } from 'models/UIMessage'
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
@@ -24,6 +20,12 @@ import { SetOfferPayload } from 'context/Market/storage/offerEditActions'
 import { StorageOffer } from 'models/marketItems/StorageItem'
 import Staking from 'components/organisms/storage/staking/Staking'
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
+import Web3 from 'web3'
+import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
+import InfoBar from 'components/molecules/InfoBar'
+import ProgressOverlay from 'components/templates/ProgressOverlay'
+import RoundBtn from 'components/atoms/RoundBtn'
+import useConfirmations from 'hooks/useConfirmations'
 
 const useStyles = makeStyles((theme: Theme) => ({
   resultsContainer: {
@@ -44,16 +46,25 @@ const StorageMyOffersPage: FC = () => {
   const {
     dispatch: editOfferDispatch,
   } = useContext<OfferEditContextProps>(OfferEditContext)
-  const { dispatch: bcDispatch } = useContext(BlockchainContext)
   const reportError = useCallback((
     e: UIError,
   ) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
-  const [isPendingConfirm, setIsPendingConfirm] = useState(false)
-  const [isProcessing, setIsProcessing] = useState(false)
+  const {
+    dispatch: confirmationsDispatch,
+  } = useContext<ConfirmationsContextProps>(ConfirmationsContext)
+
+  const [txIsInProgress, setTxIsInProgress] = useState(false)
+  const [txIsDone, setTxIsDone] = useState(false)
   const [items, setItems] = useState<StorageOffer[]>([])
   const [isLoadingData, setIsLoadingData] = useState(true)
 
+  const numberOfConfs = useConfirmations(
+    ['CANCEL_OFFER', 'NEW_OFFER', 'EDIT_OFFER'],
+  ).length
+  const isProcessingConfs = Boolean(numberOfConfs)
+
+  // fetch own offers
   useEffect(() => {
     const getOwnOffers = async (): Promise<void> => {
       const storageOffersService = appState?.apis?.['storage/v0/offers'] as StorageOffersService
@@ -68,62 +79,41 @@ const StorageMyOffersPage: FC = () => {
       setIsLoadingData(false)
     }
 
-    getOwnOffers()
-  }, [account, appDispatch, appState])
-
-  useEffect(() => {
-    if (isPendingConfirm && !isProcessing) { // Post-confirmations handle
-      history.replace(ROUTES.STORAGE.MYOFFERS.CANCEL.DONE)
+    if (!isProcessingConfs) {
+      getOwnOffers()
     }
-  }, [isPendingConfirm, history, isProcessing])
+  }, [account, appDispatch, appState, isProcessingConfs])
 
-  const onProcessingComplete = (): void => {
-    setIsProcessing(false)
+  const handleTxCompletedClose = (): void => {
+    setTxIsInProgress(false)
+    setTxIsDone(false)
   }
 
   const handleOfferCancel = async (): Promise<void> => {
-    // without web3 or account, the user wouldn't be able to perform this action
-    if (!web3 || !account) return
-
     try {
-      appDispatch({
-        type: 'SET_IS_LOADING',
-        payload: {
-          isLoading: true,
-          id: 'contract',
-          message: 'canceling your offer...',
-        } as LoadingPayload,
-      })
-
-      setIsProcessing(true)
-
-      const storageContract = StorageContract.getInstance(web3)
+      setTxIsInProgress(true)
+      const storageContract = StorageContract.getInstance(web3 as Web3)
       const terminateOfferRecepipt = await storageContract
         .terminateOffer({ from: account })
 
-      bcDispatch({
-        type: 'SET_TX_HASH',
-        payload: {
-          txHash: terminateOfferRecepipt.transactionHash,
-        } as AddTxPayload,
-      })
-
-      setIsPendingConfirm(true)
+      if (terminateOfferRecepipt) {
+        confirmationsDispatch({
+          type: 'NEW_REQUEST',
+          payload: {
+            contractAction: 'CANCEL_OFFER',
+            txHash: terminateOfferRecepipt.transactionHash,
+          },
+        })
+        setTxIsInProgress(false)
+        setTxIsDone(true)
+      }
     } catch (error) {
+      setTxIsInProgress(false)
       reportError(new UIError({
         error,
         id: 'contract-storage',
-        text: 'Could not set the offer in the contract.',
+        text: 'Could not cancel the offer in the contract.',
       }))
-      setIsProcessing(false)
-    } finally {
-      appDispatch({
-        type: 'SET_IS_LOADING',
-        payload: {
-          isLoading: false,
-          id: 'contract',
-        } as LoadingPayload,
-      })
     }
   }
 
@@ -132,11 +122,16 @@ const StorageMyOffersPage: FC = () => {
       type: 'SET_OFFER',
       payload: offer as SetOfferPayload,
     })
-    history.push(ROUTES.STORAGE.MYOFFERS.EDIT.BASE)
+    history.push(ROUTES.STORAGE.MYOFFERS.EDIT)
   }
 
   return (
     <CenteredPageTemplate>
+      <InfoBar
+        isVisible={isProcessingConfs}
+        text={`Awaiting confirmations for ${numberOfConfs} offer(s)`}
+        type="info"
+      />
       <Staking />
       <Grid
         container
@@ -154,22 +149,23 @@ const StorageMyOffersPage: FC = () => {
       </Grid>
       <OffersList
         items={items}
-        isLoading={isLoadingData}
+        isLoading={isLoadingData || isProcessingConfs}
         onCancelOffer={handleOfferCancel}
         onEditOffer={handleEditOffer}
       />
-      {
-        isProcessing
-        && (
-          <TransactionInProgressPanel
-            {...{ isPendingConfirm, onProcessingComplete }}
-            text="Canceling your offer"
-            progMsg="The waiting period is required to securely cancel your offer.
-             Please do not close this tab until the process has finished."
-            overlayed
-          />
-        )
-      }
+      <ProgressOverlay
+        isDone={txIsDone}
+        inProgress={txIsInProgress}
+        title="Canceling your storage offer"
+        doneMsg="Your storage offer has been canceled"
+        buttons={[
+          <RoundBtn
+            onClick={handleTxCompletedClose}
+          >
+            Close
+          </RoundBtn>,
+        ]}
+      />
     </CenteredPageTemplate>
   )
 }

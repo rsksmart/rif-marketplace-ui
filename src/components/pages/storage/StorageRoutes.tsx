@@ -19,11 +19,8 @@ import {
   StorageOffersPage, StorageMyOffersPage, StorageLandingPage, StorageSellPage,
 } from '.'
 import { NotFound } from '..'
-import StorageSellDone from './sell/StorageSellDone'
-import StorageMyOffersCancelled from './myoffers/StorageMyOffersCancelled'
 import StorageOffersCheckoutPage from './buy/StorageOffersCheckoutPage'
 import StorageEditOfferPage from './myoffers/StorageEditOfferPage'
-import StorageEditOfferDone from './myoffers/StorageEditOfferDone'
 import MyStoragePurchases from './myPurchases/Page'
 import RenewAgreement from './myPurchases/RenewAgreement'
 
@@ -112,11 +109,6 @@ const StorageRoutes: FC = () => {
               <Route exact path={ROUTES.STORAGE.SELL.BASE}>
                 <StorageSellPage />
               </Route>
-              <Route
-                exact
-                path={ROUTES.STORAGE.SELL.DONE}
-                component={StorageSellDone}
-              />
               <Route path={ROUTES.STORAGE.MYOFFERS.BASE}>
                 <OfferEditContextProvider>
                   <Switch>
@@ -127,21 +119,11 @@ const StorageRoutes: FC = () => {
                     />
                     <Route
                       exact
-                      path={ROUTES.STORAGE.MYOFFERS.EDIT.BASE}
+                      path={ROUTES.STORAGE.MYOFFERS.EDIT}
                       component={StorageEditOfferPage}
                     />
                   </Switch>
                 </OfferEditContextProvider>
-                <Route
-                  exact
-                  path={ROUTES.STORAGE.MYOFFERS.CANCEL.DONE}
-                  component={StorageMyOffersCancelled}
-                />
-                <Route
-                  exact
-                  path={ROUTES.STORAGE.MYOFFERS.EDIT.DONE}
-                  component={StorageEditOfferDone}
-                />
               </Route>
               <Route path={ROUTES.STORAGE.MYPURCHASES.BASE}>
                 <AgreementsContextProvider>

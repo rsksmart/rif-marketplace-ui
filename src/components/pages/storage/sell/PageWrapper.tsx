@@ -8,8 +8,10 @@ import { StorageOffer } from 'models/marketItems/StorageItem'
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import Staking from 'components/organisms/storage/staking/Staking'
-import OfferCreation from '../../../organisms/storage/sell/OfferCreation'
+import InfoBar from 'components/molecules/InfoBar'
+import useConfirmations from 'hooks/useConfirmations'
 import NoMultipleOffersCard from '../../../organisms/storage/sell/NoMultipleOffersCard'
+import OfferCreation from '../../../organisms/storage/sell/OfferCreation'
 
 const PageWrapper: FC = () => {
   const {
@@ -20,6 +22,11 @@ const PageWrapper: FC = () => {
   const { state: appState, dispatch: appDispatch } = useContext(AppContext)
   const [isLoadingOffer, setIsLoadingOffer] = useState(false)
   const [ownOffer, setOwnOffer] = useState<StorageOffer | undefined>(undefined)
+
+  const numberOfConfs = useConfirmations(
+    ['NEW_OFFER', 'EDIT_OFFER', 'CANCEL_OFFER'],
+  ).length
+  const isAwaitingConfs = Boolean(numberOfConfs)
 
   useEffect(() => {
     if (account) {
@@ -52,9 +59,14 @@ const PageWrapper: FC = () => {
 
   return (
     <CenteredPageTemplate>
+      <InfoBar
+        text={`Awaiting confirmations for ${numberOfConfs} offer(s)`}
+        type="info"
+        isVisible={isAwaitingConfs}
+      />
       <Staking />
       <OfferEditContextProvider>
-        <OfferCreation isLoading={isLoadingOffer} />
+        <OfferCreation isLoading={isLoadingOffer || isAwaitingConfs} />
       </OfferEditContextProvider>
     </CenteredPageTemplate>
   )

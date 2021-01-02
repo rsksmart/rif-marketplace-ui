@@ -51,18 +51,11 @@ const ROUTES = {
     },
     SELL: {
       BASE: STORAGE_SELL,
-      LISTING: `${STORAGE_SELL}/${LISTING}`,
-      DONE: `${STORAGE_SELL}/${DONE}`,
     },
     MYOFFERS: {
       BASE: STORAGE_MYOFFERS,
-      CANCEL: {
-        DONE: `${STORAGE_MYOFFERS_CANCEL}/${DONE}`,
-      },
-      EDIT: {
-        BASE: `${STORAGE_MYOFFERS}/${EDIT}`,
-        DONE: `${STORAGE_MYOFFERS}/${EDIT}/${DONE}`,
-      },
+      CANCEL: STORAGE_MYOFFERS_CANCEL,
+      EDIT: `${STORAGE_MYOFFERS}/${EDIT}`,
     },
     MYPURCHASES: {
       BASE: STORAGE_MYPURCHASES,
