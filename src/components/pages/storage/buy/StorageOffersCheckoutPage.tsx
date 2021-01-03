@@ -107,12 +107,17 @@ const StorageOffersCheckoutPage: FC = () => {
 
   const changePeriodCountHandle = ({
     currentTarget: { value },
-  }: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => dispatch({
-    type: 'SET_AUXILIARY',
-    payload: {
-      periodsCount: parseInt(value, 10) || initialState.auxiliary.periodsCount,
-    },
-  })
+  }: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+    const newPeriodsCount = Math.abs(parseInt(value, 10))
+      || initialState.auxiliary.periodsCount
+
+    dispatch({
+      type: 'SET_AUXILIARY',
+      payload: {
+        periodsCount: newPeriodsCount,
+      },
+    })
+  }
 
   const subscriptionOptions = planOptions.map((plan) => (
     <PlanOption
