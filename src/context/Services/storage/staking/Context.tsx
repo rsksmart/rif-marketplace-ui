@@ -6,7 +6,6 @@ import AppContext, {
   AppContextProps,
   errorReporterFactory,
 } from 'context/App/AppContext'
-import BlockchainContext, { BlockchainContextProps } from 'context/Blockchain/BlockchainContext'
 import { UIError } from 'models/UIMessage'
 import React, {
   createContext,
@@ -45,9 +44,6 @@ export const ContextProvider: FC = ({ children }) => {
     state: { apis },
     dispatch: appDispatch,
   } = useContext<AppContextProps>(AppContext)
-  const {
-    dispatch: bcDispatch,
-  }: BlockchainContextProps = useContext(BlockchainContext)
   const reportError = useCallback(
     (e: UIError) => errorReporterFactory(appDispatch)(e),
     [appDispatch],
@@ -74,7 +70,7 @@ export const ContextProvider: FC = ({ children }) => {
       try {
         connect(errorReporterFactory(appDispatch))
         attachEvent('updated', (updatedValue) => {
-          onStakeUpdated(dispatch, bcDispatch, updatedValue)
+          onStakeUpdated(dispatch, updatedValue)
         })
         attachEvent('patched', setStakeNeedsRefresh(dispatch))
         attachEvent('created', setStakeNeedsRefresh(dispatch))
@@ -83,7 +79,7 @@ export const ContextProvider: FC = ({ children }) => {
         setIsInitialised(false)
       }
     }
-  }, [api, isInitialised, appDispatch, account, bcDispatch])
+  }, [api, isInitialised, appDispatch, account])
 
   useEffect(() => {
     if (needsRefresh && account) {
