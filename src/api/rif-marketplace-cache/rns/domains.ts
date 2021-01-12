@@ -14,11 +14,11 @@ export const domainsChannel: RnsChannels = 'domains'
 
 const mapFromTransport = (item: DomainTransport): RnsDomain => {
   const {
-    tokenId, expirationDate, owner, name, offers,
+    tokenId, expiration, owner, name, offers,
   } = item
   const domain: RnsDomain = {
     id: tokenId,
-    expirationDate: new Date(expirationDate),
+    expirationDate: new Date(expiration.date),
     ownerAddress: owner.address,
     name,
     tokenId,
