@@ -11,9 +11,7 @@ export interface OfferTransport {
 }
 
 export interface DomainTransport {
-    expiration: {
-        date: string
-    }
+    expirationDate: string
     owner: {
         address: string
     }
