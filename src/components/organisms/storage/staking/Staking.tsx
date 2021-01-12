@@ -20,12 +20,11 @@ import StakingFab from 'components/molecules/storage/StakingFab'
 import withStakingContext, { StakingContext }
   from 'context/Services/storage/staking/Context'
 import RoundBtn from 'components/atoms/RoundBtn'
-import BlockchainContext,
-{ BlockchainContextProps }
-  from 'context/Blockchain/BlockchainContext'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import { SupportedTokens } from 'contracts/interfaces'
 import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Services/storage'
+import useConfirmations from 'hooks/useConfirmations'
+import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
 import DepositModal from './DepositModal'
 import WithdrawModal from './WithdrawModal'
 import StakingCard from './StakingCard'
@@ -88,13 +87,8 @@ const Staking: FC = () => {
     dispatch: appDispatch,
   } = useContext<AppContextProps>(AppContext)
   const {
-    state: {
-      servicesAwaitingConfirmations: {
-        staking: isAwaitingConfirmations,
-      },
-    },
-    dispatch: bcDispatch,
-  }: BlockchainContextProps = useContext(BlockchainContext)
+    dispatch: confirmationsDispatch,
+  } = useContext<ConfirmationsContextProps>(ConfirmationsContext)
   const reportError = useCallback((
     e: UIError,
   ) => errorReporterFactory(appDispatch)(e), [appDispatch])
@@ -108,6 +102,10 @@ const Staking: FC = () => {
   const {
     state: { isWhitelistedProvider },
   } = useContext<StorageGlobalContextProps>(StorageGlobalContext)
+
+  const isAwaitingConfirmations = Boolean(
+    useConfirmations(['STAKING_STAKE', 'STAKING_UNSTAKE']).length,
+  )
 
   const [isExpanded, setIsExpanded] = useState(false)
   const [canWithdraw, setCanWithdraw] = useState(false)
@@ -148,9 +146,12 @@ const Staking: FC = () => {
 
       if (receipt) {
         setTxOperationDone(true)
-        bcDispatch({
-          type: 'SET_AWAITING_CONFIRMATIONS',
-          payload: { service: 'staking', isAwaiting: true } as never,
+        confirmationsDispatch({
+          type: 'NEW_REQUEST',
+          payload: {
+            contractAction: 'STAKING_STAKE',
+            txHash: receipt.transactionHash,
+          },
         })
       }
     } catch (error) {
@@ -169,8 +170,6 @@ const Staking: FC = () => {
   const handleWithdraw = async (
     amount: number, currency: SupportedTokens,
   ): Promise<void> => {
-    //  users won't reach this point without a web3 instance
-    if (!web3) return
     try {
       setTxInProgressMessage(unstakeInProgressMsg)
       setProcessingTx(true)
@@ -183,9 +182,12 @@ const Staking: FC = () => {
 
       if (receipt) {
         setTxOperationDone(true)
-        bcDispatch({
-          type: 'SET_AWAITING_CONFIRMATIONS',
-          payload: { service: 'staking', isAwaiting: true } as never,
+        confirmationsDispatch({
+          type: 'NEW_REQUEST',
+          payload: {
+            contractAction: 'STAKING_UNSTAKE',
+            txHash: receipt.transactionHash,
+          },
         })
       }
     } catch (error) {
