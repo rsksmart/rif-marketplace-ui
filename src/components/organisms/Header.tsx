@@ -11,7 +11,10 @@ import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive'
 import { colors, Header as RifHeader } from '@rsksmart/rif-ui'
 import { NavItemProps, ActionHeaderItemProps } from '@rsksmart/rif-ui/dist/components/organisms/Header/HeaderProps'
 import withNotificationsContext, { NotificationsContext } from 'context/Services/notifications'
+import SyncAltIcon from '@material-ui/icons/SyncAlt'
+import { IconButton } from '@material-ui/core'
 import NotificationsPopover from './NotificationsPopover'
+import TransactionsPopover from './transactions/TransactionsPopover'
 
 const Headers: FC = () => {
   const {
@@ -25,6 +28,17 @@ const Headers: FC = () => {
   ] = React.useState<null | HTMLElement>(null)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorNotificationsMenu(event.currentTarget)
+  }
+
+  const [
+    anchorTxsPanelMenu,
+    setAnchorTxsPanelMenu,
+  ] = React.useState<null | HTMLElement>(null)
+
+  const handleTxPanelClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ): void => {
+    setAnchorTxsPanelMenu(event.currentTarget)
   }
 
   const handleClose = (): void => {
@@ -64,6 +78,15 @@ const Headers: FC = () => {
       onClick: handleClick,
       'aria-haspopup': 'true',
     },
+    {
+      icon: (
+        <IconButton>
+          <SyncAltIcon htmlColor={colors.white} />
+        </IconButton>
+      ),
+      'aria-haspopup': 'true',
+      onClick: handleTxPanelClick,
+    },
   ]
 
   return (
@@ -79,6 +102,11 @@ const Headers: FC = () => {
         onClose={handleClose}
         notifications={notifications}
         open={Boolean(anchorNotificationsMenu)}
+      />
+      <TransactionsPopover
+        anchorEl={anchorTxsPanelMenu}
+        onClose={(): void => setAnchorTxsPanelMenu(null)}
+        open={Boolean(anchorTxsPanelMenu)}
       />
     </>
   )
