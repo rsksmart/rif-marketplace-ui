@@ -32,6 +32,7 @@ const StakingCard: FC<StakingCardProps> = (props) => {
   const classes = useStyles()
 
   const withdrawButtonEnabled = Boolean(Number(totalStakedUSD))
+    && !isAwaitingConfirmations
 
   return (
     <Grid
@@ -60,6 +61,7 @@ const StakingCard: FC<StakingCardProps> = (props) => {
           color="primary"
           rounded
           variant="outlined"
+          disabled={isAwaitingConfirmations}
         >
           Add funds
         </Button>
