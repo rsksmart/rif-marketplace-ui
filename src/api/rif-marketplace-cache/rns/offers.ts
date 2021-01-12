@@ -17,7 +17,7 @@ export const offersChannel: RnsChannels = 'offers'
 const mapFromTransport = ({
   priceString,
   domain: {
-    expirationDate,
+    expiration: { date },
     name: domainName,
   },
   offerId,
@@ -29,7 +29,7 @@ const mapFromTransport = ({
   ownerAddress,
   domainName,
   price: parseToBigDecimal(priceString, 18),
-  expirationDate: new Date(expirationDate),
+  expirationDate: new Date(date),
   paymentToken: availableTokens[paymentToken.toLowerCase()],
   tokenId,
 })
