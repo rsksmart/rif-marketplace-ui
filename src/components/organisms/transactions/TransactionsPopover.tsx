@@ -3,12 +3,16 @@ import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
 import Divider from '@material-ui/core/Divider'
 import Popover, { PopoverProps } from '@material-ui/core/Popover'
+import { ConfirmationsRecord } from 'context/Confirmations/interfaces'
 import React, { FC } from 'react'
 import TransactionsList from './TransactionsList'
 
-export type TransactionsPopoverProps = PopoverProps
+export type TransactionsPopoverProps = PopoverProps & {
+  confirmations: ConfirmationsRecord
+}
 
 const TransactionsPopover: FC<TransactionsPopoverProps> = ({
+  confirmations,
   onClose,
   ...popoverProps
 }) => (
@@ -40,7 +44,7 @@ const TransactionsPopover: FC<TransactionsPopoverProps> = ({
       />
       <Divider />
       <CardContent>
-        <TransactionsList />
+        <TransactionsList confirmations={confirmations} />
       </CardContent>
     </Card>
   </Popover>

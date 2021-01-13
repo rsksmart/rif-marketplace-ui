@@ -12,7 +12,9 @@ import { colors, Header as RifHeader } from '@rsksmart/rif-ui'
 import { NavItemProps, ActionHeaderItemProps } from '@rsksmart/rif-ui/dist/components/organisms/Header/HeaderProps'
 import withNotificationsContext, { NotificationsContext } from 'context/Services/notifications'
 import SyncAltIcon from '@material-ui/icons/SyncAlt'
-import { IconButton } from '@material-ui/core'
+import Badge from '@material-ui/core/Badge'
+import IconButton from '@material-ui/core/IconButton'
+import { ConfirmationsContext } from 'context/Confirmations'
 import NotificationsPopover from './NotificationsPopover'
 import TransactionsPopover from './transactions/TransactionsPopover'
 
@@ -22,6 +24,11 @@ const Headers: FC = () => {
       notifications,
     },
   } = useContext(NotificationsContext)
+  const {
+    state: {
+      confirmations,
+    },
+  } = useContext(ConfirmationsContext)
   const [
     anchorNotificationsMenu,
     setAnchorNotificationsMenu,
@@ -81,7 +88,12 @@ const Headers: FC = () => {
     {
       icon: (
         <IconButton>
-          <SyncAltIcon htmlColor={colors.white} />
+          <Badge
+            color="secondary"
+            badgeContent={Object.keys(confirmations).length}
+          >
+            <SyncAltIcon htmlColor={colors.white} />
+          </Badge>
         </IconButton>
       ),
       'aria-haspopup': 'true',
@@ -107,6 +119,7 @@ const Headers: FC = () => {
         anchorEl={anchorTxsPanelMenu}
         onClose={(): void => setAnchorTxsPanelMenu(null)}
         open={Boolean(anchorTxsPanelMenu)}
+        confirmations={confirmations}
       />
     </>
   )
