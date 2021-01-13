@@ -177,7 +177,7 @@ const DomainOffersPage: FC = () => {
           priceFiat={price.times(rate).toString()}
           currency={displayName}
           currencyFiat={currentFiat.displayName}
-          divider=" = "
+          divider=""
         />,
         action1: (account?.toLowerCase() === ownerAddress.toLowerCase()) ? 'your offer' : (
           <SelectRowButton
