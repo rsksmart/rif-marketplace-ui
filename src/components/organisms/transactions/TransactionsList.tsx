@@ -2,15 +2,15 @@ import Divider from '@material-ui/core/Divider'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import Typography from '@material-ui/core/Typography'
-import { ConfirmationsContext } from 'context/Confirmations'
-import React, { FC, useContext } from 'react'
+import { ConfirmationsRecord } from 'context/Confirmations/interfaces'
+import React, { FC } from 'react'
 import TransactionItem from './TransactionItem'
 
-const TransactionsList: FC = () => {
-  const {
-    state: { confirmations },
-  } = useContext(ConfirmationsContext)
+type TransactionsListProps = {
+  confirmations: ConfirmationsRecord
+}
 
+const TransactionsList: FC<TransactionsListProps> = ({ confirmations }) => {
   if (Object.keys(confirmations).length) {
     return (
       <List>
