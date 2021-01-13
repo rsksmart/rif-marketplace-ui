@@ -1,5 +1,5 @@
 import { ServiceMetadata } from 'api/models/apiService'
-import { RnsFilter } from 'api/models/RnsFilter'
+import { RnsFilter, RnsSort, SORT_DIRECTION } from 'api/models/RnsFilter'
 import { OffersService } from 'api/rif-marketplace-cache/rns/offers'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import React, {
@@ -27,6 +27,7 @@ export type OffersState = Modify<RnsState, {
   filters: Pick<RnsFilter, 'name' | 'price'>
   limits: Pick<RnsFilter, 'price'>
   order?: Order
+  sort: RnsSort
 }>
 
 export type RnsOffersContextProps = Modify<RnsContextProps, {
@@ -53,6 +54,9 @@ export const initialState: OffersState = {
   },
   needsRefresh: false,
   pagination: {},
+  sort: {
+    name: SORT_DIRECTION.asc,
+  },
 }
 
 const RnsOffersContext = React.createContext({} as RnsOffersContextProps | any)
@@ -68,12 +72,13 @@ export const RnsOffersContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(offersReducer, initialState)
   const {
     filters,
+    sort,
     limits,
     needsRefresh,
     pagination: {
       page,
     },
-  } = state as RnsState
+  } = state as OffersState
 
   // Initialise
   useEffect(() => {
@@ -163,7 +168,7 @@ export const RnsOffersContextProvider = ({ children }) => {
           id: 'data',
         } as LoadingPayload,
       } as any)
-      api.fetch({ ...filters, skip: page })
+      api.fetch({ ...filters, skip: page, sort })
         .then((items) => {
           dispatch({
             type: 'SET_LISTING',
@@ -186,7 +191,7 @@ export const RnsOffersContextProvider = ({ children }) => {
           } as any)
         })
     }
-  }, [isInitialised, isLimitsSet, filters, page, limits, api, appDispatch])
+  }, [isInitialised, isLimitsSet, filters, sort, page, limits, api, appDispatch])
 
   const meta = api?.meta
 

@@ -11,6 +11,25 @@ import MarketContext from 'context/Market/MarketContext'
 import RnsOffersContext, { RnsOffersContextProps } from 'context/Services/rns/OffersContext'
 import { OrderPayload, RefreshPayload } from 'context/Services/rns/rnsActions'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
+import { RnsSort, SORT_DIRECTION } from 'api/models/RnsFilter'
+import { TableSortLabel } from '@material-ui/core'
+
+enum SORT_TO_HEADER {
+  name = 'domainName',
+  price = 'combinedPrice',
+  expirationDate = 'expirationDate',
+}
+
+const isSortedOn = (
+  header: SORT_TO_HEADER, sortedBy: string,
+): boolean => SORT_TO_HEADER[sortedBy] === header
+
+const getNewSortDirection = (
+  header: SORT_TO_HEADER, sortedBy: string, currentSortDirection: SORT_DIRECTION,
+): SORT_DIRECTION => {
+  if (isSortedOn(header, sortedBy)) return currentSortDirection > 0 ? -1 : 1
+  return 1
+}
 
 const DomainOffersPage: FC = () => {
   const {
@@ -28,6 +47,7 @@ const DomainOffersPage: FC = () => {
         outdatedTokens,
       },
       filters,
+      sort,
       pagination: {
         current: currentPage,
       },
@@ -69,11 +89,61 @@ const DomainOffersPage: FC = () => {
     )
   }
 
+  const sortedBy = Object.keys(sort)[0]
+  const sortDirection = sort[sortedBy]
+
+  const triggerSort = (by: RnsSort): void => {
+    dispatch({
+      type: 'SET_SORT',
+      payload: by,
+    })
+  }
+
   const headers = {
-    domainName: 'Name',
+    domainName: (
+      <TableSortLabel
+        active={isSortedOn(SORT_TO_HEADER.name, sortedBy)}
+        direction={SORT_DIRECTION[sortDirection] as ('asc' | 'desc')}
+        onClick={(): void => {
+          triggerSort({
+            name: getNewSortDirection(
+              SORT_TO_HEADER.name, sortedBy, sortDirection,
+            ),
+          })
+        }}
+      >
+        Name
+      </TableSortLabel>
+    ),
     ownerAddress: 'Owner',
-    expirationDate: 'Renewal Date',
-    combinedPrice: 'Price',
+    expirationDate: (
+      <TableSortLabel
+        active={isSortedOn(SORT_TO_HEADER.expirationDate, sortedBy)}
+        direction={SORT_DIRECTION[sortDirection] as ('asc' | 'desc')}
+        onClick={(): void => {
+          triggerSort({
+            expirationDate: getNewSortDirection(
+              SORT_TO_HEADER.expirationDate, sortedBy, sortDirection,
+            ),
+          })
+        }}
+      >
+        Renewal Date
+      </TableSortLabel>),
+    combinedPrice: (
+      <TableSortLabel
+        active={isSortedOn(SORT_TO_HEADER.price, sortedBy)}
+        direction={SORT_DIRECTION[sortDirection] as ('asc' | 'desc')}
+        onClick={(): void => {
+          triggerSort({
+            price: getNewSortDirection(
+              SORT_TO_HEADER.price, sortedBy, sortDirection,
+            ),
+          })
+        }}
+      >
+        Price
+      </TableSortLabel>),
     action1: action1Header,
   }
 
