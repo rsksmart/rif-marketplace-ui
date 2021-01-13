@@ -1,67 +1,49 @@
-import {
-  Card, CardContent, CardHeader, Divider, Popover, PopoverProps, Typography,
-} from '@material-ui/core'
-import { shortenString } from '@rsksmart/rif-ui'
-import { ConfirmationsContext } from 'context/Confirmations'
-import React, { FC, useContext } from 'react'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import CardHeader from '@material-ui/core/CardHeader'
+import Divider from '@material-ui/core/Divider'
+import Popover, { PopoverProps } from '@material-ui/core/Popover'
+import React, { FC } from 'react'
+import TransactionsList from './TransactionsList'
 
 export type TransactionsPopoverProps = PopoverProps
 
 const TransactionsPopover: FC<TransactionsPopoverProps> = ({
   onClose,
   ...popoverProps
-}) => {
-  const {
-    state: { confirmations },
-  } = useContext(ConfirmationsContext)
-
-  return (
-    <Popover
-      id="transactions-menu"
-      keepMounted
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'center',
+}) => (
+  // TODO: extract common styles from notifications popover, create a template to reuse
+  <Popover
+    id="transactions-menu"
+    keepMounted
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    {...{ onClose }}
+    {...popoverProps}
+  >
+    <Card
+      // TODO: move to classes
+      style={{
+        minWidth: '240px',
+        maxWidth: '400px',
       }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'center',
-      }}
-      {...{ onClose }}
-      {...popoverProps}
     >
-      <Card>
-        <CardHeader
-          title="Transactions in progress"
-          titleTypographyProps={{ variant: 'subtitle2', color: 'secondary' }}
-        />
-        <Divider />
-        <CardContent>
-          {
-            Boolean(Object.keys(confirmations).length)
-            && Object.keys(confirmations).map((txHash) => (
-              <div key={Date.now()}>
-                <Typography>
-                  {`TxHash: ${shortenString(txHash)}`}
-                </Typography>
-                <Typography>
-                  {`current: ${confirmations[txHash].currentCount}`}
-                  {
-                    confirmations[txHash].targetCount
-                    && `target: ${confirmations[txHash].targetCount}`
-                  }
-                </Typography>
-              </div>
-            ))
-          }
-          {
-            !Object.keys(confirmations).length
-            && <Typography>No pending transactions!</Typography>
-          }
-        </CardContent>
-      </Card>
-    </Popover>
-  )
-}
+      <CardHeader
+        title="Transactions"
+        titleTypographyProps={{
+          align: 'center',
+          variant: 'subtitle2',
+          color: 'secondary',
+        }}
+      />
+      <Divider />
+      <CardContent>
+        <TransactionsList />
+      </CardContent>
+    </Card>
+  </Popover>
+)
 
 export default TransactionsPopover
