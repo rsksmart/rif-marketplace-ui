@@ -1,11 +1,8 @@
-import React, {
-  useContext,
-} from 'react'
+import React, { FC, useContext } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import { StorageBillingPlan } from 'context/Market/storage/interfaces'
 import BillingPlanWithEdit from 'components/organisms/storage/sell/BillingPlanWithEdit'
-import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import MarketContext from 'context/Market/MarketContext'
 import { Theme, makeStyles } from '@material-ui/core/styles'
 import { colors, fonts } from '@rsksmart/rif-ui'
@@ -30,13 +27,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const BillingPlansList = () => {
+type BillingPlansListProps = {
+  billingPlans: StorageBillingPlan[]
+  onItemRemoved: (billingPlan: StorageBillingPlan) => void
+  onItemAdded: (billingPlan: StorageBillingPlan) => void
+  onItemSaved: (billingPlan: StorageBillingPlan) => void
+}
+
+const BillingPlansList: FC<BillingPlansListProps> = (
+  {
+    billingPlans, onItemRemoved, onItemAdded, onItemSaved,
+  },
+) => {
   const classes = useStyles()
-  const {
-    state: {
-      billingPlans,
-    },
-  } = useContext(OfferEditContext)
 
   const {
     state: {
@@ -50,16 +53,28 @@ const BillingPlansList = () => {
   return (
     <>
       <Grid className={classes.editablePlanContainer} item xs={12}>
-        <EditableBillingPlan cryptoXRs={cryptoXRs} fiatDisplayName={fiatDisplayName} />
+        <EditableBillingPlan
+          cryptoXRs={cryptoXRs}
+          fiatDisplayName={fiatDisplayName}
+          onPlanAdded={onItemAdded}
+        />
       </Grid>
       {/* STORAGE PLANS */}
       {
-        !!billingPlans.length
+        Boolean(billingPlans.length)
         && (
           <Grid className={classes.plansList} item xs={12}>
             <Grid container className={classes.listTitleContainer}>
-              <Typography className={classes.listTitle} gutterBottom display="inline">Storage plans added</Typography>
-              <Typography display="inline" color="secondary">All storage plans below will be listed in the marketplace once you click in List storage.</Typography>
+              <Typography
+                className={classes.listTitle}
+                gutterBottom
+                display="inline"
+              >
+                Storage plans added
+              </Typography>
+              <Typography display="inline" color="secondary">
+                All storage plans below will be listed in the marketplace once you click in List storage.
+              </Typography>
             </Grid>
             <Grid alignItems="center" container spacing={2}>
               {
@@ -74,6 +89,8 @@ const BillingPlansList = () => {
                         cryptoXRs={cryptoXRs}
                         fiatDisplayName={fiatDisplayName}
                         billingPlan={billingPlan}
+                        onRemoveClick={(): void => onItemRemoved(billingPlan)}
+                        onSaveClick={onItemSaved}
                       />
                     </Grid>
                   ),

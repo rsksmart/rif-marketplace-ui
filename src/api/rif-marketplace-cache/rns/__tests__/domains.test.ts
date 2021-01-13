@@ -12,7 +12,7 @@ const expectedFindOptions = {
 }
 const MOCK_DATE = 'Wed Jul 29 2020 18:32:24 GMT+0100 (British Summer Time)'
 const MOCK_DOMAIN_TRANSPORT_ITEM_0: DomainTransport = {
-  expirationDate: MOCK_DATE,
+  expiration: { date: MOCK_DATE },
   name: 'mock_name',
   owner: {
     address: 'mock_owner',
@@ -20,7 +20,7 @@ const MOCK_DOMAIN_TRANSPORT_ITEM_0: DomainTransport = {
   tokenId: 'rbtc',
 }
 const MOCK_DOMAIN_TRANSPORT_ITEM_1: DomainTransport = {
-  expirationDate: MOCK_DATE,
+  expiration: { date: MOCK_DATE },
   name: 'mock_name_1',
   owner: {
     address: 'mock_owner_1',
@@ -33,14 +33,14 @@ const MOCK_TRANSPORT = [MOCK_DOMAIN_TRANSPORT_ITEM_0, MOCK_DOMAIN_TRANSPORT_ITEM
 const MOCK_FILTER = { price: { max: 2, min: 2 }, ownerAddress: 'mock_owner_address' }
 
 const expectedDomain1 = {
-  expirationDate: new Date(MOCK_DOMAIN_TRANSPORT_ITEM_0.expirationDate),
+  expirationDate: new Date(MOCK_DOMAIN_TRANSPORT_ITEM_0.expiration.date),
   id: MOCK_DOMAIN_TRANSPORT_ITEM_0.tokenId,
   name: MOCK_DOMAIN_TRANSPORT_ITEM_0.name,
   ownerAddress: MOCK_DOMAIN_TRANSPORT_ITEM_0.owner.address,
   tokenId: MOCK_DOMAIN_TRANSPORT_ITEM_0.tokenId,
 }
 const expectedDomain2 = {
-  expirationDate: new Date(MOCK_DOMAIN_TRANSPORT_ITEM_1.expirationDate),
+  expirationDate: new Date(MOCK_DOMAIN_TRANSPORT_ITEM_1.expiration.date),
   id: MOCK_DOMAIN_TRANSPORT_ITEM_1.tokenId,
   name: MOCK_DOMAIN_TRANSPORT_ITEM_1.name,
   ownerAddress: MOCK_DOMAIN_TRANSPORT_ITEM_1.owner.address,

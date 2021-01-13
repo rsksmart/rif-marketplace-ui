@@ -6,7 +6,6 @@ import { Button, TooltipIconButton } from '@rsksmart/rif-ui'
 import Big from 'big.js'
 import CryptoPriceConverter from 'components/molecules/CryptoPriceConverter'
 import { StorageBillingPlan } from 'context/Market/storage/interfaces'
-import { AddItemPayload, EditItemPayload } from 'context/Market/storage/offerEditActions'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { MarketCryptoRecord } from 'models/Market'
 import { SubscriptionPeriod } from 'models/marketItems/StorageItem'
@@ -15,7 +14,7 @@ import { SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
 
 export interface EditableBillingPlanProps {
   onPlanAdded?: (billingPlan: StorageBillingPlan) => void
-  onPlanSaved?: () => void
+  onPlanSaved?: (billingPlan: StorageBillingPlan) => void
   billingPlan?: StorageBillingPlan
   cryptoXRs: MarketCryptoRecord
   fiatDisplayName: string
@@ -30,10 +29,9 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
 }) => {
   const {
     state: { allBillingPeriods, usedPeriodsPerCurrency },
-    dispatch,
   } = useContext(OfferEditContext)
 
-  const editMode = !!billingPlan
+  const editMode = Boolean(billingPlan)
   const [currency, setCurrency] = useState<SupportedTokens>(billingPlan?.currency || SUPPORTED_TOKENS.rbtc)
   const [pricePerGb, setPricePerGb] = useState(billingPlan?.price.toString())
   const [period, setPeriod] = useState(
@@ -57,10 +55,6 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
       currency,
       period,
     }
-    dispatch({
-      type: 'ADD_ITEM',
-      payload: newBillingPlan as AddItemPayload,
-    })
 
     if (onPlanAdded) onPlanAdded(newBillingPlan)
   }
@@ -68,17 +62,14 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
   const handleOnSaveClick = (): void => {
     if (!pricePerGb) return
     const internalId = billingPlan?.internalId
-    dispatch(({
-      type: 'EDIT_ITEM',
-      payload: {
-        internalId,
-        price: new Big(pricePerGb),
-        currency,
-        period,
-      } as EditItemPayload,
-    }))
+    const savedBillingPlan: StorageBillingPlan = {
+      internalId,
+      price: new Big(pricePerGb),
+      currency,
+      period,
+    }
 
-    if (onPlanSaved) onPlanSaved()
+    if (onPlanSaved) onPlanSaved(savedBillingPlan)
   }
 
   const ActionButton = (): JSX.Element => {
@@ -101,7 +92,9 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
     }
     const hasChanged = billingPlan?.period !== period
       || billingPlan?.currency !== currency
-    const currencyAndPeriodInUse = usedPeriodsPerCurrency[currency]?.includes(period)
+    const currencyAndPeriodInUse = usedPeriodsPerCurrency[currency]?.includes(
+      period
+    )
     // the period or currency have changed and the selected option is in use
     const isDisabled = Number(pricePerGb) <= 0
       || (hasChanged && currencyAndPeriodInUse)

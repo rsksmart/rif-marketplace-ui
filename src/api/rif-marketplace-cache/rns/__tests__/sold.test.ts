@@ -16,7 +16,9 @@ const MOCK_DATE = 'Wed Jul 29 2021'
 
 const MOCK_DOMAIN_TRANSPORT_ITEM_0: SoldDomainTransport = {
   domain: {
-    expirationDate: MOCK_DATE,
+    expiration: {
+      date: MOCK_DATE,
+    },
     name: 'fake_name',
     owner: {
       address: 'fake_addr',
