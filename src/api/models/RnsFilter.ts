@@ -18,5 +18,4 @@ export enum SORT_DIRECTION {
 export type RnsSort = {
     price?: SORT_DIRECTION
     name?: SORT_DIRECTION
-    expirationDate?: SORT_DIRECTION
 }

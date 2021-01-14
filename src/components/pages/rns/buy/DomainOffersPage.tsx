@@ -17,7 +17,6 @@ import { TableSortLabel } from '@material-ui/core'
 enum SORT_TO_HEADER {
   name = 'domainName',
   price = 'combinedPrice',
-  expirationDate = 'expirationDate',
 }
 
 const isSortedOn = (
@@ -116,20 +115,7 @@ const DomainOffersPage: FC = () => {
       </TableSortLabel>
     ),
     ownerAddress: 'Owner',
-    expirationDate: (
-      <TableSortLabel
-        active={isSortedOn(SORT_TO_HEADER.expirationDate, sortedBy)}
-        direction={SORT_DIRECTION[sortDirection] as ('asc' | 'desc')}
-        onClick={(): void => {
-          triggerSort({
-            expirationDate: getNewSortDirection(
-              SORT_TO_HEADER.expirationDate, sortedBy, sortDirection,
-            ),
-          })
-        }}
-      >
-        Renewal Date
-      </TableSortLabel>),
+    expirationDate: 'Renewal Date',
     combinedPrice: (
       <TableSortLabel
         active={isSortedOn(SORT_TO_HEADER.price, sortedBy)}
