@@ -17,6 +17,7 @@ export interface MarketFilter { // FIXUS: We should either delete or fix this ty
 export type MarketFilterType = RnsFilter & XRFilter
 
 export type MarketCrypto = {
+  symbol: SupportedTokens
   displayName: string
   rate: number
 }
