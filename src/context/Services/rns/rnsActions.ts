@@ -1,4 +1,4 @@
-import { RnsFilter } from 'api/models/RnsFilter'
+import { RnsFilter, RnsSort } from 'api/models/RnsFilter'
 import { RnsItem } from 'models/marketItems/DomainItem'
 import { ContextPayload, ContextDispatch } from 'context/storeUtils/interfaces'
 import { ServiceMetadata } from 'api/models/apiService'
@@ -15,6 +15,7 @@ export type RNS_ACTION = 'FILTER'
 | 'UPDATE_PAGE'
 | 'NEXT_PAGE'
 | 'PREV_PAGE'
+| 'SET_SORT'
 
 export type FilterPayload = Partial<RnsFilter>
 
@@ -38,6 +39,8 @@ export type LimitsPayload = Partial<Pick<RnsFilter, 'price'>>
 
 export type PagePayload = ServiceMetadata
 
+export type SortPayload = RnsSort
+
 export type RnsPayload = ContextPayload
   | FilterPayload
   | ListingPayload
@@ -47,6 +50,7 @@ export type RnsPayload = ContextPayload
   | LimitsPayload
   | RefreshPayload
   | PagePayload
+  | SortPayload
 
 export type RnsAction = ContextDispatch<RNS_ACTION, RnsPayload>
 
@@ -66,6 +70,7 @@ export type RnsActions = {
   UPDATE_PAGE: RnsReducer<PagePayload>
   NEXT_PAGE: RnsReducer<{}>
   PREV_PAGE: RnsReducer<{}>
+  SET_SORT: RnsReducer<SortPayload>
 }
 
 export const rnsActions: RnsActions = {
@@ -215,4 +220,8 @@ export const rnsActions: RnsActions = {
       },
     }
   },
+  SET_SORT: (state: RnsState, sort: SortPayload) => ({
+    ...state,
+    sort,
+  }),
 }
