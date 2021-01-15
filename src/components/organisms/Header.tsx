@@ -77,11 +77,15 @@ const Headers: FC = () => {
     },
   ]
 
+  const notificationsIcon = (): JSX.Element => (
+    notifications.length
+      ? <NotificationsActiveIcon htmlColor={colors.white} />
+      : <NotificationsNoneIcon htmlColor={colors.white} />
+  )
+
   const actionItems: ActionHeaderItemProps[] = [
     {
-      icon: notifications.length
-        ? <NotificationsActiveIcon htmlColor={colors.white} />
-        : <NotificationsNoneIcon htmlColor={colors.white} />,
+      icon: <IconButton>{notificationsIcon()}</IconButton>,
       onClick: handleClick,
       'aria-haspopup': 'true',
     },
