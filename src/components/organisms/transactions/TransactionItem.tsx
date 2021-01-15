@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import { shortenString } from '@rsksmart/rif-ui'
+import { CopyTextTooltip, shortenString } from '@rsksmart/rif-ui'
 import { TxHash } from 'context/Confirmations/interfaces'
 import React, { FC } from 'react'
 
@@ -61,6 +61,7 @@ const TransactionItem: FC<TransactionItemProps> = ({
       </Typography>
     )
   }
+
   return (
     <Grid container>
       <Typography
@@ -68,9 +69,16 @@ const TransactionItem: FC<TransactionItemProps> = ({
         component="div"
       >
         {'Transaction '}
-        <Box display="inline" fontWeight="fontWeightMedium">
-          {shortenString(txHash)}
-        </Box>
+        <CopyTextTooltip
+          displayElement={
+            (
+              <Box display="inline" fontWeight="fontWeightMedium">
+                {shortenString(txHash)}
+              </Box>
+            )
+          }
+          fullText={txHash}
+        />
       </Typography>
       <Grid container>
         <Grid item xs={3}>
