@@ -1,76 +1,39 @@
 import React, { FC } from 'react'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  Divider,
-  makeStyles, Popover, PopoverProps,
-} from '@material-ui/core'
+import Divider from '@material-ui/core/Divider'
+import { PopoverProps } from '@material-ui/core/Popover'
 import { Notifications } from 'context/Services/notifications/interfaces'
+import PopoverCardTemplate from 'components/templates/PopoverCardTemplate'
 import NotificationMessage from './NotificationMessage'
 
-const popoverStyles = makeStyles(() => ({
-  paper: {
-    borderRadius: '30px',
-  },
-}))
-const cardStyles = makeStyles(() => ({
-  root: {
-    borderRadius: '30px',
-    display: 'grid',
-    justifyItems: 'center',
-  },
-}))
-const dividerStyles = makeStyles(() => ({
-  root: {
-    justifySelf: 'normal',
-  },
-}))
-
 type Props = {
-    notifications: Notifications
+  notifications: Notifications
 } & PopoverProps
 
 const NotificationsPopover: FC<Props> = ({
   notifications,
   onClose,
   ...popoverProps
-}) => {
-  const dividerClasses = dividerStyles()
-
-  return (
-    <Popover
-      id="notifications-menu"
-      keepMounted
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'center',
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'center',
-      }}
-      classes={popoverStyles()}
-      {...{ onClose }}
-      {...popoverProps}
-    >
-      <Card classes={cardStyles()}>
-        <CardHeader title="Notifications" titleTypographyProps={{ variant: 'subtitle2', color: 'secondary' }} />
-        <Divider classes={dividerClasses} />
-        <CardContent>
-          {
-              Boolean(notifications) && notifications.map((notification, i) => (
-                <div key={notification.payload.timestamp + notification.payload.agreementReference}>
-                  {Boolean(i) && <Divider classes={dividerClasses} />}
-                  <NotificationMessage {...{ notification }} />
-                </div>
-              ))
-            }
-        </CardContent>
-      </Card>
-    </Popover>
-  )
-}
+}) => (
+  <PopoverCardTemplate
+    id="notifications-menu"
+    onClose={onClose}
+    cardTitle="Notifications"
+    {...popoverProps}
+  >
+    {
+      Boolean(notifications) && notifications.map((notification, i) => (
+        <div key={
+          notification.payload.timestamp
+          + notification.payload.agreementReference
+        }
+        >
+          {Boolean(i) && <Divider />}
+          <NotificationMessage {...{ notification }} />
+        </div>
+      ))
+    }
+  </PopoverCardTemplate>
+)
 
 export default NotificationsPopover
 export type NotificationsPopoverProps = Props
