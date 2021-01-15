@@ -31,13 +31,19 @@ class MarketplaceContract extends ContractBase {
   // Place: Proxy function for placement transaction
   public place(
     tokenId: string,
-    rifTokenAddress: string,
+    tokenAddress: string,
     price: string,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> {
     const placeTx = this.methods.place(
-      tokenId, rifTokenAddress, this.web3.utils.toWei(price),
+      tokenId,
+      tokenAddress,
+      this.web3.utils.toWei(price),
     )
+    console.log('🚀 ---------------------------------------------------------------------------')
+    console.log('🚀 ~ file: Marketplace.ts ~ line 43 ~ MarketplaceContract ~ placeTx', placeTx)
+    console.log('🚀 ---------------------------------------------------------------------------')
+
     return this._send(
       placeTx,
       {

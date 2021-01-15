@@ -7,6 +7,7 @@ const {
   services,
 } = networkConfig
 
+// ?juraj - sparate payment token addresses
 export const marketPlaceAddress = marketplace.toLowerCase()
 export const rifTokenAddress = rif.toLowerCase()
 export const rnsAddress = rnsDotRskOwner.toLowerCase()
