@@ -25,7 +25,7 @@ const UNIT = UNIT_PREFIX_POW2.MEGA
 const UNIT_BYTES = `${UNIT_PREFIX_POW2[UNIT][0]}B`
 
 type Props = {
-    dispatch: Dispatch<StorageCheckoutAction>
+  dispatch: Dispatch<StorageCheckoutAction>
 }
 
 const useActionButtonStyles = makeStyles(() => ({
@@ -34,7 +34,6 @@ const useActionButtonStyles = makeStyles(() => ({
   },
 }))
 
-const TOTAL_SIZE_LIMIT = UNIT_PREFIX_POW2.GIGA
 const CID_PREFIX = '/ipfs/'
 
 const hashErrorEndorment = (): JSX.Element => (
@@ -55,6 +54,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
         inProgress,
         isDone,
       },
+      fileSizeLimit,
     },
     asyncActions: {
       uploadFiles,
@@ -102,7 +102,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
 
     setSize(totalB)
     setUploadDisabled(!!addedFiles.length
-                && totalB.gt(TOTAL_SIZE_LIMIT))
+      && totalB.gt(fileSizeLimit))
     setFiles(addedFiles)
   }
 
@@ -135,7 +135,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
   const sizeOverLimitMB = uploadDisabled
     && hasSize
     && parseConvertBig(
-      size.minus(TOTAL_SIZE_LIMIT),
+      size.minus(fileSizeLimit),
       UNIT_PREFIX_POW2.MEGA,
     ).toFixed(3)
 
@@ -158,7 +158,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     return (
       <StorageUploadAction
         sizeOverLimitMB={sizeOverLimitMB}
-        maxSizeMB={parseConvertBig(TOTAL_SIZE_LIMIT,
+        maxSizeMB={parseConvertBig(fileSizeLimit,
           UNIT_PREFIX_POW2.MEGA).toString()}
         classes={actionBtnClasses}
         {...uploadActionProps}
@@ -204,7 +204,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
           <PinUploaderTab
             onChange={onFilesChange}
             filesLimit={666 * 666 * 666}
-            maxFileSize={Big(TOTAL_SIZE_LIMIT).minus(size).toNumber()}
+            maxFileSize={fileSizeLimit.minus(size).toNumber()}
           />
         )}
     </RifCard>

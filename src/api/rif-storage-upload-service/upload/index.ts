@@ -33,6 +33,21 @@ export default class UploadService
       return Big(fileSizeBytes)
     }
 
+    getFileSizeLimit = async (): Promise<Big> => {
+      const response = await fetch(`${UPLOAD_ADDRESS}/fileSizeLimit`)
+
+      if (response.status !== 200) {
+        throw new UIError({
+          error: new Error(await response.json()),
+          text: 'Error: Could not get file size limit',
+          id: 'service-fetch',
+        })
+      }
+      const { fileSizeLimit } = await response.json()
+
+      return Big(fileSizeLimit)
+    }
+
     post = async ({
       files, account, offerId, peerId, contractAddress,
     }: StorageUploadArgs): Promise<UploadResponse> => {
