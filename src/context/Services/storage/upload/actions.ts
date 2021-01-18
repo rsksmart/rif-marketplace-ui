@@ -8,6 +8,10 @@ const actions: Actions = {
       ...payload,
     },
   }),
+  SET_SIZE_LIMIT: (state, { fileSizeLimit }) => ({
+    ...state,
+    fileSizeLimit,
+  }),
 }
 
 export default actions

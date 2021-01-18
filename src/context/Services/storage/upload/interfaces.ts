@@ -9,11 +9,16 @@ export type State = ContextState & {
   status: Status & {
     uploadResponse?: UploadResponse
   }
+  fileSizeLimit: Big
 }
 
 // PAYLOAD
 type StatusPayload = Status & {
   uploadResponse?: UploadResponse
+}
+
+export type SizeLimitPayload = {
+  fileSizeLimit: Big
 }
 
 // ACTIONS
@@ -26,6 +31,7 @@ export type Action = (
 
 export type Actions = {
   SET_STATUS: (state: State, payload: StatusPayload) => State
+  SET_SIZE_LIMIT: (state: State, payload: SizeLimitPayload) => State
 }
 
 export type AsyncAction<ARGS, RETURN> = {
@@ -42,7 +48,7 @@ export type AsyncActions = {
 
 // PROPS
 export type Props = {
-    state: State
-    dispatch: Dispatch<Action>
-    asyncActions: AsyncActions
+  state: State
+  dispatch: Dispatch<Action>
+  asyncActions: AsyncActions
 }

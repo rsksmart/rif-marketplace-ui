@@ -4,15 +4,21 @@ import React, {
 } from 'react'
 import { Big } from 'big.js'
 import { createReducer } from 'context/storeUtils/reducer'
-import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
-import { UploadResponse, UploadAPIService } from 'api/rif-storage-upload-service/upload/interfaces'
+import AppContext, {
+  AppContextProps, errorReporterFactory,
+} from 'context/App/AppContext'
+import {
+  UploadResponse, UploadAPIService,
+} from 'api/rif-storage-upload-service/upload/interfaces'
 import Logger from 'utils/Logger'
 import { UIError } from 'models/UIMessage'
 import createWithContext from 'context/storeUtils/createWithContext'
 import { Web3Store } from '@rsksmart/rif-ui'
 import { storageAddress } from 'contracts/config'
+import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import {
   AsyncActions, GetFileSizeAction, Props, State, UploadFilesAction,
+  SizeLimitPayload,
 } from './interfaces'
 import actions from './actions'
 import { StorageOffersContext, StorageOffersContextProps } from '../offers'
@@ -23,6 +29,7 @@ export type ContextName = typeof contextID
 export const initialState: State = {
   contextID,
   status: {},
+  fileSizeLimit: Big(UNIT_PREFIX_POW2.GIGA), // 1GB by default
 }
 
 const initialAsyncActions: AsyncActions = {
@@ -50,6 +57,7 @@ export const Provider: FC = ({ children }) => {
     connect,
     post,
     fetch,
+    getFileSizeLimit,
   } = uploadApi as UploadAPIService
   const {
     state: {
@@ -76,6 +84,27 @@ export const Provider: FC = ({ children }) => {
   if (!service) {
     connect(reportError)
   }
+
+  // fetch size limit
+  useEffect(() => {
+    getFileSizeLimit().then(
+      (fileSizeLimit) => {
+        dispatch({
+          type: 'SET_SIZE_LIMIT',
+          payload: { fileSizeLimit } as SizeLimitPayload,
+        })
+      },
+    ).catch((error) => {
+      reportError(new UIError({
+        error,
+        id: 'service-fetch',
+        text: 'Could not get file size limit.',
+      }))
+    })
+  }, [
+    reportError,
+    getFileSizeLimit,
+  ])
 
   useEffect(() => {
     if (service && account && offer) {
