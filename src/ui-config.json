@@ -4,8 +4,8 @@
             "rif": "0x67b5656d60a809915323bf2c40a8bef15a152e3e",
             "rnsDotRskOwner": "0x26b4AFb60d6C903165150C6F0AA14F8016bE4aec",
             "marketplace": "0xeF391648603DCb012e30eF706452b3DfF6466dE8",
-            "storageManager": "0xDDb64fE46a91D46ee29420539FC25FD07c5FEa3E",
-            "storageStaking": "0x4339316e04CFfB5961D1c41fEF8E44bfA2A7fBd1"
+            "storageManager": "0x1b88Bdb8269A1aB1372459F5a4eC3663D6f5cCc4",
+            "storageStaking": "0xdAA71FBBA28C946258DD3d5FcC9001401f72270F"
         },
         "rnsManagerUrl": "http://localhost:3001",
         "services": {
