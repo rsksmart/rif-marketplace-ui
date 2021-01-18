@@ -1,10 +1,11 @@
 import React, {
   Dispatch, FC, useContext, useEffect, useState,
 } from 'react'
-import {
-  ButtonProps, CircularProgress, InputAdornment, makeStyles, Typography,
-} from '@material-ui/core'
-import { colors } from '@rsksmart/rif-ui'
+import { ButtonProps } from '@material-ui/core/Button'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Grid from '@material-ui/core/Grid'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import Typography from '@material-ui/core/Typography'
 import { Big } from 'big.js'
 import GridColumn from 'components/atoms/GridColumn'
 import PinEnterInfoTab from 'components/molecules/storage/buy/PinEnterInfoTab'
@@ -28,12 +29,6 @@ type Props = {
   dispatch: Dispatch<StorageCheckoutAction>
 }
 
-const useActionButtonStyles = makeStyles(() => ({
-  disabled: {
-    background: colors.gray1,
-  },
-}))
-
 const CID_PREFIX = '/ipfs/'
 
 const hashErrorEndorment = (): JSX.Element => (
@@ -45,8 +40,6 @@ const hashErrorEndorment = (): JSX.Element => (
 )
 
 const PinningCard: FC<Props> = ({ dispatch }) => {
-  const actionBtnClasses = useActionButtonStyles()
-
   const {
     state: {
       status: {
@@ -55,6 +48,9 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
         isDone,
       },
       fileSizeLimit,
+      isLoading: {
+        sizeLimit: isLoadingSizeLimit,
+      },
     },
     asyncActions: {
       uploadFiles,
@@ -73,6 +69,8 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
   const isValidCID = isHashEmpty ? false : validateCID(hash)
   const sizeUnit = size.div(UNIT)
   const hasSize = size.gt(0)
+  const sizeLimitMB = parseConvertBig(fileSizeLimit,
+    UNIT_PREFIX_POW2.MEGA).toString()
 
   const getSize = async (): Promise<void> => {
     const fileSize = await getFileSize(hash)
@@ -123,13 +121,11 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     children: !hasSize ? 'Get size' : 'Pin',
     onClick: !hasSize ? getSize : handlePinning,
     disabled: !isValidCID,
-    classes: actionBtnClasses,
   }
   const uploadActionProps: ButtonProps = {
     children: `Upload ${hasSize ? `${sizeUnit.toFixed(3)} ${UNIT_BYTES}` : ''}`,
     onClick: handleUpload,
     disabled: uploadDisabled,
-    classes: actionBtnClasses,
   }
 
   const sizeOverLimitMB = uploadDisabled
@@ -160,17 +156,41 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
         sizeOverLimitMB={sizeOverLimitMB}
         maxSizeMB={parseConvertBig(fileSizeLimit,
           UNIT_PREFIX_POW2.MEGA).toString()}
-        classes={actionBtnClasses}
         {...uploadActionProps}
       />
     )
   }
 
   const renderPinBtn = (): JSX.Element => (
-    <RoundBtn
-      classes={actionBtnClasses}
-      {...pinActionProps}
-    />
+    <Grid justify="center" container spacing={2}>
+      <RoundBtn
+        {...pinActionProps}
+      />
+    </Grid>
+  )
+
+  const renderActions = (): JSX.Element => (
+    <GridColumn spacing={4}>
+      <Grid item xs={12}>
+        {
+          isUpladed ? renderPinBtn() : renderUploadProgress()
+        }
+      </Grid>
+      {!isLoadingSizeLimit && (
+        <GridColumn>
+          <Typography
+            gutterBottom
+            variant="caption"
+            color="secondary"
+            align="center"
+          >
+            {'Max upload size is '}
+            {sizeLimitMB}
+            {' MB'}
+          </Typography>
+        </GridColumn>
+      )}
+    </GridColumn>
   )
 
   return (
@@ -181,32 +201,34 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
           value={isUpladed}
         />
       )}
-      Actions={isUpladed ? renderPinBtn : renderUploadProgress}
+      Actions={renderActions}
     >
-      {isUpladed
-        ? (
-          <PinEnterInfoTab
-            unit={UNIT_BYTES}
-            size={{
-              value: sizeUnit,
-            }}
-            hash={{
-              value: hash,
-              onChange: onHashChange,
-              error: isHashEmpty || !isValidCID,
-              InputProps: {
-                startAdornment: <InputAdornment position="start">{CID_PREFIX}</InputAdornment>,
-                endAdornment: isValidCID ? undefined : hashErrorEndorment(),
-              },
-            }}
-          />
-        ) : (
-          <PinUploaderTab
-            onChange={onFilesChange}
-            filesLimit={666 * 666 * 666}
-            maxFileSize={fileSizeLimit.minus(size).toNumber()}
-          />
-        )}
+      {
+        isUpladed
+          ? (
+            <PinEnterInfoTab
+              unit={UNIT_BYTES}
+              size={{
+                value: sizeUnit,
+              }}
+              hash={{
+                value: hash,
+                onChange: onHashChange,
+                error: isHashEmpty || !isValidCID,
+                InputProps: {
+                  startAdornment: <InputAdornment position="start">{CID_PREFIX}</InputAdornment>,
+                  endAdornment: isValidCID ? undefined : hashErrorEndorment(),
+                },
+              }}
+            />
+          ) : (
+            <PinUploaderTab
+              onChange={onFilesChange}
+              filesLimit={666 * 666 * 666}
+              maxFileSize={fileSizeLimit.minus(size).toNumber()}
+            />
+          )
+      }
     </RifCard>
   )
 }

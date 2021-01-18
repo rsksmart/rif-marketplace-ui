@@ -30,6 +30,9 @@ export const initialState: State = {
   contextID,
   status: {},
   fileSizeLimit: Big(UNIT_PREFIX_POW2.GIGA), // 1GB by default
+  isLoading: {
+    sizeLimit: false,
+  },
 }
 
 const initialAsyncActions: AsyncActions = {
@@ -87,6 +90,10 @@ export const Provider: FC = ({ children }) => {
 
   // fetch size limit
   useEffect(() => {
+    dispatch({
+      type: 'SET_IS_LOADING',
+      payload: { sizeLimit: true },
+    })
     getFileSizeLimit().then(
       (fileSizeLimit) => {
         dispatch({
@@ -100,7 +107,10 @@ export const Provider: FC = ({ children }) => {
         id: 'service-fetch',
         text: 'Could not get file size limit.',
       }))
-    })
+    }).finally(() => dispatch({
+      type: 'SET_IS_LOADING',
+      payload: { sizeLimit: false },
+    }))
   }, [
     reportError,
     getFileSizeLimit,
