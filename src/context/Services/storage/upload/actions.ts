@@ -12,6 +12,10 @@ const actions: Actions = {
     ...state,
     fileSizeLimit,
   }),
+  SET_IS_LOADING: (state, { sizeLimit }) => ({
+    ...state,
+    isLoading: { sizeLimit },
+  }),
 }
 
 export default actions

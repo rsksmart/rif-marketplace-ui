@@ -10,6 +10,10 @@ export type State = ContextState & {
     uploadResponse?: UploadResponse
   }
   fileSizeLimit: Big
+  isLoading: {
+    sizeLimit: boolean
+    // filesSize: boolean TBD in order to show loder while uploading files
+  }
 }
 
 // PAYLOAD
@@ -20,6 +24,13 @@ type StatusPayload = Status & {
 export type SizeLimitPayload = {
   fileSizeLimit: Big
 }
+
+export type IsLoadingPayload = {
+  sizeLimit: boolean
+}
+// | {
+//   filesSize: boolean
+// } TBD in order to show loader while uploading files
 
 // ACTIONS
 export type Action = (
@@ -32,6 +43,7 @@ export type Action = (
 export type Actions = {
   SET_STATUS: (state: State, payload: StatusPayload) => State
   SET_SIZE_LIMIT: (state: State, payload: SizeLimitPayload) => State
+  SET_IS_LOADING: (state: State, payload: IsLoadingPayload) => State
 }
 
 export type AsyncAction<ARGS, RETURN> = {
