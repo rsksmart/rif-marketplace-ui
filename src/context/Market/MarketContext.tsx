@@ -102,6 +102,7 @@ export const MarketContextProvider = ({ children }) => {
 
           if (supportedCrypto.includes(symbol)) {
             acc[symbol] = {
+              symbol,
               rate: newRates[i][fiatSymbol],
               displayName: tokenDisplayNames[symbol],
             }

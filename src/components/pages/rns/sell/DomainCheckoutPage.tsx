@@ -151,7 +151,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
           id: 'contract',
         },
       })
-      const rnsContract = RNSContract.getInstance(web3)
+      const rnsContract = RNSContract.getInstance(web3, currencySymbols[currency])
       const marketPlaceContract = MarketplaceContract.getInstance(web3)
       try {
         // Get gas price
@@ -194,13 +194,8 @@ const DomainsCheckoutPage: FC<{}> = () => {
         } as any)
 
         const paymentToken = Object.keys(availableTokens)
-          .find((tokenAddress) => {
-            console.log('🚀 --------------------------------------------------------------------------------')
-            console.log('🚀 ~ file: DomainCheckoutPage.tsx ~ line 198 ~ .find ~ tokenAddress', tokenAddress)
-            console.log('🚀 --------------------------------------------------------------------------------')
-
-            return availableTokens[tokenAddress] === currencySymbols[Number(currency)]
-          })
+          .find((tokenAddress) => availableTokens[tokenAddress]
+          === currencySymbols[Number(currency)])
 
         if (!paymentToken) {
           throw new Error('PaymentToken failure. Payment token not supportd.')

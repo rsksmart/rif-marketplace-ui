@@ -165,7 +165,7 @@ const CancelDomainCheckoutPage = () => {
       } as any)
 
       try {
-        const rnsContract = RNSContract.getInstance(web3)
+        const rnsContract = RNSContract.getInstance(web3, currency.symbol)
         const marketPlaceContract = MarketplaceContract.getInstance(web3)
 
         // Get gas price

@@ -40,9 +40,6 @@ class MarketplaceContract extends ContractBase {
       tokenAddress,
       this.web3.utils.toWei(price),
     )
-    console.log('🚀 ---------------------------------------------------------------------------')
-    console.log('🚀 ~ file: Marketplace.ts ~ line 43 ~ MarketplaceContract ~ placeTx', placeTx)
-    console.log('🚀 ---------------------------------------------------------------------------')
 
     return this._send(
       placeTx,
@@ -74,6 +71,14 @@ class MarketplaceContract extends ContractBase {
   ): Promise<Array<string>> {
     const { from } = txOptions
     return this.methods.placement(tokenId).call({ from })
+  }
+
+  public buy(
+    tokenId: string,
+    txOptions: TransactionOptions,
+  ): Promise<TransactionReceipt> {
+    const buyTx = this.methods.buy(tokenId)
+    return this._send(buyTx, txOptions)
   }
 }
 
