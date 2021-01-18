@@ -9,7 +9,7 @@ import waitForReceipt from 'contracts/utils/waitForReceipt'
 const logger = Logger.getInstance()
 
 export class ContractBase {
-  protected readonly name?: string
+  protected readonly name?: string // ?naz - why protcted? could it be public?
 
   protected readonly contract: Contract
 

@@ -5,7 +5,7 @@ import { ZERO_ADDRESS } from '../constants/strings'
 import { rifTokenAddress } from './config'
 import { RifERC20Contract } from './tokens/rif'
 import { MarketplaceContractErrorId } from './rns/Marketplace'
-import { RnsContractErrorId } from './rns/Rns'
+import { PaymentWrapper, RnsContractErrorId } from './rns/Rns'
 import { StorageStakingContractErrorId } from './storage/Staking'
 import { StorageContractErrorId } from './storage/Storage'
 import type { RifERC677ContractErrorId, RifERC20ContractErrorId } from './tokens/rif'
@@ -17,14 +17,10 @@ export interface TransactionOptions {
   value?: string | number
 }
 
-export interface ERC20ContractI {
+export interface ERC20ContractI extends PaymentWrapper{
   approve (
       address: string, amount: string | number, options: TransactionOptions
   ): Promise<TransactionReceipt>
-
-  getBalanceOf (
-      account: string, options: TransactionOptions
-  ): Promise<string | number>
 }
 
 export type Web3ErrorId = 'web3-getGasPrice'
