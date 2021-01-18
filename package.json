@@ -46,7 +46,7 @@
     "@rsksmart/rif-ui": "0.5.4",
     "@rsksmart/rsk-utils": "1.1.0",
     "big.js": "6.0.2",
-    "cids": "1.0.2",
+    "cids": "1.1.5",
     "material-ui-dropzone": "3.5.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
