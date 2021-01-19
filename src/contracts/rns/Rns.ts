@@ -22,7 +22,7 @@ const throwUnsupportedError = (paymentTokenSymbol: string): false => {
   throw new UIError({
     error: new Error('Payment Contract Error'),
     id: 'contract-rns-place',
-    text: `Contract name ${paymentTokenSymbol} is not supported. Check SupportedTokens.`,
+    text: `Token ${paymentTokenSymbol} is not supported. Check SupportedTokens.`,
   })
 }
 

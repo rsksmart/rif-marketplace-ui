@@ -28,7 +28,8 @@ import { UIError } from 'models/UIMessage'
 import { LoadingPayload } from 'context/App/appActions'
 import { marketPlaceAddress } from 'contracts/config'
 import { shortChecksumAddress } from 'utils/stringUtils'
-import { availableTokens } from '../../../../api/rif-marketplace-cache/rns/common'
+import { getTokenAddress } from 'utils/tokenUtils'
+import { SupportedTokens } from 'contracts/interfaces'
 
 const logger = Logger.getInstance()
 
@@ -193,16 +194,14 @@ const DomainsCheckoutPage: FC<{}> = () => {
           } as LoadingPayload,
         } as any)
 
-        const paymentToken = Object.keys(availableTokens)
-          .find((tokenAddress) => availableTokens[tokenAddress]
-          === currencySymbols[Number(currency)])
+        const paymentTokenAddr = getTokenAddress(currencySymbols[Number(currency)] as SupportedTokens)
 
-        if (!paymentToken) {
-          throw new Error('PaymentToken failure. Payment token not supportd.')
+        if (!paymentTokenAddr) {
+          throw new Error(`PaymentToken failure. Payment token ${Number(currency)} not supportd.`)
         }
 
         // Send Placement transaction
-        const placeReceipt = await marketPlaceContract.place(tokenId, paymentToken, price, { from: account, gasPrice })
+        const placeReceipt = await marketPlaceContract.place(tokenId, paymentTokenAddr, price, { from: account, gasPrice })
           .catch((error) => {
             throw new UIError({
               error,
