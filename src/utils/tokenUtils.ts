@@ -1,4 +1,4 @@
-import { availableTokens } from 'api/rif-marketplace-cache/rns/common'
+import { rnsNftAddrTokenRecord } from 'api/rif-marketplace-cache/rns/common'
 import { SupportedTokens, Token, TOKENS } from 'contracts/interfaces'
 
 export const getToken = (tokenName: SupportedTokens): Token => {
@@ -16,7 +16,7 @@ export const getTokens = (
 
 export const getTokenAddress = (
   currency: SupportedTokens,
-): string | undefined => Object.keys(availableTokens)
-  .find((tokenAddress) => availableTokens[tokenAddress] === currency)
+): string | undefined => Object.keys(rnsNftAddrTokenRecord)
+  .find((tokenAddress) => rnsNftAddrTokenRecord[tokenAddress] === currency)
 
 export default getToken

@@ -2,7 +2,7 @@ import { SoldDomainTransport } from 'api/models/transports'
 import mockFeathersService from 'api/test-utils/feathers'
 import { RnsSoldDomain } from 'models/marketItems/DomainItem'
 import { parseToBigDecimal } from 'utils/parsers'
-import { availableTokens, RnsAPIService } from '../common'
+import { rnsNftAddrTokenRecord, RnsAPIService } from '../common'
 import { SoldDomainsService } from '../sold'
 
 const mockOwnerAddress = 'fake_owner_address'
@@ -39,7 +39,7 @@ const MOCK_DOMAIN_TRANSPORT_ITEM_0: SoldDomainTransport = {
 }
 
 // @ts-ignore
-availableTokens.mockaddress = 'rif'
+rnsNftAddrTokenRecord.mockaddress = 'rif'
 
 const MOCK_TRANSPORT = [MOCK_DOMAIN_TRANSPORT_ITEM_0]
 
@@ -50,7 +50,7 @@ const expectedDomains: RnsSoldDomain[] = [
     buyer: MOCK_DOMAIN_TRANSPORT_ITEM_0.transfer.buyerAddress,
     domainName: MOCK_DOMAIN_TRANSPORT_ITEM_0.domain.name,
     id: MOCK_DOMAIN_TRANSPORT_ITEM_0.id,
-    paymentToken: availableTokens[MOCK_DOMAIN_TRANSPORT_ITEM_0.paymentToken.toLowerCase()],
+    paymentToken: rnsNftAddrTokenRecord[MOCK_DOMAIN_TRANSPORT_ITEM_0.paymentToken.toLowerCase()],
     price: parseToBigDecimal(MOCK_DOMAIN_TRANSPORT_ITEM_0.priceString, 18),
     soldDate: new Date(MOCK_DOMAIN_TRANSPORT_ITEM_0.soldDate),
     tokenId: MOCK_DOMAIN_TRANSPORT_ITEM_0.tokenId,

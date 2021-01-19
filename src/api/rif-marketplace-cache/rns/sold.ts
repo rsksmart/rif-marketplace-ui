@@ -6,7 +6,7 @@ import { RnsSoldDomain } from 'models/marketItems/DomainItem'
 import { parseToBigDecimal } from 'utils/parsers'
 import client from '../client'
 import {
-  RnsServiceAddress, RnsAPIService, RnsChannels, availableTokens,
+  RnsServiceAddress, RnsAPIService, RnsChannels, rnsNftAddrTokenRecord,
 } from './common'
 
 export const soldDomainsAddress: RnsServiceAddress = 'rns/v0/sold'
@@ -29,7 +29,7 @@ const mapFromTransport = ({
   buyer,
   tokenId,
   domainName,
-  paymentToken: availableTokens[paymentToken.toLowerCase()],
+  paymentToken: rnsNftAddrTokenRecord[paymentToken.toLowerCase()],
   price: parseToBigDecimal(priceString, 18),
   soldDate: new Date(soldDate),
 })

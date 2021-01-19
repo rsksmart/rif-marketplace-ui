@@ -4,7 +4,7 @@ import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import { parseToBigDecimal } from 'utils/parsers'
 import { RnsFilter } from 'api/models/RnsFilter'
 import { OffersService } from '../offers'
-import { availableTokens } from '../common'
+import { rnsNftAddrTokenRecord } from '../common'
 
 const MOCK_OFFER_0: OfferTransport = {
   domain: {
@@ -35,7 +35,7 @@ const MOCK_FILTERS: RnsFilter = {
 }
 
 // @ts-ignore
-availableTokens.mockaddress = 'rif'
+rnsNftAddrTokenRecord.mockaddress = 'rif'
 
 const expectedDomains: RnsDomainOffer[] = [
   {
@@ -43,7 +43,7 @@ const expectedDomains: RnsDomainOffer[] = [
     expirationDate: new Date(MOCK_OFFER_0.domain.expiration.date),
     id: MOCK_OFFER_0.offerId,
     ownerAddress: MOCK_OFFER_0.ownerAddress,
-    paymentToken: availableTokens[MOCK_OFFER_0.paymentToken.toLowerCase()],
+    paymentToken: rnsNftAddrTokenRecord[MOCK_OFFER_0.paymentToken.toLowerCase()],
     price: parseToBigDecimal(MOCK_OFFER_0.priceString, 18),
     tokenId: MOCK_OFFER_0.tokenId,
   },

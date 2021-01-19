@@ -7,7 +7,7 @@ import {
 } from 'models/marketItems/StorageItem'
 import { parseConvertBig, parseToBigDecimal } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
-import { availableTokens } from '../rns/common'
+import { rnsNftAddrTokenRecord } from '../rns/common'
 
 export enum MinMax {
   min = 1,
@@ -19,7 +19,7 @@ export const getPaymentToken = (tokenAddress: string): SupportedTokens => {
     return SUPPORTED_TOKENS.rbtc
   }
   return Object
-    .entries(availableTokens)
+    .entries(rnsNftAddrTokenRecord)
     .reduce(
       (acc, [addr, symbol]) => (addr === tokenAddress
         ? symbol as SupportedTokens
