@@ -1,12 +1,12 @@
 import { Big } from 'big.js'
-import { SUPPORTED_TOKENS } from 'contracts/interfaces'
+import { SYSTEM_SUPPORTED_TOKENS } from 'contracts/interfaces'
 import { StorageBillingPlan } from '../interfaces'
 import { AddItemPayload, SetTotalCapacityPayload, SetCountryPayload } from '../offerEditActions'
 import { initialState } from '../OfferEditContext'
 import { offerEditActions } from '../offerEditReducer'
 
 const mockedPlanItem: StorageBillingPlan = {
-  currency: SUPPORTED_TOKENS.rbtc,
+  currency: SYSTEM_SUPPORTED_TOKENS.rbtc,
   internalId: 1,
   price: new Big(0.001),
   period: 'Daily',
