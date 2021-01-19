@@ -1,5 +1,5 @@
 import { createStyles, makeStyles } from '@material-ui/core/styles'
-import { fonts } from '@rsksmart/rif-ui'
+import { fonts, WithSpinner } from '@rsksmart/rif-ui'
 import { DropzoneArea, DropzoneAreaProps } from 'material-ui-dropzone'
 import React, { FC } from 'react'
 
@@ -49,4 +49,4 @@ const PinUploaderTab: FC<DropzoneAreaProps> = (props) => {
   )
 }
 
-export default PinUploaderTab
+export default WithSpinner(PinUploaderTab)

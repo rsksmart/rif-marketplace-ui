@@ -64,6 +64,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
   const [hash, setHash] = useState('')
   const [files, setFiles] = useState<File[]>([])
   const [uploadDisabled, setUploadDisabled] = useState(false)
+  const [isLoadingFiles, setIsLoadingFiles] = useState(false)
 
   const isHashEmpty = !hash
   const isValidCID = isHashEmpty ? false : validateCID(hash)
@@ -102,6 +103,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     setUploadDisabled(!!addedFiles.length
       && totalB.gt(fileSizeLimit))
     setFiles(addedFiles)
+    setIsLoadingFiles(false)
   }
 
   useEffect(() => {
@@ -125,7 +127,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
   const uploadActionProps: ButtonProps = {
     children: `Upload ${hasSize ? `${sizeUnit.toFixed(3)} ${UNIT_BYTES}` : ''}`,
     onClick: handleUpload,
-    disabled: uploadDisabled || !hasSize,
+    disabled: uploadDisabled || !hasSize || isLoadingFiles,
   }
 
   const sizeOverLimitMB = uploadDisabled
@@ -222,7 +224,9 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
             />
           ) : (
             <PinUploaderTab
+              isLoading={isLoadingFiles}
               onChange={onFilesChange}
+              onDrop={(): void => setIsLoadingFiles(true)}
               filesLimit={666 * 666 * 666}
               maxFileSize={fileSizeLimit.minus(size).toNumber()}
             />
