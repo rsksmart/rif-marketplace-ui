@@ -12,7 +12,6 @@ export type State = ContextState & {
   fileSizeLimit: Big
   isLoading: {
     sizeLimit: boolean
-    // filesSize: boolean TBD in order to show loder while uploading files
   }
 }
 
@@ -28,9 +27,6 @@ export type SizeLimitPayload = {
 export type IsLoadingPayload = {
   sizeLimit: boolean
 }
-// | {
-//   filesSize: boolean
-// } TBD in order to show loader while uploading files
 
 // ACTIONS
 export type Action = (
