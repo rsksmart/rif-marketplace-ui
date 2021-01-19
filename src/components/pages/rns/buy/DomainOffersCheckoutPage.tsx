@@ -113,13 +113,14 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
 
   // check funds
   useEffect(() => {
-    if (web3 && account && tokenId && !isFundsConfirmed) {
+    if (web3 && account && !isFundsConfirmed) {
       const {
         item: {
           paymentToken,
+          tokenId: tokenAddr,
         },
       } = order
-      const currency = crypto[paymentToken]
+      const { symbol } = crypto[paymentToken]
       const checkFunds = async () => {
         appDispatch({
           type: 'SET_IS_LOADING',
@@ -130,10 +131,10 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
           } as LoadingPayload,
         })
 
-        const rnsContract = RNSContract.getInstance(web3, currency.symbol)
+        const rnsContract = RNSContract.getInstance(web3, symbol)
 
         const hasSufficientFunds = await rnsContract.checkFunds(
-          tokenId, account, domainName, // juraj - don't pass domain name just for an error message
+          tokenAddr, account, domainName,
         )
 
         setHasFunds(hasSufficientFunds)
@@ -154,7 +155,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
           })
         })
     }
-  }, [web3, account, tokenId, isFundsConfirmed, reportError, domainName, appDispatch, crypto, order])
+  }, [web3, account, isFundsConfirmed, reportError, domainName, appDispatch, crypto, order])
 
   useEffect(() => {
     if (isPendingConfirm && order && !order.isProcessing) {

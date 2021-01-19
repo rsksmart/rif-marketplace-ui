@@ -1,3 +1,4 @@
+import { availableTokens } from 'api/rif-marketplace-cache/rns/common'
 import { SupportedTokens, Token, TOKENS } from 'contracts/interfaces'
 
 export const getToken = (tokenName: SupportedTokens): Token => {
@@ -12,5 +13,10 @@ export const getToken = (tokenName: SupportedTokens): Token => {
 export const getTokens = (
   supportedTokens: SupportedTokens[],
 ): Token[] => supportedTokens.map(getToken)
+
+export const getTokenAddress = (
+  currency: SupportedTokens,
+): string | undefined => Object.keys(availableTokens)
+  .find((tokenAddress) => availableTokens[tokenAddress] === currency)
 
 export default getToken
