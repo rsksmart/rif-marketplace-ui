@@ -16,7 +16,7 @@ import Logger from 'utils/Logger'
 import { convertToWeiString } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import Web3 from 'web3'
-import { SUPPORTED_TOKENS, SupportedTokens, TxOptions } from 'contracts/interfaces'
+import { SYSTEM_SUPPORTED_TOKENS, SupportedTokens, TxOptions } from 'contracts/interfaces'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
 import { reducer } from './actions'
 import {
@@ -30,7 +30,7 @@ export const initialState: State = {
     location: '',
     total: new Big(0),
     billingPeriod: PeriodInSeconds.Daily,
-    token: SUPPORTED_TOKENS.rbtc,
+    token: SYSTEM_SUPPORTED_TOKENS.rbtc,
   },
   auxiliary: {
     currencyOptions: [],
@@ -160,11 +160,11 @@ const Provider: FC = ({ children }) => {
             .div(UNIT_PREFIX_POW2.MEGA)
             .round(0, 3)
             .toString(),
-          token: SUPPORTED_TOKENS[token],
+          token: SYSTEM_SUPPORTED_TOKENS[token],
         }
         const txOptions: TxOptions = {
           from: account,
-          token: SUPPORTED_TOKENS[token],
+          token: SYSTEM_SUPPORTED_TOKENS[token],
         }
 
         const storageContract = (await import('contracts/storage'))

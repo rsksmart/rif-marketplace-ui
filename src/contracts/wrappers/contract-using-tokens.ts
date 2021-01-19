@@ -4,7 +4,7 @@ import { Contract } from 'web3-eth-contract'
 
 import {
   ERC20ContractI,
-  SUPPORTED_TOKENS,
+  SYSTEM_SUPPORTED_TOKENS,
   SupportedTokens,
   Token,
   TOKEN_TYPES,
@@ -27,8 +27,8 @@ export class ContractWithTokens extends ContractBase {
     super(web3, contract, name)
     this.supportedTokens = supportedTokens
     // Set default token
-    this._defaultToken = this._isCurrencySupported(SUPPORTED_TOKENS.rbtc)
-      ? SUPPORTED_TOKENS.rbtc
+    this._defaultToken = this._isCurrencySupported(SYSTEM_SUPPORTED_TOKENS.rbtc)
+      ? SYSTEM_SUPPORTED_TOKENS.rbtc
       : this.supportedTokens[0].token
   }
 

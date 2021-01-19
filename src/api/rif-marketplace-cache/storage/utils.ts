@@ -1,7 +1,7 @@
 import { AgreementTransport, BillingPlanTransport, OfferTransport } from 'api/models/storage/transports'
 import { Big } from 'big.js'
 import { ZERO_ADDRESS } from 'constants/strings'
-import { SupportedTokens, SUPPORTED_TOKENS } from 'contracts/interfaces'
+import { SupportedTokens, SYSTEM_SUPPORTED_TOKENS } from 'contracts/interfaces'
 import {
   Agreement, BillingPlan, PeriodInSeconds, StorageOffer, SubscriptionPeriod,
 } from 'models/marketItems/StorageItem'
@@ -16,7 +16,7 @@ export enum MinMax {
 
 export const getPaymentToken = (tokenAddress: string): SupportedTokens => {
   if (tokenAddress === ZERO_ADDRESS) {
-    return SUPPORTED_TOKENS.rbtc
+    return SYSTEM_SUPPORTED_TOKENS.rbtc
   }
   return Object
     .entries(rnsNftAddrTokenRecord)
@@ -70,7 +70,7 @@ export const mapOfferFromTransport = ({
       .map<BillingPlan>((plan) => ({
         period: PeriodInSeconds[plan.period],
         price: parseToBigDecimal(plan.price, 18),
-        currency: SUPPORTED_TOKENS[plan.rateId],
+        currency: SYSTEM_SUPPORTED_TOKENS[plan.rateId],
       })),
     averagePrice: averagePriceTransport,
     acceptedCurrencies,

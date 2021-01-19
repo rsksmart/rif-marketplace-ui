@@ -8,7 +8,7 @@ import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/A
 import { ContextActions, ContextReducer, ContextState } from 'context/storeUtils/interfaces'
 import storeReducerFactory from 'context/storeUtils/reducer'
 import { MarketCryptoRecord } from 'models/Market'
-import { SUPPORTED_TOKENS } from 'contracts/interfaces'
+import { SYSTEM_SUPPORTED_TOKENS } from 'contracts/interfaces'
 import {
   MarketAction, MarketPayload, marketActions, MarketReducer,
 } from './marketActions'
@@ -41,12 +41,12 @@ export const initialState: MarketState = {
     },
     crypto: {
       rif: {
-        symbol: SUPPORTED_TOKENS.rif,
+        symbol: SYSTEM_SUPPORTED_TOKENS.rif,
         displayName: 'RIF',
         rate: -1,
       },
       rbtc: {
-        symbol: SUPPORTED_TOKENS.rbtc,
+        symbol: SYSTEM_SUPPORTED_TOKENS.rbtc,
         displayName: 'RBTC',
         rate: -1,
       },

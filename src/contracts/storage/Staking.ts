@@ -6,7 +6,7 @@ import { AbiItem } from 'web3-utils'
 
 import { ZERO_BYTES } from 'constants/strings'
 import { stakingAddress, storageSupportedTokens } from 'contracts/config'
-import { SUPPORTED_TOKENS, TxOptions } from 'contracts/interfaces'
+import { SYSTEM_SUPPORTED_TOKENS, TxOptions } from 'contracts/interfaces'
 import { getTokens } from 'utils/tokenUtils'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
 import Big from 'big.js'
@@ -88,7 +88,7 @@ class StakingContract extends ContractWithTokens {
       {
         gasMultiplier: StakingContract.gasMultiplier,
         ...txOptions,
-        token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
+        token: SYSTEM_SUPPORTED_TOKENS.rbtc, // Can be used only with native token
       },
     )
   }

@@ -5,7 +5,7 @@ import { TransactionReceipt } from 'web3-eth'
 import { AbiItem } from 'web3-utils'
 
 import { storageAddress, storageSupportedTokens } from 'contracts/config'
-import { SUPPORTED_TOKENS, SupportedTokens, TxOptions } from 'contracts/interfaces'
+import { SYSTEM_SUPPORTED_TOKENS, SupportedTokens, TxOptions } from 'contracts/interfaces'
 import { getTokens } from 'utils/tokenUtils'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
 import { validateBalance } from 'contracts/utils/accountBalance'
@@ -114,7 +114,7 @@ class StorageContract extends ContractWithTokens {
       {
         gasMultiplier: StorageContract.gasMultiplier,
         ...txOptions,
-        token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
+        token: SYSTEM_SUPPORTED_TOKENS.rbtc, // Can be used only with native token
       },
     )
   }
@@ -136,7 +136,7 @@ class StorageContract extends ContractWithTokens {
       {
         gasMultiplier: StorageContract.gasMultiplier,
         ...txOptions,
-        token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
+        token: SYSTEM_SUPPORTED_TOKENS.rbtc, // Can be used only with native token
       },
     )
   }
@@ -168,7 +168,7 @@ class StorageContract extends ContractWithTokens {
       {
         gasMultiplier: StorageContract.gasMultiplier,
         ...txOptions,
-        token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
+        token: SYSTEM_SUPPORTED_TOKENS.rbtc, // Can be used only with native token
       },
     )
   }
@@ -198,7 +198,7 @@ class StorageContract extends ContractWithTokens {
       {
         gasMultiplier: StorageContract.gasMultiplier,
         ...txOptions,
-        token: SUPPORTED_TOKENS.rbtc, // Native token only
+        token: SYSTEM_SUPPORTED_TOKENS.rbtc, // Native token only
       },
     )
   }
@@ -232,7 +232,7 @@ class StorageContract extends ContractWithTokens {
       {
         gasMultiplier: StorageContract.gasMultiplier,
         ...txOptions,
-        token: SUPPORTED_TOKENS.rbtc, // Native token only
+        token: SYSTEM_SUPPORTED_TOKENS.rbtc, // Native token only
       },
     )
   }
@@ -248,7 +248,7 @@ class StorageContract extends ContractWithTokens {
       this.methods.terminateOffer(),
       {
         ...txOptions,
-        token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
+        token: SYSTEM_SUPPORTED_TOKENS.rbtc, // Can be used only with native token
       },
     )
   }

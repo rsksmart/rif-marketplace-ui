@@ -8,7 +8,7 @@ import { StakedBalances as StakedBalancesProp } from 'api/rif-marketplace-cache/
 import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
 import React, { FC, useEffect, useState } from 'react'
-import { SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
+import { SYSTEM_SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
 import StakedBalances from './StakedBalances'
 
 export interface WithdrawModalProps {
@@ -30,8 +30,8 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
   open, onClose, onWithdraw, canWithdraw, totalStakedUSD, stakes,
 }) => {
   const classes = useStyles()
-  const currencyOptions: SupportedTokens[] = [SUPPORTED_TOKENS.rbtc, SUPPORTED_TOKENS.rif]
-  const [selectedCurrency, setSelectedCurrency] = useState<SupportedTokens>(SUPPORTED_TOKENS.rbtc)
+  const currencyOptions: SupportedTokens[] = [SYSTEM_SUPPORTED_TOKENS.rbtc, SYSTEM_SUPPORTED_TOKENS.rif]
+  const [selectedCurrency, setSelectedCurrency] = useState<SupportedTokens>(SYSTEM_SUPPORTED_TOKENS.rbtc)
   const [amountToWithdraw, setAmountToWithdraw] = useState<number | undefined>(undefined)
 
   useEffect(() => {

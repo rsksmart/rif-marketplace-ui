@@ -35,7 +35,7 @@ export type ContractErrorId =
   | StorageContractErrorId
   | StorageStakingContractErrorId
 
-export enum SUPPORTED_TOKENS {
+export enum SYSTEM_SUPPORTED_TOKENS {
   rif = 'rif',
   rbtc = 'rbtc'
 }
@@ -45,7 +45,7 @@ export enum TOKEN_TYPES {
   NATIVE = 'native'
 }
 
-export type SupportedTokens = SUPPORTED_TOKENS.rif | SUPPORTED_TOKENS.rbtc
+export type SupportedTokens = SYSTEM_SUPPORTED_TOKENS.rif | SYSTEM_SUPPORTED_TOKENS.rbtc
 
 export type TokenTypes = TOKEN_TYPES.NATIVE | TOKEN_TYPES.ERC20
 
@@ -65,13 +65,13 @@ export type TxOptions = TransactionOptions & {
 }
 
 export const TOKENS: Record<SupportedTokens, Token> = {
-  [SUPPORTED_TOKENS.rbtc]: {
-    token: SUPPORTED_TOKENS.rbtc,
+  [SYSTEM_SUPPORTED_TOKENS.rbtc]: {
+    token: SYSTEM_SUPPORTED_TOKENS.rbtc,
     type: TOKEN_TYPES.NATIVE,
     tokenAddress: ZERO_ADDRESS,
   } as Token,
-  [SUPPORTED_TOKENS.rif]: {
-    token: SUPPORTED_TOKENS.rif,
+  [SYSTEM_SUPPORTED_TOKENS.rif]: {
+    token: SYSTEM_SUPPORTED_TOKENS.rif,
     type: TOKEN_TYPES.ERC20,
     tokenContract: RifERC20Contract,
     tokenAddress: rifTokenAddress,

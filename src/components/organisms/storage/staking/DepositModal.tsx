@@ -9,7 +9,7 @@ import CenteredContent from 'components/molecules/CenteredContent'
 import React, {
   FC, useContext, useEffect, useState,
 } from 'react'
-import { SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
+import { SYSTEM_SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
 import Big from 'big.js'
 import { getBalance } from 'contracts/utils/accountBalance'
 import { convertToWeiString } from 'utils/parsers'
@@ -33,8 +33,8 @@ const DepositModal: FC<DepositModalProps> = ({
   totalStakedUSD, open, onClose, onDeposit, stakes,
 }) => {
   const classes = useStyles()
-  const currencyOptions: SupportedTokens[] = [SUPPORTED_TOKENS.rbtc, SUPPORTED_TOKENS.rif]
-  const [selectedToken, setSelectedToken] = useState<SupportedTokens>(SUPPORTED_TOKENS.rbtc)
+  const currencyOptions: SupportedTokens[] = [SYSTEM_SUPPORTED_TOKENS.rbtc, SYSTEM_SUPPORTED_TOKENS.rif]
+  const [selectedToken, setSelectedToken] = useState<SupportedTokens>(SYSTEM_SUPPORTED_TOKENS.rbtc)
   const [amountToStake, setAmountToStake] = useState<number | undefined>(undefined)
   const [accountWeiBalance, setAccountWeiBalance] = useState(Big(0))
 

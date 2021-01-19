@@ -1,6 +1,6 @@
 import Big, { BigSource } from 'big.js'
 import {
-  SupportedTokens, SUPPORTED_TOKENS,
+  SupportedTokens, SYSTEM_SUPPORTED_TOKENS,
 } from 'contracts/interfaces'
 import CustomError from 'models/CustomError'
 import getToken from 'utils/tokenUtils'
@@ -13,7 +13,7 @@ export const getBalance = (
 ): Promise<string> => {
   const tokenObject = getToken(tokenName)
 
-  if (tokenObject.token === SUPPORTED_TOKENS.rbtc) { // native token
+  if (tokenObject.token === SYSTEM_SUPPORTED_TOKENS.rbtc) { // native token
     return web3.eth.getBalance(account)
   }
 
@@ -29,7 +29,7 @@ export const validateBalance = async (
     web3: Web3
     minAmountWei: BigSource
     account?: string
-    token?: SUPPORTED_TOKENS
+    token?: SYSTEM_SUPPORTED_TOKENS
   },
 ): Promise<void> => {
   if (!account) throw new CustomError('Account is required.')

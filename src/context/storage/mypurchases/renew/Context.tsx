@@ -16,7 +16,7 @@ import { calcRenewalDate, getShortDateString } from 'utils/dateUtils'
 import Logger from 'utils/Logger'
 import { convertToWeiString, parseToBigDecimal } from 'utils/parsers'
 import Web3 from 'web3'
-import { SUPPORTED_TOKENS } from 'contracts/interfaces'
+import { SYSTEM_SUPPORTED_TOKENS } from 'contracts/interfaces'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
 import { AgreementUpdateData } from 'context/Confirmations/interfaces'
 import { reducer } from './actions'
@@ -28,7 +28,7 @@ export const initialState: State = {
     endDate: '',
     periodsCount: 1,
     plan: {
-      currency: SUPPORTED_TOKENS.rbtc,
+      currency: SYSTEM_SUPPORTED_TOKENS.rbtc,
       period: 'Daily',
       price: new Big(0),
     },

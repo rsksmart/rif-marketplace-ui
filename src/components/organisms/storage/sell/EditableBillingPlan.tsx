@@ -10,7 +10,7 @@ import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { MarketCryptoRecord } from 'models/Market'
 import { SubscriptionPeriod } from 'models/marketItems/StorageItem'
 import React, { FC, useContext, useState } from 'react'
-import { SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
+import { SYSTEM_SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
 
 export interface EditableBillingPlanProps {
   onPlanAdded?: (billingPlan: StorageBillingPlan) => void
@@ -32,7 +32,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
   } = useContext(OfferEditContext)
 
   const editMode = Boolean(billingPlan)
-  const [currency, setCurrency] = useState<SupportedTokens>(billingPlan?.currency || SUPPORTED_TOKENS.rbtc)
+  const [currency, setCurrency] = useState<SupportedTokens>(billingPlan?.currency || SYSTEM_SUPPORTED_TOKENS.rbtc)
   const [pricePerGb, setPricePerGb] = useState(billingPlan?.price.toString())
   const [period, setPeriod] = useState(
     billingPlan?.period || allBillingPeriods[0],
