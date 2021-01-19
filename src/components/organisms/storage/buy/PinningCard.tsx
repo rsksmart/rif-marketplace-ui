@@ -125,11 +125,10 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
   const uploadActionProps: ButtonProps = {
     children: `Upload ${hasSize ? `${sizeUnit.toFixed(3)} ${UNIT_BYTES}` : ''}`,
     onClick: handleUpload,
-    disabled: uploadDisabled,
+    disabled: uploadDisabled || !hasSize,
   }
 
   const sizeOverLimitMB = uploadDisabled
-    && hasSize
     && parseConvertBig(
       size.minus(fileSizeLimit),
       UNIT_PREFIX_POW2.MEGA,
