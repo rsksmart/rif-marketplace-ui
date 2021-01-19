@@ -1,4 +1,4 @@
-import { PaymentWrapper } from 'contracts/rns/Rns'
+import { PaymentWrapper } from 'contracts/wrappers/payment-wrapper'
 import Web3 from 'web3'
 
 export type RBTCWrapperErrorId = 'rbtc-getBalanceOf'
