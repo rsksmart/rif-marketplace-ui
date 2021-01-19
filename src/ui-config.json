@@ -10,7 +10,7 @@
         "rnsManagerUrl": "http://localhost:3001",
         "services": {
             "rns": {
-                "tokens": ["rif"]
+                "tokens": ["rbtc", "rif"]
             },
             "storage": {
                 "tokens": ["rbtc", "rif"]

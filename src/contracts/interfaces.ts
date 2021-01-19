@@ -5,10 +5,11 @@ import { ZERO_ADDRESS } from '../constants/strings'
 import { rifTokenAddress } from './config'
 import { RifERC20Contract } from './tokens/rif'
 import { MarketplaceContractErrorId } from './rns/Marketplace'
-import { PaymentWrapper, RnsContractErrorId } from './rns/Rns'
+import { RnsContractErrorId } from './rns/Rns'
 import { StorageStakingContractErrorId } from './storage/Staking'
 import { StorageContractErrorId } from './storage/Storage'
 import type { RifERC677ContractErrorId, RifERC20ContractErrorId } from './tokens/rif'
+import { PaymentWrapper } from './wrappers/payment-wrapper'
 
 export interface TransactionOptions {
   from?: string

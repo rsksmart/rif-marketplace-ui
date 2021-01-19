@@ -9,14 +9,13 @@ import { SupportedTokens } from 'contracts/interfaces'
 import { RifERC677Contract } from 'contracts/tokens/rif'
 import { UIError } from 'models/UIMessage'
 import { parseToBigDecimal } from 'utils/parsers'
+import { PaymentWrapper } from 'contracts/wrappers/payment-wrapper'
 import { rnsAddress } from '../config'
 import { TransactionOptions } from '../interfaces'
 import ContractBase from '../wrappers/contract-base'
 import RBTCWrapper from '../tokens/rbtc/rbtcWrapper'
 
 export type RnsContractErrorId = 'contract-rns-approve' | 'contract-rns-unapprove' | 'contract-rns-getApproved' | 'contract-rns-notApproved' | 'contract-rns-place' | 'contract-rns-buy'
-
-export type PaymentWrapper = { getBalanceOf: Function } // juraj - move somewhere more sensible
 
 const throwUnsupportedError = (paymentTokenSymbol: string): false => {
   throw new UIError({
@@ -52,7 +51,7 @@ class RNSContract extends ContractBase {
 
   private static instance: RNSContract
 
-  public async getPriceString(tokenId, account): Promise<string> { // ?juraj - account from web3?
+  public async getPriceString(tokenId, account): Promise<string> {
     const tokenPlacement = await this._marketPlaceContract.getPlacement(tokenId, { from: account })
 
     return Promise.resolve(tokenPlacement[1])

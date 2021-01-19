@@ -6,7 +6,7 @@ import { TransactionReceipt } from 'web3-eth'
 import { rifTokenAddress } from 'contracts/config'
 import ContractBase from 'contracts/wrappers/contract-base'
 import { TransactionOptions } from 'contracts/interfaces'
-import { PaymentWrapper } from 'contracts/rns/Rns'
+import { PaymentWrapper } from 'contracts/wrappers/payment-wrapper'
 
 export type RifERC677ContractErrorId = 'contract-rif-getBalanceOf' | 'contract-rif-transferAndCall'
 
