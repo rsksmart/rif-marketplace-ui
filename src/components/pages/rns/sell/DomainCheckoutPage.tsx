@@ -26,8 +26,10 @@ import Logger from 'utils/Logger'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { UIError } from 'models/UIMessage'
 import { LoadingPayload } from 'context/App/appActions'
-import { rifTokenAddress, marketPlaceAddress } from 'contracts/config'
+import { marketPlaceAddress } from 'contracts/config'
 import { shortChecksumAddress } from 'utils/stringUtils'
+import { getTokenAddress } from 'utils/tokenUtils'
+import { SupportedTokens } from 'contracts/interfaces'
 
 const logger = Logger.getInstance()
 
@@ -150,7 +152,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
           id: 'contract',
         },
       })
-      const rnsContract = RNSContract.getInstance(web3)
+      const rnsContract = RNSContract.getInstance(web3, currencySymbols[currency])
       const marketPlaceContract = MarketplaceContract.getInstance(web3)
       try {
         // Get gas price
@@ -191,8 +193,15 @@ const DomainsCheckoutPage: FC<{}> = () => {
             message: 'Placing domain...',
           } as LoadingPayload,
         } as any)
+
+        const paymentTokenAddr = getTokenAddress(currencySymbols[Number(currency)] as SupportedTokens)
+
+        if (!paymentTokenAddr) {
+          throw new Error(`PaymentToken failure. Payment token ${Number(currency)} not supportd.`)
+        }
+
         // Send Placement transaction
-        const placeReceipt = await marketPlaceContract.place(tokenId, rifTokenAddress, price, { from: account, gasPrice })
+        const placeReceipt = await marketPlaceContract.place(tokenId, paymentTokenAddr, price, { from: account, gasPrice })
           .catch((error) => {
             throw new UIError({
               error,

@@ -3,8 +3,7 @@ import RifAddress from 'components/molecules/RifAddress'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
 import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
-import { Marketplace as MarketplaceContract, Rns as RNSContract } from 'contracts/rns'
-import RIFContract from 'contracts/tokens/rif/erc677'
+import { Rns as RNSContract } from 'contracts/rns'
 import { UIError } from 'models/UIMessage'
 import React, {
   FC, useCallback, useContext, useEffect, useState,
@@ -30,7 +29,6 @@ import {
   shortenString,
 } from '@rsksmart/rif-ui'
 
-import { parseToBigDecimal } from 'utils/parsers'
 import { marketPlaceAddress } from 'contracts/config'
 import { shortChecksumAddress } from 'utils/stringUtils'
 
@@ -115,7 +113,14 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
 
   // check funds
   useEffect(() => {
-    if (web3 && account && tokenId && !isFundsConfirmed) {
+    if (web3 && account && !isFundsConfirmed) {
+      const {
+        item: {
+          paymentToken,
+          tokenId: tokenAddr,
+        },
+      } = order
+      const { symbol } = crypto[paymentToken]
       const checkFunds = async () => {
         appDispatch({
           type: 'SET_IS_LOADING',
@@ -125,32 +130,17 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
             message: 'Checking funds...',
           } as LoadingPayload,
         })
-        const rifContract = RIFContract.getInstance(web3)
-        const marketPlaceContract = MarketplaceContract.getInstance(web3)
-        const myBalance = await rifContract.getBalanceOf(account, { from: account })
-          .catch((error) => {
-            throw new UIError({
-              error,
-              id: 'contract-rif-getBalanceOf',
-              text: 'Could not get funds balance from contract.',
-            })
-          })
 
-        const tokenPlacement = await marketPlaceContract.getPlacement(tokenId, { from: account })
-          .catch((error) => {
-            throw new UIError({
-              error,
-              id: 'contract-marketplace-getPlacement',
-              text: `Could not retrieve placement for ${domainName} from contract.`,
-            })
-          })
+        const rnsContract = RNSContract.getInstance(web3, symbol)
 
-        const price = tokenPlacement[1]
-        const { utils: { toBN } } = web3
+        const hasSufficientFunds = await rnsContract.checkFunds(
+          tokenAddr, account, domainName,
+        )
 
-        setHasFunds(toBN(myBalance).gte(toBN(price)))
+        setHasFunds(hasSufficientFunds)
         setIsFundsConfirmed(true)
       }
+
       checkFunds()
         .catch((error) => {
           reportError(error)
@@ -165,7 +155,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
           })
         })
     }
-  }, [web3, account, tokenId, isFundsConfirmed, reportError, domainName, appDispatch])
+  }, [web3, account, isFundsConfirmed, reportError, domainName, appDispatch, crypto, order])
 
   useEffect(() => {
     if (isPendingConfirm && order && !order.isProcessing) {
@@ -233,11 +223,9 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
       })
 
       try {
-        const rifContract = RIFContract.getInstance(web3)
-        const marketPlaceContract = MarketplaceContract.getInstance(web3)
-        const rnsContract = RNSContract.getInstance(web3)
-
-        const tokenPlacement = await marketPlaceContract.getPlacement(tokenId, { from: account })
+        const rnsContract = RNSContract.getInstance(web3, currency.symbol)
+        // GET PLACEMENT PRICE FROM CONTRACT
+        const tokenPrice = await rnsContract.getPriceString(tokenId, account)
           .catch((error) => {
             throw new UIError({
               error,
@@ -246,42 +234,17 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
             })
           })
 
-        const tokenPrice = tokenPlacement[1]
-
-        // Check approval
-        const tokenApproval = await rnsContract.getApproved(tokenId, { from: account })
-          .catch((error) => {
-            throw new UIError({
-              error,
-              id: 'contract-rns-getApproved',
-              text: `Could not retrieve approval for ${domainName} from contract.`,
-            })
-          })
-
-        // Check if domain is approved
-        const isApproved = tokenApproval.toString().toLowerCase() === marketPlaceAddress
-
-        if (!isApproved) {
+        const transferReceipt = await rnsContract.buy(
+          marketPlaceAddress, tokenPrice, domainName,
+          tokenId, { from: account },
+        ).catch((error) => {
           throw new UIError({
-            error: new Error('Domain not approved to transfer.'),
-            id: 'contract-rns-notApproved',
-            text: `Domain ${domainName} not approved to transfer.`,
+            error,
+            id: 'contract-rns-buy',
+            text: `Could not buy domain ${domainName} from contract.`,
           })
-        }
+        })
 
-        // Get gas price
-        const gasPrice = await web3.eth.getGasPrice()
-
-        // Send Transfer and call transaction
-        const transferReceipt = await rifContract.transferAndCall(marketPlaceAddress, tokenPrice, tokenId, { from: account, gasPrice })
-          .catch((error) => {
-            const adjustedPrice = parseToBigDecimal(tokenPrice, 18).toString()
-            throw new UIError({
-              error,
-              id: 'contract-rif-transferAndCall',
-              text: `Transfer of ${adjustedPrice} ${currency.displayName} failed. Check your funds and try again.`,
-            })
-          })
         logger.info('transferReceipt:', transferReceipt)
 
         bcDispatch({
@@ -349,7 +312,14 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
             </TableBody>
           </Table>
         </CardContent>
-        {account && isFundsConfirmed && !hasFunds && <Typography color="error">You do not have enough RIF.</Typography>}
+        {account && isFundsConfirmed && !hasFunds && (
+        <Typography color="error">
+          You do not have enough
+          {' '}
+          {currency.displayName}
+          .
+        </Typography>
+        )}
         {!isProcessing && account
           && (
             <CardActions className={classes.footer}>

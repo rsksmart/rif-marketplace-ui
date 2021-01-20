@@ -6,10 +6,11 @@ import { TransactionReceipt } from 'web3-eth'
 import { rifTokenAddress } from 'contracts/config'
 import ContractBase from 'contracts/wrappers/contract-base'
 import { TransactionOptions } from 'contracts/interfaces'
+import { PaymentWrapper } from 'contracts/wrappers/payment-wrapper'
 
 export type RifERC677ContractErrorId = 'contract-rif-getBalanceOf' | 'contract-rif-transferAndCall'
 
-export class RifERC677Contract extends ContractBase {
+export class RifERC677Contract extends ContractBase implements PaymentWrapper {
   public static gasMultiplier = 1.1
 
   public static getInstance(web3: Web3): RifERC677Contract {
@@ -28,7 +29,7 @@ export class RifERC677Contract extends ContractBase {
   public getBalanceOf(
     account: string,
     txOptions: TransactionOptions,
-  ): Promise<number> {
+  ): Promise<string | number> {
     const { from } = txOptions
     return this.contract.methods.balanceOf(account).call({ from })
   }

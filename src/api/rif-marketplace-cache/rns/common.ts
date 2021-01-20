@@ -31,6 +31,7 @@ export const isSupportedToken = (
 const { contractAddresses } = network
 contractAddresses.rbtc = ZERO_ADDRESS
 
+//  - supportedTokenAddresses
 export const availableTokens = Object.keys(contractAddresses).reduce((acc, symbol) => {
   if (!isSupportedToken(symbol)) return acc
   const value = contractAddresses[symbol].toLowerCase()

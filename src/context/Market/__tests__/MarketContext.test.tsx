@@ -7,10 +7,12 @@ const expectedInitialCrypto = {
   rif: {
     displayName: 'RIF',
     rate: -1,
+    symbol: 'rif',
   },
   rbtc: {
     displayName: 'RBTC',
     rate: -1,
+    symbol: 'rbtc',
   },
 }
 
