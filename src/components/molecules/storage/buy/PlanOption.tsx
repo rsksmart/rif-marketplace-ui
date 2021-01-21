@@ -1,5 +1,4 @@
 import React, { FC } from 'react'
-import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import { BillingPlan } from 'models/marketItems/StorageItem'
 import { makeStyles, Typography } from '@material-ui/core'
 import GridItem from 'components/atoms/GridItem'
@@ -35,7 +34,7 @@ const PlanOption: FC<PlanOptionProps> = ({ plan, xr }) => {
       </GridItem>
       <GridItem>
         <CombinedPriceCell
-          currency={tokenDisplayNames[currency]}
+          currency={currency.displayName}
           currencyFiat={fiat}
           price={price.toFixed(6)}
           priceFiat={price.mul(rate).toFixed(3)}

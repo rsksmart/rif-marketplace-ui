@@ -1,14 +1,12 @@
 import { APIService } from 'api/models/apiService'
 import { RnsFilter } from 'api/models/RnsFilter'
-import network from 'config'
-import { ZERO_ADDRESS } from 'constants/strings'
+import { rnsSupportedTokens, addressTokenRecord, allNftAddresses } from 'contracts/config'
 import {
   RnsDomain,
   RnsDomainOffer,
   RnsSoldDomain,
 } from 'models/marketItems/DomainItem'
 import { Modify } from 'utils/typeUtils'
-import { SUPPORTED_TOKENS } from '../../../contracts/interfaces'
 
 export type RnsServiceAddress = 'rns/v0/offers' | 'rns/v0/domains' | 'rns/v0/sold'
 export type RnsChannels = 'domains' | 'sold' | 'offers'
@@ -24,17 +22,16 @@ export type RnsAPIService = Modify<
   }
 >
 
-export const isSupportedToken = (
+export const isSupportedRNSToken = (
   token: string,
-): boolean => SUPPORTED_TOKENS[token]
+): boolean => rnsSupportedTokens.some((t: string) => t === token)
 
-const { contractAddresses } = network
-contractAddresses.rbtc = ZERO_ADDRESS
+//  - Supported Token Address-to-token records
+export const rnsNftAddrTokenRecord: Record<string, string> = allNftAddresses
+  .reduce((acc, addr) => {
+    const symbol = addressTokenRecord[addr]
 
-//  - supportedTokenAddresses
-export const rnsNftAddrTokenRecord = Object.keys(contractAddresses).reduce((acc, symbol) => {
-  if (!isSupportedToken(symbol)) return acc
-  const value = contractAddresses[symbol].toLowerCase()
-  acc[value] = symbol
-  return acc
-}, {})
+    if (!isSupportedRNSToken(symbol)) return acc
+    acc[addr] = symbol
+    return acc
+  }, {})

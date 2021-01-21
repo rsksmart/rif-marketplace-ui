@@ -21,7 +21,7 @@ import withStakingContext, { StakingContext }
   from 'context/Services/storage/staking/Context'
 import RoundBtn from 'components/atoms/RoundBtn'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
-import { SupportedTokens } from 'contracts/interfaces'
+import { SupportedTokens } from 'models/Token'
 import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Services/storage'
 import useConfirmations from 'hooks/useConfirmations'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'

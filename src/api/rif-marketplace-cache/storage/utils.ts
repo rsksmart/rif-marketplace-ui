@@ -1,31 +1,16 @@
 import { AgreementTransport, BillingPlanTransport, OfferTransport } from 'api/models/storage/transports'
 import { Big } from 'big.js'
-import { ZERO_ADDRESS } from 'constants/strings'
-import { SupportedTokens, SYSTEM_SUPPORTED_TOKENS } from 'contracts/interfaces'
 import {
   Agreement, BillingPlan, PeriodInSeconds, StorageOffer, SubscriptionPeriod,
 } from 'models/marketItems/StorageItem'
+import { SYSTEM_SUPPORTED_TOKENS } from 'models/Token'
 import { parseConvertBig, parseToBigDecimal } from 'utils/parsers'
+import { getTokenByAddress } from 'utils/tokenUtils'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
-import { rnsNftAddrTokenRecord } from '../rns/common'
 
 export enum MinMax {
   min = 1,
   max = -1,
-}
-
-export const getPaymentToken = (tokenAddress: string): SupportedTokens => {
-  if (tokenAddress === ZERO_ADDRESS) {
-    return SYSTEM_SUPPORTED_TOKENS.rbtc
-  }
-  return Object
-    .entries(rnsNftAddrTokenRecord)
-    .reduce(
-      (acc, [addr, symbol]) => (addr === tokenAddress
-        ? symbol as SupportedTokens
-        : acc),
-      '' as SupportedTokens,
-    )
 }
 
 export const calcMonthlyRate = (
@@ -130,7 +115,7 @@ export const mapAgreementFromTransport = ({
     size: contentSize,
     subscriptionPeriod: PeriodInSeconds[billingPeriod] as SubscriptionPeriod,
     title: '',
-    paymentToken: getPaymentToken(tokenAddress.toLowerCase()),
+    paymentToken: getTokenByAddress(tokenAddress),
     consumer,
     withdrawableFunds,
     toBePayedOut: parseToBigDecimal(toBePayedOut, 18),

@@ -1,9 +1,7 @@
 import Big, { BigSource } from 'big.js'
-import {
-  SupportedTokens, SYSTEM_SUPPORTED_TOKENS,
-} from 'contracts/interfaces'
 import CustomError from 'models/CustomError'
-import getToken from 'utils/tokenUtils'
+import { SupportedTokens, SYSTEM_SUPPORTED_TOKENS } from 'models/Token'
+import { getNFTokenByName } from 'utils/tokenUtils'
 import Web3 from 'web3'
 
 export const getBalance = (
@@ -11,7 +9,7 @@ export const getBalance = (
   account: string,
   tokenName: SupportedTokens,
 ): Promise<string> => {
-  const tokenObject = getToken(tokenName)
+  const tokenObject = getNFTokenByName(tokenName)
 
   if (tokenObject.token === SYSTEM_SUPPORTED_TOKENS.rbtc) { // native token
     return web3.eth.getBalance(account)

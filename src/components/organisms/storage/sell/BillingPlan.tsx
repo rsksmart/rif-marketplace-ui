@@ -40,7 +40,7 @@ const BillingPlan: FC<BillingPlanProps> = ({
   const classes = useStyles()
 
   const { period, price, currency } = billingPlan
-  const { rate } = cryptoXRs[currency.toLowerCase()]
+  const { rate } = cryptoXRs[currency.token]
   const fiatPrice = (price.mul(rate))
 
   const fiatPriceDisplay = priceDisplay(fiatPrice, 2)
@@ -62,7 +62,7 @@ const BillingPlan: FC<BillingPlanProps> = ({
             </Typography>
           </Grid>
           <Grid xs={6} item style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-            <ItemWUnit type="mediumPrimary" unit={currency.toUpperCase()} value={price.toString()} />
+            <ItemWUnit type="mediumPrimary" unit={currency.displayName} value={price.toString()} />
             <ItemWUnit unit={fiatDisplayName.toUpperCase()} type="normalGrey" value={fiatPriceDisplay} />
           </Grid>
         </Grid>

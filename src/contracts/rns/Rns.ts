@@ -5,7 +5,7 @@ import { TransactionReceipt } from 'web3-eth'
 
 import { Marketplace as MarketplaceContract } from 'contracts/rns'
 import { Contract } from 'web3-eth-contract'
-import { SupportedTokens } from 'contracts/interfaces'
+import { SupportedTokens } from 'models/Token'
 import { RifERC677Contract } from 'contracts/tokens/rif'
 import { UIError } from 'models/UIMessage'
 import { parseToBigDecimal } from 'utils/parsers'

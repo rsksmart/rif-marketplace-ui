@@ -1,19 +1,22 @@
 import {
-  SupportedFiat, tokenDisplayNames, XRService, XRItem,
+  SupportedFiat, XRItem, XRService,
 } from 'api/rif-marketplace-cache/rates/xr'
-import React, {
-  Dispatch, useContext, useEffect, useReducer, useState,
-} from 'react'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { ContextActions, ContextReducer, ContextState } from 'context/storeUtils/interfaces'
 import storeReducerFactory from 'context/storeUtils/reducer'
-import { MarketCryptoRecord } from 'models/Market'
-import { SYSTEM_SUPPORTED_TOKENS } from 'contracts/interfaces'
+import { MarketCryptoRecord, TokenXR } from 'models/Market'
+import { UIError } from 'models/UIMessage'
+import React, {
+  Dispatch, useCallback, useContext, useEffect, useReducer, useState,
+} from 'react'
+import { getSysTokenByName } from 'utils/tokenUtils'
 import {
-  MarketAction, MarketPayload, marketActions, MarketReducer,
+  MarketAction, marketActions, MarketPayload, MarketReducer,
 } from './marketActions'
 
 export type ContextName = 'market'
+
+export type MarketErrorId = 'market-init'
 
 export type MarketFiat = {
   displayName: string
@@ -39,18 +42,7 @@ export const initialState: MarketState = {
       symbol: 'usd',
       displayName: 'USD',
     },
-    crypto: {
-      rif: {
-        symbol: SYSTEM_SUPPORTED_TOKENS.rif,
-        displayName: 'RIF',
-        rate: -1,
-      },
-      rbtc: {
-        symbol: SYSTEM_SUPPORTED_TOKENS.rbtc,
-        displayName: 'RBTC',
-        rate: -1,
-      },
-    },
+    crypto: {},
   },
 }
 
@@ -66,18 +58,20 @@ export const MarketContextProvider = ({ children }) => {
       currentFiat: {
         symbol: fiatSymbol,
       },
-      crypto,
     },
   } = state as MarketState
-  const [supportedCrypto] = useState(Object.keys(crypto).filter((token) => tokenDisplayNames[token])) // prevents update to this list
 
   const { state: appState, dispatch: appDispatch }: AppContextProps = useContext(AppContext)
   const api = appState?.apis?.['rates/v0'] as XRService
 
+  const errorReporter = useCallback((
+    e: UIError,
+  ) => errorReporterFactory(appDispatch)(e), [appDispatch])
+
   // Initialise
   useEffect(() => {
     if (api && !isInitialised) {
-      api.connect(errorReporterFactory(appDispatch))
+      api.connect(errorReporter)
 
       setIsInitialised(true)
       try {
@@ -89,33 +83,37 @@ export const MarketContextProvider = ({ children }) => {
         setIsInitialised(false)
       }
     }
-  }, [api, isInitialised, appDispatch])
+  }, [api, isInitialised, errorReporter])
 
   // fetch if is initialised
   useEffect(() => {
     if (isInitialised) {
       const { fetch } = api
 
-      fetch({ fiatSymbol }).then((newRates: XRItem[]) => {
-        const payload = Object.keys(newRates).reduce((acc, i) => {
-          const symbol = newRates[i].token
-
-          if (supportedCrypto.includes(symbol)) {
-            acc[symbol] = {
-              symbol,
-              rate: newRates[i][fiatSymbol],
-              displayName: tokenDisplayNames[symbol],
-            }
-          }
-          return acc
-        }, {})
-        dispatch({
-          type: 'SET_EXCHANGE_RATE',
-          payload,
-        } as any)
-      })
+      fetch({ fiatSymbol })
+        .then((newRates: XRItem[]) => {
+          const payload = Object.keys(newRates)
+            .reduce((acc, i) => {
+              const symbol = newRates[i].token
+              const token: TokenXR = {
+                ...getSysTokenByName(symbol),
+                rate: newRates[i][fiatSymbol],
+              }
+              acc[symbol] = token
+              return acc
+            }, {})
+          dispatch({
+            type: 'SET_EXCHANGE_RATE',
+            payload,
+          } as any)
+        })
+        .catch((error) => errorReporter({
+          error,
+          id: 'market-init',
+          text: 'Failed to initialise currency',
+        }))
     }
-  }, [isInitialised, api, fiatSymbol, supportedCrypto])
+  }, [isInitialised, api, fiatSymbol, errorReporter])
 
   const value = { state, dispatch }
   return <MarketContext.Provider value={value}>{children}</MarketContext.Provider>

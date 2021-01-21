@@ -7,7 +7,7 @@ import {
   SubscriptionPeriod,
 } from 'models/marketItems/StorageItem'
 import { ZERO_ADDRESS } from 'constants/strings'
-import { SupportedTokens } from 'contracts/interfaces'
+import { SupportedTokens } from 'models/Token'
 import Big from 'big.js'
 import { OfferEditAction } from './offerEditActions'
 

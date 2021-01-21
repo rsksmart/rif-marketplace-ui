@@ -1,12 +1,11 @@
+import { SupportedTokens, SYSTEM_SUPPORTED_TOKENS } from 'models/Token'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 import { Contract } from 'web3-eth-contract'
 
 import {
   ERC20ContractI,
-  SYSTEM_SUPPORTED_TOKENS,
-  SupportedTokens,
-  Token,
+  NFT,
   TOKEN_TYPES,
   TransactionOptions,
   TxOptions,
@@ -14,14 +13,14 @@ import {
 import ContractBase from './contract-base'
 
 export class ContractWithTokens extends ContractBase {
-  private readonly supportedTokens: Token[]
+  private readonly supportedTokens: NFT[]
 
   private _defaultToken: SupportedTokens
 
   constructor(
     web3: Web3,
     contract: Contract,
-    supportedTokens: Token[],
+    supportedTokens: NFT[],
     name?: string,
   ) {
     super(web3, contract, name)
@@ -41,11 +40,11 @@ export class ContractWithTokens extends ContractBase {
   }
 
   private _isCurrencySupported(currency: SupportedTokens): boolean {
-    return !!this.supportedTokens.find(({ token }) => currency === token)
+    return this.supportedTokens.some(({ token }) => currency === token)
   }
 
   private _approveTokenTransfer(
-    token: Token,
+    token: NFT,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> {
     const { value, from, gasPrice } = txOptions
@@ -61,7 +60,7 @@ export class ContractWithTokens extends ContractBase {
     }
   }
 
-  public getToken(tokenName?: SupportedTokens): Token {
+  public getToken(tokenName?: SupportedTokens): NFT {
     const tokenObject = this.supportedTokens.find(
       ({ token }) => token === (tokenName || this.defaultToken),
     )
