@@ -8,7 +8,7 @@ import StorageIcon from '@material-ui/icons/Storage'
 import Login from 'components/atoms/Login'
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone'
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive'
-import { colors, Header as RifHeader } from '@rsksmart/rif-ui'
+import { colors, Header as RifHeader, Web3Store } from '@rsksmart/rif-ui'
 import { NavItemProps, ActionHeaderItemProps } from '@rsksmart/rif-ui/dist/components/organisms/Header/HeaderProps'
 import withNotificationsContext, { NotificationsContext } from 'context/Services/notifications'
 import SyncAltIcon from '@material-ui/icons/SyncAlt'
@@ -29,6 +29,9 @@ const Headers: FC = () => {
       confirmations,
     },
   } = useContext(ConfirmationsContext)
+  const {
+    state: { account },
+  } = useContext(Web3Store)
   const [
     anchorNotificationsMenu,
     setAnchorNotificationsMenu,
@@ -83,27 +86,31 @@ const Headers: FC = () => {
       : <NotificationsNoneIcon htmlColor={colors.white} />
   )
 
-  const actionItems: ActionHeaderItemProps[] = [
-    {
-      icon: <IconButton>{notificationsIcon()}</IconButton>,
-      onClick: handleClick,
-      'aria-haspopup': 'true',
-    },
-    {
-      icon: (
-        <IconButton>
-          <Badge
-            color="secondary"
-            badgeContent={Object.keys(confirmations).length}
-          >
-            <SyncAltIcon htmlColor={colors.white} />
-          </Badge>
-        </IconButton>
-      ),
-      'aria-haspopup': 'true',
-      onClick: handleTxPanelClick,
-    },
-  ]
+  const showActionItems = Boolean(account)
+
+  const actionItems: ActionHeaderItemProps[] = showActionItems
+    ? [
+      {
+        icon: <IconButton>{notificationsIcon()}</IconButton>,
+        onClick: handleClick,
+        'aria-haspopup': 'true',
+      },
+      {
+        icon: (
+          <IconButton>
+            <Badge
+              color="secondary"
+              badgeContent={Object.keys(confirmations).length}
+            >
+              <SyncAltIcon htmlColor={colors.white} />
+            </Badge>
+          </IconButton>
+        ),
+        'aria-haspopup': 'true',
+        onClick: handleTxPanelClick,
+      },
+    ]
+    : []
 
   return (
     <>
