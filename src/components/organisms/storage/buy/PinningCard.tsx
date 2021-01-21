@@ -59,7 +59,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
   } = useContext(StorageUploadContext)
 
   // TODO: extract into context
-  const [isUpladed, setIsUploaded] = useState(false)
+  const [isUploaded, setIsUploaded] = useState(false)
   const [size, setSize] = useState(Big(0))
   const [hash, setHash] = useState('')
   const [files, setFiles] = useState<File[]>([])
@@ -174,7 +174,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     <GridColumn spacing={4}>
       <Grid item xs={12}>
         {
-          isUpladed ? renderPinBtn() : renderUploadProgress()
+          isUploaded ? renderPinBtn() : renderUploadProgress()
         }
       </Grid>
       {!isLoadingSizeLimit && (
@@ -194,18 +194,25 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     </GridColumn>
   )
 
+  const handleTabChange = (_, value: unknown): void => {
+    setSize(Big(0))
+    setHash('')
+    setFiles([])
+    setIsUploaded(value as boolean)
+  }
+
   return (
     <RifCard
       Header={(): JSX.Element => (
         <StoragePinTabs
-          onChange={(_, value): void => setIsUploaded(value as boolean)}
-          value={isUpladed}
+          onChange={handleTabChange}
+          value={isUploaded}
         />
       )}
       Actions={renderActions}
     >
       {
-        isUpladed
+        isUploaded
           ? (
             <PinEnterInfoTab
               unit={UNIT_BYTES}
