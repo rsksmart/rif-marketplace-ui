@@ -5,10 +5,11 @@ import { TransactionReceipt } from 'web3-eth'
 import { AbiItem } from 'web3-utils'
 
 import { storageAddress, storageSupportedTokens } from 'contracts/config'
-import { SYSTEM_SUPPORTED_TOKENS, SupportedTokens, TxOptions } from 'contracts/interfaces'
-import { getTokens } from 'utils/tokenUtils'
+import { TxOptions } from 'contracts/interfaces'
+import { getTokensFromConfigTokens } from 'utils/tokenUtils'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
 import { validateBalance } from 'contracts/utils/accountBalance'
+import { SYSTEM_SUPPORTED_TOKENS, SupportedTokens } from 'models/Token'
 import { encodeHash, prefixArray } from './utils'
 
 export type StorageContractErrorId = 'contract-storage'
@@ -24,7 +25,7 @@ class StorageContract extends ContractWithTokens {
           StorageManager.abi as AbiItem[],
           storageAddress,
         ),
-        getTokens(storageSupportedTokens),
+        getTokensFromConfigTokens(storageSupportedTokens),
         'contract-storage',
       )
     }

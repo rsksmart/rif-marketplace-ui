@@ -1,9 +1,10 @@
 import { Item } from 'models/Market'
 import Big from 'big.js'
+import { NFT } from 'contracts/interfaces'
 
 export interface RnsDomainOffer extends Item {
     tokenId: string
-    paymentToken: string
+    paymentToken: NFT
     domainName: string
     expirationDate: Date
     price: Big
@@ -20,7 +21,7 @@ export interface RnsDomain extends Item {
 
 export interface RnsSoldDomain extends Item {
     tokenId: string
-    paymentToken: string
+    paymentToken: NFT
     price: Big
     soldDate: Date
     domainName: string

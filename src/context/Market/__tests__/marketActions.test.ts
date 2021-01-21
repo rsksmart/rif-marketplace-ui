@@ -15,7 +15,7 @@ describe('MarketActions', () => {
       const { exchangeRates: { crypto } }: MarketState = marketActions.SET_EXCHANGE_RATE(initialState, payload)
 
       expect(crypto).toHaveProperty(expectedKey)
-      expect(crypto[expectedKey]).toEqual(expectedProperty)
+      expect(crypto[expectedKey]).toStrictEqual(expectedProperty)
     })
   })
 })

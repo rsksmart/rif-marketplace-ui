@@ -7,8 +7,8 @@ import { Button, ModalDialogue } from '@rsksmart/rif-ui'
 import { StakedBalances as StakedBalancesProp } from 'api/rif-marketplace-cache/storage/stakes'
 import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
+import { SupportedTokens, SYSTEM_SUPPORTED_TOKENS } from 'models/Token'
 import React, { FC, useEffect, useState } from 'react'
-import { SYSTEM_SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
 import StakedBalances from './StakedBalances'
 
 export interface WithdrawModalProps {

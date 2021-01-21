@@ -9,10 +9,10 @@ import CenteredContent from 'components/molecules/CenteredContent'
 import React, {
   FC, useContext, useEffect, useState,
 } from 'react'
-import { SYSTEM_SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
 import Big from 'big.js'
 import { getBalance } from 'contracts/utils/accountBalance'
 import { convertToWeiString } from 'utils/parsers'
+import { SupportedTokens, SYSTEM_SUPPORTED_TOKENS } from 'models/Token'
 import StakedBalances from './StakedBalances'
 
 export interface DepositModalProps {

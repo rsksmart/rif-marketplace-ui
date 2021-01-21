@@ -1,5 +1,6 @@
 import { Color } from '@material-ui/lab/Alert'
 import { APIErrorId } from 'api/models/apiService'
+import { MarketErrorId } from 'context/Market/MarketContext'
 import { ContractErrorId } from 'contracts/interfaces'
 import { Modify } from 'utils/typeUtils'
 
@@ -10,7 +11,7 @@ export interface CustomAction {
     action: Function
 }
 
-export type ErrorId = APIErrorId | ContractErrorId
+export type ErrorId = APIErrorId | ContractErrorId | MarketErrorId
 export type MessageId = ErrorId | 'wallet' | 'loading'
 export type LoaderId = 'filters' | 'data' | 'contract' | 'other'
 

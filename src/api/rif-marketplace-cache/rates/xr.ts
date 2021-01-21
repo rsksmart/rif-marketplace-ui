@@ -1,18 +1,14 @@
 import { Paginated } from '@feathersjs/feathers'
 import { AbstractAPIService, APIService, isResultPaginated } from 'api/models/apiService'
+import { SupportedTokens } from 'models/Token'
+import { getNFTokenByName } from 'utils/tokenUtils'
 import { Modify } from 'utils/typeUtils'
-import { SYSTEM_SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
 import client from '../client'
 
 export type XRServiceAddress = 'rates/v0'
 export const xrServiceAddress: XRServiceAddress = 'rates/v0'
 
 export type SupportedFiat = 'usd' | 'eur' | 'btc' | 'ars' | 'cny' | 'krw' | 'jpy';
-
-export const tokenDisplayNames: Record<SupportedTokens, string> = {
-  [SYSTEM_SUPPORTED_TOKENS.rif]: 'RIF',
-  [SYSTEM_SUPPORTED_TOKENS.rbtc]: 'RBTC',
-}
 
 export type XRItem = Partial<{
   [F in SupportedFiat]: number
@@ -46,6 +42,6 @@ export class XRService extends AbstractAPIService implements XRAPIService {
       ? results : { data: results }
     this.meta = metadata
 
-    return data.filter((item) => !!SYSTEM_SUPPORTED_TOKENS[item.token])
+    return data.filter((item) => getNFTokenByName(item.token))
   }
 }

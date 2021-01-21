@@ -1,8 +1,9 @@
 import { TransactionReceipt } from 'web3-eth'
 import Web3 from 'web3'
 
-import { ZERO_ADDRESS } from '../constants/strings'
-import { rifTokenAddress } from './config'
+import {
+  SupportedTokens, SYSTEM_SUPPORTED_TOKENS, SYSTEM_TOKENS, Token, TokenRecord,
+} from 'models/Token'
 import { RifERC20Contract } from './tokens/rif'
 import { MarketplaceContractErrorId } from './rns/Marketplace'
 import { RnsContractErrorId } from './rns/Rns'
@@ -18,7 +19,7 @@ export interface TransactionOptions {
   value?: string | number
 }
 
-export interface ERC20ContractI extends PaymentWrapper{
+export interface ERC20ContractI extends PaymentWrapper{ // FIXME: no use of "I" in interface naming
   approve (
       address: string, amount: string | number, options: TransactionOptions
   ): Promise<TransactionReceipt>
@@ -35,27 +36,18 @@ export type ContractErrorId =
   | StorageContractErrorId
   | StorageStakingContractErrorId
 
-export enum SYSTEM_SUPPORTED_TOKENS {
-  rif = 'rif',
-  rbtc = 'rbtc'
-}
-
 export enum TOKEN_TYPES {
   ERC20 = 'erc20',
   NATIVE = 'native'
 }
 
-export type SupportedTokens = SYSTEM_SUPPORTED_TOKENS.rif | SYSTEM_SUPPORTED_TOKENS.rbtc
-
 export type TokenTypes = TOKEN_TYPES.NATIVE | TOKEN_TYPES.ERC20
 
 export type SingletonContract = { getInstance(web3: Web3): any }
 
-export type Token = {
-  token: SupportedTokens
+export type NFT = Token & {
   type: TokenTypes
   tokenContract: SingletonContract
-  tokenAddress: string
 }
 
 export type TxOptions = TransactionOptions & {
@@ -64,16 +56,14 @@ export type TxOptions = TransactionOptions & {
   onApprove?: (receipt: TransactionReceipt) => void
 }
 
-export const TOKENS: Record<SupportedTokens, Token> = {
+export const NFT_RECORDS: TokenRecord<NFT> = {
   [SYSTEM_SUPPORTED_TOKENS.rbtc]: {
-    token: SYSTEM_SUPPORTED_TOKENS.rbtc,
+    ...SYSTEM_TOKENS.rbtc,
     type: TOKEN_TYPES.NATIVE,
-    tokenAddress: ZERO_ADDRESS,
-  } as Token,
+  } as NFT,
   [SYSTEM_SUPPORTED_TOKENS.rif]: {
-    token: SYSTEM_SUPPORTED_TOKENS.rif,
+    ...SYSTEM_TOKENS.rif,
     type: TOKEN_TYPES.ERC20,
     tokenContract: RifERC20Contract,
-    tokenAddress: rifTokenAddress,
   },
 }

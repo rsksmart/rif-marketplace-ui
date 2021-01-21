@@ -4,9 +4,9 @@ import Grid from '@material-ui/core/Grid'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
-import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import GridItem from 'components/atoms/GridItem'
-import { SupportedTokens } from 'contracts/interfaces'
+import { getNFTokenByName } from 'utils/tokenUtils'
+import { SupportedTokens } from 'models/Token'
 
 export type AmountWithCurrencySelectProps = {
   amountLabel?: string
@@ -69,7 +69,7 @@ const AmountWithCurrencySelect: FC<AmountWithCurrencySelectProps> = (props) => {
           {currencyOptions.map(
             (option: SupportedTokens) => (
               <MenuItem key={option as string} value={option}>
-                {tokenDisplayNames[option]}
+                {getNFTokenByName(option).displayName}
               </MenuItem>
             ),
           )}

@@ -1,6 +1,6 @@
 import { Big } from 'big.js'
 import { Item } from 'models/Market'
-import { SupportedTokens } from 'contracts/interfaces'
+import { Token } from 'models/Token'
 
 export type SubscriptionPeriod = 'Daily' | 'Weekly' | 'Monthly'
 export enum PeriodInSeconds {
@@ -12,7 +12,7 @@ export enum PeriodInSeconds {
 export interface BillingPlan {
   period: SubscriptionPeriod
   price: Big
-  currency: SupportedTokens
+  currency: Token
 }
 
 export interface StorageOffer extends Item {
@@ -37,7 +37,7 @@ export type Agreement = Item & {
   subscriptionPrice: Big
   subscriptionPeriod: SubscriptionPeriod
   monthlyFee: Big
-  paymentToken: SupportedTokens
+  paymentToken: Token
   consumer: string
   withdrawableFunds: Big
   toBePayedOut: Big
