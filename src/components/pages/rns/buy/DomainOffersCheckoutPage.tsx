@@ -113,14 +113,14 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
 
   // check funds
   useEffect(() => {
-    if (web3 && account && !isFundsConfirmed) {
+    if (web3 && account && !isFundsConfirmed && order) {
       const {
         item: {
-          paymentToken,
+          paymentToken: { symbol: tokenSymbol },
           tokenId: tokenAddr,
         },
       } = order
-      const { symbol } = crypto[paymentToken]
+      const { symbol } = crypto[tokenSymbol]
       const checkFunds = async () => {
         appDispatch({
           type: 'SET_IS_LOADING',
@@ -177,17 +177,16 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
       ownerAddress,
       expirationDate,
       price,
-      paymentToken,
+      paymentToken: { symbol },
     },
     isProcessing,
   } = order
   const isOwnDomain = account?.toLowerCase() === ownerAddress.toLowerCase()
-
-  const currency = crypto[paymentToken]
+  const currency = crypto[symbol]
 
   const priceCellProps = {
-    price,
-    priceFiat: (currency.rate * price).toString(),
+    price: price.toString(),
+    priceFiat: price.mul(currency.rate).toString(),
     currency: currency.displayName,
     currencyFiat: currentFiat.displayName,
     divider: ' ',
