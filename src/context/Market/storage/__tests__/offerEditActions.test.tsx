@@ -51,7 +51,7 @@ describe('StorageOfferEditContext', () => {
       const payload: SetTotalCapacityPayload = {
         totalCapacity: expectedSize,
       }
-      const { totalCapacity } = offerEditActions.SET_TOTAL_CAPACITY(initialState, payload) // FIXME: how did you get totalCapacity from action (a=>void)
+      const { totalCapacity } = offerEditActions.SET_TOTAL_CAPACITY(initialState, payload)
       expect(totalCapacity).toBe(expectedSize)
     })
   })

@@ -97,7 +97,7 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
   connect = (
     errorReporter: ErrorReporter,
     options?: ConnectOptions,
-  ): string | undefined => { // FIXME: that's a horrible return type
+  ): string | undefined => {
     this._client = options?.client || this._client
     this.errorReporter = errorReporter
 

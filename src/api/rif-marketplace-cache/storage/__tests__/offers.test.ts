@@ -5,6 +5,7 @@ import { OfferTransport } from 'api/models/storage/transports'
 import mockFeathersService from 'api/test-utils/feathers'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { StorageOffer, SubscriptionPeriod } from 'models/marketItems/StorageItem'
+import { rifTokenAddress } from 'contracts/config'
 import { StorageAPIService } from '../interfaces'
 import { StorageOffersService } from '../offers'
 import { mapOfferFromTransport } from '../utils'
@@ -28,7 +29,7 @@ const MOCK_ITEM_0: OfferTransport = {
       createdAt: '2020-08-10T14:11:32.680Z',
       updatedAt: '2020-08-10T14:11:32.680Z',
       rateId: 'rif',
-      tokenAddress: 'FAKE_RIF_ADDRESS',
+      tokenAddress: rifTokenAddress,
     },
   ],
 }
