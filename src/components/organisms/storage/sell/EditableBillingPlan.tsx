@@ -78,7 +78,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
   const ActionButton = (): JSX.Element => {
     if (!editMode) {
       const addIsDisabled = Number(pricePerGb) <= 0
-        || usedPeriodsPerCurrency[currency.token]?.includes(period)
+        || usedPeriodsPerCurrency[currency.symbol]?.includes(period)
 
       return (
         <Button
@@ -95,7 +95,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
     }
     const hasChanged = billingPlan?.period !== period
       || billingPlan?.currency !== currency
-    const currencyAndPeriodInUse = usedPeriodsPerCurrency[currency.token]?.includes(
+    const currencyAndPeriodInUse = usedPeriodsPerCurrency[currency.symbol]?.includes(
       period
     )
     // the period or currency have changed and the selected option is in use
@@ -135,7 +135,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
                 .sort((a, b) => PeriodInSeconds[a] - PeriodInSeconds[b])
                 .map(
                   (option: SubscriptionPeriod) => {
-                    const isDisabled = usedPeriodsPerCurrency[currency.token]?.includes(option)
+                    const isDisabled = usedPeriodsPerCurrency[currency.symbol]?.includes(option)
                       && option !== billingPlan?.period
                     return (
                       <MenuItem value={option} key={option} disabled={isDisabled}>

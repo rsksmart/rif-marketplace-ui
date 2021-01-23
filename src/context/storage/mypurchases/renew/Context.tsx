@@ -155,7 +155,7 @@ const Provider: FC = ({ children }) => {
           payload: { inProgress: true },
         })
         const receipt = await storageContract
-          .depositFunds(fundsDeposit, { from: account, token: paymentToken.token })
+          .depositFunds(fundsDeposit, { from: account, token: paymentToken.symbol })
           .catch((error) => {
             reportError(new UIError({
               error,
@@ -217,7 +217,7 @@ const Provider: FC = ({ children }) => {
       && crypto
       && paymentToken
     ) {
-      const newRate = crypto[paymentToken.token]?.rate
+      const newRate = crypto[paymentToken.symbol]?.rate
 
       dispatch({
         type: 'SET_AUXILIARY',

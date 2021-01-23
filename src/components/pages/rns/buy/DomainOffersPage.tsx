@@ -147,7 +147,7 @@ const DomainOffersPage: FC = () => {
 
       const pseudoResolvedName: string = filters.name as string && (`${filters.name}.rsk`)
 
-      const { rate, displayName } = crypto[paymentToken.token]
+      const { rate, displayName } = crypto[paymentToken.symbol]
 
       const displayDomainName = domainName || pseudoResolvedName
         ? <ShortenTextTooltip value={domainName || pseudoResolvedName} maxLength={30} />

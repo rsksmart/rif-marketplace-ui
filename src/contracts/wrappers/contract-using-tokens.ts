@@ -28,7 +28,7 @@ export class ContractWithTokens extends ContractBase {
     // Set default token
     this._defaultToken = this._isCurrencySupported(SYSTEM_SUPPORTED_TOKENS.rbtc)
       ? SYSTEM_SUPPORTED_TOKENS.rbtc
-      : this.supportedTokens[0].token
+      : this.supportedTokens[0].symbol
   }
 
   get defaultToken(): SupportedTokens {
@@ -40,7 +40,7 @@ export class ContractWithTokens extends ContractBase {
   }
 
   private _isCurrencySupported(currency: SupportedTokens): boolean {
-    return this.supportedTokens.some(({ token }) => currency === token)
+    return this.supportedTokens.some(({ symbol: token }) => currency === token)
   }
 
   private _approveTokenTransfer(
@@ -62,7 +62,7 @@ export class ContractWithTokens extends ContractBase {
 
   public getToken(tokenName?: SupportedTokens): NFT {
     const tokenObject = this.supportedTokens.find(
-      ({ token }) => token === (tokenName || this.defaultToken),
+      ({ symbol: token }) => token === (tokenName || this.defaultToken),
     )
 
     if (!tokenObject) {
@@ -75,7 +75,7 @@ export class ContractWithTokens extends ContractBase {
     const { from, value } = txOptions
     const tokenToUse = this.getToken(txOptions.token)
 
-    if (!this._isCurrencySupported(tokenToUse.token)) {
+    if (!this._isCurrencySupported(tokenToUse.symbol)) {
       throw new Error(`Token ${tokenToUse} is not supported by ${this.name} contract`)
     }
 
