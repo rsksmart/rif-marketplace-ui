@@ -4,7 +4,7 @@ import { TransactionReceipt } from 'web3-eth'
 import { Contract } from 'web3-eth-contract'
 
 import {
-  ERC20ContractI,
+  ERC20Contract,
   NFT,
   TOKEN_TYPES,
   TransactionOptions,
@@ -52,7 +52,7 @@ export class ContractWithTokens extends ContractBase {
 
     switch (tokenType) {
       case TOKEN_TYPES.ERC20:
-        return (tokenContract.getInstance(this.web3) as ERC20ContractI).approve(
+        return (tokenContract.getInstance(this.web3) as ERC20Contract).approve(
           this.contract.options.address, value as number, { from, gasPrice },
         )
       default:
