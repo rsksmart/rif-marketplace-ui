@@ -22,7 +22,7 @@ const CryptoPriceConverter: FC<CryptoPriceConverterProps> = (props) => {
   const {
     cryptoXRs, priceLabel = 'Price', price, onPriceChange, fiatDisplayName, currency, onCurrencyChange,
   } = props
-  const { rate } = cryptoXRs[currency.token]
+  const { rate } = cryptoXRs[currency.symbol]
 
   const fiatPrice = price ? (new Big(price)).mul(rate).toString() : ''
   return (
@@ -33,7 +33,7 @@ const CryptoPriceConverter: FC<CryptoPriceConverterProps> = (props) => {
           fullWidth
           label="Currency"
           id="currency-select"
-          value={currency.token}
+          value={currency.symbol}
           InputProps={{
             style: { textAlign: 'center' },
           }}

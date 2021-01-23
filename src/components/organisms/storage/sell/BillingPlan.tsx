@@ -40,7 +40,7 @@ const BillingPlan: FC<BillingPlanProps> = ({
   const classes = useStyles()
 
   const { period, price, currency } = billingPlan
-  const { rate } = cryptoXRs[currency.token]
+  const { rate } = cryptoXRs[currency.symbol]
   const fiatPrice = (price.mul(rate))
 
   const fiatPriceDisplay = priceDisplay(fiatPrice, 2)

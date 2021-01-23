@@ -122,7 +122,7 @@ const Provider: FC = ({ children }) => {
       } = listedItem
       const currencies: SupportedTokens[] = Array.from(
         new Set(subscriptionOptions.map(
-          (option: BillingPlan) => option.currency.token,
+          (option: BillingPlan) => option.currency.symbol,
         )),
       )
 
@@ -166,7 +166,7 @@ const Provider: FC = ({ children }) => {
         }
         const txOptions: TxOptions = {
           from: account,
-          token: SYSTEM_SUPPORTED_TOKENS[token.token],
+          token: SYSTEM_SUPPORTED_TOKENS[token.symbol],
         }
 
         const storageContract = (await import('contracts/storage')).default
@@ -247,7 +247,7 @@ const Provider: FC = ({ children }) => {
     ) {
       const { subscriptionOptions } = listedItem
       const newToken = currencyOptions[selectedCurrency]
-      const newRate = crypto[newToken.token]?.rate
+      const newRate = crypto[newToken.symbol]?.rate
 
       const pinnedSizeMB = Big(pinned.size)
         .div(UNIT_PREFIX_POW2.MEGA)

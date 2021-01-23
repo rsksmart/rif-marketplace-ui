@@ -127,7 +127,7 @@ class StorageContract extends ContractWithTokens {
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
     const tokensAddresses = tokens.map(
-      (t) => this.getToken(t.token).tokenAddress,
+      (t) => this.getToken(t.symbol).tokenAddress,
     )
 
     return this.send(
@@ -157,7 +157,7 @@ class StorageContract extends ContractWithTokens {
       (el) => `0x${el}`,
     )
     const tokensAddresses = tokens.map(
-      (t) => this.getToken(t.token).tokenAddress,
+      (t) => this.getToken(t.symbol).tokenAddress,
     )
 
     const setOfferTx = await this.methods.setOffer(
@@ -194,7 +194,7 @@ class StorageContract extends ContractWithTokens {
   ): Promise<TransactionReceipt> {
     const encodedDataReference = encodeHash(dataReference)
     const tokensAddresses = tokens.map(
-      (t) => this.getToken(t.token).tokenAddress,
+      (t) => this.getToken(t.symbol).tokenAddress,
     )
     const weiAmounts = amounts.map(convertToWeiString)
     const withdrawFundsTx = this.methods
@@ -214,7 +214,7 @@ class StorageContract extends ContractWithTokens {
     {
       creatorOfAgreement,
       dataReferences = [],
-      token: { token },
+      token: { symbol: token },
     }: {
       creatorOfAgreement: string
       dataReferences: string[]

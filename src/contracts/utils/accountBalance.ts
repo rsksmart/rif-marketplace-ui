@@ -11,7 +11,7 @@ export const getBalance = (
 ): Promise<string> => {
   const tokenObject = getNFTokenByName(tokenName)
 
-  if (tokenObject.token === SYSTEM_SUPPORTED_TOKENS.rbtc) { // native token
+  if (tokenObject.symbol === SYSTEM_SUPPORTED_TOKENS.rbtc) { // native token
     return web3.eth.getBalance(account)
   }
 

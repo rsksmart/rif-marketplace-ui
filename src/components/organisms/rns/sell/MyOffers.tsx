@@ -93,7 +93,7 @@ const MyOffers: FC<{}> = () => {
         const {
           price, paymentToken: {
             displayName,
-            token,
+            symbol: token,
           },
         } = offer
 

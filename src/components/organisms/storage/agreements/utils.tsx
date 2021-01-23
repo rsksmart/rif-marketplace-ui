@@ -45,7 +45,7 @@ const getCoreItemFields = (
     id,
     dataReference,
   } = agreement
-  const currency: TokenXR = crypto[paymentToken.token]
+  const currency: TokenXR = crypto[paymentToken.symbol]
 
   const sizeValue = (
     <ItemWUnit
@@ -86,7 +86,7 @@ export const getCustomerViewFrom = (
   const {
     provider, paymentToken, withdrawableFunds,
   } = agreement
-  const currency: TokenXR = crypto[paymentToken.token]
+  const currency: TokenXR = crypto[paymentToken.symbol]
 
   const providerValue = <AddressItem value={provider} />
   const withdrawableFundsValue = (
@@ -173,7 +173,7 @@ export const getProviderViewFrom = (
   const {
     consumer, paymentToken, toBePayedOut,
   } = agreement
-  const currency: TokenXR = crypto[paymentToken.token]
+  const currency: TokenXR = crypto[paymentToken.symbol]
   const consumerValue = <AddressItem value={consumer} />
   const toBePayedOutValue = (
     <ItemWUnit

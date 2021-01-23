@@ -83,7 +83,7 @@ const StorageOffersCheckoutPage: FC = () => {
 
   const {
     id,
-    token: { token },
+    token: { symbol: token },
     total,
   } = order
 
