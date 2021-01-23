@@ -9,7 +9,7 @@ import { TxOptions } from 'contracts/interfaces'
 import { getTokensFromConfigTokens } from 'utils/tokenUtils'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
 import { validateBalance } from 'contracts/utils/accountBalance'
-import { SYSTEM_SUPPORTED_TOKENS, SupportedTokens } from 'models/Token'
+import { SYSTEM_SUPPORTED_TOKENS, Token } from 'models/Token'
 import { encodeHash, prefixArray } from './utils'
 
 export type StorageContractErrorId = 'contract-storage'
@@ -123,10 +123,12 @@ class StorageContract extends ContractWithTokens {
   public setBillingPlans(
     billingPeriods: number[][],
     billingWeiPrices: string[][],
-    tokens: SupportedTokens[],
+    tokens: Token[],
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
-    const tokensAddresses = tokens.map((t) => this.getToken(t).tokenAddress)
+    const tokensAddresses = tokens.map(
+      (t) => this.getToken(t.token).tokenAddress,
+    )
 
     return this.send(
       this.methods.setBillingPlans(
@@ -146,7 +148,7 @@ class StorageContract extends ContractWithTokens {
     capacityMB: string,
     billingPeriods: number[][],
     billingWeiPrices: string[][],
-    tokens: SupportedTokens[],
+    tokens: Token[],
     peerId: string,
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
@@ -154,7 +156,9 @@ class StorageContract extends ContractWithTokens {
     const prefixedMsg = prefixArray(encodedPeerId, '01', 64).map(
       (el) => `0x${el}`,
     )
-    const tokensAddresses = tokens.map((t) => this.getToken(t).tokenAddress)
+    const tokensAddresses = tokens.map(
+      (t) => this.getToken(t.token).tokenAddress,
+    )
 
     const setOfferTx = await this.methods.setOffer(
       capacityMB,
@@ -183,13 +187,15 @@ class StorageContract extends ContractWithTokens {
     }: {
       dataReference: string
       provider: string
-      tokens: SupportedTokens[]
+      tokens: Token[]
       amounts: string[]
     },
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
     const encodedDataReference = encodeHash(dataReference)
-    const tokensAddresses = tokens.map((t: SupportedTokens) => this.getToken(t).tokenAddress)
+    const tokensAddresses = tokens.map(
+      (t) => this.getToken(t.token).tokenAddress,
+    )
     const weiAmounts = amounts.map(convertToWeiString)
     const withdrawFundsTx = this.methods
       .withdrawFunds(encodedDataReference, provider, tokensAddresses, weiAmounts)
@@ -208,11 +214,11 @@ class StorageContract extends ContractWithTokens {
     {
       creatorOfAgreement,
       dataReferences = [],
-      token,
+      token: { token },
     }: {
       creatorOfAgreement: string
       dataReferences: string[]
-      token: SupportedTokens
+      token: Token
     },
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {

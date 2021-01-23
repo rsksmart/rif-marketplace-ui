@@ -80,7 +80,7 @@ export const transformOfferDataForContract = (
     })
   }
 
-  const { prices, periods, tokens } = resultsBillingPlan.reduce(
+  const offerContractData: OfferContractData = resultsBillingPlan.reduce(
     (acc, { period, price: priceGB, currency }) => {
       const tokenIndex = acc.tokens.findIndex((t) => t === currency)
       const weiPrice = convertToWeiString(
@@ -92,19 +92,17 @@ export const transformOfferDataForContract = (
         acc.prices[tokenIndex].push(weiPrice)
         return acc
       }
-
-      return {
+      const data = {
         prices: [...acc.prices, [weiPrice]],
         periods: [...acc.periods, [PeriodInSeconds[period]]],
         tokens: [...acc.tokens, currency],
-      }
+      } as unknown as OfferContractData
+      return data
     },
-    { prices: [], periods: [], tokens: [] } as any,
+    { prices: [], periods: [], tokens: [] } as unknown as OfferContractData,
   )
   return {
+    ...offerContractData,
     totalCapacityMB,
-    prices,
-    periods,
-    tokens,
   }
 }
