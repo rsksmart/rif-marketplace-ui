@@ -1,6 +1,6 @@
 import { AbstractAPIService } from 'api/models/apiService'
 import { XRService, xrServiceAddress, XRItem } from 'api/rif-marketplace-cache/rates/xr'
-import { SYSTEM_SUPPORTED_TOKENS } from 'contracts/interfaces'
+import { SYSTEM_SUPPORTED_TOKENS } from 'models/Token'
 
 const TEST_FIAT_SYMBOL = 'usd'
 const TEST_Q_FILTER = { fiatSymbol: TEST_FIAT_SYMBOL }

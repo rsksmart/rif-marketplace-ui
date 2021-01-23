@@ -3,6 +3,7 @@ import { AbstractAPIService } from 'api/models/apiService'
 import AgreementFiltersTransport from 'api/models/storage/AgreementFiltersTransport'
 import { AgreementTransport } from 'api/models/storage/transports'
 import mockFeathersService from 'api/test-utils/feathers'
+import { rifTokenAddress } from 'contracts/config'
 import { Agreement } from 'models/marketItems/StorageItem'
 import { StorageAgreementService } from '../agreements'
 import { AgreementFilters, StorageAPIService } from '../interfaces'
@@ -24,7 +25,7 @@ const MOCK_ITEM_0: AgreementTransport = {
   periodsSinceLastPayout: 24 * 3600,
   size: '2',
   toBePayedOut: '10',
-  tokenAddress: 'mock_token_address',
+  tokenAddress: rifTokenAddress,
 }
 
 const MOCK_RESPONSE: AgreementTransport[] = [MOCK_ITEM_0]
