@@ -1,20 +1,10 @@
 import { render, cleanup } from '@testing-library/react'
 
 import React, { FC, useContext } from 'react'
+import { MarketContextProps } from 'context/Market/MarketContext'
 import MarketContext, { MarketContextProvider } from '../MarketContext'
 
-const expectedInitialCrypto = {
-  rif: {
-    displayName: 'RIF',
-    rate: -1,
-    symbol: 'rif',
-  },
-  rbtc: {
-    displayName: 'RBTC',
-    rate: -1,
-    symbol: 'rbtc',
-  },
-}
+const expectedInitialCrypto = {}
 
 describe('MarketContextProvider', () => {
   afterEach(cleanup)
@@ -70,13 +60,16 @@ describe('MarketContextProvider', () => {
       })
 
       test(`should initialise with crypto property set to ${JSON.stringify(expectedInitialCrypto)}`, () => {
-        const TestComponent = () => {
-          const { state: { exchangeRates: { crypto } } } = useContext(MarketContext)
+        const TestComponent: FC<{}> = () => {
+          const {
+            state: { exchangeRates: { crypto } },
+          } = useContext<MarketContextProps>(MarketContext)
 
           expect(crypto).not.toBeUndefined()
           expect(crypto).toEqual(expectedInitialCrypto)
-          return null
+          return <div />
         }
+
         render(
           <MarketContextProvider>
             <TestComponent />

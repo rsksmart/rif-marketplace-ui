@@ -40,7 +40,7 @@ const addressTokenRecord: Record<string, string> = allAllowedPaymentTokens
     return acc
   }, {})
 
-const rifTokenAddress = addressTokenRecord.rif
+const rifTokenAddress = tokenAddresses.rif
 
 export {
   marketPlaceAddress,

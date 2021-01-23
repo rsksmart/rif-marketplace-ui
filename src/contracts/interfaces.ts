@@ -19,7 +19,7 @@ export interface TransactionOptions {
   value?: string | number
 }
 
-export interface ERC20ContractI extends PaymentWrapper{ // FIXME: no use of "I" in interface naming
+export interface ERC20ContractI extends PaymentWrapper{ // FIXME: don't use of "I" in interface naming
   approve (
       address: string, amount: string | number, options: TransactionOptions
   ): Promise<TransactionReceipt>

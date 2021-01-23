@@ -1,12 +1,12 @@
 import { Big } from 'big.js'
-import { SYSTEM_SUPPORTED_TOKENS } from 'contracts/interfaces'
+import { SYSTEM_TOKENS } from 'models/Token'
 import { StorageBillingPlan } from '../interfaces'
 import { AddItemPayload, SetTotalCapacityPayload, SetCountryPayload } from '../offerEditActions'
 import { initialState } from '../OfferEditContext'
 import { offerEditActions } from '../offerEditReducer'
 
 const mockedPlanItem: StorageBillingPlan = {
-  currency: SYSTEM_SUPPORTED_TOKENS.rbtc,
+  currency: SYSTEM_TOKENS.rbtc,
   internalId: 1,
   price: new Big(0.001),
   period: 'Daily',
@@ -51,7 +51,7 @@ describe('StorageOfferEditContext', () => {
       const payload: SetTotalCapacityPayload = {
         totalCapacity: expectedSize,
       }
-      const { totalCapacity } = offerEditActions.SET_TOTAL_CAPACITY(initialState, payload)
+      const { totalCapacity } = offerEditActions.SET_TOTAL_CAPACITY(initialState, payload) // FIXME: how did you get totalCapacity from action (a=>void)
       expect(totalCapacity).toBe(expectedSize)
     })
   })
