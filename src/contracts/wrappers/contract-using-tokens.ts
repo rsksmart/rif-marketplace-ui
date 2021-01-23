@@ -64,7 +64,6 @@ export class ContractWithTokens extends ContractBase {
     const tokenObject = this.supportedTokens.find(
       ({ token }) => token === (tokenName || this.defaultToken),
     )
-    debugger
 
     if (!tokenObject) {
       throw new Error(`Token ${tokenName} is not supported by ${this.name} contract`)

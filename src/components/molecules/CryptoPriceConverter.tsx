@@ -33,19 +33,19 @@ const CryptoPriceConverter: FC<CryptoPriceConverterProps> = (props) => {
           fullWidth
           label="Currency"
           id="currency-select"
-          value={currency}
+          value={currency.token}
           InputProps={{
             style: { textAlign: 'center' },
           }}
           onChange={onCurrencyChange}
         >
           {
-            Object.keys(cryptoXRs).map((xrName) => {
-              const { displayName: cryptoDisplayName } = cryptoXRs[xrName]
+            Object.keys(cryptoXRs).map((symbol) => {
+              const { displayName: cryptoDisplayName } = cryptoXRs[symbol]
               return (
                 <MenuItem
-                  key={xrName}
-                  value={xrName}
+                  key={symbol}
+                  value={symbol}
                 >
                   {cryptoDisplayName}
                 </MenuItem>

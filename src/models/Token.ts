@@ -1,7 +1,7 @@
 import { ZERO_ADDRESS } from 'constants/strings'
 import { rifTokenAddress } from 'contracts/config'
 
-export enum SYSTEM_SUPPORTED_TOKENS {
+export enum SYSTEM_SUPPORTED_TOKENS { // juraj - Rename to SYSTEM_SUPPORTED_SYMBOLS
   rif = 'rif',
   rbtc = 'rbtc'
 }

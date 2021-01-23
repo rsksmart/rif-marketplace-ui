@@ -10,7 +10,8 @@ import { MarketCryptoRecord } from 'models/Market'
 import { PeriodInSeconds, SubscriptionPeriod } from 'models/marketItems/StorageItem'
 import React, { FC, useContext, useState } from 'react'
 import { StorageBillingPlan, OfferEditContextProps } from 'context/Market/storage/interfaces'
-import { SYSTEM_TOKENS, Token } from 'models/Token'
+import { SYSTEM_TOKENS, Token, SupportedTokens } from 'models/Token'
+import { getNFTokenByName } from 'utils/tokenUtils'
 
 export interface EditableBillingPlanProps {
   onPlanAdded?: (billingPlan: StorageBillingPlan) => void
@@ -44,8 +45,8 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
     { target: { value } },
   ): void => setPricePerGb(value)
   const onCurrencyChange = (
-    { target: { value } },
-  ): void => setCurrency(value)
+    { target: { value: symbol } },
+  ): void => setCurrency(getNFTokenByName(symbol as SupportedTokens))
   const onSelectedPeriodChange = (
     { target: { value } },
   ): void => setPeriod(value)
@@ -131,7 +132,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
           >
             {
               allBillingPeriods
-                .sort((a, b) => PeriodInSeconds[a] - PeriodInSeconds[b]) // - ito: how come this worked without the conversion if SubscriptionPeriod type is basically a string?
+                .sort((a, b) => PeriodInSeconds[a] - PeriodInSeconds[b])
                 .map(
                   (option: SubscriptionPeriod) => {
                     const isDisabled = usedPeriodsPerCurrency[currency.token]?.includes(option)

@@ -3,7 +3,6 @@ import { Big } from 'big.js'
 import {
   Agreement, BillingPlan, PeriodInSeconds, StorageOffer, SubscriptionPeriod,
 } from 'models/marketItems/StorageItem'
-import { SYSTEM_SUPPORTED_TOKENS } from 'models/Token'
 import { parseConvertBig, parseToBigDecimal } from 'utils/parsers'
 import { getTokenByAddress } from 'utils/tokenUtils'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
@@ -47,15 +46,16 @@ export const mapOfferFromTransport = ({
     availableSizeGB: availableCapacityGB.lt(0) ? Big(0) : availableCapacityGB,
     subscriptionOptions: plans
       .sort(
-        (a: BillingPlanTransport, b: BillingPlanTransport) => (
-          parseInt(a.period, 10) - parseInt(b.period, 10)
-        ),
+        (
+          { period: a }: BillingPlanTransport,
+          { period: b }: BillingPlanTransport,
+        ) => Number(a) - Number(b),
       )
-      .filter((plan) => Boolean(PeriodInSeconds[plan.period]))
+      .filter(({ period }) => PeriodInSeconds[period])
       .map<BillingPlan>((plan) => ({
         period: PeriodInSeconds[plan.period],
         price: parseToBigDecimal(plan.price, 18),
-        currency: SYSTEM_SUPPORTED_TOKENS[plan.rateId],
+        currency: getTokenByAddress(plan.tokenAddress),
       })),
     averagePrice: averagePriceTransport,
     acceptedCurrencies,
