@@ -81,7 +81,7 @@ const Provider: FC = ({ children }) => {
               amounts: ['0'], // using 0 withdraws the max amount available
               dataReference: agreement.dataReference,
               provider: agreement.provider,
-              tokens: [agreement.paymentToken.token],
+              tokens: [agreement.paymentToken],
             },
             { from: account },
           ).catch((error) => {

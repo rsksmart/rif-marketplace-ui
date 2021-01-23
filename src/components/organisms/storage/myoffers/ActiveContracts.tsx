@@ -102,7 +102,7 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
           {
             creatorOfAgreement: agreement.consumer,
             dataReferences: [agreement.dataReference],
-            token: agreement.paymentToken.token, // FIXME: should just take token
+            token: agreement.paymentToken,
           },
           { from: account },
         )
