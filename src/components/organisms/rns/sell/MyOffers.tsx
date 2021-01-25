@@ -1,4 +1,4 @@
-import { IconButton } from '@material-ui/core'
+import IconButton from '@material-ui/core/IconButton'
 import ClearIcon from '@material-ui/icons/Clear'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
@@ -13,7 +13,7 @@ import { OrderPayload } from 'context/Services/rns/rnsActions'
 import { ShortenTextTooltip } from '@rsksmart/rif-ui'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 
-const MyOffers: FC<{}> = () => {
+const MyOffers: FC = () => {
   const {
     state: {
       listing: {
@@ -66,16 +66,22 @@ const MyOffers: FC<{}> = () => {
       const pseudoResolvedName = filters.name as string && (`${filters.name}.rsk`)
 
       const displayDomainName = name || pseudoResolvedName
-        ? <ShortenTextTooltip value={name || pseudoResolvedName} maxLength={30} />
+        ? (
+          <ShortenTextTooltip
+            value={name || pseudoResolvedName}
+            maxLength={30}
+          />
+        )
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
       const displayItem = {
         id,
         name: displayDomainName,
         expirationDate: expirationDate.toLocaleDateString(),
-        action1: <SelectRowButton
+        action1: (
+          <SelectRowButton
             id={id}
-            handleSelect={() => {
+            handleSelect={(): void => {
               dispatch({
                 type: 'SET_ORDER',
                 payload: {
@@ -84,7 +90,8 @@ const MyOffers: FC<{}> = () => {
               })
               history.push(ROUTES.RNS.SELL.CHECKOUT)
             }}
-        />,
+          />
+        ),
         price: <></>,
         action2: <></>,
       }
@@ -112,7 +119,7 @@ const MyOffers: FC<{}> = () => {
           <IconButton
             color="primary"
             id={id}
-            onClick={() => {
+            onClick={(): void => {
               dispatch({
                 type: 'SET_ORDER',
                 payload: {
