@@ -94,6 +94,7 @@ const Headers: FC = () => {
         icon: <IconButton>{notificationsIcon()}</IconButton>,
         onClick: handleClick,
         'aria-haspopup': 'true',
+        key: 'notificationsItem',
       },
       {
         icon: (
@@ -108,6 +109,7 @@ const Headers: FC = () => {
         ),
         'aria-haspopup': 'true',
         onClick: handleTxPanelClick,
+        key: 'txsItem',
       },
     ]
     : []
