@@ -9,7 +9,6 @@ import withRenewContext, {
 } from 'context/storage/mypurchases/renew'
 import RifSelect from 'components/molecules/RifSelect'
 import { CombinedPriceCell } from 'components/molecules'
-import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import PlanOption from 'components/molecules/storage/buy/PlanOption'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import { useHistory } from 'react-router-dom'
@@ -63,7 +62,7 @@ const RenewAgreement: FC = () => {
     'CURRENCY TO PAY': <RifSelect<string>
       id="currency"
       value={0}
-      options={[tokenDisplayNames[agreement.paymentToken]]}
+      options={[agreement.paymentToken.displayName]}
       disabled
     />,
     'SUBSCRIPTION PERIOD': <RifSelect<JSX.Element>
@@ -90,7 +89,7 @@ const RenewAgreement: FC = () => {
     />,
     'TOTAL PRICE': total && totalFiat ? (
       <CombinedPriceCell
-        currency={tokenDisplayNames[agreement.paymentToken] || ''}
+        currency={agreement.paymentToken.displayName}
         currencyFiat={fiatName}
         price={total.toFixed(18)}
         priceFiat={totalFiat}

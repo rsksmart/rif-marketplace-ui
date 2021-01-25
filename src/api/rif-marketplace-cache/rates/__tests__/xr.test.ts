@@ -1,10 +1,10 @@
 import { AbstractAPIService } from 'api/models/apiService'
 import { XRService, xrServiceAddress, XRItem } from 'api/rif-marketplace-cache/rates/xr'
-import { SUPPORTED_TOKENS } from 'contracts/interfaces'
+import { SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'
 
 const TEST_FIAT_SYMBOL = 'usd'
 const TEST_Q_FILTER = { fiatSymbol: TEST_FIAT_SYMBOL }
-const TEST_TOKEN = SUPPORTED_TOKENS.rbtc
+const TEST_TOKEN = SYSTEM_SUPPORTED_SYMBOL.rbtc
 const expectedFindOptions = {
   query: {
     $select: ['token', TEST_FIAT_SYMBOL],

@@ -1,12 +1,11 @@
+import { SupportedTokenSymbol, SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 import { Contract } from 'web3-eth-contract'
 
 import {
-  ERC20ContractI,
-  SUPPORTED_TOKENS,
-  SupportedTokens,
-  Token,
+  ERC20Contract,
+  SupportedToken,
   TOKEN_TYPES,
   TransactionOptions,
   TxOptions,
@@ -14,38 +13,38 @@ import {
 import ContractBase from './contract-base'
 
 export class ContractWithTokens extends ContractBase {
-  private readonly supportedTokens: Token[]
+  private readonly supportedTokens: SupportedToken[]
 
-  private _defaultToken: SupportedTokens
+  private _defaultToken: SupportedTokenSymbol
 
   constructor(
     web3: Web3,
     contract: Contract,
-    supportedTokens: Token[],
+    supportedTokens: SupportedToken[],
     name?: string,
   ) {
     super(web3, contract, name)
     this.supportedTokens = supportedTokens
     // Set default token
-    this._defaultToken = this._isCurrencySupported(SUPPORTED_TOKENS.rbtc)
-      ? SUPPORTED_TOKENS.rbtc
-      : this.supportedTokens[0].token
+    this._defaultToken = this._isCurrencySupported(SYSTEM_SUPPORTED_SYMBOL.rbtc)
+      ? SYSTEM_SUPPORTED_SYMBOL.rbtc
+      : this.supportedTokens[0].symbol
   }
 
-  get defaultToken(): SupportedTokens {
+  get defaultToken(): SupportedTokenSymbol {
     return this._defaultToken
   }
 
-  set defaultToken(token: SupportedTokens) {
+  set defaultToken(token: SupportedTokenSymbol) {
     this._defaultToken = token
   }
 
-  private _isCurrencySupported(currency: SupportedTokens): boolean {
-    return !!this.supportedTokens.find(({ token }) => currency === token)
+  private _isCurrencySupported(currency: SupportedTokenSymbol): boolean {
+    return this.supportedTokens.some(({ symbol }) => currency === symbol)
   }
 
   private _approveTokenTransfer(
-    token: Token,
+    token: SupportedToken,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> {
     const { value, from, gasPrice } = txOptions
@@ -53,7 +52,7 @@ export class ContractWithTokens extends ContractBase {
 
     switch (tokenType) {
       case TOKEN_TYPES.ERC20:
-        return (tokenContract.getInstance(this.web3) as ERC20ContractI).approve(
+        return (tokenContract.getInstance(this.web3) as ERC20Contract).approve(
           this.contract.options.address, value as number, { from, gasPrice },
         )
       default:
@@ -61,9 +60,9 @@ export class ContractWithTokens extends ContractBase {
     }
   }
 
-  public getToken(tokenName?: SupportedTokens): Token {
+  public getToken(tokenName?: SupportedTokenSymbol): SupportedToken {
     const tokenObject = this.supportedTokens.find(
-      ({ token }) => token === (tokenName || this.defaultToken),
+      ({ symbol }) => symbol === (tokenName || this.defaultToken),
     )
 
     if (!tokenObject) {
@@ -76,7 +75,7 @@ export class ContractWithTokens extends ContractBase {
     const { from, value } = txOptions
     const tokenToUse = this.getToken(txOptions.token)
 
-    if (!this._isCurrencySupported(tokenToUse.token)) {
+    if (!this._isCurrencySupported(tokenToUse.symbol)) {
       throw new Error(`Token ${tokenToUse} is not supported by ${this.name} contract`)
     }
 

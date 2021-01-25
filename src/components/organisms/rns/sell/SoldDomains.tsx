@@ -47,7 +47,7 @@ const SoldDomains: FC<{}> = () => {
         soldDate,
         tokenId,
       } = domainItem
-      const { rate, displayName } = crypto[paymentToken]
+      const { rate, displayName } = crypto[paymentToken.symbol]
 
       const pseudoResolvedName = name && `${name}.rsk`
       const displayDomainName = domainName || pseudoResolvedName

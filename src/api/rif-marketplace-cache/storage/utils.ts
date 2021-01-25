@@ -1,31 +1,15 @@
 import { AgreementTransport, BillingPlanTransport, OfferTransport } from 'api/models/storage/transports'
 import { Big } from 'big.js'
-import { ZERO_ADDRESS } from 'constants/strings'
-import { SupportedTokens, SUPPORTED_TOKENS } from 'contracts/interfaces'
 import {
   Agreement, BillingPlan, PeriodInSeconds, StorageOffer, SubscriptionPeriod,
 } from 'models/marketItems/StorageItem'
 import { parseConvertBig, parseToBigDecimal } from 'utils/parsers'
+import { getTokenByAddress } from 'utils/tokenUtils'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
-import { availableTokens } from '../rns/common'
 
 export enum MinMax {
   min = 1,
   max = -1,
-}
-
-export const getPaymentToken = (tokenAddress: string): SupportedTokens => {
-  if (tokenAddress === ZERO_ADDRESS) {
-    return SUPPORTED_TOKENS.rbtc
-  }
-  return Object
-    .entries(availableTokens)
-    .reduce(
-      (acc, [addr, symbol]) => (addr === tokenAddress
-        ? symbol as SupportedTokens
-        : acc),
-      '' as SupportedTokens,
-    )
 }
 
 export const calcMonthlyRate = (
@@ -62,15 +46,16 @@ export const mapOfferFromTransport = ({
     availableSizeGB: availableCapacityGB.lt(0) ? Big(0) : availableCapacityGB,
     subscriptionOptions: plans
       .sort(
-        (a: BillingPlanTransport, b: BillingPlanTransport) => (
-          parseInt(a.period, 10) - parseInt(b.period, 10)
-        ),
+        (
+          { period: a }: BillingPlanTransport,
+          { period: b }: BillingPlanTransport,
+        ) => Number(a) - Number(b),
       )
-      .filter((plan) => Boolean(PeriodInSeconds[plan.period]))
+      .filter(({ period }) => PeriodInSeconds[period])
       .map<BillingPlan>((plan) => ({
         period: PeriodInSeconds[plan.period],
         price: parseToBigDecimal(plan.price, 18),
-        currency: SUPPORTED_TOKENS[plan.rateId],
+        currency: getTokenByAddress(plan.tokenAddress),
       })),
     averagePrice: averagePriceTransport,
     acceptedCurrencies,
@@ -130,7 +115,7 @@ export const mapAgreementFromTransport = ({
     size: contentSize,
     subscriptionPeriod: PeriodInSeconds[billingPeriod] as SubscriptionPeriod,
     title: '',
-    paymentToken: getPaymentToken(tokenAddress.toLowerCase()),
+    paymentToken: getTokenByAddress(tokenAddress),
     consumer,
     withdrawableFunds,
     toBePayedOut: parseToBigDecimal(toBePayedOut, 18),

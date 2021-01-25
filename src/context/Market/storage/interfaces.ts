@@ -7,7 +7,7 @@ import {
   SubscriptionPeriod,
 } from 'models/marketItems/StorageItem'
 import { ZERO_ADDRESS } from 'constants/strings'
-import { SupportedTokens } from 'contracts/interfaces'
+import { SupportedTokenSymbol } from 'models/Token'
 import Big from 'big.js'
 import { OfferEditAction } from './offerEditActions'
 
@@ -32,7 +32,7 @@ export interface OfferEditContextProps {
   dispatch: Dispatch<OfferEditAction>
 }
 
-export const TokenAddressees: Record<SupportedTokens, string> = {
+export const TokenAddressees: Record<SupportedTokenSymbol, string> = {
   rbtc: ZERO_ADDRESS, // we are using zero address for native token is Storage Manager SC
   rif: networkConfig.contractAddresses.rif,
 }

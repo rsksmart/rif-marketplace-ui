@@ -5,12 +5,13 @@ import SaveIcon from '@material-ui/icons/Save'
 import { Button, TooltipIconButton } from '@rsksmart/rif-ui'
 import Big from 'big.js'
 import CryptoPriceConverter from 'components/molecules/CryptoPriceConverter'
-import { StorageBillingPlan } from 'context/Market/storage/interfaces'
 import OfferEditContext from 'context/Market/storage/OfferEditContext'
 import { MarketCryptoRecord } from 'models/Market'
-import { SubscriptionPeriod } from 'models/marketItems/StorageItem'
+import { PeriodInSeconds, SubscriptionPeriod } from 'models/marketItems/StorageItem'
 import React, { FC, useContext, useState } from 'react'
-import { SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
+import { StorageBillingPlan, OfferEditContextProps } from 'context/Market/storage/interfaces'
+import { SYSTEM_TOKENS, BaseToken, SupportedTokenSymbol } from 'models/Token'
+import { getSupportedTokenByName } from 'utils/tokenUtils'
 
 export interface EditableBillingPlanProps {
   onPlanAdded?: (billingPlan: StorageBillingPlan) => void
@@ -29,10 +30,12 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
 }) => {
   const {
     state: { allBillingPeriods, usedPeriodsPerCurrency },
-  } = useContext(OfferEditContext)
+  } = useContext<OfferEditContextProps>(OfferEditContext)
 
   const editMode = Boolean(billingPlan)
-  const [currency, setCurrency] = useState<SupportedTokens>(billingPlan?.currency || SUPPORTED_TOKENS.rbtc)
+  const [currency, setCurrency] = useState<BaseToken>(
+    billingPlan?.currency || SYSTEM_TOKENS.rbtc,
+  )
   const [pricePerGb, setPricePerGb] = useState(billingPlan?.price.toString())
   const [period, setPeriod] = useState(
     billingPlan?.period || allBillingPeriods[0],
@@ -42,8 +45,8 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
     { target: { value } },
   ): void => setPricePerGb(value)
   const onCurrencyChange = (
-    { target: { value } },
-  ): void => setCurrency(value)
+    { target: { value: symbol } },
+  ): void => setCurrency(getSupportedTokenByName(symbol as SupportedTokenSymbol))
   const onSelectedPeriodChange = (
     { target: { value } },
   ): void => setPeriod(value)
@@ -75,7 +78,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
   const ActionButton = (): JSX.Element => {
     if (!editMode) {
       const addIsDisabled = Number(pricePerGb) <= 0
-        || usedPeriodsPerCurrency[currency]?.includes(period)
+        || usedPeriodsPerCurrency[currency.symbol]?.includes(period)
 
       return (
         <Button
@@ -92,7 +95,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
     }
     const hasChanged = billingPlan?.period !== period
       || billingPlan?.currency !== currency
-    const currencyAndPeriodInUse = usedPeriodsPerCurrency[currency]?.includes(
+    const currencyAndPeriodInUse = usedPeriodsPerCurrency[currency.symbol]?.includes(
       period
     )
     // the period or currency have changed and the selected option is in use
@@ -128,10 +131,11 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
             }}
           >
             {
-              allBillingPeriods.sort((a, b) => a - b)
+              allBillingPeriods
+                .sort((a, b) => PeriodInSeconds[a] - PeriodInSeconds[b])
                 .map(
                   (option: SubscriptionPeriod) => {
-                    const isDisabled = usedPeriodsPerCurrency[currency]?.includes(option)
+                    const isDisabled = usedPeriodsPerCurrency[currency.symbol]?.includes(option)
                       && option !== billingPlan?.period
                     return (
                       <MenuItem value={option} key={option} disabled={isDisabled}>

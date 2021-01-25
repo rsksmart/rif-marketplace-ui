@@ -16,7 +16,6 @@ import AppContext, { errorReporterFactory } from 'context/App/AppContext'
 import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper'
 import RoundedCard from 'components/atoms/RoundedCard'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
-import { SupportedTokens } from 'contracts/interfaces'
 import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Services/storage'
 import NoWhitelistedProvider from 'components/molecules/storage/NoWhitelistedProvider'
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
@@ -97,7 +96,7 @@ const OfferCreation: FC = () => {
         totalCapacityMB,
         periods,
         prices,
-        tokens as SupportedTokens[],
+        tokens,
         peerId,
         { from: account },
       )

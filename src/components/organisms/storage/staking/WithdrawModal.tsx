@@ -7,14 +7,14 @@ import { Button, ModalDialogue } from '@rsksmart/rif-ui'
 import { StakedBalances as StakedBalancesProp } from 'api/rif-marketplace-cache/storage/stakes'
 import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
+import { SupportedTokenSymbol, SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'
 import React, { FC, useEffect, useState } from 'react'
-import { SUPPORTED_TOKENS, SupportedTokens } from 'contracts/interfaces'
 import StakedBalances from './StakedBalances'
 
 export interface WithdrawModalProps {
   open: boolean
   onClose: () => void
-  onWithdraw: (amount: number, currency: SupportedTokens) => void
+  onWithdraw: (amount: number, currency: SupportedTokenSymbol) => void
   canWithdraw: boolean
   totalStakedUSD: string
   stakes: StakedBalancesProp
@@ -30,8 +30,8 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
   open, onClose, onWithdraw, canWithdraw, totalStakedUSD, stakes,
 }) => {
   const classes = useStyles()
-  const currencyOptions: SupportedTokens[] = [SUPPORTED_TOKENS.rbtc, SUPPORTED_TOKENS.rif]
-  const [selectedCurrency, setSelectedCurrency] = useState<SupportedTokens>(SUPPORTED_TOKENS.rbtc)
+  const currencyOptions: SupportedTokenSymbol[] = [SYSTEM_SUPPORTED_SYMBOL.rbtc, SYSTEM_SUPPORTED_SYMBOL.rif]
+  const [selectedCurrency, setSelectedCurrency] = useState<SupportedTokenSymbol>(SYSTEM_SUPPORTED_SYMBOL.rbtc)
   const [amountToWithdraw, setAmountToWithdraw] = useState<number | undefined>(undefined)
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
   const handleCurrencyChange = ({
     target: { value },
   }: React.ChangeEvent<{ name?: string, value: unknown }>): void => {
-    setSelectedCurrency(value as SupportedTokens)
+    setSelectedCurrency(value as SupportedTokenSymbol)
   }
 
   const handleAmountChange = ({

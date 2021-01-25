@@ -14,11 +14,11 @@ import { UIError } from 'models/UIMessage'
 import { AvgBillingPriceService } from 'api/rif-marketplace-cache/storage/avg-billing-plan-price'
 import { AvailableCapacityService } from 'api/rif-marketplace-cache/storage/available-size'
 import createWithContext from 'context/storeUtils/createWithContext'
+import { ServiceState } from 'context/Services/interfaces'
 import {
   storageOffersActions, StorageOffersPayload,
   StorageOffersReducer, StorageOffersAction,
 } from './offersActions'
-import { ServiceState } from '../../interfaces'
 import { StorageOrder } from '../interfaces'
 
 export type ContextName = 'storage_offers'

@@ -16,7 +16,6 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
-import { SupportedTokens } from 'contracts/interfaces'
 import { BillingPlan, StorageOffer } from 'models/marketItems/StorageItem'
 import Web3 from 'web3'
 import { isBillingPlansChange } from 'components/pages/storage/myoffers/utils'
@@ -84,7 +83,7 @@ const StorageEditOfferPage: FC<{}> = () => {
       return storageContract.setBillingPlans(
         periods,
         prices,
-        tokens as SupportedTokens[],
+        tokens,
         { from: account },
       )
     }
@@ -93,7 +92,7 @@ const StorageEditOfferPage: FC<{}> = () => {
       totalCapacityMB,
       periods,
       prices,
-      tokens as SupportedTokens[],
+      tokens,
       peerId,
       { from: account },
     )

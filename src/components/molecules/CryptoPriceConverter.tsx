@@ -6,6 +6,7 @@ import LabelWithValue from 'components/atoms/LabelWithValue'
 import { colors } from '@rsksmart/rif-ui'
 import { MarketCryptoRecord } from 'models/Market'
 import Big from 'big.js'
+import { BaseToken } from 'models/Token'
 
 export interface CryptoPriceConverterProps {
   cryptoXRs: MarketCryptoRecord
@@ -13,7 +14,7 @@ export interface CryptoPriceConverterProps {
   fiatDisplayName: string
   price?: string
   onPriceChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  currency: string
+  currency: BaseToken
   onCurrencyChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -21,7 +22,7 @@ const CryptoPriceConverter: FC<CryptoPriceConverterProps> = (props) => {
   const {
     cryptoXRs, priceLabel = 'Price', price, onPriceChange, fiatDisplayName, currency, onCurrencyChange,
   } = props
-  const { rate } = cryptoXRs[currency.toLowerCase()]
+  const { rate } = cryptoXRs[currency.symbol]
 
   const fiatPrice = price ? (new Big(price)).mul(rate).toString() : ''
   return (
@@ -32,19 +33,19 @@ const CryptoPriceConverter: FC<CryptoPriceConverterProps> = (props) => {
           fullWidth
           label="Currency"
           id="currency-select"
-          value={currency}
+          value={currency.symbol}
           InputProps={{
             style: { textAlign: 'center' },
           }}
           onChange={onCurrencyChange}
         >
           {
-            Object.keys(cryptoXRs).map((xrName) => {
-              const { displayName: cryptoDisplayName } = cryptoXRs[xrName]
+            Object.keys(cryptoXRs).map((symbol) => {
+              const { displayName: cryptoDisplayName } = cryptoXRs[symbol]
               return (
                 <MenuItem
-                  key={xrName}
-                  value={xrName}
+                  key={symbol}
+                  value={symbol}
                 >
                   {cryptoDisplayName}
                 </MenuItem>
@@ -70,7 +71,7 @@ const CryptoPriceConverter: FC<CryptoPriceConverterProps> = (props) => {
             },
             endAdornment: (
               <InputAdornment position="end">
-                <Typography variant="caption" color="secondary">{currency.toUpperCase()}</Typography>
+                <Typography variant="caption" color="secondary">{currency.displayName}</Typography>
               </InputAdornment>
             ),
             style: { color: colors.primary },

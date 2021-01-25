@@ -1,7 +1,9 @@
 import { ContextDispatch } from 'context/storeUtils/interfaces'
 import { Modify } from 'utils/typeUtils'
-import { Message, MessageId, ErrorMessage } from 'models/UIMessage'
-import { LoaderId } from '../../models/UIMessage'
+import {
+  Message, MessageId, ErrorMessage, LoaderId,
+} from 'models/UIMessage'
+
 import { AppState } from './AppContext'
 
 export type APP_ACTION =

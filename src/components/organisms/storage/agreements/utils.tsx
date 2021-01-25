@@ -1,15 +1,14 @@
-import React from 'react'
+import { Spinner } from '@rsksmart/rif-ui'
 import ItemWUnit from 'components/atoms/ItemWUnit'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
-import { MarketFiat } from 'context/Market/MarketContext'
-import { MarketCryptoRecord } from 'models/Market'
-import { Agreement, SubscriptionPeriod } from 'models/marketItems/StorageItem'
-import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
-import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
-import { getShortDateString } from 'utils/dateUtils'
-import { Spinner } from '@rsksmart/rif-ui'
 import { AgreementUpdateData, ConfirmationData } from 'context/Confirmations/interfaces'
+import { MarketFiat } from 'context/Market/MarketContext'
+import { MarketCryptoRecord, TokenXR } from 'models/Market'
+import { Agreement, SubscriptionPeriod } from 'models/marketItems/StorageItem'
+import React from 'react'
+import { getShortDateString } from 'utils/dateUtils'
+import { UNIT_PREFIX_POW2 } from 'utils/utils'
 
 export type AgreementView = {
   title: JSX.Element
@@ -46,7 +45,7 @@ const getCoreItemFields = (
     id,
     dataReference,
   } = agreement
-  const currency = crypto[paymentToken]
+  const currency: TokenXR = crypto[paymentToken.symbol]
 
   const sizeValue = (
     <ItemWUnit
@@ -73,7 +72,7 @@ const getCoreItemFields = (
     AMOUNT: sizeValue,
     'RENEWAL DATE': renewalDate ? getShortDateString(renewalDate) : 'Expired',
     'SUBSCRIPTION PERIOD': subscriptionPeriod,
-    CURRENCY: tokenDisplayNames[paymentToken],
+    CURRENCY: currency.displayName,
     SYSTEM: 'IPFS',
   }
 }
@@ -87,13 +86,14 @@ export const getCustomerViewFrom = (
   const {
     provider, paymentToken, withdrawableFunds,
   } = agreement
+  const currency: TokenXR = crypto[paymentToken.symbol]
 
   const providerValue = <AddressItem value={provider} />
   const withdrawableFundsValue = (
     <ItemWUnit
       type="mediumPrimary"
       value={withdrawableFunds.toPrecision(2)}
-      unit={tokenDisplayNames[paymentToken]}
+      unit={currency.displayName}
     />
   )
 
@@ -173,12 +173,13 @@ export const getProviderViewFrom = (
   const {
     consumer, paymentToken, toBePayedOut,
   } = agreement
+  const currency: TokenXR = crypto[paymentToken.symbol]
   const consumerValue = <AddressItem value={consumer} />
   const toBePayedOutValue = (
     <ItemWUnit
       type="mediumPrimary"
       value={toBePayedOut.toPrecision(2)}
-      unit={tokenDisplayNames[paymentToken]}
+      unit={currency.displayName}
     />
   )
 

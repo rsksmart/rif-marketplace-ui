@@ -16,8 +16,10 @@ import Logger from 'utils/Logger'
 import { convertToWeiString } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import Web3 from 'web3'
-import { SUPPORTED_TOKENS, SupportedTokens, TxOptions } from 'contracts/interfaces'
+import { TxOptions } from 'contracts/interfaces'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
+import { SupportedTokenSymbol, SYSTEM_SUPPORTED_SYMBOL, SYSTEM_TOKENS } from 'models/Token'
+import { getTokensFromConfigTokens } from 'utils/tokenUtils'
 import { reducer } from './actions'
 import {
   AsyncActions, PinnedContent, Props, State,
@@ -30,7 +32,7 @@ export const initialState: State = {
     location: '',
     total: new Big(0),
     billingPeriod: PeriodInSeconds.Daily,
-    token: SUPPORTED_TOKENS.rbtc,
+    token: SYSTEM_TOKENS.rbtc,
   },
   auxiliary: {
     currencyOptions: [],
@@ -118,9 +120,9 @@ const Provider: FC = ({ children }) => {
         system,
         location,
       } = listedItem
-      const currencies: SupportedTokens[] = Array.from(
+      const currencies: SupportedTokenSymbol[] = Array.from(
         new Set(subscriptionOptions.map(
-          (option: BillingPlan) => option.currency,
+          (option: BillingPlan) => option.currency.symbol,
         )),
       )
 
@@ -128,7 +130,7 @@ const Provider: FC = ({ children }) => {
       dispatch({
         type: 'INITIALISE',
         payload: {
-          currencyOptions: currencies,
+          currencyOptions: getTokensFromConfigTokens(currencies),
           id,
           system,
           location,
@@ -160,15 +162,14 @@ const Provider: FC = ({ children }) => {
             .div(UNIT_PREFIX_POW2.MEGA)
             .round(0, 3)
             .toString(),
-          token: SUPPORTED_TOKENS[token],
+          token,
         }
         const txOptions: TxOptions = {
           from: account,
-          token: SUPPORTED_TOKENS[token],
+          token: SYSTEM_SUPPORTED_SYMBOL[token.symbol],
         }
 
-        const storageContract = (await import('contracts/storage'))
-          .default
+        const storageContract = (await import('contracts/storage')).default
           .StorageContract
           .getInstance(web3 as Web3)
         appDispatch({
@@ -246,14 +247,14 @@ const Provider: FC = ({ children }) => {
     ) {
       const { subscriptionOptions } = listedItem
       const newToken = currencyOptions[selectedCurrency]
-      const newRate = crypto[newToken]?.rate
+      const newRate = crypto[newToken.symbol]?.rate
 
       const pinnedSizeMB = Big(pinned.size)
         .div(UNIT_PREFIX_POW2.MEGA)
         .round(0, 3) // RoundingMode.RoundUp - can't use the enum for ts(2748); Rounding up for cannot process fractions of a MB
 
       const newPlans = subscriptionOptions
-        .filter((plan: BillingPlan) => plan.currency === newToken)
+        .filter((plan: BillingPlan) => plan.currency.tokenAddress === newToken.tokenAddress)
         .map((plan: BillingPlan) => {
           const pricePerSize = plan.price
             .mul(pinnedSizeMB)

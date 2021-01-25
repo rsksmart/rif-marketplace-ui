@@ -16,9 +16,9 @@ import { calcRenewalDate, getShortDateString } from 'utils/dateUtils'
 import Logger from 'utils/Logger'
 import { convertToWeiString, parseToBigDecimal } from 'utils/parsers'
 import Web3 from 'web3'
-import { SUPPORTED_TOKENS } from 'contracts/interfaces'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
 import { AgreementUpdateData } from 'context/Confirmations/interfaces'
+import { SYSTEM_TOKENS } from 'models/Token'
 import { reducer } from './actions'
 import { AsyncActions, Props, State } from './interfaces'
 
@@ -28,7 +28,7 @@ export const initialState: State = {
     endDate: '',
     periodsCount: 1,
     plan: {
-      currency: SUPPORTED_TOKENS.rbtc,
+      currency: SYSTEM_TOKENS.rbtc,
       period: 'Daily',
       price: new Big(0),
     },
@@ -138,8 +138,7 @@ const Provider: FC = ({ children }) => {
           provider,
           token: networkConfig.contractAddresses[paymentToken],
         }
-        const storageContract = (await import('contracts/storage'))
-          .default
+        const storageContract = (await import('contracts/storage')).default
           .StorageContract
           .getInstance(web3 as Web3)
 
@@ -156,7 +155,7 @@ const Provider: FC = ({ children }) => {
           payload: { inProgress: true },
         })
         const receipt = await storageContract
-          .depositFunds(fundsDeposit, { from: account, token: paymentToken })
+          .depositFunds(fundsDeposit, { from: account, token: paymentToken.symbol })
           .catch((error) => {
             reportError(new UIError({
               error,
@@ -218,7 +217,7 @@ const Provider: FC = ({ children }) => {
       && crypto
       && paymentToken
     ) {
-      const newRate = crypto[paymentToken]?.rate
+      const newRate = crypto[paymentToken.symbol]?.rate
 
       dispatch({
         type: 'SET_AUXILIARY',

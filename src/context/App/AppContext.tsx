@@ -17,7 +17,7 @@ import {
 } from 'models/UIMessage'
 import React, { Dispatch, FC, useReducer } from 'react'
 import { Modify } from 'utils/typeUtils'
-import { StakesService } from '../../api/rif-marketplace-cache/storage/stakes'
+import { StakesService } from 'api/rif-marketplace-cache/storage/stakes'
 import {
   AppAction, appActions, AppPayload, AppReducer, ErrorMessagePayload,
 } from './appActions'

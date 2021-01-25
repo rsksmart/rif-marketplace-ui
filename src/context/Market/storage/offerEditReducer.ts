@@ -20,7 +20,7 @@ export interface OfferEditReducer<P extends OfferEditPayload> {
 const calculateUsedPeriodsPerCurrency = (
   billingPlans: StorageBillingPlan[],
 ): Record<string, []> => billingPlans.reduce((acc, item) => {
-  acc[item.currency] = [...(acc[item.currency] || []), item.period]
+  acc[item.currency.symbol] = [...(acc[item.currency.symbol] || []), item.period]
   return acc
 }, {})
 

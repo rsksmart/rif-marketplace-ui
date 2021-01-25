@@ -1,8 +1,9 @@
 import { TransactionReceipt } from 'web3-eth'
 import Web3 from 'web3'
 
-import { ZERO_ADDRESS } from '../constants/strings'
-import { rifTokenAddress } from './config'
+import {
+  SupportedTokenSymbol, SYSTEM_SUPPORTED_SYMBOL, SYSTEM_TOKENS, BaseToken, TokenRecord,
+} from 'models/Token'
 import { RifERC20Contract } from './tokens/rif'
 import { MarketplaceContractErrorId } from './rns/Marketplace'
 import { RnsContractErrorId } from './rns/Rns'
@@ -18,7 +19,7 @@ export interface TransactionOptions {
   value?: string | number
 }
 
-export interface ERC20ContractI extends PaymentWrapper{
+export interface ERC20Contract extends PaymentWrapper{
   approve (
       address: string, amount: string | number, options: TransactionOptions
   ): Promise<TransactionReceipt>
@@ -35,45 +36,34 @@ export type ContractErrorId =
   | StorageContractErrorId
   | StorageStakingContractErrorId
 
-export enum SUPPORTED_TOKENS {
-  rif = 'rif',
-  rbtc = 'rbtc'
-}
-
 export enum TOKEN_TYPES {
   ERC20 = 'erc20',
   NATIVE = 'native'
 }
 
-export type SupportedTokens = SUPPORTED_TOKENS.rif | SUPPORTED_TOKENS.rbtc
-
 export type TokenTypes = TOKEN_TYPES.NATIVE | TOKEN_TYPES.ERC20
 
 export type SingletonContract = { getInstance(web3: Web3): any }
 
-export type Token = {
-  token: SupportedTokens
+export type SupportedToken = BaseToken & {
   type: TokenTypes
   tokenContract: SingletonContract
-  tokenAddress: string
 }
 
 export type TxOptions = TransactionOptions & {
   gasMultiplier?: number
-  token?: SupportedTokens
+  token?: SupportedTokenSymbol
   onApprove?: (receipt: TransactionReceipt) => void
 }
 
-export const TOKENS: Record<SupportedTokens, Token> = {
-  [SUPPORTED_TOKENS.rbtc]: {
-    token: SUPPORTED_TOKENS.rbtc,
+export const SUPPORTED_TOKEN_RECORDS: TokenRecord<SupportedToken> = {
+  [SYSTEM_SUPPORTED_SYMBOL.rbtc]: {
+    ...SYSTEM_TOKENS.rbtc,
     type: TOKEN_TYPES.NATIVE,
-    tokenAddress: ZERO_ADDRESS,
-  } as Token,
-  [SUPPORTED_TOKENS.rif]: {
-    token: SUPPORTED_TOKENS.rif,
+  } as SupportedToken,
+  [SYSTEM_SUPPORTED_SYMBOL.rif]: {
+    ...SYSTEM_TOKENS.rif,
     type: TOKEN_TYPES.ERC20,
     tokenContract: RifERC20Contract,
-    tokenAddress: rifTokenAddress,
   },
 }

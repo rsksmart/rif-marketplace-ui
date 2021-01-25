@@ -5,10 +5,11 @@ import { TransactionReceipt } from 'web3-eth'
 import { AbiItem } from 'web3-utils'
 
 import { storageAddress, storageSupportedTokens } from 'contracts/config'
-import { SUPPORTED_TOKENS, SupportedTokens, TxOptions } from 'contracts/interfaces'
-import { getTokens } from 'utils/tokenUtils'
+import { TxOptions } from 'contracts/interfaces'
+import { getTokensFromConfigTokens } from 'utils/tokenUtils'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
 import { validateBalance } from 'contracts/utils/accountBalance'
+import { SYSTEM_SUPPORTED_SYMBOL, BaseToken } from 'models/Token'
 import { encodeHash, prefixArray } from './utils'
 
 export type StorageContractErrorId = 'contract-storage'
@@ -24,7 +25,7 @@ class StorageContract extends ContractWithTokens {
           StorageManager.abi as AbiItem[],
           storageAddress,
         ),
-        getTokens(storageSupportedTokens),
+        getTokensFromConfigTokens(storageSupportedTokens),
         'contract-storage',
       )
     }
@@ -114,7 +115,7 @@ class StorageContract extends ContractWithTokens {
       {
         gasMultiplier: StorageContract.gasMultiplier,
         ...txOptions,
-        token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
+        token: SYSTEM_SUPPORTED_SYMBOL.rbtc, // Can be used only with native token
       },
     )
   }
@@ -122,10 +123,12 @@ class StorageContract extends ContractWithTokens {
   public setBillingPlans(
     billingPeriods: number[][],
     billingWeiPrices: string[][],
-    tokens: SupportedTokens[],
+    tokens: BaseToken[],
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
-    const tokensAddresses = tokens.map((t) => this.getToken(t).tokenAddress)
+    const tokensAddresses = tokens.map(
+      (t) => this.getToken(t.symbol).tokenAddress,
+    )
 
     return this.send(
       this.methods.setBillingPlans(
@@ -136,7 +139,7 @@ class StorageContract extends ContractWithTokens {
       {
         gasMultiplier: StorageContract.gasMultiplier,
         ...txOptions,
-        token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
+        token: SYSTEM_SUPPORTED_SYMBOL.rbtc, // Can be used only with native token
       },
     )
   }
@@ -145,7 +148,7 @@ class StorageContract extends ContractWithTokens {
     capacityMB: string,
     billingPeriods: number[][],
     billingWeiPrices: string[][],
-    tokens: SupportedTokens[],
+    tokens: BaseToken[],
     peerId: string,
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
@@ -153,7 +156,9 @@ class StorageContract extends ContractWithTokens {
     const prefixedMsg = prefixArray(encodedPeerId, '01', 64).map(
       (el) => `0x${el}`,
     )
-    const tokensAddresses = tokens.map((t) => this.getToken(t).tokenAddress)
+    const tokensAddresses = tokens.map(
+      ({ symbol }) => this.getToken(symbol).tokenAddress,
+    )
 
     const setOfferTx = await this.methods.setOffer(
       capacityMB,
@@ -168,7 +173,7 @@ class StorageContract extends ContractWithTokens {
       {
         gasMultiplier: StorageContract.gasMultiplier,
         ...txOptions,
-        token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
+        token: SYSTEM_SUPPORTED_SYMBOL.rbtc, // Can be used only with native token
       },
     )
   }
@@ -182,13 +187,15 @@ class StorageContract extends ContractWithTokens {
     }: {
       dataReference: string
       provider: string
-      tokens: SupportedTokens[]
+      tokens: BaseToken[]
       amounts: string[]
     },
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
     const encodedDataReference = encodeHash(dataReference)
-    const tokensAddresses = tokens.map((t: SupportedTokens) => this.getToken(t).tokenAddress)
+    const tokensAddresses = tokens.map(
+      (t) => this.getToken(t.symbol).tokenAddress,
+    )
     const weiAmounts = amounts.map(convertToWeiString)
     const withdrawFundsTx = this.methods
       .withdrawFunds(encodedDataReference, provider, tokensAddresses, weiAmounts)
@@ -198,7 +205,7 @@ class StorageContract extends ContractWithTokens {
       {
         gasMultiplier: StorageContract.gasMultiplier,
         ...txOptions,
-        token: SUPPORTED_TOKENS.rbtc, // Native token only
+        token: SYSTEM_SUPPORTED_SYMBOL.rbtc, // Native token only
       },
     )
   }
@@ -207,17 +214,17 @@ class StorageContract extends ContractWithTokens {
     {
       creatorOfAgreement,
       dataReferences = [],
-      token,
+      token: { symbol },
     }: {
       creatorOfAgreement: string
       dataReferences: string[]
-      token: SupportedTokens
+      token: BaseToken
     },
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
     const { from } = txOptions
     const encodedDataReferences = dataReferences.map(encodeHash)
-    const { tokenAddress } = this.getToken(token)
+    const { tokenAddress } = this.getToken(symbol)
 
     const payoutFundsTx = this.contract.methods
       .payoutFunds(
@@ -232,7 +239,7 @@ class StorageContract extends ContractWithTokens {
       {
         gasMultiplier: StorageContract.gasMultiplier,
         ...txOptions,
-        token: SUPPORTED_TOKENS.rbtc, // Native token only
+        token: SYSTEM_SUPPORTED_SYMBOL.rbtc, // Native token only
       },
     )
   }
@@ -248,7 +255,7 @@ class StorageContract extends ContractWithTokens {
       this.methods.terminateOffer(),
       {
         ...txOptions,
-        token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
+        token: SYSTEM_SUPPORTED_SYMBOL.rbtc, // Can be used only with native token
       },
     )
   }

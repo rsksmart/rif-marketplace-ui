@@ -21,7 +21,7 @@ import withStakingContext, { StakingContext }
   from 'context/Services/storage/staking/Context'
 import RoundBtn from 'components/atoms/RoundBtn'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
-import { SupportedTokens } from 'contracts/interfaces'
+import { SupportedTokenSymbol } from 'models/Token'
 import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Services/storage'
 import useConfirmations from 'hooks/useConfirmations'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
@@ -124,7 +124,7 @@ const Staking: FC = () => {
   }
 
   const handleDeposit = async (
-    amount: number, currency: SupportedTokens,
+    amount: number, currency: SupportedTokenSymbol,
   ): Promise<void> => {
     try {
       setTxInProgressMessage(stakeInProgressMsg)
@@ -168,7 +168,7 @@ const Staking: FC = () => {
   }
 
   const handleWithdraw = async (
-    amount: number, currency: SupportedTokens,
+    amount: number, currency: SupportedTokenSymbol,
   ): Promise<void> => {
     try {
       setTxInProgressMessage(unstakeInProgressMsg)

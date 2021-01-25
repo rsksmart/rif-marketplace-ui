@@ -28,8 +28,8 @@ import { UIError } from 'models/UIMessage'
 import { LoadingPayload } from 'context/App/appActions'
 import { marketPlaceAddress } from 'contracts/config'
 import { shortChecksumAddress } from 'utils/stringUtils'
-import { getTokenAddress } from 'utils/tokenUtils'
-import { SupportedTokens } from 'contracts/interfaces'
+import { getSupportedTokenByName } from 'utils/tokenUtils'
+import { SupportedTokenSymbol, BaseToken } from 'models/Token'
 
 const logger = Logger.getInstance()
 
@@ -152,7 +152,8 @@ const DomainsCheckoutPage: FC<{}> = () => {
           id: 'contract',
         },
       })
-      const rnsContract = RNSContract.getInstance(web3, currencySymbols[currency])
+      const currencySymbol = currencySymbols[Number(currency)] as SupportedTokenSymbol
+      const rnsContract = RNSContract.getInstance(web3, currencySymbol)
       const marketPlaceContract = MarketplaceContract.getInstance(web3)
       try {
         // Get gas price
@@ -175,7 +176,9 @@ const DomainsCheckoutPage: FC<{}> = () => {
         })
 
         // Send approval transaction
-        const approveReceipt = await rnsContract.approve(marketPlaceAddress, tokenId, { from: account, gasPrice })
+        const approveReceipt = await rnsContract.approve(
+          marketPlaceAddress, tokenId, { from: account, gasPrice },
+        )
           .catch((error) => {
             throw new UIError({
               error,
@@ -194,21 +197,21 @@ const DomainsCheckoutPage: FC<{}> = () => {
           } as LoadingPayload,
         } as any)
 
-        const paymentTokenAddr = getTokenAddress(currencySymbols[Number(currency)] as SupportedTokens)
-
-        if (!paymentTokenAddr) {
-          throw new Error(`PaymentToken failure. Payment token ${Number(currency)} not supportd.`)
-        }
+        const { tokenAddress }: BaseToken = getSupportedTokenByName(currencySymbol)
 
         // Send Placement transaction
-        const placeReceipt = await marketPlaceContract.place(tokenId, paymentTokenAddr, price, { from: account, gasPrice })
-          .catch((error) => {
-            throw new UIError({
-              error,
-              id: 'contract-marketplace-place',
-              text: `Could not place domain ${name}.`,
-            })
+        const placeReceipt = await marketPlaceContract.place(
+          tokenId,
+          tokenAddress,
+          price,
+          { from: account, gasPrice },
+        ).catch((error) => {
+          throw new UIError({
+            error,
+            id: 'contract-marketplace-place',
+            text: `Could not place domain ${name}.`,
           })
+        })
         logger.info('placeReceipt:', placeReceipt)
 
         bcDispatch({

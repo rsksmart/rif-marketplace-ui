@@ -7,22 +7,13 @@ import { RnsDomain } from 'models/marketItems/DomainItem'
 import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import MarketContext from 'context/Market/MarketContext'
+import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
 import RnsDomainsContext, { RnsDomainsContextProps } from 'context/Services/rns/DomainsContext'
 import { OrderPayload } from 'context/Services/rns/rnsActions'
 import { ShortenTextTooltip } from '@rsksmart/rif-ui'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 
 const MyOffers: FC<{}> = () => {
-  const {
-    state: {
-      exchangeRates: {
-        currentFiat,
-        crypto,
-      },
-    },
-  } = useContext(MarketContext)
-
   const {
     state: {
       listing: {
@@ -33,6 +24,16 @@ const MyOffers: FC<{}> = () => {
     },
     dispatch,
   } = useContext<RnsDomainsContextProps>(RnsDomainsContext)
+  const {
+    state: {
+      exchangeRates: {
+        currentFiat: {
+          displayName: fiatDisplayName,
+        },
+        crypto,
+      },
+    },
+  } = useContext<MarketContextProps>(MarketContext)
 
   useEffect(() => {
     dispatch({
@@ -89,14 +90,21 @@ const MyOffers: FC<{}> = () => {
       }
 
       if (offer) {
-        const { price, paymentToken } = offer
-        const { rate, displayName } = crypto[paymentToken]
+        const {
+          price, paymentToken: {
+            displayName,
+            symbol: token,
+          },
+        } = offer
+
+        const { rate } = crypto[token]
+
         displayItem.price = (
           <CombinedPriceCell
             price={price.toString()}
             priceFiat={price.times(rate).toString()}
             currency={displayName}
-            currencyFiat={currentFiat.displayName}
+            currencyFiat={fiatDisplayName}
             divider=" = "
           />
         )

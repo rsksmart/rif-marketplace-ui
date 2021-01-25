@@ -6,12 +6,13 @@ import { AbiItem } from 'web3-utils'
 
 import { ZERO_BYTES } from 'constants/strings'
 import { stakingAddress, storageSupportedTokens } from 'contracts/config'
-import { SUPPORTED_TOKENS, TxOptions } from 'contracts/interfaces'
-import { getTokens } from 'utils/tokenUtils'
+import { TxOptions } from 'contracts/interfaces'
+import { getTokensFromConfigTokens } from 'utils/tokenUtils'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
 import Big from 'big.js'
 import CustomError from 'models/CustomError'
 import { validateBalance } from 'contracts/utils/accountBalance'
+import { SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'
 
 export type StorageStakingContractErrorId = 'contract-storage-staking'
 
@@ -26,7 +27,7 @@ class StakingContract extends ContractWithTokens {
           Staking.abi as AbiItem[],
           stakingAddress,
         ),
-        getTokens(storageSupportedTokens),
+        getTokensFromConfigTokens(storageSupportedTokens),
         'contract-storage-staking',
       )
     }
@@ -88,7 +89,7 @@ class StakingContract extends ContractWithTokens {
       {
         gasMultiplier: StakingContract.gasMultiplier,
         ...txOptions,
-        token: SUPPORTED_TOKENS.rbtc, // Can be used only with native token
+        token: SYSTEM_SUPPORTED_SYMBOL.rbtc, // Can be used only with native token
       },
     )
   }

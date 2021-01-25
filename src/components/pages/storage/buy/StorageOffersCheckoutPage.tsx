@@ -9,7 +9,6 @@ import {
 
   Typography,
 } from '@material-ui/core'
-import { tokenDisplayNames } from 'api/rif-marketplace-cache/rates/xr'
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
@@ -27,7 +26,6 @@ import withCheckoutContext, { ContextProps, initialState, StorageCheckoutContext
 import ROUTES from 'routes'
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import RoundBtn from 'components/atoms/RoundBtn'
-import { SupportedTokens } from 'contracts/interfaces'
 import { Web3Store } from '@rsksmart/rif-ui'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 
@@ -85,7 +83,7 @@ const StorageOffersCheckoutPage: FC = () => {
 
   const {
     id,
-    token,
+    token: { symbol: tokenSymbol },
     total,
   } = order
 
@@ -134,8 +132,7 @@ const StorageOffersCheckoutPage: FC = () => {
     'CURRENCY TO PAY': <RifSelect<string>
       id="currency"
       value={selectedCurrency}
-      options={currencyOptions
-        .map((symbol: SupportedTokens) => tokenDisplayNames[symbol])}
+      options={currencyOptions.map((symbol) => symbol.displayName)}
       onChange={changeCurrencyHandle}
       disabled={currencyOptions.length <= 1}
     />,
@@ -155,7 +152,7 @@ const StorageOffersCheckoutPage: FC = () => {
     />,
     'TOTAL PRICE': total && totalFiat ? (
       <CombinedPriceCell
-        currency={token || ''}
+        currency={tokenSymbol || ''}
         currencyFiat={fiatName}
         price={total.toFixed(18)}
         priceFiat={totalFiat}

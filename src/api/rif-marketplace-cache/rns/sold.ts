@@ -4,9 +4,10 @@ import { RnsFilter } from 'api/models/RnsFilter'
 import { SoldDomainTransport } from 'api/models/transports'
 import { RnsSoldDomain } from 'models/marketItems/DomainItem'
 import { parseToBigDecimal } from 'utils/parsers'
+import { getTokenByAddress } from 'utils/tokenUtils'
 import client from '../client'
 import {
-  RnsServiceAddress, RnsAPIService, RnsChannels, availableTokens,
+  RnsServiceAddress, RnsAPIService, RnsChannels,
 } from './common'
 
 export const soldDomainsAddress: RnsServiceAddress = 'rns/v0/sold'
@@ -29,7 +30,7 @@ const mapFromTransport = ({
   buyer,
   tokenId,
   domainName,
-  paymentToken: availableTokens[paymentToken.toLowerCase()],
+  paymentToken: getTokenByAddress(paymentToken),
   price: parseToBigDecimal(priceString, 18),
   soldDate: new Date(soldDate),
 })

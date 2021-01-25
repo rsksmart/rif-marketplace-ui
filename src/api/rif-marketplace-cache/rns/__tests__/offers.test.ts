@@ -3,8 +3,9 @@ import mockFeathersService from 'api/test-utils/feathers'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import { parseToBigDecimal } from 'utils/parsers'
 import { RnsFilter } from 'api/models/RnsFilter'
+import { rifTokenAddress } from 'contracts/config'
 import { OffersService } from '../offers'
-import { availableTokens } from '../common'
+import { rnsTokenAddrTokenRecord } from '../common'
 
 const MOCK_OFFER_0: OfferTransport = {
   domain: {
@@ -18,7 +19,7 @@ const MOCK_OFFER_0: OfferTransport = {
     tokenId: 'fake_token_id',
   },
   offerId: 'fake_id',
-  paymentToken: 'mockAddress',
+  paymentToken: rifTokenAddress,
   priceString: '19000000000',
   ownerAddress: 'string',
   ownerDomain: 'string',
@@ -35,7 +36,7 @@ const MOCK_FILTERS: RnsFilter = {
 }
 
 // @ts-ignore
-availableTokens.mockaddress = 'rif'
+rnsTokenAddrTokenRecord.mockaddress = 'rif'
 
 const expectedDomains: RnsDomainOffer[] = [
   {
@@ -43,13 +44,13 @@ const expectedDomains: RnsDomainOffer[] = [
     expirationDate: new Date(MOCK_OFFER_0.domain.expiration.date),
     id: MOCK_OFFER_0.offerId,
     ownerAddress: MOCK_OFFER_0.ownerAddress,
-    paymentToken: availableTokens[MOCK_OFFER_0.paymentToken.toLowerCase()],
+    paymentToken: rnsTokenAddrTokenRecord[MOCK_OFFER_0.paymentToken.toLowerCase()],
     price: parseToBigDecimal(MOCK_OFFER_0.priceString, 18),
     tokenId: MOCK_OFFER_0.tokenId,
   },
 ]
 
-const isRnsDomainOffer = (obj: any): obj is RnsDomainOffer => {
+const isRnsDomainOffer = (obj: RnsDomainOffer): obj is RnsDomainOffer => {
   expect((obj as RnsDomainOffer).domainName).toBeTruthy()
 
   expect((obj as RnsDomainOffer).expirationDate).toBeTruthy()

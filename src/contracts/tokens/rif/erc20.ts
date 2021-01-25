@@ -6,13 +6,13 @@ import ERC20 from 'contracts/abi/ERC20.json'
 import { rifTokenAddress } from 'contracts/config'
 import ContractBase from 'contracts/wrappers/contract-base'
 import {
-  ERC20ContractI,
+  ERC20Contract,
   TransactionOptions,
 } from 'contracts/interfaces'
 
 export type RifERC20ContractErrorId = 'contract-rif-getBalanceOf' | 'contract-rif-transferAndCall'
 
-export class RifERC20Contract extends ContractBase implements ERC20ContractI {
+export class RifERC20Contract extends ContractBase implements ERC20Contract {
   public static gasMultiplier = 1.1
 
   public static getInstance(web3: Web3): RifERC20Contract {

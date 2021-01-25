@@ -1,8 +1,9 @@
 import { RnsFilter } from 'api/models/RnsFilter'
 import { XRFilter } from 'api/rif-marketplace-cache/rates/xr'
-import { SupportedTokens } from '../contracts/interfaces'
+import { TokenRecord } from 'models/Token'
 import { RnsItem } from './marketItems/DomainItem'
 import { StorageItem } from './marketItems/StorageItem'
+import { BaseToken } from './Token'
 
 export interface Item {
   id: string
@@ -16,10 +17,8 @@ export interface MarketFilter { // FIXUS: We should either delete or fix this ty
 
 export type MarketFilterType = RnsFilter & XRFilter
 
-export type MarketCrypto = {
-  symbol: SupportedTokens
-  displayName: string
+export type TokenXR = BaseToken & {
   rate: number
 }
 
-export type MarketCryptoRecord = Record<SupportedTokens, MarketCrypto>
+export type MarketCryptoRecord = TokenRecord<TokenXR> | {}
