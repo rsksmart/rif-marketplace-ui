@@ -1,10 +1,15 @@
 import React, { FC, useContext } from 'react'
 import RnsOffersContext from 'context/Services/rns/OffersContext'
 import { MinMaxFilter } from 'models/Filters'
+import { SUPPORTED_FIAT } from 'api/rif-marketplace-cache/rates/xr'
 import RangeFilter from './RangeFilter'
 import SearchFilter from './SearchFilter'
 
 const DomainOfferFilters: FC<{}> = () => {
+  // - juraj
+  // symbol from:
+  // 1. props: DomainOffersPage
+  // 2. MarketContext.symbol: SupportedFiat
   const {
     state: {
       filters: {
@@ -12,6 +17,7 @@ const DomainOfferFilters: FC<{}> = () => {
         price: {
           min: minPrice,
           max: maxPrice,
+          // symbol: 'usd',
         },
       },
       limits: {
@@ -48,7 +54,10 @@ const DomainOfferFilters: FC<{}> = () => {
           min: absMinPrice,
           max: absMaxPrice,
         }}
-        unit="RIF"
+        // - juarj
+        // [SUPPORTED_FIAT, symbol: from *[props, context]]*
+        // string not needed
+        unit={SUPPORTED_FIAT['usd'/* symbol */].displayName as string}
         handleChange={(price: MinMaxFilter) => {
           dispatch({
             type: 'FILTER',

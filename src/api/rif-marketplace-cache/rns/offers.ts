@@ -92,7 +92,7 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
           domain: sort.name ? {
             name: sort.name,
           } : undefined,
-          price: sort.price,
+          avgUSDPrice: sort.price,
         },
         $skip: skip,
       },
