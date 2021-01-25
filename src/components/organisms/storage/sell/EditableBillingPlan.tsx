@@ -10,7 +10,7 @@ import { MarketCryptoRecord } from 'models/Market'
 import { PeriodInSeconds, SubscriptionPeriod } from 'models/marketItems/StorageItem'
 import React, { FC, useContext, useState } from 'react'
 import { StorageBillingPlan, OfferEditContextProps } from 'context/Market/storage/interfaces'
-import { SYSTEM_TOKENS, Token, SupportedTokens } from 'models/Token'
+import { SYSTEM_TOKENS, BaseToken, SupportedTokenSymbol } from 'models/Token'
 import { getNFTokenByName } from 'utils/tokenUtils'
 
 export interface EditableBillingPlanProps {
@@ -33,7 +33,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
   } = useContext<OfferEditContextProps>(OfferEditContext)
 
   const editMode = Boolean(billingPlan)
-  const [currency, setCurrency] = useState<Token>(
+  const [currency, setCurrency] = useState<BaseToken>(
     billingPlan?.currency || SYSTEM_TOKENS.rbtc,
   )
   const [pricePerGb, setPricePerGb] = useState(billingPlan?.price.toString())
@@ -46,7 +46,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
   ): void => setPricePerGb(value)
   const onCurrencyChange = (
     { target: { value: symbol } },
-  ): void => setCurrency(getNFTokenByName(symbol as SupportedTokens))
+  ): void => setCurrency(getNFTokenByName(symbol as SupportedTokenSymbol))
   const onSelectedPeriodChange = (
     { target: { value } },
   ): void => setPeriod(value)

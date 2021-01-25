@@ -8,7 +8,7 @@ import {
 } from 'models/marketItems/DomainItem'
 import { Modify } from 'utils/typeUtils'
 import { getTokenByString } from 'utils/tokenUtils'
-import { Token } from 'models/Token'
+import { BaseToken } from 'models/Token'
 
 export type RnsServiceAddress = 'rns/v0/offers' | 'rns/v0/domains' | 'rns/v0/sold'
 export type RnsChannels = 'domains' | 'sold' | 'offers'
@@ -29,7 +29,7 @@ export const isSupportedRNSToken = (
 ): boolean => rnsSupportedTokens.some((t: string) => t === token)
 
 //  - Supported Token Address-to-token records
-export const rnsNftAddrTokenRecord: Record<string, Token> = allNftAddresses
+export const rnsNftAddrTokenRecord: Record<string, BaseToken> = allNftAddresses
   .reduce((acc, addr) => {
     const symbol = addressTokenRecord[addr]
 

@@ -6,7 +6,7 @@ import LabelWithValue from 'components/atoms/LabelWithValue'
 import { colors } from '@rsksmart/rif-ui'
 import { MarketCryptoRecord } from 'models/Market'
 import Big from 'big.js'
-import { Token } from 'models/Token'
+import { BaseToken } from 'models/Token'
 
 export interface CryptoPriceConverterProps {
   cryptoXRs: MarketCryptoRecord
@@ -14,7 +14,7 @@ export interface CryptoPriceConverterProps {
   fiatDisplayName: string
   price?: string
   onPriceChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  currency: Token
+  currency: BaseToken
   onCurrencyChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 

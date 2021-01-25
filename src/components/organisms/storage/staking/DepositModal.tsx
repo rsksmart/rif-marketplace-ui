@@ -12,14 +12,14 @@ import React, {
 import Big from 'big.js'
 import { getBalance } from 'contracts/utils/accountBalance'
 import { convertToWeiString } from 'utils/parsers'
-import { SupportedTokens, SYSTEM_SUPPORTED_TOKENS } from 'models/Token'
+import { SupportedTokenSymbol, SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'
 import StakedBalances from './StakedBalances'
 
 export interface DepositModalProps {
   totalStakedUSD: string
   open: boolean
   onClose: () => void
-  onDeposit: (amount: number, currency: SupportedTokens) => void
+  onDeposit: (amount: number, currency: SupportedTokenSymbol) => void
   stakes: StakedBalancesProp
 }
 
@@ -33,8 +33,8 @@ const DepositModal: FC<DepositModalProps> = ({
   totalStakedUSD, open, onClose, onDeposit, stakes,
 }) => {
   const classes = useStyles()
-  const currencyOptions: SupportedTokens[] = [SYSTEM_SUPPORTED_TOKENS.rbtc, SYSTEM_SUPPORTED_TOKENS.rif]
-  const [selectedToken, setSelectedToken] = useState<SupportedTokens>(SYSTEM_SUPPORTED_TOKENS.rbtc)
+  const currencyOptions: SupportedTokenSymbol[] = [SYSTEM_SUPPORTED_SYMBOL.rbtc, SYSTEM_SUPPORTED_SYMBOL.rif]
+  const [selectedToken, setSelectedToken] = useState<SupportedTokenSymbol>(SYSTEM_SUPPORTED_SYMBOL.rbtc)
   const [amountToStake, setAmountToStake] = useState<number | undefined>(undefined)
   const [accountWeiBalance, setAccountWeiBalance] = useState(Big(0))
 
@@ -62,7 +62,7 @@ const DepositModal: FC<DepositModalProps> = ({
   const handleCurrencyChange = ({
     target: { value },
   }: React.ChangeEvent<{ name?: string, value: unknown }>): void => {
-    setSelectedToken(value as SupportedTokens)
+    setSelectedToken(value as SupportedTokenSymbol)
   }
 
   const handleAmountChange = ({

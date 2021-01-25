@@ -1,6 +1,6 @@
 import networkConfig from 'config'
 import { ZERO_ADDRESS } from 'constants/strings'
-import { SupportedTokens } from 'models/Token'
+import { SupportedTokenSymbol } from 'models/Token'
 
 const {
   contractAddresses,
@@ -21,8 +21,8 @@ const rnsAddress = rnsDotRskOwner.toLowerCase()
 const storageAddress = storageManager.toLowerCase()
 const stakingAddress = storageStaking.toLowerCase()
 
-const rnsSupportedTokens: SupportedTokens[] = services.rns.tokens
-const storageSupportedTokens: SupportedTokens[] = services.storage.tokens
+const rnsSupportedTokens: SupportedTokenSymbol[] = services.rns.tokens
+const storageSupportedTokens: SupportedTokenSymbol[] = services.storage.tokens
 
 const svcNames = Object.keys(services)
 const allAllowedPaymentTokens: string[] = Array.from(

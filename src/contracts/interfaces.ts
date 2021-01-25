@@ -2,7 +2,7 @@ import { TransactionReceipt } from 'web3-eth'
 import Web3 from 'web3'
 
 import {
-  SupportedTokens, SYSTEM_SUPPORTED_TOKENS, SYSTEM_TOKENS, Token, TokenRecord,
+  SupportedTokenSymbol, SYSTEM_SUPPORTED_SYMBOL, SYSTEM_TOKENS, BaseToken, TokenRecord,
 } from 'models/Token'
 import { RifERC20Contract } from './tokens/rif'
 import { MarketplaceContractErrorId } from './rns/Marketplace'
@@ -45,23 +45,23 @@ export type TokenTypes = TOKEN_TYPES.NATIVE | TOKEN_TYPES.ERC20
 
 export type SingletonContract = { getInstance(web3: Web3): any }
 
-export type NFT = Token & {
+export type SupportedToken = BaseToken & {
   type: TokenTypes
   tokenContract: SingletonContract
 }
 
 export type TxOptions = TransactionOptions & {
   gasMultiplier?: number
-  token?: SupportedTokens
+  token?: SupportedTokenSymbol
   onApprove?: (receipt: TransactionReceipt) => void
 }
 
-export const NFT_RECORDS: TokenRecord<NFT> = {
-  [SYSTEM_SUPPORTED_TOKENS.rbtc]: {
+export const NFT_RECORDS: TokenRecord<SupportedToken> = {
+  [SYSTEM_SUPPORTED_SYMBOL.rbtc]: {
     ...SYSTEM_TOKENS.rbtc,
     type: TOKEN_TYPES.NATIVE,
-  } as NFT,
-  [SYSTEM_SUPPORTED_TOKENS.rif]: {
+  } as SupportedToken,
+  [SYSTEM_SUPPORTED_SYMBOL.rif]: {
     ...SYSTEM_TOKENS.rif,
     type: TOKEN_TYPES.ERC20,
     tokenContract: RifERC20Contract,

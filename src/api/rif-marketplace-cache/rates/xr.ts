@@ -1,6 +1,6 @@
 import { Paginated } from '@feathersjs/feathers'
 import { AbstractAPIService, APIService, isResultPaginated } from 'api/models/apiService'
-import { SupportedTokens } from 'models/Token'
+import { SupportedTokenSymbol } from 'models/Token'
 import { getNFTokenByName } from 'utils/tokenUtils'
 import { Modify } from 'utils/typeUtils'
 import client from '../client'
@@ -13,7 +13,7 @@ export type SupportedFiat = 'usd' | 'eur' | 'btc' | 'ars' | 'cny' | 'krw' | 'jpy
 export type XRItem = Partial<{
   [F in SupportedFiat]: number
 }> & {
-  token: SupportedTokens
+  token: SupportedTokenSymbol
 }
 
 export interface XRFilter {

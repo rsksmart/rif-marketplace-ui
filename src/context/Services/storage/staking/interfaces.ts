@@ -1,10 +1,10 @@
 import { StakedBalances } from 'api/rif-marketplace-cache/storage/stakes'
 import { Dispatch } from 'react'
-import { SupportedTokens } from 'models/Token'
+import { SupportedTokenSymbol } from 'models/Token'
 
 export type AmountToken = {
   amount: string
-  token: SupportedTokens
+  token: SupportedTokenSymbol
 }
 
 export type State = {

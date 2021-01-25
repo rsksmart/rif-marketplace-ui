@@ -5,7 +5,7 @@ import { TransactionReceipt } from 'web3-eth'
 
 import { Marketplace as MarketplaceContract } from 'contracts/rns'
 import { Contract } from 'web3-eth-contract'
-import { SupportedTokens } from 'models/Token'
+import { SupportedTokenSymbol } from 'models/Token'
 import { RifERC677Contract } from 'contracts/tokens/rif'
 import { UIError } from 'models/UIMessage'
 import { parseToBigDecimal } from 'utils/parsers'
@@ -26,17 +26,17 @@ const throwUnsupportedError = (paymentTokenSymbol: string): false => {
 }
 
 class RNSContract extends ContractBase {
-  private _paymentTokenSymbol!: SupportedTokens
+  private _paymentTokenSymbol!: SupportedTokenSymbol
 
   private _marketPlaceContract!: MarketplaceContract
 
-  constructor(web3: Web3, contact: Contract, paymentTokenSymbol: SupportedTokens, name?: string) {
+  constructor(web3: Web3, contact: Contract, paymentTokenSymbol: SupportedTokenSymbol, name?: string) {
     super(web3, contact, name)
     this._paymentTokenSymbol = paymentTokenSymbol
     this._marketPlaceContract = MarketplaceContract.getInstance(web3)
   }
 
-  public static getInstance(web3: Web3, paymentTokenSymbol: SupportedTokens): RNSContract {
+  public static getInstance(web3: Web3, paymentTokenSymbol: SupportedTokenSymbol): RNSContract {
     if (!RNSContract.instance) {
       RNSContract.instance = new RNSContract(
         web3,

@@ -18,7 +18,7 @@ import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import Web3 from 'web3'
 import { TxOptions } from 'contracts/interfaces'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
-import { SupportedTokens, SYSTEM_SUPPORTED_TOKENS, SYSTEM_TOKENS } from 'models/Token'
+import { SupportedTokenSymbol, SYSTEM_SUPPORTED_SYMBOL, SYSTEM_TOKENS } from 'models/Token'
 import { getTokensFromConfigTokens } from 'utils/tokenUtils'
 import { reducer } from './actions'
 import {
@@ -120,7 +120,7 @@ const Provider: FC = ({ children }) => {
         system,
         location,
       } = listedItem
-      const currencies: SupportedTokens[] = Array.from(
+      const currencies: SupportedTokenSymbol[] = Array.from(
         new Set(subscriptionOptions.map(
           (option: BillingPlan) => option.currency.symbol,
         )),
@@ -166,7 +166,7 @@ const Provider: FC = ({ children }) => {
         }
         const txOptions: TxOptions = {
           from: account,
-          token: SYSTEM_SUPPORTED_TOKENS[token.symbol],
+          token: SYSTEM_SUPPORTED_SYMBOL[token.symbol],
         }
 
         const storageContract = (await import('contracts/storage')).default

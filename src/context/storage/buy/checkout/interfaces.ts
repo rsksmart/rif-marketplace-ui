@@ -2,11 +2,11 @@ import { Big } from 'big.js'
 import { BillingPlan, StorageOffer, PeriodInSeconds } from 'models/marketItems/StorageItem'
 import { Dispatch } from 'react'
 import { Status } from 'components/templates/ProgressOverlay'
-import { Token } from 'models/Token'
+import { BaseToken } from 'models/Token'
 
 // STATE
 export type AuxiliaryState = {
-  currencyOptions: Token[]
+  currencyOptions: BaseToken[]
   currentRate: number
   endDate: string
   periodsCount: number
@@ -18,7 +18,7 @@ export type AuxiliaryState = {
 
 export type Order = Pick<StorageOffer, 'id' | 'system' | 'location'> & {
   billingPeriod: PeriodInSeconds
-  token: Token
+  token: BaseToken
   total: Big
 }
 
