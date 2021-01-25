@@ -19,7 +19,7 @@ const NotificationsPopover: FC<Props> = ({
     if (!notifications.length) {
       return (
         <Typography variant="caption">
-          No notifications yet
+          No new notifications
         </Typography>
       )
     }
