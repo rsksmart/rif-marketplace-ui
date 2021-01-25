@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { FC, useContext } from 'react'
 import RnsDomainsContext from 'context/Services/rns/DomainsContext'
 import { DomainsSaleStatus } from 'api/models/RnsFilter'
 import RadioFilter from './RadioFilter'
@@ -9,7 +9,7 @@ type StatusFilter = {
   label: string
 }
 
-const DomainFilters = () => {
+const DomainFilters: FC = () => {
   const {
     state: {
       filters: {
@@ -35,7 +35,7 @@ const DomainFilters = () => {
     },
   ]
 
-  const handleOnRadioChange = (_: any, value: string) => {
+  const handleOnRadioChange = (_, value: string): void => {
     dispatch({
       type: 'FILTER',
       payload: {
@@ -48,7 +48,7 @@ const DomainFilters = () => {
     <>
       <SearchFilter
         value={name}
-        onChange={(evt) => {
+        onChange={(evt): void => {
           const { currentTarget } = evt
           const value = currentTarget.value.trim()
           dispatch({

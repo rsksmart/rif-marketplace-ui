@@ -1,16 +1,16 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { Accordion } from '@rsksmart/rif-ui'
-import {
-  FormControlLabelProps, RadioGroup, RadioGroupProps, FormControlLabel, Radio,
-} from '@material-ui/core'
+import RadioGroup, { RadioGroupProps } from '@material-ui/core/RadioGroup'
+import FormControlLabel, { FormControlLabelProps } from '@material-ui/core/FormControlLabel'
+import Radio from '@material-ui/core/Radio'
 
-export interface RadioFilterProps extends RadioGroupProps {
+export type RadioFilterProps = RadioGroupProps & {
   className?: string
   title: string
   items: Omit<FormControlLabelProps, 'control'>[]
 }
 
-const RadioFilter = ({
+const RadioFilter: FC<RadioFilterProps> = ({
   className = '', title, items, ...rest
 }: RadioFilterProps) => (
   <Accordion
