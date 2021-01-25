@@ -1,10 +1,10 @@
 import { Item } from 'models/Market'
 import Big from 'big.js'
-import { Token } from 'models/Token'
+import { BaseToken } from 'models/Token'
 
 export interface RnsDomainOffer extends Item {
     tokenId: string
-    paymentToken: Token
+    paymentToken: BaseToken
     domainName: string
     expirationDate: Date
     price: Big
@@ -21,7 +21,7 @@ export interface RnsDomain extends Item {
 
 export interface RnsSoldDomain extends Item {
     tokenId: string
-    paymentToken: Token
+    paymentToken: BaseToken
     price: Big
     soldDate: Date
     domainName: string

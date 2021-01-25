@@ -12,7 +12,7 @@ import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
 import Big from 'big.js'
 import CustomError from 'models/CustomError'
 import { validateBalance } from 'contracts/utils/accountBalance'
-import { SYSTEM_SUPPORTED_TOKENS } from 'models/Token'
+import { SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'
 
 export type StorageStakingContractErrorId = 'contract-storage-staking'
 
@@ -89,7 +89,7 @@ class StakingContract extends ContractWithTokens {
       {
         gasMultiplier: StakingContract.gasMultiplier,
         ...txOptions,
-        token: SYSTEM_SUPPORTED_TOKENS.rbtc, // Can be used only with native token
+        token: SYSTEM_SUPPORTED_SYMBOL.rbtc, // Can be used only with native token
       },
     )
   }

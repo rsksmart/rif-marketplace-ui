@@ -29,7 +29,7 @@ import { LoadingPayload } from 'context/App/appActions'
 import { marketPlaceAddress } from 'contracts/config'
 import { shortChecksumAddress } from 'utils/stringUtils'
 import { getNFTokenByName } from 'utils/tokenUtils'
-import { SupportedTokens, Token } from 'models/Token'
+import { SupportedTokenSymbol, BaseToken } from 'models/Token'
 
 const logger = Logger.getInstance()
 
@@ -152,7 +152,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
           id: 'contract',
         },
       })
-      const currencySymbol = currencySymbols[Number(currency)] as SupportedTokens
+      const currencySymbol = currencySymbols[Number(currency)] as SupportedTokenSymbol
       const rnsContract = RNSContract.getInstance(web3, currencySymbol)
       const marketPlaceContract = MarketplaceContract.getInstance(web3)
       try {
@@ -197,7 +197,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
           } as LoadingPayload,
         } as any)
 
-        const { tokenAddress }: Token = getNFTokenByName(currencySymbol)
+        const { tokenAddress }: BaseToken = getNFTokenByName(currencySymbol)
 
         // Send Placement transaction
         const placeReceipt = await marketPlaceContract.place(
