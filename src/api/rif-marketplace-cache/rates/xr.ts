@@ -1,7 +1,7 @@
 import { Paginated } from '@feathersjs/feathers'
 import { AbstractAPIService, APIService, isResultPaginated } from 'api/models/apiService'
 import { SupportedTokenSymbol } from 'models/Token'
-import { getNFTokenByName } from 'utils/tokenUtils'
+import { getSupportedTokenByName } from 'utils/tokenUtils'
 import { Modify } from 'utils/typeUtils'
 import client from '../client'
 
@@ -42,6 +42,6 @@ export class XRService extends AbstractAPIService implements XRAPIService {
       ? results : { data: results }
     this.meta = metadata
 
-    return data.filter((item) => getNFTokenByName(item.token))
+    return data.filter((item) => getSupportedTokenByName(item.token))
   }
 }

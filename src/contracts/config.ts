@@ -29,7 +29,7 @@ const allAllowedPaymentTokens: string[] = Array.from(
   new Set(svcNames.flatMap((s) => services[s].tokens)),
 )
 
-const allNftAddresses: string[] = Object.keys(tokenAddresses)
+const allTokenAddresses: string[] = Object.keys(tokenAddresses)
   .filter((scName) => allAllowedPaymentTokens.includes(scName))
   .map((scName) => tokenAddresses[scName].toLowerCase())
 
@@ -48,7 +48,7 @@ export {
   storageAddress,
   stakingAddress,
   allAllowedPaymentTokens,
-  allNftAddresses,
+  allTokenAddresses,
   addressTokenRecord,
   rnsSupportedTokens,
   storageSupportedTokens,

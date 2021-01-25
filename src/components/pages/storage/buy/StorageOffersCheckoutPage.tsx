@@ -83,7 +83,7 @@ const StorageOffersCheckoutPage: FC = () => {
 
   const {
     id,
-    token: { symbol: token },
+    token: { symbol: tokenSymbol },
     total,
   } = order
 
@@ -152,7 +152,7 @@ const StorageOffersCheckoutPage: FC = () => {
     />,
     'TOTAL PRICE': total && totalFiat ? (
       <CombinedPriceCell
-        currency={token || ''}
+        currency={tokenSymbol || ''}
         currencyFiat={fiatName}
         price={total.toFixed(18)}
         priceFiat={totalFiat}

@@ -5,7 +5,7 @@ import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import GridItem from 'components/atoms/GridItem'
-import { getNFTokenByName } from 'utils/tokenUtils'
+import { getSupportedTokenByName } from 'utils/tokenUtils'
 import { SupportedTokenSymbol } from 'models/Token'
 
 export type AmountWithCurrencySelectProps = {
@@ -69,7 +69,7 @@ const AmountWithCurrencySelect: FC<AmountWithCurrencySelectProps> = (props) => {
           {currencyOptions.map(
             (option: SupportedTokenSymbol) => (
               <MenuItem key={option as string} value={option}>
-                {getNFTokenByName(option).displayName}
+                {getSupportedTokenByName(option).displayName}
               </MenuItem>
             ),
           )}

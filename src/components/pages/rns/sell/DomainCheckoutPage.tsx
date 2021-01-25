@@ -28,7 +28,7 @@ import { UIError } from 'models/UIMessage'
 import { LoadingPayload } from 'context/App/appActions'
 import { marketPlaceAddress } from 'contracts/config'
 import { shortChecksumAddress } from 'utils/stringUtils'
-import { getNFTokenByName } from 'utils/tokenUtils'
+import { getSupportedTokenByName } from 'utils/tokenUtils'
 import { SupportedTokenSymbol, BaseToken } from 'models/Token'
 
 const logger = Logger.getInstance()
@@ -197,7 +197,7 @@ const DomainsCheckoutPage: FC<{}> = () => {
           } as LoadingPayload,
         } as any)
 
-        const { tokenAddress }: BaseToken = getNFTokenByName(currencySymbol)
+        const { tokenAddress }: BaseToken = getSupportedTokenByName(currencySymbol)
 
         // Send Placement transaction
         const placeReceipt = await marketPlaceContract.place(

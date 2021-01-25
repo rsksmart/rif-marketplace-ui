@@ -10,8 +10,8 @@ import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import Staking from 'components/organisms/storage/staking/Staking'
 import InfoBar from 'components/molecules/InfoBar'
 import useConfirmations from 'hooks/useConfirmations'
-import NoMultipleOffersCard from '../../../organisms/storage/sell/NoMultipleOffersCard'
-import OfferCreation from '../../../organisms/storage/sell/OfferCreation'
+import NoMultipleOffersCard from 'components/organisms/storage/sell/NoMultipleOffersCard'
+import OfferCreation from 'components/organisms/storage/sell/OfferCreation'
 
 const PageWrapper: FC = () => {
   const {
