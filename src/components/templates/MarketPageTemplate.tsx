@@ -6,10 +6,9 @@ import MarketFilter from 'components/templates/marketplace/MarketFilter'
 import React, {
   Dispatch, FC, useContext, useEffect,
 } from 'react'
-import AppContext from 'context/App/AppContext'
+import AppContext, { AppContextProps } from 'context/App/AppContext'
 import { MessagePayload } from 'context/App/appActions'
 import Marketplace, { MarketplaceProps } from './marketplace/Marketplace'
-import { AppContextProps } from '../../context/App/AppContext'
 
 export interface MarketPageTemplateProps extends MarketplaceProps {
   className?: string

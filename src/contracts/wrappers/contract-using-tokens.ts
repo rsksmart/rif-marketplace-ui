@@ -40,7 +40,7 @@ export class ContractWithTokens extends ContractBase {
   }
 
   private _isCurrencySupported(currency: SupportedTokenSymbol): boolean {
-    return this.supportedTokens.some(({ symbol: token }) => currency === token)
+    return this.supportedTokens.some(({ symbol }) => currency === symbol)
   }
 
   private _approveTokenTransfer(
@@ -62,7 +62,7 @@ export class ContractWithTokens extends ContractBase {
 
   public getToken(tokenName?: SupportedTokenSymbol): SupportedToken {
     const tokenObject = this.supportedTokens.find(
-      ({ symbol: token }) => token === (tokenName || this.defaultToken),
+      ({ symbol }) => symbol === (tokenName || this.defaultToken),
     )
 
     if (!tokenObject) {

@@ -11,7 +11,7 @@ import { PeriodInSeconds, SubscriptionPeriod } from 'models/marketItems/StorageI
 import React, { FC, useContext, useState } from 'react'
 import { StorageBillingPlan, OfferEditContextProps } from 'context/Market/storage/interfaces'
 import { SYSTEM_TOKENS, BaseToken, SupportedTokenSymbol } from 'models/Token'
-import { getNFTokenByName } from 'utils/tokenUtils'
+import { getSupportedTokenByName } from 'utils/tokenUtils'
 
 export interface EditableBillingPlanProps {
   onPlanAdded?: (billingPlan: StorageBillingPlan) => void
@@ -46,7 +46,7 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
   ): void => setPricePerGb(value)
   const onCurrencyChange = (
     { target: { value: symbol } },
-  ): void => setCurrency(getNFTokenByName(symbol as SupportedTokenSymbol))
+  ): void => setCurrency(getSupportedTokenByName(symbol as SupportedTokenSymbol))
   const onSelectedPeriodChange = (
     { target: { value } },
   ): void => setPeriod(value)

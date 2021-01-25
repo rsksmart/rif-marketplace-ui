@@ -56,7 +56,7 @@ export type TxOptions = TransactionOptions & {
   onApprove?: (receipt: TransactionReceipt) => void
 }
 
-export const NFT_RECORDS: TokenRecord<SupportedToken> = {
+export const SUPPORTED_TOKEN_RECORDS: TokenRecord<SupportedToken> = {
   [SYSTEM_SUPPORTED_SYMBOL.rbtc]: {
     ...SYSTEM_TOKENS.rbtc,
     type: TOKEN_TYPES.NATIVE,

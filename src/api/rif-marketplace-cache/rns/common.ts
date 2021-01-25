@@ -1,6 +1,6 @@
 import { APIService } from 'api/models/apiService'
 import { RnsFilter } from 'api/models/RnsFilter'
-import { rnsSupportedTokens, addressTokenRecord, allNftAddresses } from 'contracts/config'
+import { rnsSupportedTokens, addressTokenRecord, allTokenAddresses } from 'contracts/config'
 import {
   RnsDomain,
   RnsDomainOffer,
@@ -29,7 +29,7 @@ export const isSupportedRNSToken = (
 ): boolean => rnsSupportedTokens.some((t: string) => t === token)
 
 //  - Supported Token Address-to-token records
-export const rnsNftAddrTokenRecord: Record<string, BaseToken> = allNftAddresses
+export const rnsTokenAddrTokenRecord: Record<string, BaseToken> = allTokenAddresses
   .reduce((acc, addr) => {
     const symbol = addressTokenRecord[addr]
 

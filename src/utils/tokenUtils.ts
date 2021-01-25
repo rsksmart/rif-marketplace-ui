@@ -1,10 +1,10 @@
 import { addressTokenRecord } from 'contracts/config'
-import { SupportedToken, NFT_RECORDS } from 'contracts/interfaces'
+import { SupportedToken, SUPPORTED_TOKEN_RECORDS } from 'contracts/interfaces'
 import { SupportedTokenSymbol, BaseToken } from 'models/Token'
 import { SYSTEM_TOKENS } from '../models/Token'
 
-export const getNFTokenByName = (tokenName: SupportedTokenSymbol): SupportedToken => {
-  const tokenObject: SupportedToken = NFT_RECORDS[tokenName]
+export const getSupportedTokenByName = (tokenName: SupportedTokenSymbol): SupportedToken => {
+  const tokenObject: SupportedToken = SUPPORTED_TOKEN_RECORDS[tokenName]
 
   if (!tokenObject) {
     throw new Error(`Could not find Contract for given token "${tokenName}".`)
@@ -14,11 +14,11 @@ export const getNFTokenByName = (tokenName: SupportedTokenSymbol): SupportedToke
 
 export const getTokensFromConfigTokens = (
   configTokenNames: SupportedTokenSymbol[],
-): SupportedToken[] => configTokenNames.map(getNFTokenByName)
+): SupportedToken[] => configTokenNames.map(getSupportedTokenByName)
 
 export const getTokenByString = (
   paymentToken: string,
-): SupportedToken => getNFTokenByName(paymentToken.toLowerCase() as SupportedTokenSymbol)
+): SupportedToken => getSupportedTokenByName(paymentToken.toLowerCase() as SupportedTokenSymbol)
 
 export const getTokenByAddress = (tokenAddress: string): BaseToken => {
   const symbol = addressTokenRecord[
@@ -28,7 +28,7 @@ export const getTokenByAddress = (tokenAddress: string): BaseToken => {
   if (!symbol) {
     throw new Error(`Token address "${tokenAddress}" is not found in supported tokens in the system.`)
   }
-  return getNFTokenByName(symbol)
+  return getSupportedTokenByName(symbol)
 }
 
 export const getSysTokenByName = (

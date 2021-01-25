@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import Typography from '@material-ui/core/Typography'
 import Icon, { Icons } from 'components/atoms/Icon'
-import SideImageTemplate from '../../templates/SideImageTemplate'
+import SideImageTemplate from 'components/templates/SideImageTemplate'
 
 const StorageLandingPage: FC = () => {
   const storageIcon = (<Icon src={Icons.STORAGE} />)
