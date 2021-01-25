@@ -26,7 +26,7 @@ const storageSupportedTokens: SupportedTokenSymbol[] = services.storage.tokens
 
 const svcNames = Object.keys(services)
 const allAllowedPaymentTokens: string[] = Array.from(
-  new Set(svcNames.flatMap((s) => services[s].tokens)),
+  new Set(svcNames.reduce((acc, name) => acc.concat(services[name].tokens), [])),
 )
 
 const allTokenAddresses: string[] = Object.keys(tokenAddresses)
