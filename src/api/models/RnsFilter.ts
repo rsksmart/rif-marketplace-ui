@@ -5,7 +5,7 @@ export type DomainsSaleStatus = 'owned' | 'placed' | 'sold'
 export interface RnsFilter {
     price: MinMaxFilter
     name?: string
-    status?: DomainsSaleStatus
+    status: DomainsSaleStatus
     ownerAddress?: string
     expirationDate?: Date
 }

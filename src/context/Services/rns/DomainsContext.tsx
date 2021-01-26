@@ -3,11 +3,10 @@ import { RnsFilter } from 'api/models/RnsFilter'
 import { DomainsService } from 'api/rif-marketplace-cache/rns/domains'
 import { RnsDomain } from 'models/marketItems/DomainItem'
 import React, {
-  useContext, useEffect, useReducer, useState,
+  useContext, useEffect, useReducer, useState, FC, createContext,
 } from 'react'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
-import { ContextActions, ContextReducer } from 'context/storeUtils/interfaces'
-import storeReducerFactory from 'context/storeUtils/reducer'
+import { createReducer } from 'context/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
 import { ErrorMessagePayload, LoadingPayload } from 'context/App/appActions'
 import { ServiceMetadata } from 'api/models/apiService'
@@ -15,7 +14,7 @@ import {
   RnsListing, RnsOrder, RnsState, RnsContextProps,
 } from './interfaces'
 import {
-  rnsActions, RnsReducer, RnsPayload, RefreshPayload,
+  rnsActions, RefreshPayload,
 } from './rnsActions'
 import outdateTokenId from './utils'
 
@@ -47,10 +46,14 @@ export const initialState: DomainsState = {
   pagination: {},
 }
 
-const RnsDomainsContext = React.createContext({} as RnsDomainsContextProps | any)
-const domainsReducer: RnsReducer<RnsPayload> | ContextReducer = storeReducerFactory(initialState, rnsActions as unknown as ContextActions)
+const RnsDomainsContext = createContext<RnsDomainsContextProps>({
+  state: initialState,
+  dispatch: () => undefined,
+})
 
-export const RnsDomainsContextProvider = ({ children }) => {
+const rnsReducer = createReducer(initialState, rnsActions)
+
+export const RnsDomainsContextProvider: FC = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)
 
   const {
@@ -59,14 +62,14 @@ export const RnsDomainsContextProvider = ({ children }) => {
   } = useContext<AppContextProps>(AppContext)
   const api = appState?.apis?.['rns/v0/domains'] as DomainsService
 
-  const [state, dispatch] = useReducer(domainsReducer, initialState)
+  const [state, dispatch] = useReducer(rnsReducer, initialState)
   const { filters, needsRefresh } = state as DomainsState
   const { state: { account } } = useContext(Web3Store)
 
   // Initialise
   useEffect(() => {
     if (api && !isInitialised && account) {
-      const initialise = async () => {
+      const initialise = async (): Promise<void> => {
         const {
           attachEvent,
           authenticate,
@@ -98,7 +101,7 @@ export const RnsDomainsContextProvider = ({ children }) => {
     dispatch({
       type: 'REFRESH',
       payload: { refresh: true },
-    } as any)
+    })
   }, [filters])
 
   // fetch if needs refresh and is initialised
@@ -160,7 +163,11 @@ export const RnsDomainsContextProvider = ({ children }) => {
   }, [meta])
 
   const value = { state, dispatch }
-  return <RnsDomainsContext.Provider value={value}>{children}</RnsDomainsContext.Provider>
+  return (
+    <RnsDomainsContext.Provider value={value}>
+      {children}
+    </RnsDomainsContext.Provider>
+  )
 }
 
 export default RnsDomainsContext
