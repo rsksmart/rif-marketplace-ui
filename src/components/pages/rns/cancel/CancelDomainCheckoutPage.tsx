@@ -1,19 +1,30 @@
 import {
-  Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody, TableCell, TableRow, Theme,
-} from '@material-ui/core'
+  makeStyles, Theme,
+} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import {
   Button, colors, shortenString, Web3Store,
   ShortenTextTooltip,
 } from '@rsksmart/rif-ui'
+import Card from '@material-ui/core/Card'
+import CardActions from '@material-ui/core/CardActions'
+import CardContent from '@material-ui/core/CardContent'
+import CardHeader from '@material-ui/core/CardHeader'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableRow from '@material-ui/core/TableRow'
 import Box from '@material-ui/core/Box'
 import RifAddress from 'components/molecules/RifAddress'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
-import TransactionInProgressPanel from 'components/organisms/TransactionInProgressPanel'
+import TransactionInProgressPanel from
+  'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
-import { Marketplace as MarketplaceContract, Rns as RNSContract } from 'contracts/rns'
+import {
+  Marketplace as MarketplaceContract, Rns as RNSContract,
+} from 'contracts/rns'
 import React, {
-  useContext, useEffect, useState, useCallback,
+  useContext, useEffect, useState, useCallback, FC,
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
@@ -22,14 +33,17 @@ import BlockchainContext from 'context/Blockchain/BlockchainContext'
 import MarketContext from 'context/Market/MarketContext'
 import RnsDomainsContext from 'context/Services/rns/DomainsContext'
 import Logger from 'utils/Logger'
-import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
+import AppContext, {
+  AppContextProps, errorReporterFactory,
+} from 'context/App/AppContext'
 import { UIError } from 'models/UIMessage'
 import { LoadingPayload } from 'context/App/appActions'
 import { shortChecksumAddress } from 'utils/stringUtils'
+import Big from 'big.js'
 
 const logger = Logger.getInstance()
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   card: {
     width: 491,
     height: 'fit-content',
@@ -71,7 +85,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }))
 
-const CancelDomainCheckoutPage = () => {
+const CancelDomainCheckoutPage: FC = () => {
   const history = useHistory()
   const {
     state: {
@@ -97,20 +111,23 @@ const CancelDomainCheckoutPage = () => {
   const [isPendingConfirm, setIsPendingConfirm] = useState(false)
 
   const { dispatch: appDispatch } = useContext<AppContextProps>(AppContext)
-  const reportError = useCallback((e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch])
+  const reportError = useCallback(
+    (e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch],
+  )
 
   useEffect(() => {
     if (isPendingConfirm && order && !order.isProcessing) {
       // Post-confirmations handle
-      const { item: { domainName } } = order
-      history.replace(ROUTES.RNS.SELL.CANCEL.DONE, { domainName })
+      const { item: { name } } = order
+      history.replace(ROUTES.RNS.SELL.CANCEL.DONE, { name })
       dispatch({
         type: 'CLEAR_ORDER',
-      } as never)
+        payload: {},
+      })
     }
   }, [order, isPendingConfirm, history, dispatch])
 
-  if (!order) {
+  if (!order?.item.offer) {
     history.replace(ROUTES.LANDING)
     return null
   }
@@ -125,16 +142,15 @@ const CancelDomainCheckoutPage = () => {
     isProcessing,
   } = order
 
-  const currency = crypto[offer.paymentToken]
+  const currency = crypto[offer.paymentToken.symbol]
 
   const priceCellProps = {
-    price: offer.price,
-    priceFiat: (currency.rate * offer.price).toString(),
+    price: offer.price.toString(),
+    priceFiat: (Big(currency.rate).mul(offer.price)).toString(),
     currency: currency.displayName,
     currencyFiat: currentFiat.displayName,
     divider: ' ',
   }
-  const PriceCell = <CombinedPriceCell {...priceCellProps} />
 
   const displayName = name
     ? <ShortenTextTooltip value={name} maxLength={30} />
@@ -143,10 +159,10 @@ const CancelDomainCheckoutPage = () => {
   const details = {
     NAME: displayName,
     'RENEWAL DATE': expirationDate.toLocaleDateString(),
-    PRICE: PriceCell,
+    PRICE: <CombinedPriceCell {...priceCellProps} />,
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     if (web3 && account) {
       dispatch({
         type: 'SET_PROGRESS',
@@ -162,7 +178,7 @@ const CancelDomainCheckoutPage = () => {
           id: 'contract',
           message: 'Executing cancel...',
         } as LoadingPayload,
-      } as any)
+      })
 
       try {
         const rnsContract = RNSContract.getInstance(web3, currency.symbol)
@@ -179,25 +195,27 @@ const CancelDomainCheckoutPage = () => {
           })
 
         // Send unapproval transaction
-        const unapproveReceipt = await rnsContract.unapprove(tokenId, { from: account, gasPrice })
-          .catch((error) => {
-            throw new UIError({
-              error,
-              id: 'contract-rns-unapprove',
-              text: `Could not unapprove domain ${name}.`,
-            })
+        const unapproveReceipt = await rnsContract.unapprove(
+          tokenId, { from: account, gasPrice },
+        ).catch((error) => {
+          throw new UIError({
+            error,
+            id: 'contract-rns-unapprove',
+            text: `Could not unapprove domain ${name}.`,
           })
+        })
         logger.info('unapproveReceipt:', unapproveReceipt)
 
         // Send Unplacement transaction
-        const unplaceReceipt = await marketPlaceContract.unplace(tokenId, { from: account, gasPrice })
-          .catch((error) => {
-            throw new UIError({
-              error,
-              id: 'contract-marketplace-unplace',
-              text: `Could not unplace domain ${name}.`,
-            })
+        const unplaceReceipt = await marketPlaceContract.unplace(
+          tokenId, { from: account, gasPrice },
+        ).catch((error) => {
+          throw new UIError({
+            error,
+            id: 'contract-marketplace-unplace',
+            text: `Could not unplace domain ${name}.`,
           })
+        })
         logger.info('unplaceReceipt:', unplaceReceipt)
 
         bcDispatch({
@@ -223,12 +241,12 @@ const CancelDomainCheckoutPage = () => {
             isLoading: false,
             id: 'contract',
           } as LoadingPayload,
-        } as any)
+        })
       }
     }
   }
 
-  const onProcessingComplete = () => {
+  const onProcessingComplete = (): void => {
     dispatch({
       type: 'SET_PROGRESS',
       payload: {
@@ -248,18 +266,27 @@ const CancelDomainCheckoutPage = () => {
         backTo: 'domains',
       }}
     >
-      <Card
-        className={classes.card}
-      >
-        <CardHeader titleTypographyProps={{ variant: 'h5', color: 'primary' }} title={`Canceling ${cancelingNameTitle}`} />
+      <Card className={classes.card}>
+        <CardHeader
+          titleTypographyProps={{ variant: 'h5', color: 'primary' }}
+          title={`Canceling ${cancelingNameTitle}`}
+        />
         <CardContent>
-          <Typography className={classes.contentTitle} variant="h6" color="secondary">Domain details</Typography>
+          <Typography
+            className={classes.contentTitle}
+            variant="h6"
+            color="secondary"
+          >
+            Domain details
+          </Typography>
           <Table className={classes.contentDetails}>
             <TableBody>
               {Object.keys(details).map((key) => (
                 <TableRow key={key}>
                   <TableCell className={classes.detailKey}>{key}</TableCell>
-                  <TableCell className={classes.detailValue}>{details[key]}</TableCell>
+                  <TableCell className={classes.detailValue}>
+                    {details[key]}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -269,10 +296,15 @@ const CancelDomainCheckoutPage = () => {
           && (
             <CardActions className={classes.footer}>
               <Typography>
-                Your wallet will open and you will be asked to confirm
-                <Box display="inline" fontWeight="fontWeightMedium" color={`${colors.primary}`}>two transactions</Box>
-                {' '}
-                to cancel the domain.
+                {'Your wallet will open and you will be asked to confirm '}
+                <Box
+                  display="inline"
+                  fontWeight="fontWeightMedium"
+                  color={`${colors.primary}`}
+                >
+                  two transactions
+                </Box>
+                {' to cancel the domain.'}
               </Typography>
               <Button
                 color="primary"
@@ -286,7 +318,15 @@ const CancelDomainCheckoutPage = () => {
             </CardActions>
           )}
       </Card>
-      {isProcessing && <TransactionInProgressPanel {...{ isPendingConfirm, onProcessingComplete }} text="Canceling the domain!" progMsg="The waiting period is required to securely cancel your domain listing. Please do not close this tab until the process has finished" />}
+      {
+        isProcessing && (
+          <TransactionInProgressPanel
+            {...{ isPendingConfirm, onProcessingComplete }}
+            text="Canceling the domain!"
+            progMsg="The waiting period is required to securely cancel your domain listing. Please do not close this tab until the process has finished"
+          />
+        )
+      }
     </CheckoutPageTemplate>
   )
 }

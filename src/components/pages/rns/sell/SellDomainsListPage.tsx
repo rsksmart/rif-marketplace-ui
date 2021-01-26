@@ -13,7 +13,7 @@ const SellDomainsListPage: FC<{}> = () => {
   const {
     state: {
       filters: {
-        status: statusFilter,
+        status,
       },
     },
   } = useContext(RnsDomainsContext)
@@ -24,7 +24,7 @@ const SellDomainsListPage: FC<{}> = () => {
     sold: <SoldDomains />,
   }
 
-  return <>{componentPerStatus[statusFilter]}</>
+  return <>{componentPerStatus[status]}</>
 }
 
 export default SellDomainsListPage
