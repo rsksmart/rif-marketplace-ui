@@ -3,17 +3,20 @@ import { RnsFilter, RnsSort, SORT_DIRECTION } from 'api/models/RnsFilter'
 import { OffersService } from 'api/rif-marketplace-cache/rns/offers'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import React, {
+  createContext,
+  FC,
   useContext, useEffect, useReducer, useState,
 } from 'react'
 import { ErrorMessagePayload, LoadingPayload } from 'context/App/appActions'
-import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
-import { ContextActions, ContextReducer } from 'context/storeUtils/interfaces'
-import storeReducerFactory from 'context/storeUtils/reducer'
+import AppContext, {
+  AppContextProps, errorReporterFactory,
+} from 'context/App/AppContext'
+import { createReducer } from 'context/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
 import {
   RnsListing, RnsOrder, RnsState, RnsContextProps,
 } from './interfaces'
-import { rnsActions, RnsReducer, RnsPayload } from './rnsActions'
+import { rnsActions } from './rnsActions'
 import outdateTokenId from './utils'
 
 export type ContextName = 'rns_offers'
@@ -59,21 +62,27 @@ export const initialState: OffersState = {
   },
 }
 
-const RnsOffersContext = React.createContext({} as RnsOffersContextProps | any)
-const offersReducer: RnsReducer<RnsPayload> | ContextReducer = storeReducerFactory(initialState, rnsActions as unknown as ContextActions)
+const RnsOffersContext = createContext<RnsOffersContextProps>({
+  state: initialState,
+  dispatch: () => undefined,
+})
 
-export const RnsOffersContextProvider = ({ children }) => {
+const offersReducer = createReducer(initialState, rnsActions)
+
+export const RnsOffersContextProvider: FC = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)
   const [isLimitsSet, setIsLimitsSet] = useState(false)
 
-  const { state: appState, dispatch: appDispatch }: AppContextProps = useContext(AppContext)
+  const {
+    state: appState,
+    dispatch: appDispatch,
+  }: AppContextProps = useContext(AppContext)
   const api = appState?.apis?.['rns/v0/offers'] as OffersService
 
   const [state, dispatch] = useReducer(offersReducer, initialState)
   const {
     filters,
     sort,
-    limits,
     needsRefresh,
     pagination: {
       page,
@@ -100,7 +109,7 @@ export const RnsOffersContextProvider = ({ children }) => {
         dispatch({
           type: 'REFRESH',
           payload: { refresh: true },
-        } as any)
+        })
       } catch (e) {
         setIsInitialised(false)
       }
@@ -179,7 +188,7 @@ export const RnsOffersContextProvider = ({ children }) => {
           dispatch({
             type: 'REFRESH',
             payload: { refresh: false },
-          } as any)
+          })
         })
         .finally(() => {
           appDispatch({
@@ -191,7 +200,7 @@ export const RnsOffersContextProvider = ({ children }) => {
           } as any)
         })
     }
-  }, [isInitialised, isLimitsSet, filters, sort, page, limits, api, appDispatch])
+  }, [isInitialised, isLimitsSet, filters, sort, page, api, appDispatch])
 
   const meta = api?.meta
 
@@ -205,7 +214,11 @@ export const RnsOffersContextProvider = ({ children }) => {
   }, [meta])
 
   const value = { state, dispatch }
-  return <RnsOffersContext.Provider value={value}>{children}</RnsOffersContext.Provider>
+  return (
+    <RnsOffersContext.Provider value={value}>
+      {children}
+    </RnsOffersContext.Provider>
+  )
 }
 
 export default RnsOffersContext
