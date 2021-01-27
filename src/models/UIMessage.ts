@@ -1,6 +1,6 @@
 import { Color } from '@material-ui/lab/Alert'
 import { APIErrorId } from 'api/models/apiService'
-import { MarketErrorId } from 'context/Market/MarketContext'
+import { MarketErrorId } from 'context/Market/interfaces'
 import { ContractErrorId } from 'contracts/interfaces'
 import { Modify } from 'utils/typeUtils'
 

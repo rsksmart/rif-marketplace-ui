@@ -1,12 +1,11 @@
 import { RnsContextNames } from 'context/Services/rns/interfaces'
 import { ContextName as BlockchainContextName } from 'context/Blockchain/BlockchainContext'
-import { ContextName as MarketContextName } from 'context/Market/MarketContext'
+import { ContextName as MarketContextName } from 'context/Market/interfaces'
 import { ContextName as AppContextName } from 'context/App/AppContext'
 import { ContextName as StorageEditOfferContextName } from 'context/Market/storage/OfferEditContext'
 import { ContextName as NotificationsContextName } from 'context/Services/notifications/interfaces'
 import { ContextName as StorageUploadContextName } from 'context/Services/storage/upload/Context'
 import { ContextName as ConfirmationsContextName } from 'context/Confirmations/Context'
-import { MARKET_ACTION } from 'context/Market/marketActions'
 import { APP_ACTION } from 'context/App/appActions'
 import { BLOCKCHAIN_ACTION } from 'context/Blockchain/blockchainActions'
 import { SERVICE_ACTION } from 'context/Services/interfaces'
@@ -32,7 +31,6 @@ export interface ContextPayload {
 export type ContextActionType =
   | APP_ACTION
   | BLOCKCHAIN_ACTION
-  | MARKET_ACTION
   | SERVICE_ACTION
   | OFFER_EDIT_ACTION
 

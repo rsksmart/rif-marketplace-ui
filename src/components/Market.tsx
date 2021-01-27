@@ -3,7 +3,7 @@ import {
   PageTemplate, Web3Provider, defaultWeb3State,
 } from '@rsksmart/rif-ui'
 import { BlockchainContextProvider } from 'context/Blockchain/BlockchainContext'
-import { MarketContextProvider } from 'context/Market/MarketContext'
+import { MarketContextProvider } from 'context/Market'
 import { NotificationsContextProvider } from 'context/Services/notifications'
 import React, { FC, useContext } from 'react'
 import { BrowserRouter } from 'react-router-dom'

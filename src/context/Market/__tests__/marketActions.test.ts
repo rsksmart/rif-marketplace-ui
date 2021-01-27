@@ -1,5 +1,7 @@
-import { ExchangeRatePayload, marketActions } from '../marketActions'
-import { initialState, MarketState } from '../MarketContext'
+import { MarketCryptoRecord } from 'models/Market'
+import actions from 'context/Market/actions'
+import { marketInitialState } from 'context/Market'
+import { State as MarketState } from 'context/Market/interfaces'
 
 describe('MarketActions', () => {
   describe('SET_EXCHANGE_RATE', () => {
@@ -9,10 +11,12 @@ describe('MarketActions', () => {
         displayName: 'FAKE_TOKEN',
         rate: 9.999,
       }
-      const payload: ExchangeRatePayload = {
+      const payload: MarketCryptoRecord = {
         [expectedKey]: expectedProperty,
       }
-      const { exchangeRates: { crypto } }: MarketState = marketActions.SET_EXCHANGE_RATE(initialState, payload)
+      const {
+        exchangeRates: { crypto },
+      }: MarketState = actions.SET_EXCHANGE_RATE(marketInitialState, payload)
 
       expect(crypto).toHaveProperty(expectedKey)
       expect(crypto[expectedKey]).toStrictEqual(expectedProperty)

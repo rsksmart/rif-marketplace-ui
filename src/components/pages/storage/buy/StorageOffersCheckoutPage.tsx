@@ -21,7 +21,7 @@ import StorageOrderDescription from 'components/organisms/storage/buy/StorageOff
 import StoragePurchaseCard, { StoragePurchaseCardDetails } from 'components/organisms/storage/buy/StoragePurchaseCard'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
-import MarketContext, { MarketContextProps } from 'context/Market/MarketContext'
+import MarketContext, { MarketContextProps } from 'context/Market'
 import withCheckoutContext, { ContextProps, initialState, StorageCheckoutContext } from 'context/storage/buy/checkout'
 import ROUTES from 'routes'
 import WithLoginCard from 'components/hoc/WithLoginCard'

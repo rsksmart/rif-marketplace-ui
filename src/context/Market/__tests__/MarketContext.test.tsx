@@ -1,8 +1,10 @@
 import { render, cleanup } from '@testing-library/react'
 
 import React, { FC, useContext } from 'react'
-import { MarketContextProps } from 'context/Market/MarketContext'
-import MarketContext, { MarketContextProvider } from '../MarketContext'
+import MarketContext, {
+  MarketContextProps, MarketContextProvider,
+} from 'context/Market'
+import { AppContextProvider } from 'context/App/AppContext'
 
 const expectedInitialCrypto = {}
 
@@ -19,9 +21,11 @@ describe('MarketContextProvider', () => {
       }
 
       render(
-        <MarketContextProvider>
-          <TestComponent />
-        </MarketContextProvider>,
+        <AppContextProvider>
+          <MarketContextProvider>
+            <TestComponent />
+          </MarketContextProvider>
+        </AppContextProvider>,
       )
     })
 
@@ -33,9 +37,11 @@ describe('MarketContextProvider', () => {
         return null
       }
       render(
-        <MarketContextProvider>
-          <TestComponent />
-        </MarketContextProvider>,
+        <AppContextProvider>
+          <MarketContextProvider>
+            <TestComponent />
+          </MarketContextProvider>
+        </AppContextProvider>,
       )
     })
 
@@ -53,9 +59,11 @@ describe('MarketContextProvider', () => {
           return null
         }
         render(
-          <MarketContextProvider>
-            <TestComponent />
-          </MarketContextProvider>,
+          <AppContextProvider>
+            <MarketContextProvider>
+              <TestComponent />
+            </MarketContextProvider>
+          </AppContextProvider>,
         )
       })
 
@@ -71,9 +79,11 @@ describe('MarketContextProvider', () => {
         }
 
         render(
-          <MarketContextProvider>
-            <TestComponent />
-          </MarketContextProvider>,
+          <AppContextProvider>
+            <MarketContextProvider>
+              <TestComponent />
+            </MarketContextProvider>
+          </AppContextProvider>,
         )
       })
     })
