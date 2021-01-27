@@ -108,7 +108,6 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
 
   const [hasFunds, setHasFunds] = useState(false)
   const [isFundsConfirmed, setIsFundsConfirmed] = useState(false)
-  const tokenId = order?.item?.tokenId
   const domainName = order?.item?.domainName
 
   // check funds
@@ -167,10 +166,12 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
     }
   }, [order, isPendingConfirm, history, dispatch])
 
-  if (!order) {
+  if (!order?.item) {
     history.replace(ROUTES.LANDING)
     return null
   }
+
+  const { tokenId } = order.item
 
   const {
     item: {
@@ -205,7 +206,7 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
   }
 
   const handleBuyDomain = async () => {
-    if (web3 && account) {
+    if (web3 && account && domainName) {
       dispatch({
         type: 'SET_PROGRESS',
         payload: {
@@ -312,12 +313,12 @@ const DomainOffersCheckoutPage: FC<{}> = () => {
           </Table>
         </CardContent>
         {account && isFundsConfirmed && !hasFunds && (
-        <Typography color="error">
-          You do not have enough
-          {' '}
-          {currency.displayName}
-          .
-        </Typography>
+          <Typography color="error">
+            You do not have enough
+            {' '}
+            {currency.displayName}
+            .
+          </Typography>
         )}
         {!isProcessing && account
           && (
