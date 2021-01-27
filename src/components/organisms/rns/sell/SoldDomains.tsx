@@ -64,7 +64,6 @@ const SoldDomains: FC<{}> = () => {
           priceFiat={price.times(rate).toString()}
           currency={displayName}
           currencyFiat={currentFiat.displayName}
-          divider=" = "
         />,
         soldDate: soldDate.toLocaleDateString(),
       }
