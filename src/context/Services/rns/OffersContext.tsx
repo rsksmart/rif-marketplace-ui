@@ -16,7 +16,7 @@ import { Modify } from 'utils/typeUtils'
 import {
   RnsListing, RnsOrder, RnsState, RnsContextProps,
 } from './interfaces'
-import { rnsActions } from './rnsActions'
+import rnsActions from './rnsActions'
 import outdateTokenId from './utils'
 
 export type ContextName = 'rns_offers'

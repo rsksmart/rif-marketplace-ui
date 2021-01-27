@@ -28,4 +28,4 @@ export interface RnsSoldDomain extends Item {
     buyer: string
 }
 
-export type RnsItem = RnsDomain & RnsDomainOffer & RnsSoldDomain
+export type RnsItem = RnsDomain | RnsDomainOffer | RnsSoldDomain

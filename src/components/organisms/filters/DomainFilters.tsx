@@ -39,7 +39,7 @@ const DomainFilters: FC = () => {
     dispatch({
       type: 'FILTER',
       payload: {
-        status: value,
+        status: value as DomainsSaleStatus,
       },
     })
   }

@@ -1,8 +1,7 @@
 import { ContextState } from 'context/storeUtils/interfaces'
-import { RNS_ACTION } from './rns/rnsActions'
 import { STORAGE_ACTION } from './storage/interfaces'
 
-export type SERVICE_ACTION = STORAGE_ACTION | RNS_ACTION
+export type SERVICE_ACTION = STORAGE_ACTION
 
 export interface ServiceOrder<T> {
   item: T

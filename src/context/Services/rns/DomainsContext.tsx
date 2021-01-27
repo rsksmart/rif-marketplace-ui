@@ -13,9 +13,7 @@ import { ServiceMetadata } from 'api/models/apiService'
 import {
   RnsListing, RnsOrder, RnsState, RnsContextProps,
 } from './interfaces'
-import {
-  rnsActions, RefreshPayload,
-} from './rnsActions'
+import rnsActions from './rnsActions'
 import outdateTokenId from './utils'
 
 export type ContextName = 'rns_domains'
@@ -87,7 +85,7 @@ export const RnsDomainsContextProvider: FC = ({ children }) => {
 
           dispatch({
             type: 'REFRESH',
-            payload: { refresh: true } as RefreshPayload,
+            payload: { refresh: true },
           })
         } catch (e) {
           setIsInitialised(false)

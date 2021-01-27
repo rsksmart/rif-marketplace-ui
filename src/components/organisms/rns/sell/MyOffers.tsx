@@ -9,7 +9,6 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import MarketContext, { MarketContextProps } from 'context/Market'
 import RnsDomainsContext, { RnsDomainsContextProps } from 'context/Services/rns/DomainsContext'
-import { OrderPayload } from 'context/Services/rns/rnsActions'
 import { ShortenTextTooltip } from '@rsksmart/rif-ui'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 
@@ -86,7 +85,7 @@ const MyOffers: FC = () => {
                 type: 'SET_ORDER',
                 payload: {
                   item: domainItem,
-                } as OrderPayload,
+                },
               })
               history.push(ROUTES.RNS.SELL.CHECKOUT)
             }}
@@ -124,7 +123,7 @@ const MyOffers: FC = () => {
                 type: 'SET_ORDER',
                 payload: {
                   item: domainItem,
-                } as OrderPayload,
+                },
               })
               history.push(ROUTES.RNS.SELL.CANCEL.CHECKOUT)
             }}

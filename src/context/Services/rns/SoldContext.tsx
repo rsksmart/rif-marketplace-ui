@@ -9,12 +9,11 @@ import { Modify } from 'utils/typeUtils'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
 import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
 import { LoadingPayload } from 'context/App/appActions'
-import { RefreshPayload } from 'context/Services/rns/rnsActions'
 import { ServiceMetadata } from 'api/models/apiService'
 import {
   RnsListing, RnsOrder, RnsState, RnsContextProps,
 } from './interfaces'
-import { rnsActions } from './rnsActions'
+import rnsActions from './rnsActions'
 import outdateTokenId from './utils'
 
 export type ContextName = 'rns_sold'
@@ -90,7 +89,7 @@ export const RnsSoldContextProvider: FC = ({ children }) => {
 
           dispatch({
             type: 'REFRESH',
-            payload: { refresh: true } as RefreshPayload,
+            payload: { refresh: true },
           })
         } catch (e) {
           setIsInitialised(false)
