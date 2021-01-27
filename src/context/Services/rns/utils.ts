@@ -1,8 +1,10 @@
 import { Dispatch } from 'react'
-import { RnsAction } from './rnsActions'
+import { Action, OutdatePayload } from './interfaces'
 
-const outdateTokenId = (dispatch: Dispatch<RnsAction>) => ({ tokenId }) => {
-  dispatch({ type: 'OUTDATE', payload: { tokenId } } as any)
+const outdateTokenId = (dispatch: Dispatch<Action>) => (
+  { tokenId }: OutdatePayload,
+): void => {
+  dispatch({ type: 'OUTDATE', payload: { tokenId } })
 }
 
 export default outdateTokenId

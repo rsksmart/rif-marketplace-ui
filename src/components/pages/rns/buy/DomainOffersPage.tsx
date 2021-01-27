@@ -9,7 +9,6 @@ import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import ROUTES from 'routes'
 import MarketContext from 'context/Market'
 import RnsOffersContext, { RnsOffersContextProps } from 'context/Services/rns/OffersContext'
-import { OrderPayload, RefreshPayload } from 'context/Services/rns/rnsActions'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import { RnsSort, SORT_DIRECTION } from 'api/models/RnsFilter'
 import { TableSortLabel } from '@material-ui/core'
@@ -60,9 +59,7 @@ const DomainOffersPage: FC = () => {
     routeState.refresh = false
     dispatch({
       type: 'REFRESH',
-      payload: {
-        refresh: true,
-      } as RefreshPayload,
+      payload: { refresh: true },
     })
   }
   const {
@@ -82,8 +79,8 @@ const DomainOffersPage: FC = () => {
         from={skip + 1}
         to={nextPage > total ? total : nextPage}
         total={total}
-        onNext={(): void => dispatch({ type: 'NEXT_PAGE', payload: {} })}
-        onPrev={(): void => dispatch({ type: 'PREV_PAGE', payload: {} })}
+        onNext={(): void => dispatch({ type: 'NEXT_PAGE' })}
+        onPrev={(): void => dispatch({ type: 'PREV_PAGE' })}
       />
     )
   }
@@ -168,12 +165,10 @@ const DomainOffersPage: FC = () => {
         action1: (account?.toLowerCase() === ownerAddress.toLowerCase()) ? 'your offer' : (
           <SelectRowButton
             id={id}
-            handleSelect={() => {
+            handleSelect={(): void => {
               dispatch({
                 type: 'SET_ORDER',
-                payload: {
-                  item,
-                } as OrderPayload,
+                payload: { item },
               })
               history.push(ROUTES.RNS.BUY.CHECKOUT)
             }}

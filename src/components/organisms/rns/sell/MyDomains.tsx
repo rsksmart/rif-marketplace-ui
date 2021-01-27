@@ -6,7 +6,6 @@ import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import RnsDomainsContext, { RnsDomainsContextProps } from 'context/Services/rns/DomainsContext'
-import { OrderPayload, RefreshPayload } from 'context/Services/rns/rnsActions'
 import { ShortenTextTooltip } from '@rsksmart/rif-ui'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 
@@ -27,7 +26,7 @@ const MyDomains: FC<{}> = () => {
       type: 'REFRESH',
       payload: {
         refresh: true,
-      } as RefreshPayload,
+      },
     })
   }
 
@@ -66,18 +65,22 @@ const MyDomains: FC<{}> = () => {
         id,
         name: displayDomainName,
         expirationDate: expirationDate.toLocaleDateString(),
-        action1: <SelectRowButton
+        action1: (
+          <SelectRowButton
             id={id}
-            handleSelect={() => {
-              dispatch({
-                type: 'SET_ORDER',
-                payload: {
-                  item: domainItem,
-                } as OrderPayload,
-              })
-              history.push(ROUTES.RNS.SELL.CHECKOUT)
-            }}
-        />,
+            handleSelect={
+              (): void => {
+                dispatch({
+                  type: 'SET_ORDER',
+                  payload: {
+                    item: domainItem,
+                  },
+                })
+                history.push(ROUTES.RNS.SELL.CHECKOUT)
+              }
+}
+          />
+        ),
       }
       return displayItem
     })

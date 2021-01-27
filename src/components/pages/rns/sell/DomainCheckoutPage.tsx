@@ -143,13 +143,12 @@ const DomainsCheckoutPage: FC<{}> = () => {
     isProcessing,
   } = order
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     if (web3 && account) {
       dispatch({
         type: 'SET_PROGRESS',
         payload: {
           isProcessing: true,
-          id: 'contract',
         },
       })
       const currencySymbol = currencySymbols[Number(currency)] as SupportedTokenSymbol

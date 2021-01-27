@@ -1,10 +1,17 @@
 import Big from 'big.js'
 import { RnsDomain } from 'models/marketItems/DomainItem'
+import { SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'
+import rnsActions from '../rnsActions'
 import {
-  rnsActions, FilterPayload, LimitsPayload, OutdatePayload, RefreshPayload, OrderPayload, ProgressPayload,
-} from '../rnsActions'
+  FilterPayload,
+  LimitsPayload,
+  OutdatePayload,
+  RefreshPayload,
+  OrderPayload,
+  ProgressPayload,
+  RnsState, RnsOrder,
+} from '../interfaces'
 import { initialState } from '../DomainsContext'
-import { RnsState, RnsOrder } from '../interfaces'
 
 const fakeDomain: RnsDomain = {
   expirationDate: new Date(),
@@ -13,7 +20,11 @@ const fakeDomain: RnsDomain = {
   ownerAddress: 'fake_owner',
   tokenId: 'fake_token_id',
   offer: {
-    paymentToken: 'fake_payment_token',
+    paymentToken: {
+      symbol: SYSTEM_SUPPORTED_SYMBOL.rif,
+      displayName: 'fake_token_name',
+      tokenAddress: 'fake_token_address',
+    },
     price: Big(9999),
   },
 }

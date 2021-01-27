@@ -121,7 +121,6 @@ const CancelDomainCheckoutPage: FC = () => {
       history.replace(ROUTES.RNS.SELL.CANCEL.DONE, { name })
       dispatch({
         type: 'CLEAR_ORDER',
-        payload: {},
       })
     }
   }, [order, isPendingConfirm, history, dispatch])
@@ -167,7 +166,6 @@ const CancelDomainCheckoutPage: FC = () => {
         type: 'SET_PROGRESS',
         payload: {
           isProcessing: true,
-          id: 'contract',
         },
       })
       appDispatch({
