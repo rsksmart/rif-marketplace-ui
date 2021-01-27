@@ -75,7 +75,7 @@ const SoldDomains: FC<{}> = () => {
   return (
     <MarketPageTemplate
       filterItems={<DomainFilters />}
-      items={collection as any}
+      items={collection}
       headers={headers}
       requiresAccount
       dispatch={dispatch}
