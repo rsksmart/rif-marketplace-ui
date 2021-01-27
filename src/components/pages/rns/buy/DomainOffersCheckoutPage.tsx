@@ -14,7 +14,7 @@ import { LoadingPayload } from 'context/App/appActions'
 import AppContext, { errorReporterFactory } from 'context/App/AppContext'
 import { AddTxPayload } from 'context/Blockchain/blockchainActions'
 import BlockchainContext from 'context/Blockchain/BlockchainContext'
-import MarketContext from 'context/Market/MarketContext'
+import MarketContext from 'context/Market'
 import RnsOffersContext from 'context/Services/rns/OffersContext'
 import Logger from 'utils/Logger'
 

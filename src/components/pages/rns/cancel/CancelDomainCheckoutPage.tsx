@@ -30,7 +30,7 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import { AddTxPayload } from 'context/Blockchain/blockchainActions'
 import BlockchainContext from 'context/Blockchain/BlockchainContext'
-import MarketContext from 'context/Market/MarketContext'
+import MarketContext from 'context/Market'
 import RnsDomainsContext from 'context/Services/rns/DomainsContext'
 import Logger from 'utils/Logger'
 import AppContext, {
@@ -39,7 +39,6 @@ import AppContext, {
 import { UIError } from 'models/UIMessage'
 import { LoadingPayload } from 'context/App/appActions'
 import { shortChecksumAddress } from 'utils/stringUtils'
-import Big from 'big.js'
 
 const logger = Logger.getInstance()
 
@@ -146,7 +145,7 @@ const CancelDomainCheckoutPage: FC = () => {
 
   const priceCellProps = {
     price: offer.price.toString(),
-    priceFiat: (Big(currency.rate).mul(offer.price)).toString(),
+    priceFiat: offer.price.mul(currency.rate).toString(),
     currency: currency.displayName,
     currencyFiat: currentFiat.displayName,
     divider: ' ',

@@ -7,7 +7,7 @@ import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
 import ROUTES from 'routes'
-import MarketContext from 'context/Market/MarketContext'
+import MarketContext from 'context/Market'
 import RnsOffersContext, { RnsOffersContextProps } from 'context/Services/rns/OffersContext'
 import { OrderPayload, RefreshPayload } from 'context/Services/rns/rnsActions'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'

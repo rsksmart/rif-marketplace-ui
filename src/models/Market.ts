@@ -21,4 +21,4 @@ export type TokenXR = BaseToken & {
   rate: number
 }
 
-export type MarketCryptoRecord = TokenRecord<TokenXR> | {}
+export type MarketCryptoRecord = TokenRecord<TokenXR>

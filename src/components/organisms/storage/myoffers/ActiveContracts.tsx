@@ -6,7 +6,7 @@ import {
   createProviderItemFields,
 } from 'components/organisms/storage/agreements/utils'
 import Marketplace from 'components/templates/marketplace/Marketplace'
-import MarketContext from 'context/Market/MarketContext'
+import MarketContext from 'context/Market'
 import { Agreement } from 'models/marketItems/StorageItem'
 import React, {
   FC, useCallback, useContext, useEffect, useState,
