@@ -13,7 +13,7 @@ export type RnsContextNames = DomainsContextName
 // STATE
 export type RnsOrder<T> = {
   item: T
-  isProcessing?: boolean
+  isProcessing?: boolean // TODO: should probably be removed once migration to new confirmations handling is done
   isOutdated?: boolean
 }
 
