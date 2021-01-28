@@ -8,6 +8,8 @@ import ROUTES from 'routes'
 import RnsDomainsContext, { RnsDomainsContextProps } from 'context/Services/rns/DomainsContext'
 import { ShortenTextTooltip } from '@rsksmart/rif-ui'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
+import InfoBar from 'components/molecules/InfoBar'
+import useConfirmations from 'hooks/useConfirmations'
 
 const MyDomains: FC<{}> = () => {
   const {
@@ -18,6 +20,18 @@ const MyDomains: FC<{}> = () => {
     dispatch,
   } = useContext<RnsDomainsContextProps>(RnsDomainsContext)
   const history = useHistory()
+
+  useEffect(() => {
+    dispatch({
+      type: 'FILTER',
+      payload: {
+        status: 'owned',
+      },
+    })
+  }, [dispatch])
+
+  const buyingConfsCount = useConfirmations(['RNS_BUY']).length
+
   const routeState = history.location.state as { refresh?: boolean }
 
   if (routeState && routeState.refresh) {
@@ -29,15 +43,6 @@ const MyDomains: FC<{}> = () => {
       },
     })
   }
-
-  useEffect(() => {
-    dispatch({
-      type: 'FILTER',
-      payload: {
-        status: 'owned',
-      },
-    })
-  }, [dispatch])
 
   const { items } = listing
 
@@ -58,7 +63,12 @@ const MyDomains: FC<{}> = () => {
 
       const pseudoResolvedName = filters.name as string && (`${filters.name}.rsk`)
       const displayDomainName = name || pseudoResolvedName
-        ? <ShortenTextTooltip value={name || pseudoResolvedName} maxLength={30} />
+        ? (
+          <ShortenTextTooltip
+            value={name || pseudoResolvedName}
+            maxLength={30}
+          />
+        )
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
       const displayItem = {
@@ -78,7 +88,7 @@ const MyDomains: FC<{}> = () => {
                 })
                 history.push(ROUTES.RNS.SELL.CHECKOUT)
               }
-}
+            }
           />
         ),
       }
@@ -86,14 +96,21 @@ const MyDomains: FC<{}> = () => {
     })
 
   return (
-    <MarketPageTemplate
-      filterItems={<DomainFilters />}
-      items={collection}
-      headers={headers}
-      requiresAccount
-      dispatch={dispatch}
-      outdatedCt={listing.outdatedTokens.length}
-    />
+    <>
+      <InfoBar
+        isVisible={Boolean(buyingConfsCount)}
+        text={`Awaiting confirmations for ${buyingConfsCount} domain(s)`}
+        type="info"
+      />
+      <MarketPageTemplate
+        filterItems={<DomainFilters />}
+        items={collection}
+        headers={headers}
+        requiresAccount
+        dispatch={dispatch}
+        outdatedCt={listing.outdatedTokens.length}
+      />
+    </>
   )
 }
 
