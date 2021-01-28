@@ -1,4 +1,4 @@
-import { Web3Store, ShortenTextTooltip } from '@rsksmart/rif-ui'
+import { Web3Store, ShortenTextTooltip, Spinner } from '@rsksmart/rif-ui'
 import React, { FC, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
@@ -12,6 +12,9 @@ import RnsOffersContext, { RnsOffersContextProps } from 'context/Services/rns/Of
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import { RnsSort, SORT_DIRECTION } from 'api/models/RnsFilter'
 import { TableSortLabel } from '@material-ui/core'
+import InfoBar from 'components/molecules/InfoBar'
+import useConfirmations from 'hooks/useConfirmations'
+import { BuyDomainContractData } from 'context/Confirmations/interfaces'
 
 enum SORT_TO_HEADER {
   name = 'domainName',
@@ -67,6 +70,8 @@ const DomainOffersPage: FC = () => {
       account,
     },
   } = useContext(Web3Store)
+
+  const buyingConfs = useConfirmations(['RNS_BUY'])
 
   let action1Header: JSX.Element | string = ''
 
@@ -142,13 +147,38 @@ const DomainOffersPage: FC = () => {
         tokenId,
       } = item
 
-      const pseudoResolvedName: string = filters.name as string && (`${filters.name}.rsk`)
+      const pseudoResolvedName = filters.name as string && (`${filters.name}.rsk`)
 
       const { rate, displayName } = crypto[paymentToken.symbol]
 
       const displayDomainName = domainName || pseudoResolvedName
-        ? <ShortenTextTooltip value={domainName || pseudoResolvedName} maxLength={30} />
+        ? (
+          <ShortenTextTooltip
+            value={domainName || pseudoResolvedName}
+            maxLength={30}
+          />
+        )
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+
+      const isProcessingConfs = buyingConfs.some(
+        ({ contractActionData }) => (
+          (contractActionData as BuyDomainContractData).tokenId === tokenId
+        ),
+      )
+
+      const action1 = (
+        account?.toLowerCase() === ownerAddress.toLowerCase()) ? 'your offer' : (
+          <SelectRowButton
+            id={id}
+            handleSelect={(): void => {
+              dispatch({
+                type: 'SET_ORDER',
+                payload: { item },
+              })
+              history.push(ROUTES.RNS.BUY.CHECKOUT)
+            }}
+          />
+        )
 
       const displayItem = {
         id,
@@ -162,32 +192,28 @@ const DomainOffersPage: FC = () => {
           currencyFiat={currentFiat.displayName}
           divider=""
         />,
-        action1: (account?.toLowerCase() === ownerAddress.toLowerCase()) ? 'your offer' : (
-          <SelectRowButton
-            id={id}
-            handleSelect={(): void => {
-              dispatch({
-                type: 'SET_ORDER',
-                payload: { item },
-              })
-              history.push(ROUTES.RNS.BUY.CHECKOUT)
-            }}
-          />
-        ),
+        action1: isProcessingConfs ? <Spinner /> : action1,
       }
 
       return displayItem
     })
 
   return (
-    <MarketPageTemplate
-      className="Domain Offers"
-      filterItems={<DomainOfferFilters />}
-      items={collection}
-      headers={headers}
-      dispatch={dispatch}
-      outdatedCt={outdatedTokens.length}
-    />
+    <>
+      <InfoBar
+        type="info"
+        isVisible={Boolean(buyingConfs.length)}
+        text={`Awaiting confirmations for ${buyingConfs.length} offer(s)`}
+      />
+      <MarketPageTemplate
+        className="Domain Offers"
+        filterItems={<DomainOfferFilters />}
+        items={collection}
+        headers={headers}
+        dispatch={dispatch}
+        outdatedCt={outdatedTokens.length}
+      />
+    </>
   )
 }
 
