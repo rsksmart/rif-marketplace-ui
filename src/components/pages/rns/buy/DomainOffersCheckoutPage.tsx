@@ -30,6 +30,9 @@ import { ConfirmationsContext } from 'context/Confirmations'
 import Web3 from 'web3'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import RoundBtn from 'components/atoms/RoundBtn'
+import networkConfig from 'config'
+
+const { rnsManagerUrl } = networkConfig
 
 const logger = Logger.getInstance()
 
@@ -253,12 +256,6 @@ const DomainOffersCheckoutPage: FC = () => {
     }
   }
 
-  const handleTxCompleted = (): void => {
-    setProcessingTx(false)
-    setTxOperationDone(false)
-    history.push(ROUTES.RNS.BUY.LISTING)
-  }
-
   const buyingNameTitle = domainName
     ? shortenString(domainName, 30, 25)
     : shortChecksumAddress(tokenId)
@@ -335,9 +332,21 @@ const DomainOffersCheckoutPage: FC = () => {
         isDone={txOperationDone}
         buttons={[
           <RoundBtn
-            onClick={handleTxCompleted}
+            onClick={(): void => history.push(ROUTES.RNS.BUY.BASE)}
           >
-            Close
+            Buy another domain
+          </RoundBtn>,
+          <RoundBtn
+            disabled={!rnsManagerUrl}
+            onClick={
+              (): void => {
+                window.open(
+                  `${rnsManagerUrl}?autologin=${domainName}`, '_blank',
+                )
+              }
+            }
+          >
+            Admin my domain
           </RoundBtn>,
         ]}
 

@@ -29,7 +29,6 @@ const ROUTES = {
       BASE: RNS_BUY,
       LISTING: `${RNS_BUY}/${LISTING}`,
       CHECKOUT: `${RNS_BUY}/${CHECKOUT}`,
-      DONE: `${RNS_BUY}/${DONE}`,
     },
     SELL: {
       BASE: RNS_SELL,
