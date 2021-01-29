@@ -1,6 +1,6 @@
 /* eslint-disable-next-line import/no-unresolved */
 import { StyledNavTabProps } from '@rsksmart/rif-ui/dist/components/atoms/StyledNavTab'
-import React, { useEffect } from 'react'
+import React, { FC, useEffect } from 'react'
 import {
   Redirect, Route, Switch, useLocation, useHistory,
 } from 'react-router-dom'
@@ -14,8 +14,9 @@ import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { getTabValueFromLocation } from 'utils/utils'
 import {
-  CancelDomainCheckoutPage, DomainCanceled, DomainListed, DomainOffersCheckoutPage,
-  DomainOffersPage, DomainPurchased, DomainsCheckoutPage, NotFound, SellDomainsListPage,
+  CancelDomainCheckoutPage, DomainCanceled, DomainListed,
+  DomainOffersCheckoutPage,
+  DomainOffersPage, DomainsCheckoutPage, NotFound, SellDomainsListPage,
 } from '..'
 import RnsLandingPage from './RnsLandingPage'
 
@@ -33,7 +34,7 @@ const TABS: StyledNavTabProps[] = [
   },
 ]
 
-const RnsRoutes = () => {
+const RnsRoutes: FC = () => {
   const { pathname } = useLocation()
 
   const { services } = networkConfig
@@ -41,11 +42,12 @@ const RnsRoutes = () => {
   const history = useHistory()
 
   useEffect(() => {
+    // TODO: wrap this code block to be excecuted only on debugging
     const unlisten = history.listen((location, action) => {
       logger.debug('RnsRoutes -> location', location)
       logger.debug('RnsRoutes -> action', action)
     })
-    return () => {
+    return (): void => {
       unlisten()
     }
   }, [history])
@@ -64,10 +66,21 @@ const RnsRoutes = () => {
             <Route path={ROUTES.RNS.BUY.BASE}>
               <RnsOffersContextProvider>
                 <Switch>
-                  <Redirect exact from={ROUTES.RNS.BUY.BASE} to={ROUTES.RNS.BUY.LISTING} />
-                  <Route exact path={ROUTES.RNS.BUY.LISTING} component={DomainOffersPage} />
-                  <Route exact path={ROUTES.RNS.BUY.CHECKOUT} component={DomainOffersCheckoutPage} />
-                  <Route exact path={ROUTES.RNS.BUY.DONE} component={DomainPurchased} />
+                  <Redirect
+                    exact
+                    from={ROUTES.RNS.BUY.BASE}
+                    to={ROUTES.RNS.BUY.LISTING}
+                  />
+                  <Route
+                    exact
+                    path={ROUTES.RNS.BUY.LISTING}
+                    component={DomainOffersPage}
+                  />
+                  <Route
+                    exact
+                    path={ROUTES.RNS.BUY.CHECKOUT}
+                    component={DomainOffersCheckoutPage}
+                  />
                   <Route component={NotFound} />
                 </Switch>
               </RnsOffersContextProvider>
