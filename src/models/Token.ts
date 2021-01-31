@@ -1,9 +1,7 @@
 import { ZERO_ADDRESS } from 'constants/strings'
 import { rifTokenAddress } from 'contracts/config'
+import { BaseCurrency } from './Currency'
 
-// - juarj
-// create issue:
-//   get SYSTEM_SUPPORTED_SYMBOL from: [config?, ?]
 export enum SYSTEM_SUPPORTED_SYMBOL {
   rif = 'rif',
   rbtc = 'rbtc'
@@ -12,16 +10,7 @@ export type SupportedTokenSymbol =
     | SYSTEM_SUPPORTED_SYMBOL.rif
     | SYSTEM_SUPPORTED_SYMBOL.rbtc
 
-// - juarj
-// move to *where*
-export type BaseCurrency = {
-  symbol: SupportedTokenSymbol
-  displayName: string
-}
-
-// - juarj
-// rename BaseToken to BaseCrypto
-export type BaseToken = BaseCurrency & {
+export type BaseToken = BaseCurrency<SupportedTokenSymbol> & {
   tokenAddress: string
 }
 

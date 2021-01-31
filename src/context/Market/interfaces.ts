@@ -1,19 +1,14 @@
-import { SupportedFiat } from 'api/rif-marketplace-cache/rates/xr'
 import { ContextProps, ContextState } from 'context/storeUtils/interfaces'
+import { BaseFiat } from 'models/Fiat'
 import { MarketCryptoRecord } from 'models/Market'
 
 export type MarketErrorId = 'market-init'
-
-export type MarketFiat = {
-  displayName: string
-  symbol: SupportedFiat
-}
 
 // STATE
 export type ContextName = 'market'
 export type State = ContextState & {
   exchangeRates: {
-    currentFiat: MarketFiat
+    currentFiat: BaseFiat
     crypto: MarketCryptoRecord
   }
 }

@@ -2,9 +2,10 @@ import { Paginated } from '@feathersjs/feathers'
 import { AbstractAPIService, isResultPaginated } from 'api/models/apiService'
 import { RnsFilter, RnsSort } from 'api/models/RnsFilter'
 import { OfferTransport } from 'api/models/transports'
+import { SupportedFiatSymbol } from 'models/Fiat'
 import { MinMaxFilter } from 'models/Filters'
 import { RnsDomainOffer } from 'models/marketItems/DomainItem'
-import { convertToBigString, parseToBigDecimal, parseToInt } from 'utils/parsers'
+import { parseToBigDecimal } from 'utils/parsers'
 import { getTokenByAddress } from 'utils/tokenUtils'
 import client from '../client'
 import {
@@ -15,6 +16,7 @@ export const offersAddress: RnsServiceAddress = 'rns/v0/offers'
 export const offersChannel: RnsChannels = 'offers'
 
 const mapFromTransport = ({
+  priceFiat,
   priceString,
   domain: {
     expiration: { date },
@@ -25,6 +27,7 @@ const mapFromTransport = ({
   tokenId,
   ownerAddress,
 }: OfferTransport): RnsDomainOffer => ({
+  priceFiat: Number(priceFiat),
   id: offerId,
   ownerAddress,
   domainName,
@@ -41,29 +44,35 @@ enum LimitType {
 
 const fetchPriceLimit = async (
   service,
+  fiatSymbol: SupportedFiatSymbol,
   limitType: LimitType,
 ): Promise<number> => {
   const query = {
+    fiatSymbol,
     $limit: 1,
     $sort: {
-      price: limitType,
+      priceFiat: limitType,
     },
-    $select: ['priceString'],
   }
   const results: Paginated<OfferTransport> = await service.find({ query })
 
   const data: OfferTransport[] = isResultPaginated(results)
     ? results.data : results
 
-  // Gets the result parses it to the correct decimal and rounds it: up for max, down for min
+  // Gets the result parses and rounds it: up for max, down for min
   return data.reduce(
-    (_, item: { priceString: string }): number => {
+    (_, item): number => {
       const round = limitType === LimitType.min ? Math.floor : Math.ceil
-      return round(parseToInt(item.priceString, 18))
+      return round(parseFloat(item.priceFiat))
     },
     0,
   )
 }
+
+type FetchArgs = Partial<RnsFilter>
+    & { fiat: SupportedFiatSymbol}
+    & { skip?: number}
+    & { sort: RnsSort}
 
 export class OffersService extends AbstractAPIService implements RnsAPIService {
   path = offersAddress
@@ -72,11 +81,9 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
 
   _channel = offersChannel
 
-  _fetch = async (props: Partial<RnsFilter> & { skip?: number} & { sort: RnsSort}): Promise<RnsDomainOffer[]> => {
-    const {
-      price, name, skip, sort,
-    } = props
-
+  _fetch = async ({
+    price, name, skip, sort,
+  }: FetchArgs): Promise<RnsDomainOffer[]> => {
     const results: Paginated<OfferTransport> = await this.service.find({
       query: {
         domain: name ? {
@@ -84,15 +91,15 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
             $like: name,
           },
         } : undefined,
-        price: price ? {
-          $gte: convertToBigString(price.min, 18),
-          $lte: convertToBigString(price.max, 18),
+        priceFiat: price ? {
+          $gte: price.min,
+          $lte: price.max,
         } : undefined,
         $sort: sort && {
           domain: sort.name ? {
             name: sort.name,
           } : undefined,
-          avgUSDPrice: sort.price,
+          priceFiat: sort.price,
         },
         $skip: skip,
       },
@@ -108,9 +115,11 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
     return mappedData
   }
 
-  fetchPriceLimits = async (): Promise<MinMaxFilter> => {
-    const min = await fetchPriceLimit(this.service, LimitType.min)
-    const max = await fetchPriceLimit(this.service, LimitType.max)
+  fetchPriceLimits = async ({ fiatSymbol }: {
+    fiatSymbol: SupportedFiatSymbol
+  }): Promise<MinMaxFilter> => {
+    const min = await fetchPriceLimit(this.service, fiatSymbol, LimitType.min)
+    const max = await fetchPriceLimit(this.service, fiatSymbol, LimitType.max)
     return { min, max }
   }
 }

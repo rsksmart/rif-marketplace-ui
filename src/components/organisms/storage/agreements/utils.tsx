@@ -3,7 +3,7 @@ import ItemWUnit from 'components/atoms/ItemWUnit'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import { AgreementUpdateData, ConfirmationData } from 'context/Confirmations/interfaces'
-import { MarketFiat } from 'context/Market/interfaces'
+import { BaseFiat } from 'models/Fiat'
 import { MarketCryptoRecord, TokenXR } from 'models/Market'
 import { Agreement, SubscriptionPeriod } from 'models/marketItems/StorageItem'
 import React from 'react'
@@ -34,7 +34,7 @@ export type AgreementCustomerView = AgreementView & {
 const getCoreItemFields = (
   agreement: Agreement,
   crypto: MarketCryptoRecord,
-  currentFiat: MarketFiat,
+  currentFiat: BaseFiat,
 ): AgreementView => {
   const {
     monthlyFee,
@@ -80,7 +80,7 @@ const getCoreItemFields = (
 export const getCustomerViewFrom = (
   agreement: Agreement,
   crypto: MarketCryptoRecord,
-  currentFiat: MarketFiat,
+  currentFiat: BaseFiat,
 ): AgreementCustomerView => {
   const agreementInfo = getCoreItemFields(agreement, crypto, currentFiat)
   const {
@@ -107,7 +107,7 @@ export const getCustomerViewFrom = (
 export const createCustomerItemFields = (
   agreements: Agreement[],
   crypto: MarketCryptoRecord,
-  currentFiat: MarketFiat,
+  currentFiat: BaseFiat,
   onItemRenew: (event, agreement: Agreement) => void,
   onItemSelect: (
     event,
@@ -167,7 +167,7 @@ export const createCustomerItemFields = (
 export const getProviderViewFrom = (
   agreement: Agreement,
   crypto: MarketCryptoRecord,
-  currentFiat: MarketFiat,
+  currentFiat: BaseFiat,
 ): AgreementProviderView => {
   const agreementInfo = getCoreItemFields(agreement, crypto, currentFiat)
   const {
@@ -193,7 +193,7 @@ export const getProviderViewFrom = (
 export const createProviderItemFields = (
   agreements: Agreement[],
   crypto: MarketCryptoRecord,
-  currentFiat: MarketFiat,
+  currentFiat: BaseFiat,
   onItemWithdraw: (event, agreement: Agreement) => void,
   onItemSelect: (
     event,
