@@ -8,16 +8,14 @@ import AppContext, {
 import { XRItem, XRService } from 'api/rif-marketplace-cache/rates/xr'
 import { MarketCryptoRecord, TokenXR } from 'models/Market'
 import { getSysTokenByName } from 'utils/tokenUtils'
+import { SUPPORTED_FIAT } from 'models/Fiat'
 import actions from './actions'
 import { Props, State } from './interfaces'
 
 export const initialState: State = {
   contextID: 'market',
   exchangeRates: {
-    currentFiat: {
-      symbol: 'usd',
-      displayName: 'USD',
-    },
+    currentFiat: SUPPORTED_FIAT.usd,
     crypto: {} as MarketCryptoRecord,
   },
 }

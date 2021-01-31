@@ -9,6 +9,7 @@ export interface RnsDomainOffer extends Item {
     expirationDate: Date
     price: Big
     ownerAddress: string
+    priceFiat: number
 }
 
 export interface RnsDomain extends Item {

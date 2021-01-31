@@ -1,6 +1,6 @@
 import { Big } from 'big.js'
 import { Status } from 'components/templates/ProgressOverlay'
-import { MarketFiat } from 'context/Market/interfaces'
+import { BaseFiat } from 'models/Fiat'
 import { BillingPlan, Agreement } from 'models/marketItems/StorageItem'
 import { Dispatch } from 'react'
 
@@ -11,7 +11,7 @@ export type AuxiliaryState = {
   periodsCount: number
   plan: BillingPlan
   totalFiat: string
-  currentFiat: MarketFiat
+  currentFiat: BaseFiat
 }
 
 export type Order = Agreement & {

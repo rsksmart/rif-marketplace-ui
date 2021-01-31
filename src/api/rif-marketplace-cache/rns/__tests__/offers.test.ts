@@ -33,6 +33,7 @@ const MOCK_FILTERS: RnsFilter = {
     max: 2,
     min: 3,
   },
+  status: 'owned',
 }
 
 // @ts-ignore
@@ -47,6 +48,7 @@ const expectedDomains: RnsDomainOffer[] = [
     paymentToken: rnsTokenAddrTokenRecord[MOCK_OFFER_0.paymentToken.toLowerCase()],
     price: parseToBigDecimal(MOCK_OFFER_0.priceString, 18),
     tokenId: MOCK_OFFER_0.tokenId,
+    priceFiat: Number(MOCK_OFFER_0.priceFiat),
   },
 ]
 

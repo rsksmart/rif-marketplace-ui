@@ -1,15 +1,11 @@
 import React, { FC, useContext } from 'react'
 import RnsOffersContext from 'context/Services/rns/OffersContext'
 import { MinMaxFilter } from 'models/Filters'
-import { SUPPORTED_FIAT } from 'api/rif-marketplace-cache/rates/xr'
+import MarketContext, { MarketContextProps } from 'context/Market'
 import RangeFilter from './RangeFilter'
 import SearchFilter from './SearchFilter'
 
 const DomainOfferFilters: FC<{}> = () => {
-  // - juraj
-  // symbol from:
-  // 1. props: DomainOffersPage
-  // 2. MarketContext.symbol: SupportedFiat
   const {
     state: {
       filters: {
@@ -17,7 +13,6 @@ const DomainOfferFilters: FC<{}> = () => {
         price: {
           min: minPrice,
           max: maxPrice,
-          // symbol: 'usd',
         },
       },
       limits: {
@@ -30,11 +25,19 @@ const DomainOfferFilters: FC<{}> = () => {
     dispatch,
   } = useContext(RnsOffersContext)
 
+  const {
+    state: {
+      exchangeRates: {
+        currentFiat,
+      },
+    },
+  } = useContext<MarketContextProps>(MarketContext)
+
   return (
     <>
       <SearchFilter
         value={name}
-        onChange={(evt) => {
+        onChange={(evt): void => {
           const { currentTarget } = evt
           const value = currentTarget.value.trim()
           dispatch({
@@ -54,11 +57,8 @@ const DomainOfferFilters: FC<{}> = () => {
           min: absMinPrice,
           max: absMaxPrice,
         }}
-        // - juarj
-        // [SUPPORTED_FIAT, symbol: from *[props, context]]*
-        // string not needed
-        unit={SUPPORTED_FIAT['usd'/* symbol */].displayName as string}
-        handleChange={(price: MinMaxFilter) => {
+        unit={currentFiat.displayName}
+        handleChange={(price: MinMaxFilter): void => {
           dispatch({
             type: 'FILTER',
             payload: { price },

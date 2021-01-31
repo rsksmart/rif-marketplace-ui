@@ -13,6 +13,7 @@ import AppContext, {
 } from 'context/App/AppContext'
 import { createReducer } from 'context/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
+import MarketContext, { MarketContextProps } from 'context/Market'
 import {
   RnsListing, RnsOrder, RnsState, RnsContextProps,
 } from './interfaces'
@@ -77,6 +78,15 @@ export const RnsOffersContextProvider: FC = ({ children }) => {
     state: appState,
     dispatch: appDispatch,
   }: AppContextProps = useContext(AppContext)
+  const {
+    state: {
+      exchangeRates: {
+        currentFiat: {
+          symbol: fiatSymbol,
+        },
+      },
+    },
+  } = useContext<MarketContextProps>(MarketContext)
   const api = appState?.apis?.['rns/v0/offers'] as OffersService
 
   const [state, dispatch] = useReducer(offersReducer, initialState)
@@ -126,7 +136,7 @@ export const RnsOffersContextProvider: FC = ({ children }) => {
           id: 'filters',
         } as LoadingPayload,
       } as any)
-      api.fetchPriceLimits()
+      api.fetchPriceLimits({ fiatSymbol })
         .then((price) => {
           dispatch({
             type: 'UPDATE_LIMITS',
@@ -159,7 +169,7 @@ export const RnsOffersContextProvider: FC = ({ children }) => {
           } as any)
         })
     }
-  }, [api, isInitialised, needsRefresh, isLimitsSet, appDispatch])
+  }, [api, isInitialised, needsRefresh, isLimitsSet, fiatSymbol, appDispatch])
 
   // Fetch data
   useEffect(() => {
@@ -177,7 +187,12 @@ export const RnsOffersContextProvider: FC = ({ children }) => {
           id: 'data',
         } as LoadingPayload,
       } as any)
-      api.fetch({ ...filters, skip: page, sort })
+      api.fetch({
+        ...filters,
+        fiat: fiatSymbol,
+        skip: page,
+        sort,
+      })
         .then((items) => {
           dispatch({
             type: 'SET_LISTING',
@@ -200,7 +215,12 @@ export const RnsOffersContextProvider: FC = ({ children }) => {
           } as any)
         })
     }
-  }, [isInitialised, isLimitsSet, filters, sort, page, api, appDispatch])
+  }, [
+    isInitialised, isLimitsSet,
+    filters, fiatSymbol, sort,
+    page, api,
+    appDispatch,
+  ])
 
   const meta = api?.meta
 

@@ -8,6 +8,7 @@ export interface OfferTransport {
     ownerDomain: string
     tokenId: string
     domain: DomainTransport
+    priceFiat: string
 }
 
 export interface DomainTransport {

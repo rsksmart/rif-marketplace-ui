@@ -19,6 +19,7 @@ import Web3 from 'web3'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
 import { AgreementUpdateData } from 'context/Confirmations/interfaces'
 import { SYSTEM_TOKENS } from 'models/Token'
+import { SUPPORTED_FIAT } from 'models/Fiat'
 import { reducer } from './actions'
 import { AsyncActions, Props, State } from './interfaces'
 
@@ -33,10 +34,7 @@ export const initialState: State = {
       price: new Big(0),
     },
     totalFiat: '',
-    currentFiat: {
-      displayName: 'USD',
-      symbol: 'usd',
-    },
+    currentFiat: SUPPORTED_FIAT.usd,
   },
   status: {},
 }
