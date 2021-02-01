@@ -9,8 +9,11 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import MarketContext, { MarketContextProps } from 'context/Market'
 import RnsDomainsContext, { RnsDomainsContextProps } from 'context/Services/rns/DomainsContext'
-import { ShortenTextTooltip } from '@rsksmart/rif-ui'
+import { ShortenTextTooltip, Spinner } from '@rsksmart/rif-ui'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
+import useConfirmations from 'hooks/useConfirmations'
+import InfoBar from 'components/molecules/InfoBar'
+import { RnsContractData } from 'context/Confirmations/interfaces'
 
 const MyOffers: FC = () => {
   const {
@@ -43,6 +46,10 @@ const MyOffers: FC = () => {
     })
   }, [dispatch])
 
+  const cancelConfs = useConfirmations(
+    ['RNS_CANCEL'],
+  )
+
   const history = useHistory()
 
   const headers = {
@@ -73,29 +80,37 @@ const MyOffers: FC = () => {
         )
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
+      const isProcessingConfs = cancelConfs.some(
+        ({ contractActionData }) => (
+          (contractActionData as RnsContractData).tokenId === tokenId
+        ),
+      )
+
       const displayItem = {
         id,
         name: displayDomainName,
         expirationDate: expirationDate.toLocaleDateString(),
-        action1: (
-          <SelectRowButton
-            id={id}
-            handleSelect={(): void => {
-              dispatch({
-                type: 'SET_ORDER',
-                payload: {
-                  item: domainItem,
-                },
-              })
-              history.push(ROUTES.RNS.SELL.CHECKOUT)
-            }}
-          />
-        ),
+        action1: isProcessingConfs
+          ? <Spinner />
+          : (
+            <SelectRowButton
+              id={id}
+              handleSelect={(): void => {
+                dispatch({
+                  type: 'SET_ORDER',
+                  payload: {
+                    item: domainItem,
+                  },
+                })
+                history.push(ROUTES.RNS.SELL.CHECKOUT)
+              }}
+            />
+          ),
         price: <></>,
         action2: <></>,
       }
 
-      if (offer) {
+      if (offer && !isProcessingConfs) {
         const {
           price, paymentToken: {
             displayName,
@@ -136,14 +151,21 @@ const MyOffers: FC = () => {
     })
 
   return (
-    <MarketPageTemplate
-      filterItems={<DomainFilters />}
-      items={collection}
-      headers={headers}
-      requiresAccount
-      dispatch={dispatch}
-      outdatedCt={outdatedTokens.length}
-    />
+    <>
+      <InfoBar
+        isVisible={Boolean(cancelConfs.length)}
+        text={`Awaiting confirmations for ${cancelConfs.length} domain(s)`}
+        type="info"
+      />
+      <MarketPageTemplate
+        filterItems={<DomainFilters />}
+        items={collection}
+        headers={headers}
+        requiresAccount
+        dispatch={dispatch}
+        outdatedCt={outdatedTokens.length}
+      />
+    </>
   )
 }
 

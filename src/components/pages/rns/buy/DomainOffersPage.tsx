@@ -14,7 +14,7 @@ import { RnsSort, SORT_DIRECTION } from 'api/models/RnsFilter'
 import { TableSortLabel } from '@material-ui/core'
 import InfoBar from 'components/molecules/InfoBar'
 import useConfirmations from 'hooks/useConfirmations'
-import { BuyDomainContractData } from 'context/Confirmations/interfaces'
+import { RnsContractData } from 'context/Confirmations/interfaces'
 
 enum SORT_TO_HEADER {
   name = 'domainName',
@@ -162,7 +162,7 @@ const DomainOffersPage: FC = () => {
 
       const isProcessingConfs = buyingConfs.some(
         ({ contractActionData }) => (
-          (contractActionData as BuyDomainContractData).tokenId === tokenId
+          (contractActionData as RnsContractData).tokenId === tokenId
         ),
       )
 

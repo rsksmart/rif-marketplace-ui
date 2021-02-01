@@ -3,7 +3,7 @@ import {
 } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import {
-  Button, colors, shortenString, Web3Store,
+  colors, shortenString, Web3Store,
   ShortenTextTooltip,
 } from '@rsksmart/rif-ui'
 import Card from '@material-ui/core/Card'
@@ -17,8 +17,6 @@ import TableRow from '@material-ui/core/TableRow'
 import Box from '@material-ui/core/Box'
 import RifAddress from 'components/molecules/RifAddress'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
-import TransactionInProgressPanel from
-  'components/organisms/TransactionInProgressPanel'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
 import {
   Marketplace as MarketplaceContract, Rns as RNSContract,
@@ -28,8 +26,6 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import { AddTxPayload } from 'context/Blockchain/blockchainActions'
-import BlockchainContext from 'context/Blockchain/BlockchainContext'
 import MarketContext from 'context/Market'
 import RnsDomainsContext from 'context/Services/rns/DomainsContext'
 import Logger from 'utils/Logger'
@@ -39,6 +35,11 @@ import AppContext, {
 import { UIError } from 'models/UIMessage'
 import { LoadingPayload } from 'context/App/appActions'
 import { shortChecksumAddress } from 'utils/stringUtils'
+import Web3 from 'web3'
+import ProgressOverlay from 'components/templates/ProgressOverlay'
+import RoundBtn from 'components/atoms/RoundBtn'
+import { ConfirmationsContext } from 'context/Confirmations'
+import { RnsContractData } from 'context/Confirmations/interfaces'
 
 const logger = Logger.getInstance()
 
@@ -106,24 +107,21 @@ const CancelDomainCheckoutPage: FC = () => {
       web3,
     },
   } = useContext(Web3Store)
-  const { dispatch: bcDispatch } = useContext(BlockchainContext)
-  const [isPendingConfirm, setIsPendingConfirm] = useState(false)
-
   const { dispatch: appDispatch } = useContext<AppContextProps>(AppContext)
   const reportError = useCallback(
     (e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch],
   )
+  const {
+    dispatch: confirmationsDispatch,
+  } = useContext(ConfirmationsContext)
+  const [processingTx, setProcessingTx] = useState(false)
+  const [txOperationDone, setTxOperationDone] = useState(false)
 
-  useEffect(() => {
-    if (isPendingConfirm && order && !order.isProcessing) {
-      // Post-confirmations handle
-      const { item: { name } } = order
-      history.replace(ROUTES.RNS.SELL.CANCEL.DONE, { name })
-      dispatch({
-        type: 'CLEAR_ORDER',
-      })
-    }
-  }, [order, isPendingConfirm, history, dispatch])
+  useEffect(() => (): void => {
+    dispatch({
+      type: 'CLEAR_ORDER',
+    })
+  }, [dispatch])
 
   if (!order?.item.offer) {
     history.replace(ROUTES.LANDING)
@@ -137,7 +135,6 @@ const CancelDomainCheckoutPage: FC = () => {
       tokenId,
       offer,
     },
-    isProcessing,
   } = order
 
   const currency = crypto[offer.paymentToken.symbol]
@@ -161,95 +158,77 @@ const CancelDomainCheckoutPage: FC = () => {
   }
 
   const handleSubmit = async (): Promise<void> => {
-    if (web3 && account) {
-      dispatch({
-        type: 'SET_PROGRESS',
-        payload: {
-          isProcessing: true,
-        },
+    setProcessingTx(true)
+    appDispatch({
+      type: 'SET_IS_LOADING',
+      payload: {
+        isLoading: true,
+        id: 'contract',
+        message: 'Executing cancel...',
+      } as LoadingPayload,
+    })
+
+    try {
+      const rnsContract = RNSContract.getInstance(web3 as Web3, currency.symbol)
+      const marketPlaceContract = MarketplaceContract.getInstance(web3 as Web3)
+
+      // Get gas price
+      const gasPrice = await (web3 as Web3).eth.getGasPrice()
+        .catch((error: Error) => {
+          throw new UIError({
+            error,
+            id: 'web3-getGasPrice',
+            text: 'Could not retreive gas price from the blockchain.',
+          })
+        })
+
+      // Send unapproval transaction
+      const unapproveReceipt = await rnsContract.unapprove(
+        tokenId, { from: account, gasPrice },
+      ).catch((error) => {
+        throw new UIError({
+          error,
+          id: 'contract-rns-unapprove',
+          text: `Could not unapprove domain ${name}.`,
+        })
       })
+      logger.info('unapproveReceipt:', unapproveReceipt)
+
+      // Send Unplacement transaction
+      const unplaceReceipt = await marketPlaceContract.unplace(
+        tokenId, { from: account, gasPrice },
+      ).catch((error) => {
+        throw new UIError({
+          error,
+          id: 'contract-marketplace-unplace',
+          text: `Could not unplace domain ${name}.`,
+        })
+      })
+      logger.info('unplaceReceipt:', unplaceReceipt)
+
+      if (unplaceReceipt) {
+        setTxOperationDone(true)
+        confirmationsDispatch({
+          type: 'NEW_REQUEST',
+          payload: {
+            contractAction: 'RNS_CANCEL',
+            txHash: unplaceReceipt.transactionHash,
+            contractActionData: { tokenId } as RnsContractData,
+          },
+        })
+      }
+    } catch (e) {
+      reportError(e)
+    } finally {
       appDispatch({
         type: 'SET_IS_LOADING',
         payload: {
-          isLoading: true,
+          isLoading: false,
           id: 'contract',
-          message: 'Executing cancel...',
         } as LoadingPayload,
       })
-
-      try {
-        const rnsContract = RNSContract.getInstance(web3, currency.symbol)
-        const marketPlaceContract = MarketplaceContract.getInstance(web3)
-
-        // Get gas price
-        const gasPrice = await web3.eth.getGasPrice()
-          .catch((error: Error) => {
-            throw new UIError({
-              error,
-              id: 'web3-getGasPrice',
-              text: 'Could not retreive gas price from the blockchain.',
-            })
-          })
-
-        // Send unapproval transaction
-        const unapproveReceipt = await rnsContract.unapprove(
-          tokenId, { from: account, gasPrice },
-        ).catch((error) => {
-          throw new UIError({
-            error,
-            id: 'contract-rns-unapprove',
-            text: `Could not unapprove domain ${name}.`,
-          })
-        })
-        logger.info('unapproveReceipt:', unapproveReceipt)
-
-        // Send Unplacement transaction
-        const unplaceReceipt = await marketPlaceContract.unplace(
-          tokenId, { from: account, gasPrice },
-        ).catch((error) => {
-          throw new UIError({
-            error,
-            id: 'contract-marketplace-unplace',
-            text: `Could not unplace domain ${name}.`,
-          })
-        })
-        logger.info('unplaceReceipt:', unplaceReceipt)
-
-        bcDispatch({
-          type: 'SET_TX_HASH',
-          payload: {
-            txHash: unplaceReceipt.transactionHash,
-          } as AddTxPayload,
-        })
-        setIsPendingConfirm(true)
-      } catch (e) {
-        reportError(e)
-
-        dispatch({
-          type: 'SET_PROGRESS',
-          payload: {
-            isProcessing: false,
-          },
-        })
-      } finally {
-        appDispatch({
-          type: 'SET_IS_LOADING',
-          payload: {
-            isLoading: false,
-            id: 'contract',
-          } as LoadingPayload,
-        })
-      }
+      setProcessingTx(false)
     }
-  }
-
-  const onProcessingComplete = (): void => {
-    dispatch({
-      type: 'SET_PROGRESS',
-      payload: {
-        isProcessing: false,
-      },
-    })
   }
 
   const cancelingNameTitle = name
@@ -289,41 +268,45 @@ const CancelDomainCheckoutPage: FC = () => {
             </TableBody>
           </Table>
         </CardContent>
-        {!isProcessing
-          && (
-            <CardActions className={classes.footer}>
-              <Typography>
-                {'Your wallet will open and you will be asked to confirm '}
-                <Box
-                  display="inline"
-                  fontWeight="fontWeightMedium"
-                  color={`${colors.primary}`}
-                >
-                  two transactions
-                </Box>
-                {' to cancel the domain.'}
-              </Typography>
-              <Button
-                color="primary"
-                variant="contained"
-                rounded
-                shadow
-                onClick={handleSubmit}
-              >
-                Cancel domain
-              </Button>
-            </CardActions>
-          )}
+        <CardActions className={classes.footer}>
+          <Typography component="div">
+            {'Your wallet will open and you will be asked to confirm '}
+            <Box
+              display="inline"
+              fontWeight="fontWeightMedium"
+              color={`${colors.primary}`}
+            >
+              two transactions
+            </Box>
+            {' to cancel the domain.'}
+          </Typography>
+          <RoundBtn onClick={handleSubmit}>
+            Cancel domain
+          </RoundBtn>
+        </CardActions>
       </Card>
-      {
-        isProcessing && (
-          <TransactionInProgressPanel
-            {...{ isPendingConfirm, onProcessingComplete }}
-            text="Canceling the domain!"
-            progMsg="The waiting period is required to securely cancel your domain listing. Please do not close this tab until the process has finished"
-          />
-        )
-      }
+      <ProgressOverlay
+        title="Canceling the domain"
+        doneMsg="Your domain has been canceled!"
+        inProgress={processingTx}
+        isDone={txOperationDone}
+        buttons={[
+          <RoundBtn
+            key="go_to_my_domains"
+            onClick={(): void => history.push(ROUTES.RNS.SELL.BASE)}
+          >
+            View my domains
+          </RoundBtn>,
+          <RoundBtn
+            key="go_to_list"
+            onClick={(): void => history.push(ROUTES.RNS.BUY.BASE)}
+          >
+            View domain listing
+          </RoundBtn>,
+        ]}
+
+      />
+
     </CheckoutPageTemplate>
   )
 }
