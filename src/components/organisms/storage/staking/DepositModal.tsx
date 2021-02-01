@@ -12,7 +12,8 @@ import React, {
 import Big from 'big.js'
 import { getBalance } from 'contracts/utils/accountBalance'
 import { convertToWeiString } from 'utils/parsers'
-import { SupportedTokenSymbol, SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'
+import { SupportedTokenSymbol, SYSTEM_SUPPORTED_SYMBOL, SYSTEM_TOKENS } from 'models/Token'
+import NotEnoughFunds from 'components/atoms/NotEnoughFunds'
 import StakedBalances from './StakedBalances'
 
 export interface DepositModalProps {
@@ -142,9 +143,9 @@ const DepositModal: FC<DepositModalProps> = ({
         {
           isPositiveAmount && !enoughFunds
           && (
-            <Typography color="error" align="center">
-              {`You do not have enough ${selectedToken.toUpperCase()}`}
-            </Typography>
+            <NotEnoughFunds
+              token={SYSTEM_TOKENS[selectedToken]}
+            />
           )
         }
       </CenteredContent>
