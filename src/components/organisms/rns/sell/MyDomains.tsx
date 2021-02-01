@@ -11,7 +11,7 @@ import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import InfoBar from 'components/molecules/InfoBar'
 import useConfirmations from 'hooks/useConfirmations'
 
-const MyDomains: FC<{}> = () => {
+const MyDomains: FC = () => {
   const {
     state: {
       listing,
@@ -30,7 +30,7 @@ const MyDomains: FC<{}> = () => {
     })
   }, [dispatch])
 
-  const buyingConfsCount = useConfirmations(['RNS_BUY']).length
+  const confsCount = useConfirmations(['RNS_BUY', 'RNS_CANCEL']).length
 
   const routeState = history.location.state as { refresh?: boolean }
 
@@ -98,8 +98,8 @@ const MyDomains: FC<{}> = () => {
   return (
     <>
       <InfoBar
-        isVisible={Boolean(buyingConfsCount)}
-        text={`Awaiting confirmations for ${buyingConfsCount} domain(s)`}
+        isVisible={Boolean(confsCount)}
+        text={`Awaiting confirmations for ${confsCount} domain(s)`}
         type="info"
       />
       <MarketPageTemplate

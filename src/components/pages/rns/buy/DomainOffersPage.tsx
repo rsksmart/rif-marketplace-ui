@@ -71,7 +71,7 @@ const DomainOffersPage: FC = () => {
     },
   } = useContext(Web3Store)
 
-  const buyingConfs = useConfirmations(['RNS_BUY'])
+  const buyingAndCancelConfs = useConfirmations(['RNS_BUY', 'RNS_CANCEL'])
 
   let action1Header: JSX.Element | string = ''
 
@@ -160,7 +160,7 @@ const DomainOffersPage: FC = () => {
         )
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
-      const isProcessingConfs = buyingConfs.some(
+      const isProcessingConfs = buyingAndCancelConfs.some(
         ({ contractActionData }) => (
           (contractActionData as RnsContractData).tokenId === tokenId
         ),
@@ -202,8 +202,8 @@ const DomainOffersPage: FC = () => {
     <>
       <InfoBar
         type="info"
-        isVisible={Boolean(buyingConfs.length)}
-        text={`Awaiting confirmations for ${buyingConfs.length} offer(s)`}
+        isVisible={Boolean(buyingAndCancelConfs.length)}
+        text={`Awaiting confirmations for ${buyingAndCancelConfs.length} offer(s)`}
       />
       <MarketPageTemplate
         className="Domain Offers"
