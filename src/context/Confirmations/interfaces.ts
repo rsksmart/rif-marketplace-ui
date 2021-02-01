@@ -16,7 +16,8 @@ type StorageStakingContractAction = 'STAKING_STAKE' | 'STAKING_UNSTAKE'
 type StorageContractAction = AgreementContractAction | OfferContractAction
 
 type BuyDomainAction = 'RNS_BUY'
-type RnsContractAction = | BuyDomainAction
+type CancelDomainAction = 'RNS_CANCEL'
+type RnsContractAction = | BuyDomainAction | CancelDomainAction
 
 export type ContractAction =
   | StorageContractAction
@@ -30,11 +31,9 @@ export type AgreementUpdateData = { // used for withdraw, payout and renew
 export type AgreementContractData =
   | AgreementUpdateData
 
-export type BuyDomainContractData = {
+export type RnsContractData = {
   tokenId: string
 }
-
-export type RnsContractData = | BuyDomainContractData
 
 export type ContractActionData =
   | AgreementContractData

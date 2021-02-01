@@ -37,7 +37,6 @@ const ROUTES = {
       DONE: `${RNS_SELL}/${DONE}`,
       CANCEL: {
         CHECKOUT: `${RNS_CANCEL}/${CHECKOUT}`,
-        DONE: `${RNS_CANCEL}/${DONE}`,
       },
     },
   },
