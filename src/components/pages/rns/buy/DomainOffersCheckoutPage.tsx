@@ -1,4 +1,3 @@
-import Login from 'components/atoms/Login'
 import RifAddress from 'components/molecules/RifAddress'
 import CombinedPriceCell from 'components/molecules/CombinedPriceCell'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
@@ -14,10 +13,15 @@ import AppContext, { errorReporterFactory } from 'context/App/AppContext'
 import MarketContext from 'context/Market'
 import RnsOffersContext from 'context/Services/rns/OffersContext'
 import Logger from 'utils/Logger'
-import {
-  Card, CardActions, CardContent, CardHeader, createStyles, makeStyles, Table, TableBody,
-  TableCell, TableRow, Theme,
-} from '@material-ui/core'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Card from '@material-ui/core/Card'
+import CardActions from '@material-ui/core/CardActions'
+import CardContent from '@material-ui/core/CardContent'
+import CardHeader from '@material-ui/core/CardHeader'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableRow from '@material-ui/core/TableRow'
 import Typography from '@material-ui/core/Typography'
 import {
   Button, colors, Web3Store,
@@ -31,12 +35,14 @@ import Web3 from 'web3'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import RoundBtn from 'components/atoms/RoundBtn'
 import networkConfig from 'config'
+import WithLoginCard from 'components/hoc/WithLoginCard'
+import NotEnoughFunds from 'components/atoms/NotEnoughFunds'
 
 const { rnsManagerUrl } = networkConfig
 
 const logger = Logger.getInstance()
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   card: {
     width: 491,
     height: 'fit-content',
@@ -119,7 +125,7 @@ const DomainOffersCheckoutPage: FC = () => {
 
   // check funds
   useEffect(() => {
-    if (account && !isFundsConfirmed && order) {
+    if (!isFundsConfirmed && order) {
       const {
         item: {
           paymentToken: { symbol: tokenSymbol },
@@ -175,7 +181,6 @@ const DomainOffersCheckoutPage: FC = () => {
   }
 
   const { tokenId } = order.item
-
   const {
     item: {
       ownerAddress,
@@ -186,79 +191,83 @@ const DomainOffersCheckoutPage: FC = () => {
   } = order
   const isOwnDomain = account?.toLowerCase() === ownerAddress.toLowerCase()
   const currency = crypto[symbol]
-
-  const priceCellProps = {
-    price: price.toString(),
-    priceFiat: price.mul(currency.rate).toString(),
-    currency: currency.displayName,
-    currencyFiat: currentFiat.displayName,
-    divider: ' ',
-  }
-  const PriceCell = <CombinedPriceCell {...priceCellProps} />
-
   const displayName = domainName
     ? <ShortenTextTooltip value={domainName} maxLength={30} />
     : <RifAddress pretext="Unknown RNS:" value={tokenId} />
-
   const details = {
     NAME: displayName,
     SELLER: <RifAddress value={ownerAddress} />,
     'RENEWAL DATE': expirationDate.toLocaleDateString(),
-    PRICE: PriceCell,
+    PRICE: (
+      <CombinedPriceCell
+        price={price.toString()}
+        priceFiat={price.mul(currency.rate).toString()}
+        currency={currency.displayName}
+        currencyFiat={currentFiat.displayName}
+      />
+    ),
   }
 
   const handleBuyDomain = async (): Promise<void> => {
-    if (web3 && account && domainName) {
-      try {
-        setProcessingTx(true)
-
-        const rnsContract = RNSContract.getInstance(web3, currency.symbol)
-        // GET PLACEMENT PRICE FROM CONTRACT
-        const tokenPrice = await rnsContract.getPriceString(tokenId, account)
-          .catch((error) => {
-            throw new UIError({
-              error,
-              id: 'contract-marketplace-getPlacement',
-              text: `Could not retrieve placement for ${domainName} from contract.`,
-            })
-          })
-
-        const transferReceipt = await rnsContract.buy(
-          marketPlaceAddress, tokenPrice, domainName,
-          tokenId, { from: account },
-        ).catch((error) => {
+    try {
+      setProcessingTx(true)
+      const rnsContract = RNSContract.getInstance(
+        web3 as Web3, currency.symbol,
+      )
+      // GET PLACEMENT PRICE FROM CONTRACT
+      const tokenPrice = await rnsContract.getPriceString(tokenId, account)
+        .catch((error) => {
           throw new UIError({
             error,
-            id: 'contract-rns-buy',
-            text: `Could not buy domain ${domainName} from contract.`,
+            id: 'contract-marketplace-getPlacement',
+            text: `Could not retrieve placement for ${domainName} from contract.`,
           })
         })
 
-        logger.info('transferReceipt:', transferReceipt)
+      const transferReceipt = await rnsContract.buy(
+        marketPlaceAddress, tokenPrice, domainName as string,
+        tokenId, { from: account },
+      ).catch((error) => {
+        throw new UIError({
+          error,
+          id: 'contract-rns-buy',
+          text: `Could not buy domain ${domainName} from contract.`,
+        })
+      })
 
-        if (transferReceipt) {
-          setTxOperationDone(true)
-          confirmationsDispatch({
-            type: 'NEW_REQUEST',
-            payload: {
-              contractAction: 'RNS_BUY',
-              txHash: transferReceipt.transactionHash,
-              contractActionData: { tokenId },
-            },
-          })
-        }
-      } catch (e) {
-        logger.error(e)
-        reportError(e)
-      } finally {
-        setProcessingTx(false)
+      logger.info('transferReceipt:', transferReceipt)
+
+      if (transferReceipt) {
+        setTxOperationDone(true)
+        confirmationsDispatch({
+          type: 'NEW_REQUEST',
+          payload: {
+            contractAction: 'RNS_BUY',
+            txHash: transferReceipt.transactionHash,
+            contractActionData: { tokenId },
+          },
+        })
       }
+    } catch (e) {
+      logger.error(e)
+      reportError(e)
+    } finally {
+      setProcessingTx(false)
     }
   }
 
   const buyingNameTitle = domainName
     ? shortenString(domainName, 30, 25)
     : shortChecksumAddress(tokenId)
+
+  const renderNotEnoughFunds = (): JSX.Element | undefined => {
+    if (isFundsConfirmed && !hasFunds) {
+      return (
+        <NotEnoughFunds token={currency} />
+      )
+    }
+    return undefined
+  }
 
   return (
     <CheckoutPageTemplate
@@ -295,35 +304,26 @@ const DomainOffersCheckoutPage: FC = () => {
             </TableBody>
           </Table>
         </CardContent>
-        {account && isFundsConfirmed && !hasFunds && (
-          <Typography color="error">
-            You do not have enough
-            {' '}
-            {currency.displayName}
-            .
-          </Typography>
-        )}
-        {account
-          && (
-            <CardActions className={classes.footer}>
-              {isOwnDomain && <p>You cannot purchase your own offer.</p>}
-              {
-                !isOwnDomain && hasFunds
-                && <p>Your wallet will open and you will be asked to confirm the transaction for buying the domain.</p>
-              }
-              <Button
-                disabled={!hasFunds || isOwnDomain}
-                color="primary"
-                variant="contained"
-                rounded
-                shadow
-                onClick={handleBuyDomain}
-              >
-                Buy domain
-              </Button>
-            </CardActions>
-          )}
-        {!account && <Login />}
+        {
+          renderNotEnoughFunds()
+        }
+        <CardActions className={classes.footer}>
+          {isOwnDomain && <p>You cannot purchase your own offer.</p>}
+          {
+            !isOwnDomain && hasFunds
+            && <p>Your wallet will open and you will be asked to confirm the transaction for buying the domain.</p>
+          }
+          <Button
+            disabled={!hasFunds || isOwnDomain}
+            color="primary"
+            variant="contained"
+            rounded
+            shadow
+            onClick={handleBuyDomain}
+          >
+            Buy domain
+          </Button>
+        </CardActions>
       </Card>
       <ProgressOverlay
         title={`Buying the domain ${domainName}!`}
@@ -332,11 +332,13 @@ const DomainOffersCheckoutPage: FC = () => {
         isDone={txOperationDone}
         buttons={[
           <RoundBtn
+            key="buy_another"
             onClick={(): void => history.push(ROUTES.RNS.BUY.BASE)}
           >
             Buy another domain
           </RoundBtn>,
           <RoundBtn
+            key="go_to_rnsManager"
             disabled={!rnsManagerUrl}
             onClick={
               (): void => {
@@ -355,4 +357,8 @@ const DomainOffersCheckoutPage: FC = () => {
   )
 }
 
-export default DomainOffersCheckoutPage
+export default WithLoginCard({
+  WrappedComponent: DomainOffersCheckoutPage,
+  title: 'Connect your wallet to buy the domain',
+  contentText: 'Please, connect your wallet in order to buy a new domain.',
+})
