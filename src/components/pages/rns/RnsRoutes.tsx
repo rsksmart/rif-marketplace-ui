@@ -6,7 +6,6 @@ import React, { FC, useEffect } from 'react'
 import {
   Redirect, Route, Switch, useLocation, useHistory,
 } from 'react-router-dom'
-
 import TabsTemplate from 'components/templates/TabsTemplate'
 import networkConfig from 'config'
 import { RnsDomainsContextProvider } from 'context/Services/rns/DomainsContext'
@@ -16,7 +15,6 @@ import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { getTabValueFromLocation } from 'utils/utils'
 import {
-  DomainListed,
   DomainOffersCheckoutPage,
   DomainOffersPage, DomainsCheckoutPage, NotFound, SellDomainsListPage,
 } from '..'
@@ -39,7 +37,6 @@ const TABS: StyledNavTabProps[] = [
 
 const RnsRoutes: FC = () => {
   const { pathname } = useLocation()
-
   const { services } = networkConfig
   const rnsEnabled = services && services.rns
   const history = useHistory()
@@ -105,11 +102,6 @@ const RnsRoutes: FC = () => {
                     exact
                     path={ROUTES.RNS.SELL.CHECKOUT}
                     component={DomainsCheckoutPage}
-                  />
-                  <Route
-                    exact
-                    path={ROUTES.RNS.SELL.DONE}
-                    component={DomainListed}
                   />
                   <Route path={ROUTES.RNS.SELL.LISTING}>
                     <RnsSoldContextProvider>

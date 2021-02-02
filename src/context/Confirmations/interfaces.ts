@@ -17,7 +17,11 @@ type StorageContractAction = AgreementContractAction | OfferContractAction
 
 type BuyDomainAction = 'RNS_BUY'
 type CancelDomainAction = 'RNS_CANCEL'
-type RnsContractAction = | BuyDomainAction | CancelDomainAction
+type PlaceDomainAction = 'RNS_PLACE'
+type RnsContractAction =
+  | BuyDomainAction
+  | CancelDomainAction
+  | PlaceDomainAction
 
 export type ContractAction =
   | StorageContractAction
