@@ -2,7 +2,6 @@ import AppContext from 'context/App/AppContext'
 import {
   PageTemplate, Web3Provider, defaultWeb3State,
 } from '@rsksmart/rif-ui'
-import { BlockchainContextProvider } from 'context/Blockchain/BlockchainContext'
 import { MarketContextProvider } from 'context/Market'
 import { NotificationsContextProvider } from 'context/Services/notifications'
 import React, { FC, useContext } from 'react'
@@ -61,7 +60,6 @@ const Market: FC = () => {
   const orderedProviders = [
     ConfirmationsContextProvider,
     NotificationsContextProvider,
-    BlockchainContextProvider,
     MarketContextProvider,
   ]
   const content = (
