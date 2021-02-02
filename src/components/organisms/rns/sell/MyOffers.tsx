@@ -111,7 +111,6 @@ const MyOffers: FC = () => {
             priceFiat={price.times(rate).toString()}
             currency={displayName}
             currencyFiat={fiatDisplayName}
-            divider=" = "
           />
         )
         displayItem.action2 = (
