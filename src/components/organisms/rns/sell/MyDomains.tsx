@@ -6,10 +6,11 @@ import React, { FC, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import RnsDomainsContext, { RnsDomainsContextProps } from 'context/Services/rns/DomainsContext'
-import { ShortenTextTooltip } from '@rsksmart/rif-ui'
+import { ShortenTextTooltip, Spinner } from '@rsksmart/rif-ui'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import InfoBar from 'components/molecules/InfoBar'
 import useConfirmations from 'hooks/useConfirmations'
+import { RnsContractData } from 'context/Confirmations/interfaces'
 
 const MyDomains: FC = () => {
   const {
@@ -30,7 +31,7 @@ const MyDomains: FC = () => {
     })
   }, [dispatch])
 
-  const confsCount = useConfirmations(['RNS_BUY', 'RNS_CANCEL']).length
+  const pendingConfs = useConfirmations(['RNS_BUY', 'RNS_CANCEL', 'RNS_PLACE'])
 
   const routeState = history.location.state as { refresh?: boolean }
 
@@ -71,26 +72,34 @@ const MyDomains: FC = () => {
         )
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
+      const isProcessingConfs = pendingConfs.some(
+        ({ contractActionData }) => (
+          (contractActionData as RnsContractData).tokenId === tokenId
+        ),
+      )
+
       const displayItem = {
         id,
         name: displayDomainName,
         expirationDate: expirationDate.toLocaleDateString(),
-        action1: (
-          <SelectRowButton
-            id={id}
-            handleSelect={
-              (): void => {
-                dispatch({
-                  type: 'SET_ORDER',
-                  payload: {
-                    item: domainItem,
-                  },
-                })
-                history.push(ROUTES.RNS.SELL.CHECKOUT)
+        action1: isProcessingConfs
+          ? <Spinner />
+          : (
+            <SelectRowButton
+              id={id}
+              handleSelect={
+                (): void => {
+                  dispatch({
+                    type: 'SET_ORDER',
+                    payload: {
+                      item: domainItem,
+                    },
+                  })
+                  history.push(ROUTES.RNS.SELL.CHECKOUT)
+                }
               }
-            }
-          />
-        ),
+            />
+          ),
       }
       return displayItem
     })
@@ -98,8 +107,8 @@ const MyDomains: FC = () => {
   return (
     <>
       <InfoBar
-        isVisible={Boolean(confsCount)}
-        text={`Awaiting confirmations for ${confsCount} domain(s)`}
+        isVisible={Boolean(pendingConfs.length)}
+        text={`Awaiting confirmations for ${pendingConfs.length} domain(s)`}
         type="info"
       />
       <MarketPageTemplate

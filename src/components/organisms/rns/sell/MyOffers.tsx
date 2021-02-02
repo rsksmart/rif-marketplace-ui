@@ -46,9 +46,7 @@ const MyOffers: FC = () => {
     })
   }, [dispatch])
 
-  const cancelConfs = useConfirmations(
-    ['RNS_CANCEL'],
-  )
+  const pendingConfs = useConfirmations(['RNS_CANCEL', 'RNS_PLACE'])
 
   const history = useHistory()
 
@@ -80,7 +78,7 @@ const MyOffers: FC = () => {
         )
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
-      const isProcessingConfs = cancelConfs.some(
+      const isProcessingConfs = pendingConfs.some(
         ({ contractActionData }) => (
           (contractActionData as RnsContractData).tokenId === tokenId
         ),
@@ -153,8 +151,8 @@ const MyOffers: FC = () => {
   return (
     <>
       <InfoBar
-        isVisible={Boolean(cancelConfs.length)}
-        text={`Awaiting confirmations for ${cancelConfs.length} domain(s)`}
+        isVisible={Boolean(pendingConfs.length)}
+        text={`Awaiting confirmations for ${pendingConfs.length} domain(s)`}
         type="info"
       />
       <MarketPageTemplate
