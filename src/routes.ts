@@ -1,6 +1,5 @@
 const LISTING = 'listing'
 const CHECKOUT = 'checkout'
-const DONE = 'done'
 const EDIT = 'edit'
 
 const LANDING = '/'
@@ -34,7 +33,6 @@ const ROUTES = {
       BASE: RNS_SELL,
       LISTING: `${RNS_SELL}/${LISTING}`,
       CHECKOUT: `${RNS_SELL}/${CHECKOUT}`,
-      DONE: `${RNS_SELL}/${DONE}`,
       CANCEL: {
         CHECKOUT: `${RNS_CANCEL}/${CHECKOUT}`,
       },
