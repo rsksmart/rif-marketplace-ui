@@ -9,10 +9,11 @@ import {
 } from './pages'
 import RnsRoutes from './pages/rns/RnsRoutes'
 import StorageRoutes from './pages/storage/StorageRoutes'
+import TriggersRoutes from './pages/triggers/TriggersRoutes'
 
 const logger = Logger.getInstance()
 
-const Routes = () => {
+const Routes = (): JSX.Element => {
   const history = useHistory()
 
   useEffect(() => {
@@ -20,7 +21,7 @@ const Routes = () => {
       logger.debug('Routes -> location', location)
       logger.debug('Routes -> action', action)
     })
-    return () => {
+    return (): void => {
       unlisten()
     }
   }, [history])
@@ -31,6 +32,7 @@ const Routes = () => {
       <Route exact path={ROUTES.FAQ} component={FAQPage} />
       <Route path={ROUTES.RNS.BASE} component={RnsRoutes} />
       <Route path={ROUTES.STORAGE.BASE} component={StorageRoutes} />
+      <Route path={ROUTES.TRIGGERS.BASE} component={TriggersRoutes} />
       <Route exact path={ROUTES.ABOUT} component={AboutPage} />
       <Route component={NotFound} />
     </Switch>

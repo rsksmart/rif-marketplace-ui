@@ -1,12 +1,14 @@
 import React, { FC } from 'react'
 import {
   nameServiceImg, storageImg,
+  triggersImg,
 } from '@rsksmart/rif-ui'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 
 export const Icons = {
   DOMAINS: nameServiceImg,
   STORAGE: storageImg,
+  TRIGGERS: triggersImg,
 }
 
 export interface IconProps {

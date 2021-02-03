@@ -5,6 +5,7 @@ import InfoIcon from '@material-ui/icons/Info'
 import LiveHelpIcon from '@material-ui/icons/LiveHelp'
 import PeopleIcon from '@material-ui/icons/People'
 import StorageIcon from '@material-ui/icons/Storage'
+import NotificationsIcon from '@material-ui/icons/Notifications'
 import Login from 'components/atoms/Login'
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone'
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive'
@@ -59,14 +60,26 @@ const Headers: FC = () => {
     {
       title: 'Domains',
       to: ROUTES.RNS.BASE,
-      isActive: (_, { pathname }) => pathname.includes(ROUTES.RNS.BASE),
+      isActive: (_, {
+        pathname,
+      }): boolean => pathname.includes(ROUTES.RNS.BASE),
       icon: <PeopleIcon />,
     },
     {
       title: 'Storage',
       to: ROUTES.STORAGE.BASE,
-      isActive: (_, { pathname }) => pathname.includes(ROUTES.STORAGE.BASE),
+      isActive: (_, {
+        pathname,
+      }): boolean => pathname.includes(ROUTES.STORAGE.BASE),
       icon: <StorageIcon />,
+    },
+    {
+      title: 'Notifications',
+      to: ROUTES.TRIGGERS.BASE,
+      isActive: (_, {
+        pathname,
+      }): boolean => pathname.includes(ROUTES.TRIGGERS.BASE),
+      icon: <NotificationsIcon />,
     },
     {
       title: 'About',
