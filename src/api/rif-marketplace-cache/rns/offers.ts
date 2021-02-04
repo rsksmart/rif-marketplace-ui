@@ -41,6 +41,7 @@ enum LimitType {
   min = 1,
   max = -1,
 }
+const PAGE_LIMIT = 10
 
 const fetchPriceLimit = async (
   service,
@@ -82,7 +83,7 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
   _channel = offersChannel
 
   _fetch = async ({
-    price, name, skip, sort,
+    price, name, skip: $skip, sort,
   }: FetchArgs): Promise<RnsDomainOffer[]> => {
     const results: Paginated<OfferTransport> = await this.service.find({
       query: {
@@ -101,7 +102,8 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
           } : undefined,
           priceFiat: sort.price,
         },
-        $skip: skip,
+        $skip,
+        $limit: PAGE_LIMIT,
       },
     })
 
