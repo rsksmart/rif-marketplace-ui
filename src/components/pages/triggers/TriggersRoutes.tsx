@@ -13,6 +13,7 @@ import TabsTemplate from 'components/templates/TabsTemplate'
 import { getTabValueFromLocation } from 'utils/utils'
 import TriggersLandingPage from './TriggersLandingPage'
 import { NotFound } from '..'
+import TriggersSellPage from './sell/TriggersSellPage'
 
 const logger = Logger.getInstance()
 
@@ -60,15 +61,10 @@ const TriggersRoutes: FC = () => {
           <Switch>
             <Route path={ROUTES.TRIGGERS.SELL.BASE}>
               <Switch>
-                <Redirect
-                  exact
-                  from={ROUTES.TRIGGERS.SELL.BASE}
-                  to={ROUTES.TRIGGERS.SELL.BASE}
-                />
                 <Route
                   exact
                   path={ROUTES.TRIGGERS.SELL.BASE}
-                // component={TriggersSellPage}
+                  component={TriggersSellPage}
                 />
                 <Route component={NotFound} />
               </Switch>
