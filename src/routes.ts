@@ -19,6 +19,7 @@ const STORAGE_RENEW_AGREEMENT = `${STORAGE_MYPURCHASES}/renew`
 
 const TRIGGERS = '/notifications'
 const TRIGGERS_BUY = `${TRIGGERS}/buy`
+const TRIGGERS_SELL = `${TRIGGERS}/sell`
 
 const FAQ = '/faq'
 const ABOUT = '/about'
@@ -66,6 +67,9 @@ const ROUTES = {
     BASE: TRIGGERS,
     BUY: {
       BASE: TRIGGERS_BUY,
+    },
+    SELL: {
+      BASE: TRIGGERS_SELL,
     },
   },
   FAQ,
