@@ -2,11 +2,17 @@ import Typography from '@material-ui/core/Typography'
 import ProviderRegistrar from 'components/organisms/triggers/ProviderRegistrar'
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
+import Logger from 'utils/Logger'
+
+const logger = Logger.getInstance()
 
 const TriggersSellPage: FC = () => {
-  const [providerAddress, setProviderAddress] = useState('')
-  const [endpointUrl, setEndpointUrl] = useState('')
+  const handleRegistration = ({ endpointUrl, providerAddress }): void => {
+    logger.debug({ endpointUrl })
+    logger.debug({ providerAddress })
+    // TODO: interact with the SC
+  }
 
   return (
     <CenteredPageTemplate>
@@ -17,12 +23,7 @@ const TriggersSellPage: FC = () => {
         {`Fill out the fields below to list your notification service. 
         All the information provided is meant to be true and correct.`}
       </Typography>
-      <ProviderRegistrar
-        providerAddress={providerAddress}
-        onProviderAddrChange={setProviderAddress}
-        endpointUrl={endpointUrl}
-        onEndpointChange={setEndpointUrl}
-      />
+      <ProviderRegistrar onRegister={handleRegistration} />
     </CenteredPageTemplate>
   )
 }
