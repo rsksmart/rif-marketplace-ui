@@ -1,5 +1,6 @@
 import Typography from '@material-ui/core/Typography'
 import ProviderRegistrar from 'components/organisms/triggers/ProviderRegistrar'
+import WithLoginCard from 'components/hoc/WithLoginCard'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import React, { FC, useState } from 'react'
 
@@ -26,4 +27,8 @@ const TriggersSellPage: FC = () => {
   )
 }
 
-export default TriggersSellPage
+export default WithLoginCard({
+  WrappedComponent: TriggersSellPage,
+  title: 'Connect your wallet to register as a provider',
+  contentText: 'Please, connect your wallet in order to register as a provider.',
+})
