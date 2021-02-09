@@ -16,18 +16,18 @@ import { StakingContract, StorageContract } from 'contracts/storage'
 import {
   Props as StakingContextProps,
 } from 'context/Services/storage/staking/interfaces'
-import StakingFab from 'components/molecules/storage/StakingFab'
 import withStakingContext, { Context }
   from 'context/Services/storage/staking/Context'
+import StakingFab from 'components/molecules/staking/StakingFab'
 import RoundBtn from 'components/atoms/RoundBtn'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import { SupportedTokenSymbol } from 'models/Token'
 import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Services/storage'
 import useConfirmations from 'hooks/useConfirmations'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
-import DepositModal from './DepositModal'
-import WithdrawModal from './WithdrawModal'
-import StakingCard from './StakingCard'
+import DepositModal from 'components/organisms/staking/DepositModal'
+import WithdrawModal from 'components/organisms/staking/WithdrawModal'
+import StakingCard from 'components/organisms/staking/StakingCard'
 
 const logger = Logger.getInstance()
 
