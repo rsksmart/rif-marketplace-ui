@@ -7,10 +7,11 @@ import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { StorageItem, StorageOffer } from 'models/marketItems/StorageItem'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
 import client from '../client'
-import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
+import { StorageAPIService, StorageWSChannel } from './interfaces'
 import { mapOfferFromTransport, MinMax } from './utils'
 
-export const offersAddress: StorageServiceAddress = 'storage/v0/offers'
+export const offersAddress = 'storage/v0/offers' as const
+export type OffersAddress = typeof offersAddress
 export const offersWSChannel: StorageWSChannel = 'offers'
 
 export class StorageOffersService extends AbstractAPIService

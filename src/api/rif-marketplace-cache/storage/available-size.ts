@@ -1,11 +1,11 @@
 import { MinMaxFilter } from 'models/Filters'
 import { AbstractAPIService } from 'api/models/apiService'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
-import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
+import { StorageAPIService, StorageWSChannel } from './interfaces'
 import client from '../client'
 
-export const availableCapacityAddress: StorageServiceAddress = 'storage/v0/availableCapacity'
-
+export const availableCapacityAddress = 'storage/v0/availableCapacity' as const
+export type AvailableCapacityAddress = typeof availableCapacityAddress
 export class AvailableCapacityService
   extends AbstractAPIService implements StorageAPIService {
   path = availableCapacityAddress

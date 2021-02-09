@@ -4,11 +4,12 @@ import { AgreementTransport } from 'api/models/storage/transports'
 import { Agreement } from 'models/marketItems/StorageItem'
 import client from '../client'
 import {
-  AgreementFilters, StorageAPIService, StorageServiceAddress, StorageWSChannel,
+  AgreementFilters, StorageAPIService, StorageWSChannel,
 } from './interfaces'
 import { mapAgreementFromTransport } from './utils'
 
-export const agreementsAddress: StorageServiceAddress = 'storage/v0/agreements'
+export const agreementsAddress = 'storage/v0/agreements' as const
+export type AgreementsAddress = typeof agreementsAddress
 export const agreementsWSChannel: StorageWSChannel = 'agreements'
 
 export class StorageAgreementService extends AbstractAPIService
