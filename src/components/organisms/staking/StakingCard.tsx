@@ -2,7 +2,7 @@ import { Box, Grid, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { Button } from '@rsksmart/rif-ui'
 import GridItem from 'components/atoms/GridItem'
-import StakingBalance from 'components/molecules/storage/StakingBalance'
+import StakingBalance from 'components/molecules/staking/StakingBalance'
 import React, { FC } from 'react'
 
 export type StakingCardProps = {
