@@ -1,11 +1,7 @@
 import React, {
   FC, useCallback, useContext, useState,
 } from 'react'
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import {
-  Box, Grow, Typography,
-} from '@material-ui/core'
-import { colors, Web3Store } from '@rsksmart/rif-ui'
+import { Web3Store } from '@rsksmart/rif-ui'
 import AppContext, {
   AppContextProps, errorReporterFactory,
 } from 'context/App/AppContext'
@@ -16,7 +12,6 @@ import { StakingContract, StorageContract } from 'contracts/storage'
 import {
   Props as StakingContextProps,
 } from 'context/Services/storage/staking/interfaces'
-import StakingFab from 'components/molecules/staking/StakingFab'
 import withStakingContext, { StakingContext }
   from 'context/Services/storage/staking/Context'
 import RoundBtn from 'components/atoms/RoundBtn'
@@ -25,57 +20,14 @@ import { SupportedTokenSymbol } from 'models/Token'
 import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Services/storage'
 import useConfirmations from 'hooks/useConfirmations'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
-import DepositModal from 'components/organisms/staking/DepositModal'
-import WithdrawModal from 'components/organisms/staking/WithdrawModal'
-import StakingCard from 'components/organisms/staking/StakingCard'
+import StakingTemplate from 'components/organisms/staking/StakingTemplate'
 
 const logger = Logger.getInstance()
-
-const stakingIconSize = 10
-
-const useStyles = makeStyles((theme: Theme) => createStyles({
-  wrapper: {
-    position: 'relative',
-  },
-  root: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    width: '100%',
-    right: 0,
-    position: 'absolute',
-    zIndex: 99,
-  },
-  cardWrapper: {
-    maxWidth: '550px',
-    width: '100%',
-  },
-  infoContainer: {
-    border: `${colors.primary} 1px solid`,
-    alignItems: 'center',
-    borderRadius: '50px 0px 0px 50px',
-    paddingRight: theme.spacing(stakingIconSize / 2),
-    backgroundColor: colors.white,
-    whiteSpace: 'nowrap',
-    height: theme.spacing(stakingIconSize),
-  },
-  stakingIcon: {
-    height: theme.spacing(stakingIconSize),
-    minWidth: theme.spacing(stakingIconSize),
-    marginLeft: -theme.spacing(stakingIconSize / 2),
-  },
-  fabTitle: {
-    position: 'absolute',
-    top: '-25px',
-    right: '15px',
-  },
-}))
 
 const stakeInProgressMsg = 'Staking your funds'
 const unstakeInProgressMsg = 'Unstaking your funds'
 
 const Staking: FC = () => {
-  const classes = useStyles()
-
   const {
     state: {
       account,
@@ -107,16 +59,12 @@ const Staking: FC = () => {
     useConfirmations(['STAKING_STAKE', 'STAKING_UNSTAKE']).length,
   )
 
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [canWithdraw, setCanWithdraw] = useState(false)
-  const [depositOpened, setDepositOpened] = useState(false)
-  const [withdrawOpened, setWithdrawOpened] = useState(false)
   const [txInProgressMessage, setTxInProgressMessage] = useState('')
   const [txCompleteMsg, setTxCompleteMsg] = useState('')
   const [processingTx, setProcessingTx] = useState(false)
   const [txOperationDone, setTxOperationDone] = useState(false)
 
-  const isEnabled = account && isWhitelistedProvider
+  const isEnabled = Boolean(account && isWhitelistedProvider)
 
   const handleTxCompletedClose = (): void => {
     setProcessingTx(false)
@@ -130,7 +78,6 @@ const Staking: FC = () => {
       setTxInProgressMessage(stakeInProgressMsg)
       setProcessingTx(true)
       setTxCompleteMsg('Your funds have been staked!')
-      setDepositOpened(false)
 
       const stakeContract = StakingContract.getInstance(web3 as Web3)
       const receipt = await stakeContract.stake(
@@ -174,7 +121,6 @@ const Staking: FC = () => {
       setTxInProgressMessage(unstakeInProgressMsg)
       setProcessingTx(true)
       setTxCompleteMsg('Your funds have been unstaked!')
-      setWithdrawOpened(false)
       const stakeContract = StakingContract.getInstance(web3 as Web3)
       const receipt = await stakeContract.unstake(
         amount, { token: currency, from: account },
@@ -202,61 +148,29 @@ const Staking: FC = () => {
     }
   }
 
-  const handleOpenWithdraw = async (): Promise<void> => {
-    if (!web3 || !account) return
+  const canWithdraw = async (): Promise<boolean> => {
+    if (!web3 || !account) return false
     const storageContract = StorageContract.getInstance(web3 as Web3)
     const hasUtilizedCapacity = await storageContract.hasUtilizedCapacity(
       account as string, { from: account },
     )
-    setCanWithdraw(Boolean(!hasUtilizedCapacity))
-    setWithdrawOpened(true)
+    return !hasUtilizedCapacity
   }
 
-  const handleExpandClick = (): void => setIsExpanded((exp) => !exp)
-
   return (
-    <div className={classes.wrapper}>
-      <div className={classes.root}>
-        <Typography
-          className={classes.fabTitle}
-          component="div"
-          color="primary"
-        >
-          <Box fontWeight="fontWeightRegular">
-            Staking
-          </Box>
-        </Typography>
-        <Grow in={isExpanded}>
-          <div className={classes.cardWrapper}>
-            <StakingCard
-              className={classes.infoContainer}
-              onAddFundsClicked={(): void => setDepositOpened(true)}
-              onWithdrawClicked={handleOpenWithdraw}
-              totalStakedUSD={totalStakedUSD || '0.00'}
-              isAwaitingConfirmations={isAwaitingConfirmations}
-            />
-          </div>
-        </Grow>
-        <StakingFab
-          disabled={!isEnabled}
-          className={classes.stakingIcon}
-          onClick={handleExpandClick}
-        />
-      </div>
-      <DepositModal
+    <>
+      <StakingTemplate
+        checkCanWithdraw={canWithdraw}
+        isEnabled={isEnabled}
+        isProcessing={isAwaitingConfirmations}
+        stakedBalances={stakes}
         totalStakedUSD={totalStakedUSD}
-        stakes={stakes}
         onDeposit={handleDeposit}
-        open={depositOpened}
-        onClose={(): void => setDepositOpened(false)}
-      />
-      <WithdrawModal
-        canWithdraw={canWithdraw}
-        onClose={(): void => setWithdrawOpened(false)}
-        open={withdrawOpened}
         onWithdraw={handleWithdraw}
-        totalStakedUSD={totalStakedUSD}
-        stakes={stakes}
+        cantWithdrawMessage={
+          `You cannot withdraw funds because all your contracts are running.
+          Please wait until your contract finish`
+        }
       />
       <ProgressOverlay
         title={txInProgressMessage}
@@ -272,7 +186,7 @@ const Staking: FC = () => {
         ]}
 
       />
-    </div>
+    </>
   )
 }
 

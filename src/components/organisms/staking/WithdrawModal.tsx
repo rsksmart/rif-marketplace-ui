@@ -4,7 +4,9 @@ import {
 import Box from '@material-ui/core/Box'
 import Typography from '@material-ui/core/Typography'
 import { Button, ModalDialogue } from '@rsksmart/rif-ui'
-import { StakedBalances as StakedBalancesProp } from 'api/rif-marketplace-cache/storage/stakes'
+import {
+  StakedBalances as StakedBalancesProp,
+} from 'api/rif-marketplace-cache/storage/stakes'
 import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
 import { SupportedTokenSymbol, SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'
@@ -15,9 +17,10 @@ export interface WithdrawModalProps {
   open: boolean
   onClose: () => void
   onWithdraw: (amount: number, currency: SupportedTokenSymbol) => void
-  canWithdraw: boolean
   totalStakedUSD: string
   stakes: StakedBalancesProp
+  checkCanWithdraw: () => Promise<boolean>
+  cantWithdrawMessage: string
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -27,16 +30,30 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }))
 
 const WithdrawModal: FC<WithdrawModalProps> = ({
-  open, onClose, onWithdraw, canWithdraw, totalStakedUSD, stakes,
+  open, onClose, onWithdraw,
+  totalStakedUSD, stakes,
+  checkCanWithdraw,
+  cantWithdrawMessage = 'You cannot withdraw your funds.',
 }) => {
   const classes = useStyles()
   const currencyOptions: SupportedTokenSymbol[] = [SYSTEM_SUPPORTED_SYMBOL.rbtc, SYSTEM_SUPPORTED_SYMBOL.rif]
   const [selectedCurrency, setSelectedCurrency] = useState<SupportedTokenSymbol>(SYSTEM_SUPPORTED_SYMBOL.rbtc)
   const [amountToWithdraw, setAmountToWithdraw] = useState<number | undefined>(undefined)
+  const [withdrawEnabled, setWithdrawEnabled] = useState(true)
+  const [isCheckingWithdraw, setIsCheckingWithdraw] = useState(false)
 
   useEffect(() => {
+    const handleModalOpened = async (): Promise<void> => {
+      setIsCheckingWithdraw(true)
+      setWithdrawEnabled(await checkCanWithdraw())
+      setIsCheckingWithdraw(false)
+    }
+
+    if (open) {
+      handleModalOpened()
+    }
     setAmountToWithdraw(undefined)
-  }, [open])
+  }, [open, checkCanWithdraw])
 
   const handleCurrencyChange = ({
     target: { value },
@@ -54,7 +71,7 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
     onWithdraw(Number(amountToWithdraw), selectedCurrency)
   }
 
-  const disableWithdrawAction = !canWithdraw
+  const disableWithdrawAction = isCheckingWithdraw || !withdrawEnabled
     || !amountToWithdraw
     || amountToWithdraw <= 0
     || amountToWithdraw > Number(stakes[selectedCurrency])
@@ -124,13 +141,12 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
         <Typography
           className={classes.bodyChild}
           component="div"
-          hidden={canWithdraw}
+          hidden={withdrawEnabled}
           align="center"
           color="secondary"
         >
           <Box fontWeight="fontWeightMedium">
-            You cannot withdraw funds because all your contracts are running.
-            Please wait until your contract finish
+            {cantWithdrawMessage}
           </Box>
         </Typography>
       </CenteredContent>
