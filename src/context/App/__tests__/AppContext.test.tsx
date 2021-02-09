@@ -1,55 +1,31 @@
 import { render } from '@testing-library/react'
 import React, { FC, useContext } from 'react'
-import { ConfirmationsService } from 'api/rif-marketplace-cache/blockchain/confirmations'
-import { OffersService } from 'api/rif-marketplace-cache/rns/offers'
-import { DomainsService } from 'api/rif-marketplace-cache/rns/domains'
-import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
-import { XRService } from 'api/rif-marketplace-cache/rates/xr'
-import { ServiceMap } from 'api/models/apiService'
-import { ServiceAddress } from 'api/models/serviceAddresses'
 import AppContext, { AppContextProvider } from '../AppContext'
 
-const svcAddrss: Record<string, ServiceAddress> = {
-  rates: 'rates/v0',
-  confirmations: 'confirmations',
-  rnsDomains: 'rns/v0/domains',
-  rnsOffers: 'rns/v0/offers',
-  rnsSold: 'rns/v0/sold',
-}
+const ProviderTest: FC<{test: Function}> = ({ test }) => {
+  const MockConsumer: FC = () => {
+    test(useContext(AppContext))
 
-const isServiceMap = (obj: ServiceMap): obj is ServiceMap => {
-  if (!obj) return false
-  const {
-    rates, confirmations, rnsDomains, rnsOffers, rnsSold,
-  } = svcAddrss
+    return <div />
+  }
 
-  if (!(obj[confirmations] instanceof ConfirmationsService)) return false
-
-  if (!(obj[rates] instanceof XRService)) return false
-
-  if (!(obj[rnsDomains] instanceof DomainsService)) return false
-
-  if (!(obj[rnsOffers] instanceof OffersService)) return false
-
-  if (!(obj[rnsSold] instanceof SoldDomainsService)) return false
-
-  return true
+  return (
+    <AppContextProvider>
+      <MockConsumer />
+    </AppContextProvider>
+  )
 }
 
 describe('AppContext', () => {
   describe('AppContext.Provider', () => {
-    test('initial state should contian property apis of type ServiceMap', () => {
-      const MockConsumer: FC<{}> = () => {
-        const { state: { apis } } = useContext(AppContext)
-        expect(isServiceMap(apis)).toBe(true)
-        return <div />
-      }
+    describe('AppState', () => {
+      test('initial state should contian an object apis', () => {
+        const test = ({ state: { apis } }): void => {
+          expect(apis).toBeTruthy()
+        }
 
-      render(
-        <AppContextProvider>
-          <MockConsumer />
-        </AppContextProvider>,
-      )
+        render(<ProviderTest test={test} />)
+      })
     })
   })
 })
