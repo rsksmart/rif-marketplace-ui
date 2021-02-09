@@ -12,13 +12,14 @@ import WithdrawModal from './WithdrawModal'
 import StakingCard from './StakingCard'
 
 export type StakingTemplateProps = {
-  canWithdraw: boolean
+  checkCanWithdraw: () => Promise<boolean>
   isEnabled: boolean
   isProcessing: boolean
   stakedBalances: StakedBalances
   totalStakedUSD: string
   onDeposit: (amount: number, currency: SupportedTokenSymbol) => Promise<void>
   onWithdraw: (amount: number, currency: SupportedTokenSymbol) => Promise<void>
+  cantWithdrawMessage?: string
 }
 
 const stakingIconSize = 10
@@ -62,13 +63,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const StakingTemplate: FC<StakingTemplateProps> = (props) => {
   const {
-    canWithdraw,
+    checkCanWithdraw,
     isEnabled,
     isProcessing,
     stakedBalances,
     totalStakedUSD,
     onDeposit,
     onWithdraw,
+    cantWithdrawMessage = 'You cannot withdraw your funds.',
   } = props
   const classes = useStyles()
 
@@ -76,8 +78,18 @@ const StakingTemplate: FC<StakingTemplateProps> = (props) => {
   const [depositOpened, setDepositOpened] = useState(false)
   const [withdrawOpened, setWithdrawOpened] = useState(false)
 
-  const handleOpenWithdraw = (): void => {
-    if (canWithdraw) setWithdrawOpened(true)
+  const handleWithdraw = async (
+    amount: number, currency: SupportedTokenSymbol,
+  ): Promise<void> => {
+    await onWithdraw(amount, currency)
+    setWithdrawOpened(false)
+  }
+
+  const handleDeposit = async (
+    amount: number, currency: SupportedTokenSymbol,
+  ): Promise<void> => {
+    await onDeposit(amount, currency)
+    setDepositOpened(false)
   }
 
   return (
@@ -97,7 +109,7 @@ const StakingTemplate: FC<StakingTemplateProps> = (props) => {
             <StakingCard
               className={classes.infoContainer}
               onAddFundsClicked={(): void => setDepositOpened(true)}
-              onWithdrawClicked={handleOpenWithdraw}
+              onWithdrawClicked={(): void => setWithdrawOpened(true)}
               totalStakedUSD={totalStakedUSD || '0.00'}
               isAwaitingConfirmations={isProcessing}
             />
@@ -112,17 +124,18 @@ const StakingTemplate: FC<StakingTemplateProps> = (props) => {
       <DepositModal
         totalStakedUSD={totalStakedUSD}
         stakes={stakedBalances}
-        onDeposit={onDeposit}
+        onDeposit={handleDeposit}
         open={depositOpened}
         onClose={(): void => setDepositOpened(false)}
       />
       <WithdrawModal
-        canWithdraw={canWithdraw}
+        checkCanWithdraw={checkCanWithdraw}
         onClose={(): void => setWithdrawOpened(false)}
         open={withdrawOpened}
-        onWithdraw={onWithdraw}
+        onWithdraw={handleWithdraw}
         totalStakedUSD={totalStakedUSD}
         stakes={stakedBalances}
+        cantWithdrawMessage={cantWithdrawMessage}
       />
     </div>
   )
