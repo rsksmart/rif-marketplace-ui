@@ -5,12 +5,12 @@ import { SupportedTokenSymbol } from 'models/Token'
 import {
   StakeAPIService,
   StakeFilters,
-  StorageServiceAddress,
   StorageWSChannel,
 } from './interfaces'
 import client from '../client'
 
-export const stakesAddress: StorageServiceAddress = 'storage/v0/stakes'
+export const stakesAddress = 'storage/v0/stakes' as const
+export type StakesAddress = typeof stakesAddress
 export const stakesWSChannel: StorageWSChannel = 'stakes'
 
 export type StakedBalances = Record<SupportedTokenSymbol, string>

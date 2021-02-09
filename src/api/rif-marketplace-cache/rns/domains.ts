@@ -7,10 +7,11 @@ import { parseToBigDecimal } from 'utils/parsers'
 import { getTokenByAddress } from 'utils/tokenUtils'
 import client from '../client'
 import {
-  RnsServiceAddress, RnsAPIService, RnsChannels,
+  RnsAPIService, RnsChannels,
 } from './common'
 
-export const domainsAddress: RnsServiceAddress = 'rns/v0/domains'
+export const domainsAddress = 'rns/v0/domains' as const
+export type DomainsAddress = typeof domainsAddress
 export const domainsChannel: RnsChannels = 'domains'
 
 const mapFromTransport = (item: DomainTransport): RnsDomain => {
