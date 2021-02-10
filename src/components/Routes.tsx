@@ -4,6 +4,7 @@ import {
 } from 'react-router-dom'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
+import ErrorBoundary from './error-boundary/ErrorBoundary'
 import {
   AboutPage, FAQPage, LandingPage, NotFound,
 } from './pages'
@@ -27,15 +28,17 @@ const Routes = (): JSX.Element => {
   }, [history])
 
   return (
-    <Switch>
-      <Route exact path={ROUTES.LANDING} component={LandingPage} />
-      <Route exact path={ROUTES.FAQ} component={FAQPage} />
-      <Route path={ROUTES.RNS.BASE} component={RnsRoutes} />
-      <Route path={ROUTES.STORAGE.BASE} component={StorageRoutes} />
-      <Route path={ROUTES.TRIGGERS.BASE} component={TriggersRoutes} />
-      <Route exact path={ROUTES.ABOUT} component={AboutPage} />
-      <Route component={NotFound} />
-    </Switch>
+    <ErrorBoundary>
+      <Switch>
+        <Route exact path={ROUTES.LANDING} component={LandingPage} />
+        <Route exact path={ROUTES.FAQ} component={FAQPage} />
+        <Route path={ROUTES.RNS.BASE} component={RnsRoutes} />
+        <Route path={ROUTES.STORAGE.BASE} component={StorageRoutes} />
+        <Route path={ROUTES.TRIGGERS.BASE} component={TriggersRoutes} />
+        <Route exact path={ROUTES.ABOUT} component={AboutPage} />
+        <Route component={NotFound} />
+      </Switch>
+    </ErrorBoundary>
   )
 }
 
