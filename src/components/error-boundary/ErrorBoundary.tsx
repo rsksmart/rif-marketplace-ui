@@ -1,3 +1,4 @@
+import UncaughtError from 'components/pages/UncaughtError'
 import React, { Component, ErrorInfo, ReactNode } from 'react'
 import Logger from 'utils/Logger'
 
@@ -31,11 +32,7 @@ class ErrorBoundary extends Component<Props, State> {
   render(): React.ReactNode {
     const { hasError } = this.state
 
-    if (hasError) {
-      return (
-        <div>Something went wrong</div>
-      )
-    }
+    if (hasError) return <UncaughtError />
 
     const { children } = this.props
     return children
