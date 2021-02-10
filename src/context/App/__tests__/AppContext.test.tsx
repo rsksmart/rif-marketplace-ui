@@ -5,9 +5,9 @@ import { serviceAddress as notificationsAddress } from 'api/rif-marketplace-cach
 import { xrServiceAddress } from 'api/rif-marketplace-cache/rates/xr'
 import React, { FC, useContext } from 'react'
 import { storageAddresses } from 'api/rif-marketplace-cache/storage/interfaces'
-import { serviceAddress } from 'api/rif-storage-upload-service/upload/interfaces'
+import { serviceAddress as uploadServiceAddr } from 'api/rif-storage-upload-service/upload/interfaces'
+import { rnsAddresses } from 'api/rif-marketplace-cache/rns/common'
 import AppContext, { AppContextProvider } from '../AppContext'
-import { rnsAddresses } from '../../../api/rif-marketplace-cache/rns/common'
 
 const ProviderTest: FC<{test: Function}> = ({ test }) => {
   const MockConsumer: FC = () => {
@@ -34,9 +34,15 @@ const testServiceExistence = (service: ServiceAddress): void => {
 }
 
 describe('AppContext', () => {
-  describe('AppContext.Provider', () => {
-    describe('AppState', () => {
-      test('initial state should contian an object apis', () => {
+  describe('Provider', () => {
+    describe('initial state', () => {
+      test('should contain contextID: "app"', () => {
+        render(<ProviderTest test={({ state: { contextID } }): void => {
+          expect(contextID).toEqual('app')
+        }}
+        />)
+      })
+      test('should contian an object apis', () => {
         const testFn = ({ state: { apis } }): void => {
           expect(apis).toBeTruthy()
         }
@@ -51,8 +57,59 @@ describe('AppContext', () => {
           confirmationAddress,
           ...rnsAddresses,
           ...storageAddresses,
-          serviceAddress,
+          uploadServiceAddr,
         ].forEach(testServiceExistence)
+      })
+      test('should contain messages: {}', () => {
+        render(<ProviderTest test={({ state: { messages } }): void => {
+          expect(messages).toEqual({})
+        }}
+        />)
+      })
+
+      test('should contain loaders', () => {
+        render(<ProviderTest test={({ state: { loaders } }): void => {
+          expect(loaders).toBeTruthy()
+        }}
+        />)
+      })
+      describe('loaders', () => {
+        test(`should contain {
+              contract: false,
+              data: false,
+              filters: false,
+              other: false,
+            }`, () => {
+          render(<ProviderTest test={({ state: { loaders } }): void => {
+            expect(loaders).toBeTruthy()
+          }}
+          />)
+        })
+      })
+
+      test('should contain alertPanel', () => {
+        render(<ProviderTest test={({ state: { alertPanel } }): void => {
+          expect(alertPanel).toEqual({
+            display: false,
+            message: '',
+          })
+        }}
+        />)
+      })
+
+      describe('alertPanel', () => {
+        test(`should contain {
+            display: false,
+            message: '',
+          }`, () => {
+          render(<ProviderTest test={({ state: { alertPanel } }): void => {
+            expect(alertPanel).toEqual({
+              display: false,
+              message: '',
+            })
+          }}
+          />)
+        })
       })
     })
   })
