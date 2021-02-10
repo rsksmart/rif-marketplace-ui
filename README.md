@@ -72,3 +72,7 @@ There are some ways you can make this module better:
 ## License
 
 [MIT](./LICENSE)
+
+## Acknowledgements
+
+- Our `Uncaught Error` page was inspired by [Kapwing](https://www.kapwing.com/404-illustrations). Check out their great work!
