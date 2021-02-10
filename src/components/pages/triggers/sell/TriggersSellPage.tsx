@@ -4,6 +4,7 @@ import WithLoginCard from 'components/hoc/WithLoginCard'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import React, { FC } from 'react'
 import Logger from 'utils/Logger'
+import Staking from 'components/organisms/triggers/Staking'
 
 const logger = Logger.getInstance()
 
@@ -16,6 +17,7 @@ const TriggersSellPage: FC = () => {
 
   return (
     <CenteredPageTemplate>
+      <Staking />
       <Typography gutterBottom variant="h5" color="primary">
         Register as notifications provider
       </Typography>
