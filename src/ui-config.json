@@ -20,6 +20,12 @@
                     "rbtc",
                     "rif"
                 ]
+            },
+            "notifier": {
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
             }
         }
     },

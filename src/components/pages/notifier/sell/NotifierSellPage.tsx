@@ -1,14 +1,14 @@
 import Typography from '@material-ui/core/Typography'
-import ProviderRegistrar from 'components/organisms/triggers/ProviderRegistrar'
+import ProviderRegistrar from 'components/organisms/notifier/ProviderRegistrar'
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import React, { FC } from 'react'
 import Logger from 'utils/Logger'
-import Staking from 'components/organisms/triggers/Staking'
+import Staking from 'components/organisms/notifier/Staking'
 
 const logger = Logger.getInstance()
 
-const TriggersSellPage: FC = () => {
+const NotifierSellPage: FC = () => {
   const handleRegistration = ({ endpointUrl, providerAddress }): void => {
     logger.debug({ endpointUrl })
     logger.debug({ providerAddress })
@@ -31,7 +31,7 @@ const TriggersSellPage: FC = () => {
 }
 
 export default WithLoginCard({
-  WrappedComponent: TriggersSellPage,
+  WrappedComponent: NotifierSellPage,
   title: 'Connect your wallet to register as a provider',
   contentText: 'Please, connect your wallet in order to register as a provider.',
 })
