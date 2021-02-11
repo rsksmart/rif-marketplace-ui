@@ -75,10 +75,10 @@ const Headers: FC = () => {
     },
     {
       title: 'Notifications',
-      to: ROUTES.TRIGGERS.BASE,
+      to: ROUTES.NOTIFIER.BASE,
       isActive: (_, {
         pathname,
-      }): boolean => pathname.includes(ROUTES.TRIGGERS.BASE),
+      }): boolean => pathname.includes(ROUTES.NOTIFIER.BASE),
       icon: <NotificationsIcon />,
     },
     {
