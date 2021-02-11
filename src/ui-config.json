@@ -15,7 +15,7 @@
             "storage": {
                 "tokens": ["rbtc", "rif"]
             },
-            "triggers": {
+            "notifier": {
                 "tokens": ["rbtc", "rif"]
             }
         }
