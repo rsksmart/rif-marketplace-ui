@@ -13,6 +13,7 @@ const {
   rnsDotRskOwner,
   storageManager,
   storageStaking,
+  notificationsManager,
   ...tokenAddresses
 } = contractAddresses
 
@@ -20,9 +21,11 @@ const marketPlaceAddress = marketplace.toLowerCase()
 const rnsAddress = rnsDotRskOwner.toLowerCase()
 const storageAddress = storageManager.toLowerCase()
 const stakingAddress = storageStaking.toLowerCase()
+const notifierAddress = notificationsManager.toLowerCase()
 
 const rnsSupportedTokens: SupportedTokenSymbol[] = services.rns.tokens
 const storageSupportedTokens: SupportedTokenSymbol[] = services.storage.tokens
+const notifierSupportedTokens: SupportedTokenSymbol[] = services.notifier.tokens
 
 const svcNames = Object.keys(services)
 const allAllowedPaymentTokens: string[] = Array.from(
@@ -53,4 +56,6 @@ export {
   rnsSupportedTokens,
   storageSupportedTokens,
   rifTokenAddress,
+  notifierAddress,
+  notifierSupportedTokens,
 }
