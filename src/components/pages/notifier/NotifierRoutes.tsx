@@ -11,60 +11,60 @@ import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import TabsTemplate from 'components/templates/TabsTemplate'
 import { getTabValueFromLocation } from 'utils/utils'
-import TriggersLandingPage from './TriggersLandingPage'
+import NotifierLandingPage from './NotifierLandingPage'
 import { NotFound } from '..'
-import TriggersSellPage from './sell/TriggersSellPage'
+import NotifierSellPage from './sell/NotifierSellPage'
 
 const logger = Logger.getInstance()
 
 const TABS: StyledNavTabProps[] = [
   {
     label: 'Sell',
-    to: ROUTES.TRIGGERS.SELL.BASE,
-    value: ROUTES.TRIGGERS.SELL.BASE,
+    to: ROUTES.NOTIFIER.SELL.BASE,
+    value: ROUTES.NOTIFIER.SELL.BASE,
   },
 ]
 
-const TriggersRoutes: FC = () => {
+const NotifierRoutes: FC = () => {
   const { pathname } = useLocation()
   const { services } = networkConfig
-  const triggersEnabled = services && services.triggers
+  const notifierEnabled = services && services.notifier
   const history = useHistory()
 
   useEffect(() => {
     // TODO: wrap this code block to be excecuted only on debugging
     const unlisten = history.listen((location, action) => {
-      logger.debug('TriggersRoutes -> location', location)
-      logger.debug('TriggersRoutes -> action', action)
+      logger.debug('NotifierRoutes -> location', location)
+      logger.debug('NotifierRoutes -> action', action)
     })
     return (): void => {
       unlisten()
     }
   }, [history])
 
-  if (triggersEnabled) {
+  if (notifierEnabled) {
     return (
       <Switch>
         <Redirect
           exact
-          from={ROUTES.TRIGGERS.BASE}
-          to={ROUTES.TRIGGERS.SELL.BASE}
+          from={ROUTES.NOTIFIER.BASE}
+          to={ROUTES.NOTIFIER.SELL.BASE}
         />
 
         <TabsTemplate
           title="Notification Services"
           value={getTabValueFromLocation(
-            TABS, ROUTES.TRIGGERS.SELL.BASE,
+            TABS, ROUTES.NOTIFIER.SELL.BASE,
           )(pathname)}
           tabs={TABS}
         >
           <Switch>
-            <Route path={ROUTES.TRIGGERS.SELL.BASE}>
+            <Route path={ROUTES.NOTIFIER.SELL.BASE}>
               <Switch>
                 <Route
                   exact
-                  path={ROUTES.TRIGGERS.SELL.BASE}
-                  component={TriggersSellPage}
+                  path={ROUTES.NOTIFIER.SELL.BASE}
+                  component={NotifierSellPage}
                 />
                 <Route component={NotFound} />
               </Switch>
@@ -79,12 +79,12 @@ const TriggersRoutes: FC = () => {
     <Switch>
       <Route
         exact
-        path={ROUTES.TRIGGERS.BASE}
-        component={TriggersLandingPage}
+        path={ROUTES.NOTIFIER.BASE}
+        component={NotifierLandingPage}
       />
-      <Redirect from="*" to={ROUTES.TRIGGERS.BASE} />
+      <Redirect from="*" to={ROUTES.NOTIFIER.BASE} />
     </Switch>
   )
 }
 
-export default TriggersRoutes
+export default NotifierRoutes

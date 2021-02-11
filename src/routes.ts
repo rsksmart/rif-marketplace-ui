@@ -17,9 +17,9 @@ const STORAGE_MYOFFERS_CANCEL = `${STORAGE_MYOFFERS}/cancel`
 const STORAGE_MYPURCHASES = `${STORAGE}/mypurchases`
 const STORAGE_RENEW_AGREEMENT = `${STORAGE_MYPURCHASES}/renew`
 
-const TRIGGERS = '/notifications'
-const TRIGGERS_BUY = `${TRIGGERS}/buy`
-const TRIGGERS_SELL = `${TRIGGERS}/sell`
+const NOTIFIER = '/notifications'
+const NOTIFIER_BUY = `${NOTIFIER}/buy`
+const NOTIFIER_SELL = `${NOTIFIER}/sell`
 
 const FAQ = '/faq'
 const ABOUT = '/about'
@@ -63,13 +63,13 @@ const ROUTES = {
       RENEW: `${STORAGE_RENEW_AGREEMENT}/${CHECKOUT}`,
     },
   },
-  TRIGGERS: {
-    BASE: TRIGGERS,
+  NOTIFIER: {
+    BASE: NOTIFIER,
     BUY: {
-      BASE: TRIGGERS_BUY,
+      BASE: NOTIFIER_BUY,
     },
     SELL: {
-      BASE: TRIGGERS_SELL,
+      BASE: NOTIFIER_SELL,
     },
   },
   FAQ,
