@@ -3,8 +3,8 @@ import Icon, { Icons } from 'components/atoms/Icon'
 import SideImageTemplate from 'components/templates/SideImageTemplate'
 import React, { FC } from 'react'
 
-const TriggersLandingPage: FC = () => {
-  const icon = <Icon src={Icons.TRIGGERS} />
+const NotifierLandingPage: FC = () => {
+  const icon = <Icon src={Icons.NOTIFIER} />
   const sideText = (
     <>
       <Typography variant="body1">
@@ -64,4 +64,4 @@ const TriggersLandingPage: FC = () => {
   )
 }
 
-export default TriggersLandingPage
+export default NotifierLandingPage

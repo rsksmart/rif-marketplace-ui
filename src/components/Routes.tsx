@@ -10,7 +10,7 @@ import {
 } from './pages'
 import RnsRoutes from './pages/rns/RnsRoutes'
 import StorageRoutes from './pages/storage/StorageRoutes'
-import TriggersRoutes from './pages/triggers/TriggersRoutes'
+import NotifierRoutes from './pages/notifier/NotifierRoutes'
 
 const logger = Logger.getInstance()
 
@@ -34,7 +34,7 @@ const Routes = (): JSX.Element => {
         <Route exact path={ROUTES.FAQ} component={FAQPage} />
         <Route path={ROUTES.RNS.BASE} component={RnsRoutes} />
         <Route path={ROUTES.STORAGE.BASE} component={StorageRoutes} />
-        <Route path={ROUTES.TRIGGERS.BASE} component={TriggersRoutes} />
+        <Route path={ROUTES.NOTIFIER.BASE} component={NotifierRoutes} />
         <Route exact path={ROUTES.ABOUT} component={AboutPage} />
         <Route component={NotFound} />
       </Switch>
