@@ -181,7 +181,7 @@ const OfferCreation: FC = () => {
       {
         Boolean(account)
         && isWhitelistedProvider === false // we don't want to show the message on undefined
-        && <NoWhitelistedProvider />
+        && <NoWhitelistedProvider service="Storage" />
       }
       <RoundedCard color="primary" className={classes.stepperContainer}>
         <EditOfferStepper isLoading={false} endHandler={endHandler} />
