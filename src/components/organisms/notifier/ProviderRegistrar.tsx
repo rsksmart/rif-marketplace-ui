@@ -14,11 +14,12 @@ type Inputs = {
 }
 
 type ProviderRegistrarProps = {
+  isEnabled: boolean
   onRegister: (data: Inputs) => void
 }
 
 const ProviderRegistrar: FC<ProviderRegistrarProps> = ({
-  onRegister,
+  onRegister, isEnabled,
 }) => {
   const { register, handleSubmit, errors } = useForm<Inputs>()
 
@@ -70,7 +71,7 @@ const ProviderRegistrar: FC<ProviderRegistrarProps> = ({
               </GridItem>
               <GridItem xs={12}>
                 <GridRow justify="center" spacing={2}>
-                  <RoundBtn type="submit">
+                  <RoundBtn type="submit" disabled={!isEnabled}>
                     Register provider
                   </RoundBtn>
                   <Typography
