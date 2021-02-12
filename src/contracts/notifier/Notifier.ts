@@ -1,0 +1,46 @@
+import NotificationsManager from '@rsksmart/rif-marketplace-notifications/build/contracts/NotificationsManager.json'
+import { notifierAddress, notifierSupportedTokens } from 'contracts/config'
+import { TxOptions } from 'contracts/interfaces'
+import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
+import { getTokensFromConfigTokens } from 'utils/tokenUtils'
+import Web3 from 'web3'
+import { TransactionReceipt } from 'web3-eth'
+import { AbiItem } from 'web3-utils'
+
+export type NotifierContractErrorId = 'contract-notifier'
+
+class NotifierContract extends ContractWithTokens {
+  public static gasMultiplier = 1.1
+
+  public static getInstance(web3: Web3): NotifierContract {
+    if (!NotifierContract.instance) {
+      NotifierContract.instance = new NotifierContract(
+        web3,
+        new web3.eth.Contract(
+          NotificationsManager.abi as AbiItem[],
+          notifierAddress,
+        ),
+        getTokensFromConfigTokens(notifierSupportedTokens),
+        'contract-notifier',
+      )
+    }
+    return NotifierContract.instance
+  }
+
+  private static instance: NotifierContract
+
+  public isWhitelistedProvider(
+    account: string,
+    txOptions: TxOptions = {},
+  ): Promise<TransactionReceipt> {
+    return this._call(
+      this.methods.isWhitelistedProvider(account),
+      {
+        ...txOptions,
+        from: account,
+      },
+    )
+  }
+}
+
+export default NotifierContract
