@@ -2,8 +2,11 @@ import React, { FC } from 'react'
 import { StakedBalances } from 'api/rif-marketplace-cache/storage/stakes'
 import StakingTemplate from '../staking/StakingTemplate'
 
-const Staking: FC = () => {
-  const isEnabled = true
+type Props = {
+  isEnabled: boolean
+}
+
+const Staking: FC<Props> = ({ isEnabled }) => {
   const isProcessing = false
   const stakedBalances = {} as StakedBalances
   const totalStakedUSD = ''
