@@ -1,48 +1,22 @@
-import React, {
-  Dispatch, useContext, useEffect, useReducer, useState,
-} from 'react'
+import { AvailableCapacityService } from 'api/rif-marketplace-cache/storage/available-size'
+import { AvgBillingPriceService } from 'api/rif-marketplace-cache/storage/avg-billing-plan-price'
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
-import { LoadingPayload, ErrorMessagePayload } from 'context/App/appActions'
+import { LoadingPayload } from 'context/App/appActions'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
-import { ContextReducer, ContextActions } from 'context/storeUtils/interfaces'
-import storeReducerFactory from 'context/storeUtils/reducer'
-import { StorageItem } from 'models/marketItems/StorageItem'
-import { Modify } from 'utils/typeUtils'
-import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
+import createWithContext from 'context/storeUtils/createWithContext'
+import { createReducer } from 'context/storeUtils/reducer'
 import { MinMaxFilter } from 'models/Filters'
 import { UIError } from 'models/UIMessage'
-import { AvgBillingPriceService } from 'api/rif-marketplace-cache/storage/avg-billing-plan-price'
-import { AvailableCapacityService } from 'api/rif-marketplace-cache/storage/available-size'
-import createWithContext from 'context/storeUtils/createWithContext'
-import { ServiceState } from 'context/Services/interfaces'
-import {
-  storageOffersActions, StorageOffersPayload,
-  StorageOffersReducer, StorageOffersAction,
-} from './offersActions'
-import { StorageOrder } from '../interfaces'
+import React, {
+  createContext,
+  FC,
+  useCallback,
+  useContext, useEffect, useReducer, useState,
+} from 'react'
+import actions from './offersActions'
+import { Props, State } from './interfaces'
 
-export type ContextName = 'storage_offers'
-
-export type OffersListing = {
-  items: StorageItem[]
-}
-
-export type ContextFilters = Pick<StorageOffersFilters, 'price' | 'size' | 'periods' | 'provider'>
-export type ContextLimits = Pick<StorageOffersFilters, 'price' | 'size'>
-
-export type StorageOffersState = Modify<ServiceState<StorageItem>, {
-  listing: OffersListing
-  order?: StorageOrder
-  filters: ContextFilters
-  limits: ContextLimits
-}>
-
-export type Props = {
-  state: StorageOffersState
-  dispatch: Dispatch<StorageOffersAction>
-}
-
-export const initialState: StorageOffersState = {
+export const initialState: State = {
   contextID: 'storage_offers',
   filters: {
     size: {
@@ -72,10 +46,12 @@ export const initialState: StorageOffersState = {
   needsRefresh: true,
 }
 
-export const Context = React.createContext({} as StorageOffersState as any)
-const reducer: StorageOffersReducer<StorageOffersPayload> | ContextReducer = storeReducerFactory(initialState, storageOffersActions as unknown as ContextActions)
+export const Context = createContext<Props>({
+  state: initialState,
+  dispatch: () => undefined,
+})
 
-export const Provider = ({ children }) => {
+export const Provider: FC = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)
   const [isLimitsSet, setIsLimitsSet] = useState(false)
 
@@ -87,12 +63,18 @@ export const Provider = ({ children }) => {
   const apiAvgBillingPrice = appState.apis['storage/v0/avgBillingPrice'] as AvgBillingPriceService
   const apiAvailableCapacity = appState.apis['storage/v0/availableCapacity'] as AvailableCapacityService
 
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const reportError = useCallback(
+    (e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch],
+  )
+  const [state, dispatch] = useReducer(
+    createReducer(initialState, actions),
+    initialState,
+  )
   const {
     needsRefresh,
     filters,
     limits,
-  } = state as StorageOffersState
+  } = state as State
 
   const errorReporterInstance = errorReporterFactory(appDispatch)
 
@@ -112,18 +94,7 @@ export const Provider = ({ children }) => {
   useEffect(() => {
     if (api?.service && !isInitialised) {
       try {
-        // attachEvent('updated', outdateTokenId(dispatch))
-        // attachEvent('patched', outdateTokenId(dispatch))
-        // attachEvent('created', outdateTokenId(dispatch))
-        // attachEvent('removed', outdateTokenId(dispatch))
-
-        // dispatch({
-        //   type: 'REFRESH',
-        //   payload: { refresh: true },
-        // } as any)
-        // setTimeout(() =>
         setIsInitialised(true)
-        // , 0)
       } catch (e) {
         setIsInitialised(false)
       }
@@ -139,7 +110,7 @@ export const Provider = ({ children }) => {
           isLoading: true,
           id: 'filters',
         } as LoadingPayload,
-      } as any)
+      })
       try {
         Promise.all([
           apiAvailableCapacity.fetchSizeLimits()
@@ -182,15 +153,11 @@ export const Provider = ({ children }) => {
           setIsLimitsSet(true)
         })
       } catch (error) {
-        appDispatch({
-          type: 'SET_MESSAGE',
-          payload: {
-            id: 'service-fetch',
-            text: 'Error while fetching filters.',
-            type: 'error',
-            error,
-          } as ErrorMessagePayload,
-        } as any)
+        reportError(new UIError({
+          error,
+          id: 'service-fetch',
+          text: 'Error while fetching filters.',
+        }))
       } finally {
         appDispatch({
           type: 'SET_IS_LOADING',
@@ -198,10 +165,18 @@ export const Provider = ({ children }) => {
             isLoading: false,
             id: 'filters',
           } as LoadingPayload,
-        } as any)
+        })
       }
     }
-  }, [apiAvailableCapacity, apiAvgBillingPrice, isInitialised, needsRefresh, isLimitsSet, appDispatch])
+  }, [
+    apiAvailableCapacity,
+    apiAvgBillingPrice,
+    isInitialised,
+    needsRefresh,
+    reportError,
+    isLimitsSet,
+    appDispatch,
+  ])
 
   // Pre-fetch limits
   useEffect(() => {
@@ -219,7 +194,7 @@ export const Provider = ({ children }) => {
           isLoading: true,
           id: 'data',
         } as LoadingPayload,
-      } as any)
+      })
       api.fetch(filters)
         .then((items) => {
           dispatch({
@@ -231,7 +206,14 @@ export const Provider = ({ children }) => {
           dispatch({
             type: 'REFRESH',
             payload: { refresh: false },
-          } as any)
+          })
+        })
+        .catch((error) => {
+          reportError(new UIError({
+            error,
+            id: 'service-fetch',
+            text: 'Error while fetching filters.',
+          }))
         })
         .finally(() => {
           appDispatch({
@@ -240,10 +222,18 @@ export const Provider = ({ children }) => {
               isLoading: false,
               id: 'data',
             } as LoadingPayload,
-          } as any)
+          })
         })
     }
-  }, [isLimitsSet, isInitialised, filters, limits, api, appDispatch])
+  }, [
+    isLimitsSet,
+    isInitialised,
+    filters,
+    limits,
+    api,
+    reportError,
+    appDispatch,
+  ])
 
   const value = { state, dispatch }
   return <Context.Provider value={value}>{children}</Context.Provider>
