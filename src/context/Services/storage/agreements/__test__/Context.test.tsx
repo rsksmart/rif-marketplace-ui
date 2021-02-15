@@ -1,5 +1,4 @@
 import React from 'react'
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { render } from '@testing-library/react'
 import { useProviderTest } from '__tests__/testUtils'
 
@@ -11,7 +10,7 @@ const ProviderTest = useProviderTest(
   AgreementsContextProvider, AgreementsContext,
 )
 
-describe('AgreementsContext', () => {
+describe('Storage Agreements Context', () => {
   describe('Provider', () => {
     describe('initial state', () => {
       test('should contain contextID: "storage_agreements"', () => {
@@ -21,8 +20,8 @@ describe('AgreementsContext', () => {
         />)
       })
       test('should contain empty agreements array', () => {
-        render(<ProviderTest test={({ state: { agreemnents } }): void => {
-          expect(agreemnents).toEqual([])
+        render(<ProviderTest test={({ state: { agreements } }): void => {
+          expect(agreements).toEqual([])
         }}
         />)
       })

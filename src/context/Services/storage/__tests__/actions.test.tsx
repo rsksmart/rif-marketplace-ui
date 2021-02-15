@@ -9,7 +9,7 @@ describe('Storage Context Actions', () => {
     SET_IS_WHITELISTED_PROVIDER,
   } = actions
 
-  describe('SET_IS_LOADING', () => {
+  describe('SET_IS_WHITELISTED_PROVIDER', () => {
     test('should return StorageContext state with correct isWhitelistedProvider property', () => {
       const {
         isWhitelistedProvider,

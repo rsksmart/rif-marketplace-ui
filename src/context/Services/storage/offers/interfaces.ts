@@ -31,8 +31,6 @@ export interface RefreshPayload {
 export type FiltersLimits = Partial<StorageOffersFilters>
 export type LimitsPayload = Pick<StorageOffersFilters, 'price' | 'size'>
 
-export type OrderPayload = Omit<StorageOrder, 'isProcessing'>
-
 // ACTIONS
 export type Action =
   | {

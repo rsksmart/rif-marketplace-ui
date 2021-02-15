@@ -6,12 +6,11 @@ import StorageContextProvider, {
   StorageGlobalContext,
 } from '..'
 
-
 const ProviderTest = useProviderTest(
   StorageContextProvider, StorageGlobalContext,
 )
 
-describe('StorageCheckoutContext', () => {
+describe('Storage Global Context', () => {
   describe('Provider', () => {
     describe('initial state', () => {
       test('should contain contextID: "storage_global"', () => {
