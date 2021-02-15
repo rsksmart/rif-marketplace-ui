@@ -56,7 +56,7 @@ describe('Storage Agreements Context actions', () => {
     })
   })
   describe('SET_FILTERS', () => {
-    test('should return state with correct order property', () => {
+    test('should return state with correct filters property', () => {
       const expectedFilters: AgreementFilters = {
         consumer: 'MOCK_CONSUMER',
       }

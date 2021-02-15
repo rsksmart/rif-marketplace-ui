@@ -22,7 +22,7 @@ export interface StorageOffer extends Item {
   utilizedCapacityGB: Big
   subscriptionOptions: BillingPlan[]
   averagePrice: number
-  acceptedCurrencies: string[]
+  acceptedCurrencies: string[] // FIXME: change to Supported currency
   peerId: string
   totalCapacityGB: Big
   isActive: boolean

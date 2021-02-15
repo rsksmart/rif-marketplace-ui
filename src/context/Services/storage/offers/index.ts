@@ -9,15 +9,17 @@ import {
   State,
   ContextName,
 } from './interfaces'
+import actions from './offersActions'
 
 export {
   Context as StorageOffersContext,
   Provider as StorageOffersContextProvider,
-  initialState as storageOffersContextInitialState,
+  initialState as storageOffersInitialState,
+  actions as storageOffersActions,
 }
 
 export type StorageOffersContextProps = Props
-export type StorageOffersContextState = State
+export type StorageOffersState = State
 export type StorageOffersContextActions = Actions
 export type StorageOffersContextName = ContextName
 
