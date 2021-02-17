@@ -1,7 +1,4 @@
 import { ContextState } from 'context/storeUtils/interfaces'
-import { STORAGE_ACTION } from './storage/interfaces'
-
-export type SERVICE_ACTION = STORAGE_ACTION
 
 export interface ServiceOrder<T> {
   item: T

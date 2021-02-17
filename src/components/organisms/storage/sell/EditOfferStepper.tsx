@@ -8,11 +8,9 @@ import Step from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
 import StepContent from '@material-ui/core/StepContent'
 import { Button, validatedNumber, WithSpinner } from '@rsksmart/rif-ui'
-import { OfferEditContextProps, StorageBillingPlan } from 'context/Market/storage/interfaces'
-import OfferEditContext from 'context/Market/storage/OfferEditContext'
-import {
-  AddItemPayload, EditItemPayload, RemoveItemPayload, SetPeerIdPayload, SetTotalCapacityPayload,
-} from 'context/Market/storage/offerEditActions'
+import { OfferEditContextProps } from 'context/Market/storage'
+import { StorageBillingPlan } from 'context/Market/storage/interfaces'
+import OfferEditContext from 'context/Market/storage/Context'
 import GeneralFeatures from './GeneralFeatures'
 import BillingPlansList from './BillingPlansList'
 
@@ -48,7 +46,7 @@ const EditOfferStepper: FC<EditOfferStepperProps> = ({ endHandler }) => {
       type: 'SET_TOTAL_CAPACITY',
       payload: {
         totalCapacity: Big(validatedNumber(Number(value))),
-      } as SetTotalCapacityPayload,
+      },
     })
   }
 
@@ -57,28 +55,28 @@ const EditOfferStepper: FC<EditOfferStepperProps> = ({ endHandler }) => {
       type: 'SET_PEER_ID',
       payload: {
         peerId: value,
-      } as SetPeerIdPayload,
+      },
     })
   }
 
   const handleOnItemRemoved = (billingPlan: StorageBillingPlan): void => {
     dispatch({
       type: 'REMOVE_ITEM',
-      payload: billingPlan as RemoveItemPayload,
+      payload: billingPlan,
     })
   }
 
   const handleItemAdded = (billingPlan: StorageBillingPlan): void => {
     dispatch({
       type: 'ADD_ITEM',
-      payload: billingPlan as AddItemPayload,
+      payload: billingPlan,
     })
   }
 
   const handleItemSaved = (billingPlan: StorageBillingPlan): void => {
     dispatch(({
       type: 'EDIT_ITEM',
-      payload: billingPlan as EditItemPayload,
+      payload: billingPlan,
     }))
   }
 

@@ -15,9 +15,8 @@ import RoundBtn from 'components/atoms/RoundBtn'
 import { Web3Store } from '@rsksmart/rif-ui'
 import Logger from 'utils/Logger'
 import Web3 from 'web3'
-import AppContext, { errorReporterFactory } from 'context/App/AppContext'
+import AppContext, { errorReporterFactory } from 'context/App'
 import { UIError } from 'models/UIMessage'
-import { LoadingPayload } from 'context/App/appActions'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
 import { AgreementUpdateData } from 'context/Confirmations/interfaces'
@@ -88,7 +87,7 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
           isLoading: true,
           id: 'contract',
           message: 'Withdrawing your funds...',
-        } as LoadingPayload,
+        },
       })
 
       setProcessingTx(true)
@@ -135,7 +134,7 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
         payload: {
           isLoading: false,
           id: 'contract',
-        } as LoadingPayload,
+        },
       })
     }
   }

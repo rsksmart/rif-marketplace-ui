@@ -1,7 +1,6 @@
 import InfoBar from 'components/molecules/InfoBar'
 import React, { useContext } from 'react'
-import { RemoveMessagePayload } from 'context/App/appActions'
-import AppContext from 'context/App/AppContext'
+import AppContext from 'context/App'
 import Logger from 'utils/Logger'
 import { MessageId, Message, ErrorMessage } from 'models/UIMessage'
 
@@ -35,7 +34,7 @@ const ErrorPanel = () => {
                 }
                 dispatch({
                   type: 'REMOVE_MESSAGE',
-                  payload: { id } as RemoveMessagePayload,
+                  payload: { id },
                 })
               },
             }}

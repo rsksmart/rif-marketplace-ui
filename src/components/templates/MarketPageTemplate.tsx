@@ -6,8 +6,7 @@ import MarketFilter from 'components/templates/marketplace/MarketFilter'
 import React, {
   Dispatch, FC, useContext, useEffect,
 } from 'react'
-import AppContext, { AppContextProps } from 'context/App/AppContext'
-import { MessagePayload } from 'context/App/appActions'
+import AppContext, { AppContextProps } from 'context/App'
 import Marketplace, { MarketplaceProps } from './marketplace/Marketplace'
 
 export interface MarketPageTemplateProps extends MarketplaceProps {
@@ -65,7 +64,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
           type: 'warning',
           text: 'Please, connect your wallet.',
           id: 'wallet',
-        } as MessagePayload,
+        },
       } as any)
     }
   }, [appDispatch, requiresAccount, account])
@@ -86,7 +85,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
               dispatch({
                 type: 'REFRESH',
                 payload: { refresh: true },
-              } as any)
+              })
             },
           }}
         />

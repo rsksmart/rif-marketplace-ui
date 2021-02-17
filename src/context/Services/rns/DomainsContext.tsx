@@ -5,10 +5,9 @@ import { RnsDomain } from 'models/marketItems/DomainItem'
 import React, {
   useContext, useEffect, useReducer, useState, FC, createContext,
 } from 'react'
-import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
-import { createReducer } from 'context/storeUtils/reducer'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App'
+import createReducer from 'context/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
-import { ErrorMessagePayload, LoadingPayload } from 'context/App/appActions'
 import { ServiceMetadata } from 'api/models/apiService'
 import {
   RnsListing, RnsOrder, RnsState, RnsContextProps,
@@ -112,8 +111,8 @@ export const RnsDomainsContextProvider: FC = ({ children }) => {
         payload: {
           isLoading: true,
           id: 'data',
-        } as LoadingPayload,
-      } as any)
+        },
+      })
       fetch({
         ...filters,
         ownerAddress: account,
@@ -135,16 +134,16 @@ export const RnsDomainsContextProvider: FC = ({ children }) => {
             id: 'service-fetch',
             text: `Couldn't fetch RNS domains. Error: ${e.message}`,
             type: 'error',
-          } as ErrorMessagePayload,
-        } as any)
+          },
+        })
       }).finally(() => {
         appDispatch({
           type: 'SET_IS_LOADING',
           payload: {
             isLoading: false,
             id: 'data',
-          } as LoadingPayload,
-        } as any)
+          },
+        })
       })
     }
   }, [isInitialised, needsRefresh, filters, api, account, appDispatch])

@@ -7,11 +7,10 @@ import React, {
   FC,
   useContext, useEffect, useReducer, useState,
 } from 'react'
-import { ErrorMessagePayload, LoadingPayload } from 'context/App/appActions'
 import AppContext, {
   AppContextProps, errorReporterFactory,
-} from 'context/App/AppContext'
-import { createReducer } from 'context/storeUtils/reducer'
+} from 'context/App'
+import createReducer from 'context/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
 import MarketContext, { MarketContextProps } from 'context/Market'
 import {
@@ -134,8 +133,8 @@ export const RnsOffersContextProvider: FC = ({ children }) => {
         payload: {
           isLoading: true,
           id: 'filters',
-        } as LoadingPayload,
-      } as any)
+        },
+      })
       api.fetchPriceLimits({ fiatSymbol })
         .then((price) => {
           dispatch({
@@ -156,8 +155,8 @@ export const RnsOffersContextProvider: FC = ({ children }) => {
               text: 'Error while fetching filters.',
               type: 'error',
               error,
-            } as ErrorMessagePayload,
-          } as any)
+            },
+          })
         })
         .finally(() => {
           appDispatch({
@@ -165,8 +164,8 @@ export const RnsOffersContextProvider: FC = ({ children }) => {
             payload: {
               isLoading: false,
               id: 'filters',
-            } as LoadingPayload,
-          } as any)
+            },
+          })
         })
     }
   }, [api, isInitialised, needsRefresh, isLimitsSet, fiatSymbol, appDispatch])
@@ -185,8 +184,8 @@ export const RnsOffersContextProvider: FC = ({ children }) => {
         payload: {
           isLoading: true,
           id: 'data',
-        } as LoadingPayload,
-      } as any)
+        },
+      })
       api.fetch({
         ...filters,
         fiat: fiatSymbol,
@@ -211,8 +210,8 @@ export const RnsOffersContextProvider: FC = ({ children }) => {
             payload: {
               isLoading: false,
               id: 'data',
-            } as LoadingPayload,
-          } as any)
+            },
+          })
         })
     }
   }, [

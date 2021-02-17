@@ -31,9 +31,8 @@ import RnsDomainsContext from 'context/Services/rns/DomainsContext'
 import Logger from 'utils/Logger'
 import AppContext, {
   AppContextProps, errorReporterFactory,
-} from 'context/App/AppContext'
+} from 'context/App'
 import { UIError } from 'models/UIMessage'
-import { LoadingPayload } from 'context/App/appActions'
 import { shortChecksumAddress } from 'utils/stringUtils'
 import Web3 from 'web3'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
@@ -165,7 +164,7 @@ const CancelDomainCheckoutPage: FC = () => {
         isLoading: true,
         id: 'contract',
         message: 'Executing cancel...',
-      } as LoadingPayload,
+      },
     })
 
     try {
@@ -225,7 +224,7 @@ const CancelDomainCheckoutPage: FC = () => {
         payload: {
           isLoading: false,
           id: 'contract',
-        } as LoadingPayload,
+        },
       })
       setProcessingTx(false)
     }

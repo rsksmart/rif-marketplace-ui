@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom'
 import TabsTemplate from 'components/templates/TabsTemplate'
 import networkConfig from 'config'
-import { OfferEditContextProvider } from 'context/Market/storage/OfferEditContext'
+import { OfferEditContextProvider } from 'context/Market/storage'
 import { StorageOffersContextProvider } from 'context/Services/storage/offers'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'

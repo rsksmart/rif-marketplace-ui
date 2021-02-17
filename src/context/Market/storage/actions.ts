@@ -1,31 +1,24 @@
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
-import { StorageBillingPlan, OfferEditState } from './interfaces'
+import { initialState } from './Context'
 import {
-  AddItemPayload,
-  RemoveItemPayload,
-  EditItemPayload,
-  SetTotalCapacityPayload,
-  SetCountryPayload,
-  SetPeerIdPayload,
-  OfferEditActions,
-  OfferEditPayload,
-  SetOfferPayload,
-} from './offerEditActions'
-import { initialState } from './OfferEditContext'
-
-export interface OfferEditReducer<P extends OfferEditPayload> {
-  (state: OfferEditState, payload: P): OfferEditState
-}
+  Actions,
+  SetCountryPayload, SetOfferPayload,
+  SetPeerIdPayload, SetTotalCapacityPayload,
+  State, StorageBillingPlan,
+} from './interfaces'
 
 const calculateUsedPeriodsPerCurrency = (
   billingPlans: StorageBillingPlan[],
 ): Record<string, []> => billingPlans.reduce((acc, item) => {
-  acc[item.currency.symbol] = [...(acc[item.currency.symbol] || []), item.period]
+  acc[item.currency.symbol] = [
+    ...(acc[item.currency.symbol] || []),
+    item.period,
+  ]
   return acc
 }, {})
 
-export const offerEditActions: OfferEditActions = {
-  ADD_ITEM: (state: OfferEditState, payload: AddItemPayload) => {
+const actions: Actions = {
+  ADD_ITEM: (state: State, payload: StorageBillingPlan) => {
     const { internalCounter, billingPlans } = state
     const newPlan = {
       ...payload,
@@ -40,8 +33,8 @@ export const offerEditActions: OfferEditActions = {
       internalCounter: internalCounter + 1,
     }
   },
-  CLEAN_UP: (_, __) => initialState,
-  REMOVE_ITEM: (state: OfferEditState, { internalId }: RemoveItemPayload) => {
+  CLEAN_UP: () => initialState,
+  REMOVE_ITEM: (state: State, { internalId }: StorageBillingPlan) => {
     const { billingPlans } = state
     const newBillingPlans = billingPlans.filter(
       (x) => x.internalId !== internalId,
@@ -52,7 +45,7 @@ export const offerEditActions: OfferEditActions = {
       usedPeriodsPerCurrency: calculateUsedPeriodsPerCurrency(newBillingPlans),
     }
   },
-  EDIT_ITEM: (state: OfferEditState, payload: EditItemPayload) => {
+  EDIT_ITEM: (state: State, payload: StorageBillingPlan) => {
     const {
       internalId, period, price, currency,
     } = payload
@@ -75,21 +68,21 @@ export const offerEditActions: OfferEditActions = {
     }
   },
   SET_TOTAL_CAPACITY: (
-    state: OfferEditState,
+    state: State,
     { totalCapacity }: SetTotalCapacityPayload,
   ) => ({
     ...state,
     totalCapacity,
   }),
-  SET_COUNTRY: (state: OfferEditState, { country }: SetCountryPayload) => ({
+  SET_COUNTRY: (state: State, { country }: SetCountryPayload) => ({
     ...state,
     country,
   }),
-  SET_PEER_ID: (state: OfferEditState, { peerId }: SetPeerIdPayload) => ({
+  SET_PEER_ID: (state: State, { peerId }: SetPeerIdPayload) => ({
     ...state,
     peerId,
   }),
-  SET_OFFER: (state: OfferEditState, payload: SetOfferPayload) => {
+  SET_OFFER: (state: State, payload: SetOfferPayload) => {
     const {
       totalCapacityGB,
       location,
@@ -121,3 +114,5 @@ export const offerEditActions: OfferEditActions = {
     }
   },
 }
+
+export default actions

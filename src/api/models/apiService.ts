@@ -1,8 +1,8 @@
 import { Application, Paginated, Service } from '@feathersjs/feathers'
 import { AuthenticationResult } from '@feathersjs/authentication'
 import { MarketFilterType } from 'models/Market'
-import { ErrorReporterError } from 'context/App/AppContext'
 import createClient from 'api/client'
+import { ErrorReporterError } from 'context/App/errorReporter'
 import { ServiceAddress } from './serviceAddresses'
 
 export type APIErrorId = 'service-connection' | 'service-event-attach' | 'service-fetch' | 'service-post'

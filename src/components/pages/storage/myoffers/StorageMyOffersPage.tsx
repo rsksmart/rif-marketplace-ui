@@ -8,15 +8,14 @@ import { Web3Store } from '@rsksmart/rif-ui'
 import handProvidingFunds from 'assets/images/handProvidingFunds.svg'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import OffersList from 'components/organisms/storage/myoffers/OffersList'
-import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App'
 import { StorageContract } from 'contracts/storage'
 import ROUTES from 'routes'
 import { useHistory } from 'react-router-dom'
 import { UIError } from 'models/UIMessage'
 import WithLoginCard from 'components/hoc/WithLoginCard'
-import OfferEditContext from 'context/Market/storage/OfferEditContext'
-import { OfferEditContextProps } from 'context/Market/storage/interfaces'
-import { SetOfferPayload } from 'context/Market/storage/offerEditActions'
+import OfferEditContext from 'context/Market/storage/Context'
+import { OfferEditContextProps } from 'context/Market/storage'
 import { StorageOffer } from 'models/marketItems/StorageItem'
 import Staking from 'components/organisms/storage/staking/Staking'
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
@@ -120,7 +119,7 @@ const StorageMyOffersPage: FC = () => {
   const handleEditOffer = (offer: StorageOffer): void => {
     editOfferDispatch({
       type: 'SET_OFFER',
-      payload: offer as SetOfferPayload,
+      payload: offer,
     })
     history.push(ROUTES.STORAGE.MYOFFERS.EDIT)
   }

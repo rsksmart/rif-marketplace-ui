@@ -3,8 +3,8 @@ import {
   ConfirmationsService,
   Transport as ConfirmationTransport,
 } from 'api/rif-marketplace-cache/blockchain/confirmations'
-import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
-import { createReducer } from 'context/storeUtils/reducer'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App'
+import createReducer from 'context/storeUtils/reducer'
 import React, {
   createContext, FC, useContext, useEffect, useMemo, useReducer, useState,
 } from 'react'

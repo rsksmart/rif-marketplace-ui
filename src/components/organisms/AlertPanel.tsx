@@ -1,7 +1,7 @@
 import React, { FC, useContext } from 'react'
 import Collapse from '@material-ui/core/Collapse'
 import Alert from '@material-ui/lab/Alert'
-import AppContext from 'context/App/AppContext'
+import AppContext from 'context/App'
 
 const AlertPanel: FC = () => {
   const {
@@ -17,7 +17,6 @@ const AlertPanel: FC = () => {
   const handleClose = (): void => {
     dispatch({
       type: 'HIDE_ALERT',
-      payload: {},
     })
   }
 

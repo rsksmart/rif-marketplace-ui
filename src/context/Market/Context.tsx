@@ -1,10 +1,10 @@
 import React, {
   createContext, FC, useContext, useEffect, useMemo, useReducer,
 } from 'react'
-import { createReducer } from 'context/storeUtils/reducer'
+import createReducer from 'context/storeUtils/reducer'
 import AppContext, {
   AppContextProps, errorReporterFactory,
-} from 'context/App/AppContext'
+} from 'context/App'
 import { XRItem, XRService } from 'api/rif-marketplace-cache/rates/xr'
 import { MarketCryptoRecord, TokenXR } from 'models/Market'
 import { getSysTokenByName } from 'utils/tokenUtils'
