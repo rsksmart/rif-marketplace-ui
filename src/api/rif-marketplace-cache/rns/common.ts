@@ -9,9 +9,21 @@ import {
 import { Modify } from 'utils/typeUtils'
 import { getTokenByString } from 'utils/tokenUtils'
 import { BaseToken } from 'models/Token'
+import { domainsAddress, DomainsAddress } from './domains'
+import { offersAddress, OffersAddress } from './offers'
+import { soldDomainsAddress, SoldDomainsAddress } from './sold'
 
-export type RnsServiceAddress = 'rns/v0/offers' | 'rns/v0/domains' | 'rns/v0/sold'
+export type RnsServiceAddress =
+  | OffersAddress
+  | DomainsAddress
+  | SoldDomainsAddress
 export type RnsChannels = 'domains' | 'sold' | 'offers'
+
+export const rnsAddresses = [
+  domainsAddress,
+  offersAddress,
+  soldDomainsAddress,
+]
 
 export type RnsAPIService = Modify<
   APIService,

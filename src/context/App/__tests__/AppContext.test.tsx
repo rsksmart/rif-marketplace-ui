@@ -1,55 +1,106 @@
 import { render } from '@testing-library/react'
-import React, { FC, useContext } from 'react'
-import { ConfirmationsService } from 'api/rif-marketplace-cache/blockchain/confirmations'
-import { OffersService } from 'api/rif-marketplace-cache/rns/offers'
-import { DomainsService } from 'api/rif-marketplace-cache/rns/domains'
-import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
-import { XRService } from 'api/rif-marketplace-cache/rates/xr'
-import { ServiceMap } from 'api/models/apiService'
 import { ServiceAddress } from 'api/models/serviceAddresses'
+import { confirmationAddress } from 'api/rif-marketplace-cache/blockchain/confirmations'
+import { serviceAddress as notificationsAddress } from 'api/rif-marketplace-cache/notifications'
+import { xrServiceAddress } from 'api/rif-marketplace-cache/rates/xr'
+import { rnsAddresses } from 'api/rif-marketplace-cache/rns/common'
+import { storageAddresses } from 'api/rif-marketplace-cache/storage/interfaces'
+import { serviceAddress as uploadServiceAddr } from 'api/rif-storage-upload-service/upload/interfaces'
+import React from 'react'
+import { useProviderTest } from '__tests__/testUtils'
 import AppContext, { AppContextProvider } from '../AppContext'
 
-const svcAddrss: Record<string, ServiceAddress> = {
-  rates: 'rates/v0',
-  confirmations: 'confirmations',
-  rnsDomains: 'rns/v0/domains',
-  rnsOffers: 'rns/v0/offers',
-  rnsSold: 'rns/v0/sold',
-}
+const ProviderTest = useProviderTest(AppContextProvider, AppContext)
 
-const isServiceMap = (obj: ServiceMap): obj is ServiceMap => {
-  if (!obj) return false
-  const {
-    rates, confirmations, rnsDomains, rnsOffers, rnsSold,
-  } = svcAddrss
+const testServiceExistence = (service: ServiceAddress): void => {
+  test(`should contain ${service} service`, () => {
+    const testFn = ({ state: { apis } }): void => {
+      expect(apis[service]).toBeTruthy()
+    }
 
-  if (!(obj[confirmations] instanceof ConfirmationsService)) return false
-
-  if (!(obj[rates] instanceof XRService)) return false
-
-  if (!(obj[rnsDomains] instanceof DomainsService)) return false
-
-  if (!(obj[rnsOffers] instanceof OffersService)) return false
-
-  if (!(obj[rnsSold] instanceof SoldDomainsService)) return false
-
-  return true
+    render(<ProviderTest test={testFn} />)
+  })
 }
 
 describe('AppContext', () => {
-  describe('AppContext.Provider', () => {
-    test('initial state should contian property apis of type ServiceMap', () => {
-      const MockConsumer: FC<{}> = () => {
-        const { state: { apis } } = useContext(AppContext)
-        expect(isServiceMap(apis)).toBe(true)
-        return <div />
+  describe('Provider', () => {
+    describe('initial state', () => {
+      test('should contain contextID: "app"', () => {
+        render(<ProviderTest test={({ state: { contextID } }): void => {
+          expect(contextID).toEqual('app')
+        }}
+        />)
+      })
+      test('should contian an object apis', () => {
+        const testFn = ({ state: { apis } }): void => {
+          expect(apis).toBeTruthy()
+        }
+
+        render(<ProviderTest test={testFn} />)
+      })
+
+      describe('apis', () => {
+        [
+          notificationsAddress,
+          xrServiceAddress,
+          confirmationAddress,
+          ...rnsAddresses,
+          ...storageAddresses,
+          uploadServiceAddr,
+        ].forEach(testServiceExistence)
+      })
+      test('should contain messages: {}', () => {
+        render(<ProviderTest test={({ state: { messages } }): void => {
+          expect(messages).toEqual({})
+        }}
+        />)
+      })
+
+      test('should contain loaders', () => {
+        render(<ProviderTest test={({ state: { loaders } }): void => {
+          expect(loaders).toBeTruthy()
+        }}
+        />)
+      })
+      describe('loaders', () => {
+        const expectedLoaders = {
+          contract: false,
+          data: false,
+          filters: false,
+          other: false,
+        }
+
+        test(`should contain ${expectedLoaders}`, () => {
+          render(<ProviderTest test={({ state: { loaders } }): void => {
+            expect(loaders).toEqual(expectedLoaders)
+          }}
+          />)
+        })
+      })
+
+      const expctedAlertPanel = {
+        display: false,
+        message: '',
       }
 
-      render(
-        <AppContextProvider>
-          <MockConsumer />
-        </AppContextProvider>,
-      )
+      test('should contain alertPanel', () => {
+        render(<ProviderTest test={({ state: { alertPanel } }): void => {
+          expect(alertPanel).toEqual(expctedAlertPanel)
+        }}
+        />)
+      })
+
+      describe('alertPanel', () => {
+        test(`should contain {
+            display: false,
+            message: '',
+          }`, () => {
+          render(<ProviderTest test={({ state: { alertPanel } }): void => {
+            expect(alertPanel).toEqual(expctedAlertPanel)
+          }}
+          />)
+        })
+      })
     })
   })
 })

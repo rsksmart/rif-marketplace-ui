@@ -1,9 +1,10 @@
 import { MinMaxFilter } from 'models/Filters'
 import { AbstractAPIService } from 'api/models/apiService'
-import { StorageAPIService, StorageServiceAddress, StorageWSChannel } from './interfaces'
+import { StorageAPIService, StorageWSChannel } from './interfaces'
 import client from '../client'
 
-export const avgBillingPlanAddress: StorageServiceAddress = 'storage/v0/avgBillingPrice'
+export const avgBillingPlanAddress = 'storage/v0/avgBillingPrice' as const
+export type AvgBillingPlanAddress = typeof avgBillingPlanAddress
 
 export class AvgBillingPriceService
   extends AbstractAPIService implements StorageAPIService {

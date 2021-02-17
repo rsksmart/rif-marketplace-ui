@@ -6,8 +6,8 @@ import { getSupportedTokenByName } from 'utils/tokenUtils'
 import { Modify } from 'utils/typeUtils'
 import client from '../client'
 
-export type XRServiceAddress = 'rates/v0'
-export const xrServiceAddress: XRServiceAddress = 'rates/v0'
+export const xrServiceAddress = 'rates/v0' as const
+export type XRServiceAddress = typeof xrServiceAddress
 
 export type XRItem = Partial<{
   [F in SupportedFiatSymbol]: number
