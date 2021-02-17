@@ -11,10 +11,6 @@ export interface Item {
 
 export type MarketItem = RnsItem & StorageItem
 
-export interface MarketFilter { // FIXUS: We should either delete or fix this type
-  [filterFieldName: string]: unknown
-}
-
 export type MarketFilterType = RnsFilter & XRFilter
 
 export type TokenXR = BaseToken & {

@@ -1,10 +1,9 @@
 import { AvailableCapacityService } from 'api/rif-marketplace-cache/storage/available-size'
 import { AvgBillingPriceService } from 'api/rif-marketplace-cache/storage/avg-billing-plan-price'
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
-import { LoadingPayload } from 'context/App/appActions'
-import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App'
 import createWithContext from 'context/storeUtils/createWithContext'
-import { createReducer } from 'context/storeUtils/reducer'
+import createReducer from 'context/storeUtils/reducer'
 import { MinMaxFilter } from 'models/Filters'
 import { UIError } from 'models/UIMessage'
 import React, {
@@ -109,7 +108,7 @@ export const Provider: FC = ({ children }) => {
         payload: {
           isLoading: true,
           id: 'filters',
-        } as LoadingPayload,
+        },
       })
       try {
         Promise.all([
@@ -164,7 +163,7 @@ export const Provider: FC = ({ children }) => {
           payload: {
             isLoading: false,
             id: 'filters',
-          } as LoadingPayload,
+          },
         })
       }
     }
@@ -193,7 +192,7 @@ export const Provider: FC = ({ children }) => {
         payload: {
           isLoading: true,
           id: 'data',
-        } as LoadingPayload,
+        },
       })
       api.fetch(filters)
         .then((items) => {
@@ -221,7 +220,7 @@ export const Provider: FC = ({ children }) => {
             payload: {
               isLoading: false,
               id: 'data',
-            } as LoadingPayload,
+            },
           })
         })
     }

@@ -1,21 +1,21 @@
-import { Dispatch } from 'react'
+import Big from 'big.js'
 import { ContextState } from 'context/storeUtils/interfaces'
-import networkConfig from 'config'
 import {
   BillingPlan,
   StorageOffer,
   SubscriptionPeriod,
 } from 'models/marketItems/StorageItem'
-import { ZERO_ADDRESS } from 'constants/strings'
-import { SupportedTokenSymbol } from 'models/Token'
-import Big from 'big.js'
-import { OfferEditAction } from './offerEditActions'
+import { Dispatch } from 'react'
 
-export interface StorageBillingPlan extends BillingPlan {
+export type StorageBillingPlan = BillingPlan & {
   internalId?: number
 }
 
-export interface OfferEditState extends ContextState {
+// STATE
+export const contextID = 'storage_offer_edit' as const
+export type ContextName = typeof contextID
+
+export type State = ContextState & {
   system: string
   totalCapacity: Big
   country: string
@@ -27,12 +27,66 @@ export interface OfferEditState extends ContextState {
   originalOffer?: StorageOffer
 }
 
-export interface OfferEditContextProps {
-  state: OfferEditState
-  dispatch: Dispatch<OfferEditAction>
+// PAYLOAD
+export interface SetTotalCapacityPayload {
+  totalCapacity: Big
+}
+export interface SetCountryPayload {
+  country: string
+}
+export interface SetPeerIdPayload {
+  peerId: string
+}
+export type SetOfferPayload = StorageOffer
+
+// ACTIONS
+export type Action = (
+  | {
+    type: 'ADD_ITEM'
+    payload: StorageBillingPlan
+  }
+  | {
+    type: 'CLEAN_UP'
+  }
+  | {
+    type: 'REMOVE_ITEM'
+    payload: StorageBillingPlan
+  }
+  | {
+    type: 'EDIT_ITEM'
+    payload: StorageBillingPlan
+  }
+  | {
+    type: 'SET_COUNTRY'
+    payload: SetCountryPayload
+  }
+  | {
+    type: 'SET_TOTAL_CAPACITY'
+    payload: SetTotalCapacityPayload
+  }
+  | {
+    type: 'SET_PEER_ID'
+    payload: SetPeerIdPayload
+  }
+  | {
+    type: 'SET_OFFER'
+    payload: SetOfferPayload
+  }
+)
+
+export type Actions = {
+  ADD_ITEM: (state: State, payload: StorageBillingPlan) => State
+  CLEAN_UP: () => State
+  REMOVE_ITEM: (state: State, payload: StorageBillingPlan) => State
+  EDIT_ITEM: (state: State, payload: StorageBillingPlan) => State
+  SET_COUNTRY: (state: State, payload: SetCountryPayload) => State
+  SET_TOTAL_CAPACITY: (state: State, payload: SetTotalCapacityPayload) => State
+  SET_PEER_ID: (state: State, payload: SetPeerIdPayload) => State
+  SET_OFFER: (state: State, payload: SetOfferPayload) => State
 }
 
-export const TokenAddressees: Record<SupportedTokenSymbol, string> = {
-  rbtc: ZERO_ADDRESS, // we are using zero address for native token is Storage Manager SC
-  rif: networkConfig.contractAddresses.rif,
+// PROPS
+export interface Props {
+  state: State
+  dispatch: Dispatch<Action>
 }

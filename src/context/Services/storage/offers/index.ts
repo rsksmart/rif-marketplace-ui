@@ -7,6 +7,7 @@ import {
   Props,
   Actions,
   State,
+  ContextName,
 } from './interfaces'
 
 export {
@@ -18,6 +19,7 @@ export {
 export type StorageOffersContextProps = Props
 export type StorageOffersContextState = State
 export type StorageOffersContextActions = Actions
+export type StorageOffersContextName = ContextName
 
 const withStorageOffersContext = withContext
 

@@ -1,6 +1,6 @@
 import { ServiceState } from 'context/Services/interfaces'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
-import { StorageItem } from 'models/marketItems/StorageItem'
+import { StorageItem, StorageOffer } from 'models/marketItems/StorageItem'
 import { Dispatch } from 'react'
 import { Modify } from 'utils/typeUtils'
 import { StorageOrder } from '../interfaces'
@@ -56,7 +56,7 @@ export type Action =
   }
   | {
     type: 'SET_ORDER'
-    payload: OrderPayload
+    payload: StorageOffer
   }
 
 export type Actions = {
@@ -65,7 +65,7 @@ export type Actions = {
   FILTER: (state: State, payload: FiltersLimits) => State
   UPDATE_LIMITS: (state: State, payload: LimitsPayload) => State
   CLEAN_UP: () => State
-  SET_ORDER: (state: State, payload: OrderPayload) => State
+  SET_ORDER: (state: State, item: StorageOffer) => State
 }
 
 // PROPS

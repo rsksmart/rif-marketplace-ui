@@ -8,8 +8,7 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import { LoadingPayload } from 'context/App/appActions'
-import AppContext, { errorReporterFactory } from 'context/App/AppContext'
+import AppContext, { errorReporterFactory } from 'context/App'
 import MarketContext from 'context/Market'
 import RnsOffersContext from 'context/Services/rns/OffersContext'
 import Logger from 'utils/Logger'
@@ -140,7 +139,7 @@ const DomainOffersCheckoutPage: FC = () => {
             isLoading: true,
             id: 'contract',
             message: 'Checking funds...',
-          } as LoadingPayload,
+          },
         })
 
         const rnsContract = RNSContract.getInstance(web3 as Web3, symbol)

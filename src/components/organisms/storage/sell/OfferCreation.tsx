@@ -4,7 +4,7 @@ import React, {
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button as RUIButton, Web3Store, WithSpinner } from '@rsksmart/rif-ui'
 import Typography from '@material-ui/core/Typography'
-import OfferEditContext from 'context/Market/storage/OfferEditContext'
+import OfferEditContext from 'context/Market/storage/Context'
 import { StorageContract } from 'contracts/storage'
 import Logger from 'utils/Logger'
 import { UIError } from 'models/UIMessage'
@@ -12,7 +12,7 @@ import Login from 'components/atoms/Login'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import Big from 'big.js'
-import AppContext, { errorReporterFactory } from 'context/App/AppContext'
+import AppContext, { errorReporterFactory } from 'context/App'
 import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper'
 import RoundedCard from 'components/atoms/RoundedCard'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
@@ -20,7 +20,7 @@ import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Service
 import NoWhitelistedProvider from 'components/molecules/storage/NoWhitelistedProvider'
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
 import { StorageOffer } from 'models/marketItems/StorageItem'
-import { OfferEditContextProps } from 'context/Market/storage/interfaces'
+import { OfferEditContextProps } from 'context/Market/storage'
 import Web3 from 'web3'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
 import { NewRequestPayload } from 'context/Confirmations/interfaces'
@@ -130,7 +130,6 @@ const OfferCreation: FC = () => {
   useEffect(() => (): void => {
     dispatch({
       type: 'CLEAN_UP',
-      payload: {},
     })
   }, [dispatch])
 

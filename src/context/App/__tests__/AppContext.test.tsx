@@ -8,7 +8,7 @@ import { storageAddresses } from 'api/rif-marketplace-cache/storage/interfaces'
 import { serviceAddress as uploadServiceAddr } from 'api/rif-storage-upload-service/upload/interfaces'
 import React from 'react'
 import { useProviderTest } from '__tests__/testUtils'
-import AppContext, { AppContextProvider } from '../AppContext'
+import AppContext, { AppContextProvider } from '../Context'
 
 const ProviderTest = useProviderTest(AppContextProvider, AppContext)
 

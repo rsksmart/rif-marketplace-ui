@@ -2,9 +2,8 @@ import React, {
   createContext, FC, useContext,
   useEffect, useMemo, useReducer, useState,
 } from 'react'
-import { createReducer } from 'context/storeUtils/reducer'
-import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
-import { LoadingPayload } from 'context/App/appActions'
+import createReducer from 'context/storeUtils/reducer'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App'
 import { Props, State } from './interfaces'
 import actions from './actions'
 
@@ -68,7 +67,7 @@ export const Provider: FC = ({ children }) => {
         payload: {
           isLoading: true,
           id: 'data',
-        } as LoadingPayload,
+        },
       })
       api.fetch(filters)
         .then((items) => {
@@ -84,7 +83,7 @@ export const Provider: FC = ({ children }) => {
             payload: {
               isLoading: false,
               id: 'data',
-            } as LoadingPayload,
+            },
           })
         })
     }

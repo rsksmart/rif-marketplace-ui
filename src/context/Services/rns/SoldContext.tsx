@@ -4,11 +4,10 @@ import { RnsSoldDomain } from 'models/marketItems/DomainItem'
 import React, {
   useReducer, useContext, useState, useEffect, createContext, FC,
 } from 'react'
-import { createReducer } from 'context/storeUtils/reducer'
+import createReducer from 'context/storeUtils/reducer'
 import { Modify } from 'utils/typeUtils'
-import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App'
 import { SoldDomainsService } from 'api/rif-marketplace-cache/rns/sold'
-import { LoadingPayload } from 'context/App/appActions'
 import { ServiceMetadata } from 'api/models/apiService'
 import {
   RnsListing, RnsOrder, RnsState, RnsContextProps,
@@ -110,8 +109,8 @@ export const RnsSoldContextProvider: FC = ({ children }) => {
         payload: {
           isLoading: true,
           id: 'data',
-        } as LoadingPayload,
-      } as any)
+        },
+      })
       fetch({
         ...filters,
         ownerAddress: account,
@@ -132,8 +131,8 @@ export const RnsSoldContextProvider: FC = ({ children }) => {
           payload: {
             isLoading: false,
             id: 'data',
-          } as LoadingPayload,
-        } as any)
+          },
+        })
       })
     }
   }, [isInitialised, needsRefresh, filters, api, account, appDispatch])

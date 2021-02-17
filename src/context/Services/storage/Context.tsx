@@ -2,8 +2,9 @@ import { Web3Store } from '@rsksmart/rif-ui'
 import AppContext, {
   AppContextProps,
   errorReporterFactory,
-} from 'context/App/AppContext'
-import { createReducer } from 'context/storeUtils/reducer'
+} from 'context/App/'
+
+import createReducer from 'context/storeUtils/reducer'
 import { StorageContract } from 'contracts/storage'
 import { UIError } from 'models/UIMessage'
 import React, {

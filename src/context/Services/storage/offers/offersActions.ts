@@ -27,8 +27,8 @@ const actions: Actions = {
     },
   }),
   CLEAN_UP: () => initialState,
-  SET_ORDER: (state, payload) => ({
-    ...state, order: { ...payload, isProcessing: false },
+  SET_ORDER: (state, item) => ({
+    ...state, order: { item, isProcessing: false },
   }),
 }
 

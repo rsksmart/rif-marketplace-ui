@@ -1,7 +1,7 @@
 import { Web3Store } from '@rsksmart/rif-ui'
 import Big from 'big.js'
 import networkConfig from 'config'
-import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App'
 import MarketContext, { MarketContextProps } from 'context/Market'
 import AgreementsContext, { AgreementContextProps } from 'context/Services/storage/agreements'
 import createWithContext from 'context/storeUtils/createWithContext'

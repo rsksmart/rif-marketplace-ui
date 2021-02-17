@@ -1,4 +1,4 @@
-import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App'
 import { UIError } from 'models/UIMessage'
 import { useCallback, useContext } from 'react'
 

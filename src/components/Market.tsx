@@ -1,4 +1,4 @@
-import AppContext from 'context/App/AppContext'
+import AppContext from 'context/App'
 import {
   PageTemplate, Web3Provider, defaultWeb3State,
 } from '@rsksmart/rif-ui'
@@ -52,7 +52,6 @@ const Market: FC = () => {
     setTimeout(() => {
       dispatch({
         type: 'HIDE_ALERT',
-        payload: {},
       })
     }, 5000)
   }

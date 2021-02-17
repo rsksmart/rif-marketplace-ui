@@ -5,7 +5,7 @@ import {
 import AppContext, {
   AppContextProps,
   errorReporterFactory,
-} from 'context/App/AppContext'
+} from 'context/App'
 import { UIError } from 'models/UIMessage'
 import React, {
   createContext,

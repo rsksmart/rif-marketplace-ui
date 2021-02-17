@@ -6,11 +6,10 @@ import { TableHeaders, MarketplaceItem } from 'components/templates/marketplace/
 import { BillingPlan } from 'models/marketItems/StorageItem'
 import { SelectRowButton, AddressItem } from 'components/molecules'
 import { StorageOffersContext, StorageOffersContextProps } from 'context/Services/storage/offers'
-import { OrderPayload } from 'context/Services/storage/offers/offersActions'
 import ItemWUnit from 'components/atoms/ItemWUnit'
 import ROUTES from 'routes'
 import { Web3Store } from '@rsksmart/rif-ui'
-import AppContext from 'context/App/AppContext'
+import AppContext from 'context/App'
 import { STORAGE_DISCLAIMER_MSG } from 'constants/strings'
 
 const headers: TableHeaders = {
@@ -52,7 +51,6 @@ const StorageOffersPage: FC = () => {
   useEffect(() => (): void => {
     appDispatch({
       type: 'HIDE_ALERT',
-      payload: {},
     })
   }, [appDispatch])
 
@@ -81,9 +79,7 @@ const StorageOffersPage: FC = () => {
             handleSelect={(): void => {
               dispatch({
                 type: 'SET_ORDER',
-                payload: {
-                  item,
-                } as OrderPayload,
+                payload: item,
               })
               history.push(ROUTES.STORAGE.BUY.CHECKOUT)
             }}

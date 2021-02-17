@@ -1,14 +1,14 @@
 import {
-  appActions, AppPayload, LoadingPayload,
+  LoadingPayload,
   MessagePayload, RemoveMessagePayload,
   SetAlertPayload,
-} from 'context/App/appActions'
+} from 'context/App/interfaces'
 import { LoaderId } from 'models/UIMessage'
-import { AppState, initialState } from '../AppContext'
+import { initialState, AppState, appActions } from '..'
 
 const testActionReturn = (
-  action: (state: AppState, payload: any) => AppState,
-  payload: AppPayload,
+  action: (state: AppState, payload: unknown) => AppState,
+  payload: unknown,
 ): void => {
   test('should return AppContext state', () => {
     const {

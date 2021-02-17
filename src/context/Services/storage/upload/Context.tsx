@@ -3,10 +3,11 @@ import React, {
   useEffect, useMemo, useReducer, useState,
 } from 'react'
 import { Big } from 'big.js'
-import { createReducer } from 'context/storeUtils/reducer'
+import createReducer from 'context/storeUtils/reducer'
 import AppContext, {
-  AppContextProps, errorReporterFactory,
-} from 'context/App/AppContext'
+  AppContextProps,
+  errorReporterFactory,
+} from 'context/App'
 import {
   UploadResponse, UploadAPIService,
 } from 'api/rif-storage-upload-service/upload/interfaces'
@@ -16,6 +17,7 @@ import createWithContext from 'context/storeUtils/createWithContext'
 import { Web3Store } from '@rsksmart/rif-ui'
 import { storageAddress } from 'contracts/config'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
+
 import {
   AsyncActions, GetFileSizeAction, Props, State, UploadFilesAction,
   SizeLimitPayload,

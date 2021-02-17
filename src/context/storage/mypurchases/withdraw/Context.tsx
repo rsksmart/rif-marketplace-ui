@@ -1,6 +1,5 @@
 import { Web3Store } from '@rsksmart/rif-ui'
-import { LoadingPayload } from 'context/App/appActions'
-import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
 import { AgreementUpdateData } from 'context/Confirmations/interfaces'
 import createWithContext from 'context/storeUtils/createWithContext'
@@ -69,7 +68,7 @@ const Provider: FC = ({ children }) => {
             isLoading: true,
             id: 'contract',
             message: 'Withdrawing your funds...',
-          } as LoadingPayload,
+          },
         })
         dispatch({
           type: 'SET_STATUS',

@@ -3,13 +3,12 @@ import { StorageItem, StorageOffer } from 'models/marketItems/StorageItem'
 import { ContextState } from 'context/storeUtils/interfaces'
 import { Dispatch } from 'react'
 import { ServiceOrder, ServiceState } from '../interfaces'
-import { OFFERS_ACTION } from './offers/offersActions'
-import { ContextName as OffersContextName } from './offers/OffersContext'
+import { StorageOffersContextName } from './offers'
 import { ContextName as AgreementContextName } from './agreements/interfaces'
 import { ContextName as StorageGlobalContextName } from './Context'
 
 export type StorageContextNames =
-  | OffersContextName
+  | StorageOffersContextName
   | AgreementContextName
   | StorageGlobalContextName
 
@@ -17,8 +16,6 @@ export type StorageState = ServiceState<StorageItem> & {
   filters: StorageOffersFilters
   limits: Pick<StorageOffersFilters, 'price' | 'size'>
 }
-
-export type STORAGE_ACTION = OFFERS_ACTION
 
 export type PinnedContent = {
   contentName: string

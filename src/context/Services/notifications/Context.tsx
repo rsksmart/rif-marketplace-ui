@@ -3,10 +3,10 @@ import React, {
   FC, useContext, useEffect, useMemo, useReducer, useState,
 } from 'react'
 import { mapFromTransport, serviceAddress } from 'api/rif-marketplace-cache/notifications'
-import { createReducer } from 'context/storeUtils/reducer'
+import createReducer from 'context/storeUtils/reducer'
 import { Transport as NotificationsTransport } from 'api/rif-marketplace-cache/notifications/interfaces'
 import createWithContext from 'context/storeUtils/createWithContext'
-import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App'
 import { Web3Store } from '@rsksmart/rif-ui'
 import { Props, State } from './interfaces'
 import actions from './actions'

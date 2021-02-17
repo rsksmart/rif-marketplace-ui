@@ -1,6 +1,6 @@
 import { Web3Store } from '@rsksmart/rif-ui'
 import { Big } from 'big.js'
-import AppContext, { AppContextProps, errorReporterFactory } from 'context/App/AppContext'
+import AppContext, { AppContextProps, errorReporterFactory } from 'context/App'
 import MarketContext, { MarketContextProps } from 'context/Market'
 import { StorageOffersContext } from 'context/Services/storage/offers'
 import createWithContext from 'context/storeUtils/createWithContext'

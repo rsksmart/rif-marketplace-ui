@@ -4,7 +4,7 @@ import React, { FC, useContext } from 'react'
 import MarketContext, {
   MarketContextProps, MarketContextProvider,
 } from 'context/Market'
-import { AppContextProvider } from 'context/App/AppContext'
+import { AppContextProvider } from 'context/App'
 
 const expectedInitialCrypto = {}
 

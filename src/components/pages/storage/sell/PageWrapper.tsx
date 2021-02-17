@@ -2,8 +2,8 @@ import React, {
   FC, useContext, useEffect, useState,
 } from 'react'
 import { Web3Store } from '@rsksmart/rif-ui'
-import AppContext, { errorReporterFactory } from 'context/App/AppContext'
-import { OfferEditContextProvider } from 'context/Market/storage/OfferEditContext'
+import AppContext, { errorReporterFactory } from 'context/App'
+import { OfferEditContextProvider } from 'context/Market/storage'
 import { StorageOffer } from 'models/marketItems/StorageItem'
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'

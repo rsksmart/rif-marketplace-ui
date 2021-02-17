@@ -1,9 +1,8 @@
 import { Big } from 'big.js'
 import { SYSTEM_TOKENS } from 'models/Token'
-import { StorageBillingPlan } from '../interfaces'
-import { AddItemPayload, SetTotalCapacityPayload, SetCountryPayload } from '../offerEditActions'
-import { initialState } from '../OfferEditContext'
-import { offerEditActions } from '../offerEditReducer'
+import { SetCountryPayload, SetTotalCapacityPayload, StorageBillingPlan } from '../interfaces'
+import { initialState } from '../Context'
+import { offerEditActions } from '..'
 
 const mockedPlanItem: StorageBillingPlan = {
   currency: SYSTEM_TOKENS.rbtc,
@@ -21,12 +20,12 @@ describe('StorageOfferEditContext', () => {
   describe('offerEditActions', () => {
     describe('ADD_ITEM', () => {
       test('should add a planItem to the state', () => {
-        const payload: AddItemPayload = mockedPlanItem
+        const payload: StorageBillingPlan = mockedPlanItem
         const { billingPlans } = offerEditActions.ADD_ITEM(initialState, payload)
         expect(billingPlans).toEqual([mockedPlanItem])
       })
       test('should increment the internalCounter', () => {
-        const payload: AddItemPayload = mockedPlanItem
+        const payload: StorageBillingPlan = mockedPlanItem
         const { internalCounter } = offerEditActions.ADD_ITEM(initialState, payload)
         const expectedInternalCounter = initialState.internalCounter + 1
         expect(internalCounter).toEqual(expectedInternalCounter)
@@ -47,7 +46,7 @@ describe('StorageOfferEditContext', () => {
       expect(country).toBe(expectedCountry)
     })
     describe('SET_TOTAL_CAPACITY', () => {
-      const expectedSize = 10
+      const expectedSize = new Big(10)
       const payload: SetTotalCapacityPayload = {
         totalCapacity: expectedSize,
       }

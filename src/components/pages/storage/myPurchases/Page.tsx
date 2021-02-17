@@ -21,7 +21,7 @@ import WithLoginCard from 'components/hoc/WithLoginCard'
 import GridRow from 'components/atoms/GridRow'
 import InfoBar from 'components/molecules/InfoBar'
 import PurchasesTable from 'components/organisms/storage/mypurchases/PurchasesTable'
-import AppContext, { AppContextProps } from 'context/App/AppContext'
+import AppContext, { AppContextProps } from 'context/App'
 import useConfirmations from 'hooks/useConfirmations'
 
 const useTitleStyles = makeStyles(() => ({

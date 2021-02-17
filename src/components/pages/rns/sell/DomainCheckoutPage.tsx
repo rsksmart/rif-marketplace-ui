@@ -1,49 +1,48 @@
+import Box from '@material-ui/core/Box'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableRow from '@material-ui/core/TableRow'
-import Box from '@material-ui/core/Box'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
 import Typography from '@material-ui/core/Typography'
-import { makeStyles, Theme } from '@material-ui/core/styles'
 import {
-  Button, colors, UnitsInput, validatedNumber, Web3Store,
-  ShortenTextTooltip,
-  shortenString,
+  Button, colors,
+
+  shortenString, ShortenTextTooltip, UnitsInput, validatedNumber, Web3Store,
 } from '@rsksmart/rif-ui'
 import ItemWUnit from 'components/atoms/ItemWUnit'
+import RoundBtn from 'components/atoms/RoundBtn'
 import RifAddress from 'components/molecules/RifAddress'
 import CheckoutPageTemplate from 'components/templates/CheckoutPageTemplate'
+import ProgressOverlay from 'components/templates/ProgressOverlay'
+import AppContext, {
+  AppContextProps, errorReporterFactory,
+} from 'context/App'
+import { ConfirmationsContext } from 'context/Confirmations'
+import MarketContext from 'context/Market'
+import RnsDomainsContext from 'context/Services/rns/DomainsContext'
+import { marketPlaceAddress } from 'contracts/config'
 import {
   Marketplace as MarketplaceContract,
   Rns as RNSContract,
 } from 'contracts/rns'
+import { BaseToken, SupportedTokenSymbol } from 'models/Token'
+import { UIError } from 'models/UIMessage'
 import React, {
-  FC, useContext, useEffect, useState, useCallback,
+  FC, useCallback, useContext, useEffect, useState,
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import MarketContext from 'context/Market'
-import RnsDomainsContext from 'context/Services/rns/DomainsContext'
 import Logger from 'utils/Logger'
-import AppContext, {
-  AppContextProps, errorReporterFactory,
-} from 'context/App/AppContext'
-import { UIError } from 'models/UIMessage'
-import { LoadingPayload } from 'context/App/appActions'
-import { marketPlaceAddress } from 'contracts/config'
 import { shortChecksumAddress } from 'utils/stringUtils'
 import { getSupportedTokenByName } from 'utils/tokenUtils'
-import { SupportedTokenSymbol, BaseToken } from 'models/Token'
-import { ConfirmationsContext } from 'context/Confirmations'
 import Web3 from 'web3'
-import ProgressOverlay from 'components/templates/ProgressOverlay'
-import RoundBtn from 'components/atoms/RoundBtn'
 
 const logger = Logger.getInstance()
 
@@ -177,7 +176,7 @@ const DomainsCheckoutPage: FC = () => {
           isLoading: true,
           id: 'contract',
           message: 'Approving domain placement...',
-        } as LoadingPayload,
+        },
       })
 
       // Send approval transaction
@@ -199,8 +198,8 @@ const DomainsCheckoutPage: FC = () => {
           isLoading: true,
           id: 'contract',
           message: 'Placing domain...',
-        } as LoadingPayload,
-      } as any)
+        },
+      })
 
       const { tokenAddress }: BaseToken = getSupportedTokenByName(currencySymbol)
 
@@ -238,8 +237,8 @@ const DomainsCheckoutPage: FC = () => {
         payload: {
           isLoading: false,
           id: 'contract',
-        } as LoadingPayload,
-      } as any)
+        },
+      })
       setProcessingTx(false)
     }
   }
