@@ -14,6 +14,10 @@ export const isEmpty = (
   text: string | unknown,
 ): boolean => !(text && String(text).trim())
 
+export const toChecksum = (address: string): string => toChecksumAddress(
+  address, networkId,
+)
+
 export const shortChecksumAddress = (address: string): string => shortenString(
-  toChecksumAddress(address, networkId),
+  toChecksum(address),
 )
