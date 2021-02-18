@@ -11,6 +11,7 @@ import { StorageStakingContractErrorId } from './storage/Staking'
 import { StorageContractErrorId } from './storage/Storage'
 import type { RifERC677ContractErrorId, RifERC20ContractErrorId } from './tokens/rif'
 import { PaymentWrapper } from './wrappers/payment-wrapper'
+import { NotifierContractErrorId } from './notifier/Notifier'
 
 export interface TransactionOptions {
   from?: string
@@ -35,6 +36,7 @@ export type ContractErrorId =
   | RnsContractErrorId
   | StorageContractErrorId
   | StorageStakingContractErrorId
+  | NotifierContractErrorId
 
 export enum TOKEN_TYPES {
   ERC20 = 'erc20',
