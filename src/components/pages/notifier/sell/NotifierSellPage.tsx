@@ -10,7 +10,11 @@ import Staking from 'components/organisms/notifier/Staking'
 import NotifierContract from 'contracts/notifier/Notifier'
 import { Web3Store } from '@rsksmart/rif-ui'
 import Web3 from 'web3'
-import NoWhitelistedProvider from 'components/molecules/storage/NoWhitelistedProvider'
+import NoWhitelistedProvider
+  from 'components/molecules/storage/NoWhitelistedProvider'
+import { ConfirmationsContext } from 'context/Confirmations'
+import InfoBar from 'components/molecules/InfoBar'
+import useConfirmations from 'hooks/useConfirmations'
 
 const logger = Logger.getInstance()
 
@@ -21,8 +25,12 @@ const NotifierSellPage: FC = () => {
       account,
     },
   } = useContext(Web3Store)
-  const accountStr = account as string // this component is wrapped withLoginCard
+  const { dispatch: confirmationsDispatch } = useContext(ConfirmationsContext)
+  const hasPendingConfs = Boolean(useConfirmations(
+    ['NOTIFIER_REGISTER_PROVIDER'],
+  ).length)
 
+  const accountStr = account as string // wrapped withLoginCard
   const [isWhitelistedProvider, setIsWhitelistedProvider] = useState(false)
   const [isCheckingWhitelist, setIsCheckingWhitelist] = useState(true)
 
@@ -47,16 +55,33 @@ const NotifierSellPage: FC = () => {
   }, [accountStr, web3])
 
   const handleRegistration = async ({ endpointUrl }): Promise<void> => {
-    const notifierContract = NotifierContract.getInstance(web3 as Web3)
-    const registerReceipt = await notifierContract.registerProvider(
-      endpointUrl, { from: accountStr },
-    )
-    logger.debug(registerReceipt)
-    // TODO: handle confirmations and tx in progress
+    try {
+      const notifierContract = NotifierContract.getInstance(web3 as Web3)
+      const registerReceipt = await notifierContract.registerProvider(
+        endpointUrl, { from: accountStr },
+      )
+
+      if (registerReceipt) {
+        confirmationsDispatch({
+          type: 'NEW_REQUEST',
+          payload: {
+            contractAction: 'NOTIFIER_REGISTER_PROVIDER',
+            txHash: registerReceipt.transactionHash,
+          },
+        })
+      }
+    } catch (error) {
+      logger.error(error)
+    }
   }
 
   return (
     <CenteredPageTemplate>
+      <InfoBar
+        isVisible={Boolean(hasPendingConfs)}
+        text="Awaiting confirmations for new offer"
+        type="info"
+      />
       <Staking isEnabled={isWhitelistedProvider} />
       <Typography gutterBottom variant="h5" color="primary">
         Register as notifications provider
