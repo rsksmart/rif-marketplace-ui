@@ -7,19 +7,20 @@ import RoundBtn from 'components/atoms/RoundBtn'
 import GridItem from 'components/atoms/GridItem'
 import Typography from '@material-ui/core/Typography'
 import { useForm } from 'react-hook-form'
+import { toChecksum } from 'utils/stringUtils'
 
 type Inputs = {
   endpointUrl: string
-  providerAddress: string
 }
 
 type ProviderRegistrarProps = {
+  providerAddress: string
   isEnabled: boolean
   onRegister: (data: Inputs) => void
 }
 
 const ProviderRegistrar: FC<ProviderRegistrarProps> = ({
-  onRegister, isEnabled,
+  providerAddress, onRegister, isEnabled,
 }) => {
   const { register, handleSubmit, errors } = useForm<Inputs>()
 
@@ -40,16 +41,9 @@ const ProviderRegistrar: FC<ProviderRegistrarProps> = ({
                   inputProps={{
                     style: { textAlign: 'center' },
                   }}
-                  inputRef={register({ required: true })}
-                  name="providerAddress"
+                  disabled
+                  value={toChecksum(providerAddress)}
                 />
-                {
-                  errors.providerAddress && (
-                    <Typography color="error" variant="caption">
-                      Provider address is required
-                    </Typography>
-                  )
-                }
               </GridItem>
               <GridItem xs={12}>
                 <TextField

@@ -21,6 +21,7 @@ const NotifierSellPage: FC = () => {
       account,
     },
   } = useContext(Web3Store)
+  const accountStr = account as string // this component is wrapped withLoginCard
 
   const [isWhitelistedProvider, setIsWhitelistedProvider] = useState(false)
   const [isCheckingWhitelist, setIsCheckingWhitelist] = useState(true)
@@ -31,7 +32,7 @@ const NotifierSellPage: FC = () => {
         setIsCheckingWhitelist(true)
         const notifierContract = NotifierContract.getInstance(web3 as Web3)
         const isWhitelisted = Boolean(await notifierContract
-          .isWhitelistedProvider(account as string))
+          .isWhitelistedProvider(accountStr))
 
         setIsWhitelistedProvider(isWhitelisted)
       } catch (error) {
@@ -43,12 +44,15 @@ const NotifierSellPage: FC = () => {
     }
 
     checkWhitelisted()
-  }, [account, web3])
+  }, [accountStr, web3])
 
-  const handleRegistration = ({ endpointUrl, providerAddress }): void => {
-    logger.debug({ endpointUrl })
-    logger.debug({ providerAddress })
-    // TODO: interact with the SC
+  const handleRegistration = async ({ endpointUrl }): Promise<void> => {
+    const notifierContract = NotifierContract.getInstance(web3 as Web3)
+    const registerReceipt = await notifierContract.registerProvider(
+      endpointUrl, { from: accountStr },
+    )
+    logger.debug(registerReceipt)
+    // TODO: handle confirmations and tx in progress
   }
 
   return (
@@ -67,6 +71,7 @@ const NotifierSellPage: FC = () => {
         && <NoWhitelistedProvider service="Notifications" />
       }
       <ProviderRegistrar
+        providerAddress={accountStr}
         isEnabled={isWhitelistedProvider}
         onRegister={handleRegistration}
       />
@@ -74,6 +79,8 @@ const NotifierSellPage: FC = () => {
   )
 }
 
+// if this wrapper is removed, the account could be undefined
+// and the account handler should change
 export default WithLoginCard({
   WrappedComponent: NotifierSellPage,
   title: 'Connect your wallet to register as a provider',
