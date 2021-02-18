@@ -5,7 +5,6 @@ import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import React, {
   FC, useContext, useEffect, useState,
 } from 'react'
-import Logger from 'utils/Logger'
 import Staking from 'components/organisms/notifier/Staking'
 import NotifierContract from 'contracts/notifier/Notifier'
 import { Web3Store } from '@rsksmart/rif-ui'
@@ -15,8 +14,7 @@ import NoWhitelistedProvider
 import { ConfirmationsContext } from 'context/Confirmations'
 import InfoBar from 'components/molecules/InfoBar'
 import useConfirmations from 'hooks/useConfirmations'
-
-const logger = Logger.getInstance()
+import useErrorReporter from 'hooks/useErrorReporter'
 
 const NotifierSellPage: FC = () => {
   const {
@@ -29,6 +27,7 @@ const NotifierSellPage: FC = () => {
   const hasPendingConfs = Boolean(useConfirmations(
     ['NOTIFIER_REGISTER_PROVIDER'],
   ).length)
+  const reportError = useErrorReporter()
 
   const accountStr = account as string // wrapped withLoginCard
   const [isWhitelistedProvider, setIsWhitelistedProvider] = useState(false)
@@ -44,15 +43,18 @@ const NotifierSellPage: FC = () => {
 
         setIsWhitelistedProvider(isWhitelisted)
       } catch (error) {
-        // TODO: report new UI error
-        logger.error('Could not determine if the account is a whitelisted provider.')
+        reportError({
+          error,
+          id: 'contract-notifier',
+          text: 'Could not determine if the account is whitelisted.',
+        })
       } finally {
         setIsCheckingWhitelist(false)
       }
     }
 
     checkWhitelisted()
-  }, [accountStr, web3])
+  }, [accountStr, web3, reportError])
 
   const handleRegistration = async ({ endpointUrl }): Promise<void> => {
     try {
@@ -71,7 +73,11 @@ const NotifierSellPage: FC = () => {
         })
       }
     } catch (error) {
-      logger.error(error)
+      reportError({
+        error,
+        id: 'contract-notifier',
+        text: 'Could not register as a provider',
+      })
     }
   }
 
