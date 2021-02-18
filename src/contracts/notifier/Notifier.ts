@@ -41,6 +41,21 @@ class NotifierContract extends ContractWithTokens {
       },
     )
   }
+
+  public async registerProvider(
+    url: string,
+    txOptions: TxOptions,
+  ): Promise<TransactionReceipt> {
+    const registerProviderTx = await this.methods.registerProvider(url)
+
+    return this.send(
+      registerProviderTx,
+      {
+        gasMultiplier: NotifierContract.gasMultiplier,
+        ...txOptions,
+      },
+    )
+  }
 }
 
 export default NotifierContract
