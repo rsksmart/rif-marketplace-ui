@@ -15,6 +15,10 @@ import { ConfirmationsContext } from 'context/Confirmations'
 import InfoBar from 'components/molecules/InfoBar'
 import useConfirmations from 'hooks/useConfirmations'
 import useErrorReporter from 'hooks/useErrorReporter'
+import ProgressOverlay from 'components/templates/ProgressOverlay'
+import RoundBtn from 'components/atoms/RoundBtn'
+import { useHistory } from 'react-router-dom'
+import ROUTES from 'routes'
 
 const NotifierSellPage: FC = () => {
   const {
@@ -28,10 +32,13 @@ const NotifierSellPage: FC = () => {
     ['NOTIFIER_REGISTER_PROVIDER'],
   ).length)
   const reportError = useErrorReporter()
+  const history = useHistory()
 
   const accountStr = account as string // wrapped withLoginCard
   const [isWhitelistedProvider, setIsWhitelistedProvider] = useState(false)
   const [isCheckingWhitelist, setIsCheckingWhitelist] = useState(true)
+  const [processingTx, setProcessingTx] = useState(false)
+  const [txOperationDone, setTxOperationDone] = useState(false)
 
   useEffect(() => {
     const checkWhitelisted = async (): Promise<void> => {
@@ -58,12 +65,14 @@ const NotifierSellPage: FC = () => {
 
   const handleRegistration = async ({ endpointUrl }): Promise<void> => {
     try {
+      setProcessingTx(true)
       const notifierContract = NotifierContract.getInstance(web3 as Web3)
       const registerReceipt = await notifierContract.registerProvider(
         endpointUrl, { from: accountStr },
       )
 
       if (registerReceipt) {
+        setTxOperationDone(true)
         confirmationsDispatch({
           type: 'NEW_REQUEST',
           payload: {
@@ -78,6 +87,8 @@ const NotifierSellPage: FC = () => {
         id: 'contract-notifier',
         text: 'Could not register as a provider',
       })
+    } finally {
+      setProcessingTx(false)
     }
   }
 
@@ -106,6 +117,32 @@ const NotifierSellPage: FC = () => {
         isEnabled={isWhitelistedProvider}
         onRegister={handleRegistration}
       />
+      <ProgressOverlay
+        title="Registering as a provider!"
+        doneMsg="You have been registered as a provider!"
+        inProgress={processingTx}
+        isDone={txOperationDone}
+        buttons={[
+          <RoundBtn
+            key="go_to_my_offers"
+            onClick={
+              (): void => history.push(ROUTES.NOTIFIER.MYOFFERS.BASE)
+            }
+          >
+            View my offers
+          </RoundBtn>,
+          <RoundBtn
+            key="go_to_list"
+            onClick={
+              (): void => history.push(ROUTES.NOTIFIER.BUY.BASE)
+            }
+          >
+            View offers listing
+          </RoundBtn>,
+        ]}
+
+      />
+
     </CenteredPageTemplate>
   )
 }
