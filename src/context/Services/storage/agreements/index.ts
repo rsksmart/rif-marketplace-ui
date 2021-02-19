@@ -6,6 +6,7 @@ import {
   Props,
   Action,
   State,
+  ContextName,
 } from './interfaces'
 
 export {
@@ -15,5 +16,6 @@ export {
 export type AgreementContextProps = Props
 export type AgreementAction = Action
 export type AgreementsContextState = State
+export type AgreementContextName = ContextName
 
 export default AgreementsContext

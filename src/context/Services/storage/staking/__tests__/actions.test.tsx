@@ -1,5 +1,5 @@
 import { StakedBalances } from 'api/rif-marketplace-cache/storage/stakes'
-import { actions } from '../actions'
+import actions from '../actions'
 import { initialState } from '../Context'
 import { State } from '../interfaces'
 
@@ -12,7 +12,7 @@ const FAKE_TOTAL_STAKED_USD = '12000'
 
 const FAKE_NEEDS_REFRESH = true
 
-describe('StakingActions', () => {
+describe('Storage Staking Actions', () => {
   describe('SET_STAKES', () => {
     test('should return state with staked balances equal to FAKE_STAKED_BALANCES', () => {
       const actualState = actions.SET_STAKES(

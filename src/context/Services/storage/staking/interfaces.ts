@@ -1,18 +1,23 @@
 import { StakedBalances } from 'api/rif-marketplace-cache/storage/stakes'
 import { Dispatch } from 'react'
 import { SupportedTokenSymbol } from 'models/Token'
+import { ContextState } from 'context/storeUtils/interfaces'
 
 export type AmountToken = {
   amount: string
   token: SupportedTokenSymbol
 }
+// STATE
+export const contextName = 'storage_staking' as const
+export type ContextName = typeof contextName
 
-export type State = {
+export type State = ContextState & {
   needsRefresh: boolean
   totalStakedUSD: string
   stakes: StakedBalances
 }
 
+// ACTIONS
 export type Action =
   | {
       type: 'SET_NEEDS_REFRESH'
@@ -33,6 +38,7 @@ export type Actions = {
   SET_STAKES: (state: State, stakes: StakedBalances) => State
 }
 
+// PROPS
 export type Props = {
   state: State
   dispatch: Dispatch<Action>

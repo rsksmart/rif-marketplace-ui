@@ -3,7 +3,9 @@ import { ContextProps, ContextState } from 'context/storeUtils/interfaces'
 import { AgreementFilters } from 'api/rif-marketplace-cache/storage/interfaces'
 
 // STATE
-export type ContextName = 'storage_agreements'
+export const contextName = 'storage_agreements' as const
+export type ContextName = typeof contextName
+
 export type State = ContextState & {
   agreements: Agreement[]
   order?: Agreement

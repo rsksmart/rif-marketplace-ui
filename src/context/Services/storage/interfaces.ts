@@ -4,11 +4,13 @@ import { ContextState } from 'context/storeUtils/interfaces'
 import { Dispatch } from 'react'
 import { ServiceOrder, ServiceState } from '../interfaces'
 import { StorageOffersContextName } from './offers'
-import { ContextName as AgreementContextName } from './agreements/interfaces'
+import { AgreementContextName } from './agreements'
 import { ContextName as StorageGlobalContextName } from './Context'
+import { StorageStakingContextName } from './staking'
 
 export type StorageContextNames =
   | StorageOffersContextName
+  | StorageStakingContextName
   | AgreementContextName
   | StorageGlobalContextName
 
