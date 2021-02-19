@@ -17,7 +17,7 @@ import {
   Props as StakingContextProps,
 } from 'context/Services/storage/staking/interfaces'
 import StakingFab from 'components/molecules/storage/StakingFab'
-import withStakingContext, { StakingContext }
+import withStakingContext, { Context }
   from 'context/Services/storage/staking/Context'
 import RoundBtn from 'components/atoms/RoundBtn'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
@@ -98,7 +98,7 @@ const Staking: FC = () => {
       stakes,
       totalStakedUSD,
     },
-  } = useContext<StakingContextProps>(StakingContext)
+  } = useContext<StakingContextProps>(Context)
   const {
     state: { isWhitelistedProvider },
   } = useContext<StorageGlobalContextProps>(StorageGlobalContext)

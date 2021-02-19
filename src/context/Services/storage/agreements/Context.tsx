@@ -4,11 +4,11 @@ import React, {
 } from 'react'
 import createReducer from 'context/storeUtils/reducer'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App'
-import { Props, State } from './interfaces'
+import { contextName, Props, State } from './interfaces'
 import actions from './actions'
 
 export const initialState: State = {
-  contextID: 'storage_agreements',
+  contextID: contextName,
   agreements: [],
 }
 

@@ -6,6 +6,7 @@ import AppContext, {
   AppContextProps,
   errorReporterFactory,
 } from 'context/App'
+import createReducer from 'context/storeUtils/reducer'
 import { UIError } from 'models/UIMessage'
 import React, {
   createContext,
@@ -16,16 +17,15 @@ import React, {
   useReducer,
   useState,
 } from 'react'
-import Logger from 'utils/Logger'
-import { reducer } from './actions'
 import {
   Props, State,
+  contextName,
 } from './interfaces'
+import actions from './actions'
 import { onStakeUpdated, setStakeNeedsRefresh } from './utils'
 
-const logger = Logger.getInstance()
-
 export const initialState: State = {
+  contextID: contextName,
   needsRefresh: true,
   totalStakedUSD: '',
   stakes: {
@@ -34,7 +34,7 @@ export const initialState: State = {
   },
 }
 
-export const StakingContext = createContext<Props>({
+export const Context = createContext<Props>({
   state: initialState,
   dispatch: () => undefined,
 })
@@ -51,7 +51,10 @@ export const ContextProvider: FC = ({ children }) => {
   const {
     state: { account },
   } = useContext(Web3Store)
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(
+    createReducer(initialState, actions),
+    initialState,
+  )
   const { needsRefresh } = state
 
   const api = apis?.['storage/v0/stakes'] as StakesService
@@ -111,7 +114,6 @@ export const ContextProvider: FC = ({ children }) => {
             text: 'There was an error fetching the current balance',
           },
         ))
-        logger.error(`Fetch Stake total error: ${error.message}`)
       })
     }
   }, [dispatch, api, account, reportError, needsRefresh, appDispatch])
@@ -119,9 +121,9 @@ export const ContextProvider: FC = ({ children }) => {
   const value = { state, dispatch }
 
   return (
-    <StakingContext.Provider value={value}>
+    <Context.Provider value={value}>
       {children}
-    </StakingContext.Provider>
+    </Context.Provider>
   )
 }
 

@@ -6,7 +6,7 @@ const useProviderTest = <T extends object>(
     { test }: { test: Function },
   ): React.ReactElement => {
     const MockConsumer: FC = () => {
-      test(useContext(context))
+      test(useContext<T>(context))
 
       return <div />
     }
