@@ -3,9 +3,8 @@ import { convertToWeiString } from 'utils/parsers'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 import { AbiItem } from 'web3-utils'
-
 import { ZERO_BYTES } from 'constants/strings'
-import { stakingAddress, storageSupportedTokens } from 'contracts/config'
+import { storageStakingAddress, storageSupportedTokens } from 'contracts/config'
 import { TxOptions } from 'contracts/interfaces'
 import { getTokensFromConfigTokens } from 'utils/tokenUtils'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
@@ -25,7 +24,7 @@ class StakingContract extends ContractWithTokens {
         web3,
         new web3.eth.Contract(
           Staking.abi as AbiItem[],
-          stakingAddress,
+          storageStakingAddress,
         ),
         getTokensFromConfigTokens(storageSupportedTokens),
         'contract-storage-staking',
