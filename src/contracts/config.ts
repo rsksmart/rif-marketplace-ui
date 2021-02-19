@@ -20,7 +20,7 @@ const {
 const marketPlaceAddress = marketplace.toLowerCase()
 const rnsAddress = rnsDotRskOwner.toLowerCase()
 const storageAddress = storageManager.toLowerCase()
-const stakingAddress = storageStaking.toLowerCase()
+const storageStakingAddress = storageStaking.toLowerCase()
 const notifierAddress = notificationsManager.toLowerCase()
 
 const rnsSupportedTokens: SupportedTokenSymbol[] = services.rns?.tokens || []
@@ -49,7 +49,7 @@ export {
   marketPlaceAddress,
   rnsAddress,
   storageAddress,
-  stakingAddress,
+  storageStakingAddress,
   allAllowedPaymentTokens,
   allTokenAddresses,
   addressTokenRecord,
