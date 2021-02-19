@@ -14,6 +14,7 @@ const {
   storageManager,
   storageStaking,
   notificationsManager,
+  notificationsStaking,
   ...tokenAddresses
 } = contractAddresses
 
@@ -22,6 +23,7 @@ const rnsAddress = rnsDotRskOwner.toLowerCase()
 const storageAddress = storageManager.toLowerCase()
 const storageStakingAddress = storageStaking.toLowerCase()
 const notifierAddress = notificationsManager.toLowerCase()
+const notifierStakingAddress = notificationsStaking.toLowerCase()
 
 const rnsSupportedTokens: SupportedTokenSymbol[] = services.rns?.tokens || []
 const storageSupportedTokens: SupportedTokenSymbol[] = services.storage?.tokens || []
@@ -58,4 +60,5 @@ export {
   rifTokenAddress,
   notifierAddress,
   notifierSupportedTokens,
+  notifierStakingAddress,
 }
