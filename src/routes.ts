@@ -20,6 +20,7 @@ const STORAGE_RENEW_AGREEMENT = `${STORAGE_MYPURCHASES}/renew`
 const NOTIFIER = '/notifications'
 const NOTIFIER_BUY = `${NOTIFIER}/buy`
 const NOTIFIER_SELL = `${NOTIFIER}/sell`
+const NOTIFIER_MYOFFERS = `${NOTIFIER}/myoffers`
 
 const FAQ = '/faq'
 const ABOUT = '/about'
@@ -70,6 +71,9 @@ const ROUTES = {
     },
     SELL: {
       BASE: NOTIFIER_SELL,
+    },
+    MYOFFERS: {
+      BASE: NOTIFIER_MYOFFERS,
     },
   },
   FAQ,
