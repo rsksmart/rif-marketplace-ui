@@ -20,13 +20,10 @@ import { UNIT_PREFIX_POW2 } from 'utils/utils'
 
 import {
   AsyncActions, GetFileSizeAction, Props, State, UploadFilesAction,
-  SizeLimitPayload,
+  SizeLimitPayload, contextID,
 } from './interfaces'
 import actions from './actions'
 import { StorageOffersContext, StorageOffersContextProps } from '../offers'
-
-export const contextID = 'storage_upload' as const
-export type ContextName = typeof contextID
 
 export const initialState: State = {
   contextID,

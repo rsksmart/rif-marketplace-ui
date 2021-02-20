@@ -4,6 +4,9 @@ import { Status } from 'components/templates/ProgressOverlay'
 import { ContextState } from 'context/storeUtils/interfaces'
 import { UploadResponse } from 'api/rif-storage-upload-service/upload/interfaces'
 
+export const contextID = 'storage_upload' as const
+export type ContextName = typeof contextID
+
 // STATE
 export type State = ContextState & {
   status: Status & {
@@ -16,7 +19,7 @@ export type State = ContextState & {
 }
 
 // PAYLOAD
-type StatusPayload = Status & {
+export type StatusPayload = Status & {
   uploadResponse?: UploadResponse
 }
 

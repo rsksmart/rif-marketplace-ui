@@ -6,6 +6,7 @@ import withStorageUploadContext, {
 import {
   Props,
   Action,
+  ContextName,
 } from './interfaces'
 
 export {
@@ -15,5 +16,6 @@ export {
 }
 export type StorageUploadContextProps = Props
 export type StorageUploadAction = Action
+export type StorageUploadContextName = ContextName
 
 export default withStorageUploadContext
