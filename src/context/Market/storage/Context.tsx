@@ -19,7 +19,6 @@ export const initialState: State = {
   usedPeriodsPerCurrency: {},
   billingPlans: [],
   allBillingPeriods: billingPeriods,
-  originalOffer: undefined,
 }
 
 export const Context = createContext<Props>({
