@@ -56,7 +56,7 @@ const Staking: FC = () => {
   } = useContext<StorageGlobalContextProps>(StorageGlobalContext)
 
   const isAwaitingConfirmations = Boolean(
-    useConfirmations(['STAKING_STAKE', 'STAKING_UNSTAKE']).length,
+    useConfirmations(['STORAGE_STAKE', 'STORAGE_UNSTAKE']).length,
   )
 
   const [txInProgressMessage, setTxInProgressMessage] = useState('')
@@ -96,7 +96,7 @@ const Staking: FC = () => {
         confirmationsDispatch({
           type: 'NEW_REQUEST',
           payload: {
-            contractAction: 'STAKING_STAKE',
+            contractAction: 'STORAGE_STAKE',
             txHash: receipt.transactionHash,
           },
         })
@@ -131,7 +131,7 @@ const Staking: FC = () => {
         confirmationsDispatch({
           type: 'NEW_REQUEST',
           payload: {
-            contractAction: 'STAKING_UNSTAKE',
+            contractAction: 'STORAGE_UNSTAKE',
             txHash: receipt.transactionHash,
           },
         })
