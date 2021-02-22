@@ -8,6 +8,8 @@ import RoundBtn from 'components/atoms/RoundBtn'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import useErrorReporter from 'hooks/useErrorReporter'
 import Big from 'big.js'
+import { ConfirmationsContext } from 'context/Confirmations'
+import useConfirmations from 'hooks/useConfirmations'
 import StakingTemplate from '../staking/StakingTemplate'
 
 type Props = {
@@ -26,6 +28,7 @@ const Staking: FC<Props> = ({ isEnabled }) => {
       web3,
     },
   } = useContext(Web3Store)
+  const { dispatch: confirmationsDispatch } = useContext(ConfirmationsContext)
 
   const reportError = useErrorReporter()
 
@@ -34,8 +37,10 @@ const Staking: FC<Props> = ({ isEnabled }) => {
   const [processingTx, setProcessingTx] = useState(false)
   const [txOperationDone, setTxOperationDone] = useState(false)
 
-  // TODO: add real data
-  const isProcessing = false
+  const hasPendingConfs = Boolean(useConfirmations(
+    ['NOTIFIER_STAKE', 'NOTIFIER_UNSTAKE'],
+  ).length)
+  // TODO: add real data [when cache service is ready]
   const stakedBalances = {} as StakedBalances
   const totalStakedUSD = ''
 
@@ -61,7 +66,13 @@ const Staking: FC<Props> = ({ isEnabled }) => {
 
       if (receipt) {
         setTxOperationDone(true)
-        // TODO: send confirmation track request
+        confirmationsDispatch({
+          type: 'NEW_REQUEST',
+          payload: {
+            contractAction: 'NOTIFIER_STAKE',
+            txHash: receipt.transactionHash,
+          },
+        })
       }
     } catch (error) {
       const { customMessage } = error
@@ -89,7 +100,13 @@ const Staking: FC<Props> = ({ isEnabled }) => {
 
       if (receipt) {
         setTxOperationDone(true)
-        // TODO: add confirmations tracking
+        confirmationsDispatch({
+          type: 'NEW_REQUEST',
+          payload: {
+            contractAction: 'NOTIFIER_UNSTAKE',
+            txHash: receipt.transactionHash,
+          },
+        })
       }
     } catch (error) {
       const { customMessage } = error
@@ -108,7 +125,7 @@ const Staking: FC<Props> = ({ isEnabled }) => {
       <StakingTemplate
         checkCanWithdraw={canWithdraw}
         isEnabled={isEnabled}
-        isProcessing={isProcessing}
+        isProcessing={hasPendingConfs}
         stakedBalances={stakedBalances}
         totalStakedUSD={totalStakedUSD}
         onDeposit={handleDeposit}
