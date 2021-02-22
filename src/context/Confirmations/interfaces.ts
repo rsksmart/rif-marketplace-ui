@@ -11,7 +11,7 @@ type AgreementContractAction =
   | 'AGREEMENT_RENEW'
 
 type OfferContractAction = 'NEW_OFFER' | 'EDIT_OFFER' | 'CANCEL_OFFER'
-type StorageStakingContractAction = 'STAKING_STAKE' | 'STAKING_UNSTAKE'
+type StorageStakingContractAction = 'STORAGE_STAKE' | 'STORAGE_UNSTAKE'
 
 type StorageContractAction = AgreementContractAction | OfferContractAction
 
