@@ -24,12 +24,14 @@ type RnsContractAction =
   | PlaceDomainAction
 
 type NotifierContractAction = 'NOTIFIER_REGISTER_PROVIDER'
+type NotifierStakingContractAction = 'NOTIFIER_STAKE' | 'NOTIFIER_UNSTAKE'
 
 export type ContractAction =
   | StorageContractAction
   | StorageStakingContractAction
   | RnsContractAction
   | NotifierContractAction
+  | NotifierStakingContractAction
 
 export type AgreementUpdateData = { // used for withdraw, payout and renew
   agreementId: string
