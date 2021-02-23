@@ -25,7 +25,7 @@ const ProgressOverlay: FC<Props> = ({
   title,
   doneMsg,
 }) => {
-  if (inProgress || isDone) {
+  if (inProgress ?? isDone) {
     return (
       <OverlaidPageTemplate>
         {
@@ -45,7 +45,7 @@ const ProgressOverlay: FC<Props> = ({
                 {
                   buttons.map((btn) => (
                     <GridItem
-                      key={btn.key || (btn as unknown as HTMLElement).innerText}
+                      key={btn.key ?? (btn as unknown as HTMLElement).innerText}
                     >
                       {btn}
                     </GridItem>

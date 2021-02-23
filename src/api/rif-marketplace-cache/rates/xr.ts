@@ -27,7 +27,7 @@ export type XRAPIService = Modify<APIService, {
 export class XRService extends AbstractAPIService implements XRAPIService {
   path = xrServiceAddress
 
-  constructor() { super(client) }
+  constructor () { super(client) }
 
   _fetch = async (filters: XRFilter): Promise<XRItem[]> => {
     const { fiatSymbol } = filters
@@ -38,7 +38,8 @@ export class XRService extends AbstractAPIService implements XRAPIService {
       },
     })
     const { data, ...metadata } = isResultPaginated(results)
-      ? results : { data: results }
+      ? results
+: { data: results }
     this.meta = metadata
 
     return data.filter((item) => getSupportedTokenByName(item.token))

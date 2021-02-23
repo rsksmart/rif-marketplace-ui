@@ -20,7 +20,7 @@ const SelectRowButton: FC<SelectRowButtonProps> = ({
     onClick={handleSelect}
     {...rest}
   >
-    {children || 'Select'}
+    {children ?? 'Select'}
   </Button>
 )
 

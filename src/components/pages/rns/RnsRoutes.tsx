@@ -37,8 +37,6 @@ const TABS: StyledNavTabProps[] = [
 
 const RnsRoutes: FC = () => {
   const { pathname } = useLocation()
-  const { services } = networkConfig
-  const rnsEnabled = services && services.rns
   const history = useHistory()
 
   useEffect(() => {
@@ -52,7 +50,7 @@ const RnsRoutes: FC = () => {
     }
   }, [history])
 
-  if (rnsEnabled) {
+  if (networkConfig?.services?.rns) {
     return (
       <Switch>
         <Redirect exact from={ROUTES.RNS.BASE} to={ROUTES.RNS.BUY.BASE} />

@@ -99,7 +99,8 @@ export const mapAgreementFromTransport = ({
 
   const aux = new Date(Date.now() + expiresInSeconds * 1000)
   const renewalDate = expiresInSeconds
-    ? new Date(aux.toDateString()) : undefined
+    ? new Date(aux.toDateString())
+: undefined
 
   return {
     id: agreementReference,

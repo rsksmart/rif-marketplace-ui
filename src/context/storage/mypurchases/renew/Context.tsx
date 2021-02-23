@@ -15,9 +15,7 @@ import ROUTES from 'routes'
 import { calcRenewalDate, getShortDateString } from 'utils/dateUtils'
 import Logger from 'utils/Logger'
 import { convertToWeiString, parseToBigDecimal } from 'utils/parsers'
-import Web3 from 'web3'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
-import { AgreementUpdateData } from 'context/Confirmations/interfaces'
 import { SYSTEM_TOKENS } from 'models/Token'
 import { SUPPORTED_FIAT } from 'models/Fiat'
 import { reducer } from './actions'
@@ -40,7 +38,7 @@ export const initialState: State = {
 }
 
 const initialAsyncActions: AsyncActions = {
-  renewAgreement: (): Promise<void> => Promise.resolve(),
+  renewAgreement: async (): Promise<void> => await Promise.resolve(),
 }
 
 export const Context = createContext<Props>({
@@ -138,7 +136,7 @@ const Provider: FC = ({ children }) => {
         }
         const storageContract = (await import('contracts/storage')).default
           .StorageContract
-          .getInstance(web3 as Web3)
+          .getInstance(web3)
 
         appDispatch({
           type: 'SET_IS_LOADING',
@@ -184,8 +182,8 @@ const Provider: FC = ({ children }) => {
               txHash: receipt.transactionHash,
               contractAction: 'AGREEMENT_RENEW',
               contractActionData: {
-                agreementId: id,
-              } as AgreementUpdateData,
+                id: id,
+              },
             },
           })
           Logger.getInstance().debug('Agreement receipt:', receipt)
@@ -211,9 +209,9 @@ const Provider: FC = ({ children }) => {
   const paymentToken = order?.paymentToken
   useEffect(() => {
     if (
-      isInitialised
-      && crypto
-      && paymentToken
+      isInitialised &&
+      crypto &&
+      paymentToken
     ) {
       const newRate = crypto[paymentToken.symbol]?.rate
 

@@ -6,12 +6,8 @@ import { ErrorMessagePayload, Action } from './interfaces'
 export type ErrorReporterError = Modify<Omit<ErrorMessagePayload, 'type'>, {
   id: ErrorId
 }>
-export interface ErrorReporter {
-  (error: ErrorReporterError): void
-}
-export interface ErrorReporterFactory {
-  (dispatch: Dispatch<Action>): ErrorReporter
-}
+export type ErrorReporter = (error: ErrorReporterError) => void
+export type ErrorReporterFactory = (dispatch: Dispatch<Action>) => ErrorReporter
 
 export const errorReporterFactory: ErrorReporterFactory = (
   dispatch: Dispatch<Action>,
@@ -21,6 +17,6 @@ export const errorReporterFactory: ErrorReporterFactory = (
     payload: {
       ...error,
       type: 'error',
-    } as ErrorMessagePayload,
+    },
   })
 }

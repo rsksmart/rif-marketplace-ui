@@ -2,7 +2,7 @@ import { Spinner } from '@rsksmart/rif-ui'
 import ItemWUnit from 'components/atoms/ItemWUnit'
 import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
-import { AgreementUpdateData, ConfirmationData } from 'context/Confirmations/interfaces'
+import { ConfirmationData } from 'context/Confirmations/interfaces'
 import { BaseFiat } from 'models/Fiat'
 import { MarketCryptoRecord, TokenXR } from 'models/Market'
 import { Agreement, SubscriptionPeriod } from 'models/marketItems/StorageItem'
@@ -58,7 +58,7 @@ const getCoreItemFields = (
     <CombinedPriceCell
       price={monthlyFee.toString()}
       priceFiat={currency && monthlyFee.times(currency.rate).toPrecision(3)}
-      currency={currency && currency.displayName}
+      currency={currency.displayName}
       currencyFiat={currentFiat.displayName}
       divider=" "
     />
@@ -101,7 +101,7 @@ export const getCustomerViewFrom = (
     ...agreementInfo,
     PROVIDER: providerValue,
     'WITHDRAWABLE FUNDS': withdrawableFundsValue,
-  } as AgreementCustomerView
+  }
 }
 
 export const createCustomerItemFields = (
@@ -121,11 +121,9 @@ export const createCustomerItemFields = (
   } = agreement
   const customerView = getCustomerViewFrom(agreement, crypto, currentFiat)
 
-  const isProcessingConfs = withdrawAndRenewConfs.some(
-    ({ contractActionData }) => (
-      (contractActionData as AgreementUpdateData).agreementId === id
-    ),
-  )
+  const isProcessingConfs = withdrawAndRenewConfs.some(({
+    contractActionData
+   }) => contractActionData?.id === id)
 
   return {
     ...customerView,
@@ -187,7 +185,7 @@ export const getProviderViewFrom = (
     ...agreementInfo,
     CONSUMER: consumerValue,
     'AVAILABLE FUNDS': toBePayedOutValue,
-  } as AgreementProviderView
+  }
 }
 
 export const createProviderItemFields = (
@@ -209,7 +207,7 @@ export const createProviderItemFields = (
 
   const isProcessingPayoutConfs = payoutConfirmations.some(
     ({ contractActionData }) => (
-      (contractActionData as AgreementUpdateData).agreementId === id
+      contractActionData?.id === id
     ),
   )
 

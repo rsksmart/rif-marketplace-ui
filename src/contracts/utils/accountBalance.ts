@@ -4,7 +4,7 @@ import { SupportedTokenSymbol, SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'
 import { getSupportedTokenByName } from 'utils/tokenUtils'
 import Web3 from 'web3'
 
-export const getBalance = (
+export const getBalance = async (
   web3: Web3,
   account: string,
   tokenName: SupportedTokenSymbol,
@@ -12,7 +12,7 @@ export const getBalance = (
   const tokenObject = getSupportedTokenByName(tokenName)
 
   if (tokenObject.symbol === SYSTEM_SUPPORTED_SYMBOL.rbtc) { // native token
-    return web3.eth.getBalance(account)
+    return await web3.eth.getBalance(account)
   }
 
   const { tokenContract } = tokenObject

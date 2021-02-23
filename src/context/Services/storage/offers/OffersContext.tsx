@@ -73,7 +73,7 @@ export const Provider: FC = ({ children }) => {
     needsRefresh,
     filters,
     limits,
-  } = state as State
+  } = state
 
   const errorReporterInstance = errorReporterFactory(appDispatch)
 
@@ -110,54 +110,38 @@ export const Provider: FC = ({ children }) => {
           id: 'filters',
         },
       })
-      try {
-        Promise.all([
-          apiAvailableCapacity.fetchSizeLimits()
-            .then((size: MinMaxFilter) => {
-              dispatch({
-                type: 'UPDATE_LIMITS',
-                payload: { size },
-              })
-              dispatch({
-                type: 'FILTER',
-                payload: { size },
-              })
+      Promise.all([
+        apiAvailableCapacity.fetchSizeLimits()
+          .then((size: MinMaxFilter) => {
+            dispatch({
+              type: 'UPDATE_LIMITS',
+              payload: { size },
             })
-            .catch((error) => {
-              throw new UIError({
-                error,
-                id: 'service-fetch',
-                text: 'Error while fetching filters. ',
-              })
-            }),
-          apiAvgBillingPrice.fetchPriceLimits()
-            .then((price: MinMaxFilter) => {
-              dispatch({
-                type: 'UPDATE_LIMITS',
-                payload: { price },
-              })
-              dispatch({
-                type: 'FILTER',
-                payload: { price },
-              })
+            dispatch({
+              type: 'FILTER',
+              payload: { size },
             })
-            .catch((error) => {
-              throw new UIError({
-                error,
-                id: 'service-fetch',
-                text: 'Error while fetching filters. ',
-              })
-            }),
-        ]).then(() => {
-          setIsLimitsSet(true)
-        })
-      } catch (error) {
+          }),
+        apiAvgBillingPrice.fetchPriceLimits()
+          .then((price: MinMaxFilter) => {
+            dispatch({
+              type: 'UPDATE_LIMITS',
+              payload: { price },
+            })
+            dispatch({
+              type: 'FILTER',
+              payload: { price },
+            })
+          }),
+      ]).then(() => {
+        setIsLimitsSet(true)
+      }).catch((error) => {
         reportError(new UIError({
           error,
           id: 'service-fetch',
           text: 'Error while fetching filters.',
         }))
-      } finally {
+      }).finally(() => {
         appDispatch({
           type: 'SET_IS_LOADING',
           payload: {
@@ -165,7 +149,7 @@ export const Provider: FC = ({ children }) => {
             id: 'filters',
           },
         })
-      }
+      })
     }
   }, [
     apiAvailableCapacity,

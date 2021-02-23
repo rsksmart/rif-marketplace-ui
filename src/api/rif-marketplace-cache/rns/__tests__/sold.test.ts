@@ -39,7 +39,6 @@ const MOCK_DOMAIN_TRANSPORT_ITEM_0: SoldDomainTransport = {
   txHash: 'mock_hash',
 }
 
-// @ts-ignore
 const MOCK_TRANSPORT = [MOCK_DOMAIN_TRANSPORT_ITEM_0]
 
 const MOCK_FILTER = { price: { max: 2, min: 2 }, ownerAddress: 'mock_owner_address' }
@@ -74,15 +73,15 @@ describe('DomainsService', () => {
     beforeEach(() => {
       soldDomainsAPI.service = mockFeathersService(MOCK_TRANSPORT)
     })
-    test('should call service.find once', () => {
+    test('should call service.find once', async () => {
       const findSpy = jest.spyOn(soldDomainsAPI.service, 'find')
-      soldDomainsAPI.fetch(MOCK_FILTER)
+      await soldDomainsAPI.fetch(MOCK_FILTER)
 
       expect(findSpy).toBeCalledTimes(1)
     })
-    test(`should call service.find with ${JSON.stringify(expectedFindOptions)}`, () => {
+    test(`should call service.find with ${JSON.stringify(expectedFindOptions)}`, async () => {
       const findSpy = jest.spyOn(soldDomainsAPI.service, 'find')
-      soldDomainsAPI.fetch(MOCK_FILTER)
+      await soldDomainsAPI.fetch(MOCK_FILTER)
 
       expect(findSpy).toBeCalledWith(expectedFindQuery)
     })

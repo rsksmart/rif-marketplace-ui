@@ -15,17 +15,17 @@ export class ContractBase {
 
   protected readonly web3: Web3
 
-  constructor(web3: Web3, contact: Contract, name?: string) {
+  constructor (web3: Web3, contact: Contract, name?: string) {
     this.name = name
     this.contract = contact
     this.web3 = web3
   }
 
-  public get methods(): Record<string, Function> {
+  public get methods (): Record<string, Function> {
     return this.contract.methods
   }
 
-  protected async _processOptions(
+  protected async _processOptions (
     tx: any,
     txOptions: TxOptions,
   ): Promise<TxOptions> {
@@ -55,7 +55,7 @@ export class ContractBase {
     }
   }
 
-  protected async _send(
+  protected async _send (
     tx: any,
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
@@ -89,7 +89,7 @@ export class ContractBase {
     return txReceipt
   }
 
-  protected async _call(
+  protected async _call (
     tx: any,
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {

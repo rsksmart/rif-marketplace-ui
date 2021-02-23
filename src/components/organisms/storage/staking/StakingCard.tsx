@@ -31,8 +31,8 @@ const StakingCard: FC<StakingCardProps> = (props) => {
   } = props
   const classes = useStyles()
 
-  const withdrawButtonEnabled = Boolean(Number(totalStakedUSD))
-    && !isAwaitingConfirmations
+  const withdrawButtonEnabled = Boolean(Number(totalStakedUSD)) &&
+    !isAwaitingConfirmations
 
   return (
     <Grid

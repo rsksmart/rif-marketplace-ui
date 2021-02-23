@@ -257,7 +257,7 @@ export const countries: CountryType[] = [
 
 // ISO 3166-1 alpha-2
 // ⚠️ No support for IE 11
-export const countryToFlag = (isoCode: string) => (String.fromCodePoint
+export const countryToFlag = (isoCode: string): string => (String.fromCodePoint
   ? isoCode
     .toUpperCase()
     .replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397))

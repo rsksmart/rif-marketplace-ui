@@ -5,7 +5,7 @@ import Box from '@material-ui/core/Box'
 import { colors, ModalDialogue } from '@rsksmart/rif-ui'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 
-export interface PinnerInstructionsModal {
+export interface Props {
   open: boolean
   onClose: () => void
 }
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const PinnerInstructionsModal: FC<PinnerInstructionsModal> = ({ open, onClose }) => {
+const PinnerInstructionsModal: FC<Props> = ({ open, onClose }) => {
   const classes = useStyles()
   return (
     <ModalDialogue title="Install and initialize the pinning service" open={open} onClose={onClose}>

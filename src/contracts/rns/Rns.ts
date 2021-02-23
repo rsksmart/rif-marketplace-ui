@@ -17,7 +17,7 @@ import RBTCWrapper from '../tokens/rbtc/rbtcWrapper'
 
 export type RnsContractErrorId = 'contract-rns-approve' | 'contract-rns-unapprove' | 'contract-rns-getApproved' | 'contract-rns-notApproved' | 'contract-rns-place' | 'contract-rns-buy'
 
-const throwUnsupportedError = (paymentTokenSymbol: string): false => {
+const throwUnsupportedError = (paymentTokenSymbol: string): void => {
   throw new UIError({
     error: new Error('Payment Contract Error'),
     id: 'contract-rns-place',
@@ -26,17 +26,17 @@ const throwUnsupportedError = (paymentTokenSymbol: string): false => {
 }
 
 class RNSContract extends ContractBase {
-  private _paymentTokenSymbol!: SupportedTokenSymbol
+  private readonly _paymentTokenSymbol!: SupportedTokenSymbol
 
-  private _marketPlaceContract!: MarketplaceContract
+  private readonly _marketPlaceContract!: MarketplaceContract
 
-  constructor(web3: Web3, contact: Contract, paymentTokenSymbol: SupportedTokenSymbol, name?: string) {
+  constructor (web3: Web3, contact: Contract, paymentTokenSymbol: SupportedTokenSymbol, name?: string) {
     super(web3, contact, name)
     this._paymentTokenSymbol = paymentTokenSymbol
     this._marketPlaceContract = MarketplaceContract.getInstance(web3)
   }
 
-  public static getInstance(web3: Web3, paymentTokenSymbol: SupportedTokenSymbol): RNSContract {
+  public static getInstance (web3: Web3, paymentTokenSymbol: SupportedTokenSymbol): RNSContract {
     if (!RNSContract.instance) {
       RNSContract.instance = new RNSContract(
         web3,
@@ -51,13 +51,13 @@ class RNSContract extends ContractBase {
 
   private static instance: RNSContract
 
-  public async getPriceString(tokenId, account): Promise<string> {
+  public async getPriceString (tokenId, account): Promise<string> {
     const tokenPlacement = await this._marketPlaceContract.getPlacement(tokenId, { from: account })
 
-    return Promise.resolve(tokenPlacement[1])
+    return await Promise.resolve(tokenPlacement[1])
   }
 
-  public async checkFunds(tokenId, account, domainName): Promise<boolean> {
+  public async checkFunds (tokenId, account, domainName): Promise<boolean | undefined> {
     const { utils: { toBN } } = this.web3
     let paymentWrapper: PaymentWrapper
     switch (this._paymentTokenSymbol) {
@@ -70,7 +70,8 @@ class RNSContract extends ContractBase {
         break
       }
       default:
-        return throwUnsupportedError(this._paymentTokenSymbol)
+        throwUnsupportedError(this._paymentTokenSymbol)
+        return
     }
 
     const myBalance = await paymentWrapper.getBalanceOf(account, { from: account })
@@ -94,13 +95,13 @@ class RNSContract extends ContractBase {
     return toBN(myBalance).gte(toBN(price))
   }
 
-  public async buy(
+  public async buy (
     contractAddress: string,
     tokenPrice: string,
     domainName: string,
     tokenId: string,
     txOptions: TransactionOptions,
-  ): Promise<TransactionReceipt> {
+  ): Promise<TransactionReceipt | undefined> {
     switch (this._paymentTokenSymbol) {
       case 'rif': {
         const tokenApproval = await this.getApproved(tokenId, txOptions)
@@ -148,12 +149,11 @@ class RNSContract extends ContractBase {
         return this._marketPlaceContract.buy(tokenId, { ...txOptions, value: tokenPrice })
       default:
         throwUnsupportedError(this._paymentTokenSymbol)
-        return {} as TransactionReceipt
     }
   }
 
   // approve: Token transfer approval
-  public approve(
+  public async approve (
     contractAddress: string,
     tokenId: string,
     txOptions: TransactionOptions,
@@ -161,21 +161,21 @@ class RNSContract extends ContractBase {
     const approveTx = this.methods.approve(
       contractAddress, tokenId,
     )
-    return this._send(approveTx, txOptions)
+    return await this._send(approveTx, txOptions)
   }
 
   // unapprove: Token transfer unapproval
-  public unapprove(
+  public async unapprove (
     tokenId: string,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> {
     const contractAddress = '0x0000000000000000000000000000000000000000'
-    return this.approve(contractAddress, tokenId, txOptions)
+    return await this.approve(contractAddress, tokenId, txOptions)
   }
 
-  public getApproved = (tokenId: string, txOptions: TransactionOptions): Promise<Array<string>> => {
+  public getApproved = async (tokenId: string, txOptions: TransactionOptions): Promise<string[]> => {
     const { from } = txOptions
-    return this.methods.getApproved(tokenId).call({ from })
+    return await this.methods.getApproved(tokenId).call({ from })
   }
 }
 

@@ -64,15 +64,15 @@ describe('DomainsService', () => {
     beforeEach(() => {
       domainsAPI.service = mockFeathersService(MOCK_TRANSPORT)
     })
-    test('should call service.find once', () => {
+    test('should call service.find once', async () => {
       const findSpy = jest.spyOn(domainsAPI.service, 'find')
-      domainsAPI.fetch(MOCK_FILTER)
+      await domainsAPI.fetch(MOCK_FILTER)
 
       expect(findSpy).toBeCalledTimes(1)
     })
-    test(`should call service.find with ${JSON.stringify(expectedFindOptions)}`, () => {
+    test(`should call service.find with ${JSON.stringify(expectedFindOptions)}`, async () => {
       const findSpy = jest.spyOn(domainsAPI.service, 'find')
-      domainsAPI.fetch(MOCK_FILTER)
+      await domainsAPI.fetch(MOCK_FILTER)
 
       expect(findSpy).toBeCalledWith(expectedFindQuery)
     })

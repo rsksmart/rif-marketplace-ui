@@ -61,8 +61,8 @@ const BillingPlansList: FC<BillingPlansListProps> = (
       </Grid>
       {/* STORAGE PLANS */}
       {
-        Boolean(billingPlans.length)
-        && (
+        Boolean(billingPlans.length) &&
+        (
           <Grid className={classes.plansList} item xs={12}>
             <Grid container className={classes.listTitleContainer}>
               <Typography

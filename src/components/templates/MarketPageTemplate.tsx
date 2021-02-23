@@ -76,7 +76,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
       </Grid>
       <Grid className={classes.resultsContainer} item sm={12} md={9}>
         <InfoBar
-          isVisible={!!outdatedCt}
+          isVisible={Boolean(outdatedCt)}
           text={`${outdatedCt} item(s) in this listing had been updated. Please,`}
           buttonText="refresh"
           type="info"

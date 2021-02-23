@@ -16,7 +16,7 @@ const expectedXRItem: XRItem = {
 }
 
 const mockFeathersService = {
-  find: jest.fn(() => Promise.resolve([expectedXRItem])),
+  find: jest.fn(async () => await Promise.resolve([expectedXRItem])),
 } as any
 
 const fakeErrorHandler = jest.fn()
@@ -51,9 +51,9 @@ describe('Exchange rate service', () => {
       xrService.service = mockFeathersService
     })
 
-    test(`should call service.find with ${JSON.stringify(expectedFindOptions)}`, () => {
+    test(`should call service.find with ${JSON.stringify(expectedFindOptions)}`, async () => {
       const fetchSpy = jest.spyOn(xrService.service, 'find')
-      xrService.fetch(TEST_Q_FILTER)
+      await xrService.fetch(TEST_Q_FILTER)
 
       expect(fetchSpy).toBeCalledWith(expectedFindOptions)
     })

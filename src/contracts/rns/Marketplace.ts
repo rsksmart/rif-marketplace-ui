@@ -1,4 +1,4 @@
-import RNSSimplePlacementsV1 from '@rsksmart/rif-marketplace-nfts/RNSSimplePlacementsV1Data.json'
+import RNSSimplePlacementsV1 from '../abi/nfts/RNSSimplePlacementsV1.json'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 import { AbiItem } from 'web3-utils'
@@ -12,7 +12,7 @@ export type MarketplaceContractErrorId = 'contract-marketplace-place' | 'contrac
 class MarketplaceContract extends ContractBase {
   public static gasMultiplier = 1.1
 
-  public static getInstance(web3: Web3): MarketplaceContract {
+  public static getInstance (web3: Web3): MarketplaceContract {
     if (!MarketplaceContract.instance) {
       MarketplaceContract.instance = new MarketplaceContract(
         web3,
@@ -29,7 +29,7 @@ class MarketplaceContract extends ContractBase {
   private static instance: MarketplaceContract
 
   // Place: Proxy function for placement transaction
-  public place(
+  public async place (
     tokenId: string,
     tokenAddress: string,
     price: string,
@@ -41,7 +41,7 @@ class MarketplaceContract extends ContractBase {
       this.web3.utils.toWei(price),
     )
 
-    return this._send(
+    return await this._send(
       placeTx,
       {
         gasMultiplier: MarketplaceContract.gasMultiplier,
@@ -51,12 +51,12 @@ class MarketplaceContract extends ContractBase {
   }
 
   // Unplace: Proxy function for unplacement transaction
-  public unplace(
+  public async unplace (
     tokenId: string,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> {
     const unplaceTx = this.methods.unplace(tokenId)
-    return this._send(
+    return await this._send(
       unplaceTx,
       {
         gasMultiplier: MarketplaceContract.gasMultiplier,
@@ -65,20 +65,20 @@ class MarketplaceContract extends ContractBase {
     )
   }
 
-  public getPlacement(
+  public async getPlacement (
     tokenId: string,
     txOptions: TransactionOptions,
-  ): Promise<Array<string>> {
+  ): Promise<string[]> {
     const { from } = txOptions
-    return this.methods.placement(tokenId).call({ from })
+    return await this.methods.placement(tokenId).call({ from })
   }
 
-  public buy(
+  public async buy (
     tokenId: string,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> {
     const buyTx = this.methods.buy(tokenId)
-    return this._send(buyTx, txOptions)
+    return await this._send(buyTx, txOptions)
   }
 }
 

@@ -28,8 +28,8 @@ const NotificationsPopover: FC<Props> = ({
         {
           notifications.map((notification, i) => (
             <div key={
-              notification.payload.timestamp
-              + notification.payload.agreementReference
+              notification.payload.timestamp.toString() +
+              notification.payload.agreementReference
             }
             >
               {Boolean(i) && <Divider />}

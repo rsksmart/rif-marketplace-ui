@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid'
 import IconedItem, { IconedItemProps } from 'components/molecules/IconedItem'
 import { Icons } from 'components/atoms/Icon'
 
-export type ServiceCategoriesProps = HTMLAttributes<HTMLElement>;
+export type ServiceCategoriesProps = HTMLAttributes<HTMLElement>
 
 const useStyles = makeStyles((theme: Theme) => ({
   servicesContainer: {
@@ -48,8 +48,8 @@ const ServiceCategories: FC<ServiceCategoriesProps> = () => {
 
   return (
     <Grid container className={classes.servicesContainer}>
-      {!!availableServices.length
-        && availableServices.map((service) => (
+      {Boolean(availableServices.length) &&
+        availableServices.map((service) => (
           <Grid className={classes.serviceContent} item xs={12} lg={6} key={`g${service.text + service.description}`}>
             <IconedItem {...service} key={`i${service.text + service.description}`} />
           </Grid>

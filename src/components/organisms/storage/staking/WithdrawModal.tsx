@@ -54,10 +54,10 @@ const WithdrawModal: FC<WithdrawModalProps> = ({
     onWithdraw(Number(amountToWithdraw), selectedCurrency)
   }
 
-  const disableWithdrawAction = !canWithdraw
-    || !amountToWithdraw
-    || amountToWithdraw <= 0
-    || amountToWithdraw > Number(stakes[selectedCurrency])
+  const disableWithdrawAction = !canWithdraw ||
+    !amountToWithdraw ||
+    amountToWithdraw <= 0 ||
+    amountToWithdraw > Number(stakes[selectedCurrency])
 
   const actions: JSX.Element = (
     <Button

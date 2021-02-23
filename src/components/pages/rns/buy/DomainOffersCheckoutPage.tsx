@@ -144,9 +144,9 @@ const DomainOffersCheckoutPage: FC = () => {
 
         const rnsContract = RNSContract.getInstance(web3 as Web3, symbol)
 
-        const hasSufficientFunds = await rnsContract.checkFunds(
+        const hasSufficientFunds = Boolean(await rnsContract.checkFunds(
           tokenAddr, account, domainName,
-        )
+        ).catch((e) => reportError(e)))
 
         setHasFunds(hasSufficientFunds)
         setIsFundsConfirmed(true)
@@ -243,7 +243,7 @@ const DomainOffersCheckoutPage: FC = () => {
           payload: {
             contractAction: 'RNS_BUY',
             txHash: transferReceipt.transactionHash,
-            contractActionData: { tokenId },
+            contractActionData: { id: tokenId },
           },
         })
       }
@@ -309,8 +309,8 @@ const DomainOffersCheckoutPage: FC = () => {
         <CardActions className={classes.footer}>
           {isOwnDomain && <p>You cannot purchase your own offer.</p>}
           {
-            !isOwnDomain && hasFunds
-            && <p>Your wallet will open and you will be asked to confirm the transaction for buying the domain.</p>
+            !isOwnDomain && hasFunds &&
+            <p>Your wallet will open and you will be asked to confirm the transaction for buying the domain.</p>
           }
           <Button
             disabled={!hasFunds || isOwnDomain}

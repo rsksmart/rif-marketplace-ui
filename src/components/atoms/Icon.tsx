@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Icon: FC<IconProps> = ({ className = '', src, alt }) => {
   const classes = useStyles()
   return (
-    <img className={`${classes.iconImage} ${className}`.trim()} src={src} alt={alt || src} />
+    <img className={`${classes.iconImage} ${className}`.trim()} src={src} alt={alt ?? src} />
   )
 }
 

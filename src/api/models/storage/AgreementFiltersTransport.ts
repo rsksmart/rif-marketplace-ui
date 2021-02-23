@@ -5,7 +5,7 @@ export default class AgreementFiltersTransport {
 
   consumer?: string
 
-  constructor({
+  constructor ({
     consumer,
     provider,
   }: AgreementFilters) {

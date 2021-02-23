@@ -23,7 +23,6 @@ import { StorageOffer } from 'models/marketItems/StorageItem'
 import { OfferEditContextProps } from 'context/Market/storage'
 import Web3 from 'web3'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
-import { NewRequestPayload } from 'context/Confirmations/interfaces'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import RoundBtn from 'components/atoms/RoundBtn'
 
@@ -108,7 +107,7 @@ const OfferCreation: FC = () => {
           payload: {
             contractAction: 'NEW_OFFER',
             txHash: setOfferReceipt.transactionHash,
-          } as NewRequestPayload,
+          },
         })
         setIsTxDone(true)
       }
@@ -133,11 +132,11 @@ const OfferCreation: FC = () => {
     })
   }, [dispatch])
 
-  const isSubmitEnabled = billingPlans.length
-    && Number(totalCapacity)
-    && system
-    && peerId
-    && isWhitelistedProvider
+  const isSubmitEnabled = billingPlans.length &&
+    Number(totalCapacity) &&
+    system &&
+    peerId &&
+    isWhitelistedProvider
 
   const endHandler = account
     ? (
@@ -152,8 +151,8 @@ const OfferCreation: FC = () => {
           List storage
         </RUIButton>
         {
-          !!isSubmitEnabled
-          && (
+          Boolean(isSubmitEnabled) &&
+          (
             <Typography
               gutterBottom
               color="secondary"
@@ -179,9 +178,9 @@ const OfferCreation: FC = () => {
         All the information provided is meant to be true and correct.`}
       </Typography>
       {
-        Boolean(account)
-        && isWhitelistedProvider === false // we don't want to show the message on undefined
-        && <NoWhitelistedProvider />
+        Boolean(account) &&
+        isWhitelistedProvider === false && // we don't want to show the message on undefined
+        <NoWhitelistedProvider />
       }
       <RoundedCard color="primary" className={classes.stepperContainer}>
         <EditOfferStepper isLoading={false} endHandler={endHandler} />
@@ -189,8 +188,12 @@ const OfferCreation: FC = () => {
       <ProgressOverlay
         inProgress={isTxInProgress}
         isDone={isTxDone}
-        buttons={
-          [<RoundBtn onClick={onProcessingComplete}>See your offer</RoundBtn>]
+        buttons={[
+        <RoundBtn
+          onClick={onProcessingComplete}
+          key="prog-offer"
+        >See your offer</RoundBtn>
+]
         }
         doneMsg="Your offer has been listed!"
         title="Listing your offer"

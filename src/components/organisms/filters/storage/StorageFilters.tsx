@@ -35,19 +35,19 @@ const StorageFilters = (): JSX.Element => {
     })
   }
 
-  const onSizeChange = ((size: MinMaxFilter): void => {
+  const onSizeChange = (size: MinMaxFilter): void => {
     dispatch({
       type: 'FILTER',
       payload: { size },
     })
-  })
+  }
 
-  const onPriceChange = ((price: MinMaxFilter): void => {
+  const onPriceChange = (price: MinMaxFilter): void => {
     dispatch({
       type: 'FILTER',
       payload: { price },
     })
-  })
+  }
 
   const onPlanChange = (
     plan: SubscriptionPeriod,
@@ -65,10 +65,10 @@ const StorageFilters = (): JSX.Element => {
     })
   }
 
-  const planPeriodOptions: Modify<CheckboxProps, {
+  const planPeriodOptions: Array<Modify<CheckboxProps, {
     labelText: SubscriptionPeriod
     id: SubscriptionPeriod
-  }>[] = [
+  }>> = [
     { labelText: 'Daily', id: 'Daily', onChange: onPlanChange('Daily') },
     { labelText: 'Weekly', id: 'Weekly', onChange: onPlanChange('Weekly') },
     { labelText: 'Monthly', id: 'Monthly', onChange: onPlanChange('Monthly') },

@@ -9,15 +9,20 @@
           ".tsx"
         ],
         "paths": [
-          "src"
+          "src",
+          "__mocks__"
         ]
       }
     }
   },
+  "globals": {
+    "JSX": "readonly",
+    "SocketIOClient": "readonly"
+  },
   "extends": [
-    "standard",
-    "plugin:@typescript-eslint/recommended",
-    "airbnb"
+    "standard-with-typescript",
+    "eslint:recommended",
+    "plugin:react/recommended"
   ],
   "env": {
     "browser": true,
@@ -27,13 +32,17 @@
     "node": true
   },
   "parserOptions": {
+    "project": "./tsconfig.json",
     "sourceType": "module",
     "ecmaVersion": 2018
   },
   "plugins": [
-    "no-only-tests"
+    "no-only-tests",
+    "react",
+    "jsx-a11y"
   ],
   "rules": {
+    "comma-dangle": "off",
     "react/prop-types": "off",
     "no-unused-vars": [
       "error",
@@ -51,6 +60,7 @@
         "allowAfterThis": true
       }
     ],
+    "react/display-name": "off",
     "react/jsx-filename-extension": [
       "warn",
       {
@@ -109,7 +119,7 @@
     "no-nested-ternary": "warn",
     "no-only-tests/no-only-tests": "error",
     "no-script-url": "error",
-    "no-shadow": "error",
+    "no-shadow": "off", // FIXME: back to error
     "no-warning-comments": "warn",
     "quote-props": [
       "error",
@@ -140,8 +150,11 @@
     ],
     "no-useless-constructor": "off",
     "no-dupe-class-members": "off",
-    "@typescript-eslint/ban-ts-ignore": "warn",
+    "@typescript-eslint/indent": "off",
+    "@typescript-eslint/consistent-type-definitions": ["warn", "type"],
     "@typescript-eslint/no-useless-constructor": "error",
+    "@typescript-eslint/return-await": "off",
+    "@typescript-eslint/default-param-last": "warn", // TODO: we probably should adhere to this rule
     "@typescript-eslint/member-delimiter-style": [
       "error",
       {
@@ -155,6 +168,10 @@
         }
       }
     ],
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/no-throw-literal": "off", // FIXME: re-allow this rule and fix the use of UIError
     "import/extensions": [
       "error",
       "never"
@@ -180,9 +197,13 @@
   "overrides": [
     {
       "files": [
-        "*.spec.ts"
+        "*.spec.ts",
+        "*.spec.tsx",
+        "*.test.ts",
+        "*.test.tsx"
       ],
       "rules": {
+        "no-underscore-dangle": "off",
         "@typescript-eslint/ban-ts-ignore": "off",
         "max-nested-callbacks": [
           "error",

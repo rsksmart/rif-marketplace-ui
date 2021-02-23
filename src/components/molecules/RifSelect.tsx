@@ -10,10 +10,10 @@ export type RifSelectProps<T extends OptionType> = SelectProps & {
 
 const hasKey = (
   obj: OptionType,
-): obj is JSX.Element => typeof obj !== 'string'
-  && obj.key !== undefined
+): obj is JSX.Element => typeof obj !== 'string' &&
+  obj.key !== undefined
 
-function RifSelect<T extends OptionType>({
+function RifSelect<T extends OptionType> ({
   id, options, ...props
 }: RifSelectProps<T>): React.ReactElement {
   return (

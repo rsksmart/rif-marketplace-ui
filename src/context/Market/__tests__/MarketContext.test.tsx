@@ -30,7 +30,7 @@ describe('MarketContextProvider', () => {
     })
 
     test('should initialise with exchangeRates property', () => {
-      const TestComponent = () => {
+      const TestComponent = (): null => {
         const { state: { exchangeRates } } = useContext(MarketContext)
 
         expect(exchangeRates).not.toBeUndefined()
@@ -47,7 +47,7 @@ describe('MarketContextProvider', () => {
 
     describe('exchangeRates', () => {
       test('should initialise with currentFiat property containing { symbol: \'usd\', displayName: \'USD\' }', () => {
-        const TestComponent = () => {
+        const TestComponent = (): null => {
           const { state: { exchangeRates: { currentFiat } } } = useContext(MarketContext)
           const expectedCurrentFiat = {
             symbol: 'usd',

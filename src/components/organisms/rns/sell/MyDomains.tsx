@@ -10,7 +10,6 @@ import { ShortenTextTooltip, Spinner } from '@rsksmart/rif-ui'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import InfoBar from 'components/molecules/InfoBar'
 import useConfirmations from 'hooks/useConfirmations'
-import { RnsContractData } from 'context/Confirmations/interfaces'
 
 const MyDomains: FC = () => {
   const {
@@ -35,7 +34,7 @@ const MyDomains: FC = () => {
 
   const routeState = history.location.state as { refresh?: boolean }
 
-  if (routeState && routeState.refresh) {
+  if (routeState?.refresh) {
     routeState.refresh = false
     dispatch({
       type: 'REFRESH',
@@ -73,9 +72,7 @@ const MyDomains: FC = () => {
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
       const isProcessingConfs = pendingConfs.some(
-        ({ contractActionData }) => (
-          (contractActionData as RnsContractData).tokenId === tokenId
-        ),
+        ({ contractActionData }) => contractActionData?.id === tokenId,
       )
 
       const displayItem = {

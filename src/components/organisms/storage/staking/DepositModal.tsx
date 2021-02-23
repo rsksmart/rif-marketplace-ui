@@ -56,7 +56,7 @@ const DepositModal: FC<DepositModalProps> = ({
         const balance = await getBalance(web3, account, selectedToken)
         setAccountWeiBalance(Big(balance))
       }
-      calculateBalance()
+      calculateBalance().finally(() => {})
     }
   }, [account, web3, selectedToken])
 
@@ -77,8 +77,8 @@ const DepositModal: FC<DepositModalProps> = ({
   )
 
   const isPositiveAmount = amountToStake && amountToStake > 0
-  const enoughFunds = amountToStake
-    && Big(convertToWeiString(amountToStake)).lte(accountWeiBalance)
+  const enoughFunds = amountToStake &&
+    Big(convertToWeiString(amountToStake)).lte(accountWeiBalance)
 
   const isValidAmount = isPositiveAmount && enoughFunds
 
@@ -141,8 +141,8 @@ const DepositModal: FC<DepositModalProps> = ({
           amountLabel="Amount to stake"
         />
         {
-          isPositiveAmount && !enoughFunds
-          && (
+          isPositiveAmount && !enoughFunds &&
+          (
             <NotEnoughFunds
               token={SYSTEM_TOKENS[selectedToken]}
             />

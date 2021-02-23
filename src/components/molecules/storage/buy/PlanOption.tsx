@@ -25,7 +25,7 @@ const PlanOption: FC<PlanOptionProps> = ({ plan, xr }) => {
   return (
     <GridRow
       wrap="nowrap"
-      key={currency + period + price}
+      key={currency.tokenAddress + period.toString() + price.toString()}
       spacing={1}
       classes={useGridRowStyle()}
     >

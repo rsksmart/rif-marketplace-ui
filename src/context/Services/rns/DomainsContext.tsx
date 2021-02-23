@@ -60,7 +60,7 @@ export const RnsDomainsContextProvider: FC = ({ children }) => {
   const api = appState?.apis?.['rns/v0/domains'] as DomainsService
 
   const [state, dispatch] = useReducer(rnsReducer, initialState)
-  const { filters, needsRefresh } = state as DomainsState
+  const { filters, needsRefresh } = state
   const { state: { account } } = useContext(Web3Store)
 
   // Initialise
@@ -90,7 +90,7 @@ export const RnsDomainsContextProvider: FC = ({ children }) => {
           setIsInitialised(false)
         }
       }
-      initialise()
+      initialise().finally(() => {})
     }
   }, [api, isInitialised, account, appDispatch])
 

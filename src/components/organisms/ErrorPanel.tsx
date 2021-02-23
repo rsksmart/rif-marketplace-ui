@@ -6,7 +6,7 @@ import { MessageId, Message, ErrorMessage } from 'models/UIMessage'
 
 const logger = Logger.getInstance()
 
-const ErrorPanel = () => {
+const ErrorPanel = (): JSX.Element => {
   const {
     state: {
       messages,

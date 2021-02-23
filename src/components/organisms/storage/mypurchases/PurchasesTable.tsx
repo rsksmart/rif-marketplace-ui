@@ -115,12 +115,12 @@ const PurchasesTable: FC<PurchasesProps> = (
         <RoundBtn
           disabled={!isEnabled}
           onClick={
-            (): void => {
+            async (): Promise<void> => {
               withdrawDispatch({
                 type: 'SET_AGREEMENT',
                 payload: selectedAgreement as Agreement,
               })
-              withdrawAction()
+              return await withdrawAction()
             }
           }
         >
@@ -173,6 +173,7 @@ const PurchasesTable: FC<PurchasesProps> = (
         buttons={[
           <RoundBtn
             onClick={handleTxCompletedClose}
+            key="prog-close"
           >
             Close
           </RoundBtn>,

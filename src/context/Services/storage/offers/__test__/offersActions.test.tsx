@@ -96,7 +96,7 @@ describe('Storage Agreements Context actions', () => {
   })
   describe('REFRESH', () => {
     test('should return state with correct needsRefresh property', () => {
-      const payload: RefreshPayload = { refresh: !!MOCK_STATE.needsRefresh }
+      const payload: RefreshPayload = { refresh: Boolean(MOCK_STATE.needsRefresh) }
       const expectedState: StorageOffersState = {
         ...testDefaults.initialState,
         needsRefresh: payload.refresh,

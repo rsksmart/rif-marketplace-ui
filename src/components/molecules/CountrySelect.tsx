@@ -21,7 +21,7 @@ const useStyles = makeStyles({
 const CountrySelect: FC<CountrySelectProps> = ({ onChange }) => {
   const classes = useStyles()
 
-  const onCountryChange = (_event: any, value: CountryType | null) => {
+  const onCountryChange = (_event: any, value: CountryType | null): void => {
     if (onChange) onChange(value)
   }
 
@@ -29,7 +29,7 @@ const CountrySelect: FC<CountrySelectProps> = ({ onChange }) => {
     <Autocomplete
       onChange={onCountryChange}
       style={{ width: '100%' }}
-      options={countries as CountryType[]}
+      options={countries }
       classes={{
         option: classes.option,
       }}

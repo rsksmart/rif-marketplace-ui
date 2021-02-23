@@ -127,7 +127,7 @@ export const ContextProvider: FC = ({ children }) => {
   )
 }
 
-function withStakingContext<T>(
+function withStakingContext<T> (
   Component: React.ComponentType<T>,
 ): React.ComponentType<T> {
   return (props: T): React.ReactElement => (

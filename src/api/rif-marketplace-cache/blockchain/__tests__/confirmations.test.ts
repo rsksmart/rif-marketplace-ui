@@ -17,7 +17,7 @@ const expectedConfirmations: Confirmations = {
 }
 
 const mockFeathersService = {
-  find: jest.fn(() => Promise.resolve([MOCK_CONFIRMATION_0])),
+  find: jest.fn(async () => await Promise.resolve([MOCK_CONFIRMATION_0])),
 } as any
 
 const fakeErrorHandler = jest.fn()
@@ -51,9 +51,9 @@ describe('Confirmations service', () => {
     beforeEach(() => {
       confirmationService.service = mockFeathersService
     })
-    test('should call service.find with no arguments', () => {
+    test('should call service.find with no arguments', async () => {
       const fetchSpy = jest.spyOn(confirmationService.service, 'find')
-      confirmationService.fetch('unwanted_arg')
+      await confirmationService.fetch('unwanted_arg')
 
       expect(fetchSpy).toBeCalledWith()
     })

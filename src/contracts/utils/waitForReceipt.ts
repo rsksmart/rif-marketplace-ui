@@ -4,12 +4,12 @@ import { TransactionReceipt } from 'web3-eth'
 const TIMEOUT_LIMIT = 120000
 const POLLING_INTERVAL = 2000
 
-function waitForReceipt(
+async function waitForReceipt (
   txHash: string,
   web3: Web3,
 ): Promise<TransactionReceipt> {
   let timeElapsed = 0
-  return new Promise<TransactionReceipt>((resolve, reject) => {
+  return await new Promise<TransactionReceipt>((resolve, reject) => {
     const checkInterval = setInterval(async () => {
       timeElapsed += POLLING_INTERVAL
       const receipt = await web3.eth.getTransactionReceipt(txHash)

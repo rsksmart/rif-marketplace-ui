@@ -19,7 +19,7 @@ export type StorageStakingContractErrorId = 'contract-storage-staking'
 class StakingContract extends ContractWithTokens {
   public static gasMultiplier = 1.3
 
-  public static getInstance(web3: Web3): StakingContract {
+  public static getInstance (web3: Web3): StakingContract {
     if (!StakingContract.instance) {
       StakingContract.instance = new StakingContract(
         web3,
@@ -36,7 +36,7 @@ class StakingContract extends ContractWithTokens {
 
   private static instance: StakingContract
 
-  public async stake(
+  public async stake (
     amount: string | number,
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
@@ -58,7 +58,7 @@ class StakingContract extends ContractWithTokens {
       ZERO_BYTES,
     )
 
-    return this.send(
+    return await this.send(
       stakeTx,
       {
         gasMultiplier: StakingContract.gasMultiplier,
@@ -68,7 +68,7 @@ class StakingContract extends ContractWithTokens {
     )
   }
 
-  public unstake(
+  public async unstake (
     amount: string | number,
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
@@ -84,7 +84,7 @@ class StakingContract extends ContractWithTokens {
       tokenAddress,
       ZERO_BYTES,
     )
-    return this.send(
+    return await this.send(
       unstakeTx,
       {
         gasMultiplier: StakingContract.gasMultiplier,
@@ -94,22 +94,22 @@ class StakingContract extends ContractWithTokens {
     )
   }
 
-  public totalStakedFor(
+  public async totalStakedFor (
     account: string,
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
     const { tokenAddress } = this.getToken(txOptions.token)
-    return this._call(
+    return await this._call(
       this.methods.totalStakedFor(account, tokenAddress),
       txOptions,
     )
   }
 
-  public totalStaked(
+  public async totalStaked (
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
     const { tokenAddress } = this.getToken(txOptions.token)
-    return this._call(
+    return await this._call(
       this.methods.totalStaked(tokenAddress),
       txOptions,
     )

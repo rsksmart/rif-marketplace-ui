@@ -48,7 +48,7 @@ const AmountWithCurrencySelect: FC<AmountWithCurrencySelectProps> = (props) => {
           fullWidth
           type="number"
           label={amountLabel}
-          value={amount || ''}
+          value={amount ?? ''}
           error={!amount || amount <= 0}
           inputProps={{
             min: '0',

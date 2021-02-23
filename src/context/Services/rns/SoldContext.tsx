@@ -95,7 +95,7 @@ export const RnsSoldContextProvider: FC = ({ children }) => {
         }
       }
 
-      initialise()
+      initialise().finally(() => {})
     }
   }, [api, isInitialised, account, appDispatch])
 

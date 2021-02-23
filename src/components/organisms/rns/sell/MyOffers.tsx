@@ -13,7 +13,6 @@ import { ShortenTextTooltip, Spinner } from '@rsksmart/rif-ui'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import useConfirmations from 'hooks/useConfirmations'
 import InfoBar from 'components/molecules/InfoBar'
-import { RnsContractData } from 'context/Confirmations/interfaces'
 
 const MyOffers: FC = () => {
   const {
@@ -79,9 +78,7 @@ const MyOffers: FC = () => {
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
       const isProcessingConfs = pendingConfs.some(
-        ({ contractActionData }) => (
-          (contractActionData as RnsContractData).tokenId === tokenId
-        ),
+        ({ contractActionData }) => contractActionData?.id === tokenId,
       )
 
       const displayItem = {

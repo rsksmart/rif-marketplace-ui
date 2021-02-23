@@ -20,7 +20,7 @@ export interface DomainTransport {
     }
     name: string
     tokenId: string
-    offers?: Omit<OfferTransport, 'domain'>[]
+    offers?: Array<Omit<OfferTransport, 'domain'>>
 }
 
 export interface SoldDomainTransport {

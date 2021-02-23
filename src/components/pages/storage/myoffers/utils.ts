@@ -9,9 +9,9 @@ export const isBillingPlansChange = (
   }
   return previous.some(
     (plan) => !current.find(
-      ({ period, price, currency }) => currency === plan.currency
-              && period === plan.period
-              && price.toString() === plan.price.toString(),
+      ({ period, price, currency }) => currency === plan.currency &&
+              period === plan.period &&
+              price.toString() === plan.price.toString(),
     ),
   )
 }

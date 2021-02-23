@@ -13,7 +13,6 @@ const logger = Logger.getInstance()
 
 const TriggersRoutes: FC = () => {
   const { services } = networkConfig
-  const triggersEnabled = services && services.triggers
   const history = useHistory()
 
   useEffect(() => {
@@ -27,7 +26,7 @@ const TriggersRoutes: FC = () => {
     }
   }, [history])
 
-  if (triggersEnabled) {
+  if (services?.triggers) {
     return (
       <Switch>
         <Redirect

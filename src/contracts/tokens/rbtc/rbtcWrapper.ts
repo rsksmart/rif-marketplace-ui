@@ -4,11 +4,11 @@ import Web3 from 'web3'
 export type RBTCWrapperErrorId = 'rbtc-getBalanceOf'
 
 export class RBTCWrapper implements PaymentWrapper {
-  private _web3!: Web3
+  private readonly _web3!: Web3
 
   public static gasMultiplier = 1.1
 
-  public static getInstance(web3: Web3): RBTCWrapper {
+  public static getInstance (web3: Web3): RBTCWrapper {
     if (!RBTCWrapper.instance) {
       RBTCWrapper.instance = new RBTCWrapper(web3)
     }
@@ -17,13 +17,13 @@ export class RBTCWrapper implements PaymentWrapper {
 
   private static instance: RBTCWrapper
 
-  private constructor(web3: Web3) {
+  private constructor (web3: Web3) {
     this._web3 = web3
   }
 
-  public getBalanceOf = (
+  public getBalanceOf = async (
     account: string,
-  ): Promise<string | number> => this._web3.eth.getBalance(account)
+  ): Promise<string | number> => await this._web3.eth.getBalance(account)
 }
 
 export default RBTCWrapper

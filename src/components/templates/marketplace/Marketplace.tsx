@@ -61,12 +61,12 @@ const Marketplace: FC<MarketplaceProps> = ({
   className = '',
   items,
   headers,
-  Heading,
+  Heading = (): JSX.Element | null => null,
 }) => {
   const classes = useStyles()
   return (
     <div className={`${classes.root} ${className}`}>
-      {!!Heading && <Heading />}
+      <Heading />
       <div className={classes.content}>
         <Table>
           <TableHead>

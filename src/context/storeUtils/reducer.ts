@@ -25,7 +25,7 @@ const createReducer = <State extends ContextState>(
     logger.debug(`${contextID} action:`, type)
     logger.debug(`${contextID} payload:`, payload)
     try {
-      const newState = (!!action && action(state, payload)) || state
+      const newState = (Boolean(action) && action(state, payload)) || state
 
       if (state !== newState) {
         logger.debug('Prev state:', state)

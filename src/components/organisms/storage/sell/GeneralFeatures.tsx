@@ -27,7 +27,7 @@ const GeneralFeatures: FC<GeneralFeaturesProps> = (
     originalOffer, onPeerIdChange, onSizeChange, peerId, totalCapacity, system,
   },
 ) => {
-  const utilizedCapacityGB = originalOffer?.utilizedCapacityGB.toNumber() || 0
+  const utilizedCapacityGB = originalOffer?.utilizedCapacityGB.toNumber() ?? 0
 
   const [modalPeerIdOpened, setModalPeerIdOpened] = useState(false)
   const handleModalOpen = (): void => setModalPeerIdOpened(true)

@@ -137,6 +137,7 @@ describe('AppContext Actions', () => {
     )
 
     test('should remove state.messages[payload.id].', () => {
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       initialState.messages['contract-marketplace-getPlacement'] = {} as MessagePayload
       const payload: RemoveMessagePayload = {
         id: 'contract-marketplace-getPlacement',

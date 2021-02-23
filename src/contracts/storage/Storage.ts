@@ -17,7 +17,7 @@ export type StorageContractErrorId = 'contract-storage'
 class StorageContract extends ContractWithTokens {
   public static gasMultiplier = 1.1
 
-  public static getInstance(web3: Web3): StorageContract {
+  public static getInstance (web3: Web3): StorageContract {
     if (!StorageContract.instance) {
       StorageContract.instance = new StorageContract(
         web3,
@@ -34,7 +34,7 @@ class StorageContract extends ContractWithTokens {
 
   private static instance: StorageContract
 
-  public async newAgreement(
+  public async newAgreement (
     details: {
       fileHash: string
       provider: string
@@ -68,7 +68,7 @@ class StorageContract extends ContractWithTokens {
       tokenAddress,
     )
 
-    return this.send(
+    return await this.send(
       newAgreementTx,
       {
         ...txOptions,
@@ -77,7 +77,7 @@ class StorageContract extends ContractWithTokens {
     )
   }
 
-  public depositFunds(
+  public async depositFunds (
     {
       amount, dataReference, provider,
     }: {
@@ -97,7 +97,7 @@ class StorageContract extends ContractWithTokens {
       provider,
     )
 
-    return this.send(
+    return await this.send(
       depositTx,
       {
         ...txOptions,
@@ -106,11 +106,11 @@ class StorageContract extends ContractWithTokens {
     )
   }
 
-  public setTotalCapacity(
+  public async setTotalCapacity (
     capacityMB: string,
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
-    return this.send(
+    return await this.send(
       this.methods.setTotalCapacity(capacityMB),
       {
         gasMultiplier: StorageContract.gasMultiplier,
@@ -120,7 +120,7 @@ class StorageContract extends ContractWithTokens {
     )
   }
 
-  public setBillingPlans(
+  public async setBillingPlans (
     billingPeriods: number[][],
     billingWeiPrices: string[][],
     tokens: BaseToken[],
@@ -130,7 +130,7 @@ class StorageContract extends ContractWithTokens {
       (t) => this.getToken(t.symbol).tokenAddress,
     )
 
-    return this.send(
+    return await this.send(
       this.methods.setBillingPlans(
         billingPeriods,
         billingWeiPrices,
@@ -144,7 +144,7 @@ class StorageContract extends ContractWithTokens {
     )
   }
 
-  public async setOffer(
+  public async setOffer (
     capacityMB: string,
     billingPeriods: number[][],
     billingWeiPrices: string[][],
@@ -168,7 +168,7 @@ class StorageContract extends ContractWithTokens {
       prefixedMsg,
     )
 
-    return this.send(
+    return await this.send(
       setOfferTx,
       {
         gasMultiplier: StorageContract.gasMultiplier,
@@ -178,7 +178,7 @@ class StorageContract extends ContractWithTokens {
     )
   }
 
-  public withdrawFunds(
+  public async withdrawFunds (
     {
       dataReference,
       provider,
@@ -200,7 +200,7 @@ class StorageContract extends ContractWithTokens {
     const withdrawFundsTx = this.methods
       .withdrawFunds(encodedDataReference, provider, tokensAddresses, weiAmounts)
 
-    return this.send(
+    return await this.send(
       withdrawFundsTx,
       {
         gasMultiplier: StorageContract.gasMultiplier,
@@ -210,7 +210,7 @@ class StorageContract extends ContractWithTokens {
     )
   }
 
-  public payoutFunds(
+  public async payoutFunds (
     {
       creatorOfAgreement,
       dataReferences = [],
@@ -234,7 +234,7 @@ class StorageContract extends ContractWithTokens {
         from,
       )
 
-    return this.send(
+    return await this.send(
       payoutFundsTx,
       {
         gasMultiplier: StorageContract.gasMultiplier,
@@ -248,10 +248,10 @@ class StorageContract extends ContractWithTokens {
    * Static calls
    */
 
-  public terminateOffer(
+  public async terminateOffer (
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
-    return this.send(
+    return await this.send(
       this.methods.terminateOffer(),
       {
         ...txOptions,
@@ -260,21 +260,21 @@ class StorageContract extends ContractWithTokens {
     )
   }
 
-  public hasUtilizedCapacity(
+  public async hasUtilizedCapacity (
     account: string,
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> {
-    return this._call(
+    return await this._call(
       this.methods.hasUtilizedCapacity(account),
       txOptions,
     )
   }
 
-  public isWhitelistedProvider(
+  public async isWhitelistedProvider (
     account: string,
     txOptions: TxOptions = {},
   ): Promise<TransactionReceipt> {
-    return this._call(
+    return await this._call(
       this.methods.isWhitelistedProvider(account),
       {
         ...txOptions,

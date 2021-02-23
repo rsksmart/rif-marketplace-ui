@@ -75,6 +75,7 @@ const RenewAgreement: FC = () => {
             fiat: fiatName,
             rate: currentRate,
           }}
+          key={JSON.stringify(plan)}
         />,
       ]}
       disabled
@@ -87,7 +88,8 @@ const RenewAgreement: FC = () => {
       }}
       onChange={changePeriodCountHandle}
     />,
-    'TOTAL PRICE': total && totalFiat ? (
+    'TOTAL PRICE': total && totalFiat
+? (
       <CombinedPriceCell
         currency={agreement.paymentToken.displayName}
         currencyFiat={fiatName}
@@ -95,7 +97,8 @@ const RenewAgreement: FC = () => {
         priceFiat={totalFiat}
         divider={<br />}
       />
-    ) : null,
+    )
+: null,
     'RENEWAL DATE': endDate,
   }
 
@@ -132,10 +135,10 @@ const RenewAgreement: FC = () => {
         doneMsg="Your agreement has been renewed."
         {...status}
         buttons={[
-          <RoundBtn onClick={navToMyPurchases}>
+          <RoundBtn onClick={navToMyPurchases} key="prog-purchase">
             View my purchases
           </RoundBtn>,
-          <RoundBtn onClick={navToStorageBase}>
+          <RoundBtn onClick={navToStorageBase} key="prog-listing">
             View storage listing
           </RoundBtn>,
         ]}

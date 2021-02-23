@@ -16,13 +16,13 @@ export class StorageAgreementService extends AbstractAPIService
   implements StorageAPIService {
   path = agreementsAddress
 
-  private mapFromTransport: (
+  private readonly mapFromTransport: (
     value: AgreementTransport,
     index: number,
     array: AgreementTransport[]
   ) => Agreement
 
-  constructor() {
+  constructor () {
     super(client)
     this.mapFromTransport = mapAgreementFromTransport // This could be moved to constructor args
   }

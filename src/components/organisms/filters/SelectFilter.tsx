@@ -5,10 +5,10 @@ import { FormControlLabel, FormControlLabelProps } from '@material-ui/core'
 export interface SelectFilterProps {
   className?: string
   title: string
-  items: Omit<FormControlLabelProps, 'control'>[]
+  items: Array<Omit<FormControlLabelProps, 'control'>>
 }
 
-const SelectFilter = ({ className = '', title, items }: SelectFilterProps) => (
+const SelectFilter = ({ className = '', title, items }: SelectFilterProps): JSX.Element => (
   <Accordion
     id={title.toLocaleLowerCase()}
     className={className}

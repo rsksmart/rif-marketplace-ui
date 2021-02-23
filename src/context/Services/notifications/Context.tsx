@@ -79,7 +79,7 @@ export const Provider: FC = ({ children }) => {
         }
       }
 
-      initialise()
+      initialise().finally(() => {})
     }
   }, [
     service,

@@ -16,6 +16,7 @@ export const initialState: State = {
   contextID: 'market',
   exchangeRates: {
     currentFiat: SUPPORTED_FIAT.usd,
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     crypto: {} as MarketCryptoRecord,
   },
 }

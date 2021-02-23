@@ -7,7 +7,7 @@ import Radio from '@material-ui/core/Radio'
 export type RadioFilterProps = RadioGroupProps & {
   className?: string
   title: string
-  items: Omit<FormControlLabelProps, 'control'>[]
+  items: Array<Omit<FormControlLabelProps, 'control'>>
 }
 
 const RadioFilter: FC<RadioFilterProps> = ({

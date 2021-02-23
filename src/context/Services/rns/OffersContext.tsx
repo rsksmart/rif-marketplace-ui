@@ -96,7 +96,7 @@ export const RnsOffersContextProvider: FC = ({ children }) => {
     pagination: {
       page,
     },
-  } = state as OffersState
+  } = state
 
   // Initialise
   useEffect(() => {

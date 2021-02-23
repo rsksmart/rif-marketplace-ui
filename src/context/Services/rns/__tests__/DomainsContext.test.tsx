@@ -1,8 +1,8 @@
 import React, { useContext, FC } from 'react'
-import { render } from '@testing-library/react'
+import { render, RenderResult } from '@testing-library/react'
 import RnsDomainsContext, { RnsDomainsContextProvider, RnsDomainsContextProps, initialState } from '../DomainsContext'
 
-const renderTest = (TestComponent: React.ElementType) => render(
+const renderTest = (TestComponent: React.ElementType): RenderResult => render(
   <RnsDomainsContextProvider>
     <TestComponent />
   </RnsDomainsContextProvider>,

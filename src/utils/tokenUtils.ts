@@ -4,7 +4,7 @@ import { SupportedTokenSymbol, BaseToken } from 'models/Token'
 import { SYSTEM_TOKENS } from '../models/Token'
 
 export const getSupportedTokenByName = (tokenName: SupportedTokenSymbol): SupportedToken => {
-  const tokenObject: SupportedToken = SUPPORTED_TOKEN_RECORDS[tokenName]
+  const tokenObject: SupportedToken | undefined = SUPPORTED_TOKEN_RECORDS[tokenName]
 
   if (!tokenObject) {
     throw new Error(`Could not find Contract for given token "${tokenName}".`)
@@ -23,7 +23,7 @@ export const getTokenByString = (
 export const getTokenByAddress = (tokenAddress: string): BaseToken => {
   const symbol = addressTokenRecord[
     tokenAddress.toLowerCase()
-  ] as SupportedTokenSymbol
+  ] as SupportedTokenSymbol | undefined
 
   if (!symbol) {
     throw new Error(`Token address "${tokenAddress}" is not found in supported tokens in the system.`)
@@ -34,7 +34,7 @@ export const getTokenByAddress = (tokenAddress: string): BaseToken => {
 export const getSysTokenByName = (
   tokenName: SupportedTokenSymbol | string,
 ): BaseToken => {
-  const tokenObject: SupportedToken = SYSTEM_TOKENS[tokenName]
+  const tokenObject: SupportedToken | undefined = SYSTEM_TOKENS[tokenName]
 
   if (!tokenObject) {
     throw new Error(`Token "${tokenName}" not supported by the system.`)

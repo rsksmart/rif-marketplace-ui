@@ -10,34 +10,30 @@ const WithLoginCard = ({
   title = 'Connect your wallet',
   contentText = 'Connect your walet to see this content',
   ...props
-}) => {
-  const LoginCard = () => {
-    const {
-      state: { account },
-    } = useContext(Web3Store)
+}): () => JSX.Element => () => {
+  const {
+    state: { account },
+  } = useContext(Web3Store)
 
-    if (account) return <WrappedComponent {...props} />
-    return (
-      <Grid container justify="center">
-        <TitledRoundedCard
-          title={title}
-          titleProps={{ variant: 'h6', color: 'primary' }}
-          roundedCardProps={{ color: 'secondary' }}
-        >
-          <>
-            <Grid item xs={12}>
-              <Typography color="secondary" align="center">{contentText}</Typography>
-            </Grid>
-            <Grid container justify="center">
-              <Login modalInitiallyOpened />
-            </Grid>
-          </>
-        </TitledRoundedCard>
-      </Grid>
-    )
-  }
-
-  return LoginCard
+  if (account) return <WrappedComponent {...props} />
+  return (
+    <Grid container justify="center">
+      <TitledRoundedCard
+        title={title}
+        titleProps={{ variant: 'h6', color: 'primary' }}
+        roundedCardProps={{ color: 'secondary' }}
+      >
+        <>
+          <Grid item xs={12}>
+            <Typography color="secondary" align="center">{contentText}</Typography>
+          </Grid>
+          <Grid container justify="center">
+            <Login modalInitiallyOpened />
+          </Grid>
+        </>
+      </TitledRoundedCard>
+    </Grid>
+  )
 }
 
 export default WithLoginCard

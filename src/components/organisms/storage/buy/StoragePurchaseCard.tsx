@@ -55,9 +55,11 @@ const StoragePurchaseCard: FC<Props> = ({
     },
   } = useContext(Web3Store)
 
-  const submitWithLogin = (): JSX.Element => (account ? (
+  const submitWithLogin = (): JSX.Element => (account
+? (
     <RoundBtn {...submitProps} />
-  ) : <Login />)
+  )
+: <Login />)
 
   return (
     <RifCard

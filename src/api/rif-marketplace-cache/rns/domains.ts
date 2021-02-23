@@ -42,7 +42,7 @@ export class DomainsService
   implements RnsAPIService {
   path = domainsAddress
 
-  constructor() { super(client) }
+  constructor () { super(client) }
 
   _channel = domainsChannel
 
@@ -53,14 +53,17 @@ export class DomainsService
       .service.find({
         query: {
           placed: status === 'placed',
-          name: name ? {
+          name: name
+? {
             $like: name,
-          } : undefined,
+          }
+: undefined,
           ownerAddress,
         },
       })
     const { data, ...metadata } = isResultPaginated(results)
-      ? results : { data: results }
+      ? results
+: { data: results }
     this.meta = metadata
 
     return data.map(mapFromTransport)

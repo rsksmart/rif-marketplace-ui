@@ -32,13 +32,14 @@ export class ConfirmationsService
   implements ConfirmationAPI {
   path = confirmationAddress
 
-  constructor() { super(client) }
+  constructor () { super(client) }
 
   _fetch = async (): Promise<Confirmations> => {
     const result: Paginated<Transport> = await this
       .service.find()
     const { data, ...metadata } = isResultPaginated(result)
-      ? result : { data: result }
+      ? result
+: { data: result }
     this.meta = metadata
 
     return utils.mapFromTransport(data)

@@ -16,7 +16,7 @@ describe('AbstractAPIService', () => {
 }> {
     path = MOCK_PATH
 
-    constructor() {
+    constructor () {
       super(createClient(''))
     }
 
@@ -43,23 +43,23 @@ describe('AbstractAPIService', () => {
   })
 
   describe('fetch', () => {
-    test('should call its abstract function _fetch if its service exists', () => {
+    test('should call its abstract function _fetch if its service exists', async () => {
       fakeApiService.connect(fakeErrorReporter)
-      fakeApiService._fetch = jest.fn() // eslint-disable-line no-underscore-dangle
-      fakeApiService.fetch()
-      expect(fakeApiService._fetch).toBeCalled() // eslint-disable-line no-underscore-dangle
+      fakeApiService._fetch = jest.fn()
+      await fakeApiService.fetch()
+      expect(fakeApiService._fetch).toBeCalled()
     })
-    test('should call errorReporter if service is falsy', () => {
+    test('should call errorReporter if service is falsy', async () => {
       fakeApiService.connect(fakeErrorReporter)
       fakeApiService.service = undefined as unknown as Service<unknown>
-      fakeApiService.fetch()
+      await fakeApiService.fetch()
       expect(fakeErrorReporter).toBeCalled()
     })
-    test('should call errorReporter if this._fetch fails', () => {
+    test('should call errorReporter if this._fetch fails', async () => {
       fakeApiService.connect(fakeErrorReporter)
-      fakeApiService._fetch = (): Promise<unknown> => Promise.reject(new Error('fake reject')) // eslint-disable-line no-underscore-dangle
+      fakeApiService._fetch = async (): Promise<unknown> => await Promise.reject(new Error('fake reject'))
 
-      fakeApiService.fetch()
+      await fakeApiService.fetch()
       expect(fakeErrorReporter).toBeCalled()
     })
   })

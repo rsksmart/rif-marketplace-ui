@@ -3,7 +3,7 @@ import Logger from './Logger'
 const logger = Logger.getInstance()
 
 export default class LocalStorage {
-  public static getInstance(): LocalStorage {
+  public static getInstance (): LocalStorage {
     if (!LocalStorage.instance) {
       LocalStorage.instance = new LocalStorage()
     }
@@ -13,13 +13,13 @@ export default class LocalStorage {
 
   private static instance: LocalStorage
 
-  private storage: Storage;
+  private readonly storage: Storage
 
-  private constructor() {
+  private constructor () {
     this.storage = localStorage
   }
 
-  public setItem(key: string, item: string | object): void {
+  public setItem (key: string, item: string | object): void {
     try {
       const value = typeof item === 'object' ? JSON.stringify(item) : item
       this.storage.setItem(key, value)
@@ -28,8 +28,8 @@ export default class LocalStorage {
     }
   }
 
-  public getItem(key: string): unknown | string {
-    const value = this.storage.getItem(key) || ''
+  public getItem (key: string): unknown | string {
+    const value = this.storage.getItem(key) ?? ''
     let item: unknown
     try {
       item = JSON.parse(value)
@@ -37,7 +37,7 @@ export default class LocalStorage {
     return item || value
   }
 
-  public clear(): void {
+  public clear (): void {
     this.storage.clear()
   }
 }

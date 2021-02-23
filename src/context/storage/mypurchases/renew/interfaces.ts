@@ -63,9 +63,7 @@ export type Actions = {
   SET_STATUS: (state: State, payload: StatusPayload) => State
 }
 
-export type AsyncAction = {
-  (args?: unknown): Promise<void>
-}
+export type AsyncAction = (args?: unknown) => Promise<void>
 
 export type AsyncActions = {
   renewAgreement: AsyncAction

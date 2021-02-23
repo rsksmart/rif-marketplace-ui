@@ -80,12 +80,12 @@ const EditOfferStepper: FC<EditOfferStepperProps> = ({ endHandler }) => {
     }))
   }
 
-  const minCapacity = originalOffer?.utilizedCapacityGB.toNumber() || 0
+  const minCapacity = originalOffer?.utilizedCapacityGB.toNumber() ?? 0
   const totalCapacityNumber = totalCapacity.toNumber()
-  const nextIsDisabled = !totalCapacityNumber
-    || totalCapacityNumber <= minCapacity
-    || !system
-    || !peerId
+  const nextIsDisabled = !totalCapacityNumber ||
+    totalCapacityNumber <= minCapacity ||
+    !system ||
+    !peerId
 
   return (
     <Stepper activeStep={activeStep} orientation="vertical">

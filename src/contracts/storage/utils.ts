@@ -11,7 +11,7 @@ import { asciiToHex } from 'web3-utils'
 import { Big } from 'big.js'
 import { OfferContractData } from './interfaces'
 
-export function prefixArray(
+export function prefixArray (
   arr: string[],
   prefix: string,
   lengthPerElement = 32,
@@ -43,7 +43,7 @@ export function prefixArray(
   return arr
 }
 
-export function encodeHash(hash: string): string[] {
+export function encodeHash (hash: string): string[] {
   if (hash.length <= 32) {
     return [asciiToHex(hash).padEnd(66, '0')]
   }
@@ -67,8 +67,8 @@ export const transformOfferDataForContract = (
     // gets the billing plans with period or currency no longer in the offer
     const difference = originalSubOptions.filter(
       (originalSub) => !resultsBillingPlan.some(
-        (newSub) => originalSub.period === newSub.period
-          && originalSub.currency === newSub.currency,
+        (newSub) => originalSub.period === newSub.period &&
+          originalSub.currency === newSub.currency,
       ),
     )
 
@@ -79,7 +79,7 @@ export const transformOfferDataForContract = (
       })
     })
   }
-
+  const defaultData: OfferContractData = { prices: [], periods: [], tokens: [], totalCapacityMB: '0' }
   const offerContractData: OfferContractData = resultsBillingPlan.reduce(
     (acc, { period, price: priceGB, currency }) => {
       const tokenIndex = acc.tokens.findIndex((t) => t === currency)
@@ -99,7 +99,7 @@ export const transformOfferDataForContract = (
       } as unknown as OfferContractData
       return data
     },
-    { prices: [], periods: [], tokens: [] } as unknown as OfferContractData,
+    defaultData,
   )
   return {
     ...offerContractData,

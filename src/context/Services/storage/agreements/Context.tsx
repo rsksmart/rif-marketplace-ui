@@ -35,7 +35,7 @@ export const Provider: FC = ({ children }) => {
     initialState,
   )
 
-  const { filters } = state as State
+  const { filters } = state
 
   // Get service connection
   if (api && !api.service) {

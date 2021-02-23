@@ -14,7 +14,6 @@ import { RnsSort, SORT_DIRECTION } from 'api/models/RnsFilter'
 import { TableSortLabel } from '@material-ui/core'
 import InfoBar from 'components/molecules/InfoBar'
 import useConfirmations from 'hooks/useConfirmations'
-import { RnsContractData } from 'context/Confirmations/interfaces'
 
 enum SORT_TO_HEADER {
   name = 'domainName',
@@ -58,7 +57,7 @@ const DomainOffersPage: FC = () => {
   const history = useHistory()
   const routeState = history.location.state as { refresh?: boolean }
 
-  if (routeState && routeState.refresh) {
+  if (routeState?.refresh) {
     routeState.refresh = false
     dispatch({
       type: 'REFRESH',
@@ -161,13 +160,13 @@ const DomainOffersPage: FC = () => {
         : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
       const isProcessingConfs = pendingConfs.some(
-        ({ contractActionData }) => (
-          (contractActionData as RnsContractData).tokenId === tokenId
-        ),
+        ({ contractActionData }) => contractActionData?.id === tokenId,
       )
 
       const action1 = (
-        account?.toLowerCase() === ownerAddress.toLowerCase()) ? 'your offer' : (
+        account?.toLowerCase() === ownerAddress.toLowerCase())
+? 'your offer'
+: (
           <SelectRowButton
             id={id}
             handleSelect={(): void => {

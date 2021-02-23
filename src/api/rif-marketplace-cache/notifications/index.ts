@@ -27,7 +27,7 @@ export class NotificationsService
   implements NotificationsAPI {
   path = serviceAddress
 
-  constructor() {
+  constructor () {
     super(client)
   }
 
@@ -40,7 +40,8 @@ export class NotificationsService
       },
     })
     const { data, ...metadata } = isResultPaginated(result)
-      ? result : { data: result }
+      ? result
+: { data: result }
     this.meta = metadata
 
     return data.map(mapFromTransport)

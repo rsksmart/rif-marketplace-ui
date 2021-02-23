@@ -1,7 +1,6 @@
 import { Web3Store } from '@rsksmart/rif-ui'
 import AppContext, { AppContextProps, errorReporterFactory } from 'context/App'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
-import { AgreementUpdateData } from 'context/Confirmations/interfaces'
 import createWithContext from 'context/storeUtils/createWithContext'
 import { UIError } from 'models/UIMessage'
 import React, {
@@ -10,7 +9,6 @@ import React, {
   useCallback, useContext, useEffect, useMemo, useReducer, useState,
 } from 'react'
 import Logger from 'utils/Logger'
-import Web3 from 'web3'
 import { reducer } from './actions'
 import { AsyncActions, Props, State } from './interfaces'
 
@@ -19,7 +17,7 @@ export const initialState: State = {
 }
 
 const initialAsyncActions: AsyncActions = {
-  withdraw: (): Promise<void> => Promise.resolve(),
+  withdraw: async (): Promise<void> => await Promise.resolve(),
 }
 
 export const Context = createContext<Props>({
@@ -60,7 +58,7 @@ const Provider: FC = ({ children }) => {
         const storageContract = (await import('contracts/storage'))
           .default
           .StorageContract
-          .getInstance(web3 as Web3)
+          .getInstance(web3)
 
         appDispatch({
           type: 'SET_IS_LOADING',
@@ -107,8 +105,8 @@ const Provider: FC = ({ children }) => {
               contractAction: 'AGREEMENT_WITHDRAW',
               txHash: withdrawFundsReceipt.transactionHash,
               contractActionData: {
-                agreementId: id,
-              } as AgreementUpdateData,
+                id: id,
+              },
             },
           })
           dispatch({

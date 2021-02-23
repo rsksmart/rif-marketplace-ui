@@ -45,9 +45,7 @@ export type Actions = {
   SET_IS_LOADING: (state: State, payload: IsLoadingPayload) => State
 }
 
-export type AsyncAction<ARGS, RETURN> = {
-  (args: ARGS): Promise<RETURN>
-}
+export type AsyncAction<ARGS, RETURN> = (args: ARGS) => Promise<RETURN>
 
 export type UploadFilesAction = AsyncAction<File[], void>
 export type GetFileSizeAction = AsyncAction<string, Big>

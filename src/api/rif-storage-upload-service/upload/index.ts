@@ -14,7 +14,7 @@ export default class UploadService
   implements UploadAPIService {
     path = serviceAddress
 
-    constructor() {
+    constructor () {
       super(client)
     }
 

@@ -4,7 +4,7 @@ import Checkbox from '@material-ui/core/Checkbox'
 import TextField from '@material-ui/core/TextField'
 
 export interface AutoCompleteCheckboxProps {
-  options: { labelText: string, id: string }[]
+  options: Array<{ labelText: string, id: string }>
 }
 
 const AutoCompleteCheckbox: FC<AutoCompleteCheckboxProps> = ({ options }) => (

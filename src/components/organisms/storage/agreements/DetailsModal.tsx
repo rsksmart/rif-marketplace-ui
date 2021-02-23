@@ -59,7 +59,8 @@ const DetailsModal: FC<DetailsModalProps> = ({ modalProps, itemDetails, actions 
               spacing={2}
               className={modalCardStyleClasses.itemDetails}
             >
-              {itemDetails ? Object.keys(itemDetails)
+              {itemDetails
+? Object.keys(itemDetails)
                 .filter((k) => k !== 'title')
                 .map((key) => (
                   <Grid
@@ -83,7 +84,8 @@ const DetailsModal: FC<DetailsModalProps> = ({ modalProps, itemDetails, actions 
                     </GridItem>
                     <GridItem xs={6}>{itemDetails[key]}</GridItem>
                   </Grid>
-                )) : ''}
+                ))
+: ''}
             </GridColumn>
           </RifCard>
         </ModalBody>

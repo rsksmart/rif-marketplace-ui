@@ -32,9 +32,9 @@ export class UIError implements Pick<Message, 'text' | 'customAction'> {
 
     text!: string
 
-    customAction?: CustomAction;
+    customAction?: CustomAction
 
-    constructor({
+    constructor ({
       error, id, text, customAction,
     }: UIError) {
       this.error = error

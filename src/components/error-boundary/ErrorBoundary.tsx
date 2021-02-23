@@ -13,7 +13,7 @@ type State = {
 const logger = Logger.getInstance()
 
 class ErrorBoundary extends Component<Props, State> {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
@@ -21,15 +21,15 @@ class ErrorBoundary extends Component<Props, State> {
     }
   }
 
-  public static getDerivedStateFromError(_: Error): State {
+  public static getDerivedStateFromError (_: Error): State {
     return { hasError: true }
   }
 
-  public componentDidCatch(error: Error, info: ErrorInfo): void {
+  public componentDidCatch (error: Error, info: ErrorInfo): void {
     logger.error(`Uncaught error: ${error.message}`, info)
   }
 
-  render(): React.ReactNode {
+  render (): React.ReactNode {
     const { hasError } = this.state
 
     if (hasError) return <UncaughtError />

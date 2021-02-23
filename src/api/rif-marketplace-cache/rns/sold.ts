@@ -41,7 +41,7 @@ export class SoldDomainsService
   implements RnsAPIService {
   path = soldDomainsAddress
 
-  constructor() { super(client) }
+  constructor () { super(client) }
 
   _channel = soldDomainsChannel
 
@@ -50,16 +50,19 @@ export class SoldDomainsService
 
     const results: Paginated<SoldDomainTransport> = await this.service.find({
       query: {
-        domain: name ? {
+        domain: name
+? {
           name: {
             $like: name,
           },
-        } : undefined,
+        }
+: undefined,
         ownerAddress,
       },
     })
     const { data, ...metadata } = isResultPaginated(results)
-      ? results : { data: results }
+      ? results
+: { data: results }
     this.meta = metadata
 
     return data.map(mapFromTransport)

@@ -48,8 +48,8 @@ const SearchFilter: FC<SearchFilterProps> = (props) => {
   // we only want to display the adornment (search icon) when the textfield is not focused and empty
   const [adornmentHidden, setAdornmentHidden] = useState(false)
 
-  const handleOnFocus = () => setAdornmentHidden(true)
-  const handleOnBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+  const handleOnFocus = (): void => setAdornmentHidden(true)
+  const handleOnBlur = (event: React.FocusEvent<HTMLInputElement>): void => {
     if (!event.target.value.length) setAdornmentHidden(false)
   }
 

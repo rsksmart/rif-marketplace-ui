@@ -19,7 +19,6 @@ import { transformOfferDataForContract } from 'contracts/storage/utils'
 import { BillingPlan, StorageOffer } from 'models/marketItems/StorageItem'
 import Web3 from 'web3'
 import { isBillingPlansChange } from 'components/pages/storage/myoffers/utils'
-import { NewRequestPayload } from 'context/Confirmations/interfaces'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import RoundBtn from 'components/atoms/RoundBtn'
@@ -60,7 +59,7 @@ const StorageEditOfferPage: FC<{}> = () => {
   )
   const isCapacityChange = originalOffer?.totalCapacityGB.toString() !== totalCapacity.toString()
 
-  const makeUpdateOfferTx = (): Promise<TransactionReceipt> => {
+  const makeUpdateOfferTx = async (): Promise<TransactionReceipt> => {
     const storageContract = StorageContract.getInstance(web3 as Web3)
 
     const { subscriptionOptions } = originalOffer as StorageOffer
@@ -73,14 +72,14 @@ const StorageEditOfferPage: FC<{}> = () => {
     )
 
     if (isCapacityChange && !isPlansChange) {
-      return storageContract.setTotalCapacity(
+      return await storageContract.setTotalCapacity(
         totalCapacityMB,
         { from: account },
       )
     }
 
     if (isPlansChange && !isCapacityChange) {
-      return storageContract.setBillingPlans(
+      return await storageContract.setBillingPlans(
         periods,
         prices,
         tokens,
@@ -88,7 +87,7 @@ const StorageEditOfferPage: FC<{}> = () => {
       )
     }
 
-    return storageContract.setOffer(
+    return await storageContract.setOffer(
       totalCapacityMB,
       periods,
       prices,
@@ -110,7 +109,7 @@ const StorageEditOfferPage: FC<{}> = () => {
           payload: {
             contractAction: 'EDIT_OFFER',
             txHash: updateOfferReceipt.transactionHash,
-          } as NewRequestPayload,
+          },
         })
         setTxIsDone(true)
       }
@@ -129,14 +128,14 @@ const StorageEditOfferPage: FC<{}> = () => {
     history.push(ROUTES.STORAGE.MYOFFERS.BASE)
   }
 
-  const isSubmitEnabled = Boolean(billingPlans.length && totalCapacity
-    && (isPlansChange || isCapacityChange))
+  const isSubmitEnabled = Boolean(billingPlans.length && totalCapacity &&
+    (isPlansChange || isCapacityChange))
   const endHandler = (
     <>
       <Button disabled={!isSubmitEnabled} color="primary" variant="contained" rounded onClick={handleEditOffer}>Edit offer</Button>
       {
-        isSubmitEnabled
-        && (
+        isSubmitEnabled &&
+        (
           <Typography
             gutterBottom
             color="secondary"
@@ -171,6 +170,7 @@ const StorageEditOfferPage: FC<{}> = () => {
         buttons={[
           <RoundBtn
             onClick={onProcessingComplete}
+            key="prog-offer"
           >
             Check your offer
           </RoundBtn>,

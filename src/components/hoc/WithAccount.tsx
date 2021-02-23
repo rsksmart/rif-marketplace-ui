@@ -2,14 +2,14 @@ import React, { useContext, useState } from 'react'
 import { Web3Store } from '@rsksmart/rif-ui'
 import LoginModal from '../atoms/LoginModal'
 
-const WithAccount = ({ WrappedComponent, onChange }) => {
+const WithAccount = ({ WrappedComponent, onChange }): JSX.Element => {
   const {
     state: { account },
   } = useContext(Web3Store)
 
   const [modalOpened, setModalOpened] = useState(false)
 
-  const handleOnChange = () => {
+  const handleOnChange = (): void => {
     if (account) {
       onChange()
     } else {
@@ -17,7 +17,7 @@ const WithAccount = ({ WrappedComponent, onChange }) => {
     }
   }
 
-  const onProviderSet = (userAccount) => {
+  const onProviderSet = (userAccount): void => {
     if (userAccount) {
       onChange()
     }

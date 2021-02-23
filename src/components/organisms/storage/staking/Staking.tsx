@@ -204,9 +204,9 @@ const Staking: FC = () => {
 
   const handleOpenWithdraw = async (): Promise<void> => {
     if (!web3 || !account) return
-    const storageContract = StorageContract.getInstance(web3 as Web3)
+    const storageContract = StorageContract.getInstance(web3)
     const hasUtilizedCapacity = await storageContract.hasUtilizedCapacity(
-      account as string, { from: account },
+      account, { from: account },
     )
     setCanWithdraw(Boolean(!hasUtilizedCapacity))
     setWithdrawOpened(true)
@@ -266,6 +266,7 @@ const Staking: FC = () => {
         buttons={[
           <RoundBtn
             onClick={handleTxCompletedClose}
+            key="prog-close"
           >
             Close
           </RoundBtn>,

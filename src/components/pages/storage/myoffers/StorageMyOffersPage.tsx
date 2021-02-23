@@ -79,7 +79,7 @@ const StorageMyOffersPage: FC = () => {
     }
 
     if (!isProcessingConfs) {
-      getOwnOffers()
+      getOwnOffers().finally(() => {})
     }
   }, [account, appDispatch, appState, isProcessingConfs])
 
@@ -160,6 +160,7 @@ const StorageMyOffersPage: FC = () => {
         buttons={[
           <RoundBtn
             onClick={handleTxCompletedClose}
+            key="prog-close"
           >
             Close
           </RoundBtn>,

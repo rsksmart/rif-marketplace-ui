@@ -73,7 +73,9 @@ const StorageOffersPage: FC = () => {
         )).join(' - '),
         availableCurrencies: acceptedCurrencies.join(' - ').toUpperCase(),
         averagePrice: <ItemWUnit type="mediumPrimary" value={averagePrice.toString()} unit="USD" />,
-        action1: isOwnAccount ? 'your offer' : (
+        action1: isOwnAccount
+? 'your offer'
+: (
           <SelectRowButton
             id={id}
             handleSelect={(): void => {

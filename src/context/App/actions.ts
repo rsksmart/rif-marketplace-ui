@@ -15,13 +15,15 @@ const actions: Actions = {
     }
     return {
       ...state,
-      messages: message ? {
+      messages: message
+? {
         ...messagesCopy,
         loading: {
           text: message,
           type: 'info',
         },
-      } : messagesCopy,
+      }
+: messagesCopy,
       loaders: {
         ...loaders,
         [id]: isLoading,
@@ -45,6 +47,7 @@ const actions: Actions = {
     const { messages } = state
 
     const messagesCopy = { ...messages }
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete messagesCopy[id]
 
     return {

@@ -70,8 +70,8 @@ const MyStoragePurchases: FC = () => {
   return (
     <CenteredPageTemplate>
       {
-        Boolean(newAgreementsConfsCount)
-        && (
+        Boolean(newAgreementsConfsCount) &&
+        (
           <InfoBar
             isVisible
             type="info"

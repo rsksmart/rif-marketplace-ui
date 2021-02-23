@@ -16,15 +16,16 @@ const EXPECTED_OBJECT: OfferFiltersTransport = {
   periods: Array.from(FAKE_FILTERS.periods as Set<SubscriptionPeriod>)
     .map((p) => PeriodInSeconds[p]),
   averagePrice: {
-    min: (FAKE_FILTERS.price?.min as number) - 1,
-    max: (FAKE_FILTERS.price?.max as number) + 1,
+    min: FAKE_FILTERS.price?.min - 1,
+    max: FAKE_FILTERS.price?.max + 1,
   },
   totalCapacity: {
-    min: (FAKE_FILTERS.size?.min as number) * UNIT_PREFIX_POW2.KILO,
-    max: (FAKE_FILTERS.size?.max as number) * UNIT_PREFIX_POW2.KILO,
+    min: FAKE_FILTERS.size?.min * UNIT_PREFIX_POW2.KILO,
+    max: FAKE_FILTERS.size?.max * UNIT_PREFIX_POW2.KILO,
   },
   provider: FAKE_FILTERS.provider
-    ? { $like: FAKE_FILTERS.provider } : undefined,
+    ? { $like: FAKE_FILTERS.provider }
+: undefined,
 }
 
 const testProperty = <TObject, K extends keyof TObject>(

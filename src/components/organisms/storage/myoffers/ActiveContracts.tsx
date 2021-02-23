@@ -19,7 +19,6 @@ import AppContext, { errorReporterFactory } from 'context/App'
 import { UIError } from 'models/UIMessage'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
-import { AgreementUpdateData } from 'context/Confirmations/interfaces'
 import useConfirmations from 'hooks/useConfirmations'
 import DetailsModal from '../agreements/DetailsModal'
 
@@ -115,8 +114,8 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
             contractAction: 'AGREEMENT_PAYOUT',
             txHash: payoutFundsReceipt.transactionHash,
             contractActionData: {
-              agreementId: agreement.id,
-            } as AgreementUpdateData,
+              id: agreement.id,
+            }
           },
         })
       }
@@ -150,7 +149,7 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
     crypto,
     currentFiat,
     (_, agreement: Agreement) => {
-      onWithdraw(agreement)
+      onWithdraw(agreement).finally(() => {})
     },
     (_, agreementView: AgreementView, agreement: Agreement) => {
       setItemDetails(agreementView as AgreementProviderView)
@@ -173,7 +172,7 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
   const actions = (): JSX.Element => (
     <RoundBtn
       disabled={Number(selectedAgreement?.toBePayedOut) <= 0}
-      onClick={(): Promise<void> => onWithdraw(selectedAgreement as Agreement)}
+      onClick={async (): Promise<void> => await onWithdraw(selectedAgreement as Agreement)}
     >
       Withdraw funds
     </RoundBtn>
@@ -204,6 +203,7 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
         buttons={[
           <RoundBtn
             onClick={handleTxCompletedClose}
+            key="prog-close"
           >
             Close
           </RoundBtn>,

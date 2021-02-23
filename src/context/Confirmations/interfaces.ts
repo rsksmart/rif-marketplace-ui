@@ -28,20 +28,9 @@ export type ContractAction =
   | StorageStakingContractAction
   | RnsContractAction
 
-export type AgreementUpdateData = { // used for withdraw, payout and renew
-  agreementId: string
+export type ContractActionData = {
+  id: string
 }
-
-export type AgreementContractData =
-  | AgreementUpdateData
-
-export type RnsContractData = {
-  tokenId: string
-}
-
-export type ContractActionData =
-  | AgreementContractData
-  | RnsContractData
 
 export type TxHash = string
 

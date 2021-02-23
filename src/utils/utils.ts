@@ -12,13 +12,13 @@ export enum UNIT_PREFIX_POW2 {
 }
 
 export const getTabValueFromLocation = (
-  tabs: {
+  tabs: Array<{
     label: string
     to: string
     value: string
-  }[],
+  }>,
   defaultRoute: string,
 ) => (currentPath: string): string => {
   const activeTab = tabs.find((tab) => currentPath.includes(tab.to))
-  return activeTab?.to || defaultRoute
+  return activeTab?.to ?? defaultRoute
 }

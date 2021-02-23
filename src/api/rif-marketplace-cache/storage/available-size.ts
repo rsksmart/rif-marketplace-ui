@@ -10,11 +10,11 @@ export class AvailableCapacityService
   extends AbstractAPIService implements StorageAPIService {
   path = availableCapacityAddress
 
-  constructor() { super(client) }
+  constructor () { super(client) }
 
   _channel = 'availableCapacity' as StorageWSChannel
 
-  _fetch = (): Promise<[number, number]> => this.service.find()
+  _fetch = async (): Promise<[number, number]> => await this.service.find()
 
   fetchSizeLimits = async (): Promise<MinMaxFilter> => {
     const {

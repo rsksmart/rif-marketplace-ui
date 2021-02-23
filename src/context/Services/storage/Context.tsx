@@ -12,7 +12,6 @@ import React, {
   FC,
   useCallback, useContext, useEffect, useReducer,
 } from 'react'
-import Web3 from 'web3'
 import actions from './actions'
 import { Props, State } from './interfaces'
 
@@ -55,7 +54,7 @@ const Provider: FC = ({ children }) => {
     if (web3 && account) {
       const isWhitelisted = async (): Promise<void> => {
         try {
-          const storageContract = StorageContract.getInstance(web3 as Web3)
+          const storageContract = StorageContract.getInstance(web3)
           const isWhitelistedProvider = Boolean(await storageContract
             .isWhitelistedProvider(account))
 
@@ -71,7 +70,7 @@ const Provider: FC = ({ children }) => {
           }))
         }
       }
-      isWhitelisted()
+      isWhitelisted().finally(() => {})
     }
   }, [web3, account, reportError])
 

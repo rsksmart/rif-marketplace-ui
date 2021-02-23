@@ -20,9 +20,9 @@ export interface TransactionOptions {
 }
 
 export interface ERC20Contract extends PaymentWrapper{
-  approve (
+  approve: (
       address: string, amount: string | number, options: TransactionOptions
-  ): Promise<TransactionReceipt>
+  ) => Promise<TransactionReceipt>
 }
 
 export type Web3ErrorId = 'web3-getGasPrice'
@@ -43,7 +43,7 @@ export enum TOKEN_TYPES {
 
 export type TokenTypes = TOKEN_TYPES.NATIVE | TOKEN_TYPES.ERC20
 
-export type SingletonContract = { getInstance(web3: Web3): any }
+export type SingletonContract = { getInstance: (web3: Web3) => any }
 
 export type SupportedToken = BaseToken & {
   type: TokenTypes
@@ -60,7 +60,8 @@ export const SUPPORTED_TOKEN_RECORDS: TokenRecord<SupportedToken> = {
   [SYSTEM_SUPPORTED_SYMBOL.rbtc]: {
     ...SYSTEM_TOKENS.rbtc,
     type: TOKEN_TYPES.NATIVE,
-  } as SupportedToken,
+    tokenContract: { getInstance: () => {} }
+  },
   [SYSTEM_SUPPORTED_SYMBOL.rif]: {
     ...SYSTEM_TOKENS.rif,
     type: TOKEN_TYPES.ERC20,

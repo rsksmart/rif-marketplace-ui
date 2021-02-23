@@ -36,7 +36,7 @@ const MOCK_FILTERS: RnsFilter = {
   status: 'owned',
 }
 
-// @ts-ignore
+// @ts-expect-error
 rnsTokenAddrTokenRecord.mockaddress = 'rif'
 
 const expectedDomains: RnsDomainOffer[] = [
@@ -53,19 +53,19 @@ const expectedDomains: RnsDomainOffer[] = [
 ]
 
 const isRnsDomainOffer = (obj: RnsDomainOffer): obj is RnsDomainOffer => {
-  expect((obj as RnsDomainOffer).domainName).toBeTruthy()
+  expect((obj).domainName).toBeTruthy()
 
-  expect((obj as RnsDomainOffer).expirationDate).toBeTruthy()
+  expect((obj).expirationDate).toBeTruthy()
 
-  expect((obj as RnsDomainOffer).id).toBeTruthy()
+  expect((obj).id).toBeTruthy()
 
-  expect((obj as RnsDomainOffer).ownerAddress).toBeTruthy()
+  expect((obj).ownerAddress).toBeTruthy()
 
-  expect((obj as RnsDomainOffer).paymentToken).toBeTruthy()
+  expect((obj).paymentToken).toBeTruthy()
 
-  expect((obj as RnsDomainOffer).price).toBeTruthy()
+  expect((obj).price).toBeTruthy()
 
-  expect((obj as RnsDomainOffer).tokenId).toBeTruthy()
+  expect((obj).tokenId).toBeTruthy()
 
   return true
 }

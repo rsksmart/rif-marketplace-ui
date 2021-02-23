@@ -35,12 +35,12 @@ const CenteredPageTemplate: FC<CenteredPageTemplateProps> = ({
     <Grid className={className} container justify="center">
       <div className={classes.container}>
         {
-          !!title && (
+          Boolean(title) && (
             <Typography gutterBottom align={titlesAlignment} variant="h5" color="primary">{title}</Typography>
           )
         }
         {
-          !!subtitle && (
+          Boolean(subtitle) && (
             <Typography gutterBottom color="secondary" variant="subtitle1" align={titlesAlignment}>
               {subtitle}
             </Typography>

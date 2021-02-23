@@ -15,14 +15,13 @@ import { calcRenewalDate, getShortDateString } from 'utils/dateUtils'
 import Logger from 'utils/Logger'
 import { convertToWeiString } from 'utils/parsers'
 import { UNIT_PREFIX_POW2 } from 'utils/utils'
-import Web3 from 'web3'
 import { TxOptions } from 'contracts/interfaces'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
 import { SupportedTokenSymbol, SYSTEM_SUPPORTED_SYMBOL, SYSTEM_TOKENS } from 'models/Token'
 import { getTokensFromConfigTokens } from 'utils/tokenUtils'
 import { reducer } from './actions'
 import {
-  AsyncActions, PinnedContent, Props, State,
+  AsyncActions, Props, State,
 } from './interfaces'
 
 export const initialState: State = {
@@ -48,7 +47,7 @@ export const initialState: State = {
 }
 
 const initialAsyncActions: AsyncActions = {
-  createAgreement: (): Promise<void> => Promise.resolve(),
+  createAgreement: async (): Promise<void> => await Promise.resolve(),
 }
 
 export const Context = createContext<Props>({
@@ -152,7 +151,7 @@ const Provider: FC = ({ children }) => {
         const {
           size,
           hash: fileHash,
-        } = pinned as PinnedContent
+        } = pinned
         const agreement = {
           amount: convertToWeiString(total),
           billingPeriod,
@@ -171,7 +170,7 @@ const Provider: FC = ({ children }) => {
 
         const storageContract = (await import('contracts/storage')).default
           .StorageContract
-          .getInstance(web3 as Web3)
+          .getInstance(web3)
         appDispatch({
           type: 'SET_IS_LOADING',
           payload: {
@@ -239,11 +238,11 @@ const Provider: FC = ({ children }) => {
   // Sets plans and currency related states
   useEffect(() => {
     if (
-      isInitialised
-      && currencyOptions.length
-      && selectedCurrency >= 0
-      && listedItem
-      && pinned
+      isInitialised &&
+      currencyOptions.length &&
+      selectedCurrency >= 0 &&
+      listedItem &&
+      pinned
     ) {
       const { subscriptionOptions } = listedItem
       const newToken = currencyOptions[selectedCurrency]

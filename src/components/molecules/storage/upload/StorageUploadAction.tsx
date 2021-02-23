@@ -19,8 +19,8 @@ const StorageUploadAction: FC<Props> = ({
     <GridItem xs={12}>
       <RoundBtn {...actionProps} />
     </GridItem>
-    {Boolean(sizeOverLimitMB)
-        && (
+    {Boolean(sizeOverLimitMB) &&
+        (
           <Typography variant="caption" color="error">
             Max upload size is
             {' '}

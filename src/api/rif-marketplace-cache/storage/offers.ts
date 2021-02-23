@@ -18,13 +18,13 @@ export class StorageOffersService extends AbstractAPIService
   implements StorageAPIService {
   path = offersAddress
 
-  private mapFromTransport: (
+  private readonly mapFromTransport: (
     value: OfferTransport,
     index: number,
     array: OfferTransport[]
   ) => StorageOffer
 
-  constructor() {
+  constructor () {
     super(client)
     this.mapFromTransport = mapOfferFromTransport // This could be moved to constructor args
   }
@@ -36,7 +36,8 @@ export class StorageOffersService extends AbstractAPIService
     const result: Paginated<OfferTransport> = await this.service.find({ query })
 
     const { data, ...metadata } = isResultPaginated(result)
-      ? result : { data: result }
+      ? result
+: { data: result }
     this.meta = metadata
 
     return data.map(this.mapFromTransport)
@@ -59,7 +60,7 @@ export class StorageOffersService extends AbstractAPIService
     }
   }
 
-  private fetchMinMaxLimit = async (
+  private readonly fetchMinMaxLimit = async (
     service,
     minMax: MinMax,
     filedName: string,
@@ -67,7 +68,7 @@ export class StorageOffersService extends AbstractAPIService
       selectField?: string
     },
   ): Promise<number> => {
-    const select = options?.selectField || filedName
+    const select = options?.selectField ?? filedName
     const query = {
       $limit: 1,
       $sort: {

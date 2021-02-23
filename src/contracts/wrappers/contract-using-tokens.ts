@@ -17,7 +17,7 @@ export class ContractWithTokens extends ContractBase {
 
   private _defaultToken: SupportedTokenSymbol
 
-  constructor(
+  constructor (
     web3: Web3,
     contract: Contract,
     supportedTokens: SupportedToken[],
@@ -31,19 +31,19 @@ export class ContractWithTokens extends ContractBase {
       : this.supportedTokens[0].symbol
   }
 
-  get defaultToken(): SupportedTokenSymbol {
+  get defaultToken (): SupportedTokenSymbol {
     return this._defaultToken
   }
 
-  set defaultToken(token: SupportedTokenSymbol) {
+  set defaultToken (token: SupportedTokenSymbol) {
     this._defaultToken = token
   }
 
-  private _isCurrencySupported(currency: SupportedTokenSymbol): boolean {
+  private _isCurrencySupported (currency: SupportedTokenSymbol): boolean {
     return this.supportedTokens.some(({ symbol }) => currency === symbol)
   }
 
-  private _approveTokenTransfer(
+  private async _approveTokenTransfer (
     token: SupportedToken,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> {
@@ -52,7 +52,7 @@ export class ContractWithTokens extends ContractBase {
 
     switch (tokenType) {
       case TOKEN_TYPES.ERC20:
-        return (tokenContract.getInstance(this.web3) as ERC20Contract).approve(
+        return await (tokenContract.getInstance(this.web3) as ERC20Contract).approve(
           this.contract.options.address, value as number, { from, gasPrice },
         )
       default:
@@ -60,9 +60,9 @@ export class ContractWithTokens extends ContractBase {
     }
   }
 
-  public getToken(tokenName?: SupportedTokenSymbol): SupportedToken {
+  public getToken (tokenName?: SupportedTokenSymbol): SupportedToken {
     const tokenObject = this.supportedTokens.find(
-      ({ symbol }) => symbol === (tokenName || this.defaultToken),
+      ({ symbol }) => symbol === (tokenName ?? this.defaultToken),
     )
 
     if (!tokenObject) {
@@ -71,12 +71,12 @@ export class ContractWithTokens extends ContractBase {
     return tokenObject
   }
 
-  async send(tx: any, txOptions: TxOptions): Promise<TransactionReceipt> {
+  async send (tx: any, txOptions: TxOptions): Promise<TransactionReceipt> {
     const { from, value } = txOptions
     const tokenToUse = this.getToken(txOptions.token)
 
     if (!this._isCurrencySupported(tokenToUse.symbol)) {
-      throw new Error(`Token ${tokenToUse} is not supported by ${this.name} contract`)
+      throw new Error(`Token ${tokenToUse.displayName} is not supported by ${this.name} contract`)
     }
 
     const isNativeToken = tokenToUse.type === TOKEN_TYPES.NATIVE
@@ -97,7 +97,7 @@ export class ContractWithTokens extends ContractBase {
       gasPrice,
     } = await this._processOptions(tx, txOptions)
 
-    return this._send(
+    return await this._send(
       tx,
       {
         from,

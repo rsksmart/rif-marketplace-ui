@@ -11,7 +11,7 @@ export interface ReturnButtonProps {
 const ReturnButton: FC<ReturnButtonProps> = ({ className = '', backTo, onClick }) => {
   const history = useHistory()
 
-  const handleOnClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleOnClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     history.goBack()
 
     if (onClick) onClick(event)

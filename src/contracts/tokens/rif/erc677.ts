@@ -13,7 +13,7 @@ export type RifERC677ContractErrorId = 'contract-rif-getBalanceOf' | 'contract-r
 export class RifERC677Contract extends ContractBase implements PaymentWrapper {
   public static gasMultiplier = 1.1
 
-  public static getInstance(web3: Web3): RifERC677Contract {
+  public static getInstance (web3: Web3): RifERC677Contract {
     if (!RifERC677Contract.instance) {
       RifERC677Contract.instance = new RifERC677Contract(web3)
     }
@@ -22,26 +22,26 @@ export class RifERC677Contract extends ContractBase implements PaymentWrapper {
 
   private static instance: RifERC677Contract
 
-  private constructor(web3: Web3) {
+  private constructor (web3: Web3) {
     super(web3, new web3.eth.Contract(ERC677.abi as AbiItem[], rifTokenAddress), 'rif-erc677-contract')
   }
 
-  public getBalanceOf(
+  public async getBalanceOf (
     account: string,
     txOptions: TransactionOptions,
   ): Promise<string | number> {
     const { from } = txOptions
-    return this.contract.methods.balanceOf(account).call({ from })
+    return await this.contract.methods.balanceOf(account).call({ from })
   }
 
   // Tramsfer And Call
-  public transferAndCall(
+  public async transferAndCall (
     contractAddress: string,
     tokenPrice: string,
     tokenId: string,
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> {
-    return this._send(
+    return await this._send(
       this.contract.methods.transferAndCall(
         contractAddress, tokenPrice, tokenId,
       ),

@@ -100,8 +100,8 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     ) => acc + file.size, 0))
 
     setSize(totalB)
-    setUploadDisabled(!!addedFiles.length
-      && totalB.gt(fileSizeLimit))
+    setUploadDisabled(Boolean(addedFiles.length) &&
+      totalB.gt(fileSizeLimit))
     setFiles(addedFiles)
     setIsLoadingFiles(false)
   }
@@ -116,7 +116,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
 
   const handleUpload = (): void => {
     if (files.length) {
-      uploadFiles(files)
+      uploadFiles(files).finally(() => {})
     }
   }
   const pinActionProps: ButtonProps = {
@@ -130,8 +130,8 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
     disabled: uploadDisabled || !hasSize || isLoadingFiles,
   }
 
-  const sizeOverLimitMB = uploadDisabled
-    && parseConvertBig(
+  const sizeOverLimitMB = uploadDisabled &&
+    parseConvertBig(
       size.minus(fileSizeLimit),
       UNIT_PREFIX_POW2.MEGA,
     ).toFixed(3)
@@ -229,7 +229,8 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
                 },
               }}
             />
-          ) : (
+          )
+: (
             <PinUploaderTab
               isLoading={isLoadingFiles}
               onChange={onFilesChange}

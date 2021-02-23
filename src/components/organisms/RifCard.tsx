@@ -42,9 +42,10 @@ export type RifCardProps = CardProps & {
 }
 
 const RifCard: FC<RifCardProps> = ({
-  children, Header, Actions, ...props
+  children, Header = (): JSX.Element | null => null, Actions, ...props
 }) => {
   const classes = useStylesRifCard()
+  // const headerExists = Boolean(Header)
   return (
     <Card className={classes.card} variant="outlined" {...props}>
       <GridColumn
@@ -52,7 +53,7 @@ const RifCard: FC<RifCardProps> = ({
         justify="center"
         className={classes.titleContainer}
       >
-        {!!Header && (
+        {true && (
         <GridItem className={classes.headerItem}>
           <Header />
         </GridItem>

@@ -106,8 +106,8 @@ const StorageOffersCheckoutPage: FC = () => {
   const changePeriodCountHandle = ({
     currentTarget: { value },
   }: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
-    const newPeriodsCount = Math.abs(parseInt(value, 10))
-      || initialState.auxiliary.periodsCount
+    const newPeriodsCount = Math.abs(parseInt(value, 10)) ||
+      initialState.auxiliary.periodsCount
 
     dispatch({
       type: 'SET_AUXILIARY',
@@ -150,7 +150,8 @@ const StorageOffersCheckoutPage: FC = () => {
       }}
       onChange={changePeriodCountHandle}
     />,
-    'TOTAL PRICE': total && totalFiat ? (
+    'TOTAL PRICE': total && totalFiat
+? (
       <CombinedPriceCell
         currency={tokenSymbol || ''}
         currencyFiat={fiatName}
@@ -158,7 +159,8 @@ const StorageOffersCheckoutPage: FC = () => {
         priceFiat={totalFiat}
         divider={<br />}
       />
-    ) : null,
+    )
+: null,
     'RENEWAL DATE': endDate,
   }
 
@@ -254,8 +256,8 @@ const StorageOffersCheckoutPage: FC = () => {
     >
       <GridColumn>
         <GridItem>
-          {order && pinned
-            && (
+          {order && pinned &&
+            (
             <StorageOrderDescription
               order={{ ...order, ...pinned }}
             />
@@ -271,10 +273,10 @@ const StorageOffersCheckoutPage: FC = () => {
         doneMsg="Your storage has been bought."
         {...status}
         buttons={[
-          <RoundBtn onClick={navToMyPurchases}>
+          <RoundBtn onClick={navToMyPurchases} key="prog-purchases">
             View my purchases
           </RoundBtn>,
-          <RoundBtn onClick={navToStorageBase}>
+          <RoundBtn onClick={navToStorageBase} key="prog-listing">
             View storage listing
           </RoundBtn>,
         ]}

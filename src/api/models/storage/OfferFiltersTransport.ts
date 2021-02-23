@@ -19,7 +19,7 @@ export default class OfferFiltersTransport {
 
   withInactive?: boolean
 
-  constructor({
+  constructor ({
     periods,
     price,
     size: sizeGB,

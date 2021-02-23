@@ -10,11 +10,11 @@ export class AvgBillingPriceService
   extends AbstractAPIService implements StorageAPIService {
     path = avgBillingPlanAddress
 
-    constructor() { super(client) }
+    constructor () { super(client) }
 
     _channel = 'avgPrice' as StorageWSChannel
 
-    _fetch = (): Promise<[number, number]> => this.service.find()
+    _fetch = async (): Promise<[number, number]> => await this.service.find()
 
     fetchPriceLimits = async (): Promise<MinMaxFilter> => {
       // this 1 arg is required by service interface, but it's not actually used

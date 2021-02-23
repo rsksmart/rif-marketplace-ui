@@ -41,7 +41,7 @@ export class StakesService extends AbstractAPIService
   implements StakeAPIService {
   path = stakesAddress
 
-  constructor() { super(client) }
+  constructor () { super(client) }
 
   _channel = stakesWSChannel
 

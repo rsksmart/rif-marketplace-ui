@@ -38,7 +38,6 @@ import Web3 from 'web3'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import RoundBtn from 'components/atoms/RoundBtn'
 import { ConfirmationsContext } from 'context/Confirmations'
-import { RnsContractData } from 'context/Confirmations/interfaces'
 
 const logger = Logger.getInstance()
 
@@ -212,7 +211,7 @@ const CancelDomainCheckoutPage: FC = () => {
           payload: {
             contractAction: 'RNS_CANCEL',
             txHash: unplaceReceipt.transactionHash,
-            contractActionData: { tokenId } as RnsContractData,
+            contractActionData: { id: tokenId },
           },
         })
       }

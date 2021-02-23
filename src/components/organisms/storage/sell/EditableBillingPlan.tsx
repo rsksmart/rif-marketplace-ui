@@ -35,11 +35,11 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
 
   const editMode = Boolean(billingPlan)
   const [currency, setCurrency] = useState<BaseToken>(
-    billingPlan?.currency || SYSTEM_TOKENS.rbtc,
+    billingPlan?.currency ?? SYSTEM_TOKENS.rbtc,
   )
   const [pricePerGb, setPricePerGb] = useState(billingPlan?.price.toString())
   const [period, setPeriod] = useState(
-    billingPlan?.period || allBillingPeriods[0],
+    billingPlan?.period ?? allBillingPeriods[0],
   )
 
   const onPriceChange = (
@@ -78,8 +78,8 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
 
   const ActionButton = (): JSX.Element => {
     if (!editMode) {
-      const addIsDisabled = Number(pricePerGb) <= 0
-        || usedPeriodsPerCurrency[currency.symbol]?.includes(period)
+      const addIsDisabled = Number(pricePerGb) <= 0 ||
+        usedPeriodsPerCurrency[currency.symbol]?.includes(period)
 
       return (
         <Button
@@ -94,14 +94,14 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
         </Button>
       )
     }
-    const hasChanged = billingPlan?.period !== period
-      || billingPlan?.currency !== currency
+    const hasChanged = billingPlan?.period !== period ||
+      billingPlan?.currency !== currency
     const currencyAndPeriodInUse = usedPeriodsPerCurrency[currency.symbol]?.includes(
       period
     )
     // the period or currency have changed and the selected option is in use
-    const isDisabled = Number(pricePerGb) <= 0
-      || (hasChanged && currencyAndPeriodInUse)
+    const isDisabled = Number(pricePerGb) <= 0 ||
+      (hasChanged && currencyAndPeriodInUse)
 
     return (
       <TooltipIconButton
@@ -136,8 +136,8 @@ const EditableBillingPlan: FC<EditableBillingPlanProps> = ({
                 .sort((a, b) => PeriodInSeconds[a] - PeriodInSeconds[b])
                 .map(
                   (option: SubscriptionPeriod) => {
-                    const isDisabled = usedPeriodsPerCurrency[currency.symbol]?.includes(option)
-                      && option !== billingPlan?.period
+                    const isDisabled = usedPeriodsPerCurrency[currency.symbol]?.includes(option) &&
+                      option !== billingPlan?.period
                     return (
                       <MenuItem value={option} key={option} disabled={isDisabled}>
                         {option}

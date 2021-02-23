@@ -20,7 +20,7 @@ import { UNIT_PREFIX_POW2 } from 'utils/utils'
 
 import {
   AsyncActions, GetFileSizeAction, Props, State, UploadFilesAction,
-  SizeLimitPayload, contextID,
+  contextID,
 } from './interfaces'
 import actions from './actions'
 import { StorageOffersContext, StorageOffersContextProps } from '../offers'
@@ -35,8 +35,8 @@ export const initialState: State = {
 }
 
 const initialAsyncActions: AsyncActions = {
-  uploadFiles: (): Promise<void> => Promise.resolve(),
-  getFileSize: (): Promise<Big> => Promise.resolve(Big(0)),
+  uploadFiles: async (): Promise<void> => await Promise.resolve(),
+  getFileSize: async (): Promise<Big> => await Promise.resolve(Big(0)),
 }
 
 export const Context = createContext<Props>({
@@ -97,7 +97,7 @@ export const Provider: FC = ({ children }) => {
       (fileSizeLimit) => {
         dispatch({
           type: 'SET_SIZE_LIMIT',
-          payload: { fileSizeLimit } as SizeLimitPayload,
+          payload: { fileSizeLimit },
         })
       },
     ).catch((error) => {
@@ -123,7 +123,7 @@ export const Provider: FC = ({ children }) => {
           peerId,
         },
       } = offer
-      const uploadFiles: UploadFilesAction = (files) => {
+      const uploadFiles: UploadFilesAction = async (files) => {
         appDispatch({
           type: 'SET_IS_LOADING',
           payload: {
@@ -140,14 +140,14 @@ export const Provider: FC = ({ children }) => {
           },
         })
 
-        return new Promise((resolve) => post({
+        await post({
           files,
           account,
           peerId,
           offerId,
           contractAddress: storageAddress,
         })
-          .then((uploadResponse: UploadResponse) => {
+        .then((uploadResponse: UploadResponse) => {
             dispatch({
               type: 'SET_STATUS',
               payload: {
@@ -156,29 +156,30 @@ export const Provider: FC = ({ children }) => {
               },
             })
             Logger.getInstance().debug('Upload server replied with:', uploadResponse)
-          }).catch((error) => {
-            reportError(new UIError({
-              error,
-              id: 'service-post',
-              text: 'Could not upload files.',
-            }))
-          }).finally(() => {
-            appDispatch({
-              type: 'SET_IS_LOADING',
-              payload: {
-                isLoading: false,
-                id: 'contract',
-              },
-            })
-            dispatch({
-              type: 'SET_STATUS',
-              payload: { inProgress: false },
-            })
-            resolve()
+          })
+        .catch((error) => {
+          reportError(new UIError({
+            error,
+            id: 'service-post',
+            text: 'Could not upload files.',
           }))
+        })
+        .finally(() => {
+          appDispatch({
+            type: 'SET_IS_LOADING',
+            payload: {
+              isLoading: false,
+              id: 'contract',
+            },
+          })
+          dispatch({
+            type: 'SET_STATUS',
+            payload: { inProgress: false },
+          })
+        })
       }
 
-      const getFileSize: GetFileSizeAction = (fileHash) => {
+      const getFileSize: GetFileSizeAction = async (fileHash) => {
         appDispatch({
           type: 'SET_IS_LOADING',
           payload: {
@@ -194,7 +195,7 @@ export const Provider: FC = ({ children }) => {
           },
         })
 
-        return fetch(fileHash)
+        return await fetch(fileHash)
           .catch((error) => {
             reportError(new UIError({
               error,

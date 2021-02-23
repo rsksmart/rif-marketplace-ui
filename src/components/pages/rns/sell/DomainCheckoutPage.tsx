@@ -225,7 +225,7 @@ const DomainsCheckoutPage: FC = () => {
           payload: {
             contractAction: 'RNS_PLACE',
             txHash: placeReceipt.transactionHash,
-            contractActionData: { tokenId },
+            contractActionData: { id: tokenId },
           },
         })
       }
@@ -309,7 +309,7 @@ const DomainsCheckoutPage: FC = () => {
                     RENEWAL DATE
                   </TableCell>
                   <TableCell className={classes.detailValue}>
-                    {expirationDate && expirationDate.toLocaleDateString()}
+                    {expirationDate?.toLocaleDateString()}
                   </TableCell>
                 </TableRow>
                 <TableRow>

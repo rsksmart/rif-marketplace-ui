@@ -59,7 +59,8 @@ const fetchPriceLimit = async (
   const results: Paginated<OfferTransport> = await service.find({ query })
 
   const data: OfferTransport[] = isResultPaginated(results)
-    ? results.data : results
+    ? results.data
+: results
 
   // Gets the result parses and rounds it: up for max, down for min
   return data.reduce(
@@ -79,7 +80,7 @@ type FetchArgs = Partial<RnsFilter>
 export class OffersService extends AbstractAPIService implements RnsAPIService {
   path = offersAddress
 
-  constructor() { super(client) }
+  constructor () { super(client) }
 
   _channel = offersChannel
 
@@ -88,19 +89,25 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
   }: FetchArgs): Promise<RnsDomainOffer[]> => {
     const results: Paginated<OfferTransport> = await this.service.find({
       query: {
-        domain: name ? {
+        domain: name
+? {
           name: {
             $like: name,
           },
-        } : undefined,
-        priceFiat: price ? {
+        }
+: undefined,
+        priceFiat: price
+? {
           $gte: price.min,
           $lte: price.max,
-        } : undefined,
+        }
+: undefined,
         $sort: sort && {
-          domain: sort.name ? {
+          domain: sort.name
+? {
             name: sort.name,
-          } : undefined,
+          }
+: undefined,
           priceFiat: sort.price,
         },
         $skip,
@@ -109,7 +116,8 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
     })
 
     const { data, ...metadata } = isResultPaginated(results)
-      ? results : { data: results }
+      ? results
+: { data: results }
     this.meta = metadata
 
     const filteredData = data

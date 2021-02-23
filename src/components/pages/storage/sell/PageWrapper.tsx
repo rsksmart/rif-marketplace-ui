@@ -45,7 +45,7 @@ const PageWrapper: FC = () => {
         setIsLoadingOffer(false)
       }
 
-      getOwnOffers()
+      getOwnOffers().finally(() => {})
     }
   }, [account, appDispatch, appState])
 

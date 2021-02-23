@@ -70,7 +70,7 @@ describe('AppContext', () => {
           other: false,
         }
 
-        test(`should contain ${expectedLoaders}`, () => {
+        test(`should contain ${JSON.stringify(expectedLoaders)}`, () => {
           render(<ProviderTest test={({ state: { loaders } }): void => {
             expect(loaders).toEqual(expectedLoaders)
           }}

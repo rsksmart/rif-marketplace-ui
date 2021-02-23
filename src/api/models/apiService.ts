@@ -7,13 +7,9 @@ import { ServiceAddress } from './serviceAddresses'
 
 export type APIErrorId = 'service-connection' | 'service-event-attach' | 'service-fetch' | 'service-post'
 
-export interface ServiceEventListener {
-  (...args: any[]): void
-}
+export type ServiceEventListener = (...args: any[]) => void
 
-export interface ErrorReporter {
-  (e: ErrorReporterError): void
-}
+export type ErrorReporter = (e: ErrorReporterError) => void
 
 export type MapFromTransport<Transport, Local> = (item: Transport) => Local
 
@@ -21,7 +17,7 @@ export type ServiceMetadata = Omit<Paginated<never>, 'data'>
 
 export const isServiceMetadata = (
   metadata: ServiceMetadata | unknown,
-): metadata is ServiceMetadata => metadata && (
+): metadata is ServiceMetadata => Boolean(metadata) && (
   metadata as ServiceMetadata).total !== undefined
 
 type ConnectOptions = {
@@ -32,7 +28,7 @@ export interface APIService {
   _channel: string
   meta: ServiceMetadata | unknown
   service: Service<any>
-  authenticate: (ownerAddress: string) => Promise<AuthenticationResult | void>
+  authenticate: (ownerAddress: string) => Promise<AuthenticationResult | unknown>
   connect: (errorReporter: ErrorReporter, options?: ConnectOptions) => string | undefined
   fetch: (filters?: MarketFilterType | any) => Promise<any>
   _fetch: (filters?: MarketFilterType | any) => Promise<any>
@@ -55,19 +51,19 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
 
   service!: Service<any>
 
-  errorReporter!: ErrorReporter
+  errorReporter: ErrorReporter = () => {}
 
   _meta?: ServiceMetadata
 
-  get meta(): ServiceMetadata | unknown {
+  get meta (): ServiceMetadata | unknown {
     return this._meta
   }
 
-  set meta(meta: ServiceMetadata | unknown) {
+  set meta (meta: ServiceMetadata | unknown) {
     this._meta = isServiceMetadata(meta) ? meta : undefined
   }
 
-  constructor(client: ReturnType<typeof createClient>) {
+  constructor (client: ReturnType<typeof createClient>) {
     this._client = client
   }
 
@@ -98,7 +94,7 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
     errorReporter: ErrorReporter,
     options?: ConnectOptions,
   ): string | undefined => {
-    this._client = options?.client || this._client
+    this._client = options?.client ?? this._client
     this.errorReporter = errorReporter
 
     try {
@@ -114,9 +110,9 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
     }
   }
 
-  authenticate = (
+  authenticate = async (
     ownerAddress: string,
-  ): Promise<AuthenticationResult | void> => this._client
+  ): Promise<AuthenticationResult | unknown> => await this._client
     .authenticate({
       strategy: 'anonymous',
       channels: [this._channel],
@@ -129,7 +125,7 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
       })
     })
 
-  attachEvent = (name: string, callback: ServiceEventListener) => {
+  attachEvent = (name: string, callback: ServiceEventListener): void => {
     try {
       this.service.on(name, callback)
     } catch (error) {
