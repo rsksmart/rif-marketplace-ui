@@ -37,7 +37,7 @@ export class StorageOffersService extends AbstractAPIService
 
     const { data, ...metadata } = isResultPaginated(result)
       ? result
-: { data: result }
+      : { data: result }
     this.meta = metadata
 
     return data.map(this.mapFromTransport)

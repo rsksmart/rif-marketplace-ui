@@ -37,15 +37,14 @@ const useStylesRifCard = makeStyles((theme: Theme) => ({
 }))
 
 export type RifCardProps = CardProps & {
-    Header?: React.ElementType
-    Actions: React.ElementType
+  Header?: React.ElementType
+  Actions: React.ElementType
 }
 
 const RifCard: FC<RifCardProps> = ({
   children, Header = (): JSX.Element | null => null, Actions, ...props
 }) => {
   const classes = useStylesRifCard()
-  // const headerExists = Boolean(Header)
   return (
     <Card className={classes.card} variant="outlined" {...props}>
       <GridColumn

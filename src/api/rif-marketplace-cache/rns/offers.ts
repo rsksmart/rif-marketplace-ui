@@ -60,7 +60,7 @@ const fetchPriceLimit = async (
 
   const data: OfferTransport[] = isResultPaginated(results)
     ? results.data
-: results
+    : results
 
   // Gets the result parses and rounds it: up for max, down for min
   return data.reduce(
@@ -73,9 +73,9 @@ const fetchPriceLimit = async (
 }
 
 type FetchArgs = Partial<RnsFilter>
-    & { fiat: SupportedFiatSymbol}
-    & { skip?: number}
-    & { sort: RnsSort}
+& { fiat: SupportedFiatSymbol}
+& { skip?: number}
+& { sort: RnsSort}
 
 export class OffersService extends AbstractAPIService implements RnsAPIService {
   path = offersAddress
@@ -90,24 +90,24 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
     const results: Paginated<OfferTransport> = await this.service.find({
       query: {
         domain: name
-? {
-          name: {
-            $like: name,
-          },
-        }
-: undefined,
+          ? {
+              name: {
+                $like: name,
+              },
+            }
+          : undefined,
         priceFiat: price
-? {
-          $gte: price.min,
-          $lte: price.max,
-        }
-: undefined,
+          ? {
+              $gte: price.min,
+              $lte: price.max,
+            }
+          : undefined,
         $sort: sort && {
           domain: sort.name
-? {
-            name: sort.name,
-          }
-: undefined,
+            ? {
+                name: sort.name,
+              }
+            : undefined,
           priceFiat: sort.price,
         },
         $skip,
@@ -117,7 +117,7 @@ export class OffersService extends AbstractAPIService implements RnsAPIService {
 
     const { data, ...metadata } = isResultPaginated(results)
       ? results
-: { data: results }
+      : { data: results }
     this.meta = metadata
 
     const filteredData = data

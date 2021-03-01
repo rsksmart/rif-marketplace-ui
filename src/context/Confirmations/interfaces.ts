@@ -42,7 +42,7 @@ export type ConfirmationData = {
 }
 
 export type ConfirmationsRecord = Record<
-  TxHash, ConfirmationData
+TxHash, ConfirmationData
 >
 
 // STATE

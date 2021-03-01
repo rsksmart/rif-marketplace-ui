@@ -123,7 +123,7 @@ export const createCustomerItemFields = (
 
   const isProcessingConfs = withdrawAndRenewConfs.some(({
     contractActionData
-   }) => contractActionData?.id === id)
+  }) => contractActionData?.id === id)
 
   return {
     ...customerView,
@@ -146,7 +146,7 @@ export const createCustomerItemFields = (
         >
           Renew
         </SelectRowButton>
-      ),
+        ),
     view: isProcessingConfs
       ? <></>
       : (
@@ -158,7 +158,7 @@ export const createCustomerItemFields = (
         >
           View
         </SelectRowButton>
-      ),
+        ),
   }
 })
 
@@ -232,7 +232,7 @@ export const createProviderItemFields = (
         >
           Withdraw
         </SelectRowButton>
-      ),
+        ),
     view: isProcessingPayoutConfs
       ? <></>
       : (
@@ -244,6 +244,6 @@ export const createProviderItemFields = (
         >
           View
         </SelectRowButton>
-      ),
+        ),
   }
 })

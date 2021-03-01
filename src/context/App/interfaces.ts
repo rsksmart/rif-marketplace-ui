@@ -70,7 +70,7 @@ export type Action = (
 export type Actions = {
   SET_IS_LOADING: (state: State, payload: LoadingPayload) => State
   SET_MESSAGE: (state: State, payload: MessagePayload
-    | ErrorMessagePayload) => State
+  | ErrorMessagePayload) => State
   REMOVE_MESSAGE: (state: State, payload: RemoveMessagePayload) => State
   SET_ALERT: (state: State, payload: SetAlertPayload) => State
   HIDE_ALERT: (state: State) => State

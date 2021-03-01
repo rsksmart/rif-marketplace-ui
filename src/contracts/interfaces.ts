@@ -21,7 +21,7 @@ export interface TransactionOptions {
 
 export interface ERC20Contract extends PaymentWrapper{
   approve: (
-      address: string, amount: string | number, options: TransactionOptions
+    address: string, amount: string | number, options: TransactionOptions
   ) => Promise<TransactionReceipt>
 }
 

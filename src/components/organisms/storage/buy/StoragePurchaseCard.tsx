@@ -10,13 +10,13 @@ import RifCard from 'components/organisms/RifCard'
 import RoundBtn, { RoundBtnProps } from 'components/atoms/RoundBtn'
 
 type Details = {
-    'CONTENT SIZE': string
-    'CURRENCY TO PAY': JSX.Element
-    'SUBSCRIPTION PERIOD': JSX.Element
-    'PERIODS TO PREPAY': JSX.Element
-    'TOTAL PRICE': JSX.Element | null
-    'RENEWAL DATE': string
-  }
+  'CONTENT SIZE': string
+  'CURRENCY TO PAY': JSX.Element
+  'SUBSCRIPTION PERIOD': JSX.Element
+  'PERIODS TO PREPAY': JSX.Element
+  'TOTAL PRICE': JSX.Element | null
+  'RENEWAL DATE': string
+}
 
 type Props = {
   details: Details
@@ -56,10 +56,10 @@ const StoragePurchaseCard: FC<Props> = ({
   } = useContext(Web3Store)
 
   const submitWithLogin = (): JSX.Element => (account
-? (
+    ? (
     <RoundBtn {...submitProps} />
-  )
-: <Login />)
+      )
+    : <Login />)
 
   return (
     <RifCard

@@ -10,8 +10,8 @@ export const serviceAddress = 'notification' as const
 export const serviceChannel = 'notifications' as const
 
 export const mapFromTransport: MapFromTransport<
-  Transport,
-  NotificationItem
+Transport,
+NotificationItem
 > = (transport) => ({
   ...transport,
   payload: {
@@ -41,7 +41,7 @@ export class NotificationsService
     })
     const { data, ...metadata } = isResultPaginated(result)
       ? result
-: { data: result }
+      : { data: result }
     this.meta = metadata
 
     return data.map(mapFromTransport)

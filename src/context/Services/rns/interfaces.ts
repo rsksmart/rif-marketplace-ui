@@ -7,8 +7,8 @@ import { ContextName as OffersContextName } from './OffersContext'
 import { ContextName as SoldContextName } from './SoldContext'
 
 export type RnsContextNames = DomainsContextName
-  | OffersContextName
-  | SoldContextName
+| OffersContextName
+| SoldContextName
 
 // STATE
 export type RnsOrder<T> = {

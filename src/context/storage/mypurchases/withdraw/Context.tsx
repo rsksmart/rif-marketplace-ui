@@ -104,9 +104,7 @@ const Provider: FC = ({ children }) => {
             payload: {
               contractAction: 'AGREEMENT_WITHDRAW',
               txHash: withdrawFundsReceipt.transactionHash,
-              contractActionData: {
-                id: id,
-              },
+              contractActionData: { id },
             },
           })
           dispatch({

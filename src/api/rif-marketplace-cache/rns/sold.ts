@@ -51,18 +51,18 @@ export class SoldDomainsService
     const results: Paginated<SoldDomainTransport> = await this.service.find({
       query: {
         domain: name
-? {
-          name: {
-            $like: name,
-          },
-        }
-: undefined,
+          ? {
+              name: {
+                $like: name,
+              },
+            }
+          : undefined,
         ownerAddress,
       },
     })
     const { data, ...metadata } = isResultPaginated(results)
       ? results
-: { data: results }
+      : { data: results }
     this.meta = metadata
 
     return data.map(mapFromTransport)

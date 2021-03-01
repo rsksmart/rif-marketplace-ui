@@ -12,11 +12,11 @@ const useGridRowStyle = makeStyles(() => ({
 }))
 
 export type PlanOptionProps = {
-    plan: BillingPlan
-    xr: {
-        fiat: string
-        rate: number
-    }
+  plan: BillingPlan
+  xr: {
+    fiat: string
+    rate: number
+  }
 }
 
 const PlanOption: FC<PlanOptionProps> = ({ plan, xr }) => {

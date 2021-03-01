@@ -148,9 +148,13 @@
         "next": "function"
       }
     ],
+    "object-shorthand": "error",
+    "indent": "off",
+    "@typescript-eslint/indent": "error",
+    "no-unused-var": "off",
+    "@typescript-eslint/no-unused-vars": "error",
     "no-useless-constructor": "off",
     "no-dupe-class-members": "off",
-    "@typescript-eslint/indent": "off",
     "@typescript-eslint/consistent-type-definitions": ["warn", "type"],
     "@typescript-eslint/no-useless-constructor": "error",
     "@typescript-eslint/return-await": "off",

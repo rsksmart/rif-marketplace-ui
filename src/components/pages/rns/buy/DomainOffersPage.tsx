@@ -136,37 +136,37 @@ const DomainOffersPage: FC = () => {
 
   const collection = items
     .map<MarketplaceItem>((item: RnsDomainOffer) => {
-      const {
-        id,
-        price,
-        domainName,
-        paymentToken,
-        ownerAddress,
-        expirationDate,
-        tokenId,
-      } = item
+    const {
+      id,
+      price,
+      domainName,
+      paymentToken,
+      ownerAddress,
+      expirationDate,
+      tokenId,
+    } = item
 
-      const pseudoResolvedName = filters.name as string && (`${filters.name}.rsk`)
+    const pseudoResolvedName = filters.name as string && (`${filters.name}.rsk`)
 
-      const { rate, displayName } = crypto[paymentToken.symbol]
+    const { rate, displayName } = crypto[paymentToken.symbol]
 
-      const displayDomainName = domainName || pseudoResolvedName
-        ? (
+    const displayDomainName = domainName || pseudoResolvedName
+      ? (
           <ShortenTextTooltip
             value={domainName || pseudoResolvedName}
             maxLength={30}
           />
         )
-        : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+      : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
-      const isProcessingConfs = pendingConfs.some(
-        ({ contractActionData }) => contractActionData?.id === tokenId,
-      )
+    const isProcessingConfs = pendingConfs.some(
+      ({ contractActionData }) => contractActionData?.id === tokenId,
+    )
 
-      const action1 = (
-        account?.toLowerCase() === ownerAddress.toLowerCase())
-? 'your offer'
-: (
+    const action1 = (
+      account?.toLowerCase() === ownerAddress.toLowerCase())
+      ? 'your offer'
+      : (
           <SelectRowButton
             id={id}
             handleSelect={(): void => {
@@ -179,23 +179,23 @@ const DomainOffersPage: FC = () => {
           />
         )
 
-      const displayItem = {
-        id,
-        domainName: displayDomainName,
-        ownerAddress: <AddressItem value={ownerAddress} />,
-        expirationDate: expirationDate.toLocaleDateString(),
-        combinedPrice: <CombinedPriceCell
+    const displayItem = {
+      id,
+      domainName: displayDomainName,
+      ownerAddress: <AddressItem value={ownerAddress} />,
+      expirationDate: expirationDate.toLocaleDateString(),
+      combinedPrice: <CombinedPriceCell
           price={price.toString()}
           priceFiat={price.times(rate).toString()}
           currency={displayName}
           currencyFiat={currentFiat.displayName}
           divider=""
         />,
-        action1: isProcessingConfs ? <Spinner /> : action1,
-      }
+      action1: isProcessingConfs ? <Spinner /> : action1,
+    }
 
-      return displayItem
-    })
+    return displayItem
+  })
 
   return (
     <>

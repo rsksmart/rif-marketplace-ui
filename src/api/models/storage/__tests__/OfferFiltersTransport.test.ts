@@ -25,7 +25,7 @@ const EXPECTED_OBJECT: OfferFiltersTransport = {
   },
   provider: FAKE_FILTERS.provider
     ? { $like: FAKE_FILTERS.provider }
-: undefined,
+    : undefined,
 }
 
 const testProperty = <TObject, K extends keyof TObject>(

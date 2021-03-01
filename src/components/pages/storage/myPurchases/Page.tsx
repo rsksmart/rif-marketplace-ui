@@ -101,7 +101,7 @@ const MyStoragePurchases: FC = () => {
                     agreements={agreements}
                     onRenewAgreement={onRenewAgreement}
                   />
-                )
+                  )
             }
           </GridRow>
         </GridColumn>

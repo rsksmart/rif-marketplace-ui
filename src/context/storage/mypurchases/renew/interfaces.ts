@@ -71,7 +71,7 @@ export type AsyncActions = {
 
 // PROPS
 export type Props = {
-    state: State
-    dispatch: Dispatch<Action>
-    asyncActions: AsyncActions
+  state: State
+  dispatch: Dispatch<Action>
+  asyncActions: AsyncActions
 }

@@ -8,7 +8,7 @@ export type ContextName = typeof serviceAddress
 export type Notifications = NotificationItem[]
 
 export type State = ContextState & {
-    notifications: Notifications
+  notifications: Notifications
 }
 
 // PAYLOAD
@@ -16,12 +16,12 @@ type Payload = Notifications
 
 // ACTIONS
 export type Action = ({
-    type: 'SET_NOTIFICATIONS'
-    payload: Payload
+  type: 'SET_NOTIFICATIONS'
+  payload: Payload
 })
 
 export type ActionFunctions = {
-    SET_NOTIFICATIONS: (state: State, payload: Payload) => State
+  SET_NOTIFICATIONS: (state: State, payload: Payload) => State
 }
 
 // PROPS

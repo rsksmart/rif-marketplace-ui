@@ -40,15 +40,15 @@ export default class OfferFiltersTransport {
       : undefined
     this.averagePrice = price
       ? {
-        min: price.min - 1,
-        max: price.max + 1,
-      }
+          min: price.min - 1,
+          max: price.max + 1,
+        }
       : undefined
     this.totalCapacity = sizeGB
       ? {
-        min: sizeGB.min * UNIT_PREFIX_POW2.KILO,
-        max: sizeGB.max * UNIT_PREFIX_POW2.KILO,
-      }
+          min: sizeGB.min * UNIT_PREFIX_POW2.KILO,
+          max: sizeGB.max * UNIT_PREFIX_POW2.KILO,
+        }
       : undefined
   }
 }

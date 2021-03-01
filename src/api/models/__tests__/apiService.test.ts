@@ -12,8 +12,8 @@ describe('AbstractAPIService', () => {
   class FakeAPIService
     extends AbstractAPIService
     implements Modify<APIService, {
-  path: Path
-}> {
+      path: Path
+    }> {
     path = MOCK_PATH
 
     constructor () {

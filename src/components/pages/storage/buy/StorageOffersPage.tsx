@@ -56,26 +56,26 @@ const StorageOffersPage: FC = () => {
 
   const collection = items
     .map<MarketplaceItem>((item) => {
-      const {
-        id, system, availableSizeGB, averagePrice,
-        subscriptionOptions, acceptedCurrencies,
-      } = item
+    const {
+      id, system, availableSizeGB, averagePrice,
+      subscriptionOptions, acceptedCurrencies,
+    } = item
 
-      const isOwnAccount = account === id
+    const isOwnAccount = account === id
 
-      return {
-        id,
-        provider: <AddressItem value={id} />,
-        system,
-        availableSize: <ItemWUnit type="mediumPrimary" unit="GB" value={availableSizeGB.toString()} />,
-        subscriptionOptions: Array.from(new Set(
-          subscriptionOptions.map((plan: BillingPlan) => plan.period as string),
-        )).join(' - '),
-        availableCurrencies: acceptedCurrencies.join(' - ').toUpperCase(),
-        averagePrice: <ItemWUnit type="mediumPrimary" value={averagePrice.toString()} unit="USD" />,
-        action1: isOwnAccount
-? 'your offer'
-: (
+    return {
+      id,
+      provider: <AddressItem value={id} />,
+      system,
+      availableSize: <ItemWUnit type="mediumPrimary" unit="GB" value={availableSizeGB.toString()} />,
+      subscriptionOptions: Array.from(new Set(
+        subscriptionOptions.map((plan: BillingPlan) => plan.period as string),
+      )).join(' - '),
+      availableCurrencies: acceptedCurrencies.join(' - ').toUpperCase(),
+      averagePrice: <ItemWUnit type="mediumPrimary" value={averagePrice.toString()} unit="USD" />,
+      action1: isOwnAccount
+        ? 'your offer'
+        : (
           <SelectRowButton
             id={id}
             handleSelect={(): void => {
@@ -86,9 +86,9 @@ const StorageOffersPage: FC = () => {
               history.push(ROUTES.STORAGE.BUY.CHECKOUT)
             }}
           />
-        ),
-      }
-    })
+          ),
+    }
+  })
 
   return (
     <MarketPageTemplate

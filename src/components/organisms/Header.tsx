@@ -103,14 +103,14 @@ const Headers: FC = () => {
 
   const actionItems: ActionHeaderItemProps[] = showActionItems
     ? [
-      {
-        icon: <IconButton>{notificationsIcon()}</IconButton>,
-        onClick: handleClick,
-        'aria-haspopup': 'true',
-        key: 'notificationsItem',
-      },
-      {
-        icon: (
+        {
+          icon: <IconButton>{notificationsIcon()}</IconButton>,
+          onClick: handleClick,
+          'aria-haspopup': 'true',
+          key: 'notificationsItem',
+        },
+        {
+          icon: (
           <IconButton>
             <Badge
               color="secondary"
@@ -119,12 +119,12 @@ const Headers: FC = () => {
               <SyncAltIcon htmlColor={colors.white} />
             </Badge>
           </IconButton>
-        ),
-        'aria-haspopup': 'true',
-        onClick: handleTxPanelClick,
-        key: 'txsItem',
-      },
-    ]
+          ),
+          'aria-haspopup': 'true',
+          onClick: handleTxPanelClick,
+          key: 'txsItem',
+        },
+      ]
     : []
 
   return (

@@ -151,7 +151,7 @@ const StorageOffersCheckoutPage: FC = () => {
       onChange={changePeriodCountHandle}
     />,
     'TOTAL PRICE': total && totalFiat
-? (
+      ? (
       <CombinedPriceCell
         currency={tokenSymbol || ''}
         currencyFiat={fiatName}
@@ -159,8 +159,8 @@ const StorageOffersCheckoutPage: FC = () => {
         priceFiat={totalFiat}
         divider={<br />}
       />
-    )
-: null,
+        )
+      : null,
     'RENEWAL DATE': endDate,
   }
 

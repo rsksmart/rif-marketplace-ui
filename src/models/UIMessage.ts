@@ -7,8 +7,8 @@ import { Modify } from 'utils/typeUtils'
 export type Severity = Color
 
 export interface CustomAction {
-    name: string
-    action: Function
+  name: string
+  action: Function
 }
 
 export type ErrorId = APIErrorId | ContractErrorId | MarketErrorId
@@ -16,30 +16,30 @@ export type MessageId = ErrorId | 'wallet' | 'loading'
 export type LoaderId = 'filters' | 'data' | 'contract' | 'other'
 
 export interface Message {
-    text: string
-    type: Severity
-    customAction?: CustomAction
+  text: string
+  type: Severity
+  customAction?: CustomAction
 }
 
 export type ErrorMessage = Modify<Message, {
-    error: Error
+  error: Error
 }>
 
 export class UIError implements Pick<Message, 'text' | 'customAction'> {
-    error!: Error
+  error!: Error
 
-    id!: ErrorId
+  id!: ErrorId
 
-    text!: string
+  text!: string
 
-    customAction?: CustomAction
+  customAction?: CustomAction
 
-    constructor ({
-      error, id, text, customAction,
-    }: UIError) {
-      this.error = error
-      this.id = id
-      this.text = text
-      this.customAction = customAction
-    }
+  constructor ({
+    error, id, text, customAction,
+  }: UIError) {
+    this.error = error
+    this.id = id
+    this.text = text
+    this.customAction = customAction
+  }
 }

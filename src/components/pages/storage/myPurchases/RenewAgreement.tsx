@@ -89,7 +89,7 @@ const RenewAgreement: FC = () => {
       onChange={changePeriodCountHandle}
     />,
     'TOTAL PRICE': total && totalFiat
-? (
+      ? (
       <CombinedPriceCell
         currency={agreement.paymentToken.displayName}
         currencyFiat={fiatName}
@@ -97,8 +97,8 @@ const RenewAgreement: FC = () => {
         priceFiat={totalFiat}
         divider={<br />}
       />
-    )
-: null,
+        )
+      : null,
     'RENEWAL DATE': endDate,
   }
 

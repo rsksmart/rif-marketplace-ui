@@ -16,14 +16,14 @@ export type State = ContextState & {
 
 // ACTIONS
 export type Action = (
-    | {
-      type: 'SET_LISTING'
-      payload: Agreement[]
-    }
-    | {
-      type: 'SET_ORDER'
-      payload: Agreement
-    }
+  | {
+    type: 'SET_LISTING'
+    payload: Agreement[]
+  }
+  | {
+    type: 'SET_ORDER'
+    payload: Agreement
+  }
   | {
     type: 'SET_FILTERS'
     payload: AgreementFilters

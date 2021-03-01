@@ -17,8 +17,8 @@ class MarketplaceContract extends ContractBase {
       MarketplaceContract.instance = new MarketplaceContract(
         web3,
         new web3.eth.Contract(
-            RNSSimplePlacementsV1.abi as AbiItem[],
-            marketPlaceAddress,
+          RNSSimplePlacementsV1.abi as AbiItem[],
+          marketPlaceAddress,
         ),
         'marketplace-contract',
       )

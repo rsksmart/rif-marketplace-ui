@@ -53,10 +53,10 @@ export const mapOfferFromTransport = ({
       )
       .filter(({ period }) => PeriodInSeconds[period])
       .map<BillingPlan>((plan) => ({
-        period: PeriodInSeconds[plan.period],
-        price: parseToBigDecimal(plan.price, 18),
-        currency: getTokenByAddress(plan.tokenAddress),
-      })),
+      period: PeriodInSeconds[plan.period],
+      price: parseToBigDecimal(plan.price, 18),
+      currency: getTokenByAddress(plan.tokenAddress),
+    })),
     averagePrice: averagePriceTransport,
     acceptedCurrencies,
     peerId,
@@ -100,7 +100,7 @@ export const mapAgreementFromTransport = ({
   const aux = new Date(Date.now() + expiresInSeconds * 1000)
   const renewalDate = expiresInSeconds
     ? new Date(aux.toDateString())
-: undefined
+    : undefined
 
   return {
     id: agreementReference,

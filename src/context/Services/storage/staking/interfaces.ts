@@ -20,17 +20,17 @@ export type State = ContextState & {
 // ACTIONS
 export type Action =
   | {
-      type: 'SET_NEEDS_REFRESH'
-      payload: { needsRefresh: boolean }
-    }
+    type: 'SET_NEEDS_REFRESH'
+    payload: { needsRefresh: boolean }
+  }
   | {
-      type: 'SET_TOTAL_STAKED_USD'
-      payload: { totalStakedUSD: string }
-    }
+    type: 'SET_TOTAL_STAKED_USD'
+    payload: { totalStakedUSD: string }
+  }
   | {
-      type: 'SET_STAKES'
-      payload: StakedBalances
-    }
+    type: 'SET_STAKES'
+    payload: StakedBalances
+  }
 
 export type Actions = {
   SET_NEEDS_REFRESH: (state: State, { needsRefresh: boolean }) => State

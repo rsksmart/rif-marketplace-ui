@@ -38,38 +38,38 @@ const SoldDomains: FC<{}> = () => {
 
   const collection = items
     .map<MarketplaceItem>((domainItem: RnsSoldDomain) => {
-      const {
-        id,
-        domainName,
-        buyer,
-        paymentToken,
-        price,
-        soldDate,
-        tokenId,
-      } = domainItem
-      const { rate, displayName } = crypto[paymentToken.symbol]
+    const {
+      id,
+      domainName,
+      buyer,
+      paymentToken,
+      price,
+      soldDate,
+      tokenId,
+    } = domainItem
+    const { rate, displayName } = crypto[paymentToken.symbol]
 
-      const pseudoResolvedName = name && `${name}.rsk`
-      const displayDomainName = domainName || pseudoResolvedName
-        ? <ShortenTextTooltip value={domainName || pseudoResolvedName as string} maxLength={30} />
-        : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+    const pseudoResolvedName = name && `${name}.rsk`
+    const displayDomainName = domainName || pseudoResolvedName
+      ? <ShortenTextTooltip value={domainName || pseudoResolvedName as string} maxLength={30} />
+      : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
-      const displayItem = {
-        id,
-        domainName: displayDomainName,
-        buyer: <AddressItem value={buyer} />,
-        currency: displayName,
-        sellingPrice: <CombinedPriceCell
+    const displayItem = {
+      id,
+      domainName: displayDomainName,
+      buyer: <AddressItem value={buyer} />,
+      currency: displayName,
+      sellingPrice: <CombinedPriceCell
           price={price.toString()}
           priceFiat={price.times(rate).toString()}
           currency={displayName}
           currencyFiat={currentFiat.displayName}
         />,
-        soldDate: soldDate.toLocaleDateString(),
-      }
+      soldDate: soldDate.toLocaleDateString(),
+    }
 
-      return displayItem
-    })
+    return displayItem
+  })
 
   return (
     <MarketPageTemplate

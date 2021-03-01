@@ -7,9 +7,9 @@ import GridRow from 'components/atoms/GridRow'
 import React, { FC } from 'react'
 
 type Props = {
-    size: TextFieldProps
-    hash: TextFieldProps
-    unit: string
+  size: TextFieldProps
+  hash: TextFieldProps
+  unit: string
 }
 
 const PinEnterInfoTab: FC<Props> = ({

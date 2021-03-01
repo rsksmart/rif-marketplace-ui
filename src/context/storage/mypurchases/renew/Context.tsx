@@ -181,9 +181,7 @@ const Provider: FC = ({ children }) => {
             payload: {
               txHash: receipt.transactionHash,
               contractAction: 'AGREEMENT_RENEW',
-              contractActionData: {
-                id: id,
-              },
+              contractActionData: { id },
             },
           })
           Logger.getInstance().debug('Agreement receipt:', receipt)

@@ -26,14 +26,14 @@ export const rnsAddresses = [
 ]
 
 export type RnsAPIService = Modify<
-  APIService,
-  {
-    path: RnsServiceAddress
-    _channel: RnsChannels
-    fetch: (
-      filters: RnsFilter
-    ) => Promise<RnsDomain[] | RnsDomainOffer[] | RnsSoldDomain[]>
-  }
+APIService,
+{
+  path: RnsServiceAddress
+  _channel: RnsChannels
+  fetch: (
+    filters: RnsFilter
+  ) => Promise<RnsDomain[] | RnsDomainOffer[] | RnsSoldDomain[]>
+}
 >
 
 export const isSupportedRNSToken = (

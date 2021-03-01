@@ -39,7 +39,7 @@ export class XRService extends AbstractAPIService implements XRAPIService {
     })
     const { data, ...metadata } = isResultPaginated(results)
       ? results
-: { data: results }
+      : { data: results }
     this.meta = metadata
 
     return data.filter((item) => getSupportedTokenByName(item.token))

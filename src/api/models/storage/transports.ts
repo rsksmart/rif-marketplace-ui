@@ -23,22 +23,22 @@ export interface OfferTransport {
 }
 
 export type AgreementTransport = {
-    agreementReference: string
-    availableFunds: string
-    billingPeriod: number
-    billingPrice: string
-    consumer: string
-    dataReference: string
-    hasSufficientFunds: boolean
-    isActive: boolean
-    lastPayout: Date
-    numberOfPrepaidPeriods: number
-    offerId: string
-    periodsSinceLastPayout: number
-    size: string
-    toBePayedOut: string
-    tokenAddress: string
-    expiresIn: string
+  agreementReference: string
+  availableFunds: string
+  billingPeriod: number
+  billingPrice: string
+  consumer: string
+  dataReference: string
+  hasSufficientFunds: boolean
+  isActive: boolean
+  lastPayout: Date
+  numberOfPrepaidPeriods: number
+  offerId: string
+  periodsSinceLastPayout: number
+  size: string
+  toBePayedOut: string
+  tokenAddress: string
+  expiresIn: string
 }
 
 export type StakeBalanceTransport = {

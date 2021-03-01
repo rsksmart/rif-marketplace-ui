@@ -165,7 +165,7 @@ const OfferCreation: FC = () => {
           )
         }
       </>
-    )
+      )
     : <Login />
 
   return (
@@ -193,7 +193,7 @@ const OfferCreation: FC = () => {
           onClick={onProcessingComplete}
           key="prog-offer"
         >See your offer</RoundBtn>
-]
+        ]
         }
         doneMsg="Your offer has been listed!"
         title="Listing your offer"

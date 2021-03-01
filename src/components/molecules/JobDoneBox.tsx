@@ -3,7 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core'
 import { colors, tickWideImg } from '@rsksmart/rif-ui'
 
 export interface JobDoneBoxProps {
-    text: string
+  text: string
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({

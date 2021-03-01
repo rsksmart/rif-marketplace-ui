@@ -53,19 +53,13 @@ const expectedDomains: RnsDomainOffer[] = [
 ]
 
 const isRnsDomainOffer = (obj: RnsDomainOffer): obj is RnsDomainOffer => {
-  expect((obj).domainName).toBeTruthy()
-
-  expect((obj).expirationDate).toBeTruthy()
-
-  expect((obj).id).toBeTruthy()
-
-  expect((obj).ownerAddress).toBeTruthy()
-
-  expect((obj).paymentToken).toBeTruthy()
-
-  expect((obj).price).toBeTruthy()
-
-  expect((obj).tokenId).toBeTruthy()
+  expect(obj.domainName).toBeTruthy()
+  expect(obj.expirationDate).toBeTruthy()
+  expect(obj.id).toBeTruthy()
+  expect(obj.ownerAddress).toBeTruthy()
+  expect(obj.paymentToken).toBeTruthy()
+  expect(obj.price).toBeTruthy()
+  expect(obj.tokenId).toBeTruthy()
 
   return true
 }

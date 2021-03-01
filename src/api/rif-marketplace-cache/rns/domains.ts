@@ -54,16 +54,16 @@ export class DomainsService
         query: {
           placed: status === 'placed',
           name: name
-? {
-            $like: name,
-          }
-: undefined,
+            ? {
+                $like: name,
+              }
+            : undefined,
           ownerAddress,
         },
       })
     const { data, ...metadata } = isResultPaginated(results)
       ? results
-: { data: results }
+      : { data: results }
     this.meta = metadata
 
     return data.map(mapFromTransport)

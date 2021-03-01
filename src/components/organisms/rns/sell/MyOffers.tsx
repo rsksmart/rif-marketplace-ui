@@ -59,35 +59,35 @@ const MyOffers: FC = () => {
 
   const collection = items
     .map<MarketplaceItem>((domainItem: RnsDomain) => {
-      const {
-        id,
-        name,
-        offer,
-        expirationDate,
-        tokenId,
-      } = domainItem
-      const pseudoResolvedName = filters.name as string && (`${filters.name}.rsk`)
+    const {
+      id,
+      name,
+      offer,
+      expirationDate,
+      tokenId,
+    } = domainItem
+    const pseudoResolvedName = filters.name as string && (`${filters.name}.rsk`)
 
-      const displayDomainName = name || pseudoResolvedName
-        ? (
+    const displayDomainName = name || pseudoResolvedName
+      ? (
           <ShortenTextTooltip
             value={name || pseudoResolvedName}
             maxLength={30}
           />
         )
-        : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+      : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
-      const isProcessingConfs = pendingConfs.some(
-        ({ contractActionData }) => contractActionData?.id === tokenId,
-      )
+    const isProcessingConfs = pendingConfs.some(
+      ({ contractActionData }) => contractActionData?.id === tokenId,
+    )
 
-      const displayItem = {
-        id,
-        name: displayDomainName,
-        expirationDate: expirationDate.toLocaleDateString(),
-        action1: isProcessingConfs
-          ? <Spinner />
-          : (
+    const displayItem = {
+      id,
+      name: displayDomainName,
+      expirationDate: expirationDate.toLocaleDateString(),
+      action1: isProcessingConfs
+        ? <Spinner />
+        : (
             <SelectRowButton
               id={id}
               handleSelect={(): void => {
@@ -101,29 +101,29 @@ const MyOffers: FC = () => {
               }}
             />
           ),
-        price: <></>,
-        action2: <></>,
-      }
+      price: <></>,
+      action2: <></>,
+    }
 
-      if (offer && !isProcessingConfs) {
-        const {
-          price, paymentToken: {
-            displayName,
-            symbol: token,
-          },
-        } = offer
+    if (offer && !isProcessingConfs) {
+      const {
+        price, paymentToken: {
+          displayName,
+          symbol: token,
+        },
+      } = offer
 
-        const { rate } = crypto[token]
+      const { rate } = crypto[token]
 
-        displayItem.price = (
+      displayItem.price = (
           <CombinedPriceCell
             price={price.toString()}
             priceFiat={price.times(rate).toString()}
             currency={displayName}
             currencyFiat={fiatDisplayName}
           />
-        )
-        displayItem.action2 = (
+      )
+      displayItem.action2 = (
           <IconButton
             color="primary"
             id={id}
@@ -139,11 +139,11 @@ const MyOffers: FC = () => {
           >
             <ClearIcon />
           </IconButton>
-        )
-      }
+      )
+    }
 
-      return displayItem
-    })
+    return displayItem
+  })
 
   return (
     <>

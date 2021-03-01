@@ -26,12 +26,12 @@ export const storageAddresses = [
 export type StorageWSChannel = 'offers' | 'agreements' | 'stakes'
 
 export type StorageAPIService = Modify<
-  APIService,
-  {
-    path: StorageServiceAddress
-    _channel: StorageWSChannel
-    fetch: (filters: Partial<StorageOffersFilters | AgreementFilters>) => Promise<StorageItem[]>
-  }
+APIService,
+{
+  path: StorageServiceAddress
+  _channel: StorageWSChannel
+  fetch: (filters: Partial<StorageOffersFilters | AgreementFilters>) => Promise<StorageItem[]>
+}
 >
 
 export type StakeFilters = {
@@ -39,12 +39,12 @@ export type StakeFilters = {
 }
 
 export type StakeAPIService = Modify<
-  APIService,
-  {
-    path: StorageServiceAddress
-    _channel: StorageWSChannel
-    fetch: (filters: StakeFilters) => Promise<any[]>
-  }
+APIService,
+{
+  path: StorageServiceAddress
+  _channel: StorageWSChannel
+  fetch: (filters: StakeFilters) => Promise<any[]>
+}
 >
 
 export type AgreementFilters = (

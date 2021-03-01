@@ -147,7 +147,7 @@ export const Provider: FC = ({ children }) => {
           offerId,
           contractAddress: storageAddress,
         })
-        .then((uploadResponse: UploadResponse) => {
+          .then((uploadResponse: UploadResponse) => {
             dispatch({
               type: 'SET_STATUS',
               payload: {
@@ -157,26 +157,26 @@ export const Provider: FC = ({ children }) => {
             })
             Logger.getInstance().debug('Upload server replied with:', uploadResponse)
           })
-        .catch((error) => {
-          reportError(new UIError({
-            error,
-            id: 'service-post',
-            text: 'Could not upload files.',
-          }))
-        })
-        .finally(() => {
-          appDispatch({
-            type: 'SET_IS_LOADING',
-            payload: {
-              isLoading: false,
-              id: 'contract',
-            },
+          .catch((error) => {
+            reportError(new UIError({
+              error,
+              id: 'service-post',
+              text: 'Could not upload files.',
+            }))
           })
-          dispatch({
-            type: 'SET_STATUS',
-            payload: { inProgress: false },
+          .finally(() => {
+            appDispatch({
+              type: 'SET_IS_LOADING',
+              payload: {
+                isLoading: false,
+                id: 'contract',
+              },
+            })
+            dispatch({
+              type: 'SET_STATUS',
+              payload: { inProgress: false },
+            })
           })
-        })
       }
 
       const getFileSize: GetFileSizeAction = async (fileHash) => {

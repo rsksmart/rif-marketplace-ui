@@ -4,8 +4,8 @@ import React from 'react'
 type OptionType = JSX.Element | string
 
 export type RifSelectProps<T extends OptionType> = SelectProps & {
-    id: string
-    options: T[] | undefined
+  id: string
+  options: T[] | undefined
 }
 
 const hasKey = (

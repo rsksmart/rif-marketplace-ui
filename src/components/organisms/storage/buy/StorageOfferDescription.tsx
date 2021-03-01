@@ -86,7 +86,7 @@ const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
               </GridRow>
             </GridItem>
           </GridRow>
-        )
+          )
         : (
           <GridRow>
             <GridItem xs={12}>
@@ -97,7 +97,7 @@ const StorageOrderDescription: FC<{order: Props}> = ({ order }) => {
               </Typography>
             </GridItem>
           </GridRow>
-        )}
+          )}
     </>
   )
 }

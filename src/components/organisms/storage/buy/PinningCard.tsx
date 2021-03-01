@@ -229,8 +229,8 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
                 },
               }}
             />
-          )
-: (
+            )
+          : (
             <PinUploaderTab
               isLoading={isLoadingFiles}
               onChange={onFilesChange}
@@ -238,7 +238,7 @@ const PinningCard: FC<Props> = ({ dispatch }) => {
               filesLimit={666 * 666 * 666}
               maxFileSize={fileSizeLimit.minus(size).toNumber()}
             />
-          )
+            )
       }
     </RifCard>
   )

@@ -1,5 +1,5 @@
-import { Service } from '@feathersjs/feathers'
 import { AbstractAPIService } from 'api/models/apiService'
+import mockFeathersService from 'api/test-utils/feathers'
 import { Confirmations, ConfirmationsService, Transport as ConfirmationTransport } from '../confirmations'
 import utils from '../utils'
 
@@ -46,9 +46,7 @@ describe('Confirmations service', () => {
 
   describe('_fetch called via super.fetch', () => {
     beforeEach(() => {
-      confirmationService.service = {
-        find: jest.fn(async () => await Promise.resolve([MOCK_CONFIRMATION_0]))
-      } as unknown as Service<any>
+      confirmationService.service = mockFeathersService([MOCK_CONFIRMATION_0])
     })
     test('should call service.find with no arguments', async () => {
       const fetchSpy = jest.spyOn(confirmationService.service, 'find')

@@ -16,14 +16,14 @@ const actions: Actions = {
     return {
       ...state,
       messages: message
-? {
-        ...messagesCopy,
-        loading: {
-          text: message,
-          type: 'info',
-        },
-      }
-: messagesCopy,
+        ? {
+            ...messagesCopy,
+            loading: {
+              text: message,
+              type: 'info',
+            },
+          }
+        : messagesCopy,
       loaders: {
         ...loaders,
         [id]: isLoading,

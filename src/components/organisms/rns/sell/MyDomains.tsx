@@ -54,34 +54,34 @@ const MyDomains: FC = () => {
 
   const collection = items
     .map<MarketplaceItem>((domainItem: RnsDomain) => {
-      const {
-        id,
-        name,
-        expirationDate,
-        tokenId,
-      } = domainItem
+    const {
+      id,
+      name,
+      expirationDate,
+      tokenId,
+    } = domainItem
 
-      const pseudoResolvedName = filters.name as string && (`${filters.name}.rsk`)
-      const displayDomainName = name || pseudoResolvedName
-        ? (
+    const pseudoResolvedName = filters.name as string && (`${filters.name}.rsk`)
+    const displayDomainName = name || pseudoResolvedName
+      ? (
           <ShortenTextTooltip
             value={name || pseudoResolvedName}
             maxLength={30}
           />
         )
-        : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+      : <AddressItem pretext="Unknown RNS:" value={tokenId} />
 
-      const isProcessingConfs = pendingConfs.some(
-        ({ contractActionData }) => contractActionData?.id === tokenId,
-      )
+    const isProcessingConfs = pendingConfs.some(
+      ({ contractActionData }) => contractActionData?.id === tokenId,
+    )
 
-      const displayItem = {
-        id,
-        name: displayDomainName,
-        expirationDate: expirationDate.toLocaleDateString(),
-        action1: isProcessingConfs
-          ? <Spinner />
-          : (
+    const displayItem = {
+      id,
+      name: displayDomainName,
+      expirationDate: expirationDate.toLocaleDateString(),
+      action1: isProcessingConfs
+        ? <Spinner />
+        : (
             <SelectRowButton
               id={id}
               handleSelect={
@@ -97,9 +97,9 @@ const MyDomains: FC = () => {
               }
             />
           ),
-      }
-      return displayItem
-    })
+    }
+    return displayItem
+  })
 
   return (
     <>
