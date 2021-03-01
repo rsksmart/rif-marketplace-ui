@@ -1,3 +1,4 @@
+import { Service } from '@feathersjs/feathers'
 import { AbstractAPIService } from 'api/models/apiService'
 import { Confirmations, ConfirmationsService, Transport as ConfirmationTransport } from '../confirmations'
 import utils from '../utils'
@@ -15,10 +16,6 @@ const expectedConfirmations: Confirmations = {
     targetCount: MOCK_CONFIRMATION_0.targetConfirmation,
   },
 }
-
-const mockFeathersService = {
-  find: jest.fn(async () => await Promise.resolve([MOCK_CONFIRMATION_0])),
-} as any
 
 const fakeErrorHandler = jest.fn()
 
@@ -49,12 +46,15 @@ describe('Confirmations service', () => {
 
   describe('_fetch called via super.fetch', () => {
     beforeEach(() => {
-      confirmationService.service = mockFeathersService
+      confirmationService.service = {
+        find: jest.fn(async () => await Promise.resolve([MOCK_CONFIRMATION_0]))
+      } as unknown as Service<any>
     })
     test('should call service.find with no arguments', async () => {
       const fetchSpy = jest.spyOn(confirmationService.service, 'find')
       await confirmationService.fetch('unwanted_arg')
 
+      expect(fetchSpy).not.toBeCalledWith('unwanted_arg')
       expect(fetchSpy).toBeCalledWith()
     })
     test('should call mapFromTransport', async () => {
@@ -62,12 +62,18 @@ describe('Confirmations service', () => {
       await confirmationService.fetch()
 
       expect(mapFromTransportSpy).toBeCalledTimes(1)
+
+      mapFromTransportSpy.mockReset()
+      mapFromTransportSpy.mockRestore()
     })
     test('should call mapFromTransport with array arg', async () => {
       const mapFromTransportSpy = jest.spyOn(utils, 'mapFromTransport')
       await confirmationService.fetch()
 
       expect(mapFromTransportSpy).toBeCalledWith([MOCK_CONFIRMATION_0])
+
+      mapFromTransportSpy.mockReset()
+      mapFromTransportSpy.mockRestore()
     })
 
     test('should return Confirmations on success', async () => {

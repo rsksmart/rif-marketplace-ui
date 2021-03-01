@@ -1,3 +1,4 @@
+import { Service } from '@feathersjs/feathers'
 import { AbstractAPIService } from 'api/models/apiService'
 import { XRService, xrServiceAddress, XRItem } from 'api/rif-marketplace-cache/rates/xr'
 import { SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'
@@ -14,10 +15,6 @@ const expectedXRItem: XRItem = {
   [TEST_FIAT_SYMBOL]: 0.01,
   token: TEST_TOKEN,
 }
-
-const mockFeathersService = {
-  find: jest.fn(async () => await Promise.resolve([expectedXRItem])),
-} as any
 
 const fakeErrorHandler = jest.fn()
 
@@ -48,7 +45,9 @@ describe('Exchange rate service', () => {
 
   describe('_fetch called via super.fetch', () => {
     beforeEach(() => {
-      xrService.service = mockFeathersService
+      xrService.service = {
+        find: jest.fn(async () => await Promise.resolve([expectedXRItem])),
+      } as unknown as Service<any>
     })
 
     test(`should call service.find with ${JSON.stringify(expectedFindOptions)}`, async () => {

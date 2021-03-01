@@ -39,7 +39,7 @@ export class ConfirmationsService
       .service.find()
     const { data, ...metadata } = isResultPaginated(result)
       ? result
-: { data: result }
+      : { data: result }
     this.meta = metadata
 
     return utils.mapFromTransport(data)
