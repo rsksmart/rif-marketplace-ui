@@ -1,4 +1,4 @@
-import RNSSimplePlacementsV1 from '@rsksmart/rif-marketplace-nfts/RNSSimplePlacementsV1Data.json'
+import RNSSimplePlacementsV1 from '../abi/nfts/RNSSimplePlacementsV1.json'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 import { AbiItem } from 'web3-utils'
