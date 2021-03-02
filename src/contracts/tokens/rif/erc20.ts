@@ -1,8 +1,7 @@
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 import { AbiItem } from 'web3-utils'
-
-import ERC20 from 'contracts/abi/ERC20.json'
+import ERC20 from 'contracts/abi/nfts/ERC20.json'
 import { rifTokenAddress } from 'contracts/config'
 import ContractBase from 'contracts/wrappers/contract-base'
 import {
