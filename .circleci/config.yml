@@ -30,7 +30,7 @@ jobs:
       #          command: npx tasegir dep-check -- --unused --no-dev
       - run:
           name: "Code linting"
-          command: npm run lint -- --quiet
+          command: npm run lint -- --quiet --fix
   node-tests:
     parameters:
       version:
