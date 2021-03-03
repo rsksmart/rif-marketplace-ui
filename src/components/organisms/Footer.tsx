@@ -68,7 +68,7 @@ const Footer: FC = () => {
         links: [
           {
             title: `Version ${appVersion}`,
-            to: `https://github.com/rsksmart/rif-marketplace-ui/releases/tag/v${appVersion}`,
+            to: `https://github.com/rsksmart/rif-marketplace-ui/releases/tag/${appVersion}`,
             target: '_blank',
             isExternal: true,
           },
