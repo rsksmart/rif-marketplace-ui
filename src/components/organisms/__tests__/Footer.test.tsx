@@ -7,8 +7,8 @@ describe('Footer organism', () => {
   describe('section Developer: links', () => {
     describe('Version', () => {
       const versionTitle = `Version ${appVersion}`
-      const versionLink = `https://github.com/rsksmart/rif-marketplace-ui/releases/tag/${appVersion}`
-      
+      const versionLink = `https://github.com/rsksmart/rif-marketplace-ui/releases/tag/v${appVersion}`
+
       test(`should have title ${versionTitle}`, () => {
         const { getByText } = render(<Footer />)
         expect(getByText(versionTitle)).toBeTruthy()
