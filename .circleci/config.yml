@@ -24,7 +24,7 @@ jobs:
           command: |
             git config --global user.email "you@example.com"
             git config --global user.name "Your Name"
-            npx tasegir commitlint --circleci
+      #      npx tasegir commitlint --circleci // TODO: replace with another commitlint
       #      - run:
       #          name: "Dependency check"
       #          command: npx tasegir dep-check -- --unused --no-dev
