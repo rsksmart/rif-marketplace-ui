@@ -11,13 +11,20 @@ import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import TabsTemplate from 'components/templates/TabsTemplate'
 import { getTabValueFromLocation } from 'utils/utils'
+import { NotifierOffersContextProvider } from 'context/Services/notifier/offers'
 import NotifierLandingPage from './NotifierLandingPage'
 import { NotFound } from '..'
 import NotifierSellPage from './sell/NotifierSellPage'
+import NotifierOffersPage from './buy/NotifierOffersPage'
 
 const logger = Logger.getInstance()
 
 const TABS: StyledNavTabProps[] = [
+  {
+    label: 'Buy',
+    to: ROUTES.NOTIFIER.BUY.BASE,
+    value: ROUTES.NOTIFIER.BUY.BASE,
+  },
   {
     label: 'Sell',
     to: ROUTES.NOTIFIER.SELL.BASE,
@@ -48,27 +55,35 @@ const NotifierRoutes: FC = () => {
         <Redirect
           exact
           from={ROUTES.NOTIFIER.BASE}
-          to={ROUTES.NOTIFIER.SELL.BASE}
+          to={ROUTES.NOTIFIER.BUY.BASE}
         />
 
         <TabsTemplate
           title="Notification Services"
           value={getTabValueFromLocation(
-            TABS, ROUTES.NOTIFIER.SELL.BASE,
+            TABS, ROUTES.NOTIFIER.BUY.BASE,
           )(pathname)}
           tabs={TABS}
         >
           <Switch>
-            <Route path={ROUTES.NOTIFIER.SELL.BASE}>
-              <Switch>
-                <Route
-                  exact
-                  path={ROUTES.NOTIFIER.SELL.BASE}
-                  component={NotifierSellPage}
-                />
-                <Route component={NotFound} />
-              </Switch>
+            <Route path={ROUTES.NOTIFIER.BUY.BASE}>
+              <NotifierOffersContextProvider>
+                <Switch>
+                  <Route
+                    exact
+                    path={ROUTES.NOTIFIER.BUY.BASE}
+                    component={NotifierOffersPage}
+                  />
+                  <Route component={NotFound} />
+                </Switch>
+              </NotifierOffersContextProvider>
             </Route>
+            <Route
+              exact
+              path={ROUTES.NOTIFIER.SELL.BASE}
+              component={NotifierSellPage}
+            />
+            <Route component={NotFound} />
           </Switch>
         </TabsTemplate>
       </Switch>
