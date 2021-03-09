@@ -28,6 +28,11 @@ export const Context = createContext<Props>({
 export const Provider: FC = ({ children }) => {
   const [isInitialised, setIsInitialised] = useState(false)
 
+  const [state, dispatch] = useReducer(
+    createReducer(initialState, actions),
+    initialState,
+  )
+
   const {
     state: appState,
     dispatch: appDispatch,
@@ -62,7 +67,7 @@ export const Provider: FC = ({ children }) => {
         },
       })
       api.fetch()
-        .then((items) => {
+        .then(() => {
           dispatch({
             type: 'SET_LISTING',
           })
@@ -89,11 +94,6 @@ export const Provider: FC = ({ children }) => {
     isInitialised,
     api,
   ])
-
-  const [state, dispatch] = useReducer(
-    createReducer(initialState, actions),
-    initialState,
-  )
 
   const value = { state, dispatch }
   return <Context.Provider value={value}>{children}</Context.Provider>
