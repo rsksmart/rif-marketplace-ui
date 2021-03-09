@@ -25,9 +25,14 @@ export interface RefreshPayload {
 }
 
 // ACTIONS
-export type Action = {}
+export type Action =
+  | {
+    type: 'SET_LISTING'
+    payload: ListingPayload
+  }
 
 export type Actions = {
+  SET_LISTING: (state: State, payload: ListingPayload) => State
 }
 
 // PROPS
