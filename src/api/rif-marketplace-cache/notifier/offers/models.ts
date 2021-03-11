@@ -1,15 +1,15 @@
 import { NotifierOfferItem, NotifierPlan } from 'models/marketItems/NotifierItem'
 
-export type TransportModelType = {
+export interface NotifierOffersTransport {
     provider: string
     plans: NotifierPlan[]
 }
-class TransportModel implements TransportModelType {
+class TransportModel implements NotifierOffersTransport {
     provider!: string
 
     plans!: NotifierPlan[]
 
-    constructor({ provider, plans }: TransportModelType) {
+    constructor({ provider, plans }: NotifierOffersTransport) {
       this.plans = plans
       this.provider = provider
     }

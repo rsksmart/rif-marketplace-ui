@@ -17,6 +17,7 @@ import React, {
 } from 'react'
 import { appActions } from '.'
 import { contextID, Props, State } from './interfaces'
+import { notifierOffersAddress } from 'api/rif-marketplace-cache/notifier/offers';
 
 export const initialState: State = {
   contextID,
@@ -33,7 +34,7 @@ export const initialState: State = {
     'storage/v0/stakes': new StakesService(),
     'storage/v0/availableCapacity': new AvailableCapacityService(),
     upload: new UploadService(),
-    'notifier/v0/offers': new NotifierOffersService(),
+    [notifierOffersAddress]: new NotifierOffersService(),
   },
   messages: {},
   loaders: {

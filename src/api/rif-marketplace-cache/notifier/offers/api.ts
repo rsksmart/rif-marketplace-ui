@@ -5,7 +5,7 @@ import { NotifierOfferItem } from 'models/marketItems/NotifierItem'
 import { NotifierAPIService } from '../interfaces'
 import TransportModel from './models'
 
-export const address = 'notifier/v0/offers' as const
+export const address = 'triggers/v0/providers' as const
 export type Address = typeof address
 
 export const wsChannel = 'offers' as const
