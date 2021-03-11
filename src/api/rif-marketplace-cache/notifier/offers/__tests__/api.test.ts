@@ -35,7 +35,7 @@ describe('Notifier Offers Service', () => {
   })
 
   describe('notifierOffersAddress', () => {
-    const expectedAddress = 'notifier/v0/offers'
+    const expectedAddress = 'triggers/v0/providers'
     test(`should be set to ${expectedAddress}`, () => {
       expect(notifierOffersAddress).toBe(expectedAddress)
     })
