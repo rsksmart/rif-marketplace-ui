@@ -10,6 +10,7 @@ import { NotifierOffersService } from 'api/rif-marketplace-cache/notifier'
 import { UIError } from 'models/UIMessage'
 import { State, Props } from './interfaces'
 import actions from './actions'
+import { notifierOffersAddress } from 'api/rif-marketplace-cache/notifier/offers'
 
 export const contextName = 'notifier_offers' as const
 
@@ -37,7 +38,7 @@ export const Provider: FC = ({ children }) => {
     state: appState,
     dispatch: appDispatch,
   }: AppContextProps = useContext(AppContext)
-  const api: NotifierOffersService = appState.apis['notifier/v0/offers'] as NotifierOffersService
+  const api: NotifierOffersService = appState.apis[notifierOffersAddress] as NotifierOffersService
 
   const reportError = useErrorReporter()
 
@@ -67,9 +68,10 @@ export const Provider: FC = ({ children }) => {
         },
       })
       api.fetch()
-        .then(() => {
+        .then((items) => {
           dispatch({
             type: 'SET_LISTING',
+            payload: items,
           })
         })
         .catch((error) => {
@@ -93,6 +95,7 @@ export const Provider: FC = ({ children }) => {
     appDispatch,
     isInitialised,
     api,
+    reportError,
   ])
 
   const value = { state, dispatch }
