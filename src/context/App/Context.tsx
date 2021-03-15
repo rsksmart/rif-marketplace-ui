@@ -15,9 +15,9 @@ import createReducer from 'context/storeUtils/reducer'
 import React, {
   createContext, FC, useReducer,
 } from 'react'
+import { notifierOffersAddress } from 'api/rif-marketplace-cache/notifier/offers'
 import { appActions } from '.'
 import { contextID, Props, State } from './interfaces'
-import { notifierOffersAddress } from 'api/rif-marketplace-cache/notifier/offers';
 
 export const initialState: State = {
   contextID,
