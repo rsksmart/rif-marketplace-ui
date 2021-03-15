@@ -1,23 +1,25 @@
-import { NotifierOfferItem, NotifierPlan } from 'models/marketItems/NotifierItem'
+import { NotifierPlan } from 'models/marketItems/NotifierItem'
 
-export interface NotifierOffersTransport {
+interface Model {
     provider: string
     plans: NotifierPlan[]
 }
-class TransportModel implements NotifierOffersTransport {
+class TransportModel implements Model {
     provider!: string
 
     plans!: NotifierPlan[]
 
-    constructor({ provider, plans }: NotifierOffersTransport) {
+    constructor({ provider, plans }: Model) {
       this.plans = plans
       this.provider = provider
     }
 
-    public readonly toLocal = (): NotifierOfferItem => ({
-      id: this.provider,
-      plans: this.plans,
-    })
+    get toLocal() {
+      return {
+        id: this.provider,
+        plans: this.plans,
+      }
+    }
 }
 
 export default TransportModel
