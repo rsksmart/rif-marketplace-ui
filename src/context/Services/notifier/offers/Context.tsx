@@ -8,9 +8,9 @@ import AppContext, { AppContextProps } from 'context/App'
 import useErrorReporter from 'hooks/useErrorReporter'
 import { NotifierOffersService } from 'api/rif-marketplace-cache/notifier'
 import { UIError } from 'models/UIMessage'
+import { notifierOffersAddress } from 'api/rif-marketplace-cache/notifier/offers'
 import { State, Props } from './interfaces'
 import actions from './actions'
-import { notifierOffersAddress } from 'api/rif-marketplace-cache/notifier/offers'
 
 export const contextName = 'notifier_offers' as const
 
