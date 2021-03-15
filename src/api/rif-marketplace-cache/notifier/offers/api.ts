@@ -1,5 +1,5 @@
 import { Paginated } from '@feathersjs/feathers'
-import { AbstractAPIService, isResultPaginated, MapFromTransport } from 'api/models/apiService'
+import { AbstractAPIService, isResultPaginated } from 'api/models/apiService'
 import client from 'api/rif-marketplace-cache/client'
 import { NotifierOfferItem } from 'models/marketItems/NotifierItem'
 import { NotifierAPIService } from '../interfaces'
@@ -15,8 +15,6 @@ class OffersService extends AbstractAPIService
   implements NotifierAPIService {
     path = address
 
-    private mapFromTransport: MapFromTransport<TransportModel, NotifierOfferItem> = (transport) => transport.toLocal()
-
     constructor() {
       super(client)
     }
@@ -30,7 +28,7 @@ class OffersService extends AbstractAPIService
         ? result : { data: result }
       this.meta = metadata
 
-      return data.map(this.mapFromTransport)
+      return data.map(({ toLocal }) => toLocal)
     }
 }
 

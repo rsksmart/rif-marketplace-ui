@@ -80,7 +80,7 @@ describe('Notifier Offers Service', () => {
       const actualOffers: NotifierOfferItem[] = await offersService.fetch()
 
       const expectedOffers: NotifierOfferItem[] = MOCK_RESPONSE
-        .map((transport) => transport.toLocal())
+        .map(({ toLocal }) => toLocal)
 
       expect(actualOffers).toStrictEqual(expectedOffers)
     })
