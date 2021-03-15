@@ -5,12 +5,12 @@ import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { MarketplaceItem, TableHeaders } from 'components/templates/marketplace/Marketplace'
 import MarketContext, { MarketContextProps } from 'context/Market'
 import { NotifierOffersContext, NotifierOffersContextProps } from 'context/Services/notifier/offers'
-import { SUPPORTED_TOKEN_RECORDS } from 'contracts/interfaces'
 import React, { FC, useContext } from 'react'
+import { mapPlansToOffers } from './utils'
 
 const headers: TableHeaders = {
   provider: 'Provider',
-  amountRange: 'Notifications',
+  notifLimitRange: 'Notifications',
   channels: 'Channels',
   currencies: 'Currencies',
   priceFiatRange: 'Price',
@@ -50,29 +50,16 @@ const NotifierOffersPage: FC = () => {
         plans,
       } = item
 
-      // FIXME: Refactor
-      const channels = Array.from(new Set(plans.flatMap((plan) => plan.channels))).join(', ')
-      const allCurrencis = plans.flatMap((plan) => plan.priceOptions.map((option) => SUPPORTED_TOKEN_RECORDS[option.token].displayName))
-      const allAmounts = plans.flatMap((plan) => plan.limit).sort()
-      const allPrices = plans.flatMap((plan) => plan.priceOptions.map((option) => {
-        const xrRate = crypto[option.token].rate
-        return option.value.mul(xrRate)
-      })).sort()
-
-      const currencies = allCurrencis.length - 1 ? `${allCurrencis[0]}, ${allCurrencis[allCurrencis.length - 1]}` : allCurrencis[0]
-      const amountRange = allAmounts.length - 1 ? `${allAmounts[0]}-${allAmounts[allAmounts.length - 1]}` : allAmounts[0]
-      const priceRangeFiat = allPrices.length - 1 ? `${allPrices[0].toString()}-${allPrices[allPrices.length - 1].toString()}` : allPrices[0].toString()
+      const { priceFiatRange, ...offerDetails } = mapPlansToOffers(plans, crypto)
 
       return {
         id: provider,
         provider: <AddressItem value={provider} />,
-        channels,
-        currencies,
-        amountRange,
+        ...offerDetails,
         priceFiatRange: (
           <ItemWUnit
             type="mediumPrimary"
-            value={priceRangeFiat}
+            value={priceFiatRange}
             unit={currentFiat}
           />
         ),
