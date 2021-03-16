@@ -4,6 +4,7 @@ jobs:
   check:
     docker:
       - image: circleci/node:10
+    resource_class: xlarge
     steps:
       - checkout
       - restore_cache:
@@ -37,6 +38,7 @@ jobs:
         type: string
     docker:
       - image: circleci/node:<< parameters.version >>
+    resource_class: xlarge
     steps:
       - checkout
       - restore_cache:
