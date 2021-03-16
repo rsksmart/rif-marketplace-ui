@@ -91,7 +91,7 @@ const PurchasesTable: FC<PurchasesProps> = (
     view: '',
   }
 
-  const items = createCustomerItemFields(
+  const items = crypto ? createCustomerItemFields(
     agreements,
     crypto,
     currentFiat,
@@ -106,7 +106,7 @@ const PurchasesTable: FC<PurchasesProps> = (
       })
     },
     withdrawAndRenewConfs,
-  )
+  ) : []
 
   const modalActions = (): JSX.Element => {
     const isEnabled = Boolean(selectedAgreement?.withdrawableFunds.toNumber())
