@@ -3,14 +3,13 @@ name: RIF Marketplace UI deploy
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+-**'
       - 'v[0-9]+.[0-9]+.[0-9]+'
     branches:
-      - staging
+      - testnet
 
 jobs:
   deploy-staging:
-    name: RIF Marketplace UI - Staging
+    name: RIF Marketplace UI - Testnet
     runs-on: ubuntu-latest
 
     steps:
@@ -37,27 +36,27 @@ jobs:
 
     - name: Build site
       env:
-        REACT_APP_CACHE_ADDR: ${{ secrets.STAGING_REACT_APP_CACHE_ADDR }}
-        REACT_APP_UPLOAD_ADDR: ${{ secrets.STAGING_REACT_APP_UPLOAD_ADDR }}
+        REACT_APP_CACHE_ADDR: ${{ secrets.TESTNET_REACT_APP_CACHE_ADDR }}
+        REACT_APP_UPLOAD_ADDR: ${{ secrets.TESTNET_REACT_APP_UPLOAD_ADDR }}
         REACT_APP_LOG_LEVEL: error
-        REACT_APP_NETWORK: rskstaging
+        REACT_APP_NETWORK: rsktestnet
         REACT_APP_REQUIRED_NETWORK_ID: 31
-        REACT_APP_REQUIRED_NETWORK_NAME: RSK Staging
+        REACT_APP_REQUIRED_NETWORK_NAME: RSK Testnet
       run: |
         npm run build
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.STAGING_AWS_REGION }}
+        aws-access-key-id: ${{ secrets.TESTNET_AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.TESNET_AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.TESTNET_AWS_REGION }}
 
     - name: Deploy site to S3
       run: |
-        aws s3 sync --delete --only-show-errors dist/ ${{ secrets.STAGING_S3_BUCKET }}
+        aws s3 sync --delete --only-show-errors dist/ ${{ secrets.TESTNET_S3_BUCKET }}
 
     - name: Invalidate CloudFront cache
       run: |
-        aws cloudfront create-invalidation --distribution-id ${{ secrets.STAGING_CLOUDFRONT_DISTRIBUTION }} --paths "/*"
+        aws cloudfront create-invalidation --distribution-id ${{ secrets.TESTNET_CLOUDFRONT_DISTRIBUTION }} --paths "/*"
 
