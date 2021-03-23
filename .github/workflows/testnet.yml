@@ -33,7 +33,7 @@ jobs:
     - name: Install dependencies
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        npm ci
+        npm ci --only=production
 
     - name: Build site
       env:
