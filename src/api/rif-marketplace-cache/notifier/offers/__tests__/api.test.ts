@@ -1,29 +1,39 @@
-import Big from 'big.js'
 import { AbstractAPIService } from 'api/models/apiService'
 import mockFeathersService from 'api/test-utils/feathers'
 import { NotifierOfferItem } from 'models/marketItems/NotifierItem'
 import { SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'
 import OffersService, { notifierOffersAddress, NotifierOffersTransportModel, notifierOffersWSChannel } from '../index'
 import { NotifierAPIService } from '../../interfaces'
-import TransportModel from '../models'
+import { mapFromTransport } from '../api'
 
-const MOCK_ITEM_0: NotifierOffersTransportModel = new TransportModel({
+const MOCK_ITEM_0: NotifierOffersTransportModel = {
   provider: 'TEST_ID',
+  url: 'TEST_URL',
+  createdAt: Date(),
+  updatedAt: Date(),
   plans: [
     {
-      channels: ['test_ch0'],
-      expirationDate: new Date(),
-      id: 'test_plan_id',
-      limit: 200,
-      priceOptions: [
+      planStatus: 'ACTIVE',
+      channels: [
         {
-          token: SYSTEM_SUPPORTED_SYMBOL.rif,
-          value: Big(0.1),
+          id: 1,
+          name: 'MOCK_CHANNEL',
+        },
+      ],
+      daysLeft: 122,
+      id: 1,
+      name: 'test_plan_id',
+      quantity: 200,
+      prices: [
+        {
+          id: 1,
+          rateId: SYSTEM_SUPPORTED_SYMBOL.rif,
+          price: '0.1',
         },
       ],
     },
   ],
-})
+}
 
 const MOCK_RESPONSE: NotifierOffersTransportModel[] = [MOCK_ITEM_0]
 
@@ -80,7 +90,7 @@ describe('Notifier Offers Service', () => {
       const actualOffers: NotifierOfferItem[] = await offersService.fetch()
 
       const expectedOffers: NotifierOfferItem[] = MOCK_RESPONSE
-        .map(({ toLocal }) => toLocal)
+        .map(mapFromTransport)
 
       expect(actualOffers).toStrictEqual(expectedOffers)
     })

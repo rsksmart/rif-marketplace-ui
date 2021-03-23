@@ -1,4 +1,4 @@
-import TransportModel from './models'
+import { TransportModel } from './models'
 import OffersService, {
   address, Address,
   wsChannel, WSChannel,
