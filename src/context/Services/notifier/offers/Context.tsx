@@ -38,7 +38,8 @@ export const Provider: FC = ({ children }) => {
     state: appState,
     dispatch: appDispatch,
   }: AppContextProps = useContext(AppContext)
-  const api: NotifierOffersService = appState.apis[notifierOffersAddress] as NotifierOffersService
+  const api: NotifierOffersService = appState.apis[
+    notifierOffersAddress] as NotifierOffersService
 
   const reportError = useErrorReporter()
 
@@ -71,7 +72,7 @@ export const Provider: FC = ({ children }) => {
         .then((items) => {
           dispatch({
             type: 'SET_LISTING',
-            payload: items,
+            payload: { items },
           })
         })
         .catch((error) => {

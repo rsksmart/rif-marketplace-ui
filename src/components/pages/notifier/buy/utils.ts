@@ -1,9 +1,12 @@
 import Big from 'big.js'
-import { SUPPORTED_TOKEN_RECORDS } from 'contracts/interfaces'
 import { MarketCryptoRecord } from 'models/Market'
 import { NotifierPlan } from 'models/marketItems/NotifierItem'
 
-export function mapPlansToOffers(plans: NotifierPlan[], crypto: MarketCryptoRecord) {
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export function mapPlansToOffers(
+  plans: NotifierPlan[],
+  crypto: MarketCryptoRecord,
+) {
   const channelsSet = new Set()
   const currencyOptions = new Set()
   const notificationLimits: number[] = []
@@ -12,9 +15,9 @@ export function mapPlansToOffers(plans: NotifierPlan[], crypto: MarketCryptoReco
   for (const plan of plans) {
     plan.channels.forEach((channel) => channelsSet.add(channel))
     plan.priceOptions.forEach(({ token, value }) => {
-      currencyOptions.add(SUPPORTED_TOKEN_RECORDS[token].displayName)
+      currencyOptions.add(token.displayName)
 
-      const xrRate = crypto[token].rate
+      const xrRate = crypto[token.symbol].rate
       planPrices.push(value.mul(xrRate))
     })
     notificationLimits.push(plan.limit)

@@ -1,25 +1,24 @@
-import { NotifierPlan } from 'models/marketItems/NotifierItem'
+export type NotifierPlanDTO = {
+  id: number
+  name: string
+  planStatus: | 'ACTIVE'
+  daysLeft: number
+  quantity: number
+  channels: {
+    id: number
+    name: string
+  }[]
+  prices: {
+    id: number
+    price: string
+    rateId: string
+  }[]
+}
 
-interface Model {
+export type TransportModel = {
     provider: string
-    plans: NotifierPlan[]
+    url: string
+    createdAt: string
+    updatedAt: string
+    plans: NotifierPlanDTO[]
 }
-class TransportModel implements Model {
-    provider!: string
-
-    plans!: NotifierPlan[]
-
-    constructor({ provider, plans }: Model) {
-      this.plans = plans
-      this.provider = provider
-    }
-
-    get toLocal() {
-      return {
-        id: this.provider,
-        plans: this.plans,
-      }
-    }
-}
-
-export default TransportModel

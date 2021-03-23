@@ -1,9 +1,9 @@
 import { Item } from 'models/Market'
-import { SupportedTokenSymbol } from 'models/Token'
 import Big from 'big.js'
+import { SupportedToken } from 'contracts/interfaces'
 
 type PriceOption = {
-    token: SupportedTokenSymbol
+    token: SupportedToken
     value: Big
 }
 export type NotifierPlanPriceOption = PriceOption
