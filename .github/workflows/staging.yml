@@ -9,6 +9,7 @@ jobs:
   deploy-staging:
     name: RIF Marketplace UI - Staging
     runs-on: ubuntu-latest
+    environment: staging
 
     steps:
     - name: Checkout
@@ -52,7 +53,7 @@ jobs:
 
     - name: Deploy site to S3
       run: |
-        aws s3 sync --delete --only-show-errors dist/ ${{ secrets.STAGING_S3_BUCKET }}
+        aws s3 sync --delete --only-show-errors build/ ${{ secrets.STAGING_S3_BUCKET }}
 
     - name: Invalidate CloudFront cache
       run: |
