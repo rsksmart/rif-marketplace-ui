@@ -2,9 +2,6 @@ name: RIF Marketplace UI deploy
 
 on:
   push:
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+-**'
-      - 'v[0-9]+.[0-9]+.[0-9]+'
     branches:
       - staging
 
@@ -12,6 +9,7 @@ jobs:
   deploy-staging:
     name: RIF Marketplace UI - Staging
     runs-on: ubuntu-latest
+    environment: staging
 
     steps:
     - name: Checkout
@@ -33,7 +31,7 @@ jobs:
     - name: Install dependencies
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        npm ci --only=production
+        npm ci
 
     - name: Build site
       env:
@@ -42,9 +40,9 @@ jobs:
         REACT_APP_LOG_LEVEL: error
         REACT_APP_NETWORK: rskstaging
         REACT_APP_REQUIRED_NETWORK_ID: 31
-        REACT_APP_REQUIRED_NETWORK_NAME: RSK Testnet
+        REACT_APP_REQUIRED_NETWORK_NAME: RSK Staging
       run: |
-        npm run build
+        npm run build:prod
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -55,7 +53,7 @@ jobs:
 
     - name: Deploy site to S3
       run: |
-        aws s3 sync --delete --only-show-errors dist/ ${{ secrets.STAGING_S3_BUCKET }}
+        aws s3 sync --delete --only-show-errors build/ ${{ secrets.STAGING_S3_BUCKET }}
 
     - name: Invalidate CloudFront cache
       run: |

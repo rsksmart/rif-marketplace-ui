@@ -1,8 +1,9 @@
 import React, { FC } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { NavLinkProps } from 'react-router-dom/NavLink'
 import { Footer as RUIFooter } from '@rsksmart/rif-ui'
 /* eslint-disable-next-line import/no-unresolved */
-import { FooterProps } from '@rsksmart/rif-ui/dist/components/organisms/Footer'
+import { FooterProps as RUIFooterProps } from '@rsksmart/rif-ui/dist/components/organisms/Footer'
 import { appVersion } from 'config'
 import PrivacySettingsModal from './tracking/PrivacySettingsModal'
 
@@ -11,6 +12,8 @@ const useStyles = makeStyles(() => ({
     marginTop: 'auto',
   },
 }))
+
+type FooterProps = RUIFooterProps & NavLinkProps
 
 const Footer: FC = () => {
   const classes = useStyles()
