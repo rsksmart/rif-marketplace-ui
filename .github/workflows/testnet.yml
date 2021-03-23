@@ -44,7 +44,7 @@ jobs:
         REACT_APP_REQUIRED_NETWORK_ID: 31
         REACT_APP_REQUIRED_NETWORK_NAME: RSK Testnet
       run: |
-        npm run build
+        npm run build:prod
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
