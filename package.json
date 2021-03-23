@@ -50,7 +50,7 @@
     "material-ui-dropzone": "^3.5.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-hook-form": "^6.15.1",
+    "react-hook-form": "^6.15.5",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",
     "socket.io-client": "^2.3.0",
