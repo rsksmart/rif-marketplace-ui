@@ -50,7 +50,9 @@ const NotifierOffersPage: FC = () => {
         plans,
       } = item
 
-      const { priceFiatRange, ...offerDetails } = mapPlansToOffers(plans, crypto)
+      const { priceFiatRange, ...offerDetails } = mapPlansToOffers(
+        plans, crypto,
+      )
 
       return {
         id: provider,
