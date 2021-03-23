@@ -23,5 +23,15 @@
   },
   "include": [
     "src"
+  ],
+  "exclude":[
+      "**/*.spec.ts",
+      "**/*.spec.tsx",
+      "**/*.test.ts",
+      "**/*.test.tsx",
+      "**/__mocks__/*",
+      "**/__tests__/*",
+      "src/globals.d.ts",
+      "src/api/test-utils/*"
   ]
 }
