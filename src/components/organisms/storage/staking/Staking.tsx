@@ -144,7 +144,7 @@ const Staking: FC = () => {
         },
       )
 
-      if (receipt) {
+      if (receipt && receipt.status) {
         setTxOperationDone(true)
         confirmationsDispatch({
           type: 'NEW_REQUEST',
@@ -180,7 +180,7 @@ const Staking: FC = () => {
         amount, { token: currency, from: account },
       )
 
-      if (receipt) {
+      if (receipt && receipt.status) {
         setTxOperationDone(true)
         confirmationsDispatch({
           type: 'NEW_REQUEST',

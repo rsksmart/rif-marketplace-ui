@@ -218,7 +218,7 @@ const DomainsCheckoutPage: FC = () => {
       })
       logger.info('placeReceipt:', placeReceipt)
 
-      if (placeReceipt) {
+      if (placeReceipt && placeReceipt.status) {
         setTxOperationDone(true)
         confirmationsDispatch({
           type: 'NEW_REQUEST',

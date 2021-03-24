@@ -236,7 +236,7 @@ const DomainOffersCheckoutPage: FC = () => {
 
       logger.info('transferReceipt:', transferReceipt)
 
-      if (transferReceipt) {
+      if (transferReceipt && transferReceipt.status) {
         setTxOperationDone(true)
         confirmationsDispatch({
           type: 'NEW_REQUEST',

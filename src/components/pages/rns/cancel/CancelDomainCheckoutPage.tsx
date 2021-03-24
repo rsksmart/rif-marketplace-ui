@@ -205,7 +205,7 @@ const CancelDomainCheckoutPage: FC = () => {
       })
       logger.info('unplaceReceipt:', unplaceReceipt)
 
-      if (unplaceReceipt) {
+      if (unplaceReceipt && unplaceReceipt.status) {
         setTxOperationDone(true)
         confirmationsDispatch({
           type: 'NEW_REQUEST',
