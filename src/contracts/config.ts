@@ -21,8 +21,8 @@ const rnsAddress = rnsDotRskOwner.toLowerCase()
 const storageAddress = storageManager.toLowerCase()
 const stakingAddress = storageStaking.toLowerCase()
 
-const rnsSupportedTokens: SupportedTokenSymbol[] = services.rns.tokens
-const storageSupportedTokens: SupportedTokenSymbol[] = services.storage.tokens
+const rnsSupportedTokens: SupportedTokenSymbol[] = services.rns?.tokens || []
+const storageSupportedTokens: SupportedTokenSymbol[] = services.storage?.tokens || []
 
 const svcNames = Object.keys(services)
 const allAllowedPaymentTokens: string[] = Array.from(
