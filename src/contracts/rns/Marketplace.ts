@@ -78,7 +78,12 @@ class MarketplaceContract extends ContractBase {
     txOptions: TransactionOptions,
   ): Promise<TransactionReceipt> {
     const buyTx = this.methods.buy(tokenId)
-    return this._send(buyTx, txOptions)
+    return this._send(
+      buyTx,
+      {
+        gasMultiplier: MarketplaceContract.gasMultiplier,
+        ...txOptions
+      })
   }
 }
 
