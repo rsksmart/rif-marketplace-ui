@@ -107,7 +107,7 @@ const ActiveContracts: FC<ActiveContractsProps> = ({ agreements }) => {
         )
       logger.debug('receipt: ', { payoutFundsReceipt })
 
-      if (payoutFundsReceipt) {
+      if (payoutFundsReceipt && payoutFundsReceipt.status) {
         setTxOperationDone(true)
         confirmationsDispatch({
           type: 'NEW_REQUEST',
