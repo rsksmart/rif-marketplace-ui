@@ -107,7 +107,7 @@ export const Provider: FC = ({ children }) => {
       })
       try {
         Promise.all([
-          api.findPriceLimits({ fiatSymbol })
+          api.findLimits({ fiatSymbol })
             .then((limits) => {
               dispatch({
                 type: 'UPDATE_LIMITS',
@@ -152,6 +152,14 @@ export const Provider: FC = ({ children }) => {
     isLimitsSet,
     appDispatch,
   ])
+
+  // // Pre-fetch limits
+  // useEffect(() => {
+  //   if (needsRefresh) {
+  //     setIsLimitsSet(false)
+  //   }
+  // }, [needsRefresh])
+
   const { filters } = state
 
   // Fetch data
