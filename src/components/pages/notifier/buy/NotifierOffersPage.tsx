@@ -1,6 +1,7 @@
 import { Web3Store } from '@rsksmart/rif-ui'
 import ItemWUnit from 'components/atoms/ItemWUnit'
 import { AddressItem, SelectRowButton } from 'components/molecules'
+import NotifierOffersFilters from 'components/organisms/filters/notifier/OffersFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { MarketplaceItem, TableHeaders } from 'components/templates/marketplace/Marketplace'
 import MarketContext, { MarketContextProps } from 'context/Market'
@@ -43,19 +44,18 @@ const NotifierOffersPage: FC = () => {
 
   if (!crypto.rbtc) return null
 
-  const collection: MarketplaceItem[] = items
-    .map<MarketplaceItem>((item) => {
-      const {
-        id,
-        provider,
-      } = item
+  const providers = Array.from(new Set(items.map(({ provider }) => provider)))
+
+  const collection: MarketplaceItem[] = providers
+    .map<MarketplaceItem>((provider) => {
+      const providerPlans = items.filter((item) => item.provider === provider)
 
       const { priceFiatRange, ...offerDetails } = mapPlansToOffers(
-        item, crypto,
+        providerPlans, crypto,
       )
 
       return {
-        id,
+        id: provider,
         provider: <AddressItem value={provider} />,
         ...offerDetails,
         priceFiatRange: (
@@ -84,7 +84,7 @@ const NotifierOffersPage: FC = () => {
   return (
     <MarketPageTemplate
       className={contextID}
-      filterItems={null}
+      filterItems={<NotifierOffersFilters />}
       items={collection}
       headers={headers}
       dispatch={dispatch}

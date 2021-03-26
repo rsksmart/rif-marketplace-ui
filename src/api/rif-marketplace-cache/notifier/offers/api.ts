@@ -1,4 +1,3 @@
-import Big from 'big.js'
 import { Paginated } from '@feathersjs/feathers'
 import { AbstractAPIService, isResultPaginated } from 'api/models/apiService'
 import client from 'api/rif-marketplace-cache/client'
@@ -8,6 +7,7 @@ import { getSupportedTokenByName } from 'utils/tokenUtils'
 import { MinMaxFilter } from 'models/Filters'
 import { SupportedFiatSymbol } from 'models/Fiat'
 import { NotifierOffersFilters } from 'models/marketItems/NotifierFilters'
+import { parseToBigDecimal } from 'utils/parsers'
 import { NotifierAPIService } from '../interfaces'
 import { PlanDTO } from './models'
 
@@ -38,9 +38,9 @@ export const mapFromTransport = ({
     limit: quantity,
     priceOptions: prices.map((price) => ({
       token: getSupportedTokenByName(
-          price.rateId as SupportedTokenSymbol,
+        price.rateId as SupportedTokenSymbol,
       ),
-      value: new Big(price.price),
+      value: parseToBigDecimal(price.price),
     })),
     expirationDate,
   })
@@ -48,42 +48,44 @@ export const mapFromTransport = ({
 
 class OffersService extends AbstractAPIService
   implements NotifierAPIService {
-    path = address
+  path = address
 
-    constructor() {
-      super(client)
-    }
+  constructor() {
+    super(client)
+  }
 
-    _channel = wsChannel
+  _channel = wsChannel
 
-    _fetch = async (filters: NotifierOffersFilters): Promise<NotifierOfferItem[]> => {
-      const result: Paginated<PlanDTO> = await this.service.find({
-        query: filters && {
-          ...filters,
-          currency: Array.from(filters.currency),
-          channels: Array.from(filters.channels),
-        },
-      })
+  _fetch = async (
+    filters: NotifierOffersFilters,
+  ): Promise<NotifierOfferItem[]> => {
+    const result: Paginated<PlanDTO> = await this.service.find({
+      query: filters && {
+        ...filters,
+        currency: Array.from(filters.currency),
+        channels: Array.from(filters.channels),
+      },
+    })
 
-      const { data, ...metadata } = isResultPaginated(result)
-        ? result : { data: result }
-      this.meta = metadata
+    const { data, ...metadata } = isResultPaginated(result)
+      ? result : { data: result }
+    this.meta = metadata
 
-      return data.map(mapFromTransport)
-    }
+    return data.map(mapFromTransport)
+  }
 
-    findPriceLimits({ fiatSymbol }: {
+  findLimits({ fiatSymbol }: {
     fiatSymbol: SupportedFiatSymbol
   }): Promise<MinMaxFilter> {
-      return this.service.find({
-        query: {
-          limits: {
-            price: { fiatSymbol },
-            size: true,
-          },
+    return this.service.find({
+      query: {
+        limits: {
+          price: { fiatSymbol },
+          size: true,
         },
-      })
-    }
+      },
+    })
+  }
 }
 
 export default OffersService
