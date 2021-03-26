@@ -17,7 +17,4 @@ export type NotifierPlan = {
     provider: string
 }
 
-/**
- * id: provider address
- */
 export type NotifierOfferItem = Item & NotifierPlan
