@@ -3,41 +3,36 @@ import mockFeathersService from 'api/test-utils/feathers'
 import { NotifierOfferItem } from 'models/marketItems/NotifierItem'
 import { SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'
 import OffersService, { notifierOffersAddress, NotifierOffersTransportModel, notifierOffersWSChannel } from '../index'
-import { NotifierAPIService } from '../../interfaces'
 import { mapFromTransport } from '../api'
+import { NotifierOffersService } from '../..'
 
 const MOCK_ITEM_0: NotifierOffersTransportModel = {
-  provider: 'TEST_ID',
+  providerId: 'TEST_ID',
   url: 'TEST_URL',
-  createdAt: Date(),
-  updatedAt: Date(),
-  plans: [
+  planStatus: 'ACTIVE',
+  channels: [
     {
-      planStatus: 'ACTIVE',
-      channels: [
-        {
-          id: 1,
-          name: 'MOCK_CHANNEL',
-        },
-      ],
-      daysLeft: 122,
       id: 1,
-      name: 'test_plan_id',
-      quantity: 200,
-      prices: [
-        {
-          id: 1,
-          rateId: SYSTEM_SUPPORTED_SYMBOL.rif,
-          price: '0.1',
-        },
-      ],
+      name: 'MOCK_CHANNEL',
+    },
+  ],
+  daysLeft: 122,
+  id: 1,
+  name: 'test_plan_id',
+  quantity: 200,
+  prices: [
+    {
+      id: 1,
+      rateId: SYSTEM_SUPPORTED_SYMBOL.rif,
+      rate: 3,
+      price: '0.1',
     },
   ],
 }
 
 const MOCK_RESPONSE: NotifierOffersTransportModel[] = [MOCK_ITEM_0]
 
-let offersService: NotifierAPIService
+let offersService: NotifierOffersService
 
 describe('Notifier Offers Service', () => {
   beforeEach(() => {
@@ -45,14 +40,14 @@ describe('Notifier Offers Service', () => {
   })
 
   describe('notifierOffersAddress', () => {
-    const expectedAddress = 'triggers/v0/providers'
+    const expectedAddress = 'triggers/v0/offers'
     test(`should be set to ${expectedAddress}`, () => {
       expect(notifierOffersAddress).toBe(expectedAddress)
     })
   })
 
   describe('notifierOffersWSChannel', () => {
-    const expectedAddress = 'offers'
+    const expectedAddress = 'triggers_offers'
     test(`should be set to ${expectedAddress}`, () => {
       expect(notifierOffersWSChannel).toBe(expectedAddress)
     })
