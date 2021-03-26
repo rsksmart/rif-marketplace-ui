@@ -1,24 +1,23 @@
-export type NotifierPlanDTO = {
+type PricesDTO = {
+    id: number
+    price: string
+    rateId: string
+    rate: number
+  }
+
+type ChannelsDTO = {
+    id: number
+    name: string
+  }
+
+export type PlanDTO = {
   id: number
   name: string
   planStatus: | 'ACTIVE'
   daysLeft: number
   quantity: number
-  channels: {
-    id: number
-    name: string
-  }[]
-  prices: {
-    id: number
-    price: string
-    rateId: string
-  }[]
-}
-
-export type TransportModel = {
-    provider: string
-    url: string
-    createdAt: string
-    updatedAt: string
-    plans: NotifierPlanDTO[]
+  providerId: string
+  url: string
+  channels: ChannelsDTO[]
+  prices: PricesDTO[]
 }

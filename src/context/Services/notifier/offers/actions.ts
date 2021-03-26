@@ -7,6 +7,20 @@ const actions: Actions = {
       items: items ?? [],
     },
   }),
+  FILTER: (state, payload) => ({
+    ...state,
+    filters: {
+      ...state.filters,
+      ...payload,
+    },
+  }),
+  UPDATE_LIMITS: (state, payload) => ({
+    ...state,
+    limits: {
+      ...state.limits,
+      ...payload,
+    },
+  }),
 }
 
 export default actions
