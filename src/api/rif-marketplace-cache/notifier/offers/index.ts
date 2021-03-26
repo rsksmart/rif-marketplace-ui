@@ -1,4 +1,4 @@
-import { TransportModel } from './models'
+import { PlanDTO } from './models'
 import OffersService, {
   address, Address,
   wsChannel, WSChannel,
@@ -13,4 +13,4 @@ export default OffersService
 
 export type NotifierOffersAddress = Address
 export type NotifierOffersWSChannel = WSChannel
-export type NotifierOffersTransportModel = TransportModel
+export type NotifierOffersTransportModel = PlanDTO

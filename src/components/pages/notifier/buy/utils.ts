@@ -1,42 +1,35 @@
-import Big from 'big.js'
 import { MarketCryptoRecord } from 'models/Market'
 import { NotifierPlan } from 'models/marketItems/NotifierItem'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function mapPlansToOffers(
-  plans: NotifierPlan[],
+  {
+    channels,
+    priceOptions,
+    limit,
+  }: NotifierPlan,
   crypto: MarketCryptoRecord,
 ) {
-  const channelsSet = new Set()
+  const channelsSet = new Set(channels)
   const currencyOptions = new Set()
-  const notificationLimits: number[] = []
-  const planPrices: Big[] = []
+  const planPrices = priceOptions.map(({ token, value }) => {
+    currencyOptions.add(token.displayName)
 
-  for (const plan of plans) {
-    plan.channels.forEach((channel) => channelsSet.add(channel))
-    plan.priceOptions.forEach(({ token, value }) => {
-      currencyOptions.add(token.displayName)
+    const xrRate = crypto[token.symbol].rate
+    return value.mul(xrRate).toNumber()
+  })
 
-      const xrRate = crypto[token.symbol].rate
-      planPrices.push(value.mul(xrRate))
-    })
-    notificationLimits.push(plan.limit)
-  }
-  const sortedLimits = notificationLimits.sort()
-  const sortedPrices = planPrices.sort()
+  const minPrice = Math.min(...planPrices)
+  const maxPrice = Math.max(...planPrices)
 
-  let notifLimitRange = sortedLimits.shift()?.toString() ?? ''
-  const limitMax = sortedLimits.pop()
-  notifLimitRange += limitMax ? ` - ${limitMax}` : ''
-
-  let priceFiatRange = sortedPrices.shift()?.toString() ?? ''
-  const priceMax = sortedPrices.pop()
-  priceFiatRange += priceMax ? ` - ${priceMax}` : ''
+  const priceFiatRange = minPrice === maxPrice
+    ? `${minPrice}`
+    : `${minPrice}-${maxPrice}`
 
   return {
     channels: Array.from(channelsSet).join(', '),
     currencies: Array.from(currencyOptions).join(', '),
-    notifLimitRange,
+    notifLimitRange: limit,
     priceFiatRange,
   }
 }

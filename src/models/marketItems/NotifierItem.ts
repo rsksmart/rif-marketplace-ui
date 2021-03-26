@@ -9,16 +9,15 @@ type PriceOption = {
 export type NotifierPlanPriceOption = PriceOption
 
 export type NotifierPlan = {
-    id: string
+    name: string
     channels: string[]
     limit: number
     priceOptions: PriceOption[]
     expirationDate: Date
+    provider: string
 }
 
 /**
  * id: provider address
  */
-export type NotifierOfferItem = Item & {
-    plans: NotifierPlan[]
-}
+export type NotifierOfferItem = Item & NotifierPlan
