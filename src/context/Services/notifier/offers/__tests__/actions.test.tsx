@@ -1,6 +1,7 @@
 import Big from 'big.js'
+import { SUPPORTED_TOKEN_RECORDS } from 'contracts/interfaces'
+import { SUPPORTED_FIAT } from 'models/Fiat'
 import { NotifierOfferItem } from 'models/marketItems/NotifierItem'
-import { SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'
 import { notifierOffersActions, notifierOffersInitialState, NotifierOffersState } from '..'
 import { ListingPayload, OffersListing } from '../interfaces'
 
@@ -9,19 +10,16 @@ const testDefaults = {
 }
 
 const MOCK_OFFER: NotifierOfferItem = {
-  id: 'MOCK_ID',
-  plans: [
+  provider: 'MOCK_PROVIDER_ID',
+  name: 'MOCK_PLAN_NAME',
+  id: 'MOCK_PLAN_ID',
+  channels: ['sms'],
+  expirationDate: new Date(),
+  limit: 200,
+  priceOptions: [
     {
-      id: 'MOCK_PLAN_ID',
-      channels: ['sms'],
-      expirationDate: new Date(),
-      limit: 200,
-      priceOptions: [
-        {
-          token: SYSTEM_SUPPORTED_SYMBOL.rif,
-          value: Big(1),
-        },
-      ],
+      token: SUPPORTED_TOKEN_RECORDS.rbtc,
+      value: Big(1),
     },
   ],
 }
@@ -31,10 +29,33 @@ const MOCK_STATE: NotifierOffersState = {
   listing: {
     items: [MOCK_OFFER],
   },
-  needsRefresh: !testDefaults.initialState.needsRefresh,
   order: {
     isProcessing: true,
     item: MOCK_OFFER,
+  },
+  filters: {
+    size: {
+      min: 0,
+      max: 0,
+    },
+    price: {
+      min: 0,
+      max: 0,
+      fiatSymbol: SUPPORTED_FIAT.usd.symbol,
+    },
+    currency: new Set(),
+    channels: new Set(),
+  },
+  limits: {
+    size: {
+      min: 0,
+      max: 0,
+    },
+    price: {
+      min: 0,
+      max: 0,
+      fiatSymbol: SUPPORTED_FIAT.usd.symbol,
+    },
   },
 }
 

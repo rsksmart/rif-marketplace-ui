@@ -41,21 +41,21 @@ const NotifierOffersPage: FC = () => {
     },
   } = useContext(Web3Store)
 
-  if (!crypto.rif) return null
+  if (!crypto.rbtc) return null
 
   const collection: MarketplaceItem[] = items
     .map<MarketplaceItem>((item) => {
       const {
-        id: provider,
-        plans,
+        id,
+        provider,
       } = item
 
       const { priceFiatRange, ...offerDetails } = mapPlansToOffers(
-        plans, crypto,
+        item, crypto,
       )
 
       return {
-        id: provider,
+        id,
         provider: <AddressItem value={provider} />,
         ...offerDetails,
         priceFiatRange: (

@@ -5,38 +5,46 @@ import client from 'api/rif-marketplace-cache/client'
 import { NotifierOfferItem } from 'models/marketItems/NotifierItem'
 import { SupportedTokenSymbol } from 'models/Token'
 import { getSupportedTokenByName } from 'utils/tokenUtils'
+import { MinMaxFilter } from 'models/Filters'
+import { SupportedFiatSymbol } from 'models/Fiat'
+import { NotifierOffersFilters } from 'models/marketItems/NotifierFilters'
 import { NotifierAPIService } from '../interfaces'
-import { TransportModel } from './models'
+import { PlanDTO } from './models'
 
-export const address = 'triggers/v0/providers' as const
+export const address = 'triggers/v0/offers' as const
 export type Address = typeof address
 
-export const wsChannel = 'offers' as const
+export const wsChannel = 'triggers_offers' as const
 export type WSChannel = typeof wsChannel
 
 export const mapFromTransport = ({
-  provider, plans,
-}: TransportModel): NotifierOfferItem => ({
-  id: provider,
-  plans: plans.map((plan) => {
-    const dateNow = new Date()
-    const expirationDate = new Date()
-    expirationDate.setDate(dateNow.getDate() + plan.daysLeft)
+  providerId: provider,
+  channels,
+  daysLeft,
+  id,
+  name,
+  prices,
+  quantity,
+}: PlanDTO): NotifierOfferItem => {
+  const dateNow = new Date()
+  const expirationDate = new Date()
+  expirationDate.setDate(dateNow.getDate() + daysLeft)
 
-    return ({
-      id: plan.name,
-      channels: plan.channels.map((channel) => channel.name),
-      limit: plan.quantity,
-      priceOptions: plan.prices.map((price) => ({
-        token: getSupportedTokenByName(
-              price.rateId as SupportedTokenSymbol,
-        ),
-        value: new Big(price.price),
-      })),
-      expirationDate,
-    })
-  }),
-})
+  return ({
+    id: String(id),
+    name,
+    provider,
+    channels: channels.map((channel) => channel.name),
+    limit: quantity,
+    priceOptions: prices.map((price) => ({
+      token: getSupportedTokenByName(
+          price.rateId as SupportedTokenSymbol,
+      ),
+      value: new Big(price.price),
+    })),
+    expirationDate,
+  })
+}
 
 class OffersService extends AbstractAPIService
   implements NotifierAPIService {
@@ -48,14 +56,33 @@ class OffersService extends AbstractAPIService
 
     _channel = wsChannel
 
-    _fetch = async (): Promise<NotifierOfferItem[]> => {
-      const result: Paginated<TransportModel> = await this.service.find()
+    _fetch = async (filters: NotifierOffersFilters): Promise<NotifierOfferItem[]> => {
+      const result: Paginated<PlanDTO> = await this.service.find({
+        query: filters && {
+          ...filters,
+          currency: Array.from(filters.currency),
+          channels: Array.from(filters.channels),
+        },
+      })
 
       const { data, ...metadata } = isResultPaginated(result)
         ? result : { data: result }
       this.meta = metadata
 
       return data.map(mapFromTransport)
+    }
+
+    findPriceLimits({ fiatSymbol }: {
+    fiatSymbol: SupportedFiatSymbol
+  }): Promise<MinMaxFilter> {
+      return this.service.find({
+        query: {
+          limits: {
+            price: { fiatSymbol },
+            size: true,
+          },
+        },
+      })
     }
 }
 
