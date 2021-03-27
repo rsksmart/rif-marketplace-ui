@@ -11,6 +11,7 @@ jobs:
   deploy-staging:
     name: RIF Marketplace UI - Testnet
     runs-on: ubuntu-latest
+    environment: testnet
 
     steps:
     - name: Checkout
@@ -32,7 +33,7 @@ jobs:
     - name: Install dependencies
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        npm ci --only=production
+        npm ci
 
     - name: Build site
       env:
@@ -54,7 +55,7 @@ jobs:
 
     - name: Deploy site to S3
       run: |
-        aws s3 sync --delete --only-show-errors dist/ ${{ secrets.TESTNET_S3_BUCKET }}
+        aws s3 sync --delete --only-show-errors build/ ${{ secrets.TESTNET_S3_BUCKET }}
 
     - name: Invalidate CloudFront cache
       run: |
