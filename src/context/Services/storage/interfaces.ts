@@ -6,11 +6,9 @@ import { ServiceOrder, ServiceState } from '../interfaces'
 import { StorageOffersContextName } from './offers'
 import { AgreementContextName } from './agreements'
 import { ContextName as StorageGlobalContextName } from './Context'
-import { StorageStakingContextName } from './staking'
 
 export type StorageContextNames =
   | StorageOffersContextName
-  | StorageStakingContextName
   | AgreementContextName
   | StorageGlobalContextName
 

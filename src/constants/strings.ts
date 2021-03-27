@@ -10,4 +10,11 @@ and still undergoing final testing before the official release.
   and any purchasing of storage space should be done
    at the user’s own risk.`
 
+export const API_RESPONSE_MESSAGES = {
+  OK: 'OK',
+  ERROR: 'error',
+}
+
+export const FEATURE_NOT_SUPPORTED = 'This feature is not supported yet'
+
 export default {}

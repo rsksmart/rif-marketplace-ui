@@ -11,7 +11,7 @@ type AgreementContractAction =
   | 'AGREEMENT_RENEW'
 
 type OfferContractAction = 'NEW_OFFER' | 'EDIT_OFFER' | 'CANCEL_OFFER'
-type StorageStakingContractAction = 'STAKING_STAKE' | 'STAKING_UNSTAKE'
+type StorageStakingContractAction = 'STORAGE_STAKE' | 'STORAGE_UNSTAKE'
 
 type StorageContractAction = AgreementContractAction | OfferContractAction
 
@@ -23,10 +23,15 @@ type RnsContractAction =
   | CancelDomainAction
   | PlaceDomainAction
 
+type NotifierContractAction = 'NOTIFIER_REGISTER_PROVIDER' | 'NOTIFIER_WITHDRAW_FUNDS' | 'NOTIFIER_CREATE_SUBSCRIPTION'
+type NotifierStakingContractAction = 'NOTIFIER_STAKE' | 'NOTIFIER_UNSTAKE'
+
 export type ContractAction =
   | StorageContractAction
   | StorageStakingContractAction
   | RnsContractAction
+  | NotifierContractAction
+  | NotifierStakingContractAction
 
 export type AgreementUpdateData = { // used for withdraw, payout and renew
   agreementId: string
@@ -39,9 +44,16 @@ export type RnsContractData = {
   tokenId: string
 }
 
+export type SubscriptionWithdrawData = {
+  subscriptionHash: string
+}
+
+export type NotifierContractData = | SubscriptionWithdrawData
+
 export type ContractActionData =
   | AgreementContractData
   | RnsContractData
+  | NotifierContractData
 
 export type TxHash = string
 

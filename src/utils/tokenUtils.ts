@@ -3,7 +3,9 @@ import { SupportedToken, SUPPORTED_TOKEN_RECORDS } from 'contracts/interfaces'
 import { SupportedTokenSymbol, BaseToken } from 'models/Token'
 import { SYSTEM_TOKENS } from '../models/Token'
 
-export const getSupportedTokenByName = (tokenName: SupportedTokenSymbol): SupportedToken => {
+export const getSupportedTokenByName = (
+  tokenName: SupportedTokenSymbol,
+): SupportedToken => {
   const tokenObject: SupportedToken = SUPPORTED_TOKEN_RECORDS[tokenName]
 
   if (!tokenObject) {
@@ -18,7 +20,9 @@ export const getTokensFromConfigTokens = (
 
 export const getTokenByString = (
   paymentToken: string,
-): SupportedToken => getSupportedTokenByName(paymentToken.toLowerCase() as SupportedTokenSymbol)
+): SupportedToken => getSupportedTokenByName(
+  paymentToken.toLowerCase() as SupportedTokenSymbol,
+)
 
 export const getTokenByAddress = (tokenAddress: string): BaseToken => {
   const symbol = addressTokenRecord[

@@ -13,16 +13,21 @@ const {
   rnsDotRskOwner,
   storageManager,
   storageStaking,
+  notifierManager,
+  notifierStaking,
   ...tokenAddresses
 } = contractAddresses
 
 const marketPlaceAddress = marketplace.toLowerCase()
 const rnsAddress = rnsDotRskOwner.toLowerCase()
 const storageAddress = storageManager.toLowerCase()
-const stakingAddress = storageStaking.toLowerCase()
+const storageStakingAddress = storageStaking.toLowerCase()
+const notifierAddress = notifierManager.toLowerCase()
+const notifierStakingAddress = notifierStaking.toLowerCase()
 
 const rnsSupportedTokens: SupportedTokenSymbol[] = services.rns?.tokens || []
 const storageSupportedTokens: SupportedTokenSymbol[] = services.storage?.tokens || []
+const notifierSupportedTokens: SupportedTokenSymbol[] = services.notifier?.tokens || []
 
 const svcNames = Object.keys(services)
 const allAllowedPaymentTokens: string[] = Array.from(
@@ -33,10 +38,10 @@ const allTokenAddresses: string[] = Object.keys(tokenAddresses)
   .filter((scName) => allAllowedPaymentTokens.includes(scName))
   .map((scName) => tokenAddresses[scName].toLowerCase())
 
-const addressTokenRecord: Record<string, string> = allAllowedPaymentTokens
+const addressTokenRecord: Record<string, SupportedTokenSymbol> = allAllowedPaymentTokens
   .reduce((acc, symbol) => {
     const tokenAddress = tokenAddresses[symbol].toLowerCase()
-    acc[tokenAddress] = symbol
+    acc[tokenAddress] = symbol as SupportedTokenSymbol
     return acc
   }, {})
 
@@ -46,11 +51,14 @@ export {
   marketPlaceAddress,
   rnsAddress,
   storageAddress,
-  stakingAddress,
+  storageStakingAddress,
   allAllowedPaymentTokens,
   allTokenAddresses,
   addressTokenRecord,
   rnsSupportedTokens,
   storageSupportedTokens,
   rifTokenAddress,
+  notifierAddress,
+  notifierSupportedTokens,
+  notifierStakingAddress,
 }

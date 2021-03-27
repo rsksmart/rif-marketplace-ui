@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import ItemWUnit from 'components/atoms/ItemWUnit'
-import { priceDisplay } from 'utils/utils'
+import { toFiatPrecision } from 'utils/priceUtils'
+import useDisabledStyle from 'hooks/useDisabledStyle'
 
 export interface CombinedPriceCellProps {
   className?: string
@@ -9,15 +10,20 @@ export interface CombinedPriceCellProps {
   currency: string
   priceFiat: string
   currencyFiat: string
+  disabled?: boolean
 }
 
 const CombinedPriceCell: FC<CombinedPriceCellProps> = ({
-  className = '', divider, price, currency, priceFiat, currencyFiat,
+  className = '', disabled,
+  divider, price, currency,
+  priceFiat, currencyFiat,
 }) => {
-  const cappedDecimalsFiat = priceDisplay(parseFloat(priceFiat), 4)
+  const cappedDecimalsFiat = toFiatPrecision(priceFiat)
+  const disabledStyle = useDisabledStyle()
+  const disabledClass = disabled ? disabledStyle.root : ''
 
   return (
-    <div className={(`priceCell ${className}`).trim()}>
+    <div className={(`priceCell ${className} ${disabledClass}`).trim()}>
       <ItemWUnit type="mediumPrimary" value={price} unit={currency} />
       {!!divider && divider}
       <ItemWUnit type="normalGrey" value={cappedDecimalsFiat} unit={currencyFiat} />

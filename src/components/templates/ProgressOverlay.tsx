@@ -45,7 +45,7 @@ const ProgressOverlay: FC<Props> = ({
                 {
                   buttons.map((btn) => (
                     <GridItem
-                      key={btn.key || (btn as unknown as HTMLElement).innerText}
+                      key={String(btn.props.children)}
                     >
                       {btn}
                     </GridItem>
@@ -62,3 +62,4 @@ const ProgressOverlay: FC<Props> = ({
 }
 
 export default ProgressOverlay
+export type ProgressOverlayProps = Props

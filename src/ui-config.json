@@ -1,19 +1,65 @@
 {
     "ganache": {
         "contractAddresses": {
-            "rif": "0x67b5656d60a809915323bf2c40a8bef15a152e3e",
+            "rif": "0x67B5656d60a809915323Bf2C40A8bEF15A152e3e",
             "rnsDotRskOwner": "0x26b4AFb60d6C903165150C6F0AA14F8016bE4aec",
             "marketplace": "0xeF391648603DCb012e30eF706452b3DfF6466dE8",
             "storageManager": "0x1b88Bdb8269A1aB1372459F5a4eC3663D6f5cCc4",
-            "storageStaking": "0xdAA71FBBA28C946258DD3d5FcC9001401f72270F"
+            "storageStaking": "0x22d5C8BdD4346b390014a07109a8F830094d4abf",
+            "notifierManager": "0xc34175A79ACca40392bECD22ff10fAeBFE780Ae7",
+            "notifierStaking": "0xe97DbD7116D168190F8A6E7beB1092c103c53a12"
         },
         "rnsManagerUrl": "http://localhost:3001",
         "services": {
             "rns": {
-                "tokens": ["rbtc", "rif"]
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
             },
             "storage": {
-                "tokens": ["rbtc", "rif"]
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
+            },
+            "notifier": {
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
+            }
+        }
+    },
+    "rskdevnet": {
+        "contractAddresses": {
+            "rif": "0x1Af2844A588759D0DE58abD568ADD96BB8B3B6D8",
+            "rnsDotRskOwner": "0xdac5481925A298B95Bf5b54c35b68FC6fc2eF423",
+            "marketplace": "0xDbDA66cB801b5BCBdF3d3188171D6eF49646FEE5",
+            "storageManager": "0x13cF0a53b6102b518e8b547d5E50b38C1b089E08",
+            "storageStaking": "0xc3e75147D582fFc126590C537cEe894180aAcDDC",
+            "notifierManager": "0x73b1C6D725eAfb2B9514e2aF092f9f61Fd005088",
+            "notifierStaking": "0xb0082444317d7DE625fE4185025cc23Abb0501dD"
+        },
+        "rnsManagerUrl": "http://localhost:3001",
+        "services": {
+            "rns": {
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
+            },
+            "storage": {
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
+            },
+            "notifier": {
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
             }
         }
     },
@@ -21,14 +67,25 @@
         "contractAddresses": {
             "rif": "0x2acc95758f8b5f583470ba265eb685a8f45fc9d5",
             "rnsDotRskOwner": "0x45d3e4fb311982a06ba52359d44cb4f5980e0ef1",
-            "marketplace": "0xa966Be39A13723d991dFA92B2B0CF6b0c7416eE5"
+            "marketplace": "0xa966Be39A13723d991dFA92B2B0CF6b0c7416eE5",
+            "storageManager": "0xa18c181229F374b00f126fC952775d41A4F4c40e",
+            "storageStaking": "0xe82Eb1C0D40D555b8030116132EdA0B9f1032263"
         },
         "rnsManagerUrl": "https://manager.rns.rifos.org",
-         "services": {
-             "rns": {
-                 "tokens": ["rif"]
-             }
-         }
+        "services": {
+            "rns": {
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
+            },
+            "storage": {
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
+            }
+        }
     },
     "rsktestnet": {
         "contractAddresses": {
@@ -36,15 +93,29 @@
             "rnsDotRskOwner": "0xca0a477e19bac7e0e172ccfd2e3c28a7200bdb71",
             "marketplace": "0xFa5ade767a422C66cAFd94c3710f5b92467fB85e",
             "storageManager": "0x839856c0eC1aA2AeD25D47Fd3DDB7A14Dac3e76d",
-            "storageStaking": "0x11bE792f8fcfC84897b88e149dD3fb66b422256f"
+            "storageStaking": "0x11bE792f8fcfC84897b88e149dD3fb66b422256f",
+            "notifierManager": "0xcaED0CCbb3d9B9090d848Ea271f0abAa195f03EA",
+            "notifierStaking": "0x315645E455107213c3A35e56a12Aad595F10d922"
         },
         "rnsManagerUrl": "https://testnet.manager.rns.rifos.org",
         "services": {
             "rns": {
-                "tokens": ["rif"]
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
             },
             "storage": {
-                "tokens": ["rbtc", "rif"]
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
+            },
+            "notifier": {
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
             }
         }
     },
@@ -54,15 +125,29 @@
             "rnsDotRskOwner": "0xca0a477e19bac7e0e172ccfd2e3c28a7200bdb71",
             "marketplace": "0x978908db72E43DB49A80c74A1383Bd5b3e832c46",
             "storageManager": "0xaF37117a4907331DC49b05bDC1DE920F12dBF715",
-            "storageStaking": "0xF1573D262924abE24334FDDD62c6Ba58288d2f8c"
+            "storageStaking": "0xF1573D262924abE24334FDDD62c6Ba58288d2f8c",
+            "notifierManager": "0xd60e913029a6790fb9e5b8c459b451dd6e501139",
+            "notifierStaking": "0x19578c5b4f3d382abaa494e221a5e654ee5e6dc6"
         },
         "rnsManagerUrl": "https://testnet.manager.rns.rifos.org",
         "services": {
             "rns": {
-                "tokens": ["rif"]
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
             },
             "storage": {
-                "tokens": ["rbtc", "rif"]
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
+            },
+            "notifier": {
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
             }
         }
     }

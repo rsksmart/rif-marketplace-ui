@@ -1,15 +1,17 @@
+import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
+import { getTokensFromConfigTokens } from 'utils/tokenUtils'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 import { AbiItem } from 'web3-utils'
-
 import RNSSimplePlacementsV1 from '../abi/nfts/RNSSimplePlacementsV1.json'
-import { marketPlaceAddress } from '../config'
-import { TransactionOptions } from '../interfaces'
-import ContractBase from '../wrappers/contract-base'
+import { marketPlaceAddress, rnsSupportedTokens } from '../config'
+import {
+  SupportedToken, TOKEN_TYPES, TransactionOptions, TxOptions,
+} from '../interfaces'
 
 export type MarketplaceContractErrorId = 'contract-marketplace-place' | 'contract-marketplace-unplace' | 'contract-marketplace-getPlacement'
 
-class MarketplaceContract extends ContractBase {
+class MarketplaceContract extends ContractWithTokens {
   public static gasMultiplier = 1.3
 
   public static getInstance(web3: Web3): MarketplaceContract {
@@ -20,6 +22,7 @@ class MarketplaceContract extends ContractBase {
             RNSSimplePlacementsV1.abi as AbiItem[],
             marketPlaceAddress,
         ),
+        getTokensFromConfigTokens(rnsSupportedTokens),
         'marketplace-contract',
       )
     }
@@ -85,6 +88,34 @@ class MarketplaceContract extends ContractBase {
         ...txOptions,
       },
     )
+  }
+
+  public isWhitelistedToken = async (
+    {
+      type,
+      tokenAddress,
+    }: SupportedToken,
+    txOptions: TxOptions,
+  ): Promise<boolean> => {
+    if (type === TOKEN_TYPES.NATIVE) {
+      return this._call<boolean>(
+        this.methods.isGasPaymentAllowed(),
+        txOptions,
+      )
+    }
+
+    const wlByType = await this._call<{0: boolean, 1: boolean, 2: boolean}>(
+      this.methods.whitelistedPaymentToken(tokenAddress),
+      txOptions,
+    )
+
+    const wLTokens = {
+      [TOKEN_TYPES.ERC20]: wlByType[0],
+      [TOKEN_TYPES.ERC677]: wlByType[1],
+      [TOKEN_TYPES.ERC777]: wlByType[2],
+    }
+
+    return wLTokens[type]
   }
 }
 

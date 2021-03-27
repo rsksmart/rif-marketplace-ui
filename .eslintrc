@@ -33,7 +33,9 @@
     "no-only-tests"
   ],
   "rules": {
+    "no-restricted-syntax": "off",
     "react/prop-types": "off",
+    "react/require-default-props": "off",
     "no-unused-vars": [
       "error",
       {
@@ -179,10 +181,14 @@
   "overrides": [
     {
       "files": [
-        "*.spec.ts"
+        "*.spec.ts",
+        "*.spec.tsx",
+        "*.test.ts",
+        "*.test.tsx"
       ],
       "rules": {
         "@typescript-eslint/ban-ts-ignore": "off",
+        "no-underscore-dangle": "off",
         "max-nested-callbacks": [
           "error",
           10
