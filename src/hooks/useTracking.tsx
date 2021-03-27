@@ -1,20 +1,19 @@
+import { TRACKING_URL } from 'config'
 import { useEffect } from 'react'
 
-export type UsePlausibleProps = {
+export type Props = {
   activated: boolean
   dataDomain: string
 }
 
-const PLAUSIBLE_URL = 'https://plausible.io/js/plausible.js'
-
-const usePlausible = (
-  { activated, dataDomain }: UsePlausibleProps,
+const useTracking = (
+  { activated, dataDomain }: Props,
 ): void => {
   useEffect(() => {
     if (activated) {
       const script = document.createElement('script')
 
-      script.setAttribute('src', PLAUSIBLE_URL)
+      script.setAttribute('src', TRACKING_URL)
       script.setAttribute('async', 'true')
       script.setAttribute('data-domain', dataDomain)
 
@@ -23,4 +22,4 @@ const usePlausible = (
   }, [activated, dataDomain])
 }
 
-export default usePlausible
+export default useTracking
