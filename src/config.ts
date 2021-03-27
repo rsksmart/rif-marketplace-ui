@@ -11,3 +11,8 @@ export const networkName = process.env.REACT_APP_REQUIRED_NETWORK_NAME
 export default uiConfig[network]
 
 export const appVersion = process.env.REACT_APP_VERSION
+
+export const TRACKING_URL = process.env.REACT_APP_TRACKING_URL
+|| 'https://plausible.io/js/plausible.js'
+export const TRACKING_DATA_DOMAIN = process.env.REACT_APP_TRACKING_DOMAIN
+|| window.location.host

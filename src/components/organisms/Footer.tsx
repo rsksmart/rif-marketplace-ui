@@ -4,6 +4,7 @@ import { Footer as RUIFooter } from '@rsksmart/rif-ui'
 /* eslint-disable-next-line import/no-unresolved */
 import { FooterProps } from '@rsksmart/rif-ui/dist/components/organisms/Footer'
 import { appVersion } from 'config'
+import PrivacySettingsModal from './tracking/PrivacySettingsModal'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -114,6 +115,7 @@ const Footer: FC = () => {
 
   return (
     <div className={classes.root}>
+      <PrivacySettingsModal />
       <RUIFooter {...footerProps} />
     </div>
   )
