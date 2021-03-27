@@ -4,6 +4,7 @@ import Web3 from 'web3'
 import {
   SupportedTokenSymbol, SYSTEM_SUPPORTED_SYMBOL, SYSTEM_TOKENS, BaseToken, TokenRecord,
 } from 'models/Token'
+import Big from 'big.js'
 import { RifERC20Contract } from './tokens/rif'
 import { MarketplaceContractErrorId } from './rns/Marketplace'
 import { RnsContractErrorId } from './rns/Rns'
@@ -11,6 +12,8 @@ import { StorageStakingContractErrorId } from './storage/Staking'
 import { StorageContractErrorId } from './storage/Storage'
 import type { RifERC677ContractErrorId, RifERC20ContractErrorId } from './tokens/rif'
 import { PaymentWrapper } from './wrappers/payment-wrapper'
+import { NotifierContractErrorId } from './notifier/Notifier'
+import { NotifierStakingContractErrorId } from './notifier/Staking'
 
 export interface TransactionOptions {
   from?: string
@@ -19,13 +22,14 @@ export interface TransactionOptions {
   value?: string | number
 }
 
-export interface ERC20Contract extends PaymentWrapper{
-  approve (
-      address: string, amount: string | number, options: TransactionOptions
+export interface ERC20Contract extends PaymentWrapper {
+  approve(
+    address: string, amount: string | number, options: TransactionOptions
   ): Promise<TransactionReceipt>
 }
 
 export type Web3ErrorId = 'web3-getGasPrice'
+export type GetBalanceErrorId = 'get-balance'
 
 export type ContractErrorId =
   | Web3ErrorId
@@ -35,9 +39,14 @@ export type ContractErrorId =
   | RnsContractErrorId
   | StorageContractErrorId
   | StorageStakingContractErrorId
+  | NotifierContractErrorId
+  | NotifierStakingContractErrorId
+  | GetBalanceErrorId
 
 export enum TOKEN_TYPES {
   ERC20 = 'erc20',
+  ERC677 = 'erc677',
+  ERC777 = 'erc777',
   NATIVE = 'native'
 }
 
@@ -66,4 +75,12 @@ export const SUPPORTED_TOKEN_RECORDS: TokenRecord<SupportedToken> = {
     type: TOKEN_TYPES.ERC20,
     tokenContract: RifERC20Contract,
   },
+}
+
+export type CreateSubscriptionParams = {
+  subscriptionHash: string
+  providerAddress: string
+  signature: string
+  amount: Big
+  tokenAddress: string
 }

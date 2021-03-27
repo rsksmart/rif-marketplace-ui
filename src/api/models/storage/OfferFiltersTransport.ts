@@ -9,7 +9,7 @@ import { UNIT_PREFIX_POW2 } from 'utils/utils'
 export default class OfferFiltersTransport {
   averagePrice?: MinMaxFilter
 
-  totalCapacity?: MinMaxFilter
+  availableCapacity?: MinMaxFilter
 
   periods?: PeriodInSeconds[]
 
@@ -40,11 +40,11 @@ export default class OfferFiltersTransport {
       : undefined
     this.averagePrice = price
       ? {
-        min: price.min - 1,
-        max: price.max + 1,
+        min: Math.floor(price.min),
+        max: Math.ceil(price.max),
       }
       : undefined
-    this.totalCapacity = sizeGB
+    this.availableCapacity = sizeGB
       ? {
         min: sizeGB.min * UNIT_PREFIX_POW2.KILO,
         max: sizeGB.max * UNIT_PREFIX_POW2.KILO,

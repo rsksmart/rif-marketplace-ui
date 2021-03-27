@@ -11,13 +11,12 @@ import { UIError } from 'models/UIMessage'
 import Login from 'components/atoms/Login'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import Big from 'big.js'
 import AppContext, { errorReporterFactory } from 'context/App'
 import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper'
 import RoundedCard from 'components/atoms/RoundedCard'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
 import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Services/storage'
-import NoWhitelistedProvider from 'components/molecules/storage/NoWhitelistedProvider'
+import NoWhitelistedProvider from 'components/molecules/NoWhitelistedProvider'
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
 import { StorageOffer } from 'models/marketItems/StorageItem'
 import { OfferEditContextProps } from 'context/Market/storage'
@@ -26,9 +25,6 @@ import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirm
 import { NewRequestPayload } from 'context/Confirmations/interfaces'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import RoundBtn from 'components/atoms/RoundBtn'
-
-// TODO: discuss about wrapping the library and export it with this change
-Big.NE = -30
 
 const logger = Logger.getInstance()
 
@@ -181,7 +177,7 @@ const OfferCreation: FC = () => {
       {
         Boolean(account)
         && isWhitelistedProvider === false // we don't want to show the message on undefined
-        && <NoWhitelistedProvider />
+        && <NoWhitelistedProvider service="Storage" />
       }
       <RoundedCard color="primary" className={classes.stepperContainer}>
         <EditOfferStepper isLoading={false} endHandler={endHandler} />

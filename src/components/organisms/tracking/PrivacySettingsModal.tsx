@@ -10,12 +10,11 @@ import useTracking from 'hooks/useTracking'
 import Logger from 'utils/Logger'
 import { TRACKING_DATA_DOMAIN } from 'config'
 import makeStyles from '@material-ui/core/styles/makeStyles'
-import { Theme } from '@material-ui/core/styles/createMuiTheme'
 import Portal from '@material-ui/core/Portal/Portal'
 import Box from '@material-ui/core/Box/Box'
 import Typography from '@material-ui/core/Typography/Typography'
 import Link from '@material-ui/core/Link/Link'
-import createStyles from '@material-ui/core/styles/createStyles'
+import { Theme, createStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {

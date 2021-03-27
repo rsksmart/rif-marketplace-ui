@@ -1,9 +1,4 @@
-import Big from 'big.js'
-
-export const priceDisplay = (value: number | Big, maxDecimals = 8): string => value
-  .toFixed(maxDecimals)
-  .toString()
-  .replace(/[.,]00000000$/, '')
+import Logger from './Logger'
 
 export enum UNIT_PREFIX_POW2 {
   KILO = 1024,
@@ -21,4 +16,8 @@ export const getTabValueFromLocation = (
 ) => (currentPath: string): string => {
   const activeTab = tabs.find((tab) => currentPath.includes(tab.to))
   return activeTab?.to || defaultRoute
+}
+
+export const logNotImplemented = (name: string) => (info?: unknown): void => {
+  Logger.getInstance().warn(`We have yet to implement "${name}".`, info)
 }

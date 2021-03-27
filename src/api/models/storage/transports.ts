@@ -40,15 +40,3 @@ export type AgreementTransport = {
     tokenAddress: string
     expiresIn: string
 }
-
-export type StakeBalanceTransport = {
-  account: string
-  symbol: string
-  token: string
-  total: string
-}
-
-export interface StakeTransport {
-  totalStakedFiat: string
-  stakes: StakeBalanceTransport[]
-}

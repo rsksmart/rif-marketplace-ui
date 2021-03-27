@@ -39,9 +39,9 @@ const ServiceCategories: FC<ServiceCategoriesProps> = () => {
       description: 'Offer/Rent Decentralized Storage through the RIF Marketplace!',
     },
     {
-      to: ROUTES.TRIGGERS.BASE,
+      to: ROUTES.NOTIFIER.BASE,
       text: 'Notifications',
-      iconProps: { src: Icons.TRIGGERS, alt: 'Notifications icon' },
+      iconProps: { src: Icons.NOTIFIER, alt: 'Notifications icon' },
       description: 'Offer/Subscribe to real-time blockchain notifications through the RIF Marketplace!',
     },
   ]

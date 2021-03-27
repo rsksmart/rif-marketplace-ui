@@ -19,6 +19,8 @@ export class ContractBase {
     this.name = name
     this.contract = contact
     this.web3 = web3
+
+    this.web3.eth.handleRevert = true
   }
 
   public get methods(): Record<string, Function> {
@@ -89,10 +91,10 @@ export class ContractBase {
     return txReceipt
   }
 
-  protected async _call(
+  protected async _call<T>(
     tx: any,
     txOptions: TxOptions,
-  ): Promise<TransactionReceipt> {
+  ): Promise<T> {
     const {
       from,
       value,

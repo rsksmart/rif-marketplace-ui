@@ -27,7 +27,8 @@ import AppContext, {
 import { ConfirmationsContext } from 'context/Confirmations'
 import MarketContext from 'context/Market'
 import RnsDomainsContext from 'context/Services/rns/DomainsContext'
-import { marketPlaceAddress } from 'contracts/config'
+import { marketPlaceAddress, rnsSupportedTokens } from 'contracts/config'
+import { SUPPORTED_TOKEN_RECORDS } from 'contracts/interfaces'
 import {
   Marketplace as MarketplaceContract,
   Rns as RNSContract,
@@ -119,6 +120,9 @@ const DomainsCheckoutPage: FC = () => {
       web3,
     },
   } = useContext(Web3Store)
+  const marketplaceContract = React.useMemo(() => MarketplaceContract
+    .getInstance(web3 as Web3), [web3])
+
   const { dispatch: appDispatch } = useContext<AppContextProps>(AppContext)
   const reportError = useCallback(
     (e: UIError) => errorReporterFactory(appDispatch)(e), [appDispatch],
@@ -142,9 +146,12 @@ const DomainsCheckoutPage: FC = () => {
   }
 
   const currencySymbols = Object.keys(crypto)
-  const currencyOptions = currencySymbols.map(
-    (symbol) => crypto[symbol].displayName,
-  )
+  const currencyOptions = currencySymbols.filter((symbol) => rnsSupportedTokens
+    .includes(symbol as SupportedTokenSymbol)
+    && marketplaceContract.isWhitelistedToken(
+      SUPPORTED_TOKEN_RECORDS[symbol],
+      { from: account },
+    )).map((symbol) => crypto[symbol].displayName)
 
   const {
     item: {

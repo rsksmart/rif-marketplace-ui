@@ -84,7 +84,7 @@ const TransactionItem: FC<TransactionItemProps> = ({
         <Grid item xs={3}>
           <CircularProgress color="primary" />
         </Grid>
-        <Grid xs={9} className={classes.progressContainer}>
+        <Grid item xs={9} className={classes.progressContainer}>
           {renderProgress()}
         </Grid>
       </Grid>

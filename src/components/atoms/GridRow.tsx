@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { GridProps, Grid } from '@material-ui/core'
+import Grid, { GridProps } from '@material-ui/core/Grid'
 
 export type GridRowProps = Omit<GridProps, 'direction' | 'container' | 'item'>
 
