@@ -40,6 +40,8 @@ jobs:
         REACT_APP_NETWORK: rskstaging
         REACT_APP_REQUIRED_NETWORK_ID: 31
         REACT_APP_REQUIRED_NETWORK_NAME: RSK Staging
+        REACT_APP_TRACKING_URL: https://plausible.io/js/plausible.js
+        REACT_APP_TRACKING_DATADOMAIN: marketplace.staging.rifos.org
       run: |
         npm run build:prod
 
