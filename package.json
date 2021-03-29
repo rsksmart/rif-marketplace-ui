@@ -24,12 +24,12 @@
     "url": "https://github.com/rsksmart/rif-marketplace-ui.git"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "build:prod": "tsc -p tsconfig.prod.json && react-scripts build",
-    "test": "react-scripts test --unhandled-rejections=strict",
-    "coverage": "react-scripts test --unhandled-rejections=strict --coverageProvider=v8 --coverage --watchAll=false",
-    "lint": "eslint --ext=ts --ext=tsx ."
+    "start": "cp -f ./tsconfig.dev.json ./tsconfig.json && react-scripts start",
+    "build": "cp -f ./tsconfig.dev.json ./tsconfig.json && react-scripts build",
+    "build:prod": "cp -f ./tsconfig.prod.json ./tsconfig.json && react-scripts build",
+    "test": "cp -f ./tsconfig.dev.json ./tsconfig.json && react-scripts test --unhandled-rejections=strict",
+    "coverage": "cp -f ./tsconfig.dev.json ./tsconfig.json && react-scripts test --unhandled-rejections=strict --coverageProvider=v8 --coverage --watchAll=false",
+    "lint": "cp -f ./tsconfig.dev.json ./tsconfig.json && eslint --ext=ts --ext=tsx ."
   },
   "dependencies": {
     "@feathersjs/authentication": "^4.5.10",
