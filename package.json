@@ -63,7 +63,7 @@
     "webpack": "^4.42.0"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.11.6",
+    "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.2",
     "@testing-library/react-hooks": "^3.4.2",
     "@testing-library/user-event": "^12.2.2",
