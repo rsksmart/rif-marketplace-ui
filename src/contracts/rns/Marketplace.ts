@@ -82,8 +82,9 @@ class MarketplaceContract extends ContractBase {
       buyTx,
       {
         gasMultiplier: MarketplaceContract.gasMultiplier,
-        ...txOptions
-      })
+        ...txOptions,
+      },
+    )
   }
 }
 
