@@ -9,6 +9,7 @@ jobs:
   deploy-staging:
     name: RIF Marketplace UI - Staging
     runs-on: ubuntu-latest
+    environment: staging
 
     steps:
     - name: Checkout
