@@ -55,7 +55,7 @@ jobs:
 
     - name: Deploy site to S3
       run: |
-        aws s3 sync --delete --only-show-errors dist/ ${{ secrets.TESTNET_S3_BUCKET }}
+        aws s3 sync --delete --only-show-errors build/ ${{ secrets.TESTNET_S3_BUCKET }}
 
     - name: Invalidate CloudFront cache
       run: |
