@@ -21,6 +21,16 @@ const actions: Actions = {
       ...payload,
     },
   }),
+  SET_ORDER: (state, { plan, priceOption }) => ({
+    ...state,
+    order: {
+      item: {
+        ...plan,
+        ...priceOption,
+      },
+      isProcessing: false,
+    },
+  }),
 }
 
 export default actions

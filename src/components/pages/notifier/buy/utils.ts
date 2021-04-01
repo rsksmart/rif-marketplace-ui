@@ -3,13 +3,7 @@ import { NotifierPlan } from 'models/marketItems/NotifierItem'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function mapPlansToOffers(
-  // {
-  //   channels,
-  //   priceOptions,
-  //   limit,
-  // }
-  plans: NotifierPlan[],
-  crypto: MarketCryptoRecord,
+  plans: NotifierPlan[], crypto: MarketCryptoRecord,
 ) {
   const channelsSet = new Set()
   const currencyOptions = new Set()
@@ -21,7 +15,7 @@ export function mapPlansToOffers(
     plan.priceOptions.forEach(({ token, value }) => {
       currencyOptions.add(token.displayName)
 
-      const xrRate = crypto[token.symbol].rate
+      const xrRate = crypto[token.symbol]?.rate || 0
       planPrices.push(value.mul(xrRate).toNumber())
     })
     notificationLimits.push(plan.limit)
