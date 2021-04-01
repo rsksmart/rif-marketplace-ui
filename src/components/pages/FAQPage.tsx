@@ -1,9 +1,7 @@
 import React, { FC } from 'react'
-import {
-  FAQPageTemplate,
-} from '@rsksmart/rif-ui'
 /* eslint-disable-next-line import/no-unresolved */
-import { FAQPageTemplateProps } from '@rsksmart/rif-ui/dist/components/templates/FAQPageTemplate'
+import PrivacySettingsModal from 'components/organisms/tracking/PrivacySettingsModal'
+import FAQPageTemplate, { FAQPageTemplateProps } from 'components/templates/FAQPageTemplate'
 
 export interface FAQPageProps {
   className?: string
@@ -55,9 +53,12 @@ const FAQPage: FC<{}> = () => {
   }
 
   return (
-    <FAQPageTemplate
-      {...faqTemplateProps}
-    />
+    <>
+      <PrivacySettingsModal />
+      <FAQPageTemplate
+        {...faqTemplateProps}
+      />
+    </>
   )
 }
 

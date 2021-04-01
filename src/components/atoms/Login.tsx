@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
-import { Account, Web3Provider } from '@rsksmart/rif-ui'
+import { Web3Provider } from '@rsksmart/rif-ui'
 import { networkId, networkName } from 'config'
+import Account from './Account'
 
 export interface LoginProps {
   modalInitiallyOpened?: boolean
