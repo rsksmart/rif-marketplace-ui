@@ -25,26 +25,20 @@ export const mapFromTransport = ({
   name,
   prices,
   quantity,
-}: PlanDTO): NotifierOfferItem => {
-  const dateNow = new Date()
-  const expirationDate = new Date()
-  expirationDate.setDate(dateNow.getDate() + daysLeft)
-
-  return ({
-    id: String(id),
-    name,
-    provider,
-    channels: channels.map((channel) => channel.name),
-    limit: quantity,
-    priceOptions: prices.map((price) => ({
-      token: getSupportedTokenByName(
+}: PlanDTO): NotifierOfferItem => ({
+  id: String(id),
+  name,
+  provider,
+  channels: channels.map((channel) => channel.name),
+  limit: quantity,
+  priceOptions: prices.map((price) => ({
+    token: getSupportedTokenByName(
         price.rateId as SupportedTokenSymbol,
-      ),
-      value: parseToBigDecimal(price.price),
-    })),
-    expirationDate,
-  })
-}
+    ),
+    value: parseToBigDecimal(price.price),
+  })),
+  daysLeft,
+})
 
 class OffersService extends AbstractAPIService
   implements NotifierAPIService {

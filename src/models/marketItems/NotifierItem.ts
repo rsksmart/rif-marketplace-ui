@@ -2,7 +2,7 @@ import { Item } from 'models/Market'
 import Big from 'big.js'
 import { SupportedToken } from 'contracts/interfaces'
 
-type PriceOption = {
+export type PriceOption = {
     token: SupportedToken
     value: Big
 }
@@ -13,7 +13,7 @@ export type NotifierPlan = {
     channels: string[]
     limit: number
     priceOptions: PriceOption[]
-    expirationDate: Date
+    daysLeft: number
     provider: string
 }
 
