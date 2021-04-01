@@ -1,11 +1,8 @@
 import React, { FC } from 'react'
 import ServiceCategories from 'components/organisms/ServiceCategories'
-import {
-  HeaderTongue,
-} from '@rsksmart/rif-ui'
 /* eslint-disable-next-line import/no-unresolved */
-import { HeaderTongueProps } from '@rsksmart/rif-ui/dist/components/organisms/Header/HeaderTongue'
 import { makeStyles, Theme } from '@material-ui/core/styles'
+import HeaderTongue, { HeaderTongueProps } from 'components/organisms/Header/HeaderTongue'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
