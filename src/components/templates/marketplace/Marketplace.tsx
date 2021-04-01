@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import {
-  Table, TableHead, TableRow, TableCell, TableBody, Typography,
+  Table, TableHead, TableRow as MUITableRow, TableCell, TableBody, Typography,
 } from '@material-ui/core'
 
 import {
@@ -19,6 +19,7 @@ export interface MarketplaceProps {
   items: MarketplaceItem[]
   headers: TableHeaders
   Heading?: React.ElementType
+  itemDetail?: FC<string>
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -42,6 +43,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       textAlignLast: 'center',
     },
   },
+  detail: {
+    border: 0,
+    '&:last-child': {
+      textAlignLast: 'left',
+    },
+    paddingBottom: 0,
+    paddingTop: 0,
+  },
   th: {
     color: colors.gray6,
     fontWeight: fonts.weight.light,
@@ -57,11 +66,33 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
+// type TableRowProps = {
+//   items: MarketplaceItem[]
+//   headers: TableHeaders
+//   classes: ReturnType<typeof useStyles>
+// }
+// const TableRow: FC<TableRowProps> = ({
+//   items, classes, headers,
+// }) => (
+//   <>
+//     { items.map((item, index) => (
+//       <MUITableRow className={index % 2 ? classes.coloredRow : ''} key={item.id}>
+//         {Object.keys(headers).map((itemName: string) => (
+//           <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={itemName}>
+//             <Typography>{item[itemName]}</Typography>
+//           </TableCell>
+//         ))}
+//       </MUITableRow>
+//     ))}
+//   </>
+// )
+
 const Marketplace: FC<MarketplaceProps> = ({
   className = '',
   items,
   headers,
   Heading,
+  itemDetail = (): null => null,
 }) => {
   const classes = useStyles()
   return (
@@ -70,28 +101,39 @@ const Marketplace: FC<MarketplaceProps> = ({
       <div className={classes.content}>
         <Table>
           <TableHead>
-            <TableRow>
+            <MUITableRow>
               {
                 Object.keys(headers).map((itemName: string) => (
                   <TableCell className={classes.th} key={`th-${itemName}`}>{headers[itemName]}</TableCell>
                 ))
               }
-            </TableRow>
+            </MUITableRow>
           </TableHead>
           <TableBody>
-            {
-              items.map((item, index) => (
-                <TableRow className={index % 2 ? classes.coloredRow : ''} key={item.id}>
-                  {
-                    Object.keys(headers).map((itemName: string) => (
+            { items.map((item, index) => {
+              const rowClassName = index % 2 ? classes.coloredRow : ''
+              const rowKey = item.id
+
+              return (
+                <>
+                  <MUITableRow className={rowClassName} key={rowKey}>
+                    {Object.keys(headers).map((itemName: string) => (
                       <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={itemName}>
                         <Typography>{item[itemName]}</Typography>
                       </TableCell>
-                    ))
-                  }
-                </TableRow>
-              ))
-            }
+                    ))}
+                  </MUITableRow>
+                  <MUITableRow className={rowClassName} key={rowKey}>
+                    <TableCell
+                      className={classes.detail}
+                      colSpan={6}
+                    >
+                      {itemDetail(rowKey)}
+                    </TableCell>
+                  </MUITableRow>
+                </>
+              )
+            })}
           </TableBody>
         </Table>
       </div>

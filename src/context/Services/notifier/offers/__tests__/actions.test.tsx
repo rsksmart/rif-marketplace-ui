@@ -14,7 +14,7 @@ const MOCK_OFFER: NotifierOfferItem = {
   name: 'MOCK_PLAN_NAME',
   id: 'MOCK_PLAN_ID',
   channels: ['sms'],
-  expirationDate: new Date(),
+  daysLeft: 2,
   limit: 200,
   priceOptions: [
     {
