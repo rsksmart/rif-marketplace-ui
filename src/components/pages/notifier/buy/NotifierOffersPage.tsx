@@ -1,11 +1,8 @@
-import { Box, Collapse } from '@material-ui/core'
 import { Web3Store } from '@rsksmart/rif-ui'
-import GridItem from 'components/atoms/GridItem'
-import GridRow from 'components/atoms/GridRow'
 import ItemWUnit from 'components/atoms/ItemWUnit'
 import { AddressItem, SelectRowButton } from 'components/molecules'
-import NotifierPlan from 'components/molecules/notifier/NotifierPlan'
 import NotifierOffersFilters from 'components/organisms/filters/notifier/OffersFilters'
+import NotifierPlansDraw from 'components/organisms/notifier/NotifierPlansDraw'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { MarketplaceItem, TableHeaders } from 'components/templates/marketplace/Marketplace'
 import MarketContext, { MarketContextProps } from 'context/Market'
@@ -30,33 +27,16 @@ type ProviderItem = {
 }
 
 const showPlans = (
-  selectedItem: ProviderItem,
+  { id: selectedItemId, plans }: ProviderItem,
   currentFiat: string,
   crypto: MarketCryptoRecord,
   onPlanSelected: (plan: NotifierOfferItem, priceOption: PriceOption) => void,
 ): FC<string> => (id): JSX.Element => (
-  <Collapse
-    in={selectedItem.id === id}
-    timeout="auto"
-    unmountOnExit
-  >
-    <Box margin={1}>
-      <GridRow spacing={1} wrap="nowrap">
-        {
-        selectedItem.plans.map((plan) => (
-          <GridItem xs={2}>
-            <NotifierPlan
-              onSelect={(priceOption): void => {
-                onPlanSelected(plan, priceOption)
-              }}
-              {...{ currentFiat, crypto, ...plan }}
-            />
-          </GridItem>
-        ))
-      }
-      </GridRow>
-    </Box>
-  </Collapse>
+  <NotifierPlansDraw
+    plans={plans}
+    isOpen={selectedItemId === id}
+    {...{ onPlanSelected, currentFiat, crypto }}
+  />
 )
 
 const NotifierOffersPage: FC = () => {
