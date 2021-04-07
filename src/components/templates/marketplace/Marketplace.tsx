@@ -65,27 +65,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-// type TableRowProps = {
-//   items: MarketplaceItem[]
-//   headers: TableHeaders
-//   classes: ReturnType<typeof useStyles>
-// }
-// const TableRow: FC<TableRowProps> = ({
-//   items, classes, headers,
-// }) => (
-//   <>
-//     { items.map((item, index) => (
-//       <MUITableRow className={index % 2 ? classes.coloredRow : ''} key={item.id}>
-//         {Object.keys(headers).map((itemName: string) => (
-//           <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={itemName}>
-//             <Typography>{item[itemName]}</Typography>
-//           </TableCell>
-//         ))}
-//       </MUITableRow>
-//     ))}
-//   </>
-// )
-
 const Marketplace: FC<MarketplaceProps> = ({
   className = '',
   items,
