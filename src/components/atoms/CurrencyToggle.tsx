@@ -19,7 +19,7 @@ const CurrencyToggle: FC<Props> = ({
     {...props}
   >
     {options.map((symbol) => (
-      <ToggleButton value={symbol} aria-label={symbol}>
+      <ToggleButton value={symbol} aria-label={symbol} key={symbol}>
         <Typography>{SUPPORTED_TOKEN_RECORDS[symbol].displayName}</Typography>
       </ToggleButton>
     ))}
