@@ -1,13 +1,12 @@
-import React, { FC } from 'react'
-import { makeStyles, Theme } from '@material-ui/core/styles'
 import {
-  Table, TableHead, TableRow as MUITableRow, TableCell, TableBody, Typography,
+  Table, TableBody, TableCell, TableHead, TableRow as MUITableRow, Typography,
 } from '@material-ui/core'
-
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import {
   colors, fonts,
   WithSpinner,
 } from '@rsksmart/rif-ui'
+import React, { FC } from 'react'
 
 export type MarketplaceItem = { id: string, [key: string]: any }
 
@@ -118,12 +117,12 @@ const Marketplace: FC<MarketplaceProps> = ({
                 <>
                   <MUITableRow className={rowClassName} key={rowKey}>
                     {Object.keys(headers).map((itemName: string) => (
-                      <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={itemName}>
+                      <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={rowKey + itemName}>
                         <Typography>{item[itemName]}</Typography>
                       </TableCell>
                     ))}
                   </MUITableRow>
-                  <MUITableRow className={rowClassName} key={rowKey}>
+                  <MUITableRow className={rowClassName} key={`${rowKey}plans`}>
                     <TableCell
                       className={classes.detail}
                       colSpan={6}
