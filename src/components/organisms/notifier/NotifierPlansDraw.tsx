@@ -21,6 +21,9 @@ const NotifierPlansDraw: FC<Props> = ({
     in={isOpen}
     timeout="auto"
     unmountOnExit
+    style={{
+      marginBottom: '50px',
+    }}
   >
     <Grid
       container
