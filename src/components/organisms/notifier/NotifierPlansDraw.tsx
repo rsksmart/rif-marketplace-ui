@@ -34,6 +34,9 @@ const NotifierPlansDraw: FC<Props> = ({
           item
           xs={3}
           key={plan.id}
+          style={{
+            maxWidth: '178px',
+          }}
         >
           <NotifierPlan
             onSelect={(priceOption): void => {
