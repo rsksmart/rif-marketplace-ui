@@ -38,8 +38,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tc: {
     border: 0,
+    color: colors.gray4,
+    fontSize: fonts.size.small,
     '&:last-child': {
       textAlignLast: 'center',
+    },
+    '&:first-child': {
+      color: colors.gray5,
+      fontSize: fonts.size.normal,
     },
   },
   detail: {
@@ -59,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       textAlignLast: 'center',
     },
   },
-  'tc-domain': {
+  'tc-domain': { // FIXME: remove non-generic specific styling
     align: 'left',
     color: colors.primary,
   },
@@ -95,11 +101,15 @@ const Marketplace: FC<MarketplaceProps> = ({
               return (
                 <>
                   <MUITableRow className={rowClassName} key={rowKey}>
-                    {Object.keys(headers).map((itemName: string) => (
-                      <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={rowKey + itemName}>
-                        <Typography>{item[itemName]}</Typography>
-                      </TableCell>
-                    ))}
+                    {Object.keys(headers).map((itemName: string) => {
+                      const cell = item[itemName]
+
+                      return (
+                        <TableCell className={`${classes.tc} ${classes[`tc-${itemName}`]}`} key={rowKey + itemName}>
+                          {typeof cell === 'string' ? <Typography>{cell}</Typography> : cell}
+                        </TableCell>
+                      )
+                    })}
                   </MUITableRow>
                   <MUITableRow className={rowClassName} key={`${rowKey}plans`}>
                     <TableCell

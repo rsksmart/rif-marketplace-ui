@@ -6,17 +6,18 @@ import { ButtonProps } from '@rsksmart/rif-ui/dist/components/atoms/Button'
 export interface SelectRowButtonProps extends ButtonProps {
   className?: string
   id: string
+  isSelected?: boolean
   handleSelect: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 const SelectRowButton: FC<SelectRowButtonProps> = ({
-  id, handleSelect, children, ...rest
+  id, handleSelect, isSelected, children, ...rest
 }) => (
   <Button
     rounded
     id={id}
     variant="contained"
-    color="primary"
+    color={isSelected ? 'secondary' : 'primary'}
     onClick={handleSelect}
     {...rest}
   >

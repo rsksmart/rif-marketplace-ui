@@ -86,6 +86,8 @@ const NotifierOffersPage: FC = () => {
         providerPlans, crypto,
       )
 
+      const isSelected = selectedProvider?.id === provider
+
       return {
         id: provider,
         provider: <AddressItem value={provider} />,
@@ -100,8 +102,11 @@ const NotifierOffersPage: FC = () => {
         action1: account === provider ? 'your offer' : (
           <SelectRowButton
             id={provider}
+            isSelected={isSelected}
             handleSelect={(): void => {
-              setSelectedProvider({ id: provider, plans: providerPlans })
+              setSelectedProvider(isSelected
+                ? undefined
+                : { id: provider, plans: providerPlans })
             }}
           />
         ),

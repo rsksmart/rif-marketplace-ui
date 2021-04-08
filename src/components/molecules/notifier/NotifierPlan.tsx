@@ -24,6 +24,7 @@ const useCardStyles = makeStyles(() => ({
     border: '1px solid #CFD3DA',
     boxShadow: 'none',
     borderRadius: '10px',
+    maxWidth: '152px',
   },
   content: {
     maxHeight: '248px',
