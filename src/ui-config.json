@@ -10,10 +10,16 @@
         "rnsManagerUrl": "http://localhost:3001",
         "services": {
             "rns": {
-                "tokens": ["rbtc", "rif"]
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
             },
             "storage": {
-                "tokens": ["rbtc", "rif"]
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
             }
         }
     },
@@ -21,14 +27,24 @@
         "contractAddresses": {
             "rif": "0x2acc95758f8b5f583470ba265eb685a8f45fc9d5",
             "rnsDotRskOwner": "0x45d3e4fb311982a06ba52359d44cb4f5980e0ef1",
-            "marketplace": "0xa966Be39A13723d991dFA92B2B0CF6b0c7416eE5"
+            "marketplace": "0xa966Be39A13723d991dFA92B2B0CF6b0c7416eE5",
+            "storageManager": "0xa18c181229F374b00f126fC952775d41A4F4c40e",
+            "storageStaking": "0xe82Eb1C0D40D555b8030116132EdA0B9f1032263"
         },
         "rnsManagerUrl": "https://manager.rns.rifos.org",
-         "services": {
-             "rns": {
-                 "tokens": ["rif"]
-             }
-         }
+        "services": {
+            "rns": {
+                "tokens": [
+                    "rif"
+                ]
+            },
+            "storage": {
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
+            }
+        }
     },
     "rsktestnet": {
         "contractAddresses": {
@@ -41,10 +57,15 @@
         "rnsManagerUrl": "https://testnet.manager.rns.rifos.org",
         "services": {
             "rns": {
-                "tokens": ["rif"]
+                "tokens": [
+                    "rif"
+                ]
             },
             "storage": {
-                "tokens": ["rbtc", "rif"]
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
             }
         }
     },
@@ -59,10 +80,15 @@
         "rnsManagerUrl": "https://testnet.manager.rns.rifos.org",
         "services": {
             "rns": {
-                "tokens": ["rif"]
+                "tokens": [
+                    "rif"
+                ]
             },
             "storage": {
-                "tokens": ["rbtc", "rif"]
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
             }
         }
     }
