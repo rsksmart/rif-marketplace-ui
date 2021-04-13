@@ -25,10 +25,12 @@ export const mapFromTransport = ({
   name,
   prices,
   quantity,
+  url,
 }: PlanDTO): NotifierOfferItem => ({
   id: String(id),
   name,
-  provider,
+  provider: provider.toLocaleLowerCase(),
+  url,
   channels: channels.map((channel) => channel.name),
   limit: quantity,
   priceOptions: prices.map((price) => ({
