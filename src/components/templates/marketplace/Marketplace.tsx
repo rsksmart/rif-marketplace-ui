@@ -99,8 +99,8 @@ const Marketplace: FC<MarketplaceProps> = ({
               const rowKey = item.id
 
               return (
-                <>
-                  <MUITableRow className={rowClassName} key={rowKey}>
+                <React.Fragment key={rowKey}>
+                  <MUITableRow className={rowClassName}>
                     {Object.keys(headers).map((itemName: string) => {
                       const cell = item[itemName]
 
@@ -119,7 +119,7 @@ const Marketplace: FC<MarketplaceProps> = ({
                       {itemDetail(rowKey)}
                     </TableCell>
                   </MUITableRow>
-                </>
+                </React.Fragment>
               )
             })}
           </TableBody>

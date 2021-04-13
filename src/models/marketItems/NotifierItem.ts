@@ -8,13 +8,17 @@ export type PriceOption = {
 }
 export type NotifierPlanPriceOption = PriceOption
 
-export type NotifierPlan = {
+export type Provider = {
+    provider: string
+    url: string
+}
+
+export type NotifierPlan = Provider & {
     name: string
     channels: string[]
     limit: number
     priceOptions: PriceOption[]
     daysLeft: number
-    provider: string
 }
 
 export type NotifierOfferItem = Item & NotifierPlan

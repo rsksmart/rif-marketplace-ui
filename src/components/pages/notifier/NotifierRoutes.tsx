@@ -12,6 +12,7 @@ import NotifierLandingPage from './NotifierLandingPage'
 import { NotFound } from '..'
 import NotifierSellPage from './sell/NotifierSellPage'
 import NotifierOffersPage from './buy/NotifierOffersPage'
+import NotifierMyOffersPage from './myoffers/NotifierMyOffersPage'
 import { buildTabs } from '../routerUtils'
 
 const logger = Logger.getInstance()
@@ -19,18 +20,7 @@ const logger = Logger.getInstance()
 const TABS = buildTabs([
   { label: 'Buy', value: ROUTES.NOTIFIER.BUY.BASE },
   { label: 'Sell', value: ROUTES.NOTIFIER.SELL.BASE },
-const TABS: StyledNavTabProps[] = [
-  {
-    label: 'Buy',
-    to: ROUTES.NOTIFIER.BUY.BASE,
-    value: ROUTES.NOTIFIER.BUY.BASE,
-  },
-  {
-    label: 'Sell',
-    to: ROUTES.NOTIFIER.SELL.BASE,
-    value: ROUTES.NOTIFIER.SELL.BASE,
-  },
-]
+  { label: 'My offers', value: ROUTES.NOTIFIER.MYOFFERS.BASE },
 ])
 
 const DeadEndRoute = <Route component={NotFound} /> // TODO: Move to utils and abstract in uses across the app
@@ -81,6 +71,20 @@ const NotifierRoutes: FC = () => {
                 </Switch>
               </NotifierOffersContextProvider>
             </Route>
+            {/* MyOffers */}
+            <Route path={ROUTES.NOTIFIER.MYOFFERS.BASE}>
+              <NotifierOffersContextProvider>
+                <Switch>
+                  <Route
+                    exact
+                    path={ROUTES.NOTIFIER.MYOFFERS.BASE}
+                    component={NotifierMyOffersPage}
+                  />
+                  {DeadEndRoute}
+                </Switch>
+              </NotifierOffersContextProvider>
+            </Route>
+
             {/* Sell */}
             <Route
               exact
