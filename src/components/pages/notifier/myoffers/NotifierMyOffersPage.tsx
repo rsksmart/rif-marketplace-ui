@@ -1,62 +1,26 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import {
-  Grid, makeStyles, Paper, Typography,
+  Grid, Typography,
 } from '@material-ui/core'
-import Accordion from '@material-ui/core/Accordion'
-import AccordionDetails from '@material-ui/core/AccordionDetails'
-import Divider from '@material-ui/core/Divider'
-import TableContainer from '@material-ui/core/TableContainer'
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined'
 import {
-  Button, colors, CopyTextTooltip, shortenString, TooltipIconButton, Web3Store,
+  Button, CopyTextTooltip, shortenString, TooltipIconButton, Web3Store,
 } from '@rsksmart/rif-ui'
 import handProvidingFunds from 'assets/images/handProvidingFunds.svg'
-import LabelWithValue from 'components/atoms/LabelWithValue'
 import RoundBtn from 'components/atoms/RoundBtn'
 import WithLoginCard from 'components/hoc/WithLoginCard'
+import DescriptionCard from 'components/molecules/DescriptionCard'
 import InfoBar from 'components/molecules/InfoBar'
-import PlanViewActions from 'components/molecules/plans/PlanViewActions'
-import PlanViewSummary from 'components/molecules/plans/PlanViewSummary'
 import RifAddress from 'components/molecules/RifAddress'
+import PlanView from 'components/organisms/plans/PlanView'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
-import Marketplace from 'components/templates/marketplace/Marketplace'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import withNotifierOffersContext, { NotifierOffersContext } from 'context/Services/notifier/offers'
 import React, {
   FC, useContext, useEffect, useMemo,
 } from 'react'
 
-const useDescriptionStyles = makeStyles({
-  root: {
-    background: colors.gray1,
-    paddingLeft: '41px',
-    paddingTop: '18px',
-    paddingBottom: '28px',
-  },
-})
-
-const usePlanStyles = makeStyles({
-  root: {
-    width: '100%',
-    border: `1px solid ${colors.gray3}`,
-    borderRadius: 15,
-    boxShadow: 'none',
-    '&:before': {
-      display: 'none',
-    },
-    '&:last-child': {
-      borderRadius: 15,
-    },
-    '&:first-child': {
-      borderRadius: 15,
-    },
-  },
-})
-
 const NotifierMyOffersPage: FC = () => {
-  const descriptionClasses = useDescriptionStyles()
-  const planViewClasses = usePlanStyles()
-
   const {
     state: { account },
   } = useContext(Web3Store)
@@ -93,6 +57,16 @@ const NotifierMyOffersPage: FC = () => {
   //   e: UIError,
   // ) => errorReporterFactory(appDispatch)(e), [appDispatch])
 
+  const headers = {
+    customer: 'Customer',
+    limit: 'Notifications',
+    expDate: 'Expiration date',
+    price: 'Price',
+    funds: 'Available funds',
+  }
+  const handlePlanEdit = () => {}
+  const handlePlanCancel = () => {}
+
   return (
     <CenteredPageTemplate>
       <InfoBar
@@ -102,15 +76,10 @@ const NotifierMyOffersPage: FC = () => {
       />
       {/* <Staking /> */}
 
-      {/* Profile description */ }
       <Grid container spacing={8}>
         <Grid item md={5}>
-          <Paper
-            elevation={0}
-            classes={{
-              root: descriptionClasses.root,
-            }}
-          >
+          {/* Profile description */ }
+          <DescriptionCard>
             <Grid
               container
               spacing={1}
@@ -157,9 +126,9 @@ const NotifierMyOffersPage: FC = () => {
                 />
               </Grid>
             </Grid>
-          </Paper>
+          </DescriptionCard>
         </Grid>
-        {/* You are providing the following plans to your customers */ }
+        {/* Header */ }
         <Grid
           container
           alignItems="center"
@@ -180,59 +149,49 @@ const NotifierMyOffersPage: FC = () => {
         {/* Plans */}
         <Grid container direction="column">
           {
-            myOffers.map((offer) => (
-              <Grid item key={offer.id}>
-                <Accordion
-                  classes={{
-                    root: planViewClasses.root,
+            myOffers.map(({
+              id,
+              name,
+              limit,
+              channels,
+              priceOptions,
+              daysLeft,
+              provider,
+              url,
+            }) => {
+              const activeContracts = []
+              const isPlanEditDisabled = false
+              const isPlanCancelDisabled = false
+              const isTableLoading = false
+
+              const planSummary = {
+                name,
+                left: { label: 'Notifications', value: String(limit) },
+                middle: { label: 'Channels', value: channels.join(', ') },
+                right: {
+                  label: 'Currency',
+                  value: priceOptions
+                    .map((option) => option.token.displayName)
+                    .join(', '),
+                },
+              }
+
+              return (
+                <Grid item key={id}>
+                  <PlanView {...{
+                    planSummary,
+                    handlePlanEdit,
+                    isPlanEditDisabled,
+                    handlePlanCancel,
+                    isPlanCancelDisabled,
+                    isTableLoading,
+                    headers,
+                    activeContracts,
                   }}
-                  expanded // FIXME: add isCollapsed
-                  onChange={() => {}} // FIXME: add handler
-                >
-                  <PlanViewSummary
-                    name={`Plan ${offer.name}`}
-                    left={<LabelWithValue label="Notifications" value={`${offer.limit}`} />}
-                    middle={<LabelWithValue label="Channels" value={offer.channels.join(', ')} />}
-                    right={(
-                      <LabelWithValue
-                        label="Currency"
-                        value={`${offer.priceOptions
-                          .map((option) => option.token.displayName)
-                          .join(', ')}`}
-                      />
-                    )}
                   />
-                  <AccordionDetails>
-                    <Grid container direction="column" spacing={2}>
-                      <Grid item>
-                        <PlanViewActions
-                          editProps={{
-                            onClick: () => {},
-                            disabled: true,
-                          }}
-                          cancelProps={{
-                            onClick: () => {},
-                            disabled: true,
-                          }}
-                        />
-                      </Grid>
-                      <Grid item><Divider /></Grid>
-                      <Grid item>
-                        <Grid container>
-                          <TableContainer>
-                            <Marketplace
-                              headers={[]}
-                              isLoading={false}
-                              items={items}
-                            />
-                          </TableContainer>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </AccordionDetails>
-                </Accordion>
-              </Grid>
-            ))
+                </Grid>
+              )
+            })
           }
         </Grid>
       </Grid>

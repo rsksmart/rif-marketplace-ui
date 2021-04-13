@@ -27,7 +27,7 @@ const PlanViewActions: FC<Props> = ({ editProps, cancelProps, ...props }) => (
         // onClick={onEditOffer}
         // disabled={!storageOffer.isActive}
       >
-        Edit
+        Edit plan
       </Button>
     </Grid>
     <Grid item>
@@ -39,7 +39,7 @@ const PlanViewActions: FC<Props> = ({ editProps, cancelProps, ...props }) => (
         // onClick={handleCancelOpen}
         // disabled={!storageOffer.isActive}
       >
-        Cancel
+        Cancel plan
       </Button>
     </Grid>
     {/* <CancelOfferDialogue
