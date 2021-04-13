@@ -1,7 +1,3 @@
-import {
-  StyledNavTabProps,
-  /* eslint-disable-next-line import/no-unresolved */
-} from '@rsksmart/rif-ui/dist/components/atoms/StyledNavTab'
 import React, { FC, useEffect } from 'react'
 import {
   Redirect, Route, Switch, useHistory, useLocation,
@@ -16,9 +12,13 @@ import NotifierLandingPage from './NotifierLandingPage'
 import { NotFound } from '..'
 import NotifierSellPage from './sell/NotifierSellPage'
 import NotifierOffersPage from './buy/NotifierOffersPage'
+import { buildTabs } from '../routerUtils'
 
 const logger = Logger.getInstance()
 
+const TABS = buildTabs([
+  { label: 'Buy', value: ROUTES.NOTIFIER.BUY.BASE },
+  { label: 'Sell', value: ROUTES.NOTIFIER.SELL.BASE },
 const TABS: StyledNavTabProps[] = [
   {
     label: 'Buy',
@@ -31,7 +31,9 @@ const TABS: StyledNavTabProps[] = [
     value: ROUTES.NOTIFIER.SELL.BASE,
   },
 ]
+])
 
+const DeadEndRoute = <Route component={NotFound} /> // TODO: Move to utils and abstract in uses across the app
 const NotifierRoutes: FC = () => {
   const { pathname } = useLocation()
   const { services } = networkConfig
@@ -66,6 +68,7 @@ const NotifierRoutes: FC = () => {
           tabs={TABS}
         >
           <Switch>
+            {/* Buy */}
             <Route path={ROUTES.NOTIFIER.BUY.BASE}>
               <NotifierOffersContextProvider>
                 <Switch>
@@ -74,16 +77,17 @@ const NotifierRoutes: FC = () => {
                     path={ROUTES.NOTIFIER.BUY.BASE}
                     component={NotifierOffersPage}
                   />
-                  <Route component={NotFound} />
+                  {DeadEndRoute}
                 </Switch>
               </NotifierOffersContextProvider>
             </Route>
+            {/* Sell */}
             <Route
               exact
               path={ROUTES.NOTIFIER.SELL.BASE}
               component={NotifierSellPage}
             />
-            <Route component={NotFound} />
+            {DeadEndRoute}
           </Switch>
         </TabsTemplate>
       </Switch>
