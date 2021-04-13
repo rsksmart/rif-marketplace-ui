@@ -11,4 +11,5 @@ export type NotifierOffersFilters = {
     price: PriceFilter
     currency: Set<SupportedTokenSymbol>
     channels: Set<string>
+    provider?: string
 }
