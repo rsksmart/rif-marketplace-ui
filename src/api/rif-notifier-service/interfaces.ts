@@ -1,8 +1,7 @@
 import { APIService } from 'api/models/apiService'
 import { Modify } from 'utils/typeUtils'
 
-export const serviceAddress = 'v1' as const
-export type ServiceAddress = typeof serviceAddress
+export type ServiceAddress = string
 
 export type Subscriptions = {
   data: any

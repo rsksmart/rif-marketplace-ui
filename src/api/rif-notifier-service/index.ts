@@ -1,7 +1,7 @@
+import { createRestClient } from 'api/client'
 import { AbstractAPIService } from 'api/models/apiService'
 import { UIError } from 'models/UIMessage'
-import client, { NOTIFIER_ADDRESS } from './client'
-import { serviceAddress, NotifierAPIService, Subscriptions } from './interfaces'
+import { NotifierAPIService, Subscriptions } from './interfaces'
 
 const API_ADDRESSES = {
   GET_SUBSCRIPTIONS: 'getSubscriptions',
@@ -11,14 +11,13 @@ const API_ADDRESSES = {
 export default class NotifierService
   extends AbstractAPIService
   implements NotifierAPIService {
-    path = serviceAddress
-
-    constructor() {
-      super(client)
-    }
+  constructor(url: string) {
+    super(createRestClient<NotifierAPIService>(url))
+    this.path = url
+  }
 
     getSubscriptions = async (account: string): Promise<Subscriptions[]> => {
-      const response = await fetch(`${NOTIFIER_ADDRESS}/${API_ADDRESSES.GET_SUBSCRIPTIONS}`)
+      const response = await fetch(`${this.path}/${API_ADDRESSES.GET_SUBSCRIPTIONS}`)
 
       if (response.status !== 200) {
         throw new UIError({
@@ -31,8 +30,9 @@ export default class NotifierService
       return response.json()
     }
 
-   getSubscriptionInfo = async (subscriptionId: string): Promise<Subscriptions[]> => {
-     const response = await fetch(`${NOTIFIER_ADDRESS}/${API_ADDRESSES.GET_SUBSCRIPTION_INFO}`)
+   getSubscriptionInfo = async (subscriptionId: string):
+   Promise<Subscriptions[]> => {
+     const response = await fetch(`${this.path}/${API_ADDRESSES.GET_SUBSCRIPTION_INFO}`)
 
      if (response.status !== 200) {
        throw new UIError({
@@ -45,5 +45,5 @@ export default class NotifierService
      return response.json()
    }
 
-    _fetch = (_: any): Promise<any> => Promise.resolve()
+    _fetch = (): Promise<void> => Promise.resolve()
 }

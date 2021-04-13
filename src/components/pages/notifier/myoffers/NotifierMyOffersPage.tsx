@@ -6,24 +6,29 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined'
 import {
   Button, CopyTextTooltip, shortenString, TooltipIconButton, Web3Store,
 } from '@rsksmart/rif-ui'
+import NotifierService from 'api/rif-notifier-service'
+import { NotifierAPIService } from 'api/rif-notifier-service/interfaces'
 import handProvidingFunds from 'assets/images/handProvidingFunds.svg'
-import RoundBtn from 'components/atoms/RoundBtn'
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import DescriptionCard from 'components/molecules/DescriptionCard'
 import InfoBar from 'components/molecules/InfoBar'
 import RifAddress from 'components/molecules/RifAddress'
 import PlanView from 'components/organisms/plans/PlanView'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
-import ProgressOverlay from 'components/templates/ProgressOverlay'
+import AppContext, { AppContextProps } from 'context/App'
 import withNotifierOffersContext, { NotifierOffersContext } from 'context/Services/notifier/offers'
 import React, {
-  FC, useContext, useEffect, useMemo,
+  FC, useContext, useEffect, useMemo, useState,
 } from 'react'
 
 const NotifierMyOffersPage: FC = () => {
   const {
     state: { account },
   } = useContext(Web3Store)
+  const {
+    state: { apis },
+    dispatch: appDispatch,
+  } = useContext<AppContextProps>(AppContext)
   const {
     state: {
       listing: {
@@ -42,11 +47,44 @@ const NotifierMyOffersPage: FC = () => {
     })
   }, [account])
 
-  const myOffers = useMemo(() => items
-    .filter(({ provider }) => provider === account), [
+  type Profile = { address: string, url: string } | undefined
+  const [myProfile, setMyProfile] = useState<Profile>()
+  const [myCustomers, setMyCustomers] = useState()
+
+  const myOffers = useMemo(() => {
+    const offers = items
+      .filter(({ provider }) => provider === account)
+
+    if (offers.length) {
+      const offer = offers[0]
+      setMyProfile({
+        address: offer.provider,
+        url: offer.url,
+      })
+    }
+    return offers
+  }, [
     items,
     account,
   ])
+
+  useEffect(() => {
+    if (myProfile?.url) {
+      appDispatch({
+        type: 'SET_SERVICE',
+        payload: new NotifierService(myProfile.url),
+      })
+    }
+  }, [myProfile])
+
+  // useEffect(() => {
+  //   if (myProfile && apis[myProfile.url]) {
+  //     const notifierApi: NotifierAPIService = apis[myProfile.url]
+
+  //     notifierApi.getSubscriptions(myProfile.address)
+  //     .then((subscriptions) => setMyCustomers(subscriptions))
+  //   }
+  // }, [apis, myProfile])
 
   // const history = useHistory()
   // const {
@@ -66,6 +104,8 @@ const NotifierMyOffersPage: FC = () => {
   }
   const handlePlanEdit = () => {}
   const handlePlanCancel = () => {}
+
+  const handleEditProfile = () => {}
 
   return (
     <CenteredPageTemplate>
@@ -92,7 +132,7 @@ const NotifierMyOffersPage: FC = () => {
                   <TooltipIconButton
                     icon={<EditOutlinedIcon />}
                     iconButtonProps={{
-                      onClick: () => {},
+                      onClick: handleEditProfile,
                       style: {
                         padding: 0,
                         margin: 0,
@@ -117,10 +157,10 @@ const NotifierMyOffersPage: FC = () => {
               </Grid>
               <Grid item xs={4} md={7}>
                 <CopyTextTooltip
-                  fullText={myOffers?.[0]?.url || ''}
+                  fullText={myProfile?.url || ''}
                   displayElement={(
                     <Typography color="textSecondary" noWrap>
-                      {shortenString(myOffers?.[0]?.url.replace(/^http[s]*:\/\//, '') || '', 20, 20)}
+                      {shortenString(myProfile?.url.replace(/^http[s]*:\/\//, '') || '', 20, 20)}
                     </Typography>
                 )}
                 />
@@ -150,14 +190,14 @@ const NotifierMyOffersPage: FC = () => {
         <Grid container direction="column">
           {
             myOffers.map(({
-              id,
-              name,
-              limit,
-              channels,
-              priceOptions,
-              daysLeft,
-              provider,
-              url,
+              id: offerId,
+              name: offerName,
+              limit: offerLimit,
+              channels: offerChannels,
+              priceOptions: offerPriceOptions,
+              daysLeft: offerDaysLeft,
+              provider: offerProvider,
+              url: offerUrl,
             }) => {
               const activeContracts = []
               const isPlanEditDisabled = false
@@ -165,19 +205,19 @@ const NotifierMyOffersPage: FC = () => {
               const isTableLoading = false
 
               const planSummary = {
-                name,
-                left: { label: 'Notifications', value: String(limit) },
-                middle: { label: 'Channels', value: channels.join(', ') },
+                name: offerName,
+                left: { label: 'Notifications', value: String(offerLimit) },
+                middle: { label: 'Channels', value: offerChannels.join(', ') },
                 right: {
                   label: 'Currency',
-                  value: priceOptions
+                  value: offerPriceOptions
                     .map((option) => option.token.displayName)
                     .join(', '),
                 },
               }
 
               return (
-                <Grid item key={id}>
+                <Grid item key={offerId}>
                   <PlanView {...{
                     planSummary,
                     handlePlanEdit,
@@ -196,12 +236,12 @@ const NotifierMyOffersPage: FC = () => {
         </Grid>
       </Grid>
 
-      {/* Progress Overlay */ }
-      <ProgressOverlay
+      {/* Cancel Offer Progress Overlay */ }
+      {/* <ProgressOverlay
         isDone={false}
         inProgress={false}
-        title="Canceling your storage offer"
-        doneMsg="Your storage offer has been canceled"
+        title="Canceling your notifier offer"
+        doneMsg="Your notifier offer has been canceled"
         buttons={[
           <RoundBtn
             onClick={() => {}}
@@ -209,7 +249,7 @@ const NotifierMyOffersPage: FC = () => {
             Close
           </RoundBtn>,
         ]}
-      />
+      /> */}
     </CenteredPageTemplate>
   )
 }
