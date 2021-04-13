@@ -1,51 +1,45 @@
 /* eslint-disable import/no-unresolved */
-import {
-  StyledNavTabProps,
-} from '@rsksmart/rif-ui/dist/components/atoms/StyledNavTab'
+import TabsTemplate from 'components/templates/TabsTemplate'
+import networkConfig from 'config'
+import { OfferEditContextProvider } from 'context/Market/storage'
+import StorageContextProvider from 'context/Services/storage'
+import { AgreementsContextProvider } from 'context/Services/storage/agreements'
+import { StorageOffersContextProvider } from 'context/Services/storage/offers'
 import React, { FC, useEffect } from 'react'
 import {
   Redirect, Route, Switch, useHistory, useLocation,
 } from 'react-router-dom'
-import TabsTemplate from 'components/templates/TabsTemplate'
-import networkConfig from 'config'
-import { OfferEditContextProvider } from 'context/Market/storage'
-import { StorageOffersContextProvider } from 'context/Services/storage/offers'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { getTabValueFromLocation } from 'utils/utils'
-import { AgreementsContextProvider } from 'context/Services/storage/agreements'
-import StorageContextProvider from 'context/Services/storage'
 import {
-  StorageOffersPage, StorageMyOffersPage, StorageLandingPage, StorageSellPage,
+  StorageLandingPage, StorageMyOffersPage, StorageOffersPage, StorageSellPage,
 } from '.'
 import { NotFound } from '..'
+import { buildTabs } from '../routerUtils'
 import StorageOffersCheckoutPage from './buy/StorageOffersCheckoutPage'
 import StorageEditOfferPage from './myoffers/StorageEditOfferPage'
 import MyStoragePurchases from './myPurchases/Page'
 import RenewAgreement from './myPurchases/RenewAgreement'
 
-const TABS: StyledNavTabProps[] = [
+const TABS = buildTabs([
   {
     label: 'Buy',
-    to: ROUTES.STORAGE.BUY.BASE,
     value: ROUTES.STORAGE.BUY.BASE,
   },
   {
     label: 'Sell',
-    to: ROUTES.STORAGE.SELL.BASE,
     value: ROUTES.STORAGE.SELL.BASE,
   },
   {
     label: 'My offers',
-    to: ROUTES.STORAGE.MYOFFERS.BASE,
     value: ROUTES.STORAGE.MYOFFERS.BASE,
   },
   {
     label: 'My purchases',
-    to: ROUTES.STORAGE.MYPURCHASES.BASE,
     value: ROUTES.STORAGE.MYPURCHASES.BASE,
   },
-]
+])
 
 const logger = Logger.getInstance()
 
