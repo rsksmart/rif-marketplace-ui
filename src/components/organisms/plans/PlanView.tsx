@@ -2,8 +2,7 @@ import { makeStyles } from '@material-ui/core'
 import Accordion, { AccordionProps } from '@material-ui/core/Accordion'
 import { colors } from '@rsksmart/rif-ui'
 import ActiveContracts from 'components/molecules/plans/ActiveContracts'
-import LabelWithValue from 'components/atoms/LabelWithValue'
-import PlanViewSummary from 'components/molecules/plans/PlanViewSummary'
+import PlanViewSummary, { PlanViewSummaryProps } from 'components/molecules/plans/PlanViewSummary'
 import Marketplace from 'components/templates/marketplace/Marketplace'
 import React, {
   FC,
@@ -28,12 +27,7 @@ const usePlanStyles = makeStyles({
 })
 
 type Props = Omit<AccordionProps, 'children'> & {
-  planSummary: {
-      name: string
-      left: { label: string, value: string}
-      middle: { label: string, value: string}
-      right: { label: string, value: string}
-  }
+  summary: PlanViewSummaryProps
   handlePlanEdit: () => void
   isPlanEditDisabled: boolean
   handlePlanCancel: () => void
@@ -50,9 +44,7 @@ type Props = Omit<AccordionProps, 'children'> & {
 }
 
 const PlanView: FC<Props> = ({
-  planSummary: {
-    name, left, middle, right,
-  },
+  summary: { name, ...summaryProps },
   handlePlanEdit,
   isPlanEditDisabled,
   handlePlanCancel,
@@ -66,9 +58,7 @@ const PlanView: FC<Props> = ({
   >
     <PlanViewSummary
       name={`Plan ${name}`}
-      left={<LabelWithValue label={left.label} value={left.value} />}
-      middle={<LabelWithValue label={middle.label} value={middle.value} />}
-      right={<LabelWithValue label={right.label} value={right.value} />}
+      {...summaryProps}
     />
     <ActiveContracts
       {...{
