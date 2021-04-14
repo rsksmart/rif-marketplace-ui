@@ -27,6 +27,7 @@ const NOTIFIER = '/notifier'
 const NOTIFIER_BUY = `${NOTIFIER}/${BUY}`
 const NOTIFIER_SELL = `${NOTIFIER}/${SELL}`
 const NOTIFIER_MYOFFERS = `${NOTIFIER}/${MY_OFFERS}`
+const NOTIFIER_MYPURCHASES = `${NOTIFIER}/${MY_PURCHASES}`
 
 const FAQ = '/faq'
 const ABOUT = '/about'
@@ -81,6 +82,9 @@ const ROUTES = {
     },
     MYOFFERS: {
       BASE: NOTIFIER_MYOFFERS,
+    },
+    MYPURCHASES: {
+      BASE: NOTIFIER_MYPURCHASES,
     },
   },
   FAQ,
