@@ -35,3 +35,5 @@ export type NotifierChannel = {
     type: string
     destination: string
 }
+
+export type NotifierItem = NotifierOfferItem | NotifierSubscriptionItem
