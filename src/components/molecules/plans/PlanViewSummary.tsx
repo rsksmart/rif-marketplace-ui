@@ -1,7 +1,7 @@
-import {
-  Grid, Typography,
-} from '@material-ui/core'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
+import Grid, { GridSize } from '@material-ui/core/Grid'
+
+import Typography from '@material-ui/core/Typography'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import AccordionShowButton from 'components/molecules/AccordionShowButton'
 import React, {
@@ -10,34 +10,38 @@ import React, {
 
 type Props = {
   name: string
-  left?: JSX.Element
-  middle?: JSX.Element
-  right?: JSX.Element
+  info?: JSX.Element[]
 }
 
+const NAME_GRID_CNT = 1
+const SHOW_GRID_CNT = 2
+const INFO_GRID_CNT = 12 - NAME_GRID_CNT - SHOW_GRID_CNT
+
 const PlanViewSummary: FC<Props> = ({
-  name, left, middle, right,
+  name, info = [],
 }) => (
   <AccordionSummary
     expandIcon={<ExpandMoreIcon color="primary" />}
     aria-controls={`plan-${name}-content`}
   >
     <Grid container alignItems="center">
-      <Grid item sm={1}>
+      <Grid item sm={NAME_GRID_CNT}>
         <Typography align="center" color="primary" variant="subtitle1">
           {name}
         </Typography>
       </Grid>
-      <Grid item sm={3}>
-        {left}
+      <Grid
+        container
+        item
+        xs={INFO_GRID_CNT as GridSize}
+      >
+        {info.map((item) => (
+          <Grid item sm={(INFO_GRID_CNT / info.length) as GridSize}>
+            {item}
+          </Grid>
+        )) }
       </Grid>
-      <Grid item sm={3}>
-        {middle}
-      </Grid>
-      <Grid item sm={3}>
-        {right}
-      </Grid>
-      <Grid item sm={2}>
+      <Grid item sm={SHOW_GRID_CNT as GridSize}>
         <AccordionShowButton show subject="active contracts" />
       </Grid>
     </Grid>
