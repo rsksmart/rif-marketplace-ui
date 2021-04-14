@@ -14,6 +14,7 @@ import NotifierSellPage from './sell/NotifierSellPage'
 import NotifierOffersSelectedPage from './buy/NotifierOffersSelectedPage'
 import NotifierOffersPage from './buy/NotifierOffersPage'
 import NotifierMyOffersPage from './myoffers/NotifierMyOffersPage'
+import NotifierMyPurchasePage from './mypurchase/NotifierMyPurchasePage'
 import { buildTabs } from '../routerUtils'
 
 const logger = Logger.getInstance()
@@ -22,6 +23,7 @@ const TABS = buildTabs([
   { label: 'Buy', value: ROUTES.NOTIFIER.BUY.BASE },
   { label: 'Sell', value: ROUTES.NOTIFIER.SELL.BASE },
   { label: 'My offers', value: ROUTES.NOTIFIER.MYOFFERS.BASE },
+  { label: 'My purchases', value: ROUTES.NOTIFIER.MYPURCHASES.BASE }
 ])
 
 const DeadEndRoute = <Route component={NotFound} /> // TODO: Move to utils and abstract in uses across the app
@@ -96,6 +98,13 @@ const NotifierRoutes: FC = () => {
               exact
               path={ROUTES.NOTIFIER.SELL.BASE}
               component={NotifierSellPage}
+            />
+
+            {/* My purchases */}
+            <Route
+              exact
+              path={ROUTES.NOTIFIER.MYPURCHASES.BASE}
+              component={NotifierMyPurchasePage}
             />
             {DeadEndRoute}
           </Switch>
