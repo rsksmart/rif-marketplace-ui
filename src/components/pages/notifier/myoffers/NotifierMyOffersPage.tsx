@@ -7,11 +7,12 @@ import {
   Button, CopyTextTooltip, shortenString, TooltipIconButton, Web3Store,
 } from '@rsksmart/rif-ui'
 import NotifierService from 'api/rif-notifier-service'
-import { NotifierAPIService } from 'api/rif-notifier-service/interfaces'
 import handProvidingFunds from 'assets/images/handProvidingFunds.svg'
+import LabelWithValue from 'components/atoms/LabelWithValue'
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import DescriptionCard from 'components/molecules/DescriptionCard'
 import InfoBar from 'components/molecules/InfoBar'
+import { PlanViewSummaryProps } from 'components/molecules/plans/PlanViewSummary'
 import RifAddress from 'components/molecules/RifAddress'
 import PlanView from 'components/organisms/plans/PlanView'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
@@ -102,9 +103,9 @@ const NotifierMyOffersPage: FC = () => {
     price: 'Price',
     funds: 'Available funds',
   }
-  const handlePlanEdit = () => {}
-  const handlePlanCancel = () => {}
-
+  const handleAddPlan = () => {}
+  const handleEditPlan = () => {}
+  const handleCancelPlan = () => {}
   const handleEditProfile = () => {}
 
   return (
@@ -172,17 +173,37 @@ const NotifierMyOffersPage: FC = () => {
         <Grid
           container
           alignItems="center"
+          justify="space-between"
         >
-          <Grid item xs={1}>
-            <img src={handProvidingFunds} alt="hand providing funds" />
+          <Grid
+            container
+            item
+            xs={10}
+            alignItems="center"
+          >
+            <Grid item xs={1}>
+              <img src={handProvidingFunds} alt="hand providing funds" />
+            </Grid>
+            <Grid item xs={11} md="auto">
+              <Typography gutterBottom variant="h6" color="primary">
+                You are providing the following plans to your customers
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={9} md="auto">
-            <Typography gutterBottom variant="h5" color="primary">
-              You are providing the following plans to your customers
-            </Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Button rounded>Add notification plan</Button>
+          <Grid
+            container
+            item
+            xs={2}
+            justify="flex-end"
+          >
+            <Button
+              variant="outlined"
+              color="primary"
+              rounded
+              onClick={handleAddPlan}
+            >
+              Add notification plan
+            </Button>
           </Grid>
         </Grid>
 
@@ -196,33 +217,33 @@ const NotifierMyOffersPage: FC = () => {
               channels: offerChannels,
               priceOptions: offerPriceOptions,
               daysLeft: offerDaysLeft,
-              provider: offerProvider,
-              url: offerUrl,
             }) => {
               const activeContracts = []
               const isPlanEditDisabled = false
               const isPlanCancelDisabled = false
               const isTableLoading = false
 
-              const planSummary = {
+              const planSummary: PlanViewSummaryProps = {
                 name: offerName,
-                left: { label: 'Notifications', value: String(offerLimit) },
-                middle: { label: 'Channels', value: offerChannels.join(', ') },
-                right: {
-                  label: 'Currency',
-                  value: offerPriceOptions
-                    .map((option) => option.token.displayName)
-                    .join(', '),
-                },
+                info: [
+                  <LabelWithValue label="Notifications" value={String(offerLimit)} />,
+                  <LabelWithValue label="Channels" value={offerChannels.join(', ')} />,
+                  <LabelWithValue
+                    label="Currency"
+                    value={offerPriceOptions
+                      .map((option) => option.token.displayName)
+                      .join(', ')}
+                  />,
+                ],
               }
 
               return (
                 <Grid item key={offerId}>
                   <PlanView {...{
-                    planSummary,
-                    handlePlanEdit,
+                    summary: planSummary,
+                    handlePlanEdit: handleEditPlan,
                     isPlanEditDisabled,
-                    handlePlanCancel,
+                    handlePlanCancel: handleCancelPlan,
                     isPlanCancelDisabled,
                     isTableLoading,
                     headers,

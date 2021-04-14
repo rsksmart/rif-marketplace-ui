@@ -38,12 +38,10 @@ const ActiveContracts: FC<Props> = ({
         />
       </Grid>
       <Grid item><Divider /></Grid>
-      <Grid item>
-        <Grid container>
-          <TableContainer>
-            {children}
-          </TableContainer>
-        </Grid>
+      <Grid container item>
+        {/* <TableContainer> */}
+        {children}
+        {/* </TableContainer> */}
       </Grid>
     </Grid>
   </AccordionDetails>
