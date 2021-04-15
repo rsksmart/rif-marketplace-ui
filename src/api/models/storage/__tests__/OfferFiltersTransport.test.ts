@@ -16,12 +16,12 @@ const EXPECTED_OBJECT: OfferFiltersTransport = {
   periods: Array.from(FAKE_FILTERS.periods as Set<SubscriptionPeriod>)
     .map((p) => PeriodInSeconds[p]),
   averagePrice: {
-    min: (FAKE_FILTERS.price?.min as number) - 1,
-    max: (FAKE_FILTERS.price?.max as number) + 1,
+    min: Math.floor(FAKE_FILTERS.price.min),
+    max: Math.ceil(FAKE_FILTERS.price.max),
   },
-  totalCapacity: {
-    min: (FAKE_FILTERS.size?.min as number) * UNIT_PREFIX_POW2.KILO,
-    max: (FAKE_FILTERS.size?.max as number) * UNIT_PREFIX_POW2.KILO,
+  availableCapacity: {
+    min: FAKE_FILTERS.size.min * UNIT_PREFIX_POW2.KILO,
+    max: FAKE_FILTERS.size.max * UNIT_PREFIX_POW2.KILO,
   },
   provider: FAKE_FILTERS.provider
     ? { $like: FAKE_FILTERS.provider } : undefined,
