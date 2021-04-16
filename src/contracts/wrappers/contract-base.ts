@@ -89,10 +89,10 @@ export class ContractBase {
     return txReceipt
   }
 
-  protected async _call(
+  protected async _call<T>(
     tx: any,
     txOptions: TxOptions,
-  ): Promise<TransactionReceipt> {
+  ): Promise<T> {
     const {
       from,
       value,
