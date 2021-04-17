@@ -36,16 +36,12 @@ export type RnsAPIService = Modify<
   }
 >
 
-export const isSupportedRNSToken = (
-  token: string,
-): boolean => rnsSupportedTokens.some((t: string) => t === token)
-
 //  - Supported Token Address-to-token records
 export const rnsTokenAddrTokenRecord: Record<string, BaseToken> = allTokenAddresses
   .reduce((acc, addr) => {
     const symbol = addressTokenRecord[addr]
 
-    if (!isSupportedRNSToken(symbol)) return acc
+    if (!rnsSupportedTokens.includes(symbol)) return acc
     acc[addr] = getTokenByString(symbol)
     return acc
   }, {})
