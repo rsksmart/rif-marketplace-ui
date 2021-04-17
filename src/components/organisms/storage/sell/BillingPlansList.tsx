@@ -1,12 +1,18 @@
-import React, { FC, useContext } from 'react'
 import Grid from '@material-ui/core/Grid'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import { StorageBillingPlan } from 'context/Market/storage/interfaces'
+import { colors, fonts, Web3Store } from '@rsksmart/rif-ui'
 import BillingPlanWithEdit from 'components/organisms/storage/sell/BillingPlanWithEdit'
 import MarketContext from 'context/Market'
-import { Theme, makeStyles } from '@material-ui/core/styles'
-import { colors, fonts } from '@rsksmart/rif-ui'
+import { StorageBillingPlan } from 'context/Market/storage/interfaces'
+import { storageSupportedTokens } from 'contracts/config'
+import { SUPPORTED_TOKEN_RECORDS } from 'contracts/interfaces'
+import { StorageContract } from 'contracts/storage'
+import { MarketCryptoRecord } from 'models/Market'
 import { BillingPlan, PeriodInSeconds } from 'models/marketItems/StorageItem'
+import { SupportedTokenSymbol } from 'models/Token'
+import React, { FC, useContext } from 'react'
+import Web3 from 'web3'
 import EditableBillingPlan from './EditableBillingPlan'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -40,6 +46,10 @@ const BillingPlansList: FC<BillingPlansListProps> = (
   },
 ) => {
   const classes = useStyles()
+  const {
+    state: { account, web3 },
+  } = useContext(Web3Store)
+  const storageContract = StorageContract.getInstance(web3 as Web3)
 
   const {
     state: {
@@ -49,6 +59,19 @@ const BillingPlansList: FC<BillingPlansListProps> = (
       },
     },
   } = useContext(MarketContext)
+
+  const availableXRTokens: MarketCryptoRecord = Object.keys(cryptoXRs)
+    .reduce((acc, symbol) => {
+      if (storageSupportedTokens.includes(symbol as SupportedTokenSymbol)
+        && storageContract.isWhitelistedToken(
+          SUPPORTED_TOKEN_RECORDS[symbol],
+          { from: account },
+        )) {
+        acc[symbol] = cryptoXRs[symbol]
+      }
+
+      return acc
+    }, {} as MarketCryptoRecord)
 
   return (
     <>
@@ -86,7 +109,7 @@ const BillingPlansList: FC<BillingPlansListProps> = (
                   (billingPlan: StorageBillingPlan) => (
                     <Grid item xs={12} key={billingPlan.internalId}>
                       <BillingPlanWithEdit
-                        cryptoXRs={cryptoXRs}
+                        cryptoXRs={availableXRTokens}
                         fiatDisplayName={fiatDisplayName}
                         billingPlan={billingPlan}
                         onRemoveClick={(): void => onItemRemoved(billingPlan)}
