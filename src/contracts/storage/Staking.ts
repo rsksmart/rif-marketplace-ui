@@ -5,7 +5,7 @@ import { TransactionReceipt } from 'web3-eth'
 import { AbiItem } from 'web3-utils'
 import { ZERO_BYTES } from 'constants/strings'
 import { storageStakingAddress, storageSupportedTokens } from 'contracts/config'
-import { TxOptions } from 'contracts/interfaces'
+import { SupportedToken, TxOptions } from 'contracts/interfaces'
 import { getTokensFromConfigTokens } from 'utils/tokenUtils'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
 import Big from 'big.js'
@@ -113,6 +113,14 @@ class StakingContract extends ContractWithTokens {
       txOptions,
     )
   }
+
+  public isWhitelistedToken = (
+    { tokenAddress }: SupportedToken,
+    txOptions: TxOptions,
+  ): Promise<boolean> => this._call(
+    this.methods.isWhitelistedToken(tokenAddress),
+    txOptions,
+  )
 }
 
 export default StakingContract
