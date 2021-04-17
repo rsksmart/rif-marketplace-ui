@@ -12,7 +12,12 @@ import {
 } from '../interfaces'
 import ContractBase from './contract-base'
 
-export class ContractWithTokens extends ContractBase {
+export abstract class ContractWithTokens extends ContractBase {
+  public abstract isWhitelistedToken: (
+    token: SupportedToken,
+    txOptions: TxOptions,
+    ) => Promise<boolean>
+
   private readonly supportedTokens: SupportedToken[]
 
   private _defaultToken: SupportedTokenSymbol
