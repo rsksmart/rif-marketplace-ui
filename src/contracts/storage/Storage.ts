@@ -1,15 +1,14 @@
 import StorageManager from '@rsksmart/rif-marketplace-storage/build/contracts/StorageManager.json'
+import { storageAddress, storageSupportedTokens } from 'contracts/config'
+import { SupportedToken, TxOptions } from 'contracts/interfaces'
+import { validateBalance } from 'contracts/utils/accountBalance'
+import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
+import { BaseToken, SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'
 import { convertToWeiString } from 'utils/parsers'
+import { getTokensFromConfigTokens } from 'utils/tokenUtils'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
 import { AbiItem } from 'web3-utils'
-
-import { storageAddress, storageSupportedTokens } from 'contracts/config'
-import { TxOptions } from 'contracts/interfaces'
-import { getTokensFromConfigTokens } from 'utils/tokenUtils'
-import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
-import { validateBalance } from 'contracts/utils/accountBalance'
-import { SYSTEM_SUPPORTED_SYMBOL, BaseToken } from 'models/Token'
 import { encodeHash, prefixArray } from './utils'
 
 export type StorageContractErrorId = 'contract-storage'
@@ -282,6 +281,14 @@ class StorageContract extends ContractWithTokens {
       },
     )
   }
+
+  public isWhitelistedToken = (
+    { tokenAddress }: SupportedToken,
+    txOptions: TxOptions,
+  ): Promise<boolean> => this._call(
+    this.methods.isWhitelistedToken(tokenAddress),
+    txOptions,
+  )
 }
 
 export default StorageContract

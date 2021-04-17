@@ -1,6 +1,6 @@
 import Staking from '@rsksmart/rif-marketplace-notifications/build/contracts/Staking.json'
 import { notifierStakingAddress, notifierSupportedTokens } from 'contracts/config'
-import { TxOptions } from 'contracts/interfaces'
+import { SupportedToken, TxOptions } from 'contracts/interfaces'
 import { validateBalance } from 'contracts/utils/accountBalance'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
 import CustomError from 'models/CustomError'
@@ -90,6 +90,14 @@ class NotifierStakingContract extends ContractWithTokens {
       },
     )
   }
+
+  public isWhitelistedToken = (
+    { tokenAddress }: SupportedToken,
+    txOptions: TxOptions,
+  ): Promise<boolean> => this._call(
+    this.methods.isWhitelistedToken(tokenAddress),
+    txOptions,
+  )
 }
 
 export default NotifierStakingContract
