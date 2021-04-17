@@ -38,10 +38,10 @@ const allTokenAddresses: string[] = Object.keys(tokenAddresses)
   .filter((scName) => allAllowedPaymentTokens.includes(scName))
   .map((scName) => tokenAddresses[scName].toLowerCase())
 
-const addressTokenRecord: Record<string, string> = allAllowedPaymentTokens
+const addressTokenRecord: Record<string, SupportedTokenSymbol> = allAllowedPaymentTokens
   .reduce((acc, symbol) => {
     const tokenAddress = tokenAddresses[symbol].toLowerCase()
-    acc[tokenAddress] = symbol
+    acc[tokenAddress] = symbol as SupportedTokenSymbol
     return acc
   }, {})
 
