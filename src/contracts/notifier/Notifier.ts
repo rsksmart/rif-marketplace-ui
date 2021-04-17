@@ -1,6 +1,6 @@
 import NotifierManager from '@rsksmart/rif-marketplace-notifier/build/contracts/NotifierManager.json'
 import { notifierAddress, notifierSupportedTokens } from 'contracts/config'
-import { TxOptions } from 'contracts/interfaces'
+import { SupportedToken, TxOptions } from 'contracts/interfaces'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
 import { getTokensFromConfigTokens } from 'utils/tokenUtils'
 import Web3 from 'web3'
@@ -56,6 +56,14 @@ class NotifierContract extends ContractWithTokens {
       },
     )
   }
+
+  public isWhitelistedToken = (
+    { tokenAddress }: SupportedToken,
+    txOptions: TxOptions,
+  ): Promise<boolean> => this._call(
+    this.methods.isWhitelistedToken(tokenAddress),
+    txOptions,
+  )
 }
 
 export default NotifierContract
