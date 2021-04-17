@@ -42,6 +42,8 @@ export type ContractErrorId =
 
 export enum TOKEN_TYPES {
   ERC20 = 'erc20',
+  ERC677 = 'erc677',
+  ERC777 = 'erc777',
   NATIVE = 'native'
 }
 
