@@ -1,24 +1,33 @@
 {
     "ganache": {
         "contractAddresses": {
-            "rif": "0x67b5656d60a809915323bf2c40a8bef15a152e3e",
+            "rif": "0x67B5656d60a809915323Bf2C40A8bEF15A152e3e",
             "rnsDotRskOwner": "0x26b4AFb60d6C903165150C6F0AA14F8016bE4aec",
             "marketplace": "0xeF391648603DCb012e30eF706452b3DfF6466dE8",
             "storageManager": "0x1b88Bdb8269A1aB1372459F5a4eC3663D6f5cCc4",
-            "storageStaking": "0xdAA71FBBA28C946258DD3d5FcC9001401f72270F",
-            "notificationsManager": "0x8014E07473F23fd8b20BdC035557Fc5924cFd1af",
-            "notificationsStaking": "0x0E28793083765fEfE23A6b5F5f72b1cFa9e6E190"
+            "storageStaking": "0x22d5C8BdD4346b390014a07109a8F830094d4abf",
+            "notificationsManager": "0xCeeFD27e0542aFA926B87d23936c79c276A48277",
+            "notificationsStaking": "0x47a2Db5D68751EeAdFBC44851E84AcDB4F7299Cc"
         },
         "rnsManagerUrl": "http://localhost:3001",
         "services": {
             "rns": {
-                "tokens": ["rbtc", "rif"]
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
             },
             "storage": {
-                "tokens": ["rbtc", "rif"]
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
             },
             "notifier": {
-                "tokens": ["rbtc", "rif"]
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
             }
         }
     },
@@ -29,11 +38,13 @@
             "marketplace": "0xa966Be39A13723d991dFA92B2B0CF6b0c7416eE5"
         },
         "rnsManagerUrl": "https://manager.rns.rifos.org",
-         "services": {
-             "rns": {
-                 "tokens": ["rif"]
-             }
-         }
+        "services": {
+            "rns": {
+                "tokens": [
+                    "rif"
+                ]
+            }
+        }
     },
     "rsktestnet": {
         "contractAddresses": {
@@ -46,10 +57,15 @@
         "rnsManagerUrl": "https://testnet.manager.rns.rifos.org",
         "services": {
             "rns": {
-                "tokens": ["rif"]
+                "tokens": [
+                    "rif"
+                ]
             },
             "storage": {
-                "tokens": ["rbtc", "rif"]
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
             }
         }
     },
@@ -64,10 +80,15 @@
         "rnsManagerUrl": "https://testnet.manager.rns.rifos.org",
         "services": {
             "rns": {
-                "tokens": ["rif"]
+                "tokens": [
+                    "rif"
+                ]
             },
             "storage": {
-                "tokens": ["rbtc", "rif"]
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
             }
         }
     }

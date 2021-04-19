@@ -17,7 +17,7 @@ const STORAGE_MYOFFERS_CANCEL = `${STORAGE_MYOFFERS}/cancel`
 const STORAGE_MYPURCHASES = `${STORAGE}/mypurchases`
 const STORAGE_RENEW_AGREEMENT = `${STORAGE_MYPURCHASES}/renew`
 
-const NOTIFIER = '/notifications'
+const NOTIFIER = '/notifier'
 const NOTIFIER_BUY = `${NOTIFIER}/buy`
 const NOTIFIER_SELL = `${NOTIFIER}/sell`
 const NOTIFIER_MYOFFERS = `${NOTIFIER}/myoffers`
