@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => (
 ))
 
 type Props = {
-  service: 'Storage' | 'Notifications'
+  service: string
 }
 
 const NoWhitelistedProvider: FC<Props> = ({ service }) => {
