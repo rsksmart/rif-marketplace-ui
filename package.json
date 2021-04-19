@@ -42,7 +42,7 @@
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@rsksmart/erc677": "^1.0.2",
     "@rsksmart/erc721": "^1.0.0",
-    "@rsksmart/rif-marketplace-notifications": "0.0.1-dev.1",
+    "@rsksmart/rif-marketplace-notifier": "0.0.1-dev.2",
     "@rsksmart/rif-marketplace-storage": "^0.1.0",
     "@rsksmart/rif-ui": "^0.6.0",
     "@rsksmart/rsk-utils": "^1.1.0",

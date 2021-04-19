@@ -10,7 +10,7 @@ import NotifierContract from 'contracts/notifier/Notifier'
 import { Web3Store } from '@rsksmart/rif-ui'
 import Web3 from 'web3'
 import NoWhitelistedProvider
-  from 'components/molecules/storage/NoWhitelistedProvider'
+  from 'components/molecules/NoWhitelistedProvider'
 import { ConfirmationsContext } from 'context/Confirmations'
 import InfoBar from 'components/molecules/InfoBar'
 import useConfirmations from 'hooks/useConfirmations'
@@ -110,7 +110,7 @@ const NotifierSellPage: FC = () => {
       {
         !isCheckingWhitelist
         && !isWhitelistedProvider
-        && <NoWhitelistedProvider service="Notifications" />
+        && <NoWhitelistedProvider service="Notifier" />
       }
       <ProviderRegistrar
         providerAddress={accountStr}
