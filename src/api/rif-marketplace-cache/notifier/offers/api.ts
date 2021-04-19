@@ -11,10 +11,10 @@ import { parseToBigDecimal } from 'utils/parsers'
 import { NotifierAPIService } from '../interfaces'
 import { PlanDTO } from './models'
 
-export const address = 'triggers/v0/offers' as const
+export const address = 'notifier/v0/offers' as const
 export type Address = typeof address
 
-export const wsChannel = 'triggers_offers' as const
+export const wsChannel = 'notifier_offers' as const
 export type WSChannel = typeof wsChannel
 
 export const mapFromTransport = ({

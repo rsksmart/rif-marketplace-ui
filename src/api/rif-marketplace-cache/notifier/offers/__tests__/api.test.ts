@@ -40,14 +40,14 @@ describe('Notifier Offers Service', () => {
   })
 
   describe('notifierOffersAddress', () => {
-    const expectedAddress = 'triggers/v0/offers'
+    const expectedAddress = 'notifier/v0/offers'
     test(`should be set to ${expectedAddress}`, () => {
       expect(notifierOffersAddress).toBe(expectedAddress)
     })
   })
 
   describe('notifierOffersWSChannel', () => {
-    const expectedAddress = 'triggers_offers'
+    const expectedAddress = 'notifier_offers'
     test(`should be set to ${expectedAddress}`, () => {
       expect(notifierOffersWSChannel).toBe(expectedAddress)
     })

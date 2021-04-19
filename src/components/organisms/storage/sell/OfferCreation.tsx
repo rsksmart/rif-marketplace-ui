@@ -17,7 +17,7 @@ import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper
 import RoundedCard from 'components/atoms/RoundedCard'
 import { transformOfferDataForContract } from 'contracts/storage/utils'
 import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Services/storage'
-import NoWhitelistedProvider from 'components/molecules/storage/NoWhitelistedProvider'
+import NoWhitelistedProvider from 'components/molecules/NoWhitelistedProvider'
 import { StorageOffersService } from 'api/rif-marketplace-cache/storage/offers'
 import { StorageOffer } from 'models/marketItems/StorageItem'
 import { OfferEditContextProps } from 'context/Market/storage'
