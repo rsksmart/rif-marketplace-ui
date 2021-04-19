@@ -1,4 +1,4 @@
-import Staking from '@rsksmart/rif-marketplace-notifications/build/contracts/Staking.json'
+import Staking from '@rsksmart/rif-marketplace-notifier/build/contracts/Staking.json'
 import { notifierStakingAddress, notifierSupportedTokens } from 'contracts/config'
 import { TxOptions } from 'contracts/interfaces'
 import { validateBalance } from 'contracts/utils/accountBalance'
