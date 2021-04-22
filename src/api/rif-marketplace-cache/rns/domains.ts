@@ -20,7 +20,7 @@ const mapFromTransport = (item: DomainTransport): RnsDomain => {
   } = item
   const domain: RnsDomain = {
     id: tokenId,
-    expirationDate: new Date(expiration.date),
+    expirationDate: new Date(expiration?.date),
     ownerAddress: owner.address,
     name,
     tokenId,
