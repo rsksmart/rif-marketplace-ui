@@ -7,7 +7,7 @@ on:
       - develop
 
 jobs:
-  deploy-staging:
+  deploy-develop:
     name: RIF Marketplace UI - Develop
     runs-on: ubuntu-latest
     environment: develop
