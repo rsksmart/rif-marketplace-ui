@@ -6,8 +6,8 @@
             "marketplace": "0xeF391648603DCb012e30eF706452b3DfF6466dE8",
             "storageManager": "0x1b88Bdb8269A1aB1372459F5a4eC3663D6f5cCc4",
             "storageStaking": "0x22d5C8BdD4346b390014a07109a8F830094d4abf",
-            "notificationsManager": "0xCeeFD27e0542aFA926B87d23936c79c276A48277",
-            "notificationsStaking": "0x47a2Db5D68751EeAdFBC44851E84AcDB4F7299Cc"
+            "notifierManager": "0xc34175A79ACca40392bECD22ff10fAeBFE780Ae7",
+            "notifierStaking": "0xe97DbD7116D168190F8A6E7beB1092c103c53a12"
         },
         "rnsManagerUrl": "http://localhost:3001",
         "services": {
