@@ -8,7 +8,7 @@ type Props = TypographyProps & {
 const AccordionShowButton: FC<Props> = ({ show, subject = '', ...typographyProps }) => (
   <Typography align="right" color="primary" variant="body2" {...typographyProps}>
     {show ? 'Hide ' : 'View '}
-    {!!subject && ` ${subject}`}
+    {Boolean(subject) && ` ${subject}`}
   </Typography>
 )
 

@@ -24,20 +24,22 @@ const NotifierProviderDescription: FC<Props> = ({ myProfile, handleEditProfile, 
       <Grid item xs={4} md={5}>
         <Typography color="primary" noWrap>Your profile</Typography>
       </Grid>
-      <Grid item xs={4} md={7}>
-        <Typography color="primary" noWrap>
-          <TooltipIconButton
-            icon={<EditOutlinedIcon />}
-            iconButtonProps={{
-              onClick: handleEditProfile,
-              style: {
-                padding: 0,
-                margin: 0,
-              },
-            }}
-            tooltipTitle="Edit Profile"
-          />
-        </Typography>
+      <Grid item xs={4} md={7} container justify="flex-end" style={{ paddingRight: '16px' }}>
+        <Grid item>
+          <Typography color="primary" noWrap>
+            <TooltipIconButton
+              icon={<EditOutlinedIcon />}
+              iconButtonProps={{
+                onClick: handleEditProfile,
+                style: {
+                  padding: 0,
+                  margin: 0,
+                },
+              }}
+              tooltipTitle="Edit Profile"
+            />
+          </Typography>
+        </Grid>
       </Grid>
       <Grid item xs={4} md={5}>
         <Typography color="textPrimary" noWrap>Provider address</Typography>

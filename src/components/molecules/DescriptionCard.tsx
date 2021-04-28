@@ -19,8 +19,6 @@ const DescriptionCard: FC = ({ children }) => (
     classes={useStyles()}
   >
     { children }
-    {' '}
-
   </Paper>
 )
 
