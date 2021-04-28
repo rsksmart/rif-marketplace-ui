@@ -12,22 +12,25 @@ import InfoBar from 'components/molecules/InfoBar'
 import MyOffersHeader from 'components/molecules/MyOffersHeader'
 import { PlanViewSummaryProps } from 'components/molecules/plans/PlanViewSummary'
 import NotifierProviderDescription, { Profile } from 'components/organisms/notifier/NotifierProviderDescription'
+import Staking from 'components/organisms/notifier/Staking'
 import PlanView from 'components/organisms/plans/PlanView'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import AppContext, { AppContextProps } from 'context/App'
 import MarketContext from 'context/Market'
 import { NotifierOffersContext } from 'context/Services/notifier/offers'
+import NotifierContract from 'contracts/notifier/Notifier'
 import useErrorReporter from 'hooks/useErrorReporter'
 import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import { UIError } from 'models/UIMessage'
 import React, {
   FC, useContext, useEffect, useMemo, useState,
 } from 'react'
+import Web3 from 'web3'
 import mapActiveContracts, { activeContractHeaders, ActiveContractItem } from './mapActiveContracts'
 
 const NotifierMyOffersPage: FC = () => {
   const {
-    state: { account },
+    state: { account, web3 },
   } = useContext(Web3Store)
   const {
     state: {
@@ -102,6 +105,21 @@ const NotifierMyOffersPage: FC = () => {
     }
   }, [subscriptionsApi, myProfile, reportError])
 
+  const [isWhitelistedProvider, setIsWhitelistedProvider] = useState(false)
+
+  useEffect(() => {
+    if (account) {
+      NotifierContract.getInstance(web3 as Web3)
+        .isWhitelistedProvider(account)
+        .then((isWhitelisted) => setIsWhitelistedProvider(Boolean(isWhitelisted)))
+        .catch((error) => reportError({
+          error,
+          id: 'contract-notifier',
+          text: 'Could not determine if the account is whitelisted.',
+        }))
+    }
+  }, [account, web3, reportError])
+
   const handleAddPlan = () => {}
   const handleEditPlan = () => {}
   const handleCancelPlan = () => {}
@@ -114,7 +132,7 @@ const NotifierMyOffersPage: FC = () => {
         text={`Awaiting confirmations for ${false} offer(s)`}
         type="info"
       />
-      {/* <Staking /> */}
+      <Staking isEnabled={isWhitelistedProvider} />
 
       <Grid container spacing={8}>
         <Grid item md={5}>
