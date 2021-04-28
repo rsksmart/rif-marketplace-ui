@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography'
 import { SelectRowButton } from 'components/molecules'
 import RifAddress from 'components/molecules/RifAddress'
 import { BaseFiat } from 'models/Fiat'
-import { MarketCryptoRecord } from 'models/Market'
+import { Item, MarketCryptoRecord } from 'models/Market'
 import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import React from 'react'
 import { getShortDateString } from 'utils/dateUtils'
@@ -19,9 +19,9 @@ export const activeContractHeaders = {
   price: 'Price',
   actions: '',
 }
-export type ActiveContractItem = {
+export type ActiveContractItem = Item & {
     [K in keyof typeof activeContractHeaders]: React.ReactElement
-  } & { id: string}
+  }
 
 const mapActiveContracts = (
   myCustomers: NotifierSubscriptionItem[],
@@ -29,12 +29,21 @@ const mapActiveContracts = (
   offerLimit: number,
   crypto: MarketCryptoRecord,
   currentFiat: BaseFiat,
-) => myCustomers.filter((customer) => String(customer.subscriptionPlanId) === offerId)
-  .map<ActiveContractItem>((customer) => ({
-    id: customer.id,
+) => myCustomers.filter(({
+  subscriptionPlanId,
+}) => String(subscriptionPlanId) === offerId)
+  .map<ActiveContractItem>(({
+    id: customerId,
+    consumer,
+    expirationDate,
+    notificationBalance,
+    price,
+    token,
+  }) => ({
+    id: customerId,
     customer: (
       <RifAddress
-        value={customer.consumer}
+        value={consumer}
         color="textPrimary"
         variant="body2"
         noWrap
@@ -42,28 +51,28 @@ const mapActiveContracts = (
     ),
     expDate: (
       <Typography color="textSecondary" variant="body2">
-        {getShortDateString(customer.expirationDate)}
+        {getShortDateString(expirationDate)}
       </Typography>
     ),
     notifBalance: (
-      <Grid container wrap="nowrap">
+      <Grid container wrap="nowrap" spacing={1}>
         <Grid item>
           <Typography color="textSecondary" variant="body2">
-            {`${offerLimit - customer.notificationBalance}/${offerLimit}`}
+            {`${offerLimit - notificationBalance}/${offerLimit}`}
           </Typography>
         </Grid>
         <Grid item>
           <Typography color="textPrimary" variant="body2">
-            {` (${customer.notificationBalance} left)`}
+            {`(${notificationBalance} left)`}
           </Typography>
         </Grid>
       </Grid>
     ),
     price: (
-      <Grid container wrap="nowrap">
+      <Grid container wrap="nowrap" spacing={1}>
         <Grid item>
           <Typography color="primary" variant="body2">
-            {parseToBigDecimal(customer.price).mul(crypto?.[customer.token.symbol]?.rate)?.toFixed(2)}
+            {parseToBigDecimal(price).mul(crypto?.[token.symbol]?.rate)?.toFixed(2)}
           </Typography>
         </Grid>
         <Grid item>
@@ -77,7 +86,7 @@ const mapActiveContracts = (
       <Grid container spacing={2} justify="flex-end" wrap="nowrap">
         <Grid item>
           <SelectRowButton
-            id={customer.id}
+            id={customerId}
             handleSelect={(): void => { }}
             variant="outlined"
           >
@@ -86,7 +95,7 @@ const mapActiveContracts = (
         </Grid>
         <Grid item>
           <SelectRowButton
-            id={customer.id}
+            id={customerId}
             handleSelect={(): void => { }}
             variant="outlined"
           >
