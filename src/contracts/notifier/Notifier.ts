@@ -1,4 +1,4 @@
-import NotificationsManager from '@rsksmart/rif-marketplace-notifications/build/contracts/NotificationsManager.json'
+import NotifierManager from '@rsksmart/rif-marketplace-notifier/build/contracts/NotifierManager.json'
 import { notifierAddress, notifierSupportedTokens } from 'contracts/config'
 import { SupportedToken, TxOptions } from 'contracts/interfaces'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
@@ -17,7 +17,7 @@ class NotifierContract extends ContractWithTokens {
       NotifierContract.instance = new NotifierContract(
         web3,
         new web3.eth.Contract(
-          NotificationsManager.abi as AbiItem[],
+          NotifierManager.abi as AbiItem[],
           notifierAddress,
         ),
         getTokensFromConfigTokens(notifierSupportedTokens),
