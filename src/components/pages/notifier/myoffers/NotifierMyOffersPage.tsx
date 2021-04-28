@@ -1,20 +1,17 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import {
-  Grid, Typography,
+  Grid,
 } from '@material-ui/core'
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined'
 import {
-  Button, CopyTextTooltip, shortenString, TooltipIconButton, Web3Store,
+  Button, Web3Store,
 } from '@rsksmart/rif-ui'
 import { notifierSubscriptionsAddress } from 'api/rif-marketplace-cache/notifier/subscriptions'
-import handProvidingFunds from 'assets/images/handProvidingFunds.svg'
 import LabelWithValue from 'components/atoms/LabelWithValue'
 import WithLoginCard from 'components/hoc/WithLoginCard'
-import { SelectRowButton } from 'components/molecules'
-import DescriptionCard from 'components/molecules/DescriptionCard'
 import InfoBar from 'components/molecules/InfoBar'
+import MyOffersHeader from 'components/molecules/MyOffersHeader'
 import { PlanViewSummaryProps } from 'components/molecules/plans/PlanViewSummary'
-import RifAddress from 'components/molecules/RifAddress'
+import NotifierProviderDescription, { Profile } from 'components/organisms/notifier/NotifierProviderDescription'
 import PlanView from 'components/organisms/plans/PlanView'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import AppContext, { AppContextProps } from 'context/App'
@@ -26,8 +23,7 @@ import { UIError } from 'models/UIMessage'
 import React, {
   FC, useContext, useEffect, useMemo, useState,
 } from 'react'
-import { getShortDateString } from 'utils/dateUtils'
-import { parseToBigDecimal } from 'utils/parsers'
+import mapActiveContracts, { activeContractHeaders, ActiveContractItem } from './mapActiveContracts'
 
 const NotifierMyOffersPage: FC = () => {
   const {
@@ -36,7 +32,7 @@ const NotifierMyOffersPage: FC = () => {
   const {
     state: {
       apis: {
-        [notifierSubscriptionsAddress]: notifierApi,
+        [notifierSubscriptionsAddress]: subscriptionsApi,
       },
     },
   } = useContext<AppContextProps>(AppContext)
@@ -70,7 +66,6 @@ const NotifierMyOffersPage: FC = () => {
 
   const reportError = useErrorReporter()
 
-  type Profile = { address: string, url: string } | undefined
   const [myProfile, setMyProfile] = useState<Profile>()
   const [myCustomers, setMyCustomers] = useState<NotifierSubscriptionItem[]>([])
 
@@ -93,9 +88,9 @@ const NotifierMyOffersPage: FC = () => {
   ])
 
   useEffect(() => {
-    if (myProfile && notifierApi) {
-      notifierApi.connect(reportError)
-      notifierApi.fetch({
+    if (myProfile && subscriptionsApi) {
+      subscriptionsApi.connect(reportError)
+      subscriptionsApi.fetch({
         providerId: myProfile.address,
       })
         .then(setMyCustomers)
@@ -105,16 +100,8 @@ const NotifierMyOffersPage: FC = () => {
           error,
         })))
     }
-  }, [notifierApi, myProfile, reportError])
+  }, [subscriptionsApi, myProfile, reportError])
 
-  const headers = {
-    customer: 'Customer',
-    notifBalance: 'Notifications',
-    expDate: 'Expiration date',
-    price: 'Price',
-    funds: 'Available funds',
-    actions: '',
-  }
   const handleAddPlan = () => {}
   const handleEditPlan = () => {}
   const handleCancelPlan = () => {}
@@ -132,92 +119,14 @@ const NotifierMyOffersPage: FC = () => {
       <Grid container spacing={8}>
         <Grid item md={5}>
           {/* Profile description */ }
-          <DescriptionCard>
-            <Grid
-              container
-              spacing={1}
-            >
-              <Grid item xs={4} md={5}>
-                <Typography color="primary" noWrap>Your profile</Typography>
-              </Grid>
-              <Grid item xs={4} md={7}>
-                <Typography color="primary" noWrap>
-                  <TooltipIconButton
-                    icon={<EditOutlinedIcon />}
-                    iconButtonProps={{
-                      onClick: handleEditProfile,
-                      style: {
-                        padding: 0,
-                        margin: 0,
-                      },
-                    }}
-                    tooltipTitle="Edit Profile"
-                  />
-                </Typography>
-              </Grid>
-              <Grid item xs={4} md={5}>
-                <Typography color="textPrimary" noWrap>Provider address</Typography>
-              </Grid>
-              <Grid item xs={4} md={7}>
-                <RifAddress
-                  value={account || ''}
-                  color="textSecondary"
-                  noWrap
-                />
-              </Grid>
-              <Grid item xs={4} md={5}>
-                <Typography color="textPrimary" noWrap>End-point URL</Typography>
-              </Grid>
-              <Grid item xs={4} md={7}>
-                <CopyTextTooltip
-                  fullText={myProfile?.url || ''}
-                  displayElement={(
-                    <Typography color="textSecondary" noWrap>
-                      {shortenString(myProfile?.url.replace(/^http[s]*:\/\//, '') || '', 20, 20)}
-                    </Typography>
-                )}
-                />
-              </Grid>
-            </Grid>
-          </DescriptionCard>
+          <NotifierProviderDescription {...{ account, myProfile, handleEditProfile }} />
         </Grid>
         {/* Header */ }
-        <Grid
-          container
-          alignItems="center"
-          justify="space-between"
-        >
-          <Grid
-            container
-            item
-            xs={10}
-            alignItems="center"
-          >
-            <Grid item xs={1}>
-              <img src={handProvidingFunds} alt="hand providing funds" />
-            </Grid>
-            <Grid item xs={11} md="auto">
-              <Typography gutterBottom variant="h6" color="primary">
-                You are providing the following plans to your customers
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            item
-            xs={2}
-            justify="flex-end"
-          >
-            <Button
-              variant="outlined"
-              color="primary"
-              rounded
-              onClick={handleAddPlan}
-            >
-              Add notification plan
-            </Button>
-          </Grid>
-        </Grid>
+        <MyOffersHeader>
+          <Button variant="outlined" color="primary" rounded onClick={handleAddPlan}>
+            Add notification plan
+          </Button>
+        </MyOffersHeader>
 
         {/* Plans */}
         <Grid container direction="column">
@@ -229,76 +138,11 @@ const NotifierMyOffersPage: FC = () => {
               channels: offerChannels,
               priceOptions: offerPriceOptions,
             }) => {
-              const activeContracts = myCustomers.filter((customer) => String(customer.subscriptionPlanId) === offerId)
-                .map<{[K in keyof typeof headers]: React.ReactElement} & { id: string }>((customer) => ({
-                  id: customer.id,
-                  customer: (
-                    <RifAddress
-                      value={customer.consumer}
-                      color="textPrimary"
-                      variant="body2"
-                      noWrap
-                    />
-                  ),
-                  expDate: (
-                    <Typography color="textSecondary" variant="body2">
-                      { getShortDateString(customer.expirationDate) }
-                    </Typography>
-                  ),
-                  notifBalance: (
-                    <Grid container wrap="nowrap">
-                      <Grid item>
-                        <Typography color="textSecondary" variant="body2">
-                          {`${offerLimit - customer.notificationBalance}/${offerLimit}`}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography color="textPrimary" variant="body2">
-                          {` (${customer.notificationBalance} left)`}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  ),
-                  funds: (
-                    <Typography color="textSecondary" variant="body2" />
-                  ), // TODO: get from SC
-                  price: (
-                    <Grid container wrap="nowrap">
-                      <Grid item>
-                        <Typography color="primary" variant="body2">
-                          {parseToBigDecimal(customer.price).mul(crypto?.[customer.token.symbol]?.rate)?.toFixed(2)}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography color="primary" variant="caption">
-                          {currentFiat.displayName}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  ),
-                  actions: (
-                    <Grid container spacing={2} justify="flex-end" wrap="nowrap">
-                      <Grid item>
-                        <SelectRowButton
-                          id={customer.id}
-                          handleSelect={(): void => {}}
-                          variant="outlined"
-                        >
-                          Withdraw
-                        </SelectRowButton>
-                      </Grid>
-                      <Grid item>
-                        <SelectRowButton
-                          id={customer.id}
-                          handleSelect={(): void => {}}
-                          variant="outlined"
-                        >
-                          View
-                        </SelectRowButton>
-                      </Grid>
-                    </Grid>
-                  ),
-                }))
+              const activeContracts: ActiveContractItem[] = mapActiveContracts(
+                myCustomers, offerId,
+                offerLimit, crypto,
+                currentFiat,
+              )
               const isPlanEditDisabled = false
               const isPlanCancelDisabled = false
               const isTableLoading = false
@@ -327,7 +171,7 @@ const NotifierMyOffersPage: FC = () => {
                     handlePlanCancel: handleCancelPlan,
                     isPlanCancelDisabled,
                     isTableLoading,
-                    headers,
+                    headers: activeContractHeaders,
                     activeContracts,
                   }}
                   />
