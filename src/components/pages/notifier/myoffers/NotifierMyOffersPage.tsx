@@ -6,10 +6,11 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined'
 import {
   Button, CopyTextTooltip, shortenString, TooltipIconButton, Web3Store,
 } from '@rsksmart/rif-ui'
-import NotifierService from 'api/rif-notifier-service'
+import { notifierSubscriptionsAddress } from 'api/rif-marketplace-cache/notifier/subscriptions'
 import handProvidingFunds from 'assets/images/handProvidingFunds.svg'
 import LabelWithValue from 'components/atoms/LabelWithValue'
 import WithLoginCard from 'components/hoc/WithLoginCard'
+import { SelectRowButton } from 'components/molecules'
 import DescriptionCard from 'components/molecules/DescriptionCard'
 import InfoBar from 'components/molecules/InfoBar'
 import { PlanViewSummaryProps } from 'components/molecules/plans/PlanViewSummary'
@@ -17,24 +18,42 @@ import RifAddress from 'components/molecules/RifAddress'
 import PlanView from 'components/organisms/plans/PlanView'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import AppContext, { AppContextProps } from 'context/App'
-import withNotifierOffersContext, { NotifierOffersContext } from 'context/Services/notifier/offers'
+import MarketContext from 'context/Market'
+import { NotifierOffersContext } from 'context/Services/notifier/offers'
+import useErrorReporter from 'hooks/useErrorReporter'
+import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
+import { UIError } from 'models/UIMessage'
 import React, {
   FC, useContext, useEffect, useMemo, useState,
 } from 'react'
+import { getShortDateString } from 'utils/dateUtils'
+import { parseToBigDecimal } from 'utils/parsers'
 
 const NotifierMyOffersPage: FC = () => {
   const {
     state: { account },
   } = useContext(Web3Store)
   const {
-    state: { apis },
-    dispatch: appDispatch,
+    state: {
+      apis: {
+        [notifierSubscriptionsAddress]: notifierApi,
+      },
+    },
   } = useContext<AppContextProps>(AppContext)
+  const {
+    state: {
+      exchangeRates: {
+        currentFiat,
+        crypto,
+      },
+    },
+  } = useContext(MarketContext)
   const {
     state: {
       listing: {
         items,
       },
+      limits,
     },
     dispatch,
   } = useContext(NotifierOffersContext)
@@ -44,14 +63,18 @@ const NotifierMyOffersPage: FC = () => {
       type: 'FILTER',
       payload: {
         provider: account,
+        ...limits,
       },
     })
-  }, [account])
+  }, [account, dispatch, limits])
+
+  const reportError = useErrorReporter()
 
   type Profile = { address: string, url: string } | undefined
   const [myProfile, setMyProfile] = useState<Profile>()
-  const [myCustomers, setMyCustomers] = useState()
+  const [myCustomers, setMyCustomers] = useState<NotifierSubscriptionItem[]>([])
 
+  // Set provider upon wallet connection
   const myOffers = useMemo(() => {
     const offers = items
       .filter(({ provider }) => provider === account)
@@ -70,38 +93,27 @@ const NotifierMyOffersPage: FC = () => {
   ])
 
   useEffect(() => {
-    if (myProfile?.url) {
-      appDispatch({
-        type: 'SET_SERVICE',
-        payload: new NotifierService(myProfile.url),
+    if (myProfile && notifierApi) {
+      notifierApi.connect(reportError)
+      notifierApi.fetch({
+        providerId: myProfile.address,
       })
+        .then(setMyCustomers)
+        .catch((error) => reportError(new UIError({
+          id: 'service-fetch',
+          text: 'Error while fetching subscriptions.',
+          error,
+        })))
     }
-  }, [myProfile])
-
-  // useEffect(() => {
-  //   if (myProfile && apis[myProfile.url]) {
-  //     const notifierApi: NotifierAPIService = apis[myProfile.url]
-
-  //     notifierApi.getSubscriptions(myProfile.address)
-  //     .then((subscriptions) => setMyCustomers(subscriptions))
-  //   }
-  // }, [apis, myProfile])
-
-  // const history = useHistory()
-  // const {
-  //   state: appState,
-  //   dispatch: appDispatch,
-  // } = useContext<AppContextProps>(AppContext)
-  // const reportError = useCallback((
-  //   e: UIError,
-  // ) => errorReporterFactory(appDispatch)(e), [appDispatch])
+  }, [notifierApi, myProfile, reportError])
 
   const headers = {
     customer: 'Customer',
-    limit: 'Notifications',
+    notifBalance: 'Notifications',
     expDate: 'Expiration date',
     price: 'Price',
     funds: 'Available funds',
+    actions: '',
   }
   const handleAddPlan = () => {}
   const handleEditPlan = () => {}
@@ -216,19 +228,88 @@ const NotifierMyOffersPage: FC = () => {
               limit: offerLimit,
               channels: offerChannels,
               priceOptions: offerPriceOptions,
-              daysLeft: offerDaysLeft,
             }) => {
-              const activeContracts = []
+              const activeContracts = myCustomers.filter((customer) => String(customer.subscriptionPlanId) === offerId)
+                .map<{[K in keyof typeof headers]: React.ReactElement} & { id: string }>((customer) => ({
+                  id: customer.id,
+                  customer: (
+                    <RifAddress
+                      value={customer.consumer}
+                      color="textPrimary"
+                      variant="body2"
+                      noWrap
+                    />
+                  ),
+                  expDate: (
+                    <Typography color="textSecondary" variant="body2">
+                      { getShortDateString(customer.expirationDate) }
+                    </Typography>
+                  ),
+                  notifBalance: (
+                    <Grid container wrap="nowrap">
+                      <Grid item>
+                        <Typography color="textSecondary" variant="body2">
+                          {`${offerLimit - customer.notificationBalance}/${offerLimit}`}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography color="textPrimary" variant="body2">
+                          {` (${customer.notificationBalance} left)`}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  ),
+                  funds: (
+                    <Typography color="textSecondary" variant="body2" />
+                  ), // TODO: get from SC
+                  price: (
+                    <Grid container wrap="nowrap">
+                      <Grid item>
+                        <Typography color="primary" variant="body2">
+                          {parseToBigDecimal(customer.price).mul(crypto?.[customer.token.symbol]?.rate)?.toFixed(2)}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography color="primary" variant="caption">
+                          {currentFiat.displayName}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  ),
+                  actions: (
+                    <Grid container spacing={2} justify="flex-end" wrap="nowrap">
+                      <Grid item>
+                        <SelectRowButton
+                          id={customer.id}
+                          handleSelect={(): void => {}}
+                          variant="outlined"
+                        >
+                          Withdraw
+                        </SelectRowButton>
+                      </Grid>
+                      <Grid item>
+                        <SelectRowButton
+                          id={customer.id}
+                          handleSelect={(): void => {}}
+                          variant="outlined"
+                        >
+                          View
+                        </SelectRowButton>
+                      </Grid>
+                    </Grid>
+                  ),
+                }))
               const isPlanEditDisabled = false
               const isPlanCancelDisabled = false
               const isTableLoading = false
 
-              const planSummary: PlanViewSummaryProps = {
+              const planSummary: Partial<PlanViewSummaryProps> = {
                 name: offerName,
                 info: [
-                  <LabelWithValue label="Notifications" value={String(offerLimit)} />,
-                  <LabelWithValue label="Channels" value={offerChannels.join(', ')} />,
+                  <LabelWithValue key="notifications" label="Notifications" value={String(offerLimit)} />,
+                  <LabelWithValue key="channels" label="Channels" value={offerChannels.join(', ')} />,
                   <LabelWithValue
+                    key="currency"
                     label="Currency"
                     value={offerPriceOptions
                       .map((option) => option.token.displayName)
@@ -240,7 +321,7 @@ const NotifierMyOffersPage: FC = () => {
               return (
                 <Grid item key={offerId}>
                   <PlanView {...{
-                    summary: planSummary,
+                    summary: planSummary as PlanViewSummaryProps,
                     handlePlanEdit: handleEditPlan,
                     isPlanEditDisabled,
                     handlePlanCancel: handleCancelPlan,
@@ -276,7 +357,7 @@ const NotifierMyOffersPage: FC = () => {
 }
 
 export default WithLoginCard({
-  WrappedComponent: withNotifierOffersContext(NotifierMyOffersPage),
+  WrappedComponent: NotifierMyOffersPage,
   title: 'Connect your wallet to see your offers',
   contentText: 'Connect your wallet to get detailed information about your offers',
 })

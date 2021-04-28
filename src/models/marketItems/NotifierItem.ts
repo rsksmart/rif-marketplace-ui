@@ -24,6 +24,8 @@ export type NotifierPlan = Provider & {
 
 export type NotifierOfferItem = Item & NotifierPlan
 
-export type NotifierSubsctiption = SubscriptionDTO
-
-export type NotifierSubscriptionItem = Item & Omit<NotifierSubsctiption, 'hash'>
+export type NotifierSubscriptionItem = Item & Omit<SubscriptionDTO, 'hash' | 'price' | 'rateId' | 'providerId'> & {
+  provider: string
+  price: Big
+  token: SupportedToken
+}

@@ -11,10 +11,20 @@ const MOCK_ITEM_0: NotifierSubscriptionsTransportModel = {
   hash: 'TEST_HASH',
   expirationDate: new Date(),
   previousSubscription: 'IS THIS ADDRESS OR SHOULD IT BE TYPE NUMNER AS IN SUBSCRIPTION_ID?',
-  status: 'OK',
+  status: 'ACTIVE',
   subscriptionId: 1,
   subscriptionPlanId: 1,
-  topics: [{ key: 'not sure what the object contains' }],
+  topics: [
+    {
+      notificationPreferences: 'prefs',
+      topicParams: [],
+      type: '',
+    },
+  ],
+  notificationBalance: 2,
+  paid: false,
+  price: '2'.padEnd(18, '0'),
+  rateId: 'rif',
 }
 
 const MOCK_RESPONSE: NotifierSubscriptionsTransportModel[] = [MOCK_ITEM_0]

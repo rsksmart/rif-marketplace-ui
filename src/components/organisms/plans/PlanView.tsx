@@ -1,12 +1,10 @@
-import { makeStyles } from '@material-ui/core'
+import React, { useState } from 'react'
+import { makeStyles, TableContainer, Typography } from '@material-ui/core'
 import Accordion, { AccordionProps } from '@material-ui/core/Accordion'
 import { colors } from '@rsksmart/rif-ui'
 import ActiveContracts from 'components/molecules/plans/ActiveContracts'
 import PlanViewSummary, { PlanViewSummaryProps } from 'components/molecules/plans/PlanViewSummary'
-import Marketplace from 'components/templates/marketplace/Marketplace'
-import React, {
-  FC,
-} from 'react'
+import Marketplace, { MarketplaceItem, TableHeaders } from 'components/templates/marketplace/Marketplace'
 
 const usePlanStyles = makeStyles({
   root: {
@@ -26,24 +24,20 @@ const usePlanStyles = makeStyles({
   },
 })
 
-type Props = Omit<AccordionProps, 'children'> & {
-  summary: PlanViewSummaryProps
+type Props<H extends TableHeaders> = Omit<AccordionProps, 'children'> & {
+  summary: Omit<PlanViewSummaryProps, 'isExpanded'>
   handlePlanEdit: () => void
   isPlanEditDisabled: boolean
   handlePlanCancel: () => void
   isPlanCancelDisabled: boolean
   isTableLoading: boolean
-  headers: {
-    customer: string
-    limit: string
-    expDate: string
-    price: string
-    funds: string
-  }
-  activeContracts: never[]
+  headers: H
+  activeContracts: Array<Pick<MarketplaceItem, 'id'> & {
+    [K in keyof H]: any
+  }>
 }
 
-const PlanView: FC<Props> = ({
+const PlanView = <H extends TableHeaders>({
   summary: { name, ...summaryProps },
   handlePlanEdit,
   isPlanEditDisabled,
@@ -52,29 +46,58 @@ const PlanView: FC<Props> = ({
   isTableLoading,
   headers,
   activeContracts,
-}) => (
-  <Accordion
-    classes={usePlanStyles()}
-  >
-    <PlanViewSummary
-      name={`Plan ${name}`}
-      {...summaryProps}
-    />
-    <ActiveContracts
-      {...{
-        handlePlanEdit,
-        isPlanEditDisabled,
-        handlePlanCancel,
-        isPlanCancelDisabled,
-      }}
+  ...accordionProps
+}: Props<H>): JSX.Element => {
+  const [isExpanded, setIsExpanded] = useState(false)
+  const hasActiveContracts = Boolean(activeContracts.length)
+
+  return (
+    <Accordion
+      classes={usePlanStyles()}
+      expanded={isExpanded}
+      onChange={() => { setIsExpanded(!isExpanded) }}
+      {...accordionProps}
     >
-      <Marketplace
-        isLoading={isTableLoading}
-        headers={headers}
-        items={activeContracts}
+      <PlanViewSummary
+        name={`Plan ${name}`}
+        isExpanded={isExpanded}
+        {...summaryProps}
       />
-    </ActiveContracts>
-  </Accordion>
-)
+      <ActiveContracts
+        {...{
+          handlePlanEdit,
+          isPlanEditDisabled,
+          handlePlanCancel,
+          isPlanCancelDisabled,
+        }}
+      >
+        {
+        !hasActiveContracts
+        && (
+        <Typography
+          align="center"
+          color="secondary"
+          style={{ paddingLeft: '16px' }}
+        >
+          No active contracts yet
+        </Typography>
+        )
+      }
+        {
+        hasActiveContracts
+        && (
+        <TableContainer>
+          <Marketplace
+            isLoading={isTableLoading}
+            headers={headers}
+            items={activeContracts}
+          />
+        </TableContainer>
+        )
+      }
+      </ActiveContracts>
+    </Accordion>
+  )
+}
 
 export default PlanView
