@@ -20,6 +20,7 @@ export type StakingTemplateProps = {
   onDeposit: (amount: number, currency: SupportedTokenSymbol) => Promise<void>
   onWithdraw: (amount: number, currency: SupportedTokenSymbol) => Promise<void>
   cantWithdrawMessage?: string
+  bringToFront?: boolean
 }
 
 const stakingIconSize = 10
@@ -31,9 +32,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
     justifyContent: 'flex-end',
-    width: '100%',
+    width: '50%',
     right: 0,
     position: 'absolute',
+  },
+  bringToFront: {
     zIndex: 99,
   },
   cardWrapper: {
@@ -71,6 +74,7 @@ const StakingTemplate: FC<StakingTemplateProps> = (props) => {
     onDeposit,
     onWithdraw,
     cantWithdrawMessage = 'You cannot withdraw your funds.',
+    bringToFront,
   } = props
   const classes = useStyles()
 
@@ -94,7 +98,7 @@ const StakingTemplate: FC<StakingTemplateProps> = (props) => {
 
   return (
     <div className={classes.wrapper}>
-      <div className={classes.root}>
+      <div className={`${classes.root} ${bringToFront && classes.bringToFront}`}>
         <Typography
           className={classes.fabTitle}
           component="div"
