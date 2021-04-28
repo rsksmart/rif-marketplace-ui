@@ -9,7 +9,9 @@ import MarketContext, { MarketContextProps } from 'context/Market'
 import { NotifierOffersContext, NotifierOffersContextProps } from 'context/Services/notifier/offers'
 import { MarketCryptoRecord } from 'models/Market'
 import { NotifierOfferItem, PriceOption } from 'models/marketItems/NotifierItem'
-import React, { FC, useContext, useState } from 'react'
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react'
 import { mapPlansToOffers } from './utils'
 
 const headers: TableHeaders = {
@@ -62,6 +64,13 @@ const NotifierOffersPage: FC = () => {
       account,
     },
   } = useContext(Web3Store)
+
+  useEffect(() => {
+    dispatch({
+      type: 'FILTER',
+      payload: { provider: undefined },
+    })
+  }, [dispatch])
 
   const onPlanSelected = (
     plan: NotifierOfferItem,

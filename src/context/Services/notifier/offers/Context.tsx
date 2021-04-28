@@ -2,7 +2,6 @@ import { NotifierOffersService } from 'api/rif-marketplace-cache/notifier'
 import { notifierOffersAddress } from 'api/rif-marketplace-cache/notifier/offers'
 import AppContext, { AppContextProps } from 'context/App'
 import MarketContext, { MarketContextProps } from 'context/Market'
-import createWithContext from 'context/storeUtils/createWithContext'
 import createReducer from 'context/storeUtils/reducer'
 import useErrorReporter from 'hooks/useErrorReporter'
 import { SUPPORTED_FIAT } from 'models/Fiat'
@@ -207,5 +206,3 @@ export const Provider: FC = ({ children }) => {
   const value = { state, dispatch }
   return <Context.Provider value={value}>{children}</Context.Provider>
 }
-
-export default createWithContext(Provider)

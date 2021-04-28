@@ -1,15 +1,17 @@
-import { Typography } from '@material-ui/core'
+import { Typography, TypographyProps } from '@material-ui/core'
 import React, { FC } from 'react'
 
-type Props = {
+type Props = TypographyProps & {
     show: boolean
     subject?: string
 }
-const AccordionShowButton: FC<Props> = ({ show, subject = '' }) => (
-  <Typography align="right" color="primary" variant="body2">
+const AccordionShowButton: FC<Props> = ({ show, subject = '', ...typographyProps }) => (
+  <Typography align="right" color="primary" variant="body2" {...typographyProps}>
     {show ? 'Hide ' : 'View '}
     {!!subject && ` ${subject}`}
   </Typography>
 )
 
 export default AccordionShowButton
+
+export type AccordionShowButtonProps = Props

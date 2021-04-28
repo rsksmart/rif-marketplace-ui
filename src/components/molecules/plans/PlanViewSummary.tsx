@@ -1,15 +1,14 @@
+import React, { FC } from 'react'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
 import Grid, { GridSize } from '@material-ui/core/Grid'
 
 import Typography from '@material-ui/core/Typography'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import AccordionShowButton from 'components/molecules/AccordionShowButton'
-import React, {
-  FC,
-} from 'react'
 
 type Props = {
   name: string
+  isExpanded: boolean
   info?: JSX.Element[]
 }
 
@@ -18,7 +17,7 @@ const SHOW_GRID_CNT = 2
 const INFO_GRID_CNT = 12 - NAME_GRID_CNT - SHOW_GRID_CNT
 
 const PlanViewSummary: FC<Props> = ({
-  name, info = [],
+  name, info = [], isExpanded,
 }) => (
   <AccordionSummary
     expandIcon={<ExpandMoreIcon color="primary" />}
@@ -36,13 +35,13 @@ const PlanViewSummary: FC<Props> = ({
         xs={INFO_GRID_CNT as GridSize}
       >
         {info.map((item) => (
-          <Grid item sm={(INFO_GRID_CNT / info.length) as GridSize}>
+          <Grid key={item.key} item sm={(INFO_GRID_CNT / info.length) as GridSize}>
             {item}
           </Grid>
         )) }
       </Grid>
       <Grid item sm={SHOW_GRID_CNT as GridSize}>
-        <AccordionShowButton show subject="active contracts" />
+        <AccordionShowButton show={isExpanded} subject="active contracts" />
       </Grid>
     </Grid>
   </AccordionSummary>
