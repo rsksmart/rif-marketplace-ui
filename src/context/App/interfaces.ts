@@ -1,4 +1,4 @@
-import { AbstractAPIService, ServiceMap } from 'api/models/apiService'
+import { ServiceMap } from 'api/models/apiService'
 import { ContextState } from 'context/storeUtils/interfaces'
 import {
   ErrorMessage, LoaderId, Message, MessageId,
@@ -65,10 +65,6 @@ export type Action = (
   | {
     type: 'HIDE_ALERT'
   }
-  | {
-    type: 'SET_SERVICE'
-    payload: AbstractAPIService
-  }
 )
 
 export type Actions = {
@@ -78,7 +74,6 @@ export type Actions = {
   REMOVE_MESSAGE: (state: State, payload: RemoveMessagePayload) => State
   SET_ALERT: (state: State, payload: SetAlertPayload) => State
   HIDE_ALERT: (state: State) => State
-  SET_SERVICE: (state: State, payload: AbstractAPIService) => State
 }
 
 // PROPS

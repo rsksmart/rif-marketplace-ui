@@ -70,7 +70,7 @@ const NotifierMyOffersPage: FC = () => {
   const reportError = useErrorReporter()
 
   const [myProfile, setMyProfile] = useState<Profile>()
-  const [myCustomers, setMyCustomers] = useState<NotifierSubscriptionItem[]>([])
+  const [myCustomers, setMyCustomers] = useState<Array<NotifierSubscriptionItem>>([])
 
   // Set provider upon wallet connection
   const myOffers = useMemo(() => {
@@ -84,6 +84,7 @@ const NotifierMyOffersPage: FC = () => {
         url: offer.url,
       })
     }
+
     return offers
   }, [
     items,

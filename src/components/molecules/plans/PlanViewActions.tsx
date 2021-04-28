@@ -24,8 +24,6 @@ const PlanViewActions: FC<Props> = ({ editProps, cancelProps, ...props }) => (
         color="primary"
         rounded
         {...editProps}
-        // onClick={onEditOffer}
-        // disabled={!storageOffer.isActive}
       >
         Edit plan
       </Button>
@@ -36,17 +34,10 @@ const PlanViewActions: FC<Props> = ({ editProps, cancelProps, ...props }) => (
         rounded
         color="primary"
         {...cancelProps}
-        // onClick={handleCancelOpen}
-        // disabled={!storageOffer.isActive}
       >
         Cancel plan
       </Button>
     </Grid>
-    {/* <CancelOfferDialogue
-        open={cancelOfferOpen}
-        onClose={handleCancelClose}
-        onConfirmCancel={handleCancelation}
-    /> */}
   </Grid>
 )
 
