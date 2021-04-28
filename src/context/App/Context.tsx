@@ -1,6 +1,6 @@
 import { ConfirmationsService } from 'api/rif-marketplace-cache/blockchain/confirmations'
 import { NotificationsService } from 'api/rif-marketplace-cache/notifications'
-import { NotifierOffersService } from 'api/rif-marketplace-cache/notifier'
+import { NotifierOffersService, NotifierSubscriptionsService } from 'api/rif-marketplace-cache/notifier'
 import { XRService } from 'api/rif-marketplace-cache/rates/xr'
 import { DomainsService } from 'api/rif-marketplace-cache/rns/domains'
 import { OffersService } from 'api/rif-marketplace-cache/rns/offers'
@@ -16,6 +16,7 @@ import React, {
   createContext, FC, useReducer,
 } from 'react'
 import { notifierOffersAddress } from 'api/rif-marketplace-cache/notifier/offers'
+import { notifierSubscriptionsAddress } from 'api/rif-marketplace-cache/notifier/subscriptions'
 import { appActions } from '.'
 import { contextID, Props, State } from './interfaces'
 
@@ -35,6 +36,7 @@ export const initialState: State = {
     'storage/v0/availableCapacity': new AvailableCapacityService(),
     upload: new UploadService(),
     [notifierOffersAddress]: new NotifierOffersService(),
+    [notifierSubscriptionsAddress]: new NotifierSubscriptionsService(),
   },
   messages: {},
   loaders: {

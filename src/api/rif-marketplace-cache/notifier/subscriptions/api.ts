@@ -1,10 +1,13 @@
 import { Paginated } from '@feathersjs/feathers'
 import { AbstractAPIService, isResultPaginated } from 'api/models/apiService'
 import client from 'api/rif-marketplace-cache/client'
+import Big from 'big.js'
 import { SupportedFiatSymbol } from 'models/Fiat'
 import { MinMaxFilter } from 'models/Filters'
 import { NotifierSubscriptionsFilters } from 'models/marketItems/NotifierFilters'
 import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
+import { SupportedTokenSymbol } from 'models/Token'
+import { getSupportedTokenByName } from 'utils/tokenUtils'
 import { NotifierAPIService } from '../interfaces'
 import { SubscriptionDTO } from './models'
 
@@ -16,9 +19,17 @@ export type WSChannel = typeof wsChannel
 
 export const mapFromTransport = ({
   hash,
+  expirationDate,
+  price,
+  rateId,
+  providerId,
   ...subscription
 }: SubscriptionDTO): NotifierSubscriptionItem => ({
   id: hash,
+  expirationDate: new Date(expirationDate),
+  price: new Big(price),
+  token: getSupportedTokenByName(rateId as SupportedTokenSymbol),
+  provider: providerId,
   ...subscription,
 })
 
