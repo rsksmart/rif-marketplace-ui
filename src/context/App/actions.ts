@@ -1,4 +1,3 @@
-import { AbstractAPIService } from 'api/models/apiService'
 import {
   Actions, ErrorMessagePayload,
   LoadingPayload, MessagePayload,
@@ -65,13 +64,6 @@ const actions: Actions = {
     alertPanel: {
       display: false,
       message: '',
-    },
-  }),
-  SET_SERVICE: (state, service: AbstractAPIService) => ({
-    ...state,
-    apis: {
-      ...state.apis,
-      [service.path]: service,
     },
   }),
 }

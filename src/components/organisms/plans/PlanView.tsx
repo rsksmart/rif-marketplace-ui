@@ -4,7 +4,7 @@ import Accordion, { AccordionProps } from '@material-ui/core/Accordion'
 import { colors } from '@rsksmart/rif-ui'
 import ActiveContracts from 'components/molecules/plans/ActiveContracts'
 import PlanViewSummary, { PlanViewSummaryProps } from 'components/molecules/plans/PlanViewSummary'
-import Marketplace, { MarketplaceItem, TableHeaders } from 'components/templates/marketplace/Marketplace'
+import Marketplace, { TableHeaders } from 'components/templates/marketplace/Marketplace'
 
 const usePlanStyles = makeStyles({
   root: {
@@ -32,8 +32,8 @@ type Props<H extends TableHeaders> = Omit<AccordionProps, 'children'> & {
   isPlanCancelDisabled: boolean
   isTableLoading: boolean
   headers: H
-  activeContracts: Array<Pick<MarketplaceItem, 'id'> & {
-    [K in keyof H]: any
+  activeContracts: Array<{ id: string } & {
+    [K in keyof H]: React.ReactElement
   }>
 }
 
