@@ -21,3 +21,5 @@ export const toChecksum = (address: string): string => toChecksumAddress(
 export const shortChecksumAddress = (address: string): string => shortenString(
   toChecksum(address),
 )
+
+export const removeURLProtocol = (url: string) => url.replace(/^http[s]*:\/\//, '')
