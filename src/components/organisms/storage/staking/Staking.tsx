@@ -171,6 +171,7 @@ const Staking: FC = () => {
           `You cannot withdraw funds because all your contracts are running.
           Please wait until your contract finish`
         }
+        bringToFront
       />
       <ProgressOverlay
         title={txInProgressMessage}
