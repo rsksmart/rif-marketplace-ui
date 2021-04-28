@@ -1,9 +1,8 @@
 import {
-  Grid,
+  Grid, Typography,
 } from '@material-ui/core'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
 import Divider from '@material-ui/core/Divider'
-import TableContainer from '@material-ui/core/TableContainer'
 import PlanViewActions from 'components/molecules/plans/PlanViewActions'
 import React, {
   FC,
@@ -38,10 +37,13 @@ const ActiveContracts: FC<Props> = ({
         />
       </Grid>
       <Grid item><Divider /></Grid>
+      <Grid item>
+        <Typography color="primary" variant="subtitle1" style={{ paddingLeft: '16px' }}>
+          Active contracts
+        </Typography>
+      </Grid>
       <Grid container item>
-        {/* <TableContainer> */}
         {children}
-        {/* </TableContainer> */}
       </Grid>
     </Grid>
   </AccordionDetails>
