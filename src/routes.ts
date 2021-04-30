@@ -74,6 +74,7 @@ const ROUTES = {
     BASE: NOTIFIER,
     BUY: {
       BASE: NOTIFIER_BUY,
+      CHECKOUT: `${NOTIFIER_BUY}/${CHECKOUT}`,
     },
     SELL: {
       BASE: NOTIFIER_SELL,

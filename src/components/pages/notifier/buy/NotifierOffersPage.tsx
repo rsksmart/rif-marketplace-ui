@@ -12,6 +12,8 @@ import { NotifierOfferItem, PriceOption } from 'models/marketItems/NotifierItem'
 import React, {
   FC, useContext, useEffect, useState,
 } from 'react'
+import { useHistory } from 'react-router-dom'
+import ROUTES from 'routes'
 import { mapPlansToOffers } from './utils'
 
 const headers: TableHeaders = {
@@ -42,6 +44,7 @@ const showPlans = (
 )
 
 const NotifierOffersPage: FC = () => {
+  const history = useHistory()
   const {
     state: {
       contextID,
@@ -80,7 +83,7 @@ const NotifierOffersPage: FC = () => {
       type: 'SET_ORDER',
       payload: { plan, priceOption },
     })
-    // TODO: history.push(ROUTES.NOTIFIER.BUY.CHECKOUT)
+    history.push(ROUTES.NOTIFIER.BUY.CHECKOUT)
   }
 
   const [selectedProvider, setSelectedProvider] = useState<ProviderItem>()
