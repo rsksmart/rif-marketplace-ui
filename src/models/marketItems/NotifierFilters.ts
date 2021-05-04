@@ -1,3 +1,4 @@
+import { NotifierSubscriptionsTransportModel } from 'api/rif-marketplace-cache/notifier/subscriptions'
 import { SupportedFiatSymbol } from 'models/Fiat'
 import { MinMaxFilter } from 'models/Filters'
 import { SupportedTokenSymbol } from 'models/Token'
@@ -11,4 +12,7 @@ export type NotifierOffersFilters = {
     price: PriceFilter
     currency: Set<SupportedTokenSymbol>
     channels: Set<string>
+    provider?: string
 }
+
+export type NotifierSubscriptionsFilters = Partial<NotifierSubscriptionsTransportModel>

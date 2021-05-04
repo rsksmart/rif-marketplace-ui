@@ -5,7 +5,7 @@ import {
   ContextName,
   Action,
 } from './interfaces'
-import withContext, {
+import {
   Context,
   Provider,
   initialState,
@@ -24,7 +24,3 @@ export type NotifierOffersState = State
 export type NotifierOffersContextActions = Actions
 export type NotifierOffersContextAction = Action
 export type OffersContextName = ContextName
-
-const withNotifierOffersContext = withContext
-
-export default withNotifierOffersContext
