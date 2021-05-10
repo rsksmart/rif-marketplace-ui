@@ -13,7 +13,24 @@ const MOCK_ITEM_0: NotifierSubscriptionsTransportModel = {
   previousSubscription: 'IS THIS ADDRESS OR SHOULD IT BE TYPE NUMNER AS IN SUBSCRIPTION_ID?',
   status: 'ACTIVE',
   subscriptionId: 1,
-  subscriptionPlanId: 1,
+  plan: {
+    id: 1,
+    channels: [{ id: 1, name: 'API' }],
+    daysLeft: 100,
+    name: '1k',
+    planStatus: 'ACTIVE',
+    prices: [
+      {
+        id: 1,
+        price: '2',
+        rateId: 'rif',
+        rate: 1,
+      },
+    ],
+    providerId: '0xTEST',
+    quantity: 10,
+    url: 'nada',
+  },
   topics: [
     {
       notificationPreferences: 'prefs',
