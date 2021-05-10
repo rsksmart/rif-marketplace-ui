@@ -16,6 +16,7 @@ import TableContainer from '@material-ui/core/TableContainer'
 import { Item } from 'models/Market'
 import RemoveButton from 'components/atoms/RemoveButton'
 import Tooltip from '@material-ui/core/Tooltip'
+import NotificationChannelsList from 'components/organisms/notifier/NotificationChannelsList'
 
 const eventHeaders = {
   name: 'Name',
@@ -109,6 +110,9 @@ const NotifierOffersSelectedPage: FC = () => {
       <Button variant="outlined" color="primary" rounded>
         + Add Notification Events
       </Button>
+      <br />
+      <br />
+      <NotificationChannelsList {...{ channels: order?.item.channels }} />
     </CenteredPageTemplate>
   )
 }
