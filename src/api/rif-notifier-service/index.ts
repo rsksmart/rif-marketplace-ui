@@ -32,7 +32,7 @@ export default class NotifierService
       if (response.status !== 200) {
         throw new UIError({
           error: new Error(await response.json()),
-          text: `NotifierService ${}: Authentication failed for user ${address}`,
+          text: `NotifierService ${this.path}: Authentication failed for user ${address}`,
           id: 'service-fetch',
         })
       }
