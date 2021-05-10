@@ -29,3 +29,13 @@ export type NotifierSubscriptionItem = Item & Omit<SubscriptionDTO, 'hash' | 'pr
   price: Big
   token: SupportedToken
 }
+
+export enum NotifierChannelType {
+   API = 'Enter api destination',
+   EMAIL = 'Enter your email'
+}
+
+export type NotifierChannel = {
+    type: string
+    destination: string
+}
