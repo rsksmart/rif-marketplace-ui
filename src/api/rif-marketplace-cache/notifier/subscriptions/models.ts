@@ -1,3 +1,5 @@
+import { PlanDTO } from '../offers/models'
+
 export type SubscriptionTopic = {
   notificationPreferences: string | Array<string>
   type: string
@@ -14,7 +16,7 @@ export type SubscriptionDTO = {
   hash: string
   subscriptionId: number
   status: SubscriptionStatus
-  subscriptionPlanId: number
+  plan: PlanDTO
   notificationBalance: number
   previousSubscription: string
   expirationDate: Date
