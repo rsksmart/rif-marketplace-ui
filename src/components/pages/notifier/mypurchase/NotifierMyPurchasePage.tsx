@@ -9,6 +9,7 @@ import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
 import RoundedCard from 'components/atoms/RoundedCard'
 import WithLoginCard from 'components/hoc/WithLoginCard'
+import MyPurchasesHeader from 'components/molecules/MyPurchasesHeader'
 import PurchasesTable, { MySubscription } from 'components/organisms/notifier/mypurchase/PurchasesTable'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import AppContext, { AppContextProps } from 'context/App'
@@ -76,27 +77,29 @@ const NotifierMyPurchasePage: FC = () => {
 
   return (
     <CenteredPageTemplate>
-      <RoundedCard color="secondary">
-        <GridColumn>
-          <GridItem>
-            <Typography
-              gutterBottom
-              color="primary"
-              variant="subtitle1"
-              classes={titleStyleClass}
-            >
-              Active plans
-            </Typography>
-          </GridItem>
-          <GridRow>
-            <PurchasesTable
-              items={items}
-              isTableLoading={isTableLoading}
-            />
-          </GridRow>
-        </GridColumn>
-      </RoundedCard>
-
+      <>
+        <MyPurchasesHeader />
+        <RoundedCard color="secondary">
+          <GridColumn>
+            <GridItem>
+              <Typography
+                gutterBottom
+                color="primary"
+                variant="subtitle1"
+                classes={titleStyleClass}
+              >
+                Active plans
+              </Typography>
+            </GridItem>
+            <GridRow>
+              <PurchasesTable
+                items={items}
+                isTableLoading={isTableLoading}
+              />
+            </GridRow>
+          </GridColumn>
+        </RoundedCard>
+      </>
     </CenteredPageTemplate>
   )
 }
