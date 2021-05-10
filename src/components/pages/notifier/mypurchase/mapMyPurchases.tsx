@@ -16,6 +16,7 @@ const mapMyPurchases = ({
   id,
   token,
   provider,
+  plan,
   notificationBalance,
   expirationDate,
   price,
@@ -31,7 +32,7 @@ const mapMyPurchases = ({
     notifications: (
       <NotificationsBalance
         balance={notificationBalance}
-        limit={0} // FIXME: get offer to retreive limit
+        limit={plan.quantity}
       />
     ),
     expirationDate: (

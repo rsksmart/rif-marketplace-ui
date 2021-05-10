@@ -26,9 +26,8 @@ const mapActiveContracts = (
   offerLimit: number,
   crypto: MarketCryptoRecord,
   currentFiat: BaseFiat,
-): Array<ActiveContractItem> => myCustomers.filter(({
-  subscriptionPlanId,
-}) => String(subscriptionPlanId) === offerId)
+): Array<ActiveContractItem> => myCustomers
+  .filter(({ plan: { id } }) => String(id) === offerId)
   .map<ActiveContractItem>(({
     id: customerId,
     consumer,

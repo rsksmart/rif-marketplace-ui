@@ -72,7 +72,7 @@ const NotifierMyPurchasePage: FC = () => {
   }, [subscriptionsApi, account, reportError])
 
   const items = subscriptions?.map(mapMyPurchases(exchangeRates))
-  || [] as Array<MySubscription> // FIXME: get offer to retreive limit
+  || [] as Array<MySubscription>
 
   return (
     <CenteredPageTemplate>
