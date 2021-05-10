@@ -3,12 +3,12 @@ import { CopyTextTooltip } from '@rsksmart/rif-ui'
 import React, { FC } from 'react'
 import { shortChecksumAddress } from 'utils/stringUtils'
 
-export interface AddressItemProps extends TypographyProps {
+export interface RifAddressProps extends TypographyProps {
   pretext?: string
   value: string
 }
 
-const RifAddress: FC<AddressItemProps> = ({ pretext, value, ...rest }) => {
+const RifAddress: FC<RifAddressProps> = ({ pretext, value, ...rest }) => {
   const address = shortChecksumAddress(value)
 
   const displayElement = (
