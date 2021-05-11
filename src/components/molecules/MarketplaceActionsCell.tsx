@@ -4,11 +4,13 @@ import React, { FC } from 'react'
 import SelectRowButton, { SelectRowButtonProps } from './SelectRowButton'
 
 type Props = GridProps & {
+    disabled?: boolean
     actions: Array<SelectRowButtonProps>
 }
 
 const MarketplaceActionsCell: FC<Props> = ({
   actions,
+  disabled,
   ...gridProps
 }) => (
   <Grid
@@ -22,6 +24,7 @@ const MarketplaceActionsCell: FC<Props> = ({
         actions.map((action) => (
           <Grid item key={action.id}>
             <SelectRowButton
+              disabled={disabled || action.disabled}
               variant="outlined"
               {...action}
             />

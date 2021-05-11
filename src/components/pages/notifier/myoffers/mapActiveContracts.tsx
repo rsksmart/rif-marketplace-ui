@@ -43,12 +43,15 @@ const mapActiveContracts = (
         {getShortDateString(expirationDate)}
       </Typography>
     ),
-    notifBalance: <NotificationsBalance balance={notificationBalance} limit={offerLimit} />,
+    notifBalance: <NotificationsBalance
+      balance={notificationBalance}
+      limit={offerLimit}
+    />,
     price: (
       <Grid container wrap="nowrap" spacing={1}>
         <Grid item>
           <Typography color="primary" variant="body2">
-            {price.mul(crypto?.[token.symbol]?.rate)?.toFixed(2)}
+            {price.mul(crypto?.[token.symbol]?.rate || 0).toFixed(2)}
           </Typography>
         </Grid>
         <Grid item>

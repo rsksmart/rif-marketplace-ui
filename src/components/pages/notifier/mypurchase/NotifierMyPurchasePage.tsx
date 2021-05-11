@@ -30,7 +30,6 @@ const useTitleStyles = makeStyles(() => ({
 }))
 
 const NotifierMyPurchasePage: FC = () => {
-  // const history = useHistory()
   const titleStyleClass = useTitleStyles()
   const {
     state: { account },
@@ -50,15 +49,18 @@ const NotifierMyPurchasePage: FC = () => {
 
   const reportError = useErrorReporter()
 
-  const [subscriptions, setSubscriptions] = useState<Array<NotifierSubscriptionItem>>()
-  const [isTableLoading, setIsTableLoading] = useState<boolean>(false)
+  const [
+    subscriptions,
+    setSubscriptions,
+  ] = useState<Array<NotifierSubscriptionItem>>()
+  const [isTableLoading, setIsTableLoading] = useState<boolean>()
 
   useEffect(() => {
     if (account && subscriptionsApi) {
       setIsTableLoading(true)
       subscriptionsApi.connect(reportError)
       subscriptionsApi.fetch({
-        // consumer: account,
+        consumer: account,
       })
         .then(setSubscriptions)
         .catch((error) => reportError(new UIError({
@@ -94,7 +96,7 @@ const NotifierMyPurchasePage: FC = () => {
             <GridRow>
               <PurchasesTable
                 items={items}
-                isTableLoading={isTableLoading}
+                isTableLoading={Boolean(isTableLoading)}
               />
             </GridRow>
           </GridColumn>
