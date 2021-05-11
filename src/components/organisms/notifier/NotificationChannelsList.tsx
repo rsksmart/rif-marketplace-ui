@@ -6,8 +6,7 @@ import React, {
   FC, useState,
 } from 'react'
 import { createStyles, Theme } from '@material-ui/core/styles'
-import { NotifierChannel, NotifierChannelType } from 'models/marketItems/NotifierItem'
-import { validateEmail, validateURL } from 'utils/validationUtils'
+import { NotifierChannel, notifierChannelType } from 'models/marketItems/NotifierItem'
 import RoundBtn from 'components/atoms/RoundBtn'
 import GridRow from 'components/atoms/GridRow'
 import NotificationChannel from 'components/organisms/notifier/NotificationChannel'
@@ -18,11 +17,10 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
   channelsList: {
     marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(4),
     marginLeft: theme.spacing(15),
     borderTop: `1px solid ${colors.gray3}`,
     padding: theme.spacing(3, 0),
-  },
-  notificationChannel: {
   },
 
 }))
@@ -40,8 +38,9 @@ const NotificationChannelsList: FC<Props> = ({ channels }) => {
   const [addedChannels, setChannels] = useState<Array<NotifierChannel>>([])
   const [destination, setDestination] = useState<string>('')
   const handleChange = (e) => {
+    const { target: { value } } = e
     setChannel({
-      type: e.target.value as string,
+      type: value,
       destination: '',
     })
   }
@@ -50,28 +49,12 @@ const NotificationChannelsList: FC<Props> = ({ channels }) => {
   if (!channels) {
     return <Grid />
   }
-  const availableChannels: Array<string> = channels.map((ch) => (NotifierChannelType[ch] ? ch : ''))
-
-  const validate = (channel: NotifierChannel) => {
-    if (channel.destination) {
-      if (channel.type === 'API') {
-        return validateURL(channel.destination)
-      }
-
-      if (channel.type === 'EMAIL') {
-        return validateEmail(channel.destination)
-      }
-    }
-    return false
-  }
+  const availableChannels: Array<string> = channels.map((channel) => (notifierChannelType[channel] ? channel : ''))
 
   const addChannel = () => {
     notifierChannel.destination = destination
 
-    if (!validate(notifierChannel)) {
-      return
-    }
-    const index = addedChannels.findIndex((ch) => ch.type === notifierChannel.type)
+    const index = addedChannels.findIndex((channel) => channel.type === notifierChannel.type)
 
     if (index === -1) addedChannels.push(notifierChannel)
     else addedChannels[index].destination = destination
@@ -107,12 +90,10 @@ const NotificationChannelsList: FC<Props> = ({ channels }) => {
       <Grid className={classes.channelsList} item xs={12}>
         <Grid alignItems="center" container spacing={2}>
           {
-          collection.map((channel) => <NotificationChannel className={classes.notificationChannel} channel={channel} onRemoveClick={removeChannel} />)
+          collection.map((channel) => <NotificationChannel channel={channel} onRemoveClick={removeChannel} />)
         }
         </Grid>
       </Grid>
-      <br />
-      <br />
       <GridRow justify="center" spacing={2}>
         <RoundBtn type="submit">
           Submit

@@ -30,9 +30,9 @@ export type NotifierSubscriptionItem = Item & Omit<SubscriptionDTO, 'hash' | 'pr
   token: SupportedToken
 }
 
-export enum NotifierChannelType {
-   API = 'Enter api destination',
-   EMAIL = 'Enter your email'
+export const notifierChannelType = {
+  API: 'Enter api destination',
+  EMAIL: 'Enter your email',
 }
 
 export type NotifierChannel = {
