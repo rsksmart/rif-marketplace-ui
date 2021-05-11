@@ -11,6 +11,7 @@ export type ContextName = typeof contextName
 export type OffersListing = {
   items: NotifierOfferItem[]
 }
+
 export type OrderItem = Omit<NotifierOfferItem, 'priceOptions'> & PriceOption
 export type OffersOrder = Omit<ServiceOrder<OrderItem>, 'isOutdated'>
 
