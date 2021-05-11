@@ -3,7 +3,7 @@ import React, {
 } from 'react'
 
 import {
-  Grid,
+  Grid, makeStyles,
   Typography,
 } from '@material-ui/core'
 import { NotifierOffersContextProps as ContextProps, NotifierOffersContext } from 'context/Services/notifier/offers'
@@ -17,6 +17,14 @@ import { Item } from 'models/Market'
 import RemoveButton from 'components/atoms/RemoveButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import NotificationChannelsList from 'components/organisms/notifier/NotificationChannelsList'
+import { createStyles, Theme } from '@material-ui/core/styles'
+
+const useStyles = makeStyles((theme: Theme) => createStyles({
+
+  eventsSection: {
+    marginTop: theme.spacing(4),
+  },
+}))
 
 const eventHeaders = {
   name: 'Name',
@@ -32,6 +40,7 @@ type EventItem = Item & {
 }
 
 const NotifierOffersSelectedPage: FC = () => {
+  const classes = useStyles()
   const {
     state: {
       exchangeRates: {
@@ -91,9 +100,7 @@ const NotifierOffersSelectedPage: FC = () => {
       </Grid>
       <NotifierPlanDescription {...{ item: order, crypto, currentFiat }} />
       {/* Header */ }
-      <Grid item xs={11} md="auto">
-        <br />
-        <br />
+      <Grid item xs={11} md="auto" className={classes.eventsSection}>
         <Typography gutterBottom variant="h6" color="primary">
           Notification events added
         </Typography>
