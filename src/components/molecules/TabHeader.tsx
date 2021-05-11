@@ -15,7 +15,6 @@ const TabHeader: FC<Props> = ({ title, icon, children }) => (
     <Grid container item xs={10} alignItems="center">
       <Grid item xs={1}>
         {icon}
-        {/* <img src={handProvidingFunds} alt="hand providing funds" /> */}
       </Grid>
       <Grid item xs={11} md="auto">
         <Typography gutterBottom variant="h6" color="primary">

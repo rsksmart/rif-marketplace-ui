@@ -37,12 +37,7 @@ export default class NotifierService
         })
       }
 
-      const {
-        status,
-        content: {
-          apiKey,
-        },
-      } = await response.json()
+      const { status, content: { apiKey } } = await response.json()
 
       if (status !== 'OK') {
         throw new UIError({
@@ -78,10 +73,7 @@ export default class NotifierService
         })
       }
 
-      const {
-        content,
-        message,
-      } = await response.json()
+      const { content, message } = await response.json()
 
       if (message !== 'OK') {
         throw new UIError({

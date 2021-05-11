@@ -70,7 +70,10 @@ const NotifierMyOffersPage: FC = () => {
   const reportError = useErrorReporter()
 
   const [myProfile, setMyProfile] = useState<Profile>()
-  const [myCustomers, setMyCustomers] = useState<Array<NotifierSubscriptionItem>>([])
+  const [
+    myCustomers,
+    setMyCustomers,
+  ] = useState<Array<NotifierSubscriptionItem>>([])
 
   // Set provider upon wallet connection
   const myOffers = useMemo(() => {
@@ -121,9 +124,13 @@ const NotifierMyOffersPage: FC = () => {
     }
   }, [account, web3, reportError])
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const handleAddPlan = () => {}
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const handleEditPlan = () => {}
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const handleCancelPlan = () => {}
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const handleEditProfile = () => {}
 
   return (
@@ -138,7 +145,12 @@ const NotifierMyOffersPage: FC = () => {
       <Grid container spacing={8}>
         <Grid item md={5}>
           {/* Profile description */ }
-          <NotifierProviderDescription {...{ account, myProfile, handleEditProfile }} />
+          <NotifierProviderDescription {...{
+            account,
+            myProfile,
+            handleEditProfile,
+          }}
+          />
         </Grid>
         {/* Header */ }
         <MyOffersHeader>

@@ -10,10 +10,12 @@ type ChannelsDTO = {
     name: string
   }
 
+export type PlanStatus = 'ACTIVE' | 'INACTIVE'
+
 export type PlanDTO = {
   id: number
   name: string
-  planStatus: | 'ACTIVE'
+  planStatus: PlanStatus
   daysLeft: number
   quantity: number
   providerId: string
