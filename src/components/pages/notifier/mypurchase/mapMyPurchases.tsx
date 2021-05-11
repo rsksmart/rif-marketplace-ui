@@ -1,13 +1,25 @@
 import React from 'react'
-import MarketplaceCell from 'components/atoms/MarketplaceCell'
 import { CombinedPriceCell } from 'components/molecules'
 import MarketplaceActionsCell from 'components/molecules/MarketplaceActionsCell'
 import NotificationsBalance from 'components/molecules/notifier/NotificationsBalance'
 import { MySubscription } from 'components/organisms/notifier/mypurchase/PurchasesTable'
 import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
-import { getShortDateString } from 'utils/dateUtils'
 import { ExchageRate } from 'context/Market/interfaces'
 import MarketplaceAddressCell from 'components/molecules/MarketplaceAddressCell'
+import ExpirationDate, { SubscriptionExpirationType } from 'components/molecules/ExpirationDate'
+import { PlanDTO } from 'api/rif-marketplace-cache/notifier/offers/models'
+
+const EXPIRATION_WARNING_TRIGGER = 5
+
+const getExpirationType = (
+  { planStatus, daysLeft }: PlanDTO,
+): SubscriptionExpirationType => {
+  if (planStatus === 'INACTIVE' || daysLeft <= 0) return 'blocked'
+
+  if (daysLeft <= EXPIRATION_WARNING_TRIGGER) return 'warning'
+
+  return 'normal'
+}
 
 const mapMyPurchases = ({
   currentFiat,
@@ -25,6 +37,8 @@ const mapMyPurchases = ({
   const { rate, displayName } = crypto?.[token.symbol]
     || { rate: 0, displayName: '' }
 
+  const expType = getExpirationType(plan)
+
   return {
     id,
     subId: <MarketplaceAddressCell value={id} />,
@@ -36,11 +50,13 @@ const mapMyPurchases = ({
       />
     ),
     expirationDate: (
-      <MarketplaceCell>
-        { getShortDateString(expirationDate) }
-      </MarketplaceCell>
+      <ExpirationDate
+        date={expirationDate}
+        type={expType}
+      />
     ),
     price: <CombinedPriceCell
+      disabled={expType === 'blocked'}
       price={price.toString()}
       priceFiat={price.times(rate).toString()}
       currency={displayName}
@@ -51,6 +67,7 @@ const mapMyPurchases = ({
       <MarketplaceActionsCell
         actions={[
           {
+            disabled: expType === 'blocked',
             id: `renew_${id}`,
             // eslint-disable-next-line @typescript-eslint/no-empty-function
             handleSelect: (): void => {},
