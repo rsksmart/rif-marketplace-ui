@@ -16,9 +16,15 @@ type Props = {
     crypto: MarketCryptoRecord
 }
 
-const NotifierPlanDescription: FC<Props> = ({ item, crypto, currentFiat }) => {
+const NotifierPlanDescription: FC<Props> = ({ item, crypto, currentFiat: currentFiatName }) => {
   if (!item) return <DescriptionCard />
-  const { token, daysLeft, value } = item.item
+  const {
+    token, daysLeft, value,
+    provider, limit, channels,
+  } = item.item
+  const rate = crypto?.[token.symbol]?.rate || 0
+  const valueInFiat = ((value.mul(rate))).toFixed(2)
+
   return (
     <DescriptionCard>
       <Grid container spacing={1}>
@@ -41,22 +47,22 @@ const NotifierPlanDescription: FC<Props> = ({ item, crypto, currentFiat }) => {
           <Typography color="textSecondary" noWrap>Expiration Period</Typography>
         </Grid>
         <Grid item xs={1} md={2}>
-          <RifAddress value={item.item['provider']} color="textPrimary" noWrap />
+          <RifAddress value={provider} color="textPrimary" noWrap />
         </Grid>
         <Grid item xs={1} md={2}>
-          <Typography color="textPrimary">{item.item['limit']}</Typography>
+          <Typography color="textPrimary">{limit}</Typography>
         </Grid>
         <Grid item xs={1} md={2}>
-          <Typography color="textPrimary">{item.item['channels'].join('+')}</Typography>
+          <Typography color="textPrimary">{channels.join(',')}</Typography>
         </Grid>
         <Grid item xs={1} md={2}>
-          <Typography color="textPrimary">{item.item['token'].displayName}</Typography>
+          <Typography color="textPrimary">{token.displayName}</Typography>
         </Grid>
         <Grid item xs={1} md={2}>
           <Typography color="textPrimary">
-            {((crypto?.[token.symbol]?.rate || 0) * value.toNumber()).toPrecision(4)}
+            {valueInFiat}
             {' '}
-            {currentFiat}
+            {currentFiatName}
           </Typography>
         </Grid>
         <Grid item xs={1} md={2}>
