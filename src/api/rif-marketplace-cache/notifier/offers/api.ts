@@ -8,6 +8,7 @@ import { MinMaxFilter } from 'models/Filters'
 import { SupportedFiatSymbol } from 'models/Fiat'
 import { NotifierOffersFilters } from 'models/marketItems/NotifierFilters'
 import { parseToBigDecimal } from 'utils/parsers'
+import { SupportedEventChannel } from 'config/notifier'
 import { NotifierAPIService } from '../interfaces'
 import { PlanDTO } from './models'
 
@@ -31,7 +32,7 @@ export const mapFromTransport = ({
   name,
   provider: provider.toLocaleLowerCase(),
   url,
-  channels: channels.map((channel) => channel.name),
+  channels: channels.map((channel) => channel.name as SupportedEventChannel),
   limit: quantity,
   priceOptions: prices.map((price) => ({
     token: getSupportedTokenByName(
