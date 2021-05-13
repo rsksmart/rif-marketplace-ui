@@ -40,8 +40,8 @@ jobs:
         REACT_APP_UPLOAD_ADDR: ${{ secrets.DEVELOP_REACT_APP_UPLOAD_ADDR }}
         REACT_APP_LOG_LEVEL: error
         REACT_APP_NETWORK: rskdevnet
-        REACT_APP_REQUIRED_NETWORK_ID: 31
-        REACT_APP_REQUIRED_NETWORK_NAME: RSK Develop
+        REACT_APP_REQUIRED_NETWORK_ID: 33
+        REACT_APP_REQUIRED_NETWORK_NAME: RSK Devnet
       run: |
         npm run build:prod
 
