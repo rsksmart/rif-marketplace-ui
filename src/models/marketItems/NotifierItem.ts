@@ -2,6 +2,7 @@ import { Item } from 'models/Market'
 import Big from 'big.js'
 import { SupportedToken } from 'contracts/interfaces'
 import { SubscriptionDTO } from 'api/rif-marketplace-cache/notifier/subscriptions/models'
+import { SupportedEventChannel } from 'config/notifier'
 
 export type PriceOption = {
     token: SupportedToken
@@ -16,7 +17,7 @@ export type Provider = {
 
 export type NotifierPlan = Provider & {
     name: string
-    channels: string[]
+    channels: Array<SupportedEventChannel>
     limit: number
     priceOptions: PriceOption[]
     daysLeft: number
@@ -28,11 +29,6 @@ export type NotifierSubscriptionItem = Item & Omit<SubscriptionDTO, 'hash' | 'pr
   provider: string
   price: Big
   token: SupportedToken
-}
-
-export const notifierChannelType = {
-  API: 'Enter api destination',
-  EMAIL: 'Enter your email',
 }
 
 export type NotifierChannel = {

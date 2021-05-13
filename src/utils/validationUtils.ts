@@ -1,11 +1,10 @@
-const validateURL = (_url: string): boolean => {
-  let url
+const validateURL = (url: string, validProtocols: Array<string>): boolean => {
   try {
-    url = new URL(_url)
-  } catch (_) {
+    const { protocol } = new URL(url)
+    return validProtocols.includes(protocol)
+  } catch {
     return false
   }
-  return url.protocol === 'http:' || url.protocol === 'https:'
 }
 
 export default validateURL
