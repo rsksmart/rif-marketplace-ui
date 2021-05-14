@@ -36,7 +36,7 @@ const eventHeaders = {
 type EventItem = Item & {
   [K in keyof Omit<typeof eventHeaders, 'actions'>]: string
 } & {
-    signature: string
+  signature: string
 }
 
 const NotifierOffersSelectedPage: FC = () => {
@@ -59,8 +59,6 @@ const NotifierOffersSelectedPage: FC = () => {
     dispatch,
   } = useContext<ContextProps>(NotifierOffersContext)
 
-  if (!order?.item) return null
-
   /* TODO use real events instead of hard coded events */
   const [events, setEvents] = useState<Array<EventItem>>(
     [
@@ -80,6 +78,8 @@ const NotifierOffersSelectedPage: FC = () => {
       },
     ],
   )
+
+  if (!order?.item) return null
 
   const removeEvent = (e) => {
     const newevents = events.filter((i) => i.name !== e.currentTarget.id)
@@ -101,7 +101,7 @@ const NotifierOffersSelectedPage: FC = () => {
         </Typography>
       </Grid>
       <NotifierPlanDescription {...{ item: order.item, crypto, currentFiat }} />
-      {/* Header */ }
+      {/* Header */}
       <Grid item xs={11} md="auto" className={classes.eventsSection}>
         <Typography gutterBottom variant="h6" color="primary">
           Notification events added
