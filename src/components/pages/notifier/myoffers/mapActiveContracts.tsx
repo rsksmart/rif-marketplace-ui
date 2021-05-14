@@ -8,6 +8,7 @@ import { Item, MarketCryptoRecord } from 'models/Market'
 import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import { getShortDateString } from 'utils/dateUtils'
 import { BaseFiat } from 'models/Fiat'
+import { logNotImplemented } from 'utils/utils'
 
 export const activeContractHeaders = {
   customer: 'Customer',
@@ -66,13 +67,11 @@ const mapActiveContracts = (
         actions={[
           {
             id: `withdraw_${customerId}`,
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            handleSelect: (): void => {},
+            handleSelect: (): void => logNotImplemented('handle withdraw'),
             children: 'Withdraw',
           }, {
             id: `view_${customerId}`,
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            handleSelect: (): void => {},
+            handleSelect: (): void => logNotImplemented('handle view'),
             children: 'View',
           },
         ]}

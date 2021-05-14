@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import {
   Grid,
 } from '@material-ui/core'
@@ -25,6 +24,7 @@ import { UIError } from 'models/UIMessage'
 import React, {
   FC, useContext, useEffect, useMemo, useState,
 } from 'react'
+import { logNotImplemented } from 'utils/utils'
 import Web3 from 'web3'
 import mapActiveContracts, { activeContractHeaders, ActiveContractItem } from './mapActiveContracts'
 
@@ -115,7 +115,9 @@ const NotifierMyOffersPage: FC = () => {
     if (account) {
       NotifierContract.getInstance(web3 as Web3)
         .isWhitelistedProvider(account)
-        .then((isWhitelisted) => setIsWhitelistedProvider(Boolean(isWhitelisted)))
+        .then((isWhitelisted) => setIsWhitelistedProvider(
+          Boolean(isWhitelisted),
+        ))
         .catch((error) => reportError({
           error,
           id: 'contract-notifier',
@@ -124,14 +126,10 @@ const NotifierMyOffersPage: FC = () => {
     }
   }, [account, web3, reportError])
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handleAddPlan = () => {}
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handleEditPlan = () => {}
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handleCancelPlan = () => {}
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handleEditProfile = () => {}
+  const handleAddPlan = (): void => logNotImplemented('handle add plan')
+  const handleEditPlan = (): void => logNotImplemented('handle edit plan')
+  const handleCancelPlan = (): void => logNotImplemented('handle cancel plan')
+  const handleEditProfile = (): void => logNotImplemented('handle edit profile')
 
   return (
     <CenteredPageTemplate>
