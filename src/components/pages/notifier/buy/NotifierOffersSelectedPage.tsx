@@ -59,6 +59,8 @@ const NotifierOffersSelectedPage: FC = () => {
     dispatch,
   } = useContext<ContextProps>(NotifierOffersContext)
 
+  if (!order?.item) return null
+
   /* TODO use real events instead of hard coded events */
   const [events, setEvents] = useState<Array<EventItem>>(
     [
@@ -98,7 +100,7 @@ const NotifierOffersSelectedPage: FC = () => {
           Notification plan selected
         </Typography>
       </Grid>
-      <NotifierPlanDescription {...{ item: order, crypto, currentFiat }} />
+      <NotifierPlanDescription {...{ item: order.item, crypto, currentFiat }} />
       {/* Header */ }
       <Grid item xs={11} md="auto" className={classes.eventsSection}>
         <Typography gutterBottom variant="h6" color="primary">

@@ -7,21 +7,22 @@ import RifAddress from 'components/molecules/RifAddress'
 import React, {
   FC,
 } from 'react'
-import { OffersOrder } from 'context/Services/notifier/offers/interfaces'
 import { MarketCryptoRecord } from 'models/Market'
+import { OrderItem } from 'context/Services/notifier/offers/interfaces'
 
 type Props = {
-      item?: OffersOrder
+    item: OrderItem
     currentFiat: string
     crypto: MarketCryptoRecord
 }
 
-const NotifierPlanDescription: FC<Props> = ({ item, crypto, currentFiat: currentFiatName }) => {
-  if (!item) return <DescriptionCard />
-  const {
+const NotifierPlanDescription: FC<Props> = ({
+  item: {
     token, daysLeft, value,
     provider, limit, channels,
-  } = item.item
+  }, crypto,
+  currentFiat: currentFiatName,
+}) => {
   const rate = crypto?.[token.symbol]?.rate || 0
   const valueInFiat = ((value.mul(rate))).toFixed(2)
 
