@@ -6,12 +6,12 @@ export type MarketErrorId = 'market-init'
 
 // STATE
 export type ContextName = 'market'
-export type ExchageRate = {
+export type ExchangeRate = {
     currentFiat: BaseFiat
     crypto: MarketCryptoRecord
 }
 export type State = ContextState & {
-  exchangeRates: ExchageRate
+  exchangeRates: ExchangeRate
 }
 
 // ACTIONS
