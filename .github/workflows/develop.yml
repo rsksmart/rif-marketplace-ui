@@ -41,7 +41,7 @@ jobs:
         REACT_APP_LOG_LEVEL: error
         REACT_APP_NETWORK: rskdevnet
         REACT_APP_REQUIRED_NETWORK_ID: 33
-        REACT_APP_REQUIRED_NETWORK_NAME: RSK Devnet
+        REACT_APP_REQUIRED_NETWORK_NAME: RSK Regtest
       run: |
         npm run build:prod
 
