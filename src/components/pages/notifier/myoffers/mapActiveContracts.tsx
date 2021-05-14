@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid } from '@material-ui/core'
+import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import MarketplaceActionsCell from 'components/molecules/MarketplaceActionsCell'
 import MarketplaceAddressCell from 'components/molecules/MarketplaceAddressCell'

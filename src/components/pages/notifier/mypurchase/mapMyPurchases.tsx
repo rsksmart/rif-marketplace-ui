@@ -4,7 +4,7 @@ import MarketplaceActionsCell from 'components/molecules/MarketplaceActionsCell'
 import NotificationsBalance from 'components/molecules/notifier/NotificationsBalance'
 import { MySubscription } from 'components/organisms/notifier/mypurchase/PurchasesTable'
 import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
-import { ExchageRate } from 'context/Market/interfaces'
+import { ExchangeRate } from 'context/Market/interfaces'
 import MarketplaceAddressCell from 'components/molecules/MarketplaceAddressCell'
 import ExpirationDate, { SubscriptionExpirationType } from 'components/molecules/ExpirationDate'
 import { PlanDTO } from 'api/rif-marketplace-cache/notifier/offers/models'
@@ -25,7 +25,7 @@ const getExpirationType = (
 const mapMyPurchases = ({
   currentFiat,
   crypto,
-}: ExchageRate) => ({
+}: ExchangeRate) => ({
   id,
   token,
   provider,

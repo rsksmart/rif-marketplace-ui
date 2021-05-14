@@ -1,6 +1,7 @@
 import {
-  makeStyles, TableContainer, Theme,
-} from '@material-ui/core'
+  makeStyles, Theme,
+} from '@material-ui/core/styles'
+import TableContainer from '@material-ui/core/TableContainer'
 import Typography from '@material-ui/core/Typography'
 import Marketplace from 'components/templates/marketplace/Marketplace'
 import { Item } from 'models/Market'
