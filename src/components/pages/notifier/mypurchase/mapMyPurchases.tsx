@@ -8,6 +8,7 @@ import { ExchageRate } from 'context/Market/interfaces'
 import MarketplaceAddressCell from 'components/molecules/MarketplaceAddressCell'
 import ExpirationDate, { SubscriptionExpirationType } from 'components/molecules/ExpirationDate'
 import { PlanDTO } from 'api/rif-marketplace-cache/notifier/offers/models'
+import { logNotImplemented } from 'utils/utils'
 
 const EXPIRATION_WARNING_TRIGGER = 5
 
@@ -69,13 +70,11 @@ const mapMyPurchases = ({
           {
             disabled: expType === 'blocked',
             id: `renew_${id}`,
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            handleSelect: (): void => {},
+            handleSelect: (): void => logNotImplemented('handle renew'),
             children: 'Renew',
           }, {
             id: `view_${id}`,
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            handleSelect: (): void => {},
+            handleSelect: (): void => logNotImplemented('handle view'),
             children: 'View',
           },
         ]}
