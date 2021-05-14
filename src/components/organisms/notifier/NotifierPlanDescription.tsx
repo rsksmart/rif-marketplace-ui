@@ -24,7 +24,7 @@ const NotifierPlanDescription: FC<Props> = ({
   currentFiat: currentFiatName,
 }) => {
   const rate = crypto?.[token.symbol]?.rate || 0
-  const valueInFiat = ((value.mul(rate))).toFixed(2)
+  const valueInFiat = (value.mul(rate)).toFixed(2)
 
   return (
     <DescriptionCard>
