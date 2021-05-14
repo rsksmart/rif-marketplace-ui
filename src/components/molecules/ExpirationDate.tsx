@@ -1,9 +1,10 @@
-import Typography from '@material-ui/core/Typography/Typography'
+import Typography from '@material-ui/core/Typography'
 import React, { FC } from 'react'
 import { getShortDateString } from 'utils/dateUtils'
 import {
-  makeStyles, Theme, Grid,
-} from '@material-ui/core'
+  makeStyles, Theme,
+} from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid'
 import WatchLaterIcon from '@material-ui/icons/WatchLater'
 
 const useStyles = makeStyles(({ palette }: Theme) => ({
