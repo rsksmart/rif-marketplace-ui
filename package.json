@@ -44,7 +44,7 @@
     "@rsksmart/erc721": "^1.0.0",
     "@rsksmart/rif-marketplace-notifier": "0.0.1-dev.2",
     "@rsksmart/rif-marketplace-storage": "^0.1.0",
-    "@rsksmart/rif-ui": "^0.6.0",
+    "@rsksmart/rif-ui": "^0.6.1",
     "@rsksmart/rsk-utils": "^1.1.0",
     "big.js": "^6.0.2",
     "cids": "^1.0.2",

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import {
   Grid,
 } from '@material-ui/core'
@@ -25,6 +24,7 @@ import { UIError } from 'models/UIMessage'
 import React, {
   FC, useContext, useEffect, useMemo, useState,
 } from 'react'
+import { logNotImplemented } from 'utils/utils'
 import Web3 from 'web3'
 import mapActiveContracts, { activeContractHeaders, ActiveContractItem } from './mapActiveContracts'
 
@@ -70,7 +70,10 @@ const NotifierMyOffersPage: FC = () => {
   const reportError = useErrorReporter()
 
   const [myProfile, setMyProfile] = useState<Profile>()
-  const [myCustomers, setMyCustomers] = useState<Array<NotifierSubscriptionItem>>([])
+  const [
+    myCustomers,
+    setMyCustomers,
+  ] = useState<Array<NotifierSubscriptionItem>>([])
 
   // Set provider upon wallet connection
   const myOffers = useMemo(() => {
@@ -112,7 +115,9 @@ const NotifierMyOffersPage: FC = () => {
     if (account) {
       NotifierContract.getInstance(web3 as Web3)
         .isWhitelistedProvider(account)
-        .then((isWhitelisted) => setIsWhitelistedProvider(Boolean(isWhitelisted)))
+        .then((isWhitelisted) => setIsWhitelistedProvider(
+          Boolean(isWhitelisted),
+        ))
         .catch((error) => reportError({
           error,
           id: 'contract-notifier',
@@ -121,10 +126,10 @@ const NotifierMyOffersPage: FC = () => {
     }
   }, [account, web3, reportError])
 
-  const handleAddPlan = () => {}
-  const handleEditPlan = () => {}
-  const handleCancelPlan = () => {}
-  const handleEditProfile = () => {}
+  const handleAddPlan = (): void => logNotImplemented('handle add plan')
+  const handleEditPlan = (): void => logNotImplemented('handle edit plan')
+  const handleCancelPlan = (): void => logNotImplemented('handle cancel plan')
+  const handleEditProfile = (): void => logNotImplemented('handle edit profile')
 
   return (
     <CenteredPageTemplate>
@@ -138,7 +143,12 @@ const NotifierMyOffersPage: FC = () => {
       <Grid container spacing={8}>
         <Grid item md={5}>
           {/* Profile description */ }
-          <NotifierProviderDescription {...{ account, myProfile, handleEditProfile }} />
+          <NotifierProviderDescription {...{
+            account,
+            myProfile,
+            handleEditProfile,
+          }}
+          />
         </Grid>
         {/* Header */ }
         <MyOffersHeader>

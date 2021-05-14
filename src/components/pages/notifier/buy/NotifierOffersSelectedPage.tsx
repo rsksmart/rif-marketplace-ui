@@ -3,7 +3,7 @@ import React, {
 } from 'react'
 
 import {
-  Grid,
+  Grid, makeStyles,
   Typography,
 } from '@material-ui/core'
 import { NotifierOffersContextProps as ContextProps, NotifierOffersContext } from 'context/Services/notifier/offers'
@@ -16,6 +16,15 @@ import TableContainer from '@material-ui/core/TableContainer'
 import { Item } from 'models/Market'
 import RemoveButton from 'components/atoms/RemoveButton'
 import Tooltip from '@material-ui/core/Tooltip'
+import NotificationChannelsList from 'components/organisms/notifier/NotificationChannelsList'
+import { createStyles, Theme } from '@material-ui/core/styles'
+
+const useStyles = makeStyles((theme: Theme) => createStyles({
+
+  eventsSection: {
+    marginTop: theme.spacing(4),
+  },
+}))
 
 const eventHeaders = {
   name: 'Name',
@@ -31,6 +40,7 @@ type EventItem = Item & {
 }
 
 const NotifierOffersSelectedPage: FC = () => {
+  const classes = useStyles()
   const {
     state: {
       exchangeRates: {
@@ -48,6 +58,8 @@ const NotifierOffersSelectedPage: FC = () => {
     },
     dispatch,
   } = useContext<ContextProps>(NotifierOffersContext)
+
+  if (!order?.item) return null
 
   /* TODO use real events instead of hard coded events */
   const [events, setEvents] = useState<Array<EventItem>>(
@@ -88,11 +100,9 @@ const NotifierOffersSelectedPage: FC = () => {
           Notification plan selected
         </Typography>
       </Grid>
-      <NotifierPlanDescription {...{ item: order, crypto, currentFiat }} />
+      <NotifierPlanDescription {...{ item: order.item, crypto, currentFiat }} />
       {/* Header */ }
-      <Grid item xs={11} md="auto">
-        <br />
-        <br />
+      <Grid item xs={11} md="auto" className={classes.eventsSection}>
         <Typography gutterBottom variant="h6" color="primary">
           Notification events added
         </Typography>
@@ -109,6 +119,9 @@ const NotifierOffersSelectedPage: FC = () => {
       <Button variant="outlined" color="primary" rounded>
         + Add Notification Events
       </Button>
+      <br />
+      <br />
+      <NotificationChannelsList {...{ channels: order?.item.channels }} />
     </CenteredPageTemplate>
   )
 }

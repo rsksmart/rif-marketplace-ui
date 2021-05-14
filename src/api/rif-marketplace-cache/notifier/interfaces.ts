@@ -1,5 +1,6 @@
 import { APIService } from 'api/models/apiService'
-import { NotifierOfferItem } from 'models/marketItems/NotifierItem'
+import { NotifierSubscriptionsFilters } from 'models/marketItems/NotifierFilters'
+import { NotifierItem } from 'models/marketItems/NotifierItem'
 import { NotifierOffersAddress, NotifierOffersWSChannel } from './offers'
 import { NotifierSubscriptionsAddress, NotifierSubscriptionsWSChannel } from './subscriptions'
 
@@ -13,5 +14,5 @@ export type WSChannel =
 export interface NotifierAPIService extends APIService {
   path: Address
   _channel: WSChannel
-  fetch: () => Promise<NotifierOfferItem[]>
+  fetch: (filters?: NotifierSubscriptionsFilters) => Promise<NotifierItem[]>
 }
