@@ -5,10 +5,9 @@ import MarketplaceActionsCell from 'components/molecules/MarketplaceActionsCell'
 import MarketplaceAddressCell from 'components/molecules/MarketplaceAddressCell'
 import NotificationsBalance from 'components/molecules/notifier/NotificationsBalance'
 import { Item, MarketCryptoRecord } from 'models/Market'
-import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
+import { NotifierOfferItem, NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import { getShortDateString } from 'utils/dateUtils'
 import { BaseFiat } from 'models/Fiat'
-import { logNotImplemented } from 'utils/utils'
 
 export const activeContractHeaders = {
   customer: 'Customer',
@@ -21,62 +20,66 @@ export type ActiveContractItem = Item & {
     [K in keyof typeof activeContractHeaders]: React.ReactElement
   }
 
-const mapActiveContracts = (
+const mapActiveContracts = <T extends Function, U extends Function>(
   myCustomers: NotifierSubscriptionItem[],
-  offerId: string,
-  offerLimit: number,
-  crypto: MarketCryptoRecord,
-  currentFiat: BaseFiat,
+  { id: offerId, limit }: Pick<NotifierOfferItem, 'id' | 'limit'>,
+  { currentFiat: { displayName }, crypto }: {
+    currentFiat: BaseFiat
+    crypto: MarketCryptoRecord
+  },
+  { onWithdraw, onView }: {
+      onWithdraw: T
+      onView: U
+    },
 ): Array<ActiveContractItem> => myCustomers
-  .filter(({ plan: { id } }) => String(id) === offerId)
-  .map<ActiveContractItem>(({
-    id: customerId,
-    consumer,
-    expirationDate,
-    notificationBalance,
-    price,
-    token,
-  }) => ({
-    id: customerId,
-    customer: <MarketplaceAddressCell value={consumer} />,
-    expDate: (
-      <Typography color="textSecondary" variant="body2">
-        {getShortDateString(expirationDate)}
-      </Typography>
-    ),
-    notifBalance: <NotificationsBalance
-      balance={notificationBalance}
-      limit={offerLimit}
-    />,
-    price: (
-      <Grid container wrap="nowrap" spacing={1}>
-        <Grid item>
-          <Typography color="primary" variant="body2">
-            {price.mul(crypto?.[token.symbol]?.rate || 0).toFixed(2)}
-          </Typography>
+    .filter(({ plan: { id } }) => String(id) === offerId)
+    .map<ActiveContractItem>(({
+      id,
+      consumer,
+      expirationDate,
+      notificationBalance,
+      price,
+      token,
+    }) => ({
+      id,
+      customer: <MarketplaceAddressCell value={consumer} />,
+      expDate: (
+        <Typography color="textSecondary" variant="body2">
+          {getShortDateString(expirationDate)}
+        </Typography>
+      ),
+      notifBalance: <NotificationsBalance
+        balance={notificationBalance}
+        limit={limit}
+      />,
+      price: (
+        <Grid container wrap="nowrap" spacing={1}>
+          <Grid item>
+            <Typography color="primary" variant="body2">
+              {price.mul(crypto?.[token.symbol]?.rate || 0).toFixed(2)}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography color="primary" variant="caption">
+              {displayName}
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Typography color="primary" variant="caption">
-            {currentFiat.displayName}
-          </Typography>
-        </Grid>
-      </Grid>
-    ),
-    actions: (
-      <MarketplaceActionsCell
-        actions={[
-          {
-            id: `withdraw_${customerId}`,
-            handleSelect: (): void => logNotImplemented('handle withdraw'),
-            children: 'Withdraw',
-          }, {
-            id: `view_${customerId}`,
-            handleSelect: (): void => logNotImplemented('handle view'),
-            children: 'View',
-          },
-        ]}
-      />
-    ),
-  }))
-
+      ),
+      actions: (
+        <MarketplaceActionsCell
+          actions={[
+            {
+              id: `withdraw_${id}`,
+              handleSelect: (): void => onWithdraw({ id, token, price }),
+              children: 'Withdraw',
+            }, {
+              id: `view_${id}`,
+              handleSelect: (): void => onView(),
+              children: 'View',
+            },
+          ]}
+        />
+      ),
+    }))
 export default mapActiveContracts
