@@ -70,11 +70,11 @@ const mapMyPurchases = ({
           {
             disabled: expType === 'blocked',
             id: `renew_${id}`,
-            handleSelect: (): void => logNotImplemented('handle renew'),
+            handleSelect: logNotImplemented('handle renew'),
             children: 'Renew',
           }, {
             id: `view_${id}`,
-            handleSelect: (): void => logNotImplemented('handle view'),
+            handleSelect: logNotImplemented('handle view'),
             children: 'View',
           },
         ]}

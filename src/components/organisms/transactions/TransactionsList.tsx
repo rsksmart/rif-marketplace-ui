@@ -1,3 +1,4 @@
+import Container from '@material-ui/core/Container'
 import Divider from '@material-ui/core/Divider'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -16,17 +17,16 @@ const TransactionsList: FC<TransactionsListProps> = ({ confirmations }) => {
       <List>
         {
           Object.keys(confirmations).map((txHash, i) => (
-            <>
+            <Container key={`${txHash}`}>
               {Boolean(i) && <Divider />}
               <ListItem>
                 <TransactionItem
-                  key={txHash}
                   txHash={txHash}
                   currentCount={confirmations[txHash].currentCount}
                   targetCount={confirmations[txHash].targetCount}
                 />
               </ListItem>
-            </>
+            </Container>
           ))
         }
       </List>

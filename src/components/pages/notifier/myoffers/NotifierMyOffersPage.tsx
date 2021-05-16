@@ -6,6 +6,7 @@ import {
 } from '@rsksmart/rif-ui'
 import { notifierSubscriptionsAddress } from 'api/rif-marketplace-cache/notifier/subscriptions'
 import LabelWithValue from 'components/atoms/LabelWithValue'
+import RoundBtn from 'components/atoms/RoundBtn'
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import InfoBar from 'components/molecules/InfoBar'
 import MyOffersHeader from 'components/molecules/MyOffersHeader'
@@ -14,13 +15,14 @@ import NotifierProviderDescription, { Profile } from 'components/organisms/notif
 import Staking from 'components/organisms/notifier/Staking'
 import PlanView from 'components/organisms/plans/PlanView'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
+import ProgressOverlay, { ProgressOverlayProps } from 'components/templates/ProgressOverlay'
 import AppContext, { AppContextProps } from 'context/App'
+import { ConfirmationsContext } from 'context/Confirmations'
 import MarketContext from 'context/Market'
 import { NotifierOffersContext } from 'context/Services/notifier/offers'
 import NotifierContract from 'contracts/notifier/Notifier'
 import useErrorReporter from 'hooks/useErrorReporter'
 import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
-import { UIError } from 'models/UIMessage'
 import React, {
   FC, useContext, useEffect, useMemo, useState,
 } from 'react'
@@ -39,12 +41,10 @@ const NotifierMyOffersPage: FC = () => {
       },
     },
   } = useContext<AppContextProps>(AppContext)
+  const { dispatch: confirmationsDispatch } = useContext(ConfirmationsContext)
   const {
     state: {
-      exchangeRates: {
-        currentFiat,
-        crypto,
-      },
+      exchangeRates,
     },
   } = useContext(MarketContext)
   const {
@@ -57,23 +57,14 @@ const NotifierMyOffersPage: FC = () => {
     dispatch,
   } = useContext(NotifierOffersContext)
 
-  useEffect(() => {
-    dispatch({
-      type: 'FILTER',
-      payload: {
-        provider: account,
-        ...limits,
-      },
-    })
-  }, [account, dispatch, limits])
+  const [myProfile, setMyProfile] = useState<Profile>()
+  const [myCustomers, setMyCustomers] = useState<Array<NotifierSubscriptionItem>>([])
+  const [isWhitelistedProvider, setIsWhitelistedProvider] = useState(false)
+  const [progress, setProgress] = useState<Pick<ProgressOverlayProps, 'title' | 'doneMsg'>>()
+  const [txDone, setTxDone] = useState(false)
+  const [txInProgress, setTxInProgress] = useState(false)
 
   const reportError = useErrorReporter()
-
-  const [myProfile, setMyProfile] = useState<Profile>()
-  const [
-    myCustomers,
-    setMyCustomers,
-  ] = useState<Array<NotifierSubscriptionItem>>([])
 
   // Set provider upon wallet connection
   const myOffers = useMemo(() => {
@@ -95,21 +86,29 @@ const NotifierMyOffersPage: FC = () => {
   ])
 
   useEffect(() => {
+    dispatch({
+      type: 'FILTER',
+      payload: {
+        provider: account,
+        ...limits,
+      },
+    })
+  }, [account, dispatch, limits])
+
+  useEffect(() => {
     if (myProfile && subscriptionsApi) {
       subscriptionsApi.connect(reportError)
       subscriptionsApi.fetch({
         providerId: myProfile.address,
       })
         .then(setMyCustomers)
-        .catch((error) => reportError(new UIError({
+        .catch((error) => reportError({
           id: 'service-fetch',
           text: 'Error while fetching subscriptions.',
           error,
-        })))
+        }))
     }
   }, [subscriptionsApi, myProfile, reportError])
-
-  const [isWhitelistedProvider, setIsWhitelistedProvider] = useState(false)
 
   useEffect(() => {
     if (account) {
@@ -126,10 +125,54 @@ const NotifierMyOffersPage: FC = () => {
     }
   }, [account, web3, reportError])
 
-  const handleAddPlan = (): void => logNotImplemented('handle add plan')
-  const handleEditPlan = (): void => logNotImplemented('handle edit plan')
-  const handleCancelPlan = (): void => logNotImplemented('handle cancel plan')
-  const handleEditProfile = (): void => logNotImplemented('handle edit profile')
+  const handleAddPlan = logNotImplemented('handle add plan')
+  const handleEditPlan = logNotImplemented('handle edit plan')
+  const handleCancelPlan = logNotImplemented('handle cancel plan')
+  const handleEditProfile = logNotImplemented('handle edit profile')
+
+  const onWithdraw = ({
+    token, price, id,
+  }: Pick<NotifierSubscriptionItem, 'token' | 'price' | 'id'>): void => {
+    if (account) {
+      setProgress({
+        title: 'Withdrawing your funds from the contract',
+        doneMsg: 'Funds withdrawn',
+      })
+      setTxInProgress(true)
+
+      NotifierContract.getInstance(web3 as Web3)
+        .withdrawFunds(id, token, price, account)
+        .then((receipt) => {
+          if (receipt) {
+            confirmationsDispatch({
+              type: 'NEW_REQUEST',
+              payload: {
+                contractAction: 'NOTIFIER_WITHDRAW_FUNDS',
+                txHash: receipt.transactionHash,
+              },
+            })
+
+            setTxDone(true)
+            setTxInProgress(true)
+          }
+        })
+        .catch((error) => {
+          setTxInProgress(false)
+          setTxDone(false)
+
+          reportError({
+            error,
+            id: 'contract-notifier',
+            text: 'Could not withdraw funds from the contract.',
+          })
+        })
+        .finally(() => {
+          setTxInProgress(false)
+        })
+    }
+  }
+
+  const onView = logNotImplemented('handle view')
 
   return (
     <CenteredPageTemplate>
@@ -161,16 +204,17 @@ const NotifierMyOffersPage: FC = () => {
         <Grid container direction="column">
           {
             myOffers.map(({
-              id: offerId,
+              id,
               name: offerName,
-              limit: offerLimit,
+              limit,
               channels: offerChannels,
               priceOptions: offerPriceOptions,
             }) => {
               const activeContracts: ActiveContractItem[] = mapActiveContracts(
-                myCustomers, offerId,
-                offerLimit, crypto,
-                currentFiat,
+                myCustomers,
+                { id, limit },
+                exchangeRates,
+                { onWithdraw, onView },
               )
               const isPlanEditDisabled = false
               const isPlanCancelDisabled = false
@@ -179,7 +223,7 @@ const NotifierMyOffersPage: FC = () => {
               const planSummary: Partial<PlanViewSummaryProps> = {
                 name: offerName,
                 info: [
-                  <LabelWithValue key="notifications" label="Notifications" value={String(offerLimit)} />,
+                  <LabelWithValue key="notifications" label="Notifications" value={String(limit)} />,
                   <LabelWithValue key="channels" label="Channels" value={offerChannels.join(', ')} />,
                   <LabelWithValue
                     key="currency"
@@ -192,7 +236,7 @@ const NotifierMyOffersPage: FC = () => {
               }
 
               return (
-                <Grid item key={offerId}>
+                <Grid item key={id}>
                   <PlanView {...{
                     summary: planSummary as PlanViewSummaryProps,
                     handlePlanEdit: handleEditPlan,
@@ -211,20 +255,21 @@ const NotifierMyOffersPage: FC = () => {
         </Grid>
       </Grid>
 
-      {/* Cancel Offer Progress Overlay */ }
-      {/* <ProgressOverlay
-        isDone={false}
-        inProgress={false}
-        title="Canceling your notifier offer"
-        doneMsg="Your notifier offer has been canceled"
+      {/* Progress Overlay */ }
+      {progress && (
+      <ProgressOverlay
+        {...progress}
+        inProgress={txInProgress}
+        isDone={txDone}
         buttons={[
           <RoundBtn
-            onClick={() => {}}
+            onClick={(): void => { setProgress(undefined) }}
           >
             Close
           </RoundBtn>,
         ]}
-      /> */}
+      />
+      )}
     </CenteredPageTemplate>
   )
 }
