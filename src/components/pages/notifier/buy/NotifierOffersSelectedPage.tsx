@@ -18,6 +18,8 @@ import RemoveButton from 'components/atoms/RemoveButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import NotificationChannelsList from 'components/organisms/notifier/NotificationChannelsList'
 import { createStyles, Theme } from '@material-ui/core/styles'
+import CheckoutStepper from 'components/organisms/notifier/buy/CheckoutStepper'
+import { logNotImplemented } from 'utils/utils'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
 
@@ -93,6 +95,8 @@ const NotifierOffersSelectedPage: FC = () => {
     actions: <RemoveButton id={event.id} handleSelect={removeEvent} />,
   }))
 
+  const onBuy = logNotImplemented('handle on buy')
+
   return (
     <CenteredPageTemplate>
       <Grid item xs={11} md="auto">
@@ -121,6 +125,11 @@ const NotifierOffersSelectedPage: FC = () => {
       </Button>
       <br />
       <br />
+      {/*
+          TODO: remove from here - only for testing
+          this stepper should wrap notifications events added, notification channels and payment step
+      */}
+      <CheckoutStepper onBuy={onBuy} />
       <NotificationChannelsList {...{ channels: order?.item.channels }} />
     </CenteredPageTemplate>
   )
