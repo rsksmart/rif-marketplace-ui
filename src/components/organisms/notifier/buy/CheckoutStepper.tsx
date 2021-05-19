@@ -5,6 +5,7 @@ import StepLabel from '@material-ui/core/StepLabel'
 import StepContent from '@material-ui/core/StepContent'
 import { Button } from '@rsksmart/rif-ui'
 import RoundBtn from 'components/atoms/RoundBtn'
+import CheckoutPayment from './CheckoutPayment'
 
 type Props = {
   onBuy: () => void
@@ -33,21 +34,17 @@ const CheckoutStepper: FC<Props> = ({ onBuy }) => {
       <Step>
         <StepLabel>Payment</StepLabel>
         <StepContent>
-          <p>And here goes the checkout, the payment step</p>
-          <br />
-          <div>
-            <Button
-              onClick={handleBack}
-              variant="outlined"
-              color="secondary"
-              rounded
-            >
-              Back
+          <CheckoutPayment onBuy={onBuy} />
+          {/* <div> */}
+          <Button
+            onClick={handleBack}
+            variant="outlined"
+            color="secondary"
+            rounded
+          >
+            Back
             </Button>
-            <RoundBtn onClick={onBuy}>
-              Buy
-            </RoundBtn>
-          </div>
+          {/* </div> */}
         </StepContent>
       </Step>
     </Stepper>
