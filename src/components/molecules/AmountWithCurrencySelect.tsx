@@ -1,12 +1,10 @@
 import { createStyles, makeStyles } from '@material-ui/core'
 import React, { FC } from 'react'
 import Grid from '@material-ui/core/Grid'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import GridItem from 'components/atoms/GridItem'
-import { getSupportedTokenByName } from 'utils/tokenUtils'
 import { SupportedTokenSymbol } from 'models/Token'
+import CurrencySelect from './CurrencySelect'
 
 export type AmountWithCurrencySelectProps = {
   amountLabel?: string
@@ -60,20 +58,11 @@ const AmountWithCurrencySelect: FC<AmountWithCurrencySelectProps> = (props) => {
       <GridItem
         className={classes.currencySelectContainer}
       >
-        <Select
+        <CurrencySelect
           value={selectedCurrency}
+          options={currencyOptions}
           onChange={onCurrencyChange}
-          variant="standard"
-          color="secondary"
-        >
-          {currencyOptions.map(
-            (option: SupportedTokenSymbol) => (
-              <MenuItem key={option as string} value={option}>
-                {getSupportedTokenByName(option).displayName}
-              </MenuItem>
-            ),
-          )}
-        </Select>
+        />
       </GridItem>
     </Grid>
   )
