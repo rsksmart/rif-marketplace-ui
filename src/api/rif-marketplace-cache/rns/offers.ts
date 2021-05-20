@@ -20,7 +20,7 @@ const mapFromTransport = ({
   priceFiat,
   priceString,
   domain: {
-    expiration,
+    expiration: { date },
     name: domainName,
   },
   offerId,
@@ -33,7 +33,7 @@ const mapFromTransport = ({
   ownerAddress,
   domainName,
   price: parseToBigDecimal(priceString, 18),
-  expirationDate: new Date(expiration?.date),
+  expirationDate: new Date(date),
   paymentToken: getTokenByAddress(paymentToken),
   tokenId,
 })
