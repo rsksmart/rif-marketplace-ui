@@ -3,6 +3,7 @@ import { AuthenticationResult } from '@feathersjs/authentication'
 import { MarketFilterType } from 'models/Market'
 import createClient from 'api/client'
 import { ErrorReporterError } from 'context/App/errorReporter'
+import Logger from 'utils/Logger'
 import { ServiceAddress } from './serviceAddresses'
 
 export type APIErrorId = 'service-connection' | 'service-event-attach' | 'service-fetch' | 'service-post'
@@ -55,7 +56,8 @@ export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
 
   service!: Service<any>
 
-  errorReporter!: ErrorReporter
+  errorReporter: ErrorReporter = ({ error, id }) => Logger.getInstance()
+    .error('Error reporter not implemented', id, error)
 
   _meta?: ServiceMetadata
 

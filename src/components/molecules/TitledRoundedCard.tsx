@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       maxWidth: '90%',
     },
+    width: '100%',
   },
   titleContainer: {
     padding: theme.spacing(3),

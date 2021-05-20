@@ -1,16 +1,12 @@
-import {
-  StyledNavTabProps,
-  /* eslint-disable-next-line import/no-unresolved */
-} from '@rsksmart/rif-ui/dist/components/atoms/StyledNavTab'
-import React, { FC, useEffect } from 'react'
-import {
-  Redirect, Route, Switch, useLocation, useHistory,
-} from 'react-router-dom'
 import TabsTemplate from 'components/templates/TabsTemplate'
 import networkConfig from 'config'
 import { RnsDomainsContextProvider } from 'context/Services/rns/DomainsContext'
 import { RnsOffersContextProvider } from 'context/Services/rns/OffersContext'
 import { RnsSoldContextProvider } from 'context/Services/rns/SoldContext'
+import React, { FC, useEffect } from 'react'
+import {
+  Redirect, Route, Switch, useHistory, useLocation,
+} from 'react-router-dom'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import { getTabValueFromLocation } from 'utils/utils'
@@ -18,22 +14,21 @@ import {
   DomainOffersCheckoutPage,
   DomainOffersPage, DomainsCheckoutPage, NotFound, SellDomainsListPage,
 } from '..'
-import RnsLandingPage from './RnsLandingPage'
+import { buildTabs } from '../routerUtils'
 import CancelDomainCheckoutPage from './cancel/CancelDomainCheckoutPage'
+import RnsLandingPage from './RnsLandingPage'
 
 const logger = Logger.getInstance()
-const TABS: StyledNavTabProps[] = [
+const TABS = buildTabs([
   {
     label: 'Buy',
-    to: ROUTES.RNS.BUY.BASE,
     value: ROUTES.RNS.BUY.BASE,
   },
   {
     label: 'Sell',
-    to: ROUTES.RNS.SELL.BASE,
     value: ROUTES.RNS.SELL.BASE,
   },
-]
+])
 
 const RnsRoutes: FC = () => {
   const { pathname } = useLocation()

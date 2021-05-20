@@ -10,11 +10,15 @@ const useStyles = makeStyles(() => (
   }
 ))
 
-const NoWhitelistedProvider: FC = () => {
+type Props = {
+  service: string
+}
+
+const NoWhitelistedProvider: FC<Props> = ({ service }) => {
   const classes = useStyles()
   return (
     <Typography className={classes.root}>
-      {`* The account is not registered as a Storage 
+      {`* The account is not registered as a ${service} 
       provider for this Beta version.`}
     </Typography>
   )

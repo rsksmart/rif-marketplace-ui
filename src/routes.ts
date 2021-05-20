@@ -1,24 +1,33 @@
 const LISTING = 'listing'
 const CHECKOUT = 'checkout'
 const EDIT = 'edit'
+const BUY = 'buy'
+const SELL = 'sell'
+const CANCEL = 'cancel'
+const RENEW = 'renew'
+const MY_OFFERS = 'myoffers'
+const MY_PURCHASES = 'mypurchases'
 
 const LANDING = '/'
 
 const RNS = '/domains'
-const RNS_BUY = `${RNS}/buy`
-const RNS_SELL = `${RNS}/sell`
-const RNS_CANCEL = `${RNS_SELL}/cancel`
+const RNS_BUY = `${RNS}/${BUY}`
+const RNS_SELL = `${RNS}/${SELL}`
+const RNS_CANCEL = `${RNS_SELL}/${CANCEL}`
 
 const STORAGE = '/storage'
-const STORAGE_BUY = `${STORAGE}/buy`
-const STORAGE_SELL = `${STORAGE}/sell`
-const STORAGE_MYOFFERS = `${STORAGE}/myoffers`
-const STORAGE_MYOFFERS_CANCEL = `${STORAGE_MYOFFERS}/cancel`
-const STORAGE_MYPURCHASES = `${STORAGE}/mypurchases`
-const STORAGE_RENEW_AGREEMENT = `${STORAGE_MYPURCHASES}/renew`
+const STORAGE_BUY = `${STORAGE}/${BUY}`
+const STORAGE_SELL = `${STORAGE}/${SELL}`
+const STORAGE_MYOFFERS = `${STORAGE}/${MY_OFFERS}`
+const STORAGE_MYOFFERS_CANCEL = `${STORAGE_MYOFFERS}/${CANCEL}`
+const STORAGE_MYPURCHASES = `${STORAGE}/${MY_PURCHASES}`
+const STORAGE_RENEW_AGREEMENT = `${STORAGE_MYPURCHASES}/${RENEW}`
 
-const TRIGGERS = '/notifications'
-const TRIGGERS_BUY = `${TRIGGERS}/buy`
+const NOTIFIER = '/notifier'
+const NOTIFIER_BUY = `${NOTIFIER}/${BUY}`
+const NOTIFIER_SELL = `${NOTIFIER}/${SELL}`
+const NOTIFIER_MYOFFERS = `${NOTIFIER}/${MY_OFFERS}`
+const NOTIFIER_MYPURCHASES = `${NOTIFIER}/${MY_PURCHASES}`
 
 const FAQ = '/faq'
 const ABOUT = '/about'
@@ -62,10 +71,20 @@ const ROUTES = {
       RENEW: `${STORAGE_RENEW_AGREEMENT}/${CHECKOUT}`,
     },
   },
-  TRIGGERS: {
-    BASE: TRIGGERS,
+  NOTIFIER: {
+    BASE: NOTIFIER,
     BUY: {
-      BASE: TRIGGERS_BUY,
+      BASE: NOTIFIER_BUY,
+      CHECKOUT: `${NOTIFIER_BUY}/${CHECKOUT}`,
+    },
+    SELL: {
+      BASE: NOTIFIER_SELL,
+    },
+    MYOFFERS: {
+      BASE: NOTIFIER_MYOFFERS,
+    },
+    MYPURCHASES: {
+      BASE: NOTIFIER_MYPURCHASES,
     },
   },
   FAQ,

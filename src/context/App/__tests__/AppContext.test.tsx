@@ -2,6 +2,7 @@ import { render } from '@testing-library/react'
 import { ServiceAddress } from 'api/models/serviceAddresses'
 import { confirmationAddress } from 'api/rif-marketplace-cache/blockchain/confirmations'
 import { serviceAddress as notificationsAddress } from 'api/rif-marketplace-cache/notifications'
+import { notifierAddresses } from 'api/rif-marketplace-cache/notifier'
 import { xrServiceAddress } from 'api/rif-marketplace-cache/rates/xr'
 import { rnsAddresses } from 'api/rif-marketplace-cache/rns/common'
 import { storageAddresses } from 'api/rif-marketplace-cache/storage/interfaces'
@@ -47,6 +48,7 @@ describe('AppContext', () => {
           ...rnsAddresses,
           ...storageAddresses,
           uploadServiceAddr,
+          ...notifierAddresses,
         ].forEach(testServiceExistence)
       })
       test('should contain messages: {}', () => {

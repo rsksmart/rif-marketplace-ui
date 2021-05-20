@@ -14,6 +14,12 @@ export const isEmpty = (
   text: string | unknown,
 ): boolean => !(text && String(text).trim())
 
-export const shortChecksumAddress = (address: string): string => shortenString(
-  toChecksumAddress(address, networkId),
+export const toChecksum = (address: string): string => toChecksumAddress(
+  address, networkId,
 )
+
+export const shortChecksumAddress = (address: string): string => shortenString(
+  toChecksum(address),
+)
+
+export const removeURLProtocol = (url: string) => url.replace(/^http[s]*:\/\//, '')
