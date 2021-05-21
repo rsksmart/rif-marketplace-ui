@@ -120,6 +120,8 @@ const NotifierOffersSelectedPage: FC = () => {
       </Grid>
       <NotifierPlanDescription {...{ item: order.item, crypto, currentFiat }} />
       {/* Header */}
+
+      {/* TODO: move to separate component, all this is step 1 of the stepper checkout */}
       <Grid item xs={11} md="auto" className={classes.eventsSection}>
         <Typography gutterBottom variant="h6" color="primary">
           Notification events added
