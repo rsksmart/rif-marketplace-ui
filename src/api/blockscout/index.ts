@@ -23,7 +23,8 @@ const getABIEvents = async (contract: string): Promise<ContractABIEvent[]> => {
     })
   }
   const abiItems: ContractABIItem[] = JSON.parse(result)
-  return abiItems.filter((abiItem: ContractABIItem) => abiItem.type === 'event').map((item) => item as ContractABIEvent)
+  return abiItems.filter((abiItem: ContractABIItem) => abiItem.type === 'event')
+    .map((item) => item as ContractABIEvent)
 }
 
 export default getABIEvents

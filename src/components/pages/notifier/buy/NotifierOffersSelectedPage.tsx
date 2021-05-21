@@ -20,6 +20,7 @@ import { createStyles, Theme } from '@material-ui/core/styles'
 import NotificationEventCreate from 'components/organisms/notifier/NotificationEventCreate'
 import { NotifierEvent, NotifierEventParam } from 'models/marketItems/NotifierItem'
 import Box from '@material-ui/core/Box'
+import { Item } from 'models/Market'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
 
@@ -35,13 +36,18 @@ const eventHeaders = {
   actions: '',
 } as const
 
-type EventItem = {
-    [K in keyof Omit<typeof eventHeaders, 'actions'>]: string
+type EventItem = Item & {
+  [K in keyof Omit<typeof eventHeaders, | 'name' | 'actions'>]: string
 } & {
-    signature: string
+  signature: string
 }
 
-const buildEventSignature = (notifierEvent: NotifierEvent): string => `${notifierEvent.name}(${notifierEvent?.params?.map((input: NotifierEventParam) => `${input.name} ${input.type}`).join(',')})`
+const buildEventSignature = (notifierEvent: NotifierEvent): string => {
+  const params = notifierEvent?.params?.map(
+      (input: NotifierEventParam) => `${input.name} ${input.type}`)
+      .join(',')
+  return `${notifierEvent.name}(${params})`
+}
 
 const NotifierOffersSelectedPage: FC = () => {
   const classes = useStyles()
@@ -69,8 +75,7 @@ const NotifierOffersSelectedPage: FC = () => {
   const addNotifierEvent = (notifierEvent: NotifierEvent): void => {
     setEvents([
       ...events, {
-        // id: notifierEvent.name as string,
-        name: notifierEvent.name as string,
+        id: notifierEvent.name as string,
         type: notifierEvent.type,
         signature: buildEventSignature(notifierEvent) as string,
         channels: notifierEvent.channels.map((channel) => channel.type).join('+'),
@@ -82,15 +87,15 @@ const NotifierOffersSelectedPage: FC = () => {
   if (!order?.item) return null
 
   const removeEvent = (e) => {
-    const newevents = events.filter((i) => i.name !== e.currentTarget.id)
+    const newevents = events.filter((i) => i.id !== e.currentTarget.id)
     setEvents(newevents)
   }
 
   const collection = events.map((event) => ({
-    name: <Tooltip title={event.signature}><Typography>{event.name}</Typography></Tooltip>,
+    name: <Tooltip title={event.signature}><Typography>{event.id}</Typography></Tooltip>,
     type: event.type,
     channels: event.channels,
-    actions: <RemoveButton id={event.name} handleSelect={removeEvent} />,
+    actions: <RemoveButton id={event.id} handleSelect={removeEvent} />,
   }))
 
   return (

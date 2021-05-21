@@ -34,19 +34,19 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 type Inputs = {
-    contract: string
+  contract: string
 }
 
 type Props = {
-    onAddEvent: (event: NotifierEvent) => void
-    channels?: Array<SupportedEventChannel>
+  onAddEvent: (event: NotifierEvent) => void
+  channels?: Array<SupportedEventChannel>
 }
 
 type EventData = {
-    contract: string
-    event: ContractABIEvent
-    eventType: SupportedEventType
-    addedChannels: Array<NotifierChannel>
+  contract: string
+  event: ContractABIEvent
+  eventType: SupportedEventType
+  addedChannels: Array<NotifierChannel>
 }
 
 const NotificationEventCreate: FC<Props> = ({
@@ -110,6 +110,8 @@ const NotificationEventCreate: FC<Props> = ({
     }
   }
 
+  // const defaultEvent: string = events.length ? events[0].name : ''
+
   return (
     <form>
       <Grid container spacing={4}>
@@ -124,21 +126,21 @@ const NotificationEventCreate: FC<Props> = ({
             <Select
               name="eventType"
               onChange={handleEventTypeChange}
-              value={eventData?.eventType ?? SUPPORTED_EVENTS.SMARTCONTRACT}
+              value={eventData.eventType ?? SUPPORTED_EVENTS.SMARTCONTRACT}
               variant="outlined"
               className={classes.select}
               id="event-type-select"
             >
               {
-                                SUPPORTED_EVENT_TYPES.map((eventType) => (
-                                  <MenuItem
-                                    key={eventType}
-                                    value={eventType}
-                                  >
-                                    {notifierEventTypeLabels[eventType]}
-                                  </MenuItem>
-                                ))
-                            }
+                  SUPPORTED_EVENT_TYPES.map((eventType) => (
+                    <MenuItem
+                      key={eventType}
+                      value={eventType}
+                    >
+                      {notifierEventTypeLabels[eventType]}
+                    </MenuItem>
+                  ))
+                }
             </Select>
           </GridItem>
         </GridRow>
@@ -159,12 +161,12 @@ const NotificationEventCreate: FC<Props> = ({
               }}
             />
             {
-                            errors.contract && (
-                            <Typography color="error" variant="caption">
-                              Invalid Contract Address
-                            </Typography>
-                            )
-                        }
+                errors.contract && (
+                <Typography color="error" variant="caption">
+                  Invalid Contract Address
+                </Typography>
+                )
+              }
           </GridItem>
         </GridRow>
         <GridRow spacing={5} className={classes.gridRow}>
@@ -178,21 +180,21 @@ const NotificationEventCreate: FC<Props> = ({
               <Select
                 name="eventName"
                 onChange={handleEventChange}
-                value={eventData?.event?.name || (events.length ? events[0].name : '')}
+                value={eventData.event?.name || ''}
                 className={classes.select}
                 id="event"
                 variant="outlined"
               >
                 {
-                                    events.map((event) => (
-                                      <MenuItem
-                                        key={event.name}
-                                        value={event.name}
-                                      >
-                                        {event.name}
-                                      </MenuItem>
-                                    ))
-                                }
+                    events.map((event) => (
+                      <MenuItem
+                        key={event.name}
+                        value={event.name}
+                      >
+                        {event.name}
+                      </MenuItem>
+                    ))
+                  }
               </Select>
             </Box>
           </GridItem>
@@ -203,13 +205,6 @@ const NotificationEventCreate: FC<Props> = ({
           <NotificationChannelsList channels={channels} onEventChannelsUpdate={handleAddChannels} />
         </Box>
         <GridRow justify="center" spacing={2}>
-          {
-                        eventData?.contract && !eventData?.addedChannels?.length && (
-                        <Typography color="error" variant="caption">
-                          Atleast one notification channel must be added
-                        </Typography>
-                        )
-                    }
           <RoundBtn disabled={!canAddEvent()} onClick={handleSubmit(handleAddEvent)}>
             Submit
           </RoundBtn>

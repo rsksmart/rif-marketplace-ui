@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }))
 
 type Props = {
-    channels?: Array<SupportedEventChannel>
-    onEventChannelsUpdate: (channels: Array<NotifierChannel>) => void
+  channels?: Array<SupportedEventChannel>
+  onEventChannelsUpdate: (channels: Array<NotifierChannel>) => void
 }
 
 const NotificationChannelsList: FC<Props> = ({ channels, onEventChannelsUpdate }) => {
@@ -38,11 +38,8 @@ const NotificationChannelsList: FC<Props> = ({ channels, onEventChannelsUpdate }
   const availableChannels: Array<SupportedEventChannel> = channels.filter((channel) => SUPPORTED_EVENT_CHANNELS.includes(channel as SupportedEventChannel))
 
   const addChannel = (notifierChannel: NotifierChannel) => {
-    const index = addedChannels.findIndex((channel) => channel.type === notifierChannel.type)
-
-    if (index === -1) addedChannels.push(notifierChannel)
-    else addedChannels[index].destination = notifierChannel.destination
-    const newChannels = [...addedChannels]
+    const newChannels = addedChannels.filter(({ type }) => type !== notifierChannel.type)
+    newChannels.push(notifierChannel)
     setAddedChannels(newChannels)
     onEventChannelsUpdate(newChannels)
   }
@@ -73,13 +70,13 @@ const NotificationChannelsList: FC<Props> = ({ channels, onEventChannelsUpdate }
       <Grid className={classes.channelsList} item xs={12}>
         <Grid alignItems="center" container spacing={2}>
           {
-                      collection.map((channel) => (
-                        <NotificationChannel
-                          channel={channel}
-                          onRemoveClick={removeChannel}
-                        />
-                      ))
-                  }
+                  collection.map((channel) => (
+                    <NotificationChannel
+                      channel={channel}
+                      onRemoveClick={removeChannel}
+                    />
+                  ))
+                }
         </Grid>
       </Grid>
 
