@@ -22,13 +22,13 @@ const useStyles = makeStyles(({ palette }: Theme) => ({
 export type SubscriptionExpirationType = 'normal' | 'warning' | 'blocked'
 
 type Props = {
-    date: Date
-    type: SubscriptionExpirationType
+  className?: string
+  date: Date
+  type: SubscriptionExpirationType
 }
 
 const ExpirationDate: FC<Props> = ({
-  date,
-  type,
+  className = '', date, type,
 }) => {
   const classes = useStyles()
 
@@ -38,15 +38,15 @@ const ExpirationDate: FC<Props> = ({
       wrap="nowrap"
       alignItems="center"
       spacing={1}
-      className={classes[type]}
+      className={`${classes[type]} ${className}`}
     >
       <Grid item>
         <Typography variant="body2">
-          { getShortDateString(date) }
+          {getShortDateString(date)}
         </Typography>
       </Grid>
       <Grid item>
-        { type === 'warning' && <WatchLaterIcon /> }
+        {type === 'warning' && <WatchLaterIcon />}
       </Grid>
     </Grid>
   )
