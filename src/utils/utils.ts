@@ -24,6 +24,6 @@ export const getTabValueFromLocation = (
   return activeTab?.to || defaultRoute
 }
 
-export const logNotImplemented = (name: string): void => {
+export const logNotImplemented = (name: string) => (): void => {
   Logger.getInstance().debug(`We have yet to implement "${name}".`)
 }

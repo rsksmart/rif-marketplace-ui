@@ -1,7 +1,10 @@
 import NotifierManager from '@rsksmart/rif-marketplace-notifier/build/contracts/NotifierManager.json'
+import Big from 'big.js'
 import { notifierAddress, notifierSupportedTokens } from 'contracts/config'
 import { SupportedToken, TxOptions } from 'contracts/interfaces'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
+import { BaseToken } from 'models/Token'
+import { convertToWeiString } from 'utils/parsers'
 import { getTokensFromConfigTokens } from 'utils/tokenUtils'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
@@ -52,6 +55,27 @@ class NotifierContract extends ContractWithTokens {
       registerProviderTx,
       {
         gasMultiplier: NotifierContract.gasMultiplier,
+        ...txOptions,
+      },
+    )
+  }
+
+  public async withdrawFunds(
+    hash: string,
+    { tokenAddress }: BaseToken,
+    amount: Big,
+    from: string,
+    txOptions: TxOptions = {},
+  ): Promise<TransactionReceipt> {
+    if (!hash) throw Error('Subscription hash not defined.')
+
+    return this.send(
+      await this.methods.withdrawFunds(
+        hash, tokenAddress, convertToWeiString(amount),
+      ),
+      {
+        gasMultiplier: NotifierContract.gasMultiplier,
+        from,
         ...txOptions,
       },
     )
