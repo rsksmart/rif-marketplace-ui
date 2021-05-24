@@ -3,6 +3,7 @@ import React, {
 } from 'react'
 
 import {
+  Collapse,
   Grid, makeStyles,
   Typography,
 } from '@material-ui/core'
@@ -13,11 +14,13 @@ import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import NotifierPlanDescription from 'components/organisms/notifier/NotifierPlanDescription'
 import MarketContext, { MarketContextProps } from 'context/Market'
 import TableContainer from '@material-ui/core/TableContainer'
-import { Item } from 'models/Market'
 import RemoveButton from 'components/atoms/RemoveButton'
 import Tooltip from '@material-ui/core/Tooltip'
-import NotificationChannelsList from 'components/organisms/notifier/NotificationChannelsList'
 import { createStyles, Theme } from '@material-ui/core/styles'
+import NotificationEventCreate from 'components/organisms/notifier/NotificationEventCreate'
+import { NotifierEvent, NotifierEventParam } from 'models/marketItems/NotifierItem'
+import Box from '@material-ui/core/Box'
+import { Item } from 'models/Market'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
 
@@ -34,9 +37,16 @@ const eventHeaders = {
 } as const
 
 type EventItem = Item & {
-  [K in keyof Omit<typeof eventHeaders, 'actions'>]: string
+  [K in keyof Omit<typeof eventHeaders, | 'name' | 'actions'>]: string
 } & {
   signature: string
+}
+
+const buildEventSignature = (notifierEvent: NotifierEvent): string => {
+  const params = notifierEvent?.params?.map(
+      (input: NotifierEventParam) => `${input.name} ${input.type}`)
+      .join(',')
+  return `${notifierEvent.name}(${params})`
 }
 
 const NotifierOffersSelectedPage: FC = () => {
@@ -59,35 +69,30 @@ const NotifierOffersSelectedPage: FC = () => {
     dispatch,
   } = useContext<ContextProps>(NotifierOffersContext)
 
-  /* TODO use real events instead of hard coded events */
-  const [events, setEvents] = useState<Array<EventItem>>(
-    [
-      {
-        id: 'event1',
-        name: 'event1',
-        type: 'custom',
-        signature: 'test1',
-        channels: 'API',
+  const [events, setEvents] = useState<Array<EventItem>>([])
+  const [addEventCollapsed, setAddEventCollapsed] = useState<boolean>(false)
+
+  const addNotifierEvent = (notifierEvent: NotifierEvent): void => {
+    setEvents([
+      ...events, {
+        id: notifierEvent.name as string,
+        type: notifierEvent.type,
+        signature: buildEventSignature(notifierEvent) as string,
+        channels: notifierEvent.channels.map((channel) => channel.type).join('+'),
       },
-      {
-        id: 'event2',
-        name: 'event2',
-        type: 'custom',
-        signature: 'test2',
-        channels: 'API',
-      },
-    ],
-  )
+    ])
+    setAddEventCollapsed(!addEventCollapsed)
+  }
 
   if (!order?.item) return null
 
   const removeEvent = (e) => {
-    const newevents = events.filter((i) => i.name !== e.currentTarget.id)
+    const newevents = events.filter(({ id }) => id !== e.currentTarget.id)
     setEvents(newevents)
   }
 
   const collection = events.map((event) => ({
-    name: <Tooltip title={event.signature}><Typography>{event.name}</Typography></Tooltip>,
+    name: <Tooltip title={event.signature}><Typography>{event.id}</Typography></Tooltip>,
     type: event.type,
     channels: event.channels,
     actions: <RemoveButton id={event.id} handleSelect={removeEvent} />,
@@ -116,12 +121,23 @@ const NotifierOffersSelectedPage: FC = () => {
         </TableContainer>
       </Grid>
 
-      <Button variant="outlined" color="primary" rounded>
+      <Button
+        onClick={() => {
+          setAddEventCollapsed(!addEventCollapsed)
+        }}
+        variant="outlined"
+        color="primary"
+        rounded
+      >
         + Add Notification Events
       </Button>
       <br />
       <br />
-      <NotificationChannelsList {...{ channels: order?.item.channels }} />
+      <Collapse in={addEventCollapsed}>
+        <Box mt={6}>
+          <NotificationEventCreate onAddEvent={addNotifierEvent} channels={order?.item.channels} />
+        </Box>
+      </Collapse>
     </CenteredPageTemplate>
   )
 }
