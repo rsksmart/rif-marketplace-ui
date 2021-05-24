@@ -14,7 +14,7 @@ const EXPIRATION_WARNING_TRIGGER = 5
 const getExpirationType = (
   { planStatus, daysLeft }: PlanDTO,
 ): SubscriptionExpirationType => {
-  if (planStatus === 'INACTIVE' || daysLeft <= 0) return 'blocked'
+  if (planStatus !== 'ACTIVE' || daysLeft <= 0) return 'blocked'
 
   if (daysLeft <= EXPIRATION_WARNING_TRIGGER) return 'warning'
 
