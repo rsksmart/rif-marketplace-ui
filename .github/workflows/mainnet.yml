@@ -1,0 +1,51 @@
+name: RIF Marketplace MAINNET UI deploy
+
+on:
+  push:
+    branches:
+      - mainnet
+
+jobs:
+  deploy-mainnet:
+    name: RIF Marketplace UI - mainnet
+    runs-on: ubuntu-latest
+    environment: mainnet
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Node 14
+      uses: actions/setup-node@v1
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: |
+        npm ci
+
+    - name: Build site
+      env:
+        REACT_APP_CACHE_ADDR: ${{ secrets.MAINNET_REACT_APP_CACHE_ADDR }}
+        REACT_APP_UPLOAD_ADDR: ${{ secrets.MAINNET_REACT_APP_UPLOAD_ADDR }}
+        REACT_APP_LOG_LEVEL: error
+        REACT_APP_NETWORK: rskmainnet
+        REACT_APP_REQUIRED_NETWORK_ID: 31
+        REACT_APP_REQUIRED_NETWORK_NAME: RSK mainnet
+      run: |
+        npm run build:prod
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.MAINNET_AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.TESNET_AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.MAINNET_AWS_REGION }}
+
+    - name: Deploy site to S3
+      run: |
+        aws s3 sync --delete --only-show-errors build/ ${{ secrets.MAINNET_S3_BUCKET }}
+
+    - name: Invalidate CloudFront cache
+      run: |
+        aws cloudfront create-invalidation --distribution-id ${{ secrets.MAINNET_CLOUDFRONT_DISTRIBUTION }} --paths "/*"
