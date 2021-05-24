@@ -1,18 +1,16 @@
 import React, { FC } from 'react'
 import {
   ButtonProps,
-} from '@material-ui/core'
+} from '@material-ui/core/Button'
 import { Button } from '@rsksmart/rif-ui'
 
-export type RoundBtnProps = Omit<ButtonProps, 'color' | 'variant'>
-
-const RoundBtn: FC<RoundBtnProps> = (props) => (
+const RoundBtn: FC<ButtonProps> = ({ color = 'primary', variant = 'contained', ...otherProps }) => (
   <Button
-    color="primary"
-    variant="contained"
+    color={color}
+    variant={variant}
     rounded
     shadow
-    {...props}
+    {...otherProps}
   />
 )
 

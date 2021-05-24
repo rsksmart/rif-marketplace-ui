@@ -7,20 +7,21 @@ import { Web3Store } from '@rsksmart/rif-ui'
 import GridColumn from 'components/atoms/GridColumn'
 import Login from 'components/atoms/Login'
 import RifCard from 'components/organisms/RifCard'
-import RoundBtn, { RoundBtnProps } from 'components/atoms/RoundBtn'
+import { ButtonProps } from '@material-ui/core/Button'
+import RoundBtn from 'components/atoms/RoundBtn'
 
 type Details = {
-    'CONTENT SIZE': string
-    'CURRENCY TO PAY': JSX.Element
-    'SUBSCRIPTION PERIOD': JSX.Element
-    'PERIODS TO PREPAY': JSX.Element
-    'TOTAL PRICE': JSX.Element | null
-    'RENEWAL DATE': string
-  }
+  'CONTENT SIZE': string
+  'CURRENCY TO PAY': JSX.Element
+  'SUBSCRIPTION PERIOD': JSX.Element
+  'PERIODS TO PREPAY': JSX.Element
+  'TOTAL PRICE': JSX.Element | null
+  'RENEWAL DATE': string
+}
 
 type Props = {
   details: Details
-  submitProps: RoundBtnProps
+  submitProps: ButtonProps
   title: string
 }
 
