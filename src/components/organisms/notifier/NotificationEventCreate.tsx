@@ -95,8 +95,6 @@ const NotificationEventCreate: FC<Props> = ({
     setEventData({ ...eventData, addedChannels: selectedChannels })
   }
 
-  const canAddEvent = (): boolean => Boolean(eventData.addedChannels?.length && eventData.event)
-
   const handleAddEvent = (data: Inputs): void => {
     if (eventData.addedChannels?.length && eventData.event) {
       onAddEvent({
@@ -109,8 +107,6 @@ const NotificationEventCreate: FC<Props> = ({
       setEventData({ eventType: SUPPORTED_EVENTS.SMARTCONTRACT })
     }
   }
-
-  // const defaultEvent: string = events.length ? events[0].name : ''
 
   return (
     <form>
@@ -205,7 +201,7 @@ const NotificationEventCreate: FC<Props> = ({
           <NotificationChannelsList channels={channels} onEventChannelsUpdate={handleAddChannels} />
         </Box>
         <GridRow justify="center" spacing={2}>
-          <RoundBtn disabled={!canAddEvent()} onClick={handleSubmit(handleAddEvent)}>
+          <RoundBtn disabled={!(eventData.addedChannels?.length && eventData.event)} onClick={handleSubmit(handleAddEvent)}>
             Submit
           </RoundBtn>
         </GridRow>

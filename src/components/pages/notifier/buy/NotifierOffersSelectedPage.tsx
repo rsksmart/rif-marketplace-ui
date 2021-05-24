@@ -87,7 +87,7 @@ const NotifierOffersSelectedPage: FC = () => {
   if (!order?.item) return null
 
   const removeEvent = (e) => {
-    const newevents = events.filter((i) => i.id !== e.currentTarget.id)
+    const newevents = events.filter(({ id }) => id !== e.currentTarget.id)
     setEvents(newevents)
   }
 
