@@ -79,7 +79,10 @@ const NotificationEventCreate: FC<Props> = ({
   }
 
   const handleEventChange = ({ target: { value } }) => {
-    setEventData({ ...eventData, event: events.find(({ name }) => name === value) as ContractABIEvent })
+    setEventData({
+      ...eventData,
+      event: events.find(({ name }) => name === value) as ContractABIEvent,
+    })
   }
 
   const handleEventTypeChange = ({ target: { value } }) => {
@@ -198,10 +201,16 @@ const NotificationEventCreate: FC<Props> = ({
       </Grid>
       <Grid>
         <Box mt={4}>
-          <NotificationChannelsList channels={channels} onEventChannelsUpdate={handleAddChannels} />
+          <NotificationChannelsList
+            channels={channels}
+            onEventChannelsUpdate={handleAddChannels}
+          />
         </Box>
         <GridRow justify="center" spacing={2}>
-          <RoundBtn disabled={!(eventData.addedChannels?.length && eventData.event)} onClick={handleSubmit(handleAddEvent)}>
+          <RoundBtn
+            disabled={!(eventData.addedChannels?.length && eventData.event)}
+            onClick={handleSubmit(handleAddEvent)}
+          >
             Submit
           </RoundBtn>
         </GridRow>
