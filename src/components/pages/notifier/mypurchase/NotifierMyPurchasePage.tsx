@@ -1,31 +1,31 @@
-import { Card } from '@material-ui/core'
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import {
-  Modal,
-  ModalHeader,
+  shortenString,
   theme, Web3Store,
 } from '@rsksmart/rif-ui'
 import { notifierSubscriptionsAddress } from 'api/rif-marketplace-cache/notifier/subscriptions'
 import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
-import RoundBtn from 'components/atoms/RoundBtn'
 import RoundedCard from 'components/atoms/RoundedCard'
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import MyPurchasesHeader from 'components/molecules/MyPurchasesHeader'
 import PurchasesTable, { MySubscription } from 'components/organisms/notifier/mypurchase/PurchasesTable'
-import RifCard from 'components/organisms/RifCard'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import AppContext, { AppContextProps } from 'context/App'
 import MarketContext from 'context/Market'
 import useErrorReporter from 'hooks/useErrorReporter'
 import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import { UIError } from 'models/UIMessage'
-import React, {
-  FC, useContext, useEffect, useState,
-} from 'react'
 import { logNotImplemented } from 'utils/utils'
+import NotifierDetails, { SubscriptionDetails, SubscriptionEvents } from 'components/organisms/notifier/mypurchase/NotifierDetailsModal'
+import { getShortDateString } from 'utils/dateUtils'
+import { getFiatPrice } from 'utils/tokenUtils'
+import { shortChecksumAddress } from 'utils/stringUtils'
 import mapMyPurchases from './mapMyPurchases'
 
 const useTitleStyles = makeStyles(() => ({
@@ -36,7 +36,8 @@ const useTitleStyles = makeStyles(() => ({
 }))
 
 const NotifierMyPurchasePage: FC = () => {
-  const titleStyleClass = useTitleStyles()
+  const titleStyles = useTitleStyles()
+
   const {
     state: { account },
   } = useContext(Web3Store)
@@ -59,12 +60,14 @@ const NotifierMyPurchasePage: FC = () => {
     subscriptions,
     setSubscriptions,
   ] = useState<Array<NotifierSubscriptionItem>>()
-  const [subscriptionDetails, setSubscriptionDetails] = useState<NotifierSubscriptionItem & {
-    eventName: string
-    eventType: string
-    eventParameters: any
-    eventChannels: Array<string>
-  }>()
+  const [
+    subscriptionDetails,
+    setSubscriptionDetails,
+  ] = useState<SubscriptionDetails>()
+  const [
+    subscriptionEvents,
+    setSubscriptionEvents,
+  ] = useState<Array<SubscriptionEvents>>()
 
   const [isTableLoading, setIsTableLoading] = useState<boolean>()
 
@@ -88,19 +91,30 @@ const NotifierMyPurchasePage: FC = () => {
   }, [subscriptionsApi, account, reportError])
 
   const onView = (subscriptionId: string): void => {
-    if (!subscriptions) return
     const subscription: NotifierSubscriptionItem = subscriptions
-      .find(({ id }) => id === subscriptionId) as NotifierSubscriptionItem
+    ?.find(({ id }) => id === subscriptionId) as NotifierSubscriptionItem
 
-    const viewItem = {
-      ...subscription,
-      eventName: 'string',
-      eventType: 'SMART_CONTRACT',
-      eventParameters: ['transferFrom'],
-      eventChannels: ['API'],
+    if (!subscription) return
+
+    const {
+      crypto,
+      currentFiat: {
+        displayName: fiatDisplayName,
+      },
+    } = exchangeRates
+    const viewItem: typeof subscriptionDetails = {
+      id: shortenString(subscription.id),
+      provider: shortChecksumAddress(subscription.provider),
+      amount: String(subscription.notificationBalance),
+      channels: subscription.plan.channels?.map(({ name }) => name).join(',') || '',
+      expDate: getShortDateString(subscription.expirationDate),
+      price: `${getFiatPrice(subscription.price, crypto[subscription.token.symbol])} ${fiatDisplayName}`,
     }
 
     setSubscriptionDetails(viewItem)
+
+    const events = undefined // FIXME: add events retrieval
+    setSubscriptionEvents(events)
   }
 
   const onRenew = logNotImplemented('handle renew')
@@ -108,6 +122,11 @@ const NotifierMyPurchasePage: FC = () => {
   const items = subscriptions?.map(mapMyPurchases(
     exchangeRates, { onView, onRenew },
   )) || [] as Array<MySubscription>
+
+  const onModalClose = (): void => {
+    setSubscriptionDetails(undefined)
+    setSubscriptionEvents([])
+  }
 
   return (
     <CenteredPageTemplate>
@@ -120,7 +139,7 @@ const NotifierMyPurchasePage: FC = () => {
                 gutterBottom
                 color="primary"
                 variant="subtitle1"
-                classes={titleStyleClass}
+                classes={titleStyles}
               >
                 Active plans
               </Typography>
@@ -133,13 +152,14 @@ const NotifierMyPurchasePage: FC = () => {
             </GridRow>
           </GridColumn>
         </RoundedCard>
-        <Modal open={Boolean(subscriptionDetails)}>
-          <Card>
-            <RoundBtn onClick={logNotImplemented('cancel handle')}>
-              Cancel
-            </RoundBtn>
-          </Card>
-        </Modal>
+        {subscriptionDetails
+        && (
+        <NotifierDetails
+          details={subscriptionDetails}
+          events={subscriptionEvents}
+          onClose={onModalClose}
+        />
+        )}
       </>
     </CenteredPageTemplate>
   )
