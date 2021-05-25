@@ -14,9 +14,11 @@ import { NotifierEvent, NotifierEventParam } from 'models/marketItems/NotifierIt
 import { Item } from 'models/Market'
 import { SUPPORTED_EVENTS, SupportedEventType } from 'config/notifier'
 import { OffersOrder } from 'context/Services/notifier/offers/interfaces'
+import RoundBtn from 'components/atoms/RoundBtn'
 
 export type EventsRegistrarProps = {
   order?: OffersOrder
+  onNext: () => void
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -49,7 +51,7 @@ const isBlockEvent = (eventType: SupportedEventType): boolean => (
   eventType === SUPPORTED_EVENTS.NEWBLOCK
 )
 
-const EventsRegistrar: FC<EventsRegistrarProps> = ({ order }) => {
+const EventsRegistrar: FC<EventsRegistrarProps> = ({ order, onNext }) => {
   const classes = useStyles()
 
   const [events, setEvents] = useState<Array<EventItem>>([])
@@ -88,6 +90,7 @@ const EventsRegistrar: FC<EventsRegistrarProps> = ({ order }) => {
   }))
 
   const generateKey = (): string => `'eve_'${new Date().getTime()}`
+  const isNextDisabled = !events.length
 
   return (
     <>
@@ -122,6 +125,9 @@ const EventsRegistrar: FC<EventsRegistrarProps> = ({ order }) => {
           />
         </Box>
       </Collapse>
+      <RoundBtn onClick={onNext} disabled={isNextDisabled}>
+        Next
+      </RoundBtn>
     </>
   )
 }
