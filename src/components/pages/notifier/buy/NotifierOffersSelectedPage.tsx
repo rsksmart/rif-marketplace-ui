@@ -21,6 +21,7 @@ import NotificationEventCreate from 'components/organisms/notifier/NotificationE
 import { NotifierEvent, NotifierEventParam } from 'models/marketItems/NotifierItem'
 import Box from '@material-ui/core/Box'
 import { Item } from 'models/Market'
+import { SUPPORTED_EVENTS, SupportedEventType } from 'config/notifier'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
 
@@ -44,10 +45,12 @@ type EventItem = Item & {
 
 const buildEventSignature = (notifierEvent: NotifierEvent): string => {
   const params = notifierEvent?.params?.map(
-      (input: NotifierEventParam) => `${input.name} ${input.type}`)
-      .join(',')
+  (input: NotifierEventParam) => `${input.name} ${input.type}`)
+  .join(',')
   return `${notifierEvent.name}(${params})`
 }
+
+const isBlockEvent = (eventType: SupportedEventType): boolean => eventType === SUPPORTED_EVENTS.NEWBLOCK
 
 const NotifierOffersSelectedPage: FC = () => {
   const classes = useStyles()
@@ -73,11 +76,19 @@ const NotifierOffersSelectedPage: FC = () => {
   const [addEventCollapsed, setAddEventCollapsed] = useState<boolean>(false)
 
   const addNotifierEvent = (notifierEvent: NotifierEvent): void => {
+    if (isBlockEvent(notifierEvent.type)
+        && events.find((addedEvent) => isBlockEvent(
+            addedEvent.type as SupportedEventType,
+        ))) {
+      setAddEventCollapsed(!addEventCollapsed)
+      return
+    }
     setEvents([
       ...events, {
         id: notifierEvent.name as string,
         type: notifierEvent.type,
-        signature: buildEventSignature(notifierEvent) as string,
+        signature: isBlockEvent(notifierEvent.type) ? ''
+          : buildEventSignature(notifierEvent) as string,
         channels: notifierEvent.channels.map((channel) => channel.type).join('+'),
       },
     ])
@@ -86,7 +97,7 @@ const NotifierOffersSelectedPage: FC = () => {
 
   if (!order?.item) return null
 
-  const removeEvent = (e) => {
+  const removeEvent = (e): void => {
     const newevents = events.filter(({ id }) => id !== e.currentTarget.id)
     setEvents(newevents)
   }
@@ -97,6 +108,8 @@ const NotifierOffersSelectedPage: FC = () => {
     channels: event.channels,
     actions: <RemoveButton id={event.id} handleSelect={removeEvent} />,
   }))
+
+  const generateKey = (): string => `'eve_'${new Date().getTime()}`
 
   return (
     <CenteredPageTemplate>
@@ -122,7 +135,7 @@ const NotifierOffersSelectedPage: FC = () => {
       </Grid>
 
       <Button
-        onClick={() => {
+        onClick={(): void => {
           setAddEventCollapsed(!addEventCollapsed)
         }}
         variant="outlined"
@@ -135,7 +148,11 @@ const NotifierOffersSelectedPage: FC = () => {
       <br />
       <Collapse in={addEventCollapsed}>
         <Box mt={6}>
-          <NotificationEventCreate onAddEvent={addNotifierEvent} channels={order?.item.channels} />
+          <NotificationEventCreate
+            key={generateKey()}
+            onAddEvent={addNotifierEvent}
+            channels={order?.item.channels}
+          />
         </Box>
       </Collapse>
     </CenteredPageTemplate>
