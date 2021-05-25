@@ -4,7 +4,6 @@ import Step from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
 import StepContent from '@material-ui/core/StepContent'
 import { Button } from '@rsksmart/rif-ui'
-import RoundBtn from 'components/atoms/RoundBtn'
 import { SYSTEM_SUPPORTED_FIAT } from 'models/Fiat'
 import { QuotationPerToken } from 'models/Market'
 import MarketContext from 'context/Market'
@@ -58,10 +57,7 @@ const CheckoutStepper: FC<Props> = ({ onBuy, order }) => {
       <Step>
         <StepLabel>Notification events</StepLabel>
         <StepContent>
-          <EventsRegistrar order={order} />
-          <RoundBtn onClick={handleNext}>
-            Next
-          </RoundBtn>
+          <EventsRegistrar onNext={handleNext} order={order} />
         </StepContent>
       </Step>
       <Step>
