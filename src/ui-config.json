@@ -33,13 +33,13 @@
     },
     "rskdevnet": {
         "contractAddresses": {
-            "rif": "0x09DAf8FEf3cE62f9D2fEB505FeA2113581172550",
-            "rnsDotRskOwner": "0xfE87342112c26fbF2Ae30031FE84860793b495B9",
-            "marketplace": "0xa0B16502Ba611A2aF8efdEFC81Bb2961890eDE4b",
-            "storageManager": "0x89bac3BB0517F7Dc0E5E94265217A9Acc5cc489f",
-            "storageStaking": "0x3eE31F6049065B616f85470985c0eF067f2bEbDE",
-            "notifierManager": "0x3f1A0Af69F10f8A2a5553Ce93Ed75d466F231e15",
-            "notifierStaking": "0x6216f4244a2b1562bF9934C5Bd97c9640706C765"
+            "rif": "0x1Af2844A588759D0DE58abD568ADD96BB8B3B6D8",
+            "rnsDotRskOwner": "0xdac5481925A298B95Bf5b54c35b68FC6fc2eF423",
+            "marketplace": "0xDbDA66cB801b5BCBdF3d3188171D6eF49646FEE5",
+            "storageManager": "0x13cF0a53b6102b518e8b547d5E50b38C1b089E08",
+            "storageStaking": "0xc3e75147D582fFc126590C537cEe894180aAcDDC",
+            "notifierManager": "0x73b1C6D725eAfb2B9514e2aF092f9f61Fd005088",
+            "notifierStaking": "0xb0082444317d7DE625fE4185025cc23Abb0501dD"
         },
         "rnsManagerUrl": "http://localhost:3001",
         "services": {
