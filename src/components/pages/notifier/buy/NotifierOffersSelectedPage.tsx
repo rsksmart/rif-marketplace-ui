@@ -1,59 +1,18 @@
 import React, {
-  FC, useContext, useState,
+  FC, useContext,
 } from 'react'
-
 import {
-  Collapse,
-  Grid, makeStyles,
+  Grid,
   Typography,
 } from '@material-ui/core'
 import { NotifierOffersContextProps as ContextProps, NotifierOffersContext } from 'context/Services/notifier/offers'
-import { Button } from '@rsksmart/rif-ui'
-import Marketplace from 'components/templates/marketplace/Marketplace'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import NotifierPlanDescription from 'components/organisms/notifier/NotifierPlanDescription'
 import MarketContext, { MarketContextProps } from 'context/Market'
-import TableContainer from '@material-ui/core/TableContainer'
-import RemoveButton from 'components/atoms/RemoveButton'
-import Tooltip from '@material-ui/core/Tooltip'
-import { createStyles, Theme } from '@material-ui/core/styles'
-import NotificationEventCreate from 'components/organisms/notifier/NotificationEventCreate'
-import { NotifierEvent, NotifierEventParam } from 'models/marketItems/NotifierItem'
-import Box from '@material-ui/core/Box'
-import { Item } from 'models/Market'
-import { SUPPORTED_EVENTS, SupportedEventType } from 'config/notifier'
-
-const useStyles = makeStyles((theme: Theme) => createStyles({
-
-  eventsSection: {
-    marginTop: theme.spacing(4),
-  },
-}))
-
-const eventHeaders = {
-  name: 'Name',
-  type: 'Type',
-  channels: 'Channels',
-  actions: '',
-} as const
-
-type EventItem = Item & {
-  [K in keyof Omit<typeof eventHeaders, | 'name' | 'actions'>]: string
-} & {
-  signature: string
-}
-
-const buildEventSignature = (notifierEvent: NotifierEvent): string => {
-  const params = notifierEvent?.params?.map(
-  (input: NotifierEventParam) => `${input.name} ${input.type}`)
-  .join(',')
-  return `${notifierEvent.name}(${params})`
-}
-
-const isBlockEvent = (eventType: SupportedEventType): boolean => eventType === SUPPORTED_EVENTS.NEWBLOCK
+import CheckoutStepper from 'components/organisms/notifier/buy/CheckoutStepper'
+import { logNotImplemented } from 'utils/utils'
 
 const NotifierOffersSelectedPage: FC = () => {
-  const classes = useStyles()
   const {
     state: {
       exchangeRates: {
@@ -69,47 +28,12 @@ const NotifierOffersSelectedPage: FC = () => {
     state: {
       order,
     },
-    dispatch,
   } = useContext<ContextProps>(NotifierOffersContext)
-
-  const [events, setEvents] = useState<Array<EventItem>>([])
-  const [addEventCollapsed, setAddEventCollapsed] = useState<boolean>(false)
-
-  const addNotifierEvent = (notifierEvent: NotifierEvent): void => {
-    if (isBlockEvent(notifierEvent.type)
-        && events.find((addedEvent) => isBlockEvent(
-            addedEvent.type as SupportedEventType,
-        ))) {
-      setAddEventCollapsed(!addEventCollapsed)
-      return
-    }
-    setEvents([
-      ...events, {
-        id: notifierEvent.name as string,
-        type: notifierEvent.type,
-        signature: isBlockEvent(notifierEvent.type) ? ''
-          : buildEventSignature(notifierEvent) as string,
-        channels: notifierEvent.channels.map((channel) => channel.type).join('+'),
-      },
-    ])
-    setAddEventCollapsed(!addEventCollapsed)
-  }
 
   if (!order?.item) return null
 
-  const removeEvent = (e): void => {
-    const newevents = events.filter(({ id }) => id !== e.currentTarget.id)
-    setEvents(newevents)
-  }
-
-  const collection = events.map((event) => ({
-    name: <Tooltip title={event.signature}><Typography>{event.id}</Typography></Tooltip>,
-    type: event.type,
-    channels: event.channels,
-    actions: <RemoveButton id={event.id} handleSelect={removeEvent} />,
-  }))
-
-  const generateKey = (): string => `'eve_'${new Date().getTime()}`
+  // TODO: remove hardcoded
+  const handleOnBuy = logNotImplemented('buy notification plan')
 
   return (
     <CenteredPageTemplate>
@@ -119,44 +43,7 @@ const NotifierOffersSelectedPage: FC = () => {
         </Typography>
       </Grid>
       <NotifierPlanDescription {...{ item: order.item, crypto, currentFiat }} />
-      {/* Header */}
-
-      {/* TODO: move to separate component, all this is step 1 of the stepper checkout */}
-      <Grid item xs={11} md="auto" className={classes.eventsSection}>
-        <Typography gutterBottom variant="h6" color="primary">
-          Notification events added
-        </Typography>
-        <TableContainer>
-          <Marketplace
-            isLoading={false}
-            items={collection}
-            headers={eventHeaders}
-            dispatch={dispatch}
-          />
-        </TableContainer>
-      </Grid>
-
-      <Button
-        onClick={(): void => {
-          setAddEventCollapsed(!addEventCollapsed)
-        }}
-        variant="outlined"
-        color="primary"
-        rounded
-      >
-        + Add Notification Events
-      </Button>
-      <br />
-      <br />
-      <Collapse in={addEventCollapsed}>
-        <Box mt={6}>
-          <NotificationEventCreate
-            key={generateKey()}
-            onAddEvent={addNotifierEvent}
-            channels={order?.item.channels}
-          />
-        </Box>
-      </Collapse>
+      <CheckoutStepper onBuy={handleOnBuy} order={order} />
     </CenteredPageTemplate>
   )
 }
