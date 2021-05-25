@@ -8,14 +8,22 @@ import RoundBtn from 'components/atoms/RoundBtn'
 import { SYSTEM_SUPPORTED_FIAT } from 'models/Fiat'
 import { QuotationPerToken } from 'models/Market'
 import MarketContext from 'context/Market'
-import Big from 'big.js'
+import { OffersOrder } from 'context/Services/notifier/offers/interfaces'
 import CheckoutPayment from './CheckoutPayment'
+import EventsRegistrar from './EventsRegistrar'
 
 type Props = {
+  order: OffersOrder
   onBuy: () => void
 }
 
-const CheckoutStepper: FC<Props> = ({ onBuy }) => {
+const getExpirationDate = (daysLeft: number): Date => {
+  const retDate = new Date()
+  retDate.setDate(retDate.getDate() + daysLeft)
+  return retDate
+}
+
+const CheckoutStepper: FC<Props> = ({ onBuy, order }) => {
   const [activeStep, setActiveStep] = useState(0)
   const {
     state: {
@@ -25,29 +33,35 @@ const CheckoutStepper: FC<Props> = ({ onBuy }) => {
     },
   } = useContext(MarketContext)
 
+  const {
+    item: {
+      token,
+      value: tokenValue,
+      daysLeft,
+    },
+  } = order
+
   const handleNext = (): void => setActiveStep(1)
   const handleBack = (): void => setActiveStep(0)
-  // TODO: remove hardcoded
-  const paymentOptions: QuotationPerToken = {
-    rif: Big('100'),
-    rbtc: Big('0.001'),
-  }
-  const expirationDate = new Date(2022, 1, 1)
+
+  const paymentOptions: QuotationPerToken = {} as QuotationPerToken
+  paymentOptions[token.symbol] = tokenValue
+  // FIXME: now we are only receiving a single quotation, need to check the need of this
+  // two options:
+  // 1 - allow to proceed in the list without selecting a currency
+  // 2 - change the model we are using when selecting the order
+  // TODO: after solving the previous issue QuotationPerToken and PriceOption(src/models/marketItems/NotifierItem.ts) types should be combined into the same one
+  const expirationDate = getExpirationDate(daysLeft)
 
   return (
     <Stepper activeStep={activeStep} orientation="vertical">
       <Step>
-        {/* TODO: replace with content of pages/notifier/buy/NotifierOffersSelectedPage.tsx */}
-        <StepLabel>Notification Channels</StepLabel>
+        <StepLabel>Notification events</StepLabel>
         <StepContent>
-          <p>Here goes the notificiation channels list.</p>
-          <p>Users can create more here.</p>
-          <br />
-          <div>
-            <RoundBtn onClick={handleNext}>
-              Next
-            </RoundBtn>
-          </div>
+          <EventsRegistrar order={order} />
+          <RoundBtn onClick={handleNext}>
+            Next
+          </RoundBtn>
         </StepContent>
       </Step>
       <Step>
