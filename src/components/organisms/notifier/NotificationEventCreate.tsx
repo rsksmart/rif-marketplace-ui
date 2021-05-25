@@ -78,14 +78,14 @@ const NotificationEventCreate: FC<Props> = ({
     })
   }
 
-  const handleEventChange = ({ target: { value } }) => {
+  const handleEventChange = ({ target: { value } }): void => {
     setEventData({
       ...eventData,
       event: events.find(({ name }) => name === value) as ContractABIEvent,
     })
   }
 
-  const handleEventTypeChange = ({ target: { value } }) => {
+  const handleEventTypeChange = ({ target: { value } }): void => {
     setEventData({ ...eventData, eventType: value })
   }
 
@@ -99,13 +99,15 @@ const NotificationEventCreate: FC<Props> = ({
   }
 
   const handleAddEvent = (data: Inputs): void => {
-    if (eventData.addedChannels?.length && eventData.event) {
+    if (eventData.addedChannels?.length
+        && (eventData.eventType === SUPPORTED_EVENTS.NEWBLOCK
+            || eventData.event)) {
       onAddEvent({
         smartContract: data.contract,
-        name: eventData.event.name,
+        name: eventData.eventType === SUPPORTED_EVENTS.NEWBLOCK ? 'NEWBLOCK' : eventData.event?.name,
         channels: eventData.addedChannels,
         type: eventData.eventType as SupportedEventType,
-        params: eventData.event.inputs as Array<NotifierEventParam>,
+        params: eventData.event?.inputs as Array<NotifierEventParam>,
       })
       setEventData({ eventType: SUPPORTED_EVENTS.SMARTCONTRACT })
     }
@@ -143,48 +145,50 @@ const NotificationEventCreate: FC<Props> = ({
             </Select>
           </GridItem>
         </GridRow>
-        <GridRow spacing={4} className={classes.gridRow}>
-          <GridItem>
-            <Typography gutterBottom color="secondary" variant="body2">
-              Smart Contract
-            </Typography>
-          </GridItem>
-          <GridItem>
-            <TextField
-              name="contract"
-              inputRef={register({ required: true })}
-              onChange={handleContractChange}
-              variant="outlined"
-              InputProps={{
-                style: { width: 400, height: 40 },
-              }}
-            />
-            {
+        { eventData.eventType === SUPPORTED_EVENTS.SMARTCONTRACT && (
+        <>
+          <GridRow spacing={4} className={classes.gridRow}>
+            <GridItem>
+              <Typography gutterBottom color="secondary" variant="body2">
+                Smart Contract
+              </Typography>
+            </GridItem>
+            <GridItem>
+              <TextField
+                name="contract"
+                inputRef={register({ required: true })}
+                onChange={handleContractChange}
+                variant="outlined"
+                InputProps={{
+                  style: { width: 400, height: 40 },
+                }}
+              />
+              {
                 errors.contract && (
                 <Typography color="error" variant="caption">
                   Invalid Contract Address
                 </Typography>
                 )
               }
-          </GridItem>
-        </GridRow>
-        <GridRow spacing={5} className={classes.gridRow}>
-          <GridItem>
-            <Typography gutterBottom color="secondary" variant="body2">
-              Event
-            </Typography>
-          </GridItem>
-          <GridItem>
-            <Box pl={7}>
-              <Select
-                name="eventName"
-                onChange={handleEventChange}
-                value={eventData.event?.name || ''}
-                className={classes.select}
-                id="event"
-                variant="outlined"
-              >
-                {
+            </GridItem>
+          </GridRow>
+          <GridRow spacing={5} className={classes.gridRow}>
+            <GridItem>
+              <Typography gutterBottom color="secondary" variant="body2">
+                Event
+              </Typography>
+            </GridItem>
+            <GridItem>
+              <Box pl={7}>
+                <Select
+                  name="eventName"
+                  onChange={handleEventChange}
+                  value={eventData.event?.name || ''}
+                  className={classes.select}
+                  id="event"
+                  variant="outlined"
+                >
+                  {
                     events.map((event) => (
                       <MenuItem
                         key={event.name}
@@ -194,10 +198,12 @@ const NotificationEventCreate: FC<Props> = ({
                       </MenuItem>
                     ))
                   }
-              </Select>
-            </Box>
-          </GridItem>
-        </GridRow>
+                </Select>
+              </Box>
+            </GridItem>
+          </GridRow>
+        </>
+        )}
       </Grid>
       <Grid>
         <Box mt={4}>
@@ -208,7 +214,9 @@ const NotificationEventCreate: FC<Props> = ({
         </Box>
         <GridRow justify="center" spacing={2}>
           <RoundBtn
-            disabled={!(eventData.addedChannels?.length && eventData.event)}
+            disabled={!(eventData.addedChannels?.length
+                && (eventData.eventType === SUPPORTED_EVENTS.NEWBLOCK
+                    || eventData.event))}
             onClick={handleSubmit(handleAddEvent)}
           >
             Submit
