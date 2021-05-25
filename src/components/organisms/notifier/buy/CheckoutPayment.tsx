@@ -9,7 +9,8 @@ import { SYSTEM_SUPPORTED_FIAT } from 'models/Fiat'
 import { MarketCryptoRecord, QuotationPerToken } from 'models/Market'
 import ExpirationDate from 'components/molecules/ExpirationDate'
 import PriceSummary from 'components/molecules/PriceSummary'
-import { Box, makeStyles, Theme } from '@material-ui/core'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Box from '@material-ui/core/Box'
 import RoundedCard from 'components/atoms/RoundedCard'
 
 type Props = {
