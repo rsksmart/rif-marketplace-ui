@@ -1,24 +1,22 @@
 import RoundBtn from 'components/atoms/RoundBtn'
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
 import Typography from '@material-ui/core/Typography'
 import GridRow from 'components/atoms/GridRow'
 import Grid, { GridProps } from '@material-ui/core/Grid'
-import { SupportedTokenSymbol } from 'models/Token'
-import CurrencySelect from 'components/molecules/CurrencySelect'
-import { SYSTEM_SUPPORTED_FIAT } from 'models/Fiat'
-import { MarketCryptoRecord, QuotationPerToken } from 'models/Market'
+import { TokenXR } from 'models/Market'
 import ExpirationDate from 'components/molecules/ExpirationDate'
 import PriceSummary from 'components/molecules/PriceSummary'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
 import RoundedCard from 'components/atoms/RoundedCard'
+import Big from 'big.js'
 
 type Props = {
   onBuy: () => void
-  paymentOptions: QuotationPerToken
-  fiatUnit: SYSTEM_SUPPORTED_FIAT
+  fiatDisplayName: string
   expirationDate: Date
-  cryptoXRs: MarketCryptoRecord
+  tokenXR: TokenXR
+  cryptoPrice: Big
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -32,24 +30,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const CheckoutPayment: FC<Props> = ({
-  onBuy, paymentOptions, fiatUnit, expirationDate, cryptoXRs,
+  onBuy, fiatDisplayName, expirationDate, tokenXR, cryptoPrice,
 }) => {
   const classes = useStyles()
-
-  const currencyOptions = Object.keys(paymentOptions) as SupportedTokenSymbol[]
-  const [selectedCurrency, setSelectedCurrency] = useState(currencyOptions[0])
-
-  const handleCurrencyChange = (
-    { target: { value } }: React.ChangeEvent<{ name?: string, value: unknown }>,
-  ): void => {
-    setSelectedCurrency(value as SupportedTokenSymbol)
-  }
 
   const colProps: GridProps = {
     container: true,
     item: true,
     direction: 'column',
-    md: 4,
+    md: 6,
     sm: 12,
     alignItems: 'center',
     justify: 'center',
@@ -68,20 +57,11 @@ const CheckoutPayment: FC<Props> = ({
       </Typography>
       <GridRow spacing={3} alignItems="center">
         <Grid {...colProps}>
-          <Typography>Select currency</Typography>
-          <CurrencySelect
-            options={currencyOptions}
-            value={selectedCurrency}
-            onChange={handleCurrencyChange}
-          />
-        </Grid>
-        <Grid {...colProps}>
           <RoundedCard className={classes.priceSummaryCard} color="primary">
             <PriceSummary
-              cryptoPrice={paymentOptions[selectedCurrency]}
-              cryptoXRs={cryptoXRs}
-              currency={selectedCurrency}
-              fiatUnit={fiatUnit}
+              cryptoPrice={cryptoPrice}
+              tokenXR={tokenXR}
+              fiatDisplayName={fiatDisplayName}
             />
           </RoundedCard>
           <GridRow justify="center">
