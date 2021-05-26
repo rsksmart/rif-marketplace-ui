@@ -4,8 +4,6 @@ import Step from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
 import StepContent from '@material-ui/core/StepContent'
 import { Button } from '@rsksmart/rif-ui'
-import { SYSTEM_SUPPORTED_FIAT } from 'models/Fiat'
-import { QuotationPerToken } from 'models/Market'
 import MarketContext from 'context/Market'
 import { OffersOrder } from 'context/Services/notifier/offers/interfaces'
 import CheckoutPayment from './CheckoutPayment'
@@ -28,13 +26,14 @@ const CheckoutStepper: FC<Props> = ({ onBuy, order }) => {
     state: {
       exchangeRates: {
         crypto: cryptoXRs,
+        currentFiat: { displayName: fiatDisplayName },
       },
     },
   } = useContext(MarketContext)
 
   const {
     item: {
-      token,
+      token: { symbol: tokenSymbol },
       value: tokenValue,
       daysLeft,
     },
@@ -43,14 +42,8 @@ const CheckoutStepper: FC<Props> = ({ onBuy, order }) => {
   const handleNext = (): void => setActiveStep(1)
   const handleBack = (): void => setActiveStep(0)
 
-  const paymentOptions: QuotationPerToken = {} as QuotationPerToken
-  paymentOptions[token.symbol] = tokenValue
-  // FIXME: now we are only receiving a single quotation, need to check the need of this
-  // two options:
-  // 1 - allow to proceed in the list without selecting a currency
-  // 2 - change the model we are using when selecting the order
-  // TODO: after solving the previous issue QuotationPerToken and PriceOption(src/models/marketItems/NotifierItem.ts) types should be combined into the same one
   const expirationDate = getExpirationDate(daysLeft)
+  const tokenXR = cryptoXRs[tokenSymbol]
 
   return (
     <Stepper activeStep={activeStep} orientation="vertical">
@@ -65,10 +58,10 @@ const CheckoutStepper: FC<Props> = ({ onBuy, order }) => {
         <StepContent>
           <CheckoutPayment
             onBuy={onBuy}
-            paymentOptions={paymentOptions}
-            fiatUnit={SYSTEM_SUPPORTED_FIAT.usd}
+            fiatDisplayName={fiatDisplayName}
             expirationDate={expirationDate}
-            cryptoXRs={cryptoXRs}
+            cryptoPrice={tokenValue}
+            tokenXR={tokenXR}
           />
           <Button
             onClick={handleBack}
