@@ -2,26 +2,21 @@ import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import Big from 'big.js'
 import GridItem from 'components/atoms/GridItem'
-import { SUPPORTED_FIAT, SYSTEM_SUPPORTED_FIAT } from 'models/Fiat'
-import { MarketCryptoRecord } from 'models/Market'
-import { SYSTEM_SUPPORTED_SYMBOL, SYSTEM_TOKENS } from 'models/Token'
+import { TokenXR } from 'models/Market'
 import React, { FC } from 'react'
 
 export type Props = {
   className?: string
   title?: string
   cryptoPrice: Big
-  currency: SYSTEM_SUPPORTED_SYMBOL
-  cryptoXRs: MarketCryptoRecord
-  // to fully support multifiat we need to refactor
-  // cryptoXR should be able to provide rate per crypto per fiat
-  fiatUnit: SYSTEM_SUPPORTED_FIAT
+  tokenXR: TokenXR
+  fiatDisplayName: string
 }
 
 const PriceSummary: FC<Props> = ({
-  className = '', title = 'Total Price', cryptoPrice, currency, cryptoXRs, fiatUnit,
+  className = '', title = 'Total Price', cryptoPrice, tokenXR, fiatDisplayName,
 }) => {
-  const { rate } = cryptoXRs[currency]
+  const { rate, displayName: tokenDisplayName } = tokenXR
   const fiatPrice = Big(cryptoPrice).mul(rate).toFixed(2)
 
   return (
@@ -33,10 +28,10 @@ const PriceSummary: FC<Props> = ({
           fontSize="h6.fontSize"
           color="primary.main"
         >
-          {`${cryptoPrice} ${SYSTEM_TOKENS[currency].displayName}`}
+          {`${cryptoPrice} ${tokenDisplayName}`}
         </Box>
         <Box color="text.secondary">
-          {`${fiatPrice} ${SUPPORTED_FIAT[fiatUnit].displayName}`}
+          {`${fiatPrice} ${fiatDisplayName}`}
         </Box>
       </Typography>
     </GridItem>
