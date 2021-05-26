@@ -8,6 +8,9 @@ import GridItem from 'components/atoms/GridItem'
 import Typography from '@material-ui/core/Typography'
 import { useForm } from 'react-hook-form'
 import { toChecksum } from 'utils/stringUtils'
+import useErrorReporter from 'hooks/useErrorReporter'
+import { API_RESPONSE_MESSAGES } from 'constants/strings'
+import ProviderValidationService from 'api/rif-notifier-service/provider'
 
 type Inputs = {
   endpointUrl: string
@@ -23,6 +26,21 @@ const ProviderRegistrar: FC<ProviderRegistrarProps> = ({
   providerAddress, onRegister, isEnabled,
 }) => {
   const { register, handleSubmit, errors } = useForm<Inputs>()
+  const reportError = useErrorReporter()
+
+  const validateProviderURL = async (url: string): Promise<boolean> => {
+    const notifierService: ProviderValidationService = new ProviderValidationService(url)
+    notifierService.connect(reportError)
+    const result: string = await notifierService.healthCheck().catch((error) => {
+      reportError({
+        error,
+        id: 'notifier-provider',
+        text: error.text ? error.text : 'Invalid notifier provider url',
+      })
+      return API_RESPONSE_MESSAGES.ERROR
+    })
+    return result === API_RESPONSE_MESSAGES.OK
+  }
 
   return (
     <GridRow justify="center">
@@ -52,7 +70,10 @@ const ProviderRegistrar: FC<ProviderRegistrarProps> = ({
                   inputProps={{
                     style: { textAlign: 'center' },
                   }}
-                  inputRef={register({ required: true })}
+                  inputRef={register({
+                    required: true,
+                    validate: { validateProviderURL },
+                  })}
                   name="endpointUrl"
                 />
                 {

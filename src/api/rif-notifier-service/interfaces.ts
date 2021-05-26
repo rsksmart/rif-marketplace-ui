@@ -3,6 +3,9 @@ import { Modify } from 'utils/typeUtils'
 
 export type ServiceAddress = string
 
+export type NotifierProviderErrorId = 'notifier-provider'
+export type NotifierErrorId = NotifierProviderErrorId
+
 export type Subscriptions = {
   data: any
 }

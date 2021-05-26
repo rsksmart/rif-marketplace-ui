@@ -3,6 +3,7 @@ import { APIErrorId } from 'api/models/apiService'
 import { MarketErrorId } from 'context/Market/interfaces'
 import { ContractErrorId } from 'contracts/interfaces'
 import { Modify } from 'utils/typeUtils'
+import { NotifierErrorId } from 'api/rif-notifier-service/interfaces'
 
 export type Severity = Color
 
@@ -11,7 +12,8 @@ export interface CustomAction {
     action: Function
 }
 
-export type ErrorId = APIErrorId | ContractErrorId | MarketErrorId
+export type ErrorId = APIErrorId | ContractErrorId |
+    MarketErrorId | NotifierErrorId
 export type MessageId = ErrorId | 'wallet' | 'loading'
 export type LoaderId = 'filters' | 'data' | 'contract' | 'other'
 
