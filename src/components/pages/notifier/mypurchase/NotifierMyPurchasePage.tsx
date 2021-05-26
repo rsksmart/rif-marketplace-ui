@@ -22,7 +22,10 @@ import useErrorReporter from 'hooks/useErrorReporter'
 import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import { UIError } from 'models/UIMessage'
 import { logNotImplemented } from 'utils/utils'
-import NotifierDetails, { SubscriptionDetails, SubscriptionEvents } from 'components/organisms/notifier/mypurchase/NotifierDetailsModal'
+import NotifierDetails, {
+  SubscriptionDetails,
+  SubscriptionEvents,
+} from 'components/organisms/notifier/mypurchase/NotifierDetailsModal'
 import { getShortDateString } from 'utils/dateUtils'
 import { getFiatPrice } from 'utils/tokenUtils'
 import { shortChecksumAddress } from 'utils/stringUtils'
