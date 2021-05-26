@@ -1,30 +1,13 @@
 import React, { FC } from 'react'
-import { Grid } from '@material-ui/core'
-import Typography from '@material-ui/core/Typography'
-import { theme } from '@rsksmart/rif-ui'
-import RoundBtn from 'components/atoms/RoundBtn'
-import { logNotImplemented } from 'utils/utils'
-import withStyles from '@material-ui/core/styles/withStyles'
-import Dialog from '@material-ui/core/Dialog'
-import Marketplace from 'components/templates/marketplace/Marketplace'
+import Grid from '@material-ui/core/Grid'
 import TableContainer from '@material-ui/core/TableContainer'
+import Typography from '@material-ui/core/Typography'
 import MarketplaceCell from 'components/atoms/MarketplaceCell'
+import RoundBtn from 'components/atoms/RoundBtn'
+import RifDialog from 'components/organisms/RifDialog'
+import Marketplace from 'components/templates/marketplace/Marketplace'
 import { Item } from 'models/Market'
-import CrossBtn from 'components/atoms/CrossBtn'
-
-const StyledDialog = withStyles({
-  root: {
-    '& > .MuiBackdrop-root': {
-      backgroundColor: 'rgba(0, 0, 0, 0.2)',
-    },
-  },
-  paper: {
-    padding: theme.spacing(2),
-    borderRadius: 20,
-    minWidth: '549px',
-    minHeight: '529px',
-  },
-})(Dialog)
+import { logNotImplemented } from 'utils/utils'
 
 const subscriptionHeaders = {
   id: 'Subscription ID',
@@ -61,12 +44,10 @@ const NotifierDetails: FC<Props> = ({
   events,
   onClose,
 }) => (
-  <StyledDialog
+  <RifDialog
     open={Boolean(details)}
     onClose={onClose}
   >
-    {/* Close btn */}
-    <CrossBtn onClick={onClose} hoverText="close modal" />
     <Grid
       container
       spacing={2}
@@ -178,6 +159,6 @@ const NotifierDetails: FC<Props> = ({
         </Grid>
       </Grid>
     </Grid>
-  </StyledDialog>
+  </RifDialog>
 )
 export default NotifierDetails
