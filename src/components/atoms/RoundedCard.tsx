@@ -1,8 +1,7 @@
 import React, { FC } from 'react'
-import Card from '@material-ui/core/Card'
 import { makeStyles } from '@material-ui/core/styles'
 import { colors } from '@rsksmart/rif-ui'
-import { CardProps } from '@material-ui/core'
+import Card, { CardProps } from '@material-ui/core/Card'
 
 export type RoundedCardProps = CardProps & {
   className?: string
