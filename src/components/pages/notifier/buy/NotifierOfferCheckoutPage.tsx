@@ -12,7 +12,7 @@ import MarketContext, { MarketContextProps } from 'context/Market'
 import CheckoutStepper from 'components/organisms/notifier/buy/CheckoutStepper'
 import { logNotImplemented } from 'utils/utils'
 
-const NotifierOffersSelectedPage: FC = () => {
+const NotifierOfferCheckoutPage: FC = () => {
   const {
     state: {
       exchangeRates: {
@@ -48,4 +48,4 @@ const NotifierOffersSelectedPage: FC = () => {
   )
 }
 
-export default NotifierOffersSelectedPage
+export default NotifierOfferCheckoutPage
