@@ -8,79 +8,80 @@ import { ExchangeRate } from 'context/Market/interfaces'
 import MarketplaceAddressCell from 'components/molecules/MarketplaceAddressCell'
 import ExpirationDate, { SubscriptionExpirationType } from 'components/molecules/ExpirationDate'
 import { PlanDTO } from 'api/rif-marketplace-cache/notifier/offers/models'
-import { logNotImplemented } from 'utils/utils'
 
 const EXPIRATION_WARNING_TRIGGER = 5
 
 const getExpirationType = (
   { planStatus, daysLeft }: PlanDTO,
 ): SubscriptionExpirationType => {
-  if (planStatus === 'INACTIVE' || daysLeft <= 0) return 'blocked'
+  if (planStatus !== 'ACTIVE' || daysLeft <= 0) return 'blocked'
 
   if (daysLeft <= EXPIRATION_WARNING_TRIGGER) return 'warning'
 
   return 'normal'
 }
 
-const mapMyPurchases = ({
-  currentFiat,
-  crypto,
-}: ExchangeRate) => ({
-  id,
-  token,
-  provider,
-  plan,
-  notificationBalance,
-  expirationDate,
-  price,
-}: NotifierSubscriptionItem):
+const mapMyPurchases = <V extends Function, R extends Function>(
+  { currentFiat, crypto }: ExchangeRate,
+  { onView, onRenew }: {
+    onView: V
+    onRenew: R
+  }) => ({
+    id,
+    token,
+    provider,
+    plan,
+    notificationBalance,
+    expirationDate,
+    price,
+  }: NotifierSubscriptionItem):
   MySubscription => {
-  const { rate, displayName } = crypto?.[token.symbol]
+    const { rate, displayName } = crypto?.[token.symbol]
     || { rate: 0, displayName: '' }
 
-  const expType = getExpirationType(plan)
+    const expType = getExpirationType(plan)
 
-  return {
-    id,
-    subId: <MarketplaceAddressCell value={id} />,
-    provider: <MarketplaceAddressCell value={provider} />,
-    notifications: (
-      <NotificationsBalance
-        balance={notificationBalance}
-        limit={plan.quantity}
-      />
-    ),
-    expirationDate: (
-      <ExpirationDate
-        date={expirationDate}
-        type={expType}
-      />
-    ),
-    price: <CombinedPriceCell
-      disabled={expType === 'blocked'}
-      price={price.toString()}
-      priceFiat={price.times(rate).toString()}
-      currency={displayName}
-      currencyFiat={currentFiat.displayName}
-      divider=""
-    />,
-    actions: (
-      <MarketplaceActionsCell
-        actions={[
-          {
-            disabled: expType === 'blocked',
-            id: `renew_${id}`,
-            handleSelect: logNotImplemented('handle renew'),
-            children: 'Renew',
-          }, {
-            id: `view_${id}`,
-            handleSelect: logNotImplemented('handle view'),
-            children: 'View',
-          },
-        ]}
-      />
-    ),
+    return {
+      id,
+      subId: <MarketplaceAddressCell value={id} />,
+      provider: <MarketplaceAddressCell value={provider} />,
+      notifications: (
+        <NotificationsBalance
+          balance={notificationBalance}
+          limit={plan.quantity}
+        />
+      ),
+      expirationDate: (
+        <ExpirationDate
+          date={expirationDate}
+          type={expType}
+        />
+      ),
+      price: <CombinedPriceCell
+        disabled={expType === 'blocked'}
+        price={price.toString()}
+        priceFiat={price.times(rate).toString()}
+        currency={displayName}
+        currencyFiat={currentFiat.displayName}
+        divider=""
+      />,
+      actions: (
+        <MarketplaceActionsCell
+          actions={[
+            {
+              disabled: expType === 'blocked',
+              id: `renew_${id}`,
+              handleSelect: (): void => onRenew(),
+              children: 'Renew',
+            }, {
+              id: `view_${id}`,
+              handleSelect: (): void => onView(id),
+              children: 'View',
+            },
+          ]}
+        />
+      ),
+    }
   }
-}
 
 export default mapMyPurchases

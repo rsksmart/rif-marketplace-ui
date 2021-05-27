@@ -1,11 +1,11 @@
 import React, { FC } from 'react'
-import Card from '@material-ui/core/Card'
 import { makeStyles } from '@material-ui/core/styles'
 import { colors } from '@rsksmart/rif-ui'
+import Card, { CardProps } from '@material-ui/core/Card'
 
-export interface RoundedCardProps {
+export type RoundedCardProps = CardProps & {
   className?: string
-  color?: 'primary' | 'secondary'
+  color?: 'primary' | 'secondary' | 'noBorder'
 }
 
 const useStyles = makeStyles(() => ({
@@ -19,13 +19,20 @@ const useStyles = makeStyles(() => ({
   secondary: {
     border: `1px solid ${colors.gray3}`,
   },
+  noBorder: {
+    border: 'none',
+  },
 }))
 
-// TODO: move to rif-ui
-const RoundedCard: FC<RoundedCardProps> = ({ className = '', color = 'secondary', children }) => {
+const RoundedCard: FC<RoundedCardProps> = ({
+  className = '',
+  color = 'secondary',
+  children,
+  ...props
+}) => {
   const classes = useStyles()
   return (
-    <Card className={`${classes.root} ${classes[color]} ${className}`}>
+    <Card className={`${classes.root} ${classes[color]} ${className}`} {...props}>
       {children}
     </Card>
   )
