@@ -1,30 +1,27 @@
-import React, {
-  FC, useContext, useState,
-} from 'react'
-
-import {
-  Collapse,
-  Grid, makeStyles,
-  Typography,
-} from '@material-ui/core'
-import { NotifierOffersContextProps as ContextProps, NotifierOffersContext } from 'context/Services/notifier/offers'
+import React, { FC, useState } from 'react'
 import { Button } from '@rsksmart/rif-ui'
 import Marketplace from 'components/templates/marketplace/Marketplace'
-import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
-import NotifierPlanDescription from 'components/organisms/notifier/NotifierPlanDescription'
-import MarketContext, { MarketContextProps } from 'context/Market'
 import TableContainer from '@material-ui/core/TableContainer'
-import RemoveButton from 'components/atoms/RemoveButton'
-import Tooltip from '@material-ui/core/Tooltip'
-import { createStyles, Theme } from '@material-ui/core/styles'
 import NotificationEventCreate from 'components/organisms/notifier/NotificationEventCreate'
-import { NotifierEvent, NotifierEventParam } from 'models/marketItems/NotifierItem'
 import Box from '@material-ui/core/Box'
+import Grid from '@material-ui/core/Grid'
+import Collapse from '@material-ui/core/Collapse'
+import Typography from '@material-ui/core/Typography'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Tooltip from '@material-ui/core/Tooltip'
+import RemoveButton from 'components/atoms/RemoveButton'
+import { NotifierEvent, NotifierEventParam } from 'models/marketItems/NotifierItem'
 import { Item } from 'models/Market'
 import { SUPPORTED_EVENTS, SupportedEventType } from 'config/notifier'
+import { OffersOrder } from 'context/Services/notifier/offers/interfaces'
+import RoundBtn from 'components/atoms/RoundBtn'
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
+export type EventsRegistrarProps = {
+  order?: OffersOrder
+  onNext: () => void
+}
 
+const useStyles = makeStyles((theme: Theme) => ({
   eventsSection: {
     marginTop: theme.spacing(4),
   },
@@ -45,41 +42,26 @@ type EventItem = Item & {
 
 const buildEventSignature = (notifierEvent: NotifierEvent): string => {
   const params = notifierEvent?.params?.map(
-  (input: NotifierEventParam) => `${input.name} ${input.type}`)
-  .join(',')
+    (input: NotifierEventParam) => `${input.name} ${input.type}`)
+    .join(',')
   return `${notifierEvent.name}(${params})`
 }
 
-const isBlockEvent = (eventType: SupportedEventType): boolean => eventType === SUPPORTED_EVENTS.NEWBLOCK
+const isBlockEvent = (eventType: SupportedEventType): boolean => (
+  eventType === SUPPORTED_EVENTS.NEWBLOCK
+)
 
-const NotifierOffersSelectedPage: FC = () => {
+const EventsRegistrar: FC<EventsRegistrarProps> = ({ order, onNext }) => {
   const classes = useStyles()
-  const {
-    state: {
-      exchangeRates: {
-        currentFiat: {
-          displayName: currentFiat,
-        },
-        crypto,
-      },
-    },
-  } = useContext<MarketContextProps>(MarketContext)
-
-  const {
-    state: {
-      order,
-    },
-    dispatch,
-  } = useContext<ContextProps>(NotifierOffersContext)
 
   const [events, setEvents] = useState<Array<EventItem>>([])
   const [addEventCollapsed, setAddEventCollapsed] = useState<boolean>(false)
 
   const addNotifierEvent = (notifierEvent: NotifierEvent): void => {
     if (isBlockEvent(notifierEvent.type)
-        && events.find((addedEvent) => isBlockEvent(
-            addedEvent.type as SupportedEventType,
-        ))) {
+      && events.find((addedEvent) => isBlockEvent(
+        addedEvent.type as SupportedEventType,
+      ))) {
       setAddEventCollapsed(!addEventCollapsed)
       return
     }
@@ -95,8 +77,6 @@ const NotifierOffersSelectedPage: FC = () => {
     setAddEventCollapsed(!addEventCollapsed)
   }
 
-  if (!order?.item) return null
-
   const removeEvent = (e): void => {
     const newevents = events.filter(({ id }) => id !== e.currentTarget.id)
     setEvents(newevents)
@@ -110,26 +90,16 @@ const NotifierOffersSelectedPage: FC = () => {
   }))
 
   const generateKey = (): string => `'eve_'${new Date().getTime()}`
+  const isNextDisabled = !events.length
 
   return (
-    <CenteredPageTemplate>
-      <Grid item xs={11} md="auto">
-        <Typography gutterBottom variant="h6" color="primary">
-          Notification plan selected
-        </Typography>
-      </Grid>
-      <NotifierPlanDescription {...{ item: order.item, crypto, currentFiat }} />
-      {/* Header */}
+    <>
       <Grid item xs={11} md="auto" className={classes.eventsSection}>
-        <Typography gutterBottom variant="h6" color="primary">
-          Notification events added
-        </Typography>
         <TableContainer>
           <Marketplace
             isLoading={false}
             items={collection}
             headers={eventHeaders}
-            dispatch={dispatch}
           />
         </TableContainer>
       </Grid>
@@ -147,7 +117,7 @@ const NotifierOffersSelectedPage: FC = () => {
       <br />
       <br />
       <Collapse in={addEventCollapsed}>
-        <Box mt={6}>
+        <Box mt={6} ml={6}>
           <NotificationEventCreate
             key={generateKey()}
             onAddEvent={addNotifierEvent}
@@ -155,8 +125,11 @@ const NotifierOffersSelectedPage: FC = () => {
           />
         </Box>
       </Collapse>
-    </CenteredPageTemplate>
+      <RoundBtn onClick={onNext} disabled={isNextDisabled}>
+        Next
+      </RoundBtn>
+    </>
   )
 }
 
-export default NotifierOffersSelectedPage
+export default EventsRegistrar
