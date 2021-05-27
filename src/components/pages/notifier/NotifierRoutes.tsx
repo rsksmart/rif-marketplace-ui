@@ -11,7 +11,7 @@ import { NotifierOffersContextProvider } from 'context/Services/notifier/offers'
 import NotifierLandingPage from './NotifierLandingPage'
 import { NotFound } from '..'
 import NotifierSellPage from './sell/NotifierSellPage'
-import NotifierOffersSelectedPage from './buy/NotifierOffersSelectedPage'
+import NotifierOfferCheckoutPage from './buy/NotifierOfferCheckoutPage'
 import NotifierOffersPage from './buy/NotifierOffersPage'
 import NotifierMyOffersPage from './myoffers/NotifierMyOffersPage'
 import NotifierMyPurchasePage from './mypurchase/NotifierMyPurchasePage'
@@ -73,7 +73,7 @@ const NotifierRoutes: FC = () => {
                   <Route
                     exact
                     path={ROUTES.NOTIFIER.BUY.CHECKOUT}
-                    component={NotifierOffersSelectedPage}
+                    component={NotifierOfferCheckoutPage}
                   />
                   {DeadEndRoute}
                 </Switch>
