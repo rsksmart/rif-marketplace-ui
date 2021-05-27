@@ -1,5 +1,5 @@
 import React, {
-  FC, useContext,
+  FC, useContext, useState,
 } from 'react'
 import {
   Grid,
@@ -11,6 +11,7 @@ import NotifierPlanDescription from 'components/organisms/notifier/NotifierPlanD
 import MarketContext, { MarketContextProps } from 'context/Market'
 import CheckoutStepper from 'components/organisms/notifier/buy/CheckoutStepper'
 import { logNotImplemented } from 'utils/utils'
+import { NotifierEventItem } from 'models/marketItems/NotifierEventItem'
 
 const NotifierOfferCheckoutPage: FC = () => {
   const {
@@ -30,10 +31,31 @@ const NotifierOfferCheckoutPage: FC = () => {
     },
   } = useContext<ContextProps>(NotifierOffersContext)
 
+  const [eventsAdded, setEventsAdded] = useState<NotifierEventItem[]>([])
+
   if (!order?.item) return null
 
-  // TODO: remove hardcoded
-  const handleOnBuy = logNotImplemented('buy notification plan')
+  const handleEventItemRemoved = (
+    { id: notifierEventId }: NotifierEventItem,
+  ): void => {
+    const filteredEvents = eventsAdded.filter(
+      ({ id }) => id === notifierEventId,
+    )
+    setEventsAdded(filteredEvents)
+  }
+
+  const handleEventItemAdded = (
+    eventItem: NotifierEventItem,
+  ): void => {
+    setEventsAdded([...eventsAdded, eventItem])
+  }
+
+  const handleOnBuy = (): void => {
+    // TODO: all data should be here ready to interact with SC
+    // console.log({ order })
+    // console.log({ addedEvents: eventsAdded })
+    logNotImplemented('buy notification plan')
+  }
 
   return (
     <CenteredPageTemplate>
@@ -43,7 +65,13 @@ const NotifierOfferCheckoutPage: FC = () => {
         </Typography>
       </Grid>
       <NotifierPlanDescription {...{ item: order.item, crypto, currentFiat }} />
-      <CheckoutStepper onBuy={handleOnBuy} order={order} />
+      <CheckoutStepper
+        onBuy={handleOnBuy}
+        onEventItemAdded={handleEventItemAdded}
+        onEventItemRemoved={handleEventItemRemoved}
+        order={order}
+        eventsAdded={eventsAdded}
+      />
     </CenteredPageTemplate>
   )
 }
