@@ -10,4 +10,9 @@ and still undergoing final testing before the official release.
   and any purchasing of storage space should be done
    at the user’s own risk.`
 
+export const API_RESPONSE_MESSAGES = {
+  OK: 'OK',
+  ERROR: 'error',
+}
+
 export default {}

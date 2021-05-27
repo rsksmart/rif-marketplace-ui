@@ -8,6 +8,8 @@ import GridItem from 'components/atoms/GridItem'
 import Typography from '@material-ui/core/Typography'
 import { useForm } from 'react-hook-form'
 import { toChecksum } from 'utils/stringUtils'
+import useErrorReporter from 'hooks/useErrorReporter'
+import SubscriptionPlans from 'api/rif-notifier-service/subscriptionPlans'
 
 type Inputs = {
   endpointUrl: string
@@ -23,6 +25,14 @@ const ProviderRegistrar: FC<ProviderRegistrarProps> = ({
   providerAddress, onRegister, isEnabled,
 }) => {
   const { register, handleSubmit, errors } = useForm<Inputs>()
+  const reportError = useErrorReporter()
+
+  const validateProviderURL = (url: string): Promise<boolean> => {
+    const notifierService: SubscriptionPlans = new SubscriptionPlans(url)
+    notifierService.connect(reportError)
+
+    return notifierService.hasPlans()
+  }
 
   return (
     <GridRow justify="center">
@@ -52,7 +62,10 @@ const ProviderRegistrar: FC<ProviderRegistrarProps> = ({
                   inputProps={{
                     style: { textAlign: 'center' },
                   }}
-                  inputRef={register({ required: true })}
+                  inputRef={register({
+                    required: true,
+                    validate: { validateProviderURL },
+                  })}
                   name="endpointUrl"
                 />
                 {
