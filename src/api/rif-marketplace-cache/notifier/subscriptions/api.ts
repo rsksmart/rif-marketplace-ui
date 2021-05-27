@@ -8,7 +8,7 @@ import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import { SupportedTokenSymbol } from 'models/Token'
 import { parseToBigDecimal } from 'utils/parsers'
 import { getSupportedTokenByName } from 'utils/tokenUtils'
-import { NotifierAPIService } from '../interfaces'
+import { NotifierCacheAPIService } from '../interfaces'
 import { SubscriptionDTO } from './models'
 
 export const address = 'notifier/v0/subscriptions' as const
@@ -34,7 +34,7 @@ export const mapFromTransport = ({
 })
 
 class SubscriptionsService extends AbstractAPIService
-  implements NotifierAPIService {
+  implements NotifierCacheAPIService {
   path = address
 
   constructor() {

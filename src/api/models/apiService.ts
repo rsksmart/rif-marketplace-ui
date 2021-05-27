@@ -22,10 +22,9 @@ export type ServiceMetadata = Omit<Paginated<never>, 'data'>
 
 export const isServiceMetadata = (
   metadata: ServiceMetadata | unknown,
-): metadata is ServiceMetadata => metadata && (
-  metadata as ServiceMetadata).total !== undefined
+): metadata is ServiceMetadata => Boolean((metadata as ServiceMetadata)?.total)
 
-type ConnectOptions = {
+export type ConnectOptions = {
   client: ReturnType<typeof createClient>
 }
 export interface APIService {
@@ -44,8 +43,7 @@ export interface APIService {
 
 export const isResultPaginated = <T>(
   result: Paginated<T> | [],
-): result is Paginated<T> => (result as Paginated<T>)
-    .data !== undefined
+): result is Paginated<T> => Boolean((result as Paginated<T>)?.data)
 
 export abstract class AbstractAPIService implements Omit<APIService, 'fetch'> {
   private _client: Application
