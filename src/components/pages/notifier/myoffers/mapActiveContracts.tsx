@@ -8,6 +8,7 @@ import { Item, MarketCryptoRecord } from 'models/Market'
 import { NotifierOfferItem, NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import { getShortDateString } from 'utils/dateUtils'
 import { BaseFiat } from 'models/Fiat'
+import { getFiatPrice } from 'utils/tokenUtils'
 
 export const activeContractHeaders = {
   customer: 'Customer',
@@ -56,7 +57,7 @@ const mapActiveContracts = <T extends Function, U extends Function>(
         <Grid container wrap="nowrap" spacing={1}>
           <Grid item>
             <Typography color="primary" variant="body2">
-              {price.mul(crypto?.[token.symbol]?.rate || 0).toFixed(2)}
+              {getFiatPrice(price, crypto[token.symbol])}
             </Typography>
           </Grid>
           <Grid item>

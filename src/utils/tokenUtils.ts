@@ -1,5 +1,7 @@
+import Big from 'big.js'
 import { addressTokenRecord } from 'contracts/config'
 import { SupportedToken, SUPPORTED_TOKEN_RECORDS } from 'contracts/interfaces'
+import { TokenXR } from 'models/Market'
 import { SupportedTokenSymbol, BaseToken } from 'models/Token'
 import { SYSTEM_TOKENS } from '../models/Token'
 
@@ -41,3 +43,5 @@ export const getSysTokenByName = (
   }
   return tokenObject
 }
+
+export const getFiatPrice = (price: Big, token?: TokenXR) => price.mul(token?.rate || 0).toFixed(2)

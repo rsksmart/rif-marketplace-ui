@@ -19,7 +19,13 @@ const useStyles = makeStyles(({ palette }: Theme) => ({
   },
 }))
 
-export type SubscriptionExpirationType = 'normal' | 'warning' | 'blocked'
+export const EXPIRATION_TYPES = {
+  normal: 'normal',
+  warning: 'warning',
+  blocked: 'blocked',
+} as const
+
+export type SubscriptionExpirationType = keyof typeof EXPIRATION_TYPES
 
 type Props = {
   className?: string

@@ -1,7 +1,8 @@
 import Big from 'big.js'
 import Logger from './Logger'
 
-export const priceDisplay = (value: number | Big, maxDecimals = 8): string => value
+export const priceDisplay = (value: number
+  | Big, maxDecimals = 8): string => value
   .toFixed(maxDecimals)
   .toString()
   .replace(/[.,]00000000$/, '')
@@ -24,6 +25,6 @@ export const getTabValueFromLocation = (
   return activeTab?.to || defaultRoute
 }
 
-export const logNotImplemented = (name: string) => (): void => {
-  Logger.getInstance().debug(`We have yet to implement "${name}".`)
+export const logNotImplemented = (name: string) => (info?: unknown): void => {
+  Logger.getInstance().warn(`We have yet to implement "${name}".`, info)
 }
