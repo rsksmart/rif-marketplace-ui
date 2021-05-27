@@ -11,7 +11,7 @@ export type WSChannel =
     | NotifierOffersWSChannel
     | NotifierSubscriptionsWSChannel
 
-export interface NotifierAPIService extends APIService {
+export interface NotifierCacheAPIService extends APIService {
   path: Address
   _channel: WSChannel
   fetch: (filters?: NotifierSubscriptionsFilters) => Promise<NotifierItem[]>

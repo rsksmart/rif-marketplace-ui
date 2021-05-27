@@ -9,7 +9,7 @@ import { SupportedFiatSymbol } from 'models/Fiat'
 import { NotifierOffersFilters } from 'models/marketItems/NotifierFilters'
 import { parseToBigDecimal } from 'utils/parsers'
 import { SupportedEventChannel } from 'config/notifier'
-import { NotifierAPIService } from '../interfaces'
+import { NotifierCacheAPIService } from '../interfaces'
 import { PlanDTO } from './models'
 
 export const address = 'notifier/v0/offers' as const
@@ -44,7 +44,7 @@ export const mapFromTransport = ({
 })
 
 class OffersService extends AbstractAPIService
-  implements NotifierAPIService {
+  implements NotifierCacheAPIService {
   path = address
 
   constructor() {
