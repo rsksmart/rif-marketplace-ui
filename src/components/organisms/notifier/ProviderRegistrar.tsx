@@ -9,8 +9,7 @@ import Typography from '@material-ui/core/Typography'
 import { useForm } from 'react-hook-form'
 import { toChecksum } from 'utils/stringUtils'
 import useErrorReporter from 'hooks/useErrorReporter'
-import { API_RESPONSE_MESSAGES } from 'constants/strings'
-import ProviderValidationService from 'api/rif-notifier-service/provider'
+import SubscriptionPlans from 'api/rif-notifier-service/subscriptionPlans'
 
 type Inputs = {
   endpointUrl: string
@@ -28,18 +27,11 @@ const ProviderRegistrar: FC<ProviderRegistrarProps> = ({
   const { register, handleSubmit, errors } = useForm<Inputs>()
   const reportError = useErrorReporter()
 
-  const validateProviderURL = async (url: string): Promise<boolean> => {
-    const notifierService: ProviderValidationService = new ProviderValidationService(url)
+  const validateProviderURL = (url: string): Promise<boolean> => {
+    const notifierService: SubscriptionPlans = new SubscriptionPlans(url)
     notifierService.connect(reportError)
-    const result: string = await notifierService.healthCheck().catch((error) => {
-      reportError({
-        error,
-        id: 'notifier-provider',
-        text: error.text ? error.text : 'Invalid notifier provider url',
-      })
-      return API_RESPONSE_MESSAGES.ERROR
-    })
-    return result === API_RESPONSE_MESSAGES.OK
+
+    return notifierService.hasPlans()
   }
 
   return (

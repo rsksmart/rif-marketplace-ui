@@ -1,16 +1,12 @@
-import { APIService } from 'api/models/apiService'
-import { Modify } from 'utils/typeUtils'
+import { createRestClient } from 'api/client'
+import { AbstractAPIService } from 'api/models/apiService'
 
 export type ServiceAddress = string
-
-export type NotifierProviderErrorId = 'notifier-provider'
-export type NotifierErrorId = NotifierProviderErrorId
-
-export type Subscriptions = {
-  data: any
-}
-
-export type NotifierAPIService = Modify<APIService, {
+export abstract class NotifierAPIService extends AbstractAPIService {
   path: ServiceAddress
-  getSubscriptions: (account: string) => Promise<Subscriptions[]>
-}>
+
+  constructor(url: string) {
+    super(createRestClient<NotifierAPIService>(url))
+    this.path = url
+  }
+}
