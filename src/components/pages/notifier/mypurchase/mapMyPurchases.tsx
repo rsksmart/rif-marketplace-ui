@@ -7,14 +7,14 @@ import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import { ExchangeRate } from 'context/Market/interfaces'
 import MarketplaceAddressCell from 'components/molecules/MarketplaceAddressCell'
 import ExpirationDate, { SubscriptionExpirationType } from 'components/molecules/ExpirationDate'
-import { PlanDTO } from 'api/rif-marketplace-cache/notifier/offers/models'
+import { PlanDTO, PLAN_STATUS } from 'api/rif-marketplace-cache/notifier/offers/models'
 
 const EXPIRATION_WARNING_TRIGGER = 5
 
 const getExpirationType = (
   { planStatus, daysLeft }: PlanDTO,
 ): SubscriptionExpirationType => {
-  if (planStatus !== 'ACTIVE' || daysLeft <= 0) return 'blocked'
+  if (planStatus !== PLAN_STATUS.ACTIVE || daysLeft <= 0) return 'blocked'
 
   if (daysLeft <= EXPIRATION_WARNING_TRIGGER) return 'warning'
 
