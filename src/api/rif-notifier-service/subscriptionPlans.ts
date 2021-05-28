@@ -18,7 +18,7 @@ export default class SubscriptionPlans
     if (isValidResponse && !length) {
       this.errorReporter({
         error: new Error('No available subscription plan'),
-        text: 'Atleast one subscription plan must be available for registration',
+        text: 'At least one subscription plan must be available for registration',
         id: 'service-fetch',
       })
       return false
