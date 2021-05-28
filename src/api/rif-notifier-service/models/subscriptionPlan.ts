@@ -24,6 +24,6 @@ export type SubscriptionPlanDTO = {
     subscriptionPriceList: PlanPriceDTO[]
 }
 
-export type SubscriptionResponse = NotifierResponse & {
+export type SubscriptionPlanResponse = NotifierResponse & {
     content: Array<SubscriptionPlanDTO>
 }
