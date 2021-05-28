@@ -1,5 +1,6 @@
+import { SubscriptionPlanResponse } from 'api/rif-notifier-service/models/subscriptionPlan'
+import { NOTIFIER_RESPONSE_MESSAGES } from 'api/rif-notifier-service/models/response'
 import { NotifierAPIService } from './interfaces'
-import { SubscriptionPlanDTO } from './models/subscriptionPlan'
 
 export const address = 'getSubscriptionPlans' as const
 export type Address = typeof address
@@ -8,18 +9,20 @@ export default class SubscriptionPlans
   extends NotifierAPIService {
   path = address
 
-  _fetch = (): Promise<Array<SubscriptionPlanDTO>> => this.service.find()
+  _fetch = (): Promise<SubscriptionPlanResponse> => this.service.find()
 
   hasPlans = async (): Promise<boolean> => {
-    const plans = await this._fetch()
-      .catch(() => {
-        this.errorReporter({
-          error: new Error('No available subscription plan'),
-          text: 'Atleast one subscription plan must be available for registration',
-          id: 'service-fetch',
-        })
-        return []
+    const { message, content: { length } }: SubscriptionPlanResponse = await this.fetch()
+    const isValidResponse = message === NOTIFIER_RESPONSE_MESSAGES.OK
+
+    if (isValidResponse && !length) {
+      this.errorReporter({
+        error: new Error('No available subscription plan'),
+        text: 'At least one subscription plan must be available for registration',
+        id: 'service-fetch',
       })
-    return Boolean(plans.length)
+      return false
+    }
+    return isValidResponse
   }
 }
