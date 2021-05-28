@@ -1,3 +1,5 @@
+import { NotifierResponse } from 'api/rif-notifier-service/interfaces'
+
 export type PlanStatusDTO =
     | 'ACTIVE'
 
@@ -20,4 +22,8 @@ export type SubscriptionPlanDTO = {
     notificationPreferences: string[]
     notificationQuantity: number
     subscriptionPriceList: PlanPriceDTO[]
+}
+
+export type SubscriptionResponse = NotifierResponse & {
+    content: Array<SubscriptionPlanDTO>
 }

@@ -10,6 +10,8 @@ import { useForm } from 'react-hook-form'
 import { toChecksum } from 'utils/stringUtils'
 import useErrorReporter from 'hooks/useErrorReporter'
 import SubscriptionPlans from 'api/rif-notifier-service/subscriptionPlans'
+import { SubscriptionResponse } from 'api/rif-notifier-service/models/subscriptionPlan'
+import { NOTIFIER_RESPONSE_MESSAGES } from 'api/rif-notifier-service/responseConstants'
 
 type Inputs = {
   endpointUrl: string
@@ -27,11 +29,13 @@ const ProviderRegistrar: FC<ProviderRegistrarProps> = ({
   const { register, handleSubmit, errors } = useForm<Inputs>()
   const reportError = useErrorReporter()
 
-  const validateProviderURL = (url: string): Promise<boolean> => {
+  const validateProviderURL = async (url: string): Promise<boolean> => {
     const notifierService: SubscriptionPlans = new SubscriptionPlans(url)
     notifierService.connect(reportError)
 
-    return notifierService.hasPlans()
+    const response: SubscriptionResponse = await notifierService.fetch()
+    const { message } = response
+    return message === NOTIFIER_RESPONSE_MESSAGES.OK && notifierService.hasPlans(response)
   }
 
   return (
