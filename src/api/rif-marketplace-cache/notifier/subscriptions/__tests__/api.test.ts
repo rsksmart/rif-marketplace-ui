@@ -33,9 +33,9 @@ const MOCK_ITEM_0: NotifierSubscriptionsTransportModel = {
   },
   topics: [
     {
-      notificationPreferences: 'prefs',
+      notificationPreferences: 'API',
       topicParams: [],
-      type: '',
+      type: 'NEW_BLOCK',
     },
   ],
   notificationBalance: 2,
