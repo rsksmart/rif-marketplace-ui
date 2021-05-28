@@ -1,6 +1,3 @@
-import React, {
-  FC, useContext, useEffect, useState,
-} from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import {
@@ -14,6 +11,10 @@ import GridRow from 'components/atoms/GridRow'
 import RoundedCard from 'components/atoms/RoundedCard'
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import MyPurchasesHeader from 'components/molecules/MyPurchasesHeader'
+import NotifierDetails, {
+  SubscriptionDetails,
+  SubscriptionEventsDisplayItem,
+} from 'components/organisms/notifier/mypurchase/NotifierDetailsModal'
 import PurchasesTable, { MySubscription } from 'components/organisms/notifier/mypurchase/PurchasesTable'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import AppContext, { AppContextProps } from 'context/App'
@@ -21,15 +22,15 @@ import MarketContext from 'context/Market'
 import useErrorReporter from 'hooks/useErrorReporter'
 import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import { UIError } from 'models/UIMessage'
-import { logNotImplemented } from 'utils/utils'
-import NotifierDetails, {
-  SubscriptionDetails,
-  SubscriptionEvents,
-} from 'components/organisms/notifier/mypurchase/NotifierDetailsModal'
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react'
 import { getShortDateString } from 'utils/dateUtils'
-import { getFiatPrice } from 'utils/tokenUtils'
 import { shortChecksumAddress } from 'utils/stringUtils'
+import { getFiatPrice } from 'utils/tokenUtils'
+import { logNotImplemented } from 'utils/utils'
 import mapMyPurchases from './mapMyPurchases'
+import { eventDisplayItemIterator } from './utils'
 
 const useTitleStyles = makeStyles(() => ({
   root: {
@@ -70,7 +71,7 @@ const NotifierMyPurchasePage: FC = () => {
   const [
     subscriptionEvents,
     setSubscriptionEvents,
-  ] = useState<Array<SubscriptionEvents>>()
+  ] = useState<Array<SubscriptionEventsDisplayItem>>()
 
   const [isTableLoading, setIsTableLoading] = useState<boolean>()
 
@@ -115,9 +116,7 @@ const NotifierMyPurchasePage: FC = () => {
     }
 
     setSubscriptionDetails(viewItem)
-
-    const events = undefined // FIXME: add events retrieval
-    setSubscriptionEvents(events)
+    setSubscriptionEvents(subscription.events.map(eventDisplayItemIterator))
   }
 
   const onRenew = logNotImplemented('handle renew')

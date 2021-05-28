@@ -10,7 +10,12 @@ type ChannelsDTO = {
     name: string
   }
 
-export type PlanStatus = 'ACTIVE' | 'INACTIVE'
+export const PLAN_STATUS = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+} as const
+
+export type PlanStatus = keyof typeof PLAN_STATUS
 
 export type PlanDTO = {
   id: number

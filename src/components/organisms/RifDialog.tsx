@@ -16,7 +16,7 @@ const StyledDialog = withStyles({
     padding: theme.spacing(2),
     borderRadius: 20,
     minWidth: '549px',
-    minHeight: '529px',
+    minHeight: '360px',
   },
 })(Dialog)
 
@@ -36,7 +36,7 @@ type Props = Modify<DialogProps, {
 }>
 
 const RifDialog: FC<Props> = ({ onClose, children, ...props }) => (
-  <StyledDialog {...props} onClose={onClose}>
+  <StyledDialog {...props} onClose={onClose} maxWidth="lg">
     <StyledIconButton onClick={onClose}>
       <ClearIcon />
     </StyledIconButton>

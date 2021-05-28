@@ -23,6 +23,7 @@ export const mapFromTransport = ({
   price,
   rateId,
   providerId,
+  topics,
   ...subscription
 }: SubscriptionDTO): NotifierSubscriptionItem => ({
   id: hash,
@@ -30,6 +31,7 @@ export const mapFromTransport = ({
   price: parseToBigDecimal(price),
   token: getSupportedTokenByName(rateId as SupportedTokenSymbol),
   provider: providerId,
+  events: topics,
   ...subscription,
 })
 
