@@ -8,7 +8,7 @@ import { convertToWeiString } from 'utils/parsers'
 import { getTokensFromConfigTokens } from 'utils/tokenUtils'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
-import { AbiItem } from 'web3-utils'
+import { AbiItem, asciiToHex } from 'web3-utils'
 
 export type NotifierContractErrorId = 'contract-notifier'
 
@@ -88,6 +88,38 @@ class NotifierContract extends ContractWithTokens {
     this.methods.isWhitelistedToken(tokenAddress),
     txOptions,
   )
+
+  public createSubscription = (
+    data: {
+      subscriptionHash: string
+      providerAddress: string
+      signature: string
+      amount: Big
+      token: SupportedToken
+    },
+    txOptions: TxOptions,
+  ): Promise<TransactionReceipt> => {
+    const {
+      providerAddress,
+      subscriptionHash,
+      signature,
+      amount,
+      token: { tokenAddress },
+    } = data
+    const weiAmount = convertToWeiString(amount)
+    const encodedHash = asciiToHex(subscriptionHash).padEnd(34, '0')
+    const createSubsTx = this.contract.methods.createSubscription(
+      providerAddress,
+      encodedHash,
+      signature,
+      tokenAddress,
+      weiAmount,
+    )
+    return this.send(createSubsTx, {
+      gasMultiplier: NotifierContract.gasMultiplier,
+      ...txOptions,
+    })
+  }
 }
 
 export default NotifierContract
