@@ -30,7 +30,6 @@ const ProviderRegistrar: FC<ProviderRegistrarProps> = ({
   const validateProviderURL = (url: string): Promise<boolean> => {
     const notifierService: SubscriptionPlans = new SubscriptionPlans(url)
     notifierService.connect(reportError)
-
     return notifierService.hasPlans()
   }
 
