@@ -25,17 +25,17 @@ export type SubscriptionDetails = {
 const eventsHeaders = {
   name: 'Name',
   type: 'Type',
-  param: 'Parameter',
+  contract: 'Contract',
   channels: 'Channels',
 }
 
-export type SubscriptionEvents = Item & {
+export type SubscriptionEventsDisplayItem = Item & {
     [K in keyof typeof eventsHeaders]: React.ReactElement
   }
 
 type Props = {
   details: SubscriptionDetails
-  events?: Array<SubscriptionEvents>
+  events?: Array<SubscriptionEventsDisplayItem>
   onClose: (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void
 }
 
