@@ -23,7 +23,7 @@ type RnsContractAction =
   | CancelDomainAction
   | PlaceDomainAction
 
-type NotifierContractAction = 'NOTIFIER_REGISTER_PROVIDER' | 'NOTIFIER_WITHDRAW_FUNDS'
+type NotifierContractAction = 'NOTIFIER_REGISTER_PROVIDER' | 'NOTIFIER_WITHDRAW_FUNDS' | 'NOTIFIER_CREATE_SUBSCRIPTION'
 type NotifierStakingContractAction = 'NOTIFIER_STAKE' | 'NOTIFIER_UNSTAKE'
 
 export type ContractAction =

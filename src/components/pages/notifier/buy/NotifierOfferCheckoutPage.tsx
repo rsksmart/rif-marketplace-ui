@@ -19,6 +19,7 @@ import ProgressOverlay from 'components/templates/ProgressOverlay'
 import RoundBtn from 'components/atoms/RoundBtn'
 import ROUTES from 'routes'
 import { useHistory } from 'react-router-dom'
+import { ConfirmationsContext } from 'context/Confirmations'
 
 const NotifierOfferCheckoutPage: FC = () => {
   const {
@@ -34,6 +35,7 @@ const NotifierOfferCheckoutPage: FC = () => {
       },
     },
   } = useContext<MarketContextProps>(MarketContext)
+  const { dispatch: confirmationsDispatch } = useContext(ConfirmationsContext)
 
   const {
     state: {
@@ -94,6 +96,13 @@ const NotifierOfferCheckoutPage: FC = () => {
 
       if (purchaseReceipt) {
         setTxOperationDone(true)
+        confirmationsDispatch({
+          type: 'NEW_REQUEST',
+          payload: {
+            contractAction: 'NOTIFIER_CREATE_SUBSCRIPTION',
+            txHash: purchaseReceipt.transactionHash,
+          },
+        })
         // TODO: confirmationsDispatch
       }
     } catch (error) {
