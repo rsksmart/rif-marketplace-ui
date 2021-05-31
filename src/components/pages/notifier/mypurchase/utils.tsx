@@ -51,7 +51,7 @@ export const eventDisplayItemIterator = ({
 
   return ({
     channels,
-    id: `${name}.${contract}`,
+    id: `${name}@${contractAddress}`,
     name,
     contract,
     type,
