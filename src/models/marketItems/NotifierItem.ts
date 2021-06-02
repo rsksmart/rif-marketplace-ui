@@ -1,7 +1,7 @@
 import { Item } from 'models/Market'
 import Big from 'big.js'
 import { SupportedToken } from 'contracts/interfaces'
-import { SubscriptionDTO } from 'api/rif-marketplace-cache/notifier/subscriptions/models'
+import { SubscriptionDTO, SubscriptionEvent } from 'api/rif-marketplace-cache/notifier/subscriptions/models'
 import { SupportedEventType, SupportedEventChannel } from 'config/notifier'
 
 export type PriceOption = {
@@ -25,10 +25,12 @@ export type NotifierPlan = Provider & {
 
 export type NotifierOfferItem = Item & NotifierPlan
 
-export type NotifierSubscriptionItem = Item & Omit<SubscriptionDTO, 'hash' | 'price' | 'rateId' | 'providerId'> & {
+export type NotifierSubscriptionItem = Item & Omit<SubscriptionDTO,
+'hash' | 'price' | 'rateId' | 'providerId' | 'topics'> & {
     provider: string
     price: Big
     token: SupportedToken
+    events: Array<SubscriptionEvent>
 }
 
 export type NotifierChannel = {
