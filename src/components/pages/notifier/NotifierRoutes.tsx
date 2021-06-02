@@ -16,6 +16,7 @@ import NotifierOffersPage from './buy/NotifierOffersPage'
 import NotifierMyOffersPage from './myoffers/NotifierMyOffersPage'
 import NotifierMyPurchasePage from './mypurchase/NotifierMyPurchasePage'
 import { buildTabs } from '../routerUtils'
+import NotifierEditOffersPage from './myoffers/NotifierEditOffersPage'
 
 const logger = Logger.getInstance()
 
@@ -88,6 +89,12 @@ const NotifierRoutes: FC = () => {
                     path={ROUTES.NOTIFIER.MYOFFERS.BASE}
                     component={NotifierMyOffersPage}
                   />
+                  <Route
+                    exact
+                    path={ROUTES.NOTIFIER.MYOFFERS.EDIT}
+                    component={NotifierEditOffersPage}
+                  />
+
                   {DeadEndRoute}
                 </Switch>
               </NotifierOffersContextProvider>

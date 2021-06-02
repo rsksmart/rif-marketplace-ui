@@ -19,10 +19,11 @@ type ProviderRegistrarProps = {
   providerAddress: string
   isEnabled: boolean
   onRegister: (data: Inputs) => void
+  buttonLabel?: string
 }
 
 const ProviderRegistrar: FC<ProviderRegistrarProps> = ({
-  providerAddress, onRegister, isEnabled,
+  providerAddress, onRegister, isEnabled, buttonLabel,
 }) => {
   const { register, handleSubmit, errors } = useForm<Inputs>()
   const reportError = useErrorReporter()
@@ -78,7 +79,7 @@ const ProviderRegistrar: FC<ProviderRegistrarProps> = ({
               <GridItem xs={12}>
                 <GridRow justify="center" spacing={2}>
                   <RoundBtn type="submit" disabled={!isEnabled}>
-                    Register provider
+                    {buttonLabel ?? 'Register Provider'}
                   </RoundBtn>
                   <Typography
                     color="secondary"
