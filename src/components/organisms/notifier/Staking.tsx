@@ -10,7 +10,7 @@ import Big from 'big.js'
 import { ConfirmationsContext } from 'context/Confirmations'
 import useConfirmations from 'hooks/useConfirmations'
 import withStakingContext, { Context } from 'context/Services/notifier/staking/Context'
-import { StorageStakingContextProps } from 'context/Services/storage/staking'
+import { StakingContextProps } from 'context/Services/staking'
 import StakingTemplate from '../staking/StakingTemplate'
 
 type Props = {
@@ -38,7 +38,7 @@ const Staking: FC<Props> = ({ isEnabled }) => {
       stakes,
       totalStakedUSD,
     },
-  } = useContext<StorageStakingContextProps>(Context)
+  } = useContext<StakingContextProps>(Context)
 
   const [txInProgressMessage, setTxInProgressMessage] = useState('')
   const [txCompleteMsg, setTxCompleteMsg] = useState('')
@@ -48,9 +48,6 @@ const Staking: FC<Props> = ({ isEnabled }) => {
   const hasPendingConfs = Boolean(useConfirmations(
     ['NOTIFIER_STAKE', 'NOTIFIER_UNSTAKE'],
   ).length)
-  // TODO: add real data [when cache service is ready]
-  // const stakedBalances = {} as StakedBalances
-  // const totalStakedUSD = ''
 
   const canWithdraw = async (): Promise<boolean> => {
     // TODO: add specific validation logic

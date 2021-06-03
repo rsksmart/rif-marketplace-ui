@@ -1,7 +1,7 @@
-import { StakedBalances } from 'api/rif-marketplace-cache/storage/stakes'
-import actions from '../actions'
+import { StakedBalances } from 'api/rif-marketplace-cache/common/stakes'
+import actions from 'context/Services/staking/actions'
+import { State } from 'context/Services/staking/interfaces'
 import { initialState } from '../Context'
-import { State } from '../interfaces'
 
 const FAKE_STAKED_BALANCES: StakedBalances = {
   rbtc: '100000000000000000',

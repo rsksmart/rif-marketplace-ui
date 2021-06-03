@@ -2,10 +2,10 @@ import { Web3Store } from '@rsksmart/rif-ui'
 import {
   NotifierStakesService,
 } from 'api/rif-marketplace-cache/notifier/index'
-// TODO: start - move files to more generic place
-import { onStakeUpdated, setStakeNeedsRefresh } from 'context/Services/storage/staking/utils'
-import actions from 'context/Services/storage/staking/actions'
-// end - move files to more generic place
+import {
+  onStakeUpdated, setStakeNeedsRefresh,
+} from 'context/Services/staking/utils'
+import actions from 'context/Services/staking/actions'
 import AppContext, {
   AppContextProps,
   errorReporterFactory,
@@ -23,8 +23,10 @@ import React, {
 } from 'react'
 import {
   Props, State,
-} from 'context/Services/storage/staking/interfaces'
-import { notifierStakesAddress } from 'api/rif-marketplace-cache/notifier/stakes'
+} from 'context/Services/staking/interfaces'
+import {
+  notifierStakesAddress,
+} from 'api/rif-marketplace-cache/notifier/stakes'
 import {
   contextName,
 } from './interfaces'

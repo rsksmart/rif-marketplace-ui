@@ -1,8 +1,5 @@
-import { StakedBalances } from 'api/rif-marketplace-cache/storage/stakes'
-import {
-  Actions,
-  State,
-} from './interfaces'
+import { StakedBalances } from 'api/rif-marketplace-cache/common/stakes'
+import { Actions, State } from './interfaces'
 
 const actions: Actions = {
   SET_NEEDS_REFRESH: (state: State, { needsRefresh }): State => ({
