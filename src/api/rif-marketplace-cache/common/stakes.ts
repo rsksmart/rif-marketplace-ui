@@ -27,7 +27,7 @@ export type Staked = {
 export const mapStakesListFromTransport = (
   stakes,
 ): StakedBalances => stakes.reduce((acc, { symbol, total }) => {
-  acc[symbol] = parseToBigDecimal(total, 18).toString()
+  acc[symbol] = parseToBigDecimal(total).toString()
   return acc
 }, {})
 

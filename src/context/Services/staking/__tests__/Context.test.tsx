@@ -1,18 +1,18 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { useProviderTest } from '__tests__/testUtils'
-import { StorageStakingProvider, StorageStakingContext } from '..'
+import { StakingContextProvider, StakingContext } from '..'
 
 const ProviderTest = useProviderTest(
-  StorageStakingProvider, StorageStakingContext,
+  StakingContextProvider, StakingContext,
 )
 
-describe('Storage Staking Context', () => {
+describe('Staking Context', () => {
   describe('Provider', () => {
     describe('initial state', () => {
-      test('should contain contextID: "storage_staking"', () => {
+      test('should contain contextID: "staking"', () => {
         render(<ProviderTest test={({ state: { contextID } }): void => {
-          expect(contextID).toEqual('storage_staking')
+          expect(contextID).toEqual('staking')
         }}
         />)
       })
