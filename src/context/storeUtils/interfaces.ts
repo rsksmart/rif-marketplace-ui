@@ -8,6 +8,7 @@ import { ContextName as ConfirmationsContextName } from 'context/Confirmations/C
 import { StorageContextNames } from 'context/Services/storage/interfaces'
 import { Dispatch } from 'react'
 import { NotifierContextNames } from 'context/Services/notifier'
+import { StakingContextName } from 'context/Services/staking'
 
 export type AvailableContexts =
   | RnsContextNames
@@ -19,6 +20,7 @@ export type AvailableContexts =
   | StorageUploadContextName
   | ConfirmationsContextName
   | NotifierContextNames
+  | StakingContextName
 
 export interface ContextState {
   contextID: AvailableContexts

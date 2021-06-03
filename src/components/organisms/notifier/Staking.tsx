@@ -9,8 +9,8 @@ import useErrorReporter from 'hooks/useErrorReporter'
 import Big from 'big.js'
 import { ConfirmationsContext } from 'context/Confirmations'
 import useConfirmations from 'hooks/useConfirmations'
-import withStakingContext, { Context } from 'context/Services/notifier/staking/Context'
-import { StakingContextProps } from 'context/Services/staking'
+import { StakingContextProps, withStakingContext } from 'context/Services/staking'
+import { Context } from 'context/Services/staking/Context'
 import StakingTemplate from '../staking/StakingTemplate'
 
 type Props = {
@@ -153,4 +153,4 @@ const Staking: FC<Props> = ({ isEnabled }) => {
   )
 }
 
-export default withStakingContext(Staking)
+export default withStakingContext(Staking, 'notifier/v0/stakes')
