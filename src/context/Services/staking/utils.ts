@@ -1,5 +1,6 @@
-import { StakeTransport } from 'api/models/storage/transports'
-import { mapFromTransport } from 'api/rif-marketplace-cache/storage/stakes'
+import {
+  mapFromTransport, StakeTransport,
+} from 'api/rif-marketplace-cache/common/stakes'
 import { Dispatch } from 'react'
 import { Action } from './interfaces'
 

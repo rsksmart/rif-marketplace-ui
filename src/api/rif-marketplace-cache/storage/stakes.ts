@@ -1,41 +1,14 @@
 import { AbstractAPIService } from 'api/models/apiService'
-import { StakeTransport } from 'api/models/storage/transports'
-import { parseToBigDecimal } from 'utils/parsers'
-import { SupportedTokenSymbol } from 'models/Token'
 import {
   StakeAPIService,
-  StakeFilters,
   StorageWSChannel,
 } from './interfaces'
 import client from '../client'
+import { mapFromTransport, Staked, StakeFilters } from '../common/stakes'
 
 export const stakesAddress = 'storage/v0/stakes' as const
 export type StakesAddress = typeof stakesAddress
 export const stakesWSChannel: StorageWSChannel = 'stakes'
-
-export type StakedBalances = Record<SupportedTokenSymbol, string>
-
-export type Staked = {
-  stakedBalances: StakedBalances
-  totalStakedUSD: string
-}
-
-export const mapStakesListFromTransport = (
-  stakes,
-): StakedBalances => stakes.reduce((acc, { symbol, total }) => {
-  acc[symbol] = parseToBigDecimal(total, 18).toString()
-  return acc
-}, {})
-
-export const mapFromTransport = (stakeTransport: StakeTransport): Staked => {
-  const { totalStakedFiat: totalStakedUSD, stakes } = stakeTransport
-  const stakedBalances = mapStakesListFromTransport(stakes)
-
-  return {
-    stakedBalances,
-    totalStakedUSD,
-  }
-}
 
 export class StakesService extends AbstractAPIService
   implements StakeAPIService {
