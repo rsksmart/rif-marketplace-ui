@@ -9,7 +9,7 @@ export type AmountToken = {
 }
 
 // STATE
-export const contextName = 'storage_staking' as const
+export const contextName = 'staking' as const
 export type ContextName = typeof contextName
 
 export type State = ContextState & {

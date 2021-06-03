@@ -3,7 +3,7 @@ import { APIService } from 'api/models/apiService'
 import { StorageOffersFilters } from 'models/marketItems/StorageFilters'
 import { StorageItem } from 'models/marketItems/StorageItem'
 import { offersAddress, OffersAddress } from './offers'
-import { stakesAddress, StakesAddress } from './stakes'
+import { storageStakesAddress, StorageStakesAddress } from './stakes'
 import { avgBillingPlanAddress, AvgBillingPlanAddress } from './avg-billing-plan-price'
 import { agreementsAddress, AgreementsAddress } from './agreements'
 import { availableCapacityAddress, AvailableCapacityAddress } from './available-size'
@@ -12,14 +12,14 @@ import { StakeFilters } from '../common/stakes'
 export type StorageServiceAddress =
   | OffersAddress
   | AvgBillingPlanAddress
-  | StakesAddress
+  | StorageStakesAddress
   | AgreementsAddress
   | AvailableCapacityAddress
 
 export const storageAddresses = [
   offersAddress,
   avgBillingPlanAddress,
-  stakesAddress,
+  storageStakesAddress,
   agreementsAddress,
   availableCapacityAddress,
 ]

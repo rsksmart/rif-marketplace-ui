@@ -6,13 +6,13 @@ import {
 import client from '../client'
 import { mapFromTransport, Staked, StakeFilters } from '../common/stakes'
 
-export const stakesAddress = 'storage/v0/stakes' as const
-export type StakesAddress = typeof stakesAddress
+export const storageStakesAddress = 'storage/v0/stakes' as const
+export type StorageStakesAddress = typeof storageStakesAddress
 export const stakesWSChannel: StorageWSChannel = 'stakes'
 
 export class StakesService extends AbstractAPIService
   implements StakeAPIService {
-  path = stakesAddress
+  path = storageStakesAddress
 
   constructor() { super(client) }
 
