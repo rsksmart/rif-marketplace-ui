@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography'
 import { Button, ModalDialogue } from '@rsksmart/rif-ui'
 import {
   StakedBalances as StakedBalancesProp,
-} from 'api/rif-marketplace-cache/storage/stakes'
+} from 'api/rif-marketplace-cache/common/stakes'
 import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
 import { SupportedTokenSymbol, SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'

@@ -11,7 +11,7 @@ import Web3 from 'web3'
 import { StakingContract, StorageContract } from 'contracts/storage'
 import {
   Props as StakingContextProps,
-} from 'context/Services/storage/staking/interfaces'
+} from 'context/Services/staking/interfaces'
 import withStakingContext, { Context }
   from 'context/Services/storage/staking/Context'
 import RoundBtn from 'components/atoms/RoundBtn'

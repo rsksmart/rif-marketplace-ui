@@ -1,4 +1,4 @@
-import { StakedBalances as StakedBalancesProp } from 'api/rif-marketplace-cache/storage/stakes'
+import { StakedBalances as StakedBalancesProp } from 'api/rif-marketplace-cache/common/stakes'
 import LabelWithValue from 'components/atoms/LabelWithValue'
 import React, { FC } from 'react'
 import { getTokenByString } from 'utils/tokenUtils'
