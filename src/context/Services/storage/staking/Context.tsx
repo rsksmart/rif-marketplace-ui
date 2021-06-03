@@ -17,12 +17,12 @@ import React, {
   useReducer,
   useState,
 } from 'react'
+import actions from 'context/Services/staking/actions'
 import {
-  Props, State,
-  contextName,
-} from './interfaces'
-import actions from './actions'
-import { onStakeUpdated, setStakeNeedsRefresh } from './utils'
+  onStakeUpdated, setStakeNeedsRefresh,
+} from 'context/Services/staking/utils'
+import { State, Props } from 'context/Services/staking/interfaces'
+import { contextName } from './interfaces'
 
 export const initialState: State = {
   contextID: contextName,

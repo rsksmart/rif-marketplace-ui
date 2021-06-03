@@ -7,6 +7,7 @@ import { stakesAddress, StakesAddress } from './stakes'
 import { avgBillingPlanAddress, AvgBillingPlanAddress } from './avg-billing-plan-price'
 import { agreementsAddress, AgreementsAddress } from './agreements'
 import { availableCapacityAddress, AvailableCapacityAddress } from './available-size'
+import { StakeFilters } from '../common/stakes'
 
 export type StorageServiceAddress =
   | OffersAddress
@@ -33,10 +34,6 @@ export type StorageAPIService = Modify<
     fetch: (filters: Partial<StorageOffersFilters | AgreementFilters>) => Promise<StorageItem[]>
   }
 >
-
-export type StakeFilters = {
-  account: string
-}
 
 export type StakeAPIService = Modify<
   APIService,

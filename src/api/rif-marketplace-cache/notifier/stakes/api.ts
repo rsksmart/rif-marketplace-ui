@@ -1,9 +1,6 @@
 import { AbstractAPIService } from 'api/models/apiService'
 import client from 'api/rif-marketplace-cache/client'
-import { StakeFilters } from 'api/rif-marketplace-cache/storage/interfaces' // TODO: move to more generic location
-import {
-  mapFromTransport, Staked,
-} from 'api/rif-marketplace-cache/storage/stakes' // TODO: move to more generic location
+import { mapFromTransport, Staked, StakeFilters } from 'api/rif-marketplace-cache/common/stakes'
 import { NotifierCacheAPIService } from '../interfaces'
 
 export const address = 'notifier/v0/stakes' as const
