@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import RoundBtn from 'components/atoms/RoundBtn'
 import { Grid } from '@material-ui/core'
-import { ModalDialogue, Web3Store } from '@rsksmart/rif-ui'
+import { ModalDialogue, Web3Store, WithSpinner } from '@rsksmart/rif-ui'
 import NotifierContract from 'contracts/notifier/Notifier'
 import Web3 from 'web3'
 import { ConfirmationsContext } from 'context/Confirmations'
@@ -159,4 +159,4 @@ const ProviderEdition: FC<Props> = (
   )
 }
 
-export default ProviderEdition
+export default WithSpinner(ProviderEdition)

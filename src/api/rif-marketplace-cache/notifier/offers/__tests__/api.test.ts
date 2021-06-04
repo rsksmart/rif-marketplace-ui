@@ -2,6 +2,8 @@ import { AbstractAPIService } from 'api/models/apiService'
 import mockFeathersService from 'api/test-utils/feathers'
 import { NotifierOfferItem } from 'models/marketItems/NotifierItem'
 import { SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'
+import { NotifierOffersFilters } from 'models/marketItems/NotifierFilters'
+import { SYSTEM_SUPPORTED_FIAT } from 'models/Fiat'
 import OffersService, { notifierOffersAddress, NotifierOffersTransportModel, notifierOffersWSChannel } from '../index'
 import { mapFromTransport } from '../api'
 import { NotifierOffersService } from '../..'
@@ -33,6 +35,15 @@ const MOCK_ITEM_0: NotifierOffersTransportModel = {
 const MOCK_RESPONSE: NotifierOffersTransportModel[] = [MOCK_ITEM_0]
 
 let offersService: NotifierOffersService
+
+const filters: NotifierOffersFilters = {
+  price: {
+    min: 1,
+    max: 10,
+    fiatSymbol: SYSTEM_SUPPORTED_FIAT.usd,
+  },
+  size: { min: 1, max: 10 },
+}
 
 describe('Notifier Offers Service', () => {
   beforeEach(() => {
@@ -77,12 +88,12 @@ describe('Notifier Offers Service', () => {
     test('should call service find method', async () => {
       const serviceFindSpy = jest.spyOn(offersService.service, 'find')
 
-      await offersService.fetch()
+      await offersService.fetch(filters)
       expect(serviceFindSpy).toBeCalled()
     })
 
     test('should return NotifierOfferItem[] on success', async () => {
-      const actualOffers: NotifierOfferItem[] = await offersService.fetch()
+      const actualOffers: NotifierOfferItem[] = await offersService.fetch(filters)
 
       const expectedOffers: NotifierOfferItem[] = MOCK_RESPONSE
         .map(mapFromTransport)
