@@ -15,9 +15,9 @@ const NotifierEditOfferPage: FC = () => {
     },
   } = useContext(Web3Store)
   const history = useHistory()
-  const hasPendingConfs = useConfirmations(
+  const hasPendingConfs = Boolean(useConfirmations(
     ['NOTIFIER_REGISTER_PROVIDER'],
-  ).length
+  ).length)
 
   if (!account) {
     history.push(ROUTES.NOTIFIER.BASE)
@@ -27,7 +27,7 @@ const NotifierEditOfferPage: FC = () => {
   return (
     <CenteredPageTemplate>
       <InfoBar
-        isVisible={Boolean(hasPendingConfs)}
+        isVisible={hasPendingConfs}
         text="Awaiting confirmations for provider registration"
         type="info"
       />
@@ -38,7 +38,7 @@ const NotifierEditOfferPage: FC = () => {
         {`Fill out the fields below to edit your trigger offer. 
         All the information provided is meant to be true and correct.`}
       </Typography>
-      <ProviderEdition editMode />
+      <ProviderEdition isLoading={hasPendingConfs} editMode />
     </CenteredPageTemplate>
   )
 }

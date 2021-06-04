@@ -10,8 +10,8 @@ type PriceFilter = MinMaxFilter & {
 export type NotifierOffersFilters = {
     size: MinMaxFilter
     price: PriceFilter
-    currency: Set<SupportedTokenSymbol>
-    channels: Set<string>
+    currency?: Set<SupportedTokenSymbol>
+    channels?: Set<string>
     provider?: string
 }
 
