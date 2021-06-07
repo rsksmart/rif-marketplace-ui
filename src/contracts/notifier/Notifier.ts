@@ -8,7 +8,7 @@ import { convertToWeiString } from 'utils/parsers'
 import { getTokensFromConfigTokens } from 'utils/tokenUtils'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-eth'
-import { AbiItem, asciiToHex } from 'web3-utils'
+import { AbiItem } from 'web3-utils'
 
 export type NotifierContractErrorId = 'contract-notifier'
 
@@ -107,10 +107,9 @@ class NotifierContract extends ContractWithTokens {
       token: { tokenAddress },
     } = data
     const weiAmount = convertToWeiString(amount)
-    const encodedHash = asciiToHex(subscriptionHash).padEnd(34, '0')
     const createSubsTx = this.contract.methods.createSubscription(
       providerAddress,
-      encodedHash,
+      subscriptionHash,
       signature,
       tokenAddress,
       weiAmount,
@@ -118,6 +117,7 @@ class NotifierContract extends ContractWithTokens {
     return this.send(createSubsTx, {
       gasMultiplier: NotifierContract.gasMultiplier,
       ...txOptions,
+      value: weiAmount,
     })
   }
 }

@@ -5,7 +5,10 @@ import {
   Grid,
   Typography,
 } from '@material-ui/core'
-import { NotifierOffersContextProps as ContextProps, NotifierOffersContext } from 'context/Services/notifier/offers'
+import {
+  NotifierOffersContextProps as ContextProps,
+  NotifierOffersContext,
+} from 'context/Services/notifier/offers'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import NotifierPlanDescription from 'components/organisms/notifier/NotifierPlanDescription'
 import MarketContext, { MarketContextProps } from 'context/Market'
@@ -20,6 +23,96 @@ import RoundBtn from 'components/atoms/RoundBtn'
 import ROUTES from 'routes'
 import { useHistory } from 'react-router-dom'
 import { ConfirmationsContext } from 'context/Confirmations'
+import { subscribeToPlan } from 'api/rif-notifier-service/subscriptionBatch'
+import {
+  NotificationPreference, NotificationServiceType, SubscribeToPlanDTO, TopicDTO, TopicParams, TOPIC_PARAM_TYPES, TOPIC_TYPES,
+} from 'api/rif-notifier-service/models/subscriptions'
+import { SUPPORTED_EVENTS } from 'config/notifier'
+import { convertToWeiString } from 'utils/parsers'
+import { OrderItem } from 'context/Services/notifier/offers/interfaces'
+
+const buildSubscribeToPlanDTO = (
+  item: OrderItem, eventsAdded: NotifierEventItem[], account: string,
+): SubscribeToPlanDTO => {
+  const topics: Array<TopicDTO> = []
+  const {
+    token: { symbol: currencySymbol },
+    planId: subscriptionPlanId,
+    value: price,
+  } = item
+
+  eventsAdded.forEach((eventAdded) => {
+    const {
+      event: {
+        type: eventType, channels, smartContract, name, params,
+      },
+    } = eventAdded
+    const notificationPreferences: Array<NotificationPreference> = []
+    channels.forEach((channel) => {
+      const notificationPreference: NotificationPreference = {
+        notificationService: channel.type as NotificationServiceType,
+        destination: channel.destination,
+        destinationParams: {
+          username: '',
+          password: '',
+          apiKey: '',
+        },
+      }
+      notificationPreferences.push(notificationPreference)
+    })
+
+    if (eventType === SUPPORTED_EVENTS.NEWBLOCK) {
+      const topic: TopicDTO = {
+        type: TOPIC_TYPES.NEW_BLOCK,
+        notificationPreferences,
+      }
+      topics.push(topic)
+    } else if (eventType === SUPPORTED_EVENTS.SMARTCONTRACT) {
+      const topicParams: Array<TopicParams> = [
+        {
+          type: TOPIC_PARAM_TYPES.CONTRACT_ADDRESS,
+          value: smartContract as string,
+        },
+        {
+          type: TOPIC_PARAM_TYPES.EVENT_NAME,
+          value: name as string,
+        },
+      ]
+
+      if (params) {
+        params.forEach(({
+          type: valueType,
+          name: paramName,
+          indexed: paramIsIndexed,
+        }) => {
+          const topicParam: TopicParams = {
+            type: TOPIC_PARAM_TYPES.EVENT_PARAM,
+            value: paramName,
+            indexed: paramIsIndexed,
+            valueType: valueType.charAt(0).toUpperCase() + valueType.slice(1),
+          }
+          topicParams.push(topicParam)
+        })
+      }
+
+      const topic: TopicDTO = {
+        type: TOPIC_TYPES.CONTRACT_EVENT,
+        notificationPreferences,
+        topicParams,
+      }
+      topics.push(topic)
+    }
+  })
+
+  const newSubscription: SubscribeToPlanDTO = {
+    subscriptionPlanId: Number(subscriptionPlanId),
+    userAddress: account,
+    price: convertToWeiString(price),
+    currency: currencySymbol,
+    topics,
+  }
+  return newSubscription
+}
 
 const NotifierOfferCheckoutPage: FC = () => {
   const {
@@ -69,28 +162,35 @@ const NotifierOfferCheckoutPage: FC = () => {
   const handleOnBuy = async (): Promise<void> => {
     if (!account) return // should be unreachable if no account is provided
     try {
-      // console.log({ order })
-      // console.log({ addedEvents: eventsAdded })
       setIsProcessingTx(true)
 
+      const { item } = order
+      const subscribeToPlanDTO = buildSubscribeToPlanDTO(
+        item, eventsAdded, account,
+      )
       const {
-        id: subscriptionHash,
+        url: providerUrl,
         provider: providerAddress,
         value: amount,
         token,
-      } = order.item
+      } = item
+
+      const {
+        signature, hash: subscriptionHash,
+      } = await subscribeToPlan(providerUrl, subscribeToPlanDTO)
 
       const purchaseReceipt = await NotifierContract.getInstance(web3 as Web3)
         .createSubscription(
           {
             subscriptionHash,
             providerAddress,
-            signature: '', // TODO: get provider signature of the given hash
+            signature,
             amount,
             token,
           },
           {
             from: account,
+            value: convertToWeiString(amount),
           },
         )
 
@@ -103,7 +203,6 @@ const NotifierOfferCheckoutPage: FC = () => {
             txHash: purchaseReceipt.transactionHash,
           },
         })
-        // TODO: confirmationsDispatch
       }
     } catch (error) {
       reportError({

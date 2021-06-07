@@ -1,5 +1,5 @@
 import { SubscriptionPlanResponse } from 'api/rif-notifier-service/models/subscriptionPlan'
-import { NOTIFIER_RESPONSE_MESSAGES } from 'api/rif-notifier-service/models/response'
+import { NOTIFIER_RESPONSE_STATUSES } from 'api/rif-notifier-service/models/response'
 import { NotifierAPIService } from './interfaces'
 
 export const address = 'getSubscriptionPlans' as const
@@ -13,7 +13,7 @@ export default class SubscriptionPlans
 
   hasPlans = async (): Promise<boolean> => {
     const { message, content: { length } }: SubscriptionPlanResponse = await this.fetch()
-    const isValidResponse = message === NOTIFIER_RESPONSE_MESSAGES.OK
+    const isValidResponse = message === NOTIFIER_RESPONSE_STATUSES.OK
 
     if (isValidResponse && !length) {
       this.errorReporter({

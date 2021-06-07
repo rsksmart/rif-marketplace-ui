@@ -67,6 +67,7 @@ const EventsRegistrar: FC<EventsRegistrarProps> = (
       signature: isBlockEvent(notifierEvent.type) ? ''
         : buildEventSignature(notifierEvent) as string,
       channels: notifierEvent.channels.map((channel) => channel.type).join('+'),
+      event: notifierEvent,
     }
     onEventAdded(addedEvent)
     setAddEventCollapsed(!addEventCollapsed)

@@ -16,6 +16,7 @@ export type Provider = {
 }
 
 export type NotifierPlan = Provider & {
+    planId: number
     name: string
     channels: Array<SupportedEventChannel>
     limit: number
