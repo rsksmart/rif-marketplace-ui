@@ -128,14 +128,12 @@ const NotifierMyOffersPage: FC = () => {
     }
   }, [account, web3, reportError])
 
-  const editProvider = (): void => {
-    history.push(ROUTES.NOTIFIER.MYOFFERS.EDIT)
-  }
-
   const handleAddPlan = logNotImplemented('handle add plan')
   const handleEditPlan = logNotImplemented('handle edit plan')
   const handleCancelPlan = logNotImplemented('handle cancel plan')
-  const handleEditProfile = editProvider
+  const handleEditProfile = (): void => {
+    history.push(ROUTES.NOTIFIER.MYOFFERS.EDIT)
+  }
   const onWithdraw = ({
     token, price, id,
   }: Pick<NotifierSubscriptionItem, 'token' | 'price' | 'id'>): void => {
