@@ -7,13 +7,12 @@ import RifDialog from 'components/organisms/RifDialog'
 import ProviderRegistrar from '../ProviderRegistrar'
 
 type Props = {
-  isWhitelistedProvider: boolean
   accountStr: string
-  onRegister: (string) => Promise<void>
+  onRegister: (url: string) => Promise<void>
 }
 
 const EditProvider: FC<Props> = ({
-  isWhitelistedProvider, accountStr, onRegister, children,
+  accountStr, onRegister, children,
 }) => {
   const [showConfirmProviderEdit, setShowConfirmProviderEdit] = useState(false)
   const [providerUrl, setProviderUrl] = useState('')
@@ -47,13 +46,15 @@ const EditProvider: FC<Props> = ({
           </Box>
         </Grid>
       </RifDialog>
-      <Typography gutterBottom variant="h5" color="primary"> Edit your information as provider    </Typography>
+      <Typography gutterBottom variant="h5" color="primary">
+        Edit your information as provider
+      </Typography>
       <Typography gutterBottom color="secondary" variant="subtitle1">
         Fill out the fields below to edit your trigger offer. All the information provided is meant to be true and correct.
       </Typography>
       <ProviderRegistrar
         providerAddress={accountStr}
-        isEnabled={isWhitelistedProvider}
+        isEnabled
         onRegister={({ endpointUrl }): void => {
           setShowConfirmProviderEdit(true)
           setProviderUrl(endpointUrl)

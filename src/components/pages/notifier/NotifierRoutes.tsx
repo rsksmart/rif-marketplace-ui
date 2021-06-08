@@ -8,8 +8,6 @@ import Logger from 'utils/Logger'
 import TabsTemplate from 'components/templates/TabsTemplate'
 import { getTabValueFromLocation } from 'utils/utils'
 import { NotifierOffersContextProvider } from 'context/Services/notifier/offers'
-import ManageProviderPage from 'components/pages/notifier/provider/ManageProviderPage'
-import WithLoginCard from 'components/hoc/WithLoginCard'
 import NotifierLandingPage from './NotifierLandingPage'
 import { NotFound } from '..'
 import NotifierOfferCheckoutPage from './buy/NotifierOfferCheckoutPage'
@@ -17,6 +15,8 @@ import NotifierOffersPage from './buy/NotifierOffersPage'
 import NotifierMyOffersPage from './myoffers/NotifierMyOffersPage'
 import NotifierMyPurchasePage from './mypurchase/NotifierMyPurchasePage'
 import { buildTabs } from '../routerUtils'
+import NotifierEditOfferPage from './myoffers/NotifierEditOfferPage'
+import NotifierSellPage from './sell/NotifierSellPage'
 
 const logger = Logger.getInstance()
 
@@ -92,28 +92,19 @@ const NotifierRoutes: FC = () => {
                   <Route
                     exact
                     path={ROUTES.NOTIFIER.MYOFFERS.EDIT}
-                    component={ManageProviderPage}
+                    component={NotifierEditOfferPage}
                   />
 
                   {DeadEndRoute}
                 </Switch>
               </NotifierOffersContextProvider>
             </Route>
-
             {/* Sell */}
             <Route
               exact
               path={ROUTES.NOTIFIER.SELL.BASE}
-              component={
-        WithLoginCard({
-          WrappedComponent: () => <ManageProviderPage create />,
-          title: 'Connect your wallet to register as a provider',
-          contentText: 'Please, connect your wallet in order to register as a provider.',
-        })
-
-              }
+              component={NotifierSellPage}
             />
-
             {/* My purchases */}
             <Route
               exact
