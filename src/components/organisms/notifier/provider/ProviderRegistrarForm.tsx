@@ -15,14 +15,14 @@ type Inputs = {
   endpointUrl: string
 }
 
-type ProviderRegistrarProps = {
+type ProviderRegistrarFormProps = {
   providerAddress: string
   isEnabled: boolean
   onRegister: (data: Inputs) => void
   buttonLabel?: string
 }
 
-const ProviderRegistrar: FC<ProviderRegistrarProps> = ({
+const ProviderRegistrarForm: FC<ProviderRegistrarFormProps> = ({
   providerAddress, onRegister, isEnabled, buttonLabel,
 }) => {
   const { register, handleSubmit, errors } = useForm<Inputs>()
@@ -100,4 +100,4 @@ const ProviderRegistrar: FC<ProviderRegistrarProps> = ({
   )
 }
 
-export default ProviderRegistrar
+export default ProviderRegistrarForm
