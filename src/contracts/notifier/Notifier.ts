@@ -1,7 +1,7 @@
 import NotifierManager from '@rsksmart/rif-marketplace-notifier/build/contracts/NotifierManager.json'
 import Big from 'big.js'
 import { notifierAddress, notifierSupportedTokens } from 'contracts/config'
-import { SupportedToken, TxOptions } from 'contracts/interfaces'
+import { CreateSubscriptionParams, SupportedToken, TxOptions } from 'contracts/interfaces'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
 import { BaseToken } from 'models/Token'
 import { convertToWeiString } from 'utils/parsers'
@@ -90,13 +90,7 @@ class NotifierContract extends ContractWithTokens {
   )
 
   public createSubscription = (
-    data: {
-      subscriptionHash: string
-      providerAddress: string
-      signature: string
-      amount: Big
-      token: SupportedToken
-    },
+    data: CreateSubscriptionParams,
     txOptions: TxOptions,
   ): Promise<TransactionReceipt> => {
     const {

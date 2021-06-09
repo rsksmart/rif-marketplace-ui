@@ -14,9 +14,14 @@ import { NotifierEvent, NotifierEventParam } from 'models/marketItems/NotifierIt
 import { SUPPORTED_EVENTS, SupportedEventType } from 'config/notifier'
 import { OffersOrder } from 'context/Services/notifier/offers/interfaces'
 import RoundBtn from 'components/atoms/RoundBtn'
-import {
-  NotifierEventItem, notifierEventItemHeaders,
-} from 'models/marketItems/NotifierEventItem'
+import { NotifierEventItem } from 'models/marketItems/NotifierEventItem'
+
+const notifierEventItemHeaders = {
+  name: 'Name',
+  type: 'Type',
+  channels: 'Channels',
+  actions: '',
+}
 
 export type EventsRegistrarProps = {
   eventsAdded: NotifierEventItem[]

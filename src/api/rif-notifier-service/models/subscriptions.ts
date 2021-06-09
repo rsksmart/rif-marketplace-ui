@@ -1,5 +1,3 @@
-import { SupportedTokenSymbol } from 'models/Token'
-
 export const TOPIC_TYPES = {
   NEW_BLOCK: 'NEW_BLOCK',
   NEW_TRANSACTIONS: 'NEW_TRANSACTIONS',
@@ -17,12 +15,11 @@ export const TOPIC_PARAM_TYPES = {
 export type TopicParamType = keyof typeof TOPIC_PARAM_TYPES
 
 export type TopicParams = {
-  topic?: TopicDTO
   type: TopicParamType
   value: string
-  order?: number
   valueType?: string
   indexed?: boolean
+  order?: number
   filter?: string
 }
 
@@ -41,10 +38,8 @@ export type DestinationParams = {
 
 export type NotificationPreference = {
   notificationService: NotificationServiceType
-  subscription?: SubscriptionDTO
   destination: string
   destinationParams?: DestinationParams
-  idTopic?: number
 }
 
 export type TopicDTO = {
@@ -91,11 +86,6 @@ export type SubscriptionDTO = {
   userAddress: string
   providerAddress: string
   previousSubscription: SubscriptionDTO
-}
-
-export const currencyNameDTO: Record<SupportedTokenSymbol, string> = {
-  rbtc: 'RBTC',
-  rif: 'RIF',
 }
 
 export type SubscribeToPlanDTO = {

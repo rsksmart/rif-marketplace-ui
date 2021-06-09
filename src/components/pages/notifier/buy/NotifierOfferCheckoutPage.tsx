@@ -23,13 +23,60 @@ import RoundBtn from 'components/atoms/RoundBtn'
 import ROUTES from 'routes'
 import { useHistory } from 'react-router-dom'
 import { ConfirmationsContext } from 'context/Confirmations'
-import { subscribeToPlan } from 'api/rif-notifier-service/subscriptionBatch'
+import SubscribeToPlanService from 'api/rif-notifier-service/subscriptionBatch'
 import {
   NotificationPreference, NotificationServiceType, SubscribeToPlanDTO, TopicDTO, TopicParams, TOPIC_PARAM_TYPES, TOPIC_TYPES,
 } from 'api/rif-notifier-service/models/subscriptions'
-import { SUPPORTED_EVENTS } from 'config/notifier'
+import { SupportedEventType } from 'config/notifier'
 import { convertToWeiString } from 'utils/parsers'
 import { OrderItem } from 'context/Services/notifier/offers/interfaces'
+import { NotifierChannel } from 'models/marketItems/NotifierItem'
+
+const buildBlockEvent = (notificationPreferences: Array<NotificationPreference>): TopicDTO => ({
+  type: TOPIC_TYPES.NEW_BLOCK,
+  notificationPreferences,
+})
+
+const buildContractEvent = (notificationPreferences: Array<NotificationPreference>,
+  { event: { smartContract, name, params } }: NotifierEventItem): TopicDTO => {
+  const topicParams: Array<TopicParams> = [
+    {
+      type: TOPIC_PARAM_TYPES.CONTRACT_ADDRESS,
+      value: smartContract as string,
+    },
+    {
+      type: TOPIC_PARAM_TYPES.EVENT_NAME,
+      value: name as string,
+    },
+  ]
+
+  if (params) {
+    params.forEach(({
+      type: valueType,
+      name: paramName,
+      indexed: paramIsIndexed,
+    }) => {
+      const topicParam: TopicParams = {
+        type: TOPIC_PARAM_TYPES.EVENT_PARAM,
+        value: paramName,
+        indexed: paramIsIndexed,
+        valueType: valueType.charAt(0).toUpperCase() + valueType.slice(1),
+      }
+      topicParams.push(topicParam)
+    })
+  }
+
+  return {
+    type: TOPIC_TYPES.CONTRACT_EVENT,
+    notificationPreferences,
+    topicParams,
+  } as TopicDTO
+}
+
+const eventBuilders: Record<SupportedEventType, Function> = {
+  NEWBLOCK: buildBlockEvent,
+  SMARTCONTRACT: buildContractEvent,
+}
 
 const buildSubscribeToPlanDTO = (
   item: OrderItem, eventsAdded: NotifierEventItem[], account: string,
@@ -43,65 +90,19 @@ const buildSubscribeToPlanDTO = (
 
   eventsAdded.forEach((eventAdded) => {
     const {
-      event: {
-        type: eventType, channels, smartContract, name, params,
-      },
+      event: { type: eventType, channels },
     } = eventAdded
-    const notificationPreferences: Array<NotificationPreference> = []
-    channels.forEach((channel) => {
-      const notificationPreference: NotificationPreference = {
-        notificationService: channel.type as NotificationServiceType,
-        destination: channel.destination,
-        destinationParams: {
-          username: '',
-          password: '',
-          apiKey: '',
-        },
-      }
-      notificationPreferences.push(notificationPreference)
-    })
+    const notificationPreferences: Array<NotificationPreference> = channels.map((channel: NotifierChannel) => ({
+      notificationService: channel.type as NotificationServiceType,
+      destination: channel.destination,
+      destinationParams: {
+        username: '',
+        password: '',
+        apiKey: '',
+      },
+    }))
 
-    if (eventType === SUPPORTED_EVENTS.NEWBLOCK) {
-      const topic: TopicDTO = {
-        type: TOPIC_TYPES.NEW_BLOCK,
-        notificationPreferences,
-      }
-      topics.push(topic)
-    } else if (eventType === SUPPORTED_EVENTS.SMARTCONTRACT) {
-      const topicParams: Array<TopicParams> = [
-        {
-          type: TOPIC_PARAM_TYPES.CONTRACT_ADDRESS,
-          value: smartContract as string,
-        },
-        {
-          type: TOPIC_PARAM_TYPES.EVENT_NAME,
-          value: name as string,
-        },
-      ]
-
-      if (params) {
-        params.forEach(({
-          type: valueType,
-          name: paramName,
-          indexed: paramIsIndexed,
-        }) => {
-          const topicParam: TopicParams = {
-            type: TOPIC_PARAM_TYPES.EVENT_PARAM,
-            value: paramName,
-            indexed: paramIsIndexed,
-            valueType: valueType.charAt(0).toUpperCase() + valueType.slice(1),
-          }
-          topicParams.push(topicParam)
-        })
-      }
-
-      const topic: TopicDTO = {
-        type: TOPIC_TYPES.CONTRACT_EVENT,
-        notificationPreferences,
-        topicParams,
-      }
-      topics.push(topic)
-    }
+    topics.push(eventBuilders[eventType](notificationPreferences, eventAdded))
   })
 
   const newSubscription: SubscribeToPlanDTO = {
@@ -144,7 +145,7 @@ const NotifierOfferCheckoutPage: FC = () => {
 
   if (!order?.item) return null
 
-  const handleEventItemRemoved = (
+  const handleEventAdded = (
     { id: notifierEventId }: NotifierEventItem,
   ): void => {
     const filteredEvents = eventsAdded.filter(
@@ -160,7 +161,7 @@ const NotifierOfferCheckoutPage: FC = () => {
   }
 
   const handleOnBuy = async (): Promise<void> => {
-    if (!account) return // should be unreachable if no account is provided
+    if (!account) return
     try {
       setIsProcessingTx(true)
 
@@ -175,9 +176,12 @@ const NotifierOfferCheckoutPage: FC = () => {
         token,
       } = item
 
+      const subscribeToPlanService: SubscribeToPlanService = new SubscribeToPlanService(providerUrl)
+      subscribeToPlanService.connect(reportError)
+
       const {
         signature, hash: subscriptionHash,
-      } = await subscribeToPlan(providerUrl, subscribeToPlanDTO)
+      } = await subscribeToPlanService.subscribeToPlan(subscribeToPlanDTO)
 
       const purchaseReceipt = await NotifierContract.getInstance(web3 as Web3)
         .createSubscription(
@@ -226,7 +230,7 @@ const NotifierOfferCheckoutPage: FC = () => {
       <CheckoutStepper
         onBuy={handleOnBuy}
         onEventItemAdded={handleEventItemAdded}
-        onEventItemRemoved={handleEventItemRemoved}
+        onEventItemRemoved={handleEventAdded}
         order={order}
         eventsAdded={eventsAdded}
       />
