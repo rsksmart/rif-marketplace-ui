@@ -145,11 +145,11 @@ const NotifierOfferCheckoutPage: FC = () => {
 
   if (!order?.item) return null
 
-  const handleEventAdded = (
+  const handleEventRemoved = (
     { id: notifierEventId }: NotifierEventItem,
   ): void => {
     const filteredEvents = eventsAdded.filter(
-      ({ id }) => id === notifierEventId,
+      ({ id }) => id !== notifierEventId,
     )
     setEventsAdded(filteredEvents)
   }
@@ -230,7 +230,7 @@ const NotifierOfferCheckoutPage: FC = () => {
       <CheckoutStepper
         onBuy={handleOnBuy}
         onEventItemAdded={handleEventItemAdded}
-        onEventItemRemoved={handleEventAdded}
+        onEventItemRemoved={handleEventRemoved}
         order={order}
         eventsAdded={eventsAdded}
       />
