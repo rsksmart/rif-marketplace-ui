@@ -25,4 +25,9 @@ export default class SubscriptionPlans
     }
     return isValidResponse
   }
+
+  _create = async <SubscriptionPlanDTO>(data: SubscriptionPlanDTO): Promise<boolean> => {
+    await this.service.create(data)
+    return true
+  }
 }

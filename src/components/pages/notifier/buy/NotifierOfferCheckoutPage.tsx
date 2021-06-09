@@ -183,6 +183,8 @@ const NotifierOfferCheckoutPage: FC = () => {
         signature, hash: subscriptionHash,
       } = await subscribeToPlanService.subscribeToPlan(subscribeToPlanDTO)
 
+      if (!subscriptionHash) return
+
       const purchaseReceipt = await NotifierContract.getInstance(web3 as Web3)
         .createSubscription(
           {
