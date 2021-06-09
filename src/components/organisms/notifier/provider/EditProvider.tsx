@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import RoundBtn from 'components/atoms/RoundBtn'
 import { Grid } from '@material-ui/core'
-import RifDialog from 'components/organisms/RifDialog'
+import { ModalDialogue } from '@rsksmart/rif-ui'
 import ProviderRegistrar from '../ProviderRegistrar'
 
 type Props = {
@@ -19,7 +19,8 @@ const EditProvider: FC<Props> = ({
 
   return (
     <>
-      <RifDialog
+      <ModalDialogue
+        title="Confirm Provider Update"
         open={showConfirmProviderEdit}
         onClose={(): void => { setShowConfirmProviderEdit(false) }}
       >
@@ -30,22 +31,23 @@ const EditProvider: FC<Props> = ({
           direction="column"
           alignItems="center"
         >
-          <Box pt={4}>
-            <Typography gutterBottom variant="h5" color="primary">
-              Confirm Provider Update
+          <Box p={3}>
+            <Typography
+              gutterBottom
+              color="error"
+              align="center"
+            >
+              Your existing subscriptions and plans will be affected
             </Typography>
-          </Box>
-          <Box pt={8} pl={3} pr={3}>
-            <Typography gutterBottom color="error">Your existing subscriptions and plans will be affected</Typography>
             <Typography gutterBottom color="secondary">
               As a result of this operation, if the new url contains a different set of subscription plans than the current set of plans in marketplace, the current marketplace plans will be set to inactive, and any subscriptions that belong to those plans will be affected.
             </Typography>
           </Box>
-          <Box pt={4}>
+          <Box>
             <RoundBtn onClick={(): Promise<void> => onRegister(providerUrl)}>Confirm</RoundBtn>
           </Box>
         </Grid>
-      </RifDialog>
+      </ModalDialogue>
       <Typography gutterBottom variant="h5" color="primary">
         Edit your information as provider
       </Typography>
@@ -61,7 +63,7 @@ const EditProvider: FC<Props> = ({
         }}
         buttonLabel="Edit Offer"
       />
-      {children}
+      { children}
     </>
   )
 }
