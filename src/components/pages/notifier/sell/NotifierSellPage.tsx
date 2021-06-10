@@ -1,24 +1,18 @@
 import Typography from '@material-ui/core/Typography'
-import ProviderRegistrar from 'components/organisms/notifier/ProviderRegistrar'
+import { Web3Store } from '@rsksmart/rif-ui'
 import WithLoginCard from 'components/hoc/WithLoginCard'
+import InfoBar from 'components/molecules/InfoBar'
+import NoWhitelistedProvider from 'components/molecules/NoWhitelistedProvider'
+import ProviderEdition from 'components/organisms/notifier/provider/ProviderEdition'
+import Staking from 'components/organisms/notifier/Staking'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
+import NotifierContract from 'contracts/notifier/Notifier'
+import useConfirmations from 'hooks/useConfirmations'
+import useErrorReporter from 'hooks/useErrorReporter'
 import React, {
   FC, useContext, useEffect, useState,
 } from 'react'
-import Staking from 'components/organisms/notifier/Staking'
-import NotifierContract from 'contracts/notifier/Notifier'
-import { Web3Store } from '@rsksmart/rif-ui'
 import Web3 from 'web3'
-import NoWhitelistedProvider
-  from 'components/molecules/NoWhitelistedProvider'
-import { ConfirmationsContext } from 'context/Confirmations'
-import InfoBar from 'components/molecules/InfoBar'
-import useConfirmations from 'hooks/useConfirmations'
-import useErrorReporter from 'hooks/useErrorReporter'
-import ProgressOverlay from 'components/templates/ProgressOverlay'
-import RoundBtn from 'components/atoms/RoundBtn'
-import { useHistory } from 'react-router-dom'
-import ROUTES from 'routes'
 
 const NotifierSellPage: FC = () => {
   const {
@@ -27,18 +21,14 @@ const NotifierSellPage: FC = () => {
       account,
     },
   } = useContext(Web3Store)
-  const { dispatch: confirmationsDispatch } = useContext(ConfirmationsContext)
   const hasPendingConfs = Boolean(useConfirmations(
     ['NOTIFIER_REGISTER_PROVIDER'],
   ).length)
   const reportError = useErrorReporter()
-  const history = useHistory()
 
-  const accountStr = account as string // wrapped withLoginCard
-  const [isWhitelistedProvider, setIsWhitelistedProvider] = useState(false)
   const [isCheckingWhitelist, setIsCheckingWhitelist] = useState(true)
-  const [processingTx, setProcessingTx] = useState(false)
-  const [txOperationDone, setTxOperationDone] = useState(false)
+  const [isWhitelistedProvider, setIsWhitelistedProvider] = useState(false)
+  const accountStr = account as string // wrapped with login card
 
   useEffect(() => {
     const checkWhitelisted = async (): Promise<void> => {
@@ -63,92 +53,30 @@ const NotifierSellPage: FC = () => {
     checkWhitelisted()
   }, [accountStr, web3, reportError])
 
-  const handleRegistration = async ({ endpointUrl }): Promise<void> => {
-    try {
-      setProcessingTx(true)
-      const notifierContract = NotifierContract.getInstance(web3 as Web3)
-      const registerReceipt = await notifierContract.registerProvider(
-        endpointUrl, { from: accountStr },
-      )
-
-      if (registerReceipt) {
-        setTxOperationDone(true)
-        confirmationsDispatch({
-          type: 'NEW_REQUEST',
-          payload: {
-            contractAction: 'NOTIFIER_REGISTER_PROVIDER',
-            txHash: registerReceipt.transactionHash,
-          },
-        })
-      }
-    } catch (error) {
-      reportError({
-        error,
-        id: 'contract-notifier',
-        text: 'Could not register as a provider',
-      })
-    } finally {
-      setProcessingTx(false)
-    }
-  }
-
   return (
     <CenteredPageTemplate>
       <InfoBar
         isVisible={Boolean(hasPendingConfs)}
-        text="Awaiting confirmations for new offer"
+        text="Awaiting confirmations for provider registration"
         type="info"
       />
-      <Staking isEnabled={isWhitelistedProvider} />
-      <Typography gutterBottom variant="h5" color="primary">
-        Register as notifications provider
-      </Typography>
-      <Typography gutterBottom color="secondary" variant="subtitle1">
-        {`Fill out the fields below to list your notification service. 
-        All the information provided is meant to be true and correct.`}
-      </Typography>
       {
         !isCheckingWhitelist
         && !isWhitelistedProvider
         && <NoWhitelistedProvider service="Notifier" />
       }
-      <ProviderRegistrar
-        providerAddress={accountStr}
-        isEnabled={isWhitelistedProvider}
-        onRegister={handleRegistration}
-      />
-      <ProgressOverlay
-        title="Registering as a provider!"
-        doneMsg="You have been registered as a provider!"
-        inProgress={processingTx}
-        isDone={txOperationDone}
-        buttons={[
-          <RoundBtn
-            key="go_to_my_offers"
-            onClick={
-              (): void => history.push(ROUTES.NOTIFIER.MYOFFERS.BASE)
-            }
-          >
-            View my offers
-          </RoundBtn>,
-          <RoundBtn
-            key="go_to_list"
-            onClick={
-              (): void => history.push(ROUTES.NOTIFIER.BUY.BASE)
-            }
-          >
-            View offers listing
-          </RoundBtn>,
-        ]}
-
-      />
-
+      <Staking isEnabled={isWhitelistedProvider} />
+      <Typography gutterBottom variant="h5" color="primary">
+        Register as notifications provider
+      </Typography>
+      <Typography gutterBottom color="secondary" variant="subtitle1">
+        Fill out the fields below to list your notification service. All the information provided is meant to be true and correct.
+      </Typography>
+      <ProviderEdition />
     </CenteredPageTemplate>
   )
 }
 
-// if this wrapper is removed, the account could be undefined
-// and the account handler should change
 export default WithLoginCard({
   WrappedComponent: NotifierSellPage,
   title: 'Connect your wallet to register as a provider',

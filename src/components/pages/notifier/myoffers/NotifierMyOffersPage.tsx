@@ -26,6 +26,8 @@ import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import React, {
   FC, useContext, useEffect, useMemo, useState,
 } from 'react'
+import { useHistory } from 'react-router-dom'
+import ROUTES from 'routes'
 import { logNotImplemented } from 'utils/utils'
 import Web3 from 'web3'
 import mapActiveContracts, { activeContractHeaders, ActiveContractItem } from './mapActiveContracts'
@@ -63,6 +65,7 @@ const NotifierMyOffersPage: FC = () => {
   const [progress, setProgress] = useState<Pick<ProgressOverlayProps, 'title' | 'doneMsg'>>()
   const [txDone, setTxDone] = useState(false)
   const [txInProgress, setTxInProgress] = useState(false)
+  const history = useHistory()
 
   const reportError = useErrorReporter()
 
@@ -128,8 +131,9 @@ const NotifierMyOffersPage: FC = () => {
   const handleAddPlan = logNotImplemented('handle add plan')
   const handleEditPlan = logNotImplemented('handle edit plan')
   const handleCancelPlan = logNotImplemented('handle cancel plan')
-  const handleEditProfile = logNotImplemented('handle edit profile')
-
+  const handleEditProfile = (): void => {
+    history.push(ROUTES.NOTIFIER.MYOFFERS.EDIT)
+  }
   const onWithdraw = ({
     token, price, id,
   }: Pick<NotifierSubscriptionItem, 'token' | 'price' | 'id'>): void => {
