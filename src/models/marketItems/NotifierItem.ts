@@ -15,7 +15,8 @@ export type Provider = {
     url: string
 }
 
-export type NotifierPlan = Provider & {
+export type NotifierPlan = Item & Provider & {
+    planId: number
     name: string
     channels: Array<SupportedEventChannel>
     limit: number
@@ -23,7 +24,7 @@ export type NotifierPlan = Provider & {
     daysLeft: number
 }
 
-export type NotifierOfferItem = Item & NotifierPlan
+export type NotifierOfferItem = NotifierPlan
 
 export type NotifierSubscriptionItem = Item & Omit<SubscriptionDTO,
 'hash' | 'price' | 'rateId' | 'providerId' | 'topics'> & {

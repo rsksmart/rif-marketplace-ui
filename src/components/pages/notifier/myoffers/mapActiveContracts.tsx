@@ -33,7 +33,7 @@ const mapActiveContracts = <T extends Function, U extends Function>(
       onView: U
     },
 ): Array<ActiveContractItem> => myCustomers
-    .filter(({ plan: { id } }) => String(id) === offerId)
+    .filter(({ plan: { planId } }) => String(planId) === offerId)
     .map<ActiveContractItem>(({
       id,
       consumer,

@@ -4,6 +4,7 @@ import Web3 from 'web3'
 import {
   SupportedTokenSymbol, SYSTEM_SUPPORTED_SYMBOL, SYSTEM_TOKENS, BaseToken, TokenRecord,
 } from 'models/Token'
+import Big from 'big.js'
 import { RifERC20Contract } from './tokens/rif'
 import { MarketplaceContractErrorId } from './rns/Marketplace'
 import { RnsContractErrorId } from './rns/Rns'
@@ -72,4 +73,12 @@ export const SUPPORTED_TOKEN_RECORDS: TokenRecord<SupportedToken> = {
     type: TOKEN_TYPES.ERC20,
     tokenContract: RifERC20Contract,
   },
+}
+
+export type CreateSubscriptionParams = {
+  subscriptionHash: string
+  providerAddress: string
+  signature: string
+  amount: Big
+  token: SupportedToken
 }

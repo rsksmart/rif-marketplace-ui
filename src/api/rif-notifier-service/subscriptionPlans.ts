@@ -1,5 +1,6 @@
 import { SubscriptionPlanResponse } from 'api/rif-notifier-service/models/subscriptionPlan'
-import { NOTIFIER_RESPONSE_MESSAGES } from 'api/rif-notifier-service/models/response'
+import { NOTIFIER_RESPONSE_STATUSES } from 'api/rif-notifier-service/models/response'
+import { logNotImplemented } from 'utils/utils'
 import { NotifierAPIService } from './interfaces'
 
 export const address = 'getSubscriptionPlans' as const
@@ -12,8 +13,8 @@ export default class SubscriptionPlans
   _fetch = (): Promise<SubscriptionPlanResponse> => this.service.find()
 
   hasPlans = async (): Promise<boolean> => {
-    const { message, content: { length } }: SubscriptionPlanResponse = await this.fetch()
-    const isValidResponse = message === NOTIFIER_RESPONSE_MESSAGES.OK
+    const { status, content: { length } }: SubscriptionPlanResponse = await this.fetch()
+    const isValidResponse = status === NOTIFIER_RESPONSE_STATUSES.OK
 
     if (isValidResponse && !length) {
       this.errorReporter({
@@ -25,4 +26,6 @@ export default class SubscriptionPlans
     }
     return isValidResponse
   }
+
+  _create = (): Promise<any> => Promise.resolve(logNotImplemented('Subscription Plans')())
 }
