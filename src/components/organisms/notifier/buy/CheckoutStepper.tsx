@@ -6,12 +6,16 @@ import StepContent from '@material-ui/core/StepContent'
 import { Button } from '@rsksmart/rif-ui'
 import MarketContext from 'context/Market'
 import { OffersOrder } from 'context/Services/notifier/offers/interfaces'
+import { NotifierEventItem } from 'models/marketItems/NotifierEventItem'
 import CheckoutPayment from './CheckoutPayment'
 import EventsRegistrar from './EventsRegistrar'
 
 type Props = {
   order: OffersOrder
+  onEventItemAdded: (eventitem: NotifierEventItem) => void
+  onEventItemRemoved: (eventitem: NotifierEventItem) => void
   onBuy: () => void
+  eventsAdded: NotifierEventItem[]
 }
 
 const getExpirationDate = (daysLeft: number): Date => {
@@ -20,7 +24,11 @@ const getExpirationDate = (daysLeft: number): Date => {
   return retDate
 }
 
-const CheckoutStepper: FC<Props> = ({ onBuy, order }) => {
+const CheckoutStepper: FC<Props> = (
+  {
+    onBuy, order, onEventItemAdded, onEventItemRemoved, eventsAdded,
+  },
+) => {
   const [activeStep, setActiveStep] = useState(0)
   const {
     state: {
@@ -50,7 +58,13 @@ const CheckoutStepper: FC<Props> = ({ onBuy, order }) => {
       <Step>
         <StepLabel>Notification events</StepLabel>
         <StepContent>
-          <EventsRegistrar onNext={handleNext} order={order} />
+          <EventsRegistrar
+            onNext={handleNext}
+            order={order}
+            onEventAdded={onEventItemAdded}
+            onEventRemoved={onEventItemRemoved}
+            eventsAdded={eventsAdded}
+          />
         </StepContent>
       </Step>
       <Step>

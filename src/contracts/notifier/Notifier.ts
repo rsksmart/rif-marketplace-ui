@@ -1,7 +1,7 @@
 import NotifierManager from '@rsksmart/rif-marketplace-notifier/build/contracts/NotifierManager.json'
 import Big from 'big.js'
 import { notifierAddress, notifierSupportedTokens } from 'contracts/config'
-import { SupportedToken, TxOptions } from 'contracts/interfaces'
+import { CreateSubscriptionParams, SupportedToken, TxOptions } from 'contracts/interfaces'
 import ContractWithTokens from 'contracts/wrappers/contract-using-tokens'
 import { BaseToken } from 'models/Token'
 import { convertToWeiString } from 'utils/parsers'
@@ -88,6 +88,32 @@ class NotifierContract extends ContractWithTokens {
     this.methods.isWhitelistedToken(tokenAddress),
     txOptions,
   )
+
+  public createSubscription = (
+    data: CreateSubscriptionParams,
+    txOptions: TxOptions,
+  ): Promise<TransactionReceipt> => {
+    const {
+      providerAddress,
+      subscriptionHash,
+      signature,
+      amount,
+      token: { tokenAddress },
+    } = data
+    const weiAmount = convertToWeiString(amount)
+    const createSubsTx = this.contract.methods.createSubscription(
+      providerAddress,
+      subscriptionHash,
+      signature,
+      tokenAddress,
+      weiAmount,
+    )
+    return this.send(createSubsTx, {
+      gasMultiplier: NotifierContract.gasMultiplier,
+      ...txOptions,
+      value: weiAmount,
+    })
+  }
 }
 
 export default NotifierContract
