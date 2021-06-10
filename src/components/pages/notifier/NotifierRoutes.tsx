@@ -10,12 +10,13 @@ import { getTabValueFromLocation } from 'utils/utils'
 import { NotifierOffersContextProvider } from 'context/Services/notifier/offers'
 import NotifierLandingPage from './NotifierLandingPage'
 import { NotFound } from '..'
-import NotifierSellPage from './sell/NotifierSellPage'
 import NotifierOfferCheckoutPage from './buy/NotifierOfferCheckoutPage'
 import NotifierOffersPage from './buy/NotifierOffersPage'
 import NotifierMyOffersPage from './myoffers/NotifierMyOffersPage'
 import NotifierMyPurchasePage from './mypurchase/NotifierMyPurchasePage'
 import { buildTabs } from '../routerUtils'
+import NotifierEditOfferPage from './myoffers/NotifierEditOfferPage'
+import NotifierSellPage from './sell/NotifierSellPage'
 
 const logger = Logger.getInstance()
 
@@ -88,18 +89,22 @@ const NotifierRoutes: FC = () => {
                     path={ROUTES.NOTIFIER.MYOFFERS.BASE}
                     component={NotifierMyOffersPage}
                   />
+                  <Route
+                    exact
+                    path={ROUTES.NOTIFIER.MYOFFERS.EDIT}
+                    component={NotifierEditOfferPage}
+                  />
+
                   {DeadEndRoute}
                 </Switch>
               </NotifierOffersContextProvider>
             </Route>
-
             {/* Sell */}
             <Route
               exact
               path={ROUTES.NOTIFIER.SELL.BASE}
               component={NotifierSellPage}
             />
-
             {/* My purchases */}
             <Route
               exact

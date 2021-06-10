@@ -82,6 +82,7 @@ const ROUTES = {
     },
     MYOFFERS: {
       BASE: NOTIFIER_MYOFFERS,
+      EDIT: `${NOTIFIER_MYOFFERS}/${EDIT}`,
     },
     MYPURCHASES: {
       BASE: NOTIFIER_MYPURCHASES,
