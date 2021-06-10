@@ -3,7 +3,6 @@ import Divider from '@material-ui/core/Divider'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import { Button, ModalDialogue, Web3Store } from '@rsksmart/rif-ui'
-import { StakedBalances as StakedBalancesProp } from 'api/rif-marketplace-cache/storage/stakes'
 import AmountWithCurrencySelect from 'components/molecules/AmountWithCurrencySelect'
 import CenteredContent from 'components/molecules/CenteredContent'
 import React, {
@@ -12,8 +11,13 @@ import React, {
 import Big from 'big.js'
 import { getBalance } from 'contracts/utils/accountBalance'
 import { convertToWeiString } from 'utils/parsers'
-import { SupportedTokenSymbol, SYSTEM_SUPPORTED_SYMBOL, SYSTEM_TOKENS } from 'models/Token'
+import {
+  SupportedTokenSymbol, SYSTEM_SUPPORTED_SYMBOL, SYSTEM_TOKENS,
+} from 'models/Token'
 import NotEnoughFunds from 'components/atoms/NotEnoughFunds'
+import {
+  StakedBalances as StakedBalancesProp,
+} from 'api/rif-marketplace-cache/common/stakes'
 import StakedBalances from './StakedBalances'
 
 export interface DepositModalProps {
