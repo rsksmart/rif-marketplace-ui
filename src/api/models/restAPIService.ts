@@ -1,9 +1,9 @@
 import { AbstractAPIService } from './apiService'
 
 export default abstract class AbstractRestAPIService extends AbstractAPIService {
-    abstract _create: <T, S>(data: T, params?: S) => Promise<any>
+    abstract _create: <T, S, R>(data: T, params?: S) => Promise<R>
 
-    create = async <T, S> (data: T, params?: S): Promise<any> => {
+    create = async <T, S, R> (data: T, params?: S): Promise<R> => {
       if (!this.service) {
         this.errorReporter({
           id: 'service-connection',
@@ -21,6 +21,6 @@ export default abstract class AbstractRestAPIService extends AbstractAPIService 
           error,
         })
       }
-      return response
+      return response as R
     }
 }
