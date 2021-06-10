@@ -18,7 +18,7 @@ export const PLAN_STATUS = {
 export type PlanStatus = keyof typeof PLAN_STATUS
 
 export type PlanDTO = {
-  id: number
+  planId: number
   name: string
   planStatus: PlanStatus
   daysLeft: number

@@ -11,13 +11,23 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import Tooltip from '@material-ui/core/Tooltip'
 import RemoveButton from 'components/atoms/RemoveButton'
 import { NotifierEvent, NotifierEventParam } from 'models/marketItems/NotifierItem'
-import { Item } from 'models/Market'
 import { SUPPORTED_EVENTS, SupportedEventType } from 'config/notifier'
 import { OffersOrder } from 'context/Services/notifier/offers/interfaces'
 import RoundBtn from 'components/atoms/RoundBtn'
+import { NotifierEventItem } from 'models/marketItems/NotifierEventItem'
+
+const notifierEventItemHeaders = {
+  name: 'Name',
+  type: 'Type',
+  channels: 'Channels',
+  actions: '',
+}
 
 export type EventsRegistrarProps = {
-  order?: OffersOrder
+  eventsAdded: NotifierEventItem[]
+  onEventAdded: (item: NotifierEventItem) => void
+  onEventRemoved: (item: NotifierEventItem) => void
+  order: OffersOrder
   onNext: () => void
 }
 
@@ -26,19 +36,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(4),
   },
 }))
-
-const eventHeaders = {
-  name: 'Name',
-  type: 'Type',
-  channels: 'Channels',
-  actions: '',
-} as const
-
-type EventItem = Item & {
-  [K in keyof Omit<typeof eventHeaders, | 'name' | 'actions'>]: string
-} & {
-  signature: string
-}
 
 const buildEventSignature = (notifierEvent: NotifierEvent): string => {
   const params = notifierEvent?.params?.map(
@@ -51,46 +48,54 @@ const isBlockEvent = (eventType: SupportedEventType): boolean => (
   eventType === SUPPORTED_EVENTS.NEWBLOCK
 )
 
-const EventsRegistrar: FC<EventsRegistrarProps> = ({ order, onNext }) => {
+const EventsRegistrar: FC<EventsRegistrarProps> = (
+  {
+    order, onNext, eventsAdded, onEventAdded, onEventRemoved,
+  },
+) => {
   const classes = useStyles()
 
-  const [events, setEvents] = useState<Array<EventItem>>([])
   const [addEventCollapsed, setAddEventCollapsed] = useState<boolean>(false)
+  const { item: { channels } } = order
 
   const addNotifierEvent = (notifierEvent: NotifierEvent): void => {
     if (isBlockEvent(notifierEvent.type)
-      && events.find((addedEvent) => isBlockEvent(
+      && eventsAdded.find((addedEvent) => isBlockEvent(
         addedEvent.type as SupportedEventType,
       ))) {
       setAddEventCollapsed(!addEventCollapsed)
       return
     }
-    setEvents([
-      ...events, {
-        id: notifierEvent.name as string,
-        type: notifierEvent.type,
-        signature: isBlockEvent(notifierEvent.type) ? ''
-          : buildEventSignature(notifierEvent) as string,
-        channels: notifierEvent.channels.map((channel) => channel.type).join('+'),
-      },
-    ])
+    const addedEvent: NotifierEventItem = {
+      id: notifierEvent.name as string,
+      type: notifierEvent.type,
+      signature: isBlockEvent(notifierEvent.type) ? ''
+        : buildEventSignature(notifierEvent) as string,
+      channels: notifierEvent.channels.map((channel) => channel.type).join('+'),
+      event: notifierEvent,
+    }
+    onEventAdded(addedEvent)
     setAddEventCollapsed(!addEventCollapsed)
   }
 
-  const removeEvent = (e): void => {
-    const newevents = events.filter(({ id }) => id !== e.currentTarget.id)
-    setEvents(newevents)
-  }
-
-  const collection = events.map((event) => ({
-    name: <Tooltip title={event.signature}><Typography>{event.id}</Typography></Tooltip>,
+  const collection = eventsAdded.map((event) => ({
+    name: (
+      <Tooltip title={event.signature}>
+        <Typography>{event.id}</Typography>
+      </Tooltip>
+    ),
     type: event.type,
     channels: event.channels,
-    actions: <RemoveButton id={event.id} handleSelect={removeEvent} />,
+    actions: (
+      <RemoveButton
+        id={event.id}
+        handleSelect={(): void => onEventRemoved(event)}
+      />
+    ),
   }))
 
   const generateKey = (): string => `'eve_'${new Date().getTime()}`
-  const isNextDisabled = !events.length
+  const isNextDisabled = !eventsAdded.length
 
   return (
     <>
@@ -99,7 +104,7 @@ const EventsRegistrar: FC<EventsRegistrarProps> = ({ order, onNext }) => {
           <Marketplace
             isLoading={false}
             items={collection}
-            headers={eventHeaders}
+            headers={notifierEventItemHeaders}
           />
         </TableContainer>
       </Grid>
@@ -121,7 +126,7 @@ const EventsRegistrar: FC<EventsRegistrarProps> = ({ order, onNext }) => {
           <NotificationEventCreate
             key={generateKey()}
             onAddEvent={addNotifierEvent}
-            channels={order?.item.channels}
+            channels={channels}
           />
         </Box>
       </Collapse>

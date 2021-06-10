@@ -15,13 +15,12 @@ export const TOPIC_PARAM_TYPES = {
 export type TopicParamType = keyof typeof TOPIC_PARAM_TYPES
 
 export type TopicParams = {
-    topic: TopicDTO
-    type: TopicParamType
-    value: string
-    order: number
-    valueType: string
-    indexed: boolean
-    filter: string
+  type: TopicParamType
+  value: string
+  valueType?: string
+  indexed?: boolean
+  order?: number
+  filter?: string
 }
 
 export const NOTIFICATION_SVC_TYPES = {
@@ -32,23 +31,21 @@ export const NOTIFICATION_SVC_TYPES = {
 export type NotificationServiceType = keyof typeof NOTIFICATION_SVC_TYPES
 
 export type DestinationParams = {
-    username: string
-    password: string
-    apiKey: string
+  username: string
+  password: string
+  apiKey: string
 }
 
 export type NotificationPreference = {
-    notificationService: NotificationServiceType
-    subscription: SubscriptionDTO
-    destination: string
-    destinationParams: DestinationParams
-    idTopic: number
+  notificationService: NotificationServiceType
+  destination: string
+  destinationParams?: DestinationParams
 }
 
 export type TopicDTO = {
   notificationPreferences: Array<NotificationPreference>
   type: TopicType
-  topicParams: Array<TopicParams>
+  topicParams?: Array<TopicParams>
 }
 
 export const SUBSCRIPTION_STATUSES = {
@@ -61,32 +58,46 @@ export const SUBSCRIPTION_STATUSES = {
 export type SubscriptionStatus = keyof typeof SUBSCRIPTION_STATUSES
 
 export type CurrencyDTO = {
-    name: string
-    address: string
+  name: string
+  address: string
 }
 
 export type SubscriptionPayment = {
-    amount: string
-    subscription: SubscriptionDTO
-    status: string
-    currency: CurrencyDTO
+  amount: string
+  subscription: SubscriptionDTO
+  status: string
+  currency: CurrencyDTO
 }
 
 export type SubscriptionDTO = {
-    id: number
-    hash: string
-    apiKey: string
-    activeSince: Date
-    notificationBalance: number
-    status: SubscriptionStatus
-    expirationDate: Date
-    paid: boolean
-    subscriptionPayments: Array<SubscriptionPayment>
-    subscriptionPlanId: number
-    price: BigInteger
-    currency: CurrencyDTO
-    topics: Array<TopicDTO>
-    userAddress: string
-    providerAddress: string
-    previousSubscription: SubscriptionDTO
+  id: number
+  hash: string
+  apiKey: string
+  activeSince: Date
+  notificationBalance: number
+  status: SubscriptionStatus
+  expirationDate: Date
+  paid: boolean
+  subscriptionPayments: Array<SubscriptionPayment>
+  subscriptionPlanId: number
+  price: BigInteger
+  currency: CurrencyDTO
+  topics: Array<TopicDTO>
+  userAddress: string
+  providerAddress: string
+  previousSubscription: SubscriptionDTO
+}
+
+export type SubscribeToPlanDTO = {
+  userAddress: string
+  price: string
+  currency: string
+  subscriptionPlanId: number
+  topics: TopicDTO[]
+}
+
+export type SubscribeToPlanResponseDTO = {
+  hash: string
+  signature: string
+  subscription: SubscriptionDTO
 }

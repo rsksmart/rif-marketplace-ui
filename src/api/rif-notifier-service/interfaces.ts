@@ -1,13 +1,14 @@
 import { createRestClient } from 'api/client'
-import { AbstractAPIService } from 'api/models/apiService'
-import { NOTIFIER_RESPONSE_MESSAGES, NotifierResponseMessage } from 'api/rif-notifier-service/models/response'
+import AbstractRestAPIService from 'api/models/restAPIService'
+import { NOTIFIER_RESPONSE_STATUSES, NotifierResponseStatus } from 'api/rif-notifier-service/models/response'
 
-export type NotifierResponse = {
-  content: Array<any>
-  message: NotifierResponseMessage
+export type NotifierResponse<T> = {
+  content: T
+  message: string
+  status: NotifierResponseStatus
 }
 export type ServiceAddress = string
-export abstract class NotifierAPIService extends AbstractAPIService {
+export abstract class NotifierAPIService extends AbstractRestAPIService {
   path: ServiceAddress
 
   constructor(url: string) {
@@ -15,13 +16,13 @@ export abstract class NotifierAPIService extends AbstractAPIService {
     this.path = url
   }
 
-  fetch = (): Promise<NotifierResponse> => this._fetch()
+  fetch = <T>(): Promise<NotifierResponse<T>> => this._fetch()
     .catch((error) => {
       this.errorReporter({
         error,
         text: 'Error fetching data from notifier',
         id: 'service-fetch',
       })
-      return { content: [], message: NOTIFIER_RESPONSE_MESSAGES.ERROR }
+      return { content: [], message: NOTIFIER_RESPONSE_STATUSES.ERROR }
     })
 }
