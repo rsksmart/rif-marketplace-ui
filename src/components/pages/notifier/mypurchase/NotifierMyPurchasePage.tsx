@@ -10,6 +10,7 @@ import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
 import RoundedCard from 'components/atoms/RoundedCard'
 import WithLoginCard from 'components/hoc/WithLoginCard'
+import InfoBar from 'components/molecules/InfoBar'
 import MyPurchasesHeader from 'components/molecules/MyPurchasesHeader'
 import NotifierDetails, {
   SubscriptionDetails,
@@ -19,6 +20,7 @@ import PurchasesTable, { MySubscription } from 'components/organisms/notifier/my
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import AppContext, { AppContextProps } from 'context/App'
 import MarketContext from 'context/Market'
+import useConfirmations from 'hooks/useConfirmations'
 import useErrorReporter from 'hooks/useErrorReporter'
 import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import { UIError } from 'models/UIMessage'
@@ -75,6 +77,11 @@ const NotifierMyPurchasePage: FC = () => {
 
   const [isTableLoading, setIsTableLoading] = useState<boolean>()
 
+  const numberOfConfs = useConfirmations(
+    ['NOTIFIER_CREATE_SUBSCRIPTION'],
+  ).length
+  const isAwaitingConfs = Boolean(numberOfConfs)
+
   useEffect(() => {
     if (account && subscriptionsApi) {
       setIsTableLoading(true)
@@ -96,7 +103,7 @@ const NotifierMyPurchasePage: FC = () => {
 
   const onView = (subscriptionId: string): void => {
     const subscription: NotifierSubscriptionItem = subscriptions
-    ?.find(({ id }) => id === subscriptionId) as NotifierSubscriptionItem
+      ?.find(({ id }) => id === subscriptionId) as NotifierSubscriptionItem
 
     if (!subscription) return
 
@@ -132,6 +139,11 @@ const NotifierMyPurchasePage: FC = () => {
 
   return (
     <CenteredPageTemplate>
+      <InfoBar
+        text={`Awaiting confirmations for ${numberOfConfs} purchase(s)`}
+        type="info"
+        isVisible={isAwaitingConfs}
+      />
       <>
         <MyPurchasesHeader />
         <RoundedCard color="secondary">
@@ -155,13 +167,13 @@ const NotifierMyPurchasePage: FC = () => {
           </GridColumn>
         </RoundedCard>
         {subscriptionDetails
-        && (
-        <NotifierDetails
-          details={subscriptionDetails}
-          events={subscriptionEvents}
-          onClose={onModalClose}
-        />
-        )}
+          && (
+            <NotifierDetails
+              details={subscriptionDetails}
+              events={subscriptionEvents}
+              onClose={onModalClose}
+            />
+          )}
       </>
     </CenteredPageTemplate>
   )
