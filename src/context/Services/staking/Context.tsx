@@ -1,7 +1,8 @@
 import { Web3Store } from '@rsksmart/rif-ui'
 import {
-  StakesService,
-} from 'api/rif-marketplace-cache/storage/stakes'
+  onStakeUpdated, setStakeNeedsRefresh,
+} from 'context/Services/staking/utils'
+import actions from 'context/Services/staking/actions'
 import AppContext, {
   AppContextProps,
   errorReporterFactory,
@@ -19,10 +20,14 @@ import React, {
 } from 'react'
 import {
   Props, State,
+} from 'context/Services/staking/interfaces'
+import {
+  NotifierStakesAddress,
+} from 'api/rif-marketplace-cache/notifier/stakes'
+import { StorageStakesAddress } from 'api/rif-marketplace-cache/storage/stakes'
+import {
   contextName,
 } from './interfaces'
-import actions from './actions'
-import { onStakeUpdated, setStakeNeedsRefresh } from './utils'
 
 export const initialState: State = {
   contextID: contextName,
@@ -39,7 +44,13 @@ export const Context = createContext<Props>({
   dispatch: () => undefined,
 })
 
-export const ContextProvider: FC = ({ children }) => {
+type StakesAddress = NotifierStakesAddress | StorageStakesAddress
+
+export type ContextProviderProps = {
+  apiAddress: StakesAddress
+}
+
+export const ContextProvider: FC<ContextProviderProps> = ({ apiAddress, children }) => {
   const {
     state: { apis },
     dispatch: appDispatch,
@@ -57,8 +68,13 @@ export const ContextProvider: FC = ({ children }) => {
   )
   const { needsRefresh } = state
 
-  const api = apis?.['storage/v0/stakes'] as StakesService
-  api.connect(errorReporterFactory(appDispatch))
+  const api = apis[
+    apiAddress
+  ]
+
+  if (api && !api.service) {
+    api.connect(errorReporterFactory(appDispatch))
+  }
 
   const [isInitialised, setIsInitialised] = useState(false)
 
@@ -127,14 +143,15 @@ export const ContextProvider: FC = ({ children }) => {
   )
 }
 
-function withStakingContext<T>(
+export default ContextProvider
+
+export function withContext<T>(
   Component: React.ComponentType<T>,
+  stakesAddress: StakesAddress,
 ): React.ComponentType<T> {
   return (props: T): React.ReactElement => (
-    <ContextProvider>
+    <ContextProvider apiAddress={stakesAddress}>
       <Component {...props} />
     </ContextProvider>
   )
 }
-
-export default withStakingContext

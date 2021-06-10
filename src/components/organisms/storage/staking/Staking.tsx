@@ -11,9 +11,7 @@ import Web3 from 'web3'
 import { StakingContract, StorageContract } from 'contracts/storage'
 import {
   Props as StakingContextProps,
-} from 'context/Services/storage/staking/interfaces'
-import withStakingContext, { Context }
-  from 'context/Services/storage/staking/Context'
+} from 'context/Services/staking/interfaces'
 import RoundBtn from 'components/atoms/RoundBtn'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import { SupportedTokenSymbol } from 'models/Token'
@@ -21,6 +19,8 @@ import { StorageGlobalContext, StorageGlobalContextProps } from 'context/Service
 import useConfirmations from 'hooks/useConfirmations'
 import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirmations'
 import StakingTemplate from 'components/organisms/staking/StakingTemplate'
+import { Context } from 'context/Services/staking/Context'
+import { withStakingContext } from 'context/Services/staking'
 
 const logger = Logger.getInstance()
 
@@ -191,4 +191,4 @@ const Staking: FC = () => {
   )
 }
 
-export default withStakingContext(Staking)
+export default withStakingContext(Staking, 'storage/v0/stakes')

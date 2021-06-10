@@ -1,5 +1,4 @@
 import React, { FC, useContext, useState } from 'react'
-import { StakedBalances } from 'api/rif-marketplace-cache/storage/stakes'
 import { SupportedTokenSymbol } from 'models/Token'
 import NotifierStakingContract from 'contracts/notifier/Staking'
 import { Web3Store } from '@rsksmart/rif-ui'
@@ -10,6 +9,8 @@ import useErrorReporter from 'hooks/useErrorReporter'
 import Big from 'big.js'
 import { ConfirmationsContext } from 'context/Confirmations'
 import useConfirmations from 'hooks/useConfirmations'
+import { StakingContextProps, withStakingContext } from 'context/Services/staking'
+import { Context } from 'context/Services/staking/Context'
 import StakingTemplate from '../staking/StakingTemplate'
 
 type Props = {
@@ -32,6 +33,13 @@ const Staking: FC<Props> = ({ isEnabled }) => {
 
   const reportError = useErrorReporter()
 
+  const {
+    state: {
+      stakes,
+      totalStakedUSD,
+    },
+  } = useContext<StakingContextProps>(Context)
+
   const [txInProgressMessage, setTxInProgressMessage] = useState('')
   const [txCompleteMsg, setTxCompleteMsg] = useState('')
   const [processingTx, setProcessingTx] = useState(false)
@@ -40,9 +48,6 @@ const Staking: FC<Props> = ({ isEnabled }) => {
   const hasPendingConfs = Boolean(useConfirmations(
     ['NOTIFIER_STAKE', 'NOTIFIER_UNSTAKE'],
   ).length)
-  // TODO: add real data [when cache service is ready]
-  const stakedBalances = {} as StakedBalances
-  const totalStakedUSD = ''
 
   const canWithdraw = async (): Promise<boolean> => {
     // TODO: add specific validation logic
@@ -126,7 +131,7 @@ const Staking: FC<Props> = ({ isEnabled }) => {
         checkCanWithdraw={canWithdraw}
         isEnabled={isEnabled}
         isProcessing={hasPendingConfs}
-        stakedBalances={stakedBalances}
+        stakedBalances={stakes}
         totalStakedUSD={totalStakedUSD}
         onDeposit={handleDeposit}
         onWithdraw={handleWithdraw}
@@ -148,4 +153,4 @@ const Staking: FC<Props> = ({ isEnabled }) => {
   )
 }
 
-export default Staking
+export default withStakingContext(Staking, 'notifier/v0/stakes')
