@@ -15,6 +15,7 @@ import Web3 from 'web3'
 import AppContext from 'context/App'
 import { NotifierOffersService } from 'api/rif-marketplace-cache/notifier'
 import WithLoginCard from 'components/hoc/WithLoginCard'
+import NoMultipleOffersCard from 'components/organisms/NoMultipleOffersCard'
 
 const NotifierSellPage: FC = () => {
   const {
@@ -78,8 +79,7 @@ const NotifierSellPage: FC = () => {
   if (hasOffer) {
     return (
       <CenteredPageTemplate>
-        <h1>Multiple offers is not supported yet! Please, edit your</h1>
-        <p>Please, consider editing your offer here</p>
+        <NoMultipleOffersCard service="notifier" />
       </CenteredPageTemplate>
     )
   }
