@@ -13,9 +13,10 @@ import React, {
 } from 'react'
 import Web3 from 'web3'
 import AppContext from 'context/App'
-import { NotifierOffersService } from 'api/rif-marketplace-cache/notifier'
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import NoMultipleOffersCard from 'components/organisms/NoMultipleOffersCard'
+import { NotifierCacheAPIService } from 'api/rif-marketplace-cache/notifier/interfaces'
+import { NotifierOffersFilters } from 'models/marketItems/NotifierFilters'
 
 const NotifierSellPage: FC = () => {
   const {
@@ -40,13 +41,13 @@ const NotifierSellPage: FC = () => {
     const getOwnOffers = async (): Promise<void> => {
       setIsLoadingOffer(true)
 
-      const offersService = apis['notifier/v0/offers'] as NotifierOffersService
+      const offersService = apis['notifier/v0/offers'] as NotifierCacheAPIService
       offersService.connect(reportError)
 
       const currentOwnOffers = await offersService.fetch({
         provider: account,
-      })
-      setHasOffer(Boolean(currentOwnOffers[0]))
+      } as NotifierOffersFilters)
+      setHasOffer(Boolean(currentOwnOffers?.length))
       setIsLoadingOffer(false)
     }
 
