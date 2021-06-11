@@ -125,21 +125,23 @@ const NotifierOffersPage: FC = () => {
       }
     })
 
-  return (
-    <MarketPageTemplate
-      className={contextID}
-      filterItems={<NotifierOffersFilters />}
-      items={collection}
-      headers={headers}
-      dispatch={dispatch}
-      outdatedCt={0}
-      itemDetail={
-        selectedProvider && showPlans(
-          selectedProvider, currentFiat, crypto, onPlanSelected,
-        )
-      }
-    />
-  )
+  throw new Error('ooopps')
+  return <></>
+  // return (
+  //   <MarketPageTemplate
+  //     className={contextID}
+  //     filterItems={<NotifierOffersFilters />}
+  //     items={collection}
+  //     headers={headers}
+  //     dispatch={dispatch}
+  //     outdatedCt={0}
+  //     itemDetail={
+  //       selectedProvider && showPlans(
+  //         selectedProvider, currentFiat, crypto, onPlanSelected,
+  //       )
+  //     }
+  //   />
+  // )
 }
 
 export default NotifierOffersPage

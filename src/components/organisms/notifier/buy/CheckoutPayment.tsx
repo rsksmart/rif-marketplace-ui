@@ -44,6 +44,20 @@ const CheckoutPayment: FC<Props> = ({
     justify: 'center',
   }
 
+  // compare cryptoPrice with tokenXR.address.getBalance?
+
+  // useEffect(() => {
+  //   if (account && web3) {
+  //     const calculateBalance = async (): Promise<void> => {
+  //       const balance = await getBalance(web3, account, tokenXR.symbol)
+  //       setAccountWeiBalance(Big(balance))
+  //     }
+  //     calculateBalance()
+  //   }
+  // }, [account, web3, selectedToken])
+
+  // debugger
+
   return (
     <>
       <Typography component="div" variant="caption" gutterBottom>
