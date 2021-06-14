@@ -1,5 +1,7 @@
 import RoundBtn from 'components/atoms/RoundBtn'
-import React, { FC } from 'react'
+import React, {
+  FC, useState, useEffect, useContext,
+} from 'react'
 import Typography from '@material-ui/core/Typography'
 import GridRow from 'components/atoms/GridRow'
 import Grid, { GridProps } from '@material-ui/core/Grid'
@@ -10,6 +12,11 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
 import RoundedCard from 'components/atoms/RoundedCard'
 import Big from 'big.js'
+import { Web3Store } from '@rsksmart/rif-ui'
+import { getBalance } from 'contracts/utils/accountBalance'
+import NotEnoughFunds from 'components/atoms/NotEnoughFunds'
+import Web3 from 'web3'
+import useErrorReporter from 'hooks/useErrorReporter'
 
 type Props = {
   onBuy: () => void
@@ -33,6 +40,36 @@ const CheckoutPayment: FC<Props> = ({
   onBuy, fiatDisplayName, expirationDate, tokenXR, cryptoPrice,
 }) => {
   const classes = useStyles()
+  const reportError = useErrorReporter()
+
+  const { state: { web3, account } } = useContext(Web3Store)
+  const [hasEnoughFunds, setHasEnoughFunds] = useState(false)
+  const [isLoadingBalance, setIsLoadingBalance] = useState(false)
+
+  const {
+    symbol: selectedTokenSymbol,
+  } = tokenXR
+
+  useEffect(() => {
+    const calculateBalance = async (): Promise<void> => {
+      try {
+        setIsLoadingBalance(true)
+        const balance = await getBalance(
+          web3 as Web3, account as string, selectedTokenSymbol,
+        )
+        setHasEnoughFunds(Big(balance).gte(cryptoPrice))
+      } catch (error) {
+        reportError({
+          error,
+          id: 'get-balance',
+          text: 'Could not read account balance',
+        })
+      } finally {
+        setIsLoadingBalance(false)
+      }
+    }
+    calculateBalance()
+  }, [account, web3, selectedTokenSymbol, cryptoPrice, reportError])
 
   const colProps: GridProps = {
     container: true,
@@ -74,8 +111,18 @@ const CheckoutPayment: FC<Props> = ({
           </GridRow>
         </Grid>
         <Grid {...colProps}>
+          {
+            !isLoadingBalance && !hasEnoughFunds && (
+              <NotEnoughFunds token={tokenXR} />
+            )
+          }
           <GridRow justify="center">
-            <RoundBtn onClick={onBuy}>Buy</RoundBtn>
+            <RoundBtn
+              disabled={!hasEnoughFunds || isLoadingBalance}
+              onClick={onBuy}
+            >
+              Buy
+            </RoundBtn>
           </GridRow>
           <Typography
             color="secondary"
