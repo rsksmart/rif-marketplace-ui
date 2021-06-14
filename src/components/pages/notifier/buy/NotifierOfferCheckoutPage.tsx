@@ -31,6 +31,7 @@ import { SupportedEventType } from 'config/notifier'
 import { convertToWeiString } from 'utils/parsers'
 import { OrderItem } from 'context/Services/notifier/offers/interfaces'
 import { NotifierChannel } from 'models/marketItems/NotifierItem'
+import WithLoginCard from 'components/hoc/WithLoginCard'
 
 const buildBlockEvent = (notificationPreferences: Array<NotificationPreference>): TopicDTO => ({
   type: TOPIC_TYPES.NEW_BLOCK,
@@ -143,7 +144,10 @@ const NotifierOfferCheckoutPage: FC = () => {
   const [txOperationDone, setTxOperationDone] = useState(false)
   const [eventsAdded, setEventsAdded] = useState<NotifierEventItem[]>([])
 
-  if (!order?.item) return null
+  if (!order?.item) {
+    history.push(ROUTES.NOTIFIER.BUY.BASE)
+    return null
+  }
 
   const handleEventRemoved = (
     { id: notifierEventId }: NotifierEventItem,
@@ -161,7 +165,7 @@ const NotifierOfferCheckoutPage: FC = () => {
   }
 
   const handleOnBuy = async (): Promise<void> => {
-    if (!account) return
+    if (!account) return // wrapped with withLoginCard
     try {
       setIsProcessingTx(true)
 
@@ -265,4 +269,8 @@ const NotifierOfferCheckoutPage: FC = () => {
   )
 }
 
-export default NotifierOfferCheckoutPage
+export default WithLoginCard({
+  WrappedComponent: NotifierOfferCheckoutPage,
+  title: 'Please, connect your wallet.',
+  contentText: 'Connect your wallet in order to proceed to the checkout.',
+})
