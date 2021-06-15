@@ -12,10 +12,6 @@ import RoundedCard from 'components/atoms/RoundedCard'
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import InfoBar from 'components/molecules/InfoBar'
 import MyPurchasesHeader from 'components/molecules/MyPurchasesHeader'
-import NotifierDetails, {
-  SubscriptionDetails,
-  SubscriptionEventsDisplayItem,
-} from 'components/organisms/notifier/mypurchase/NotifierDetailsModal'
 import PurchasesTable, { MySubscription } from 'components/organisms/notifier/mypurchase/PurchasesTable'
 import CenteredPageTemplate from 'components/templates/CenteredPageTemplate'
 import AppContext, { AppContextProps } from 'context/App'
@@ -31,8 +27,11 @@ import { getShortDateString } from 'utils/dateUtils'
 import { shortChecksumAddress } from 'utils/stringUtils'
 import { getFiatPrice } from 'utils/tokenUtils'
 import { logNotImplemented } from 'utils/utils'
+import { SubscriptionDetails, subscriptionHeaders } from 'components/organisms/notifier/mypurchase/details'
+import NotifierDetails, { SubscriptionEventsDisplayItem } from 'components/organisms/notifier/details/NotifierDetailsModal'
+import RoundBtn from 'components/atoms/RoundBtn'
 import mapMyPurchases from './mapMyPurchases'
-import { eventDisplayItemIterator } from './utils'
+import { eventDisplayItemIterator } from '../../../organisms/notifier/details/utils'
 
 const useTitleStyles = makeStyles(() => ({
   root: {
@@ -169,9 +168,15 @@ const NotifierMyPurchasePage: FC = () => {
         {subscriptionDetails
           && (
             <NotifierDetails
+              headers={subscriptionHeaders}
               details={subscriptionDetails}
-              events={subscriptionEvents}
+              events={subscriptionEvents || []}
               onClose={onModalClose}
+              actions={(
+                <RoundBtn onClick={logNotImplemented('cancel handle')}>
+                  Cancel plan
+                </RoundBtn>
+)}
             />
           )}
       </>
