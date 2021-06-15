@@ -3,8 +3,8 @@ import {
   EventParam, EVENT_PARAM_TYPES, SubscriptionEvent, TopicParamType,
 } from 'api/rif-marketplace-cache/notifier/subscriptions/models'
 import MarketplaceCell from 'components/atoms/MarketplaceCell'
-import { SubscriptionEventsDisplayItem } from 'components/organisms/notifier/mypurchase/NotifierDetailsModal'
 import RifAddress from 'components/molecules/RifAddress'
+import { SubscriptionEventsDisplayItem } from './NotifierDetailsModal'
 
 export const getTopicParamValue = (
   topicParams: Array<EventParam>,
