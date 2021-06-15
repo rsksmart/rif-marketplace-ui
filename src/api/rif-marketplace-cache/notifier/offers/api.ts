@@ -37,7 +37,7 @@ export const mapFromTransport = ({
   limit: quantity,
   priceOptions: prices.map((price) => ({
     token: getSupportedTokenByName(
-        price.rateId as SupportedTokenSymbol,
+      price.rateId as SupportedTokenSymbol,
     ),
     value: parseToBigDecimal(price.price),
   })),
@@ -57,13 +57,13 @@ class OffersService extends AbstractAPIService
   _fetch = async (
     filters: NotifierOffersFilters,
   ): Promise<NotifierOfferItem[]> => {
-    const result: Paginated<PlanDTO> = await this.service.find({
-      query: filters && {
-        ...filters,
-        currency: Array.from(filters.currency),
-        channels: Array.from(filters.channels),
-      },
-    })
+    const { currency, channels } = filters
+    const query = filters && {
+      ...filters,
+      currency: currency && Array.from(currency),
+      channels: channels && Array.from(channels),
+    }
+    const result: Paginated<PlanDTO> = await this.service.find({ query })
 
     const { data, ...metadata } = isResultPaginated(result)
       ? result : { data: result }

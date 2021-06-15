@@ -1,6 +1,5 @@
 import Typography from '@material-ui/core/Typography'
 import { Web3Store } from '@rsksmart/rif-ui'
-import WithLoginCard from 'components/hoc/WithLoginCard'
 import InfoBar from 'components/molecules/InfoBar'
 import NoWhitelistedProvider from 'components/molecules/NoWhitelistedProvider'
 import ProviderEdition from 'components/organisms/notifier/provider/ProviderEdition'
@@ -13,6 +12,11 @@ import React, {
   FC, useContext, useEffect, useState,
 } from 'react'
 import Web3 from 'web3'
+import AppContext from 'context/App'
+import WithLoginCard from 'components/hoc/WithLoginCard'
+import NoMultipleOffersCard from 'components/organisms/NoMultipleOffersCard'
+import { NotifierCacheAPIService } from 'api/rif-marketplace-cache/notifier/interfaces'
+import { NotifierOffersFilters } from 'models/marketItems/NotifierFilters'
 
 const NotifierSellPage: FC = () => {
   const {
@@ -21,6 +25,7 @@ const NotifierSellPage: FC = () => {
       account,
     },
   } = useContext(Web3Store)
+  const { state: { apis } } = useContext(AppContext)
   const hasPendingConfs = Boolean(useConfirmations(
     ['NOTIFIER_REGISTER_PROVIDER'],
   ).length)
@@ -29,6 +34,25 @@ const NotifierSellPage: FC = () => {
   const [isCheckingWhitelist, setIsCheckingWhitelist] = useState(true)
   const [isWhitelistedProvider, setIsWhitelistedProvider] = useState(false)
   const accountStr = account as string // wrapped with login card
+  const [isLoadingOffer, setIsLoadingOffer] = useState(false)
+  const [hasOffer, setHasOffer] = useState(false)
+
+  useEffect(() => {
+    const getOwnOffers = async (): Promise<void> => {
+      setIsLoadingOffer(true)
+
+      const offersService = apis['notifier/v0/offers'] as NotifierCacheAPIService
+      offersService.connect(reportError)
+
+      const currentOwnOffers = await offersService.fetch({
+        provider: account,
+      } as NotifierOffersFilters)
+      setHasOffer(Boolean(currentOwnOffers?.length))
+      setIsLoadingOffer(false)
+    }
+
+    getOwnOffers()
+  }, [apis, account, reportError])
 
   useEffect(() => {
     const checkWhitelisted = async (): Promise<void> => {
@@ -53,6 +77,14 @@ const NotifierSellPage: FC = () => {
     checkWhitelisted()
   }, [accountStr, web3, reportError])
 
+  if (hasOffer) {
+    return (
+      <CenteredPageTemplate>
+        <NoMultipleOffersCard service="notifier" />
+      </CenteredPageTemplate>
+    )
+  }
+
   return (
     <CenteredPageTemplate>
       <InfoBar
@@ -72,7 +104,7 @@ const NotifierSellPage: FC = () => {
       <Typography gutterBottom color="secondary" variant="subtitle1">
         Fill out the fields below to list your notification service. All the information provided is meant to be true and correct.
       </Typography>
-      <ProviderEdition />
+      <ProviderEdition isLoading={isLoadingOffer || hasPendingConfs} />
     </CenteredPageTemplate>
   )
 }
