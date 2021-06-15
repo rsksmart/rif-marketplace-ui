@@ -29,7 +29,7 @@ export type SubscriptionEventsDisplayItem = Item & {
 type Props<H extends typeof baseSubscriptionHeaders, T> = {
   headers: H
   details: T
-  events: Array<SubscriptionEventsDisplayItem>
+  events?: Array<SubscriptionEventsDisplayItem>
   onClose: (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void
   actions: React.ReactNode
 }
@@ -37,7 +37,7 @@ type Props<H extends typeof baseSubscriptionHeaders, T> = {
 const NotifierDetails = <H extends typeof baseSubscriptionHeaders, T, >({
   headers,
   details,
-  events,
+  events = [],
   onClose,
   actions,
 }: Props<H, T>): React.ReactElement => (

@@ -30,8 +30,8 @@ import { logNotImplemented } from 'utils/utils'
 import { SubscriptionDetails, subscriptionHeaders } from 'components/organisms/notifier/mypurchase/details'
 import NotifierDetails, { SubscriptionEventsDisplayItem } from 'components/organisms/notifier/details/NotifierDetailsModal'
 import RoundBtn from 'components/atoms/RoundBtn'
+import { eventDisplayItemIterator } from 'components/organisms/notifier/details/utils'
 import mapMyPurchases from './mapMyPurchases'
-import { eventDisplayItemIterator } from '../../../organisms/notifier/details/utils'
 
 const useTitleStyles = makeStyles(() => ({
   root: {
@@ -100,6 +100,13 @@ const NotifierMyPurchasePage: FC = () => {
     }
   }, [subscriptionsApi, account, reportError])
 
+  const {
+    crypto,
+    currentFiat: {
+      displayName: fiatDisplayName,
+    },
+  } = exchangeRates
+
   const onView = (subscriptionId: string): void => {
     const subscription: NotifierSubscriptionItem = subscriptions
       ?.find(({ id }) => id === subscriptionId) as NotifierSubscriptionItem
@@ -107,22 +114,27 @@ const NotifierMyPurchasePage: FC = () => {
     if (!subscription) return
 
     const {
-      crypto,
-      currentFiat: {
-        displayName: fiatDisplayName,
-      },
-    } = exchangeRates
+      id,
+      provider,
+      notificationBalance,
+      plan: { channels },
+      expirationDate,
+      price,
+      token: { symbol: tokenSymbol },
+      events,
+    } = subscription
+
     const viewItem: typeof subscriptionDetails = {
-      id: shortenString(subscription.id),
-      provider: shortChecksumAddress(subscription.provider),
-      amount: String(subscription.notificationBalance),
-      channels: subscription.plan.channels?.map(({ name }) => name).join(',') || '',
-      expDate: getShortDateString(subscription.expirationDate),
-      price: `${getFiatPrice(subscription.price, crypto[subscription.token.symbol])} ${fiatDisplayName}`,
+      id: shortenString(id),
+      provider: shortChecksumAddress(provider),
+      amount: String(notificationBalance),
+      channels: channels?.map(({ name }) => name).join(',') || '',
+      expDate: getShortDateString(expirationDate),
+      price: `${getFiatPrice(price, crypto[tokenSymbol])} ${fiatDisplayName}`,
     }
 
     setSubscriptionDetails(viewItem)
-    setSubscriptionEvents(subscription.events.map(eventDisplayItemIterator))
+    setSubscriptionEvents(events.map(eventDisplayItemIterator))
   }
 
   const onRenew = logNotImplemented('handle renew')
@@ -170,13 +182,13 @@ const NotifierMyPurchasePage: FC = () => {
             <NotifierDetails
               headers={subscriptionHeaders}
               details={subscriptionDetails}
-              events={subscriptionEvents || []}
+              events={subscriptionEvents}
               onClose={onModalClose}
               actions={(
                 <RoundBtn onClick={logNotImplemented('cancel handle')}>
                   Cancel plan
                 </RoundBtn>
-)}
+              )}
             />
           )}
       </>
