@@ -2,7 +2,7 @@ import { baseSubscriptionHeaders } from '../details/NotifierDetailsModal'
 
 export const subscriptionHeaders = {
   ...baseSubscriptionHeaders,
-  provider: 'Provider',
+  customer: 'Customer',
 } as const
 
 export type SubscriptionDetails = {
