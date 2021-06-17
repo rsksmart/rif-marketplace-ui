@@ -1,3 +1,4 @@
+import CustomError from 'models/CustomError'
 import { logNotImplemented } from 'utils/utils'
 import { NotifierAPIService, NotifierResponse } from './interfaces'
 import { NOTIFIER_RESPONSE_STATUSES } from './models/response'
@@ -16,29 +17,52 @@ export default class SubscriptionService
 
   _create = (): Promise<any> => Promise.resolve(logNotImplemented('Create Subscription')())
 
-  getPendingSubscription =
-  async (user: string, planId: number):
-  Promise<SubscriptionSummary|undefined> => {
+  getUserSubscriptions =
+  async (user: string):
+  Promise<Array<SubscriptionDTO>> => {
     const response: SubscriptionResponse = await this._fetch({ headers: { userAddress: user } })
     const { status, content } = response
 
     if (status !== NOTIFIER_RESPONSE_STATUSES.OK) {
       this.errorReporter({
         error: new Error('Subscription fetch Error'),
-        text: 'Error Getting pending subscription',
+        text: 'Error getting pending subscription',
         id: 'service-fetch',
       })
     }
-    const activeSubscriptions: Array<SubscriptionDTO> = content.filter((subscription) => {
+    return content
+  }
+
+  getActiveSubscription =
+  async (user: string):
+  Promise<SubscriptionDTO|undefined> => {
+    const userSubscriptions: Array<SubscriptionDTO> = await this.getUserSubscriptions(user)
+    return this._getActiveSubscription(userSubscriptions)
+  }
+
+  _getActiveSubscription = (userSubscriptions: Array<SubscriptionDTO>): SubscriptionDTO|undefined => {
+    const activeSubscriptions: Array<SubscriptionDTO> = userSubscriptions.filter((subscription) => {
       const { status: subscriptionStatus } = subscription
-      return (subscriptionStatus === 'ACTIVE')
+      //  when there will be notifier support for multiple active subscriptions add planId to condition
+      return subscriptionStatus === 'ACTIVE'
     })
 
     if (activeSubscriptions.length) {
-      throw new Error('user already has an active subscription')
+      return activeSubscriptions[0]
+    }
+    return undefined
+  }
+
+  getPendingSubscription =
+  async (user: string, planId: number):
+  Promise<SubscriptionSummary|undefined> => {
+    const userSubscriptions: Array<SubscriptionDTO> = await this.getUserSubscriptions(user)
+
+    if (this._getActiveSubscription(userSubscriptions)) {
+      throw new CustomError('User already has an active subscription')
     }
 
-    const pendingSubscriptions: Array<SubscriptionDTO> = content.filter((subscription) => {
+    const pendingSubscriptions: Array<SubscriptionDTO> = userSubscriptions.filter((subscription) => {
       const { subscriptionPlanId, status: subscriptionStatus } = subscription
       return subscriptionPlanId === planId && (subscriptionStatus === 'PENDING')
     })
