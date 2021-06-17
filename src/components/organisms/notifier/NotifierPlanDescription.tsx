@@ -9,7 +9,7 @@ import React, {
 } from 'react'
 import { MarketCryptoRecord } from 'models/Market'
 import { OrderItem } from 'context/Services/notifier/offers/interfaces'
-import { getFiatPrice } from 'utils/tokenUtils'
+import { getFiatPrice } from 'utils/priceUtils'
 
 type Props = {
     item: OrderItem
