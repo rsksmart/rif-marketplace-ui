@@ -25,7 +25,7 @@ import React, {
 } from 'react'
 import { getShortDateString } from 'utils/dateUtils'
 import { shortChecksumAddress } from 'utils/stringUtils'
-import { getFiatPrice } from 'utils/tokenUtils'
+import { getFiatPrice } from 'utils/priceUtils'
 import { logNotImplemented } from 'utils/utils'
 import { SubscriptionDetails, subscriptionHeaders } from 'components/organisms/notifier/mypurchase/details'
 import NotifierDetails, { SubscriptionEventsDisplayItem } from 'components/organisms/notifier/details/NotifierDetailsModal'

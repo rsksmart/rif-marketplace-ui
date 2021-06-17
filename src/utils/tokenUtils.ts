@@ -1,11 +1,11 @@
-import Big, { BigSource } from 'big.js'
 import { addressTokenRecord } from 'contracts/config'
 import { SupportedToken, SUPPORTED_TOKEN_RECORDS } from 'contracts/interfaces'
-import { TokenXR } from 'models/Market'
 import { SupportedTokenSymbol, BaseToken } from 'models/Token'
 import { SYSTEM_TOKENS } from '../models/Token'
 
-export const getSupportedTokenByName = (tokenName: SupportedTokenSymbol): SupportedToken => {
+export const getSupportedTokenByName = (
+  tokenName: SupportedTokenSymbol,
+): SupportedToken => {
   const tokenObject: SupportedToken = SUPPORTED_TOKEN_RECORDS[tokenName]
 
   if (!tokenObject) {
@@ -20,7 +20,9 @@ export const getTokensFromConfigTokens = (
 
 export const getTokenByString = (
   paymentToken: string,
-): SupportedToken => getSupportedTokenByName(paymentToken.toLowerCase() as SupportedTokenSymbol)
+): SupportedToken => getSupportedTokenByName(
+  paymentToken.toLowerCase() as SupportedTokenSymbol,
+)
 
 export const getTokenByAddress = (tokenAddress: string): BaseToken => {
   const symbol = addressTokenRecord[
@@ -43,13 +45,3 @@ export const getSysTokenByName = (
   }
   return tokenObject
 }
-
-const FIAT_PRECISION = 2
-
-export const toFiatPrecision = (price: BigSource): string => Big(price)
-  .toFixed(FIAT_PRECISION)
-
-export const getFiatPrice = (
-  price: Big,
-  token?: TokenXR,
-): string => toFiatPrecision(price.mul(token?.rate || 0))

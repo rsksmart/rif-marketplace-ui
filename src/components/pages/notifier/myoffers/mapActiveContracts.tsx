@@ -8,7 +8,7 @@ import { Item, MarketCryptoRecord } from 'models/Market'
 import { NotifierOfferItem, NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import { getShortDateString } from 'utils/dateUtils'
 import { BaseFiat } from 'models/Fiat'
-import { getFiatPrice } from 'utils/tokenUtils'
+import { getFiatPrice } from 'utils/priceUtils'
 
 export const activeContractHeaders = {
   customer: 'Customer',

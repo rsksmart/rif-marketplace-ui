@@ -7,7 +7,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditIcon from '@material-ui/icons/Edit'
 import { colors, TooltipIconButton } from '@rsksmart/rif-ui'
 import { StorageBillingPlan } from 'context/Market/storage/interfaces'
-import { priceDisplay } from 'utils/utils'
+import { getFiatPrice } from 'utils/priceUtils'
 import ItemWUnit from 'components/atoms/ItemWUnit'
 import { MarketCryptoRecord } from 'models/Market'
 
@@ -40,10 +40,9 @@ const BillingPlan: FC<BillingPlanProps> = ({
   const classes = useStyles()
 
   const { period, price, currency } = billingPlan
-  const { rate } = cryptoXRs[currency.symbol]
-  const fiatPrice = (price.mul(rate))
+  const rateToken = cryptoXRs[currency.symbol]
 
-  const fiatPriceDisplay = priceDisplay(fiatPrice, 2)
+  const fiatPriceDisplay = getFiatPrice(price, rateToken)
 
   return (
     <Grid className={className} container alignItems="center" spacing={2}>
