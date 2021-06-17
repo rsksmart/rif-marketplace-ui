@@ -53,4 +53,5 @@ export type SubscriptionDTO = {
   price: string
   rateId: string
   providerId: string
+  signature: string
 }
