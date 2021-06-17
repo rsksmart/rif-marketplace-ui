@@ -1,11 +1,4 @@
-import Big from 'big.js'
 import Logger from './Logger'
-
-export const priceDisplay = (value: number
-  | Big, maxDecimals = 8): string => value
-  .toFixed(maxDecimals)
-  .toString()
-  .replace(/[.,]00000000$/, '')
 
 export enum UNIT_PREFIX_POW2 {
   KILO = 1024,

@@ -4,7 +4,7 @@ import Big from 'big.js'
 import GridItem from 'components/atoms/GridItem'
 import { TokenXR } from 'models/Market'
 import React, { FC } from 'react'
-import { getFiatPrice } from 'utils/tokenUtils'
+import { getFiatPrice } from 'utils/priceUtils'
 
 export type Props = {
   className?: string
