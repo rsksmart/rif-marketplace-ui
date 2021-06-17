@@ -137,7 +137,42 @@ const NotifierMyPurchasePage: FC = () => {
     setSubscriptionEvents(events.map(eventDisplayItemIterator))
   }
 
-  const onRenew = logNotImplemented('handle renew')
+  const onRenew = (subscriptionId: string): void => {
+    const subscription: NotifierSubscriptionItem = subscriptions
+      ?.find(({ id }) => id === subscriptionId) as NotifierSubscriptionItem
+
+    if (!subscription) return
+
+    logNotImplemented('workin on it!')
+
+    // /renewSubscription?previousSubscriptionHash - https://github.com/rsksmart/rif-notifier#renew-a-plan
+
+    // only half of the data is in this object, may be need to fetch from notifier api with getSubscription
+    // const {
+    //   plan: { planId, url: providerUrl },
+    //   events,
+    //   provider: providerAddress,
+    //   price,
+    //   token,
+    // } = subscription
+
+    // const subscribeToPlanDTO = buildSubscribeToPlanDTO(
+    //   {
+    //     planId,
+    //     currencySymbol: token.symbol,
+    //     price: amount,
+    //   }, eventsAdded, account,
+    // )
+
+    // buildSubscribeToPlanDTO({ subscription })
+
+    // debugger
+    // console.log('****************************************************************')
+    // console.log({ subscription })
+    // console.log('****************************************************************')
+
+    // handle interaction with notifier service
+  }
 
   const items = subscriptions?.map(mapMyPurchases(
     exchangeRates, { onView, onRenew },

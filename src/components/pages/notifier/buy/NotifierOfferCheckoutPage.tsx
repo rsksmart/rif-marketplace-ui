@@ -1,10 +1,8 @@
 import React, {
   FC, useContext, useState,
 } from 'react'
-import {
-  Grid,
-  Typography,
-} from '@material-ui/core'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
 import {
   NotifierOffersContextProps as ContextProps,
   NotifierOffersContext,
@@ -25,7 +23,7 @@ import { useHistory } from 'react-router-dom'
 import { ConfirmationsContext } from 'context/Confirmations'
 import { convertToWeiString } from 'utils/parsers'
 import WithLoginCard from 'components/hoc/WithLoginCard'
-import { getOrCreateSubscription } from './checkoutUtils'
+import { getOrCreateSubscription } from 'api/rif-notifier-service/subscriptionUtils'
 
 const NotifierOfferCheckoutPage: FC = () => {
   const {
@@ -85,9 +83,17 @@ const NotifierOfferCheckoutPage: FC = () => {
         provider: providerAddress,
         value: amount,
         token,
+        planId,
+        url,
       } = item
 
-      const { hash: subscriptionHash, signature } = await getOrCreateSubscription(item, eventsAdded, account, reportError)
+      const { symbol } = token
+
+      const {
+        hash: subscriptionHash, signature,
+      } = await getOrCreateSubscription({
+        planId, symbol, url, value: amount,
+      }, eventsAdded, account, reportError)
 
       if (!subscriptionHash) return
 
