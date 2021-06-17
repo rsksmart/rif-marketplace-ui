@@ -1,4 +1,4 @@
-import { SupportedEventChannel } from 'config/notifier'
+import { TopicDTO } from 'api/rif-notifier-service/models/subscriptions'
 import { PlanDTO } from '../offers/models'
 
 export const EVENT_TYPES = {
@@ -17,18 +17,6 @@ export const EVENT_PARAM_TYPES = {
 } as const
 
 export type TopicParamType = keyof typeof EVENT_PARAM_TYPES
-
-export type EventParam = {
-  type: TopicParamType
-  value: string
-  valueType: string
-}
-
-export type SubscriptionEvent = {
-  notificationPreferences: SupportedEventChannel | Array<SupportedEventChannel>
-  type: SubscriptionEventType
-  topicParams: Array<EventParam>
-}
 
 export const SUBSCRIPTION_STATUS = {
   ACTIVE: 'ACTIVE',
@@ -53,7 +41,7 @@ export type SubscriptionDTO = {
   previousSubscription: string
   expirationDate: Date
   consumer: string
-  topics: Array<SubscriptionEvent>
+  topics: Array<TopicDTO>
   paid: boolean
   price: string
   rateId: string

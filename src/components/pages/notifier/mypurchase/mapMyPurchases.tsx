@@ -35,9 +35,9 @@ const mapMyPurchases = <V extends Function, R extends Function>(
     expirationDate,
     price,
   }: NotifierSubscriptionItem):
-  MySubscription => {
+    MySubscription => {
     const { rate, displayName } = crypto?.[token.symbol]
-    || { rate: 0, displayName: '' }
+      || { rate: 0, displayName: '' }
 
     const expType = getExpirationType(plan)
 
@@ -71,7 +71,7 @@ const mapMyPurchases = <V extends Function, R extends Function>(
             {
               disabled: expType === 'blocked',
               id: `renew_${id}`,
-              handleSelect: (): void => onRenew(),
+              handleSelect: (): void => onRenew(id),
               children: 'Renew',
             }, {
               id: `view_${id}`,

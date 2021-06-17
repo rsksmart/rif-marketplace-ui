@@ -1,13 +1,14 @@
 import React from 'react'
 import {
-  EventParam, EVENT_PARAM_TYPES, SubscriptionEvent, TopicParamType,
+  EVENT_PARAM_TYPES, TopicParamType,
 } from 'api/rif-marketplace-cache/notifier/subscriptions/models'
 import MarketplaceCell from 'components/atoms/MarketplaceCell'
 import RifAddress from 'components/molecules/RifAddress'
+import { TopicDTO, TopicParams } from 'api/rif-notifier-service/models/subscriptions'
 import { SubscriptionEventsDisplayItem } from './NotifierDetailsModal'
 
 export const getTopicParamValue = (
-  topicParams: Array<EventParam>,
+  topicParams: Array<TopicParams>,
   paramType: TopicParamType,
 ): string => topicParams.find(
   ({ type }) => type === paramType,
@@ -15,7 +16,7 @@ export const getTopicParamValue = (
 
 export const eventDisplayItemIterator = ({
   notificationPreferences, topicParams, type: eventType,
-}: SubscriptionEvent): SubscriptionEventsDisplayItem => {
+}: TopicDTO): SubscriptionEventsDisplayItem => {
   const nameValue = getTopicParamValue(
     topicParams, EVENT_PARAM_TYPES.EVENT_NAME,
   )
