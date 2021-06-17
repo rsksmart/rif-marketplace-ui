@@ -1,5 +1,6 @@
 import { MarketCryptoRecord } from 'models/Market'
 import { NotifierPlan } from 'models/marketItems/NotifierItem'
+import { toFiatPrecision } from 'utils/tokenUtils'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function mapPlansToOffers(
@@ -21,8 +22,8 @@ export function mapPlansToOffers(
     notificationLimits.push(plan.limit)
   }
 
-  const minPrice = Math.min(...planPrices)
-  const maxPrice = Math.max(...planPrices)
+  const minPrice = toFiatPrecision(Math.min(...planPrices))
+  const maxPrice = toFiatPrecision(Math.max(...planPrices))
 
   const priceFiatRange = minPrice === maxPrice
     ? `${minPrice}`

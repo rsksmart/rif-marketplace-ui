@@ -1,4 +1,4 @@
-import Big from 'big.js'
+import Big, { BigSource } from 'big.js'
 import { addressTokenRecord } from 'contracts/config'
 import { SupportedToken, SUPPORTED_TOKEN_RECORDS } from 'contracts/interfaces'
 import { TokenXR } from 'models/Market'
@@ -44,4 +44,12 @@ export const getSysTokenByName = (
   return tokenObject
 }
 
-export const getFiatPrice = (price: Big, token?: TokenXR) => price.mul(token?.rate || 0).toFixed(2)
+const FIAT_PRECISION = 2
+
+export const toFiatPrecision = (price: BigSource): string => Big(price)
+  .toFixed(FIAT_PRECISION)
+
+export const getFiatPrice = (
+  price: Big,
+  token?: TokenXR,
+): string => toFiatPrecision(price.mul(token?.rate || 0))

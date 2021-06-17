@@ -9,6 +9,7 @@ import React, {
 } from 'react'
 import { MarketCryptoRecord } from 'models/Market'
 import { OrderItem } from 'context/Services/notifier/offers/interfaces'
+import { getFiatPrice } from 'utils/tokenUtils'
 
 type Props = {
     item: OrderItem
@@ -23,8 +24,8 @@ const NotifierPlanDescription: FC<Props> = ({
   }, crypto,
   currentFiat: currentFiatName,
 }) => {
-  const rate = crypto?.[token.symbol]?.rate || 0
-  const valueInFiat = (value.mul(rate)).toFixed(2)
+  const rateToken = crypto?.[token.symbol]
+  const valueInFiat = getFiatPrice(value, rateToken)
 
   return (
     <DescriptionCard>
