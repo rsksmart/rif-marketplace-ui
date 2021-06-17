@@ -2,7 +2,7 @@ import {
   Grid,
 } from '@material-ui/core'
 import {
-  Button, Web3Store,
+  Button, shortenString, Web3Store,
 } from '@rsksmart/rif-ui'
 import { notifierSubscriptionsAddress } from 'api/rif-marketplace-cache/notifier/subscriptions'
 import LabelWithValue from 'components/atoms/LabelWithValue'
@@ -11,6 +11,9 @@ import WithLoginCard from 'components/hoc/WithLoginCard'
 import InfoBar from 'components/molecules/InfoBar'
 import MyOffersHeader from 'components/molecules/MyOffersHeader'
 import { PlanViewSummaryProps } from 'components/molecules/plans/PlanViewSummary'
+import NotifierDetails, { SubscriptionEventsDisplayItem } from 'components/organisms/notifier/details/NotifierDetailsModal'
+import { eventDisplayItemIterator } from 'components/organisms/notifier/details/utils'
+import { SubscriptionDetails, subscriptionHeaders } from 'components/organisms/notifier/myoffers/details'
 import NotifierProviderDescription, { Profile } from 'components/organisms/notifier/NotifierProviderDescription'
 import Staking from 'components/organisms/notifier/Staking'
 import PlanView from 'components/organisms/plans/PlanView'
@@ -28,6 +31,9 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
+import { getShortDateString } from 'utils/dateUtils'
+import { shortChecksumAddress } from 'utils/stringUtils'
+import { getFiatPrice } from 'utils/tokenUtils'
 import { logNotImplemented } from 'utils/utils'
 import Web3 from 'web3'
 import mapActiveContracts, { activeContractHeaders, ActiveContractItem } from './mapActiveContracts'
@@ -59,13 +65,30 @@ const NotifierMyOffersPage: FC = () => {
     dispatch,
   } = useContext(NotifierOffersContext)
 
+  const history = useHistory()
+
   const [myProfile, setMyProfile] = useState<Profile>()
-  const [myCustomers, setMyCustomers] = useState<Array<NotifierSubscriptionItem>>([])
+  const [
+    myCustomers,
+    setMyCustomers,
+  ] = useState<Array<NotifierSubscriptionItem>>([])
   const [isWhitelistedProvider, setIsWhitelistedProvider] = useState(false)
   const [progress, setProgress] = useState<Pick<ProgressOverlayProps, 'title' | 'doneMsg'>>()
   const [txDone, setTxDone] = useState(false)
   const [txInProgress, setTxInProgress] = useState(false)
-  const history = useHistory()
+  const [
+    subscriptionDetails,
+    setSubscriptionDetails,
+  ] = useState<SubscriptionDetails>()
+  const [
+    subscriptionEvents,
+    setSubscriptionEvents,
+  ] = useState<Array<SubscriptionEventsDisplayItem>>()
+
+  const onModalClose = (): void => {
+    setSubscriptionDetails(undefined)
+    setSubscriptionEvents([])
+  }
 
   const reportError = useErrorReporter()
 
@@ -176,7 +199,42 @@ const NotifierMyOffersPage: FC = () => {
     }
   }
 
-  const onView = logNotImplemented('handle view')
+  const {
+    crypto,
+    currentFiat: {
+      displayName: fiatDisplayName,
+    },
+  } = exchangeRates
+
+  const onView = (subscriptionId: string): void => {
+    const subscription: NotifierSubscriptionItem = myCustomers
+      ?.find(({ id }) => id === subscriptionId) as NotifierSubscriptionItem
+
+    if (!subscription) return
+
+    const {
+      id,
+      consumer,
+      notificationBalance,
+      plan: { channels },
+      expirationDate,
+      price,
+      token: { symbol: tokenSymbol },
+      events,
+    } = subscription
+
+    const viewItem: typeof subscriptionDetails = {
+      id: shortenString(id),
+      customer: shortChecksumAddress(consumer),
+      amount: String(notificationBalance),
+      channels: channels?.map(({ name }) => name).join(',') || '',
+      expDate: getShortDateString(expirationDate),
+      price: `${getFiatPrice(price, crypto[tokenSymbol])} ${fiatDisplayName}`,
+    }
+
+    setSubscriptionDetails(viewItem)
+    setSubscriptionEvents(events.map(eventDisplayItemIterator))
+  }
 
   return (
     <CenteredPageTemplate>
@@ -258,6 +316,21 @@ const NotifierMyOffersPage: FC = () => {
           }
         </Grid>
       </Grid>
+
+      {subscriptionDetails
+          && (
+            <NotifierDetails
+              headers={subscriptionHeaders}
+              details={subscriptionDetails}
+              events={subscriptionEvents}
+              onClose={onModalClose}
+              actions={(
+                <RoundBtn onClick={logNotImplemented('cancel handle')}>
+                  Cancel plan
+                </RoundBtn>
+              )}
+            />
+          )}
 
       {/* Progress Overlay */ }
       {progress && (

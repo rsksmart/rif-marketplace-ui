@@ -22,13 +22,14 @@ export interface TransactionOptions {
   value?: string | number
 }
 
-export interface ERC20Contract extends PaymentWrapper{
-  approve (
-      address: string, amount: string | number, options: TransactionOptions
+export interface ERC20Contract extends PaymentWrapper {
+  approve(
+    address: string, amount: string | number, options: TransactionOptions
   ): Promise<TransactionReceipt>
 }
 
 export type Web3ErrorId = 'web3-getGasPrice'
+export type GetBalanceErrorId = 'get-balance'
 
 export type ContractErrorId =
   | Web3ErrorId
@@ -40,6 +41,7 @@ export type ContractErrorId =
   | StorageStakingContractErrorId
   | NotifierContractErrorId
   | NotifierStakingContractErrorId
+  | GetBalanceErrorId
 
 export enum TOKEN_TYPES {
   ERC20 = 'erc20',

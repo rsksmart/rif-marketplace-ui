@@ -76,7 +76,7 @@ const mapActiveContracts = <T extends Function, U extends Function>(
               children: 'Withdraw',
             }, {
               id: `view_${id}`,
-              handleSelect: (): void => onView(),
+              handleSelect: (): void => onView(id),
               children: 'View',
             },
           ]}

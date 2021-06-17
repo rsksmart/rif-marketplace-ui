@@ -15,13 +15,22 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const MY_OFFERS_ROUTE = ROUTES.STORAGE.MYOFFERS.BASE
+type Service = 'storage' | 'notifier'
 
-const NoMultipleOffersCard: FC = () => {
+const MY_OFFERS_ROUTE: Record<Service, string> = {
+  storage: ROUTES.STORAGE.MYOFFERS.BASE,
+  notifier: ROUTES.NOTIFIER.MYOFFERS.BASE,
+}
+
+type Props = {
+  service: Service
+}
+
+const NoMultipleOffersCard: FC<Props> = ({ service }) => {
   const classes = useStyles()
   const history = useHistory()
 
-  const navigateMyOffers = (): void => history.push(MY_OFFERS_ROUTE)
+  const navigateMyOffers = (): void => history.push(MY_OFFERS_ROUTE[service])
 
   return (
     <Grid container justify="center">
@@ -40,7 +49,7 @@ const NoMultipleOffersCard: FC = () => {
             An offer is already created for the selected account.
             <br />
             {'You can edit your current offer in '}
-            <NavLink to={MY_OFFERS_ROUTE} className={classes.myOffersLink}>
+            <NavLink to={MY_OFFERS_ROUTE[service]} className={classes.myOffersLink}>
               <Box display="inline" fontWeight="fontWeightMedium">
                 My Offers
               </Box>

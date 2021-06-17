@@ -24,6 +24,7 @@ import ROUTES from 'routes'
 import { useHistory } from 'react-router-dom'
 import { ConfirmationsContext } from 'context/Confirmations'
 import { convertToWeiString } from 'utils/parsers'
+import WithLoginCard from 'components/hoc/WithLoginCard'
 import { getOrCreateSubscription } from './checkoutUtils'
 
 const NotifierOfferCheckoutPage: FC = () => {
@@ -54,7 +55,10 @@ const NotifierOfferCheckoutPage: FC = () => {
   const [txOperationDone, setTxOperationDone] = useState(false)
   const [eventsAdded, setEventsAdded] = useState<NotifierEventItem[]>([])
 
-  if (!order?.item) return null
+  if (!order?.item) {
+    history.push(ROUTES.NOTIFIER.BUY.BASE)
+    return null
+  }
 
   const handleEventRemoved = (
     { id: notifierEventId }: NotifierEventItem,
@@ -72,7 +76,7 @@ const NotifierOfferCheckoutPage: FC = () => {
   }
 
   const handleOnBuy = async (): Promise<void> => {
-    if (!account) return
+    if (!account) return // wrapped with withLoginCard
     try {
       setIsProcessingTx(true)
 
@@ -167,4 +171,8 @@ const NotifierOfferCheckoutPage: FC = () => {
   )
 }
 
-export default NotifierOfferCheckoutPage
+export default WithLoginCard({
+  WrappedComponent: NotifierOfferCheckoutPage,
+  title: 'Please, connect your wallet.',
+  contentText: 'Connect your wallet in order to proceed to the checkout.',
+})

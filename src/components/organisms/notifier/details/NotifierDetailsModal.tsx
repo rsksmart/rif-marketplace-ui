@@ -1,26 +1,19 @@
-import React, { FC } from 'react'
+import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import TableContainer from '@material-ui/core/TableContainer'
 import Typography from '@material-ui/core/Typography'
 import MarketplaceCell from 'components/atoms/MarketplaceCell'
-import RoundBtn from 'components/atoms/RoundBtn'
 import RifDialog from 'components/organisms/RifDialog'
 import Marketplace from 'components/templates/marketplace/Marketplace'
 import { Item } from 'models/Market'
-import { logNotImplemented } from 'utils/utils'
 
-const subscriptionHeaders = {
+export const baseSubscriptionHeaders = {
   id: 'Subscription ID',
-  provider: 'Provider',
   amount: 'Notifications',
   channels: 'Channels',
   price: 'Price',
   expDate: 'Expiration Date',
-}
-
-export type SubscriptionDetails = {
-    [K in keyof typeof subscriptionHeaders]: string
-  }
+} as const
 
 const eventsHeaders = {
   name: 'Name',
@@ -33,17 +26,21 @@ export type SubscriptionEventsDisplayItem = Item & {
     [K in keyof typeof eventsHeaders]: React.ReactElement
   }
 
-type Props = {
-  details: SubscriptionDetails
+type Props<H extends typeof baseSubscriptionHeaders, T> = {
+  headers: H
+  details: T
   events?: Array<SubscriptionEventsDisplayItem>
   onClose: (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void
+  actions: React.ReactNode
 }
 
-const NotifierDetails: FC<Props> = ({
+const NotifierDetails = <H extends typeof baseSubscriptionHeaders, T, >({
+  headers,
   details,
-  events,
+  events = [],
   onClose,
-}) => (
+  actions,
+}: Props<H, T>): React.ReactElement => (
   <RifDialog
     open={Boolean(details)}
     onClose={onClose}
@@ -77,7 +74,7 @@ const NotifierDetails: FC<Props> = ({
         sm={6}
       >
         {
-          Object.keys(subscriptionHeaders).map((detailsHeader) => (
+          Object.keys(headers).map((detailsHeader) => (
             <Grid
               key={detailsHeader}
               item
@@ -87,7 +84,7 @@ const NotifierDetails: FC<Props> = ({
             >
               <Grid item xs={6}>
                 <MarketplaceCell style={{ textAlign: 'right' }}>
-                  {String(subscriptionHeaders[detailsHeader]).toUpperCase() }
+                  {String(headers[detailsHeader]).toUpperCase() }
                 </MarketplaceCell>
               </Grid>
               <Grid item xs={6}>
@@ -125,7 +122,7 @@ const NotifierDetails: FC<Props> = ({
         style={{ paddingTop: '-16px' }}
       >
         <Grid item>
-          {events?.length && (
+          {Boolean(events.length) && (
           <TableContainer>
             <Marketplace
               isLoading={false}
@@ -135,7 +132,7 @@ const NotifierDetails: FC<Props> = ({
           </TableContainer>
           )}
           {
-            !events?.length && (
+            !events.length && (
               <MarketplaceCell>
                 There seem to be no events here.
               </MarketplaceCell>
@@ -153,12 +150,10 @@ const NotifierDetails: FC<Props> = ({
         alignItems="center"
       >
         <Grid item>
-          <RoundBtn onClick={logNotImplemented('cancel handle')}>
-            Cancel plan
-          </RoundBtn>
+          {actions}
         </Grid>
       </Grid>
     </Grid>
   </RifDialog>
-)
+  )
 export default NotifierDetails
