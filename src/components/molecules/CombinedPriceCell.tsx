@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import ItemWUnit from 'components/atoms/ItemWUnit'
-import { priceDisplay } from 'utils/utils'
+import { toFiatPrecision } from 'utils/priceUtils'
 import useDisabledStyle from 'hooks/useDisabledStyle'
 
 export interface CombinedPriceCellProps {
@@ -18,7 +18,7 @@ const CombinedPriceCell: FC<CombinedPriceCellProps> = ({
   divider, price, currency,
   priceFiat, currencyFiat,
 }) => {
-  const cappedDecimalsFiat = priceDisplay(parseFloat(priceFiat), 4)
+  const cappedDecimalsFiat = toFiatPrecision(priceFiat)
   const disabledStyle = useDisabledStyle()
   const disabledClass = disabled ? disabledStyle.root : ''
 

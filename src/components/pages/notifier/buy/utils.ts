@@ -1,6 +1,6 @@
 import { MarketCryptoRecord } from 'models/Market'
 import { NotifierPlan } from 'models/marketItems/NotifierItem'
-import { toFiatPrecision } from 'utils/tokenUtils'
+import { toFiatPrecision } from 'utils/priceUtils'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function mapPlansToOffers(

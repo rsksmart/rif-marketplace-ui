@@ -11,7 +11,6 @@ import { UIError } from 'models/UIMessage'
 import Login from 'components/atoms/Login'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
-import Big from 'big.js'
 import AppContext, { errorReporterFactory } from 'context/App'
 import EditOfferStepper from 'components/organisms/storage/sell/EditOfferStepper'
 import RoundedCard from 'components/atoms/RoundedCard'
@@ -26,9 +25,6 @@ import { ConfirmationsContext, ConfirmationsContextProps } from 'context/Confirm
 import { NewRequestPayload } from 'context/Confirmations/interfaces'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import RoundBtn from 'components/atoms/RoundBtn'
-
-// TODO: discuss about wrapping the library and export it with this change
-Big.NE = -30
 
 const logger = Logger.getInstance()
 

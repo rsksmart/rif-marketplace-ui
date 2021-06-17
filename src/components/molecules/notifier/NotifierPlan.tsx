@@ -11,6 +11,9 @@ import { SupportedTokenSymbol } from 'models/Token'
 import React, {
   FC, useMemo, useState,
 } from 'react'
+import {
+  getFiatPrice, toCryptoPrecision,
+} from 'utils/priceUtils'
 import { CombinedPriceCell, SelectRowButton } from '..'
 
 type NotifierPlanProps = NotifierOfferItem & {
@@ -35,6 +38,7 @@ const useCardStyles = makeStyles(() => ({
   text: {
     textAlign: 'center',
     textAlignLast: 'center',
+    overflow: 'scroll',
   },
   smallText: {
     fontSize: fonts.size.small,
@@ -95,7 +99,7 @@ const NotifierPlan: FC<NotifierPlanProps> = ({
     if (selectedOption) setSelectedOption(selectedOption)
   }
 
-  const selectedRate = crypto?.[selectedSymbol]?.rate || 0
+  const selectedRateToken = crypto?.[selectedSymbol]
 
   return (
     <Card className={classes.root}>
@@ -106,6 +110,7 @@ const NotifierPlan: FC<NotifierPlanProps> = ({
           spacing={2}
           alignItems="center"
           justify="center"
+          wrap="nowrap"
         >
           <Grid item xs={12} className={classes.item}>
             <Typography className={classes.text} color="primary" noWrap>
@@ -142,14 +147,14 @@ const NotifierPlan: FC<NotifierPlanProps> = ({
           <Grid item xs={12} className={classes.item}>
             <CombinedPriceCell
               className={classes.text}
-              price={selectedPrice.toString()}
-              priceFiat={selectedPrice.times(selectedRate).toString()}
+              price={toCryptoPrecision(selectedPrice)}
+              priceFiat={getFiatPrice(selectedPrice, selectedRateToken)}
               currency={selectedTokenName}
               currencyFiat={currentFiat}
               divider=""
             />
           </Grid>
-          <Grid item xs={12} className={classes.item} wrap="nowrap">
+          <Grid item xs={12} className={classes.item}>
             <Typography
               className={`${classes.text} ${classes.smallText}`}
               color="secondary"
@@ -158,16 +163,16 @@ const NotifierPlan: FC<NotifierPlanProps> = ({
             >
               Valid for
               {' '}
-              <Typography
-                className={`${classes.text} ${classes.smallText}`}
-                color="primary"
-                noWrap
-                display="inline"
-              >
-                {daysLeft}
-                {' '}
-                {`day${daysLeft !== 1 && 's'}`}
-              </Typography>
+            </Typography>
+            <Typography
+              className={`${classes.text} ${classes.smallText}`}
+              color="primary"
+              noWrap
+              display="inline"
+            >
+              {daysLeft}
+              {' '}
+              {`day${daysLeft !== 1 && 's'}`}
             </Typography>
           </Grid>
         </Grid>

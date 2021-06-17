@@ -35,7 +35,7 @@ const NotifierPlansDraw: FC<Props> = ({
           xs={3}
           key={plan.id}
           style={{
-            maxWidth: '178px',
+            maxWidth: 'fit-content',
           }}
         >
           <NotifierPlan
