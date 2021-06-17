@@ -32,6 +32,9 @@ import NotifierDetails, { SubscriptionEventsDisplayItem } from 'components/organ
 import RoundBtn from 'components/atoms/RoundBtn'
 import { eventDisplayItemIterator } from 'components/organisms/notifier/details/utils'
 import { SUBSCRIPTION_STATUSES } from 'api/rif-notifier-service/models/subscriptions'
+import { buildSubscribeToPlanDTO } from 'api/rif-notifier-service/subscriptionUtils'
+import RenewSubscriptionService from 'api/rif-notifier-service/renewSubscription'
+import Logger from 'utils/Logger'
 import mapMyPurchases from './mapMyPurchases'
 
 const useTitleStyles = makeStyles(() => ({
@@ -141,7 +144,34 @@ const NotifierMyPurchasePage: FC = () => {
     setSubscriptionEvents(events.map(eventDisplayItemIterator))
   }
 
-  const onRenew = logNotImplemented('handle renew')
+  const onRenew = async (subscriptionId: string): Promise<void> => {
+    const subscription: NotifierSubscriptionItem = subscriptions
+      ?.find(({ id }) => id === subscriptionId) as NotifierSubscriptionItem
+
+    if (!subscription) return
+    const {
+      id: subscriptionHash,
+      plan: { planId, url: providerUrl },
+      price,
+      token: { symbol: tokenSymbol },
+      events,
+    } = subscription
+
+    const subscribeToPlanDTO = buildSubscribeToPlanDTO(
+      {
+        value: price, symbol: tokenSymbol, planId, url: providerUrl,
+      },
+      events,
+      account as string, // wrapped with login card
+    )
+
+    const renewSubscriptionService = new RenewSubscriptionService(providerUrl)
+    renewSubscriptionService.connect(reportError)
+    const response = await renewSubscriptionService.renewSubscription(
+      subscribeToPlanDTO, subscriptionHash,
+    )
+    Logger.getInstance().debug('response', { response })
+  }
 
   const items = subscriptions?.map(mapMyPurchases(
     exchangeRates, { onView, onRenew },
