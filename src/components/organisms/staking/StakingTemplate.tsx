@@ -32,7 +32,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
     justifyContent: 'flex-end',
-    width: '50%',
+    [theme.breakpoints.up('md')]: {
+      width: '60%',
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
+    },
     right: 0,
     position: 'absolute',
   },
@@ -40,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     zIndex: 99,
   },
   cardWrapper: {
-    maxWidth: '550px',
+    maxWidth: '600px',
     width: '100%',
   },
   infoContainer: {
