@@ -37,10 +37,10 @@ export default class SubscriptionService
   async (user: string):
   Promise<SubscriptionDTO|undefined> => {
     const userSubscriptions: Array<SubscriptionDTO> = await this.getUserSubscriptions(user)
-    return this._getActiveSubscription(userSubscriptions)
+    return this._getActiveSubscriptionFrom(userSubscriptions)
   }
 
-  _getActiveSubscription = (userSubscriptions: Array<SubscriptionDTO>): SubscriptionDTO|undefined => {
+  _getActiveSubscriptionFrom = (userSubscriptions: Array<SubscriptionDTO>): SubscriptionDTO|undefined => {
     const activeSubscriptions: Array<SubscriptionDTO> = userSubscriptions.filter((subscription) => {
       const { status: subscriptionStatus } = subscription
       //  when there will be notifier support for multiple active subscriptions add planId to condition
@@ -58,7 +58,7 @@ export default class SubscriptionService
   Promise<SubscriptionSummary|undefined> => {
     const userSubscriptions: Array<SubscriptionDTO> = await this.getUserSubscriptions(user)
 
-    if (this._getActiveSubscription(userSubscriptions)) {
+    if (this._getActiveSubscriptionFrom(userSubscriptions)) {
       throw new CustomError('User already has an active subscription')
     }
 
