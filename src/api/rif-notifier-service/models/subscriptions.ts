@@ -86,6 +86,7 @@ export type SubscriptionDTO = {
   userAddress: string
   providerAddress: string
   previousSubscription: SubscriptionDTO
+  signature: string
 }
 
 export type SubscribeToPlanDTO = {
