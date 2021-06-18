@@ -135,6 +135,7 @@ const Staking: FC<Props> = ({ isEnabled }) => {
         totalStakedUSD={totalStakedUSD}
         onDeposit={handleDeposit}
         onWithdraw={handleWithdraw}
+        bringToFront
       />
       <ProgressOverlay
         title={txInProgressMessage}
