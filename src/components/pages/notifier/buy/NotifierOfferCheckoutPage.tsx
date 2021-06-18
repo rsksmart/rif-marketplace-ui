@@ -1,10 +1,8 @@
 import React, {
   FC, useContext, useState,
 } from 'react'
-import {
-  Grid,
-  Typography,
-} from '@material-ui/core'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
 import {
   NotifierOffersContextProps as ContextProps,
   NotifierOffersContext,
@@ -23,98 +21,9 @@ import RoundBtn from 'components/atoms/RoundBtn'
 import ROUTES from 'routes'
 import { useHistory } from 'react-router-dom'
 import { ConfirmationsContext } from 'context/Confirmations'
-import SubscribeToPlanService from 'api/rif-notifier-service/subscriptionBatch'
-import {
-  NotificationPreference, NotificationServiceType, SubscribeToPlanDTO, TopicDTO, TopicParams, TOPIC_PARAM_TYPES, TOPIC_TYPES,
-} from 'api/rif-notifier-service/models/subscriptions'
-import { SupportedEventType } from 'config/notifier'
 import { convertToWeiString } from 'utils/parsers'
-import { OrderItem } from 'context/Services/notifier/offers/interfaces'
-import { NotifierChannel } from 'models/marketItems/NotifierItem'
 import WithLoginCard from 'components/hoc/WithLoginCard'
-
-const buildBlockEvent = (notificationPreferences: Array<NotificationPreference>): TopicDTO => ({
-  type: TOPIC_TYPES.NEW_BLOCK,
-  notificationPreferences,
-})
-
-const buildContractEvent = (notificationPreferences: Array<NotificationPreference>,
-  { event: { smartContract, name, params } }: NotifierEventItem): TopicDTO => {
-  const topicParams: Array<TopicParams> = [
-    {
-      type: TOPIC_PARAM_TYPES.CONTRACT_ADDRESS,
-      value: smartContract as string,
-    },
-    {
-      type: TOPIC_PARAM_TYPES.EVENT_NAME,
-      value: name as string,
-    },
-  ]
-
-  if (params) {
-    params.forEach(({
-      type: valueType,
-      name: paramName,
-      indexed: paramIsIndexed,
-    }) => {
-      const topicParam: TopicParams = {
-        type: TOPIC_PARAM_TYPES.EVENT_PARAM,
-        value: paramName,
-        indexed: paramIsIndexed,
-        valueType: valueType.charAt(0).toUpperCase() + valueType.slice(1),
-      }
-      topicParams.push(topicParam)
-    })
-  }
-
-  return {
-    type: TOPIC_TYPES.CONTRACT_EVENT,
-    notificationPreferences,
-    topicParams,
-  } as TopicDTO
-}
-
-const eventBuilders: Record<SupportedEventType, Function> = {
-  NEWBLOCK: buildBlockEvent,
-  SMARTCONTRACT: buildContractEvent,
-}
-
-const buildSubscribeToPlanDTO = (
-  item: OrderItem, eventsAdded: NotifierEventItem[], account: string,
-): SubscribeToPlanDTO => {
-  const topics: Array<TopicDTO> = []
-  const {
-    token: { symbol: currencySymbol },
-    planId: subscriptionPlanId,
-    value: price,
-  } = item
-
-  eventsAdded.forEach((eventAdded) => {
-    const {
-      event: { type: eventType, channels },
-    } = eventAdded
-    const notificationPreferences: Array<NotificationPreference> = channels.map((channel: NotifierChannel) => ({
-      notificationService: channel.type as NotificationServiceType,
-      destination: channel.destination,
-      destinationParams: {
-        username: '',
-        password: '',
-        apiKey: '',
-      },
-    }))
-
-    topics.push(eventBuilders[eventType](notificationPreferences, eventAdded))
-  })
-
-  const newSubscription: SubscribeToPlanDTO = {
-    subscriptionPlanId: Number(subscriptionPlanId),
-    userAddress: account,
-    price: convertToWeiString(price),
-    currency: currencySymbol,
-    topics,
-  }
-  return newSubscription
-}
+import { getOrCreateSubscription } from 'api/rif-notifier-service/subscriptionUtils'
 
 const NotifierOfferCheckoutPage: FC = () => {
   const {
@@ -170,22 +79,21 @@ const NotifierOfferCheckoutPage: FC = () => {
       setIsProcessingTx(true)
 
       const { item } = order
-      const subscribeToPlanDTO = buildSubscribeToPlanDTO(
-        item, eventsAdded, account,
-      )
       const {
-        url: providerUrl,
         provider: providerAddress,
         value: amount,
         token,
+        planId,
+        url,
       } = item
 
-      const subscribeToPlanService: SubscribeToPlanService = new SubscribeToPlanService(providerUrl)
-      subscribeToPlanService.connect(reportError)
+      const { symbol } = token
 
       const {
-        signature, hash: subscriptionHash,
-      } = await subscribeToPlanService.subscribeToPlan(subscribeToPlanDTO)
+        hash: subscriptionHash, signature,
+      } = await getOrCreateSubscription({
+        planId, symbol, url, value: amount,
+      }, eventsAdded, account, reportError)
 
       if (!subscriptionHash) return
 
@@ -215,10 +123,11 @@ const NotifierOfferCheckoutPage: FC = () => {
         })
       }
     } catch (error) {
+      const { customMessage } = error
       reportError({
         error,
         id: 'contract-notifier',
-        text: 'Could not complete the order.',
+        text: customMessage || 'Could not complete the order}',
       })
     } finally {
       setIsProcessingTx(false)
