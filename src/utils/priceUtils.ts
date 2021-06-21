@@ -15,7 +15,7 @@ export const toPrecision = (
   const precision = PRICE_PRECISIONS[precisionType]
 
   const bigPrice = Big(price)
-  const exponent = bigPrice.e
+  const exponent = Math.abs(bigPrice.e)
 
   const fixTo = bigPrice.lt(1) && exponent > precision ? exponent : precision
 
