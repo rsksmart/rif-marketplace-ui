@@ -31,6 +31,7 @@ import { SubscriptionDetails, subscriptionHeaders } from 'components/organisms/n
 import NotifierDetails, { SubscriptionEventsDisplayItem } from 'components/organisms/notifier/details/NotifierDetailsModal'
 import RoundBtn from 'components/atoms/RoundBtn'
 import { eventDisplayItemIterator } from 'components/organisms/notifier/details/utils'
+import { SUBSCRIPTION_STATUSES } from 'api/rif-notifier-service/models/subscriptions'
 import mapMyPurchases from './mapMyPurchases'
 
 const useTitleStyles = makeStyles(() => ({
@@ -87,6 +88,9 @@ const NotifierMyPurchasePage: FC = () => {
       subscriptionsApi.connect(reportError)
       subscriptionsApi.fetch({
         consumer: account,
+        status: {
+          $ne: SUBSCRIPTION_STATUSES.PENDING,
+        },
       })
         .then(setSubscriptions)
         .catch((error) => reportError(new UIError({
