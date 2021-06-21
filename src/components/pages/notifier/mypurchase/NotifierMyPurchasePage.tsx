@@ -81,6 +81,10 @@ const NotifierMyPurchasePage: FC = () => {
   ).length
   const isAwaitingConfs = Boolean(numberOfConfs)
 
+  const setPurchasedSubscriptions = (allSubscriptions: Array<NotifierSubscriptionItem>): void => {
+    setSubscriptions(allSubscriptions.filter((subscription) => subscription.status !== 'PENDING'))
+  }
+
   useEffect(() => {
     if (account && subscriptionsApi) {
       setIsTableLoading(true)
@@ -88,7 +92,7 @@ const NotifierMyPurchasePage: FC = () => {
       subscriptionsApi.fetch({
         consumer: account,
       })
-        .then(setSubscriptions)
+        .then(setPurchasedSubscriptions)
         .catch((error) => reportError(new UIError({
           id: 'service-fetch',
           text: 'Error while fetching subscriptions.',
