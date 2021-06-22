@@ -10,7 +10,7 @@ import { NotifierOffersFilters } from 'models/marketItems/NotifierFilters'
 import { parseToBigDecimal } from 'utils/parsers'
 import { SupportedEventChannel } from 'config/notifier'
 import { NotifierCacheAPIService } from '../interfaces'
-import { PlanDTO } from './models'
+import NotifierFiltersTransport, { PlanDTO } from './models'
 
 export const address = 'notifier/v0/offers' as const
 export type Address = typeof address
@@ -57,12 +57,7 @@ class OffersService extends AbstractAPIService
   _fetch = async (
     filters: NotifierOffersFilters,
   ): Promise<NotifierOfferItem[]> => {
-    const { currency, channels } = filters
-    const query = filters && {
-      ...filters,
-      currency: currency && Array.from(currency),
-      channels: channels && Array.from(channels),
-    }
+    const query = filters && new NotifierFiltersTransport(filters)
     const result: Paginated<PlanDTO> = await this.service.find({ query })
 
     const { data, ...metadata } = isResultPaginated(result)
