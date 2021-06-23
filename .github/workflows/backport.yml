@@ -1,0 +1,20 @@
+name: Backport
+on:
+  push:
+    branches:
+      - hotfix/*
+  pull_request:
+    types:
+      - opened
+      - closed
+
+jobs:
+  backport:
+    runs-on: ubuntu-18.04
+    name: backport
+    steps:
+      - name: backport
+        uses: rsksmart/rif-marketplace-backport@v1
+        with:
+          branches: develop,staging,testnet,mainnet
+          github_token: ${{ secrets.GITHUB_TOKEN }}
