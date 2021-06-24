@@ -2,11 +2,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import {
   shortenString,
-  theme, Web3Store,
+  theme, Web3Store, Spinner,
 } from '@rsksmart/rif-ui'
 import { notifierSubscriptionsAddress } from 'api/rif-marketplace-cache/notifier/subscriptions'
-import GridColumn from 'components/atoms/GridColumn'
-import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
 import RoundedCard from 'components/atoms/RoundedCard'
 import WithLoginCard from 'components/hoc/WithLoginCard'
@@ -78,7 +76,7 @@ const NotifierMyPurchasePage: FC = () => {
     setSubscriptionEvents,
   ] = useState<Array<SubscriptionEventsDisplayItem>>()
 
-  const [isTableLoading, setIsTableLoading] = useState<boolean>()
+  const [isLoadingData, setIsLoadingData] = useState<boolean>(true)
 
   const numberOfConfs = useConfirmations(
     ['NOTIFIER_CREATE_SUBSCRIPTION'],
@@ -87,7 +85,7 @@ const NotifierMyPurchasePage: FC = () => {
 
   useEffect(() => {
     if (account && subscriptionsApi) {
-      setIsTableLoading(true)
+      setIsLoadingData(true)
       subscriptionsApi.connect(reportError)
       subscriptionsApi.fetch({
         consumer: account,
@@ -102,7 +100,7 @@ const NotifierMyPurchasePage: FC = () => {
           error,
         })))
         .finally(() => {
-          setIsTableLoading(false)
+          setIsLoadingData(false)
         })
     }
   }, [subscriptionsApi, account, reportError])
@@ -193,24 +191,23 @@ const NotifierMyPurchasePage: FC = () => {
       <>
         <MyPurchasesHeader />
         <RoundedCard color="secondary">
-          <GridColumn>
-            <GridItem>
-              <Typography
-                gutterBottom
-                color="primary"
-                variant="subtitle1"
-                classes={titleStyles}
-              >
-                Active plans
-              </Typography>
-            </GridItem>
-            <GridRow>
-              <PurchasesTable
-                items={items}
-                isTableLoading={Boolean(isTableLoading)}
-              />
-            </GridRow>
-          </GridColumn>
+          <GridRow>
+            <Typography
+              gutterBottom
+              color="primary"
+              variant="subtitle1"
+              classes={titleStyles}
+            >
+              Active plans
+            </Typography>
+          </GridRow>
+          <GridRow>
+            {
+              isLoadingData
+                ? <Spinner />
+                : <PurchasesTable items={items} />
+            }
+          </GridRow>
         </RoundedCard>
         {subscriptionDetails
           && (
