@@ -28,7 +28,7 @@ export type NotifierPlan = Item & Provider & {
 export type NotifierOfferItem = NotifierPlan
 
 export type NotifierSubscriptionItem = Item & Omit<SubscriptionDTO,
-'hash' | 'price' | 'rateId' | 'topics'> & {
+'hash' | 'price' | 'rateId' | 'providerId' | 'topics'> & {
     price: Big
     provider: Provider
     token: SupportedToken

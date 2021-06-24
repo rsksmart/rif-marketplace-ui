@@ -29,22 +29,23 @@ const mapMyPurchases = <V extends Function, R extends Function>(
   }) => ({
     id,
     token,
-    providerId,
     plan,
     notificationBalance,
     expirationDate,
     price,
+    provider,
   }: NotifierSubscriptionItem):
     MySubscription => {
     const { rate, displayName } = crypto?.[token.symbol]
       || { rate: 0, displayName: '' }
 
     const expType = getExpirationType(plan)
+    const { provider: providerAddress } = provider
 
     return {
       id,
       subId: <MarketplaceAddressCell value={id} />,
-      provider: <MarketplaceAddressCell value={providerId} />,
+      provider: <MarketplaceAddressCell value={providerAddress || ''} />,
       notifications: (
         <NotificationsBalance
           balance={notificationBalance}
