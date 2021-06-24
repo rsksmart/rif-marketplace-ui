@@ -56,7 +56,7 @@ export default class NotifierFiltersTransport {
     }: NotifierOffersFilters) {
       this.size = size
       this.provider = provider
-      this.price = {
+      this.price = price && {
         min: Math.floor(price.min),
         max: Math.ceil(price.max),
         fiatSymbol: price.fiatSymbol,
