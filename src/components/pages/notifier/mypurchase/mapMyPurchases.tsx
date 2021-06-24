@@ -40,11 +40,12 @@ const mapMyPurchases = <V extends Function, R extends Function>(
     || { rate: 0, displayName: '' }
 
     const expType = getExpirationType(plan)
+    const { provider: providerAddress } = provider
 
     return {
       id,
       subId: <MarketplaceAddressCell value={id} />,
-      provider: <MarketplaceAddressCell value={provider} />,
+      provider: <MarketplaceAddressCell value={providerAddress || ''} />,
       notifications: (
         <NotificationsBalance
           balance={notificationBalance}

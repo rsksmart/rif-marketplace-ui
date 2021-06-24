@@ -127,10 +127,11 @@ const NotifierMyPurchasePage: FC = () => {
       token: { symbol: tokenSymbol },
       events,
     } = subscription
+    const { provider: providerAddress } = provider
 
     const viewItem: typeof subscriptionDetails = {
       id: shortenString(id),
-      provider: shortChecksumAddress(provider),
+      provider: shortChecksumAddress(providerAddress),
       amount: String(notificationBalance),
       channels: channels?.map(({ name }) => name).join(',') || '',
       expDate: getShortDateString(expirationDate),

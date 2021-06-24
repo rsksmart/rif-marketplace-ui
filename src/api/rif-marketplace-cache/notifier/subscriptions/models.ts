@@ -39,6 +39,11 @@ export const SUBSCRIPTION_STATUS = {
 
 export type SubscriptionStatus = keyof typeof SUBSCRIPTION_STATUS
 
+export type ProviderDTO = {
+  url: string
+  provider: string
+}
+
 export type SubscriptionDTO = {
   hash: string
   subscriptionId: number
@@ -53,5 +58,6 @@ export type SubscriptionDTO = {
   price: string
   rateId: string
   providerId: string
+  provider: ProviderDTO
   signature: string
 }
