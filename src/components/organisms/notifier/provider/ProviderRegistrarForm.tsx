@@ -1,7 +1,7 @@
 import TextField from '@material-ui/core/TextField'
 import GridRow from 'components/atoms/GridRow'
 import TitledRoundedCard from 'components/molecules/TitledRoundedCard'
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import CenteredContent from 'components/molecules/CenteredContent'
 import RoundBtn from 'components/atoms/RoundBtn'
 import GridItem from 'components/atoms/GridItem'
@@ -10,6 +10,8 @@ import { useForm } from 'react-hook-form'
 import { toChecksum } from 'utils/stringUtils'
 import useErrorReporter from 'hooks/useErrorReporter'
 import SubscriptionPlans from 'api/rif-notifier-service/subscriptionPlans'
+import ProvidersService, { notifierProvidersAddress } from 'api/rif-marketplace-cache/notifier/providers'
+import AppContext, { AppContextProps } from 'context/App'
 
 type Inputs = {
   endpointUrl: string
@@ -27,11 +29,22 @@ const ProviderRegistrarForm: FC<ProviderRegistrarFormProps> = ({
 }) => {
   const { register, handleSubmit, errors } = useForm<Inputs>()
   const reportError = useErrorReporter()
+  const {
+    state: {
+      apis: {
+        [notifierProvidersAddress]: providersApi,
+      },
+    },
+  } = useContext<AppContextProps>(AppContext)
 
-  const validateProviderURL = (url: string): Promise<boolean> => {
+  const validateProviderURL = async (url: string): Promise<boolean> => {
     const notifierService: SubscriptionPlans = new SubscriptionPlans(url)
     notifierService.connect(reportError)
-    return notifierService.hasPlans()
+    providersApi.connect(reportError)
+    const providerService: ProvidersService = providersApi as ProvidersService
+    const urlIsUnregistered = await providerService.isUnregisteredURL(url.replace(/\/$/, ''))
+    const hasPlans = await notifierService.hasPlans()
+    return urlIsUnregistered && hasPlans
   }
 
   return (
@@ -101,3 +114,7 @@ const ProviderRegistrarForm: FC<ProviderRegistrarFormProps> = ({
 }
 
 export default ProviderRegistrarForm
+
+/* function AppContext<T>(AppContext: any): { state: { apis: { 'notifier/v0/providers': any } } } {
+  throw new Error('Function not implemented.')
+} */

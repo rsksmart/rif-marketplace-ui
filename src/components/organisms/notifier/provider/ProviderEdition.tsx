@@ -53,8 +53,9 @@ const ProviderEdition: FC<Props> = (
     try {
       setProcessingTx(true)
       const notifierContract = NotifierContract.getInstance(web3 as Web3)
+      const registerableURL: string = url.replace(/\/$/, '')
       const registerReceipt = await notifierContract.registerProvider(
-        url, { from: account },
+        registerableURL, { from: account },
       )
 
       if (registerReceipt) {

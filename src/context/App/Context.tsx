@@ -18,6 +18,7 @@ import React, {
 import { notifierOffersAddress } from 'api/rif-marketplace-cache/notifier/offers'
 import { notifierSubscriptionsAddress } from 'api/rif-marketplace-cache/notifier/subscriptions'
 import { notifierStakesAddress } from 'api/rif-marketplace-cache/notifier/stakes'
+import ProvidersService, { notifierProvidersAddress } from 'api/rif-marketplace-cache/notifier/providers'
 import { appActions } from '.'
 import { contextID, Props, State } from './interfaces'
 
@@ -38,6 +39,7 @@ export const initialState: State = {
     upload: new UploadService(),
     [notifierOffersAddress]: new NotifierOffersService(),
     [notifierSubscriptionsAddress]: new NotifierSubscriptionsService(),
+    [notifierProvidersAddress]: new ProvidersService(),
     [notifierStakesAddress]: new NotifierStakesService(),
   },
   messages: {},
