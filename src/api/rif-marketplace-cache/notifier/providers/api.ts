@@ -1,5 +1,4 @@
-import { Paginated } from '@feathersjs/feathers'
-import { AbstractAPIService, isResultPaginated } from 'api/models/apiService'
+import { AbstractAPIService } from 'api/models/apiService'
 import client from 'api/rif-marketplace-cache/client'
 import { NotifierProvidersFilters } from 'models/marketItems/NotifierFilters'
 import { Provider } from 'models/marketItems/NotifierItem'
@@ -33,31 +32,19 @@ class ProvidersService extends AbstractAPIService
   _fetch = async (
     filters: NotifierProvidersFilters,
   ): Promise<Provider[]> => {
-    const result: Paginated<Provider> = await this.service.find({
+    const data = await this.service.find({
       query: filters && {
         ...filters,
       },
     })
 
-    const { data, ...metadata } = isResultPaginated(result)
-      ? result : { data: result }
-    this.meta = metadata
-
     return data.map(mapFromTransport)
   }
 
-  isUnregisteredURL = async (url: string): Promise<boolean> => {
-    const result = await this.fetch({ url })
+  isRegisteredURL = async (url: string): Promise<boolean> => {
+    const { length: hasResult } = await this.fetch({ url })
 
-    if (result.length) {
-      this.errorReporter({
-        id: 'service-fetch',
-        text: 'The URL is already registered',
-        error: new Error('URL is already registered'),
-      })
-    }
-
-    return !result.length
+    return hasResult
   }
 }
 

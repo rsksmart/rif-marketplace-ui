@@ -22,7 +22,7 @@ export const mapFromTransport = ({
   expirationDate,
   price,
   rateId,
-  provider,
+  provider: { url },
   providerId,
   topics,
   ...subscription
@@ -31,7 +31,7 @@ export const mapFromTransport = ({
   expirationDate: new Date(expirationDate),
   price: parseToBigDecimal(price),
   token: getSupportedTokenByName(rateId as SupportedTokenSymbol),
-  provider: { url: provider.url, provider: providerId },
+  provider: { url, provider: providerId },
   events: topics,
   ...subscription,
 })

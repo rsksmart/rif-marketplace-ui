@@ -11,6 +11,7 @@ import { useHistory } from 'react-router-dom'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import ROUTES from 'routes'
 import useErrorReporter from 'hooks/useErrorReporter'
+import { trailingSlashRegex } from 'utils/stringUtils'
 import ProviderRegistrarForm from './ProviderRegistrarForm'
 
 type Props = {
@@ -53,7 +54,7 @@ const ProviderEdition: FC<Props> = (
     try {
       setProcessingTx(true)
       const notifierContract = NotifierContract.getInstance(web3 as Web3)
-      const registerableURL: string = url.replace(/\/$/, '')
+      const registerableURL: string = url.replace(trailingSlashRegex, '')
       const registerReceipt = await notifierContract.registerProvider(
         registerableURL, { from: account },
       )
