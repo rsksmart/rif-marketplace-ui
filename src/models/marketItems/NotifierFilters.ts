@@ -1,3 +1,4 @@
+import { ProviderDTO } from 'api/rif-marketplace-cache/notifier/subscriptions/models'
 import { SubscriptionDTO } from 'api/rif-notifier-service/models/subscriptions'
 import { SupportedFiatSymbol } from 'models/Fiat'
 import { MinMaxFilter } from 'models/Filters'
@@ -16,6 +17,8 @@ export type NotifierOffersFilters = {
 }
 
 export type NotifierSubscriptionsFilters = Partial<SubscriptionDTO>
+
+export type NotifierProvidersFilters = Partial<ProviderDTO>
 
 export type NotifierFilters =
     | NotifierOffersFilters

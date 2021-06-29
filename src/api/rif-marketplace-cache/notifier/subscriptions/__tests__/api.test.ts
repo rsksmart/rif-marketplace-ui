@@ -14,7 +14,7 @@ const MOCK_ITEM_0: NotifierSubscriptionsTransportModel = {
   status: 'ACTIVE',
   subscriptionId: 1,
   plan: {
-    id: 1,
+    planId: 1,
     channels: [{ id: 1, name: 'API' }],
     daysLeft: 100,
     name: '1k',
@@ -42,6 +42,10 @@ const MOCK_ITEM_0: NotifierSubscriptionsTransportModel = {
   paid: false,
   price: '2'.padEnd(18, '0'),
   rateId: 'rif',
+  provider: {
+    provider: 'TEST_PROVIDER_ADDR',
+    url: 'nada',
+  },
 }
 
 const MOCK_RESPONSE: NotifierSubscriptionsTransportModel[] = [MOCK_ITEM_0]

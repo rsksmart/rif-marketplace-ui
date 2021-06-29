@@ -23,3 +23,5 @@ export const shortChecksumAddress = (address: string): string => shortenString(
 )
 
 export const removeURLProtocol = (url: string) => url.replace(/^http[s]*:\/\//, '')
+
+export const trailingSlashRegex = new RegExp(/\/$/, '')
