@@ -127,7 +127,7 @@ const NotifierOfferCheckoutPage: FC = () => {
       reportError({
         error,
         id: 'contract-notifier',
-        text: customMessage || 'Could not complete the order}',
+        text: customMessage || 'Could not complete the order',
       })
     } finally {
       setIsProcessingTx(false)
