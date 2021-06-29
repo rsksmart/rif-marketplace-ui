@@ -98,7 +98,7 @@ class NotifierContract extends ContractWithTokens {
       subscriptionHash,
       signature,
       amount,
-      token: { tokenAddress },
+      tokenAddress,
     } = data
     const weiAmount = convertToWeiString(amount)
     const createSubsTx = this.contract.methods.createSubscription(

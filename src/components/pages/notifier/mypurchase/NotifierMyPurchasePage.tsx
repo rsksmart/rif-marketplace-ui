@@ -33,6 +33,13 @@ import { SUBSCRIPTION_STATUSES } from 'api/rif-notifier-service/models/subscript
 import { buildSubscribeToPlanDTO } from 'api/rif-notifier-service/subscriptionUtils'
 import RenewSubscriptionService from 'api/rif-notifier-service/renewSubscription'
 import Logger from 'utils/Logger'
+import ProgressOverlay from 'components/templates/ProgressOverlay'
+import ROUTES from 'routes'
+import NotifierContract from 'contracts/notifier/Notifier'
+import Web3 from 'web3'
+import { convertToWeiString } from 'utils/parsers'
+import { useHistory } from 'react-router-dom'
+import { ConfirmationsContext } from 'context/Confirmations'
 import mapMyPurchases from './mapMyPurchases'
 
 const useTitleStyles = makeStyles(() => ({
@@ -46,7 +53,7 @@ const NotifierMyPurchasePage: FC = () => {
   const titleStyles = useTitleStyles()
 
   const {
-    state: { account },
+    state: { account, web3 },
   } = useContext(Web3Store)
   const {
     state: {
@@ -60,7 +67,9 @@ const NotifierMyPurchasePage: FC = () => {
       exchangeRates,
     },
   } = useContext(MarketContext)
+  const { dispatch: confirmationsDispatch } = useContext(ConfirmationsContext)
 
+  const history = useHistory()
   const reportError = useErrorReporter()
 
   const [
@@ -76,6 +85,8 @@ const NotifierMyPurchasePage: FC = () => {
     setSubscriptionEvents,
   ] = useState<Array<SubscriptionEventsDisplayItem>>()
 
+  const [isProcessingTx, setIsProcessingTx] = useState(false)
+  const [txOperationDone, setTxOperationDone] = useState(false)
   const [isLoadingData, setIsLoadingData] = useState<boolean>(true)
 
   const numberOfConfs = useConfirmations(
@@ -147,29 +158,71 @@ const NotifierMyPurchasePage: FC = () => {
     const subscription: NotifierSubscriptionItem = subscriptions
       ?.find(({ id }) => id === subscriptionId) as NotifierSubscriptionItem
 
-    if (!subscription) return
-    const {
-      id: subscriptionHash,
-      plan: { planId, url: providerUrl },
-      price,
-      token: { symbol: tokenSymbol },
-      events,
-    } = subscription
+    if (!subscription || !account) return
 
-    const subscribeToPlanDTO = buildSubscribeToPlanDTO(
-      {
-        value: price, symbol: tokenSymbol, planId, url: providerUrl,
-      },
-      events,
-      account as string, // wrapped with login card
-    )
+    try {
+      setIsProcessingTx(true)
+      const {
+        id: subscriptionHash,
+        plan: { planId },
+        price,
+        token: { symbol: tokenSymbol, tokenAddress },
+        events,
+        provider: { provider: providerAddress, url: providerUrl },
+      } = subscription
 
-    const renewSubscriptionService = new RenewSubscriptionService(providerUrl)
-    renewSubscriptionService.connect(reportError)
-    const response = await renewSubscriptionService.renewSubscription(
-      subscribeToPlanDTO, subscriptionHash,
-    )
-    Logger.getInstance().debug('response', { response })
+      const subscribeToPlanDTO = buildSubscribeToPlanDTO(
+        {
+          value: price, symbol: tokenSymbol, planId, url: providerUrl,
+        },
+        events,
+        account, // wrapped with login card
+      )
+
+      const renewSubscriptionService = new RenewSubscriptionService(providerUrl)
+      renewSubscriptionService.connect(reportError)
+      const response = await renewSubscriptionService.renewSubscription(
+        subscribeToPlanDTO, subscriptionHash,
+      )
+      Logger.getInstance().debug('response', { response })
+
+      const { signature } = response
+
+      const purchaseReceipt = await NotifierContract.getInstance(web3 as Web3)
+        .createSubscription(
+          {
+            subscriptionHash,
+            providerAddress,
+            signature,
+            amount: price,
+            tokenAddress,
+          },
+          {
+            from: account,
+            value: convertToWeiString(price),
+          },
+        )
+
+      if (purchaseReceipt) {
+        setTxOperationDone(true)
+        confirmationsDispatch({
+          type: 'NEW_REQUEST',
+          payload: {
+            contractAction: 'NOTIFIER_CREATE_SUBSCRIPTION',
+            txHash: purchaseReceipt.transactionHash,
+          },
+        })
+      }
+    } catch (error) {
+      const { customMessage } = error
+      reportError({
+        error,
+        id: 'contract-notifier',
+        text: customMessage || 'Could not complete the order',
+      })
+    } finally {
+      setIsProcessingTx(false)
+    }
   }
 
   const items = subscriptions?.map(mapMyPurchases(
@@ -224,6 +277,30 @@ const NotifierMyPurchasePage: FC = () => {
             />
           )}
       </>
+      <ProgressOverlay
+        title="Renewing your plan!"
+        doneMsg="Your notification plan has been renewed!"
+        inProgress={isProcessingTx}
+        isDone={txOperationDone}
+        buttons={[
+          <RoundBtn
+            key="go_to_my_purchases"
+            onClick={
+              (): void => setTxOperationDone(false)
+            }
+          >
+            View my purchases
+          </RoundBtn>,
+          <RoundBtn
+            key="go_to_list"
+            onClick={
+              (): void => history.push(ROUTES.NOTIFIER.BUY.BASE)
+            }
+          >
+            View offers listing
+          </RoundBtn>,
+        ]}
+      />
     </CenteredPageTemplate>
   )
 }

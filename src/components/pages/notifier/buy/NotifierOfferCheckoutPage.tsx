@@ -87,7 +87,7 @@ const NotifierOfferCheckoutPage: FC = () => {
         url,
       } = item
 
-      const { symbol } = token
+      const { symbol, tokenAddress } = token
 
       const {
         hash: subscriptionHash, signature,
@@ -104,7 +104,7 @@ const NotifierOfferCheckoutPage: FC = () => {
             providerAddress,
             signature,
             amount,
-            token,
+            tokenAddress,
           },
           {
             from: account,
