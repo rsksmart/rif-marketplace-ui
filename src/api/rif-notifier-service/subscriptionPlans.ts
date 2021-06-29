@@ -16,15 +16,7 @@ export default class SubscriptionPlans
     const { status, content: { length } }: SubscriptionPlanResponse = await this.fetch()
     const isValidResponse = status === NOTIFIER_RESPONSE_STATUSES.OK
 
-    if (isValidResponse && !length) {
-      this.errorReporter({
-        error: new Error('No available subscription plan'),
-        text: 'At least one subscription plan must be available for registration',
-        id: 'service-fetch',
-      })
-      return false
-    }
-    return isValidResponse
+    return isValidResponse && Boolean(length)
   }
 
   _create = (): Promise<any> => Promise.resolve(logNotImplemented('Subscription Plans')())

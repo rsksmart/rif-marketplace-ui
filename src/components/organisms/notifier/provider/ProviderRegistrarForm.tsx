@@ -1,15 +1,18 @@
 import TextField from '@material-ui/core/TextField'
 import GridRow from 'components/atoms/GridRow'
 import TitledRoundedCard from 'components/molecules/TitledRoundedCard'
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import CenteredContent from 'components/molecules/CenteredContent'
 import RoundBtn from 'components/atoms/RoundBtn'
 import GridItem from 'components/atoms/GridItem'
 import Typography from '@material-ui/core/Typography'
 import { useForm } from 'react-hook-form'
-import { toChecksum } from 'utils/stringUtils'
+import { toChecksum, trailingSlashRegex } from 'utils/stringUtils'
 import useErrorReporter from 'hooks/useErrorReporter'
 import SubscriptionPlans from 'api/rif-notifier-service/subscriptionPlans'
+import ProvidersService, { notifierProvidersAddress } from 'api/rif-marketplace-cache/notifier/providers'
+import AppContext, { AppContextProps } from 'context/App'
+import { NO_AVAILABLE_SUBSCRIPTION_PLAN, URL_ALREADY_REGISTERED } from 'constants/notifier/strings'
 
 type Inputs = {
   endpointUrl: string
@@ -25,13 +28,29 @@ type ProviderRegistrarFormProps = {
 const ProviderRegistrarForm: FC<ProviderRegistrarFormProps> = ({
   providerAddress, onRegister, isEnabled, buttonLabel,
 }) => {
-  const { register, handleSubmit, errors } = useForm<Inputs>()
+  const {
+    register, handleSubmit, errors,
+  } = useForm<Inputs>()
   const reportError = useErrorReporter()
+  const {
+    state: {
+      apis: {
+        [notifierProvidersAddress]: providersApi,
+      },
+    },
+  } = useContext<AppContextProps>(AppContext)
 
-  const validateProviderURL = (url: string): Promise<boolean> => {
+  const validateProviderURL = async (url: string): Promise<boolean|string> => {
     const notifierService: SubscriptionPlans = new SubscriptionPlans(url)
     notifierService.connect(reportError)
-    return notifierService.hasPlans()
+    providersApi.connect(reportError)
+    const providerService: ProvidersService = providersApi as ProvidersService
+    const urlIsRegistered: boolean = await providerService.isRegisteredURL(url.replace(trailingSlashRegex, ''))
+    const hasPlans: boolean|undefined = await notifierService.hasPlans()
+    const urlMessage = urlIsRegistered ? URL_ALREADY_REGISTERED : ''
+    const planMessage = hasPlans ? '' : NO_AVAILABLE_SUBSCRIPTION_PLAN
+
+    return (!urlIsRegistered && hasPlans) || urlMessage || planMessage
   }
 
   return (
@@ -71,7 +90,7 @@ const ProviderRegistrarForm: FC<ProviderRegistrarFormProps> = ({
                 {
                   errors.endpointUrl && (
                     <Typography color="error" variant="caption">
-                      Endpoint URL is required
+                      { errors.endpointUrl.message || 'Endpoint url is required'}
                     </Typography>
                   )
                 }
