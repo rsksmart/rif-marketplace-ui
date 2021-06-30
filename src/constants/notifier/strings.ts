@@ -2,6 +2,7 @@ import { SupportedEventType, SupportedEventChannel } from 'config/notifier'
 
 export const notifierChannelPlaceHolder: Record<SupportedEventChannel, string> = {
   API: 'Enter api destination',
+  EMAIL: 'Enter email address',
 }
 
 export const notifierEventTypeLabels: Record<SupportedEventType, string> = {

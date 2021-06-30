@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography'
 import validateURL from 'utils/validationUtils'
 import { notifierChannelPlaceHolder } from 'constants/notifier/strings'
 import { SUPPORTED_API_CHANNEL_PROTOCOLS, SupportedEventChannel } from 'config/notifier'
+import { emailRegex } from 'utils/stringUtils'
 
 interface Props {
   channelAdd: (notifierChannel: NotifierChannel) => void
@@ -58,7 +59,7 @@ const NotificationChannelCreate: FC<Props> = ({
     if (notifierChannel.type === 'API') {
       return validateURL(destination, SUPPORTED_API_CHANNEL_PROTOCOLS)
     }
-    return true
+    return emailRegex.test(destination)
   }
   const classes = useStyles()
   const { register, handleSubmit, errors } = useForm<Inputs>()
