@@ -51,7 +51,7 @@ const mapMyPurchases = <V extends Function, R extends Function>(
     return {
       id,
       subId: <MarketplaceAddressCell value={id} />,
-      provider: <MarketplaceAddressCell value={providerAddress || ''} />,
+      provider: <MarketplaceAddressCell value={providerAddress} />,
       notifications: (
         <NotificationsBalance
           balance={notificationBalance}
