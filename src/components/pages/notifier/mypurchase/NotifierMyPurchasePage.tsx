@@ -32,7 +32,6 @@ import { eventDisplayItemIterator } from 'components/organisms/notifier/details/
 import { SUBSCRIPTION_STATUSES } from 'api/rif-notifier-service/models/subscriptions'
 import { buildSubscribeToPlanDTO } from 'api/rif-notifier-service/subscriptionUtils'
 import RenewSubscriptionService from 'api/rif-notifier-service/renewSubscription'
-import Logger from 'utils/Logger'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import ROUTES from 'routes'
 import NotifierContract from 'contracts/notifier/Notifier'
@@ -167,7 +166,6 @@ const NotifierMyPurchasePage: FC = () => {
         plan: { planId },
         price,
         token: { symbol: tokenSymbol, tokenAddress },
-        events,
         provider: { provider: providerAddress, url: providerUrl },
       } = subscription
 
@@ -175,7 +173,7 @@ const NotifierMyPurchasePage: FC = () => {
         {
           value: price, symbol: tokenSymbol, planId, url: providerUrl,
         },
-        events,
+        [],
         account, // wrapped with login card
       )
 
@@ -184,14 +182,13 @@ const NotifierMyPurchasePage: FC = () => {
       const response = await renewSubscriptionService.renewSubscription(
         subscribeToPlanDTO, subscriptionHash,
       )
-      Logger.getInstance().debug('response', { response })
 
-      const { signature } = response
+      const { hash: renewalHash, signature } = response
 
       const purchaseReceipt = await NotifierContract.getInstance(web3 as Web3)
         .createSubscription(
           {
-            subscriptionHash,
+            subscriptionHash: renewalHash,
             providerAddress,
             signature,
             amount: price,
