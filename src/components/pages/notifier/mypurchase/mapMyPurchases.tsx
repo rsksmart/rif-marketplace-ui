@@ -9,6 +9,7 @@ import MarketplaceAddressCell from 'components/molecules/MarketplaceAddressCell'
 import ExpirationDate, { SubscriptionExpirationType } from 'components/molecules/ExpirationDate'
 import { PlanDTO, PLAN_STATUS } from 'api/rif-marketplace-cache/notifier/offers/models'
 import { SUBSCRIPTION_STATUSES } from 'api/rif-notifier-service/models/subscriptions'
+import { Typography } from '@material-ui/core'
 
 const EXPIRATION_WARNING_TRIGGER = 5
 
@@ -47,6 +48,7 @@ const mapMyPurchases = <V extends Function, R extends Function>(
       status === SUBSCRIPTION_STATUSES.COMPLETED
       || status === SUBSCRIPTION_STATUSES.EXPIRED
     )
+    // TODO: add text and tooltip explaining why it's disabled
 
     return {
       id,
@@ -72,6 +74,8 @@ const mapMyPurchases = <V extends Function, R extends Function>(
         currencyFiat={currentFiat.displayName}
         divider=""
       />,
+      // TODO: show different colors based on status
+      status: <Typography>{status}</Typography>,
       actions: (
         <MarketplaceActionsCell
           actions={[
