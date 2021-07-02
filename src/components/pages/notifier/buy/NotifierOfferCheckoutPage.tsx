@@ -87,7 +87,7 @@ const NotifierOfferCheckoutPage: FC = () => {
         url,
       } = item
 
-      const { symbol } = token
+      const { symbol, tokenAddress } = token
 
       const {
         hash: subscriptionHash, signature,
@@ -104,7 +104,7 @@ const NotifierOfferCheckoutPage: FC = () => {
             providerAddress,
             signature,
             amount,
-            token,
+            tokenAddress,
           },
           {
             from: account,
@@ -127,7 +127,7 @@ const NotifierOfferCheckoutPage: FC = () => {
       reportError({
         error,
         id: 'contract-notifier',
-        text: customMessage || 'Could not complete the order}',
+        text: customMessage || 'Could not complete the order',
       })
     } finally {
       setIsProcessingTx(false)

@@ -16,6 +16,7 @@ const buildBlockEvent = (
 ): TopicDTO => ({
   type: TOPIC_TYPES.NEW_BLOCK,
   notificationPreferences,
+  topicParams: [],
 })
 
 const buildContractEvent = (
@@ -94,7 +95,7 @@ type SubscriptionOrderItem = Pick<OrderItem, 'url' | 'planId' | 'value'> & {
 
 export const buildSubscribeToPlanDTO = (
   item: SubscriptionOrderItem,
-  notifierEventItems: Array<NotifierEventItem>,
+  topics: Array<TopicDTO>,
   account: string,
 ): SubscribeToPlanDTO => {
   const {
@@ -102,8 +103,6 @@ export const buildSubscribeToPlanDTO = (
     planId: subscriptionPlanId,
     value: price,
   } = item
-
-  const topics = buildTopicsDTOFrom(notifierEventItems)
 
   return {
     subscriptionPlanId: Number(subscriptionPlanId),
@@ -118,8 +117,7 @@ export const searchPendingSubscription = (
   account: string,
   item: SubscriptionOrderItem,
   reportError: (e: UIError) => void,
-):
-  Promise<SubscriptionSummary | undefined> => {
+): Promise<SubscriptionSummary | undefined> => {
   const { url: providerUrl, planId } = item
   const subscriptionService = new SubscriptionService(providerUrl)
   subscriptionService.connect(reportError)
@@ -133,7 +131,7 @@ export const createPendingSubscription = (
 ): Promise<SubscribeToPlanResponseDTO> => {
   const { url: providerUrl } = item
   const subscribeToPlanDTO = buildSubscribeToPlanDTO(
-    item, notifierEventItems, account,
+    item, buildTopicsDTOFrom(notifierEventItems), account,
   )
 
   const subscribeToPlanService = new SubscribeToPlanService(providerUrl)

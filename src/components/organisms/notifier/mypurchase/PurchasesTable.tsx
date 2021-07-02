@@ -26,7 +26,6 @@ export type MySubscription = Item & {
 
 type Props = {
   items: Array<MySubscription>
-  isTableLoading: boolean
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -35,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const PurchasesTable: FC<Props> = ({ items: subscriptions, isTableLoading }) => {
+const PurchasesTable: FC<Props> = ({ items: subscriptions }) => {
   const classes = useStyles()
 
   if (!subscriptions.length) {
@@ -54,7 +53,7 @@ const PurchasesTable: FC<Props> = ({ items: subscriptions, isTableLoading }) => 
     <TableContainer>
       <Marketplace
         headers={headers}
-        isLoading={isTableLoading}
+        isLoading={false}
         items={subscriptions}
       />
     </TableContainer>
