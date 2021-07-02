@@ -45,7 +45,7 @@ export type NotificationPreference = {
 export type TopicDTO = {
   notificationPreferences: Array<NotificationPreference>
   type: TopicType
-  topicParams: Array<TopicParams>
+  topicParams?: Array<TopicParams>
 }
 
 export const SUBSCRIPTION_STATUSES = {

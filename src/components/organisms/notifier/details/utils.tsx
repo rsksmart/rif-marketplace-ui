@@ -17,7 +17,7 @@ export const getTopicParamValue = (
 export const eventDisplayItemIterator = ({
   notificationPreferences, topicParams, type: eventType,
 }: TopicDTO): SubscriptionEventsDisplayItem => {
-  const nameValue = getTopicParamValue(
+  const nameValue = topicParams && getTopicParamValue(
     topicParams, EVENT_PARAM_TYPES.EVENT_NAME,
   )
   const name = (
@@ -25,7 +25,7 @@ export const eventDisplayItemIterator = ({
       {nameValue || eventType}
     </MarketplaceCell>
   )
-  const contractAddress = getTopicParamValue(
+  const contractAddress = topicParams && getTopicParamValue(
     topicParams, EVENT_PARAM_TYPES.CONTRACT_ADDRESS,
   )
   const contract = contractAddress ? (
