@@ -82,5 +82,5 @@ export type CreateSubscriptionParams = {
   providerAddress: string
   signature: string
   amount: Big
-  token: SupportedToken
+  tokenAddress: string
 }

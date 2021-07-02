@@ -2,11 +2,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import {
   shortenString,
-  theme, Web3Store,
+  theme, Web3Store, Spinner,
 } from '@rsksmart/rif-ui'
 import { notifierSubscriptionsAddress } from 'api/rif-marketplace-cache/notifier/subscriptions'
-import GridColumn from 'components/atoms/GridColumn'
-import GridItem from 'components/atoms/GridItem'
 import GridRow from 'components/atoms/GridRow'
 import RoundedCard from 'components/atoms/RoundedCard'
 import WithLoginCard from 'components/hoc/WithLoginCard'
@@ -32,6 +30,15 @@ import NotifierDetails, { SubscriptionEventsDisplayItem } from 'components/organ
 import RoundBtn from 'components/atoms/RoundBtn'
 import { eventDisplayItemIterator } from 'components/organisms/notifier/details/utils'
 import { SUBSCRIPTION_STATUSES } from 'api/rif-notifier-service/models/subscriptions'
+import { buildSubscribeToPlanDTO } from 'api/rif-notifier-service/subscriptionUtils'
+import RenewSubscriptionService from 'api/rif-notifier-service/renewSubscription'
+import ProgressOverlay from 'components/templates/ProgressOverlay'
+import ROUTES from 'routes'
+import NotifierContract from 'contracts/notifier/Notifier'
+import Web3 from 'web3'
+import { convertToWeiString } from 'utils/parsers'
+import { useHistory } from 'react-router-dom'
+import { ConfirmationsContext } from 'context/Confirmations'
 import mapMyPurchases from './mapMyPurchases'
 
 const useTitleStyles = makeStyles(() => ({
@@ -45,7 +52,7 @@ const NotifierMyPurchasePage: FC = () => {
   const titleStyles = useTitleStyles()
 
   const {
-    state: { account },
+    state: { account, web3 },
   } = useContext(Web3Store)
   const {
     state: {
@@ -59,7 +66,9 @@ const NotifierMyPurchasePage: FC = () => {
       exchangeRates,
     },
   } = useContext(MarketContext)
+  const { dispatch: confirmationsDispatch } = useContext(ConfirmationsContext)
 
+  const history = useHistory()
   const reportError = useErrorReporter()
 
   const [
@@ -75,7 +84,9 @@ const NotifierMyPurchasePage: FC = () => {
     setSubscriptionEvents,
   ] = useState<Array<SubscriptionEventsDisplayItem>>()
 
-  const [isTableLoading, setIsTableLoading] = useState<boolean>()
+  const [isProcessingTx, setIsProcessingTx] = useState(false)
+  const [txOperationDone, setTxOperationDone] = useState(false)
+  const [isLoadingData, setIsLoadingData] = useState<boolean>(true)
 
   const numberOfConfs = useConfirmations(
     ['NOTIFIER_CREATE_SUBSCRIPTION'],
@@ -84,7 +95,7 @@ const NotifierMyPurchasePage: FC = () => {
 
   useEffect(() => {
     if (account && subscriptionsApi) {
-      setIsTableLoading(true)
+      setIsLoadingData(true)
       subscriptionsApi.connect(reportError)
       subscriptionsApi.fetch({
         consumer: account,
@@ -99,7 +110,7 @@ const NotifierMyPurchasePage: FC = () => {
           error,
         })))
         .finally(() => {
-          setIsTableLoading(false)
+          setIsLoadingData(false)
         })
     }
   }, [subscriptionsApi, account, reportError])
@@ -119,18 +130,19 @@ const NotifierMyPurchasePage: FC = () => {
 
     const {
       id,
-      providerId,
       notificationBalance,
       plan: { channels },
       expirationDate,
       price,
       token: { symbol: tokenSymbol },
       events,
+      provider,
     } = subscription
+    const { provider: providerAddress } = provider
 
     const viewItem: typeof subscriptionDetails = {
       id: shortenString(id),
-      provider: shortChecksumAddress(providerId),
+      provider: shortChecksumAddress(providerAddress),
       amount: String(notificationBalance),
       channels: channels?.map(({ name }) => name).join(',') || '',
       expDate: getShortDateString(expirationDate),
@@ -141,7 +153,74 @@ const NotifierMyPurchasePage: FC = () => {
     setSubscriptionEvents(events.map(eventDisplayItemIterator))
   }
 
-  const onRenew = logNotImplemented('handle renew')
+  const onRenew = async (subscriptionId: string): Promise<void> => {
+    const subscription: NotifierSubscriptionItem = subscriptions
+      ?.find(({ id }) => id === subscriptionId) as NotifierSubscriptionItem
+
+    if (!subscription || !account) return
+
+    try {
+      setIsProcessingTx(true)
+      const {
+        id: subscriptionHash,
+        plan: { planId },
+        price,
+        token: { symbol: tokenSymbol, tokenAddress },
+        provider: { provider: providerAddress, url: providerUrl },
+      } = subscription
+
+      const subscribeToPlanDTO = buildSubscribeToPlanDTO(
+        {
+          value: price, symbol: tokenSymbol, planId, url: providerUrl,
+        },
+        [],
+        account, // wrapped with login card
+      )
+
+      const renewSubscriptionService = new RenewSubscriptionService(providerUrl)
+      renewSubscriptionService.connect(reportError)
+      const response = await renewSubscriptionService.renewSubscription(
+        subscribeToPlanDTO, subscriptionHash,
+      )
+
+      const { hash: renewalHash, signature } = response
+
+      const purchaseReceipt = await NotifierContract.getInstance(web3 as Web3)
+        .createSubscription(
+          {
+            subscriptionHash: renewalHash,
+            providerAddress,
+            signature,
+            amount: price,
+            tokenAddress,
+          },
+          {
+            from: account,
+            value: convertToWeiString(price),
+          },
+        )
+
+      if (purchaseReceipt) {
+        setTxOperationDone(true)
+        confirmationsDispatch({
+          type: 'NEW_REQUEST',
+          payload: {
+            contractAction: 'NOTIFIER_CREATE_SUBSCRIPTION',
+            txHash: purchaseReceipt.transactionHash,
+          },
+        })
+      }
+    } catch (error) {
+      const { customMessage } = error
+      reportError({
+        error,
+        id: 'contract-notifier',
+        text: customMessage || 'Could not complete the order',
+      })
+    } finally {
+      setIsProcessingTx(false)
+    }
+  }
 
   const items = subscriptions?.map(mapMyPurchases(
     exchangeRates, { onView, onRenew },
@@ -162,24 +241,23 @@ const NotifierMyPurchasePage: FC = () => {
       <>
         <MyPurchasesHeader />
         <RoundedCard color="secondary">
-          <GridColumn>
-            <GridItem>
-              <Typography
-                gutterBottom
-                color="primary"
-                variant="subtitle1"
-                classes={titleStyles}
-              >
-                Active plans
-              </Typography>
-            </GridItem>
-            <GridRow>
-              <PurchasesTable
-                items={items}
-                isTableLoading={Boolean(isTableLoading)}
-              />
-            </GridRow>
-          </GridColumn>
+          <GridRow>
+            <Typography
+              gutterBottom
+              color="primary"
+              variant="subtitle1"
+              classes={titleStyles}
+            >
+              Active plans
+            </Typography>
+          </GridRow>
+          <GridRow>
+            {
+              isLoadingData
+                ? <Spinner />
+                : <PurchasesTable items={items} />
+            }
+          </GridRow>
         </RoundedCard>
         {subscriptionDetails
           && (
@@ -196,6 +274,30 @@ const NotifierMyPurchasePage: FC = () => {
             />
           )}
       </>
+      <ProgressOverlay
+        title="Renewing your plan!"
+        doneMsg="Your notification plan has been renewed!"
+        inProgress={isProcessingTx}
+        isDone={txOperationDone}
+        buttons={[
+          <RoundBtn
+            key="go_to_my_purchases"
+            onClick={
+              (): void => setTxOperationDone(false)
+            }
+          >
+            View my purchases
+          </RoundBtn>,
+          <RoundBtn
+            key="go_to_list"
+            onClick={
+              (): void => history.push(ROUTES.NOTIFIER.BUY.BASE)
+            }
+          >
+            View offers listing
+          </RoundBtn>,
+        ]}
+      />
     </CenteredPageTemplate>
   )
 }
