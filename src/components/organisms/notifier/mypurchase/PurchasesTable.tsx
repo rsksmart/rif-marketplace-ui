@@ -15,6 +15,7 @@ const headers = {
   notifications: 'Notifications',
   expirationDate: 'Expiration Date',
   price: 'Price',
+  status: 'Status',
   actions: '',
 } as const
 
