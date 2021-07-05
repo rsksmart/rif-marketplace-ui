@@ -30,8 +30,6 @@ import NotifierDetails, { SubscriptionEventsDisplayItem } from 'components/organ
 import RoundBtn from 'components/atoms/RoundBtn'
 import { eventDisplayItemIterator } from 'components/organisms/notifier/details/utils'
 import { SUBSCRIPTION_STATUSES } from 'api/rif-notifier-service/models/subscriptions'
-import { buildSubscribeToPlanDTO } from 'api/rif-notifier-service/subscriptionUtils'
-import RenewSubscriptionService from 'api/rif-notifier-service/renewSubscription'
 import ProgressOverlay from 'components/templates/ProgressOverlay'
 import ROUTES from 'routes'
 import NotifierContract from 'contracts/notifier/Notifier'
@@ -39,6 +37,7 @@ import Web3 from 'web3'
 import { convertToWeiString } from 'utils/parsers'
 import { useHistory } from 'react-router-dom'
 import { ConfirmationsContext } from 'context/Confirmations'
+import { getOrCreateRenewalSubscription } from 'api/rif-notifier-service/subscriptionUtils'
 import mapMyPurchases from './mapMyPurchases'
 
 const useTitleStyles = makeStyles(() => ({
@@ -169,18 +168,10 @@ const NotifierMyPurchasePage: FC = () => {
         provider: { provider: providerAddress, url: providerUrl },
       } = subscription
 
-      const subscribeToPlanDTO = buildSubscribeToPlanDTO(
-        {
+      const response = await getOrCreateRenewalSubscription(
+        subscriptionHash, {
           value: price, symbol: tokenSymbol, planId, url: providerUrl,
-        },
-        [],
-        account, // wrapped with login card
-      )
-
-      const renewSubscriptionService = new RenewSubscriptionService(providerUrl)
-      renewSubscriptionService.connect(reportError)
-      const response = await renewSubscriptionService.renewSubscription(
-        subscribeToPlanDTO, subscriptionHash,
+        }, account, reportError,
       )
 
       const { hash: renewalHash, signature } = response

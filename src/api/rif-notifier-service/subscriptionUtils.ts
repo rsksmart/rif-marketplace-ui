@@ -10,6 +10,7 @@ import { NotifierChannel } from 'models/marketItems/NotifierItem'
 import { SupportedTokenSymbol } from 'models/Token'
 import { UIError } from 'models/UIMessage'
 import { convertToWeiString } from 'utils/parsers'
+import RenewSubscriptionService from './renewSubscription'
 
 const buildBlockEvent = (
   notificationPreferences: Array<NotificationPreference>,
@@ -140,9 +141,26 @@ export const createPendingSubscription = (
   return subscribeToPlanService.subscribeToPlan(subscribeToPlanDTO)
 }
 
-export const getOrCreateSubscription = async (item: SubscriptionOrderItem,
-  eventsAdded: Array<NotifierEventItem>, account: string,
-  reportError: (e: UIError) => void): Promise<SubscriptionSummary> => {
+export const createRenewalSubscription = (
+  subscriptionHash: string,
+  item: SubscriptionOrderItem,
+  account: string, reportError: (e: UIError) => void,
+): Promise<SubscribeToPlanResponseDTO> => {
+  const { url: providerUrl } = item
+  const subscribeToPlanDTO = buildSubscribeToPlanDTO(
+    item, [], account,
+  )
+  const renewSubscriptionService = new RenewSubscriptionService(providerUrl)
+  renewSubscriptionService.connect(reportError)
+  return renewSubscriptionService.renewSubscription(
+    subscribeToPlanDTO, subscriptionHash,
+  )
+}
+
+const getOrCreateNewOrRenewalSubscription = async (item: SubscriptionOrderItem,
+  account: string, reportError: (e: UIError) => void,
+  eventsAdded: Array<NotifierEventItem>,
+  subscriptionHash?: string): Promise<SubscriptionSummary> => {
   const pendingSubscription = await searchPendingSubscription(
     account, item, reportError,
   )
@@ -152,8 +170,18 @@ export const getOrCreateSubscription = async (item: SubscriptionOrderItem,
   }
   const {
     signature, hash,
-  } = await createPendingSubscription(item, eventsAdded, account, reportError)
+  } = subscriptionHash ? await createRenewalSubscription(subscriptionHash, item, account, reportError)
+    : await createPendingSubscription(item, eventsAdded, account, reportError)
   return {
     signature, hash, status: 'PENDING',
   }
 }
+
+export const getOrCreateSubscription = (item: SubscriptionOrderItem,
+  eventsAdded: Array<NotifierEventItem>, account: string,
+  reportError: (e: UIError) => void): Promise<SubscriptionSummary> => getOrCreateNewOrRenewalSubscription(item, account, reportError, eventsAdded)
+
+export const getOrCreateRenewalSubscription = (
+  subscriptionHash: string, item: SubscriptionOrderItem, account: string,
+  reportError: (e: UIError) => void,
+): Promise<SubscriptionSummary> => getOrCreateNewOrRenewalSubscription(item, account, reportError, [], subscriptionHash)
