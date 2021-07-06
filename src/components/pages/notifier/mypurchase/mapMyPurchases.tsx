@@ -12,14 +12,16 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Tooltip from '@material-ui/core/Tooltip'
 import RoundBtn from 'components/atoms/RoundBtn'
+import { PlanDTO, PLAN_STATUS } from 'api/rif-marketplace-cache/notifier/offers/models'
 
 const EXPIRATION_WARNING_TRIGGER = 5
 const CANT_RENEW_MESSAGE = 'Subscriptions renewal is available only for completed or expired purchases'
 
 const getExpirationType = (
-  { status, expirationDate }: Pick<NotifierSubscriptionItem, 'status' | 'expirationDate'>,
+  { status, expirationDate }: Pick<NotifierSubscriptionItem, 'status' | 'expirationDate'>, plan: PlanDTO,
 ): SubscriptionExpirationType => {
-  const daysLeft = Math.ceil(Math.abs(new Date().getTime() - expirationDate?.getTime()) / 86400000)
+  if (plan.planStatus === PLAN_STATUS.INACTIVE) return 'disabled'
+  const daysLeft = Math.ceil(Math.abs(new Date().getTime() - expirationDate?.getTime()) / (60 * 60 * 24 * 1000))
 
   if (status !== SUBSCRIPTION_STATUS.ACTIVE || daysLeft <= 0) return 'blocked'
 
@@ -48,7 +50,7 @@ const mapMyPurchases = <V extends Function, R extends Function>(
     const { rate, displayName } = crypto?.[token.symbol]
       || { rate: 0, displayName: '' }
 
-    const expType = getExpirationType({ status, expirationDate })
+    const expType = getExpirationType({ status, expirationDate }, plan)
     const { provider: providerAddress } = provider
     const canRenew = (
       status === SUBSCRIPTION_STATUSES.COMPLETED

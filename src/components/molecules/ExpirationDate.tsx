@@ -17,12 +17,16 @@ const useStyles = makeStyles(({ palette }: Theme) => ({
   blocked: {
     color: palette.error.main,
   },
+  disabled: {
+    color: palette.text.disabled,
+  },
 }))
 
 export const EXPIRATION_TYPES = {
   normal: 'normal',
   warning: 'warning',
   blocked: 'blocked',
+  disabled: 'disabled',
 } as const
 
 export type SubscriptionExpirationType = keyof typeof EXPIRATION_TYPES
