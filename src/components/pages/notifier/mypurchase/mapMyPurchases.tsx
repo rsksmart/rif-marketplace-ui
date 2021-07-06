@@ -7,15 +7,17 @@ import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import { ExchangeRate } from 'context/Market/interfaces'
 import MarketplaceAddressCell from 'components/molecules/MarketplaceAddressCell'
 import ExpirationDate, { SubscriptionExpirationType } from 'components/molecules/ExpirationDate'
-import { PlanDTO, PLAN_STATUS } from 'api/rif-marketplace-cache/notifier/offers/models'
 import { SUBSCRIPTION_STATUSES } from 'api/rif-notifier-service/models/subscriptions'
+import { SUBSCRIPTION_STATUS } from 'api/rif-marketplace-cache/notifier/subscriptions/models'
 
 const EXPIRATION_WARNING_TRIGGER = 5
 
 const getExpirationType = (
-  { planStatus, daysLeft }: PlanDTO,
+  { status, expirationDate }: Pick<NotifierSubscriptionItem, 'status' | 'expirationDate'>,
 ): SubscriptionExpirationType => {
-  if (planStatus !== PLAN_STATUS.ACTIVE || daysLeft <= 0) return 'blocked'
+  const daysLeft = Math.ceil(Math.abs(new Date().getTime() - expirationDate?.getTime()) / 86400000)
+
+  if (status !== SUBSCRIPTION_STATUS.ACTIVE || daysLeft <= 0) return 'blocked'
 
   if (daysLeft <= EXPIRATION_WARNING_TRIGGER) return 'warning'
 
@@ -27,7 +29,8 @@ const mapMyPurchases = <V extends Function, R extends Function>(
   { onView, onRenew }: {
     onView: V
     onRenew: R
-  }) => ({
+  },
+) => ({
     id,
     token,
     plan,
@@ -41,7 +44,7 @@ const mapMyPurchases = <V extends Function, R extends Function>(
     const { rate, displayName } = crypto?.[token.symbol]
       || { rate: 0, displayName: '' }
 
-    const expType = getExpirationType(plan)
+    const expType = getExpirationType({ status, expirationDate })
     const { provider: providerAddress } = provider
     const canRenew = (
       status === SUBSCRIPTION_STATUSES.COMPLETED

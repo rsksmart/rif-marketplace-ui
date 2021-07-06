@@ -15,7 +15,7 @@ const useStyles = makeStyles(({ palette }: Theme) => ({
     color: palette.warning.main,
   },
   blocked: {
-    color: palette.text.disabled,
+    color: palette.error.main,
   },
 }))
 
