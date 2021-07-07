@@ -6,20 +6,24 @@ import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import { ExchangeRate } from 'context/Market/interfaces'
 import MarketplaceAddressCell from 'components/molecules/MarketplaceAddressCell'
 import ExpirationDate, { SubscriptionExpirationType } from 'components/molecules/ExpirationDate'
-import { PlanDTO, PLAN_STATUS } from 'api/rif-marketplace-cache/notifier/offers/models'
 import { SUBSCRIPTION_STATUSES } from 'api/rif-notifier-service/models/subscriptions'
+import { SUBSCRIPTION_STATUS } from 'api/rif-marketplace-cache/notifier/subscriptions/models'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Tooltip from '@material-ui/core/Tooltip'
 import RoundBtn from 'components/atoms/RoundBtn'
+import { PlanDTO, PLAN_STATUS } from 'api/rif-marketplace-cache/notifier/offers/models'
 
 const EXPIRATION_WARNING_TRIGGER = 5
 const CANT_RENEW_MESSAGE = 'Subscriptions renewal is available only for completed or expired purchases'
 
 const getExpirationType = (
-  { planStatus, daysLeft }: PlanDTO,
+  { status, expirationDate }: Pick<NotifierSubscriptionItem, 'status' | 'expirationDate'>, plan: PlanDTO,
 ): SubscriptionExpirationType => {
-  if (planStatus !== PLAN_STATUS.ACTIVE || daysLeft <= 0) return 'blocked'
+  if (plan.planStatus === PLAN_STATUS.INACTIVE) return 'disabled'
+  const daysLeft = Math.ceil(Math.abs(new Date().getTime() - expirationDate?.getTime()) / (60 * 60 * 24 * 1000))
+
+  if (status !== SUBSCRIPTION_STATUS.ACTIVE || daysLeft <= 0) return 'blocked'
 
   if (daysLeft <= EXPIRATION_WARNING_TRIGGER) return 'warning'
 
@@ -31,7 +35,8 @@ const mapMyPurchases = <V extends Function, R extends Function>(
   { onView, onRenew }: {
     onView: V
     onRenew: R
-  }) => ({
+  },
+) => ({
     id,
     token,
     plan,
@@ -45,7 +50,7 @@ const mapMyPurchases = <V extends Function, R extends Function>(
     const { rate, displayName } = crypto?.[token.symbol]
       || { rate: 0, displayName: '' }
 
-    const expType = getExpirationType(plan)
+    const expType = getExpirationType({ status, expirationDate }, plan)
     const { provider: providerAddress } = provider
     const canRenew = (
       status === SUBSCRIPTION_STATUSES.COMPLETED
