@@ -1,6 +1,5 @@
 import React from 'react'
 import { CombinedPriceCell } from 'components/molecules'
-import MarketplaceActionsCell from 'components/molecules/MarketplaceActionsCell'
 import NotificationsBalance from 'components/molecules/notifier/NotificationsBalance'
 import { MySubscription } from 'components/organisms/notifier/mypurchase/PurchasesTable'
 import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
@@ -9,8 +8,13 @@ import MarketplaceAddressCell from 'components/molecules/MarketplaceAddressCell'
 import ExpirationDate, { SubscriptionExpirationType } from 'components/molecules/ExpirationDate'
 import { SUBSCRIPTION_STATUSES } from 'api/rif-notifier-service/models/subscriptions'
 import { SUBSCRIPTION_STATUS } from 'api/rif-marketplace-cache/notifier/subscriptions/models'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import Tooltip from '@material-ui/core/Tooltip'
+import RoundBtn from 'components/atoms/RoundBtn'
 
 const EXPIRATION_WARNING_TRIGGER = 5
+const CANT_RENEW_MESSAGE = 'Subscriptions renewal is available only for completed or expired purchases'
 
 const getExpirationType = (
   { status, expirationDate }: Pick<NotifierSubscriptionItem, 'status' | 'expirationDate'>,
@@ -51,6 +55,25 @@ const mapMyPurchases = <V extends Function, R extends Function>(
       || status === SUBSCRIPTION_STATUSES.EXPIRED
     )
 
+    const renewButton = (
+      <RoundBtn
+        onClick={(): void => onRenew(id)}
+        disabled={!canRenew}
+      >
+        Renew
+      </RoundBtn>
+    )
+
+    const renewAction = canRenew
+      ? renewButton
+      : (
+        <Tooltip title={CANT_RENEW_MESSAGE}>
+          <span>
+            {renewButton}
+          </span>
+        </Tooltip>
+      )
+
     return {
       id,
       subId: <MarketplaceAddressCell value={id} />,
@@ -75,21 +98,21 @@ const mapMyPurchases = <V extends Function, R extends Function>(
         currencyFiat={currentFiat.displayName}
         divider=""
       />,
+      status: <Typography>{status}</Typography>,
       actions: (
-        <MarketplaceActionsCell
-          actions={[
-            {
-              disabled: !canRenew,
-              id: `renew_${id}`,
-              handleSelect: (): void => onRenew(id),
-              children: 'Renew',
-            }, {
-              id: `view_${id}`,
-              handleSelect: (): void => onView(id),
-              children: 'View',
-            },
-          ]}
-        />
+        <Grid
+          container
+          spacing={2}
+          justify="flex-end"
+          wrap="nowrap"
+        >
+          <Grid item>
+            {renewAction}
+          </Grid>
+          <Grid item>
+            <RoundBtn onClick={(): void => onView(id)}>View</RoundBtn>
+          </Grid>
+        </Grid>
       ),
     }
   }
