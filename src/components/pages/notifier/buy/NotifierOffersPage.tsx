@@ -94,6 +94,8 @@ const NotifierOffersPage: FC = () => {
     .map<MarketplaceItem>((provider) => {
       const providerPlans = items.filter((item) => item.provider === provider)
 
+      const hasActivePlans = providerPlans.some(({ planStatus }) => planStatus === 'ACTIVE')
+
       const { priceFiatRange, ...offerDetails } = mapPlansToOffers(
         providerPlans, crypto,
       )
@@ -113,6 +115,8 @@ const NotifierOffersPage: FC = () => {
         ),
         action1: account === provider ? 'your offer' : (
           <SelectRowButton
+            // TODO: when disabled, wrap in tooltip explaining the reason
+            disabled={!hasActivePlans}
             id={provider}
             isSelected={isSelected}
             handleSelect={(): void => {

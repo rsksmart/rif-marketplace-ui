@@ -25,6 +25,7 @@ export type NotifierPlan = Item & Provider & {
     limit: number
     priceOptions: PriceOption[]
     daysLeft: number
+    planStatus: PlanStatus
 }
 
 export type NotifierOfferItem = NotifierPlan

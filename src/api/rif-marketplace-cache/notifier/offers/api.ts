@@ -45,6 +45,7 @@ export const mapFromTransport = ({
     value: parseToBigDecimal(price.price),
   })),
   daysLeft,
+  planStatus,
 })
 
 class OffersService extends AbstractAPIService
