@@ -16,5 +16,5 @@ jobs:
       - name: backport
         uses: rsksmart/rif-marketplace-backport@v1
         with:
-          branches: develop,staging,testnet,mainnet
+          branches: testDevelop,testStaging,testTestnet,testMainnet
           github_token: ${{ secrets.GITHUB_TOKEN }}
