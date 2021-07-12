@@ -22,7 +22,7 @@ export type ActiveContractItem = Item & {
   }
 
 const mapActiveContracts = <T extends Function, U extends Function>(
-  myCustomers: NotifierSubscriptionItem[],
+  myCustomers: NotifierSubscriptionItem[] = [],
   { id: offerId, limit }: Pick<NotifierOfferItem, 'id' | 'limit'>,
   { currentFiat: { displayName }, crypto }: {
     currentFiat: BaseFiat
@@ -33,7 +33,7 @@ const mapActiveContracts = <T extends Function, U extends Function>(
       onView: U
     },
 ): Array<ActiveContractItem> => myCustomers
-    .filter(({ plan: { planId } }) => String(planId) === offerId)
+    .filter(({ plan: { id } }) => String(id) === offerId)
     .map<ActiveContractItem>(({
       id,
       consumer,
