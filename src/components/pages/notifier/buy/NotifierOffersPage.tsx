@@ -16,6 +16,7 @@ import React, {
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
+import Tooltip from '@material-ui/core/Tooltip'
 import { mapPlansToOffers } from './utils'
 
 const headers: TableHeaders = {
@@ -112,6 +113,30 @@ const NotifierOffersPage: FC = () => {
 
           const isSelected = selectedProvider?.id === provider
 
+          const selectButton = (
+            <SelectRowButton
+              disabled={!hasActivePlans}
+              id={provider}
+              isSelected={isSelected}
+              handleSelect={(): void => {
+                setSelectedProvider(isSelected
+                  ? undefined
+                  : { id: provider, plans: providerPlans })
+              }}
+            />
+          )
+          let action1 = selectButton
+
+          if (!hasActivePlans) {
+            action1 = (
+              <Tooltip title="This provider doesn't have any active plan at the moment">
+                <span>
+                  {selectButton}
+                </span>
+              </Tooltip>
+            )
+          }
+
           return {
             id: provider,
             provider: <AddressItem value={provider} />,
@@ -123,19 +148,7 @@ const NotifierOffersPage: FC = () => {
                 unit={currentFiat}
               />
             ),
-            action1: account === provider ? 'your offer' : (
-              <SelectRowButton
-                  // TODO: when disabled, wrap in tooltip explaining the reason
-                disabled={!hasActivePlans}
-                id={provider}
-                isSelected={isSelected}
-                handleSelect={(): void => {
-                  setSelectedProvider(isSelected
-                    ? undefined
-                    : { id: provider, plans: providerPlans })
-                }}
-              />
-            ),
+            action1: account === provider ? 'your offer' : action1,
           }
         })).then((marketplaceItems) => {
         setCollection(marketplaceItems)
