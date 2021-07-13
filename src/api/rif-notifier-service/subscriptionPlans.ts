@@ -12,11 +12,13 @@ export default class SubscriptionPlans
 
   _fetch = (): Promise<SubscriptionPlanResponse> => this.service.find()
 
-  hasPlans = async (): Promise<boolean> => {
-    const { status, content: { length } }: SubscriptionPlanResponse = await this.fetch()
+  hasActivePlans = async (): Promise<boolean> => {
+    const { status, content }: SubscriptionPlanResponse = await this.fetch()
     const isValidResponse = status === NOTIFIER_RESPONSE_STATUSES.OK
 
-    return isValidResponse && Boolean(length)
+    const anyActive = content.some(({ planStatus }) => planStatus === 'ACTIVE')
+
+    return isValidResponse && anyActive
   }
 
   _create = (): Promise<any> => Promise.resolve(logNotImplemented('Subscription Plans')())
