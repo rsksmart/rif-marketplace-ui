@@ -102,7 +102,17 @@ const NotifierMyPurchasePage: FC = () => {
           $ne: SUBSCRIPTION_STATUSES.PENDING,
         },
       })
-        .then(setSubscriptions)
+        .then((subs: Array<NotifierSubscriptionItem>) => {
+          // This should really be done in SQL (cache) but sequelize doesn't support subquery and raw query would be impractical in this case (src: https://github.com/sequelize/sequelize/issues/5354)
+          const filtered = subs.reduce((acc, cur) => {
+            const sub: NotifierSubscriptionItem = acc[cur.plan.id] ?? cur
+            acc[cur.plan.id] = cur.expirationDate > sub.expirationDate
+              ? cur : sub
+
+            return acc
+          }, {})
+          setSubscriptions(Object.values(filtered))
+        })
         .catch((error) => reportError(new UIError({
           id: 'service-fetch',
           text: 'Error while fetching subscriptions.',
