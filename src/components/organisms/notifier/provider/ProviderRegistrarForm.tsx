@@ -46,11 +46,11 @@ const ProviderRegistrarForm: FC<ProviderRegistrarFormProps> = ({
     providersApi.connect(reportError)
     const providerService: ProvidersService = providersApi as ProvidersService
     const urlIsRegistered: boolean = await providerService.isRegisteredURL(url.replace(trailingSlashRegex, ''))
-    const hasPlans: boolean|undefined = await notifierService.hasPlans()
+    const hasActivePlans: boolean|undefined = await notifierService.hasActivePlans()
     const urlMessage = urlIsRegistered ? URL_ALREADY_REGISTERED : ''
-    const planMessage = hasPlans ? '' : NO_AVAILABLE_SUBSCRIPTION_PLAN
+    const planMessage = hasActivePlans ? '' : NO_AVAILABLE_SUBSCRIPTION_PLAN
 
-    return (!urlIsRegistered && hasPlans) || urlMessage || planMessage
+    return (!urlIsRegistered && hasActivePlans) || urlMessage || planMessage
   }
 
   return (
