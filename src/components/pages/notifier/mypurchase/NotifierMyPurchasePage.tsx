@@ -1,8 +1,7 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import {
-  shortenString,
-  theme, Web3Store, Spinner,
+  shortenString, Web3Store, Spinner, TooltipIconButton,
 } from '@rsksmart/rif-ui'
 import { notifierSubscriptionsAddress } from 'api/rif-marketplace-cache/notifier/subscriptions'
 import GridRow from 'components/atoms/GridRow'
@@ -20,6 +19,7 @@ import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import { UIError } from 'models/UIMessage'
 import React, {
   FC, useContext, useEffect, useState,
+  useCallback,
 } from 'react'
 import { getShortDateString } from 'utils/dateUtils'
 import { shortChecksumAddress } from 'utils/stringUtils'
@@ -38,17 +38,24 @@ import { convertToWeiString } from 'utils/parsers'
 import { useHistory } from 'react-router-dom'
 import { ConfirmationsContext } from 'context/Confirmations'
 import { getOrCreateRenewalSubscription } from 'api/rif-notifier-service/subscriptionUtils'
+import Box from '@material-ui/core/Box'
+import GridItem from 'components/atoms/GridItem'
+import RefreshIcon from '@material-ui/icons/Refresh'
 import mapMyPurchases from './mapMyPurchases'
 
-const useTitleStyles = makeStyles(() => ({
-  root: {
-    marginBlockStart: `${theme.spacing(2)}px`,
-    marginInlineStart: `${theme.spacing(2)}px`,
+const useStyles = makeStyles((theme: Theme) => ({
+  titleContainer: {
+    padding: theme.spacing(2, 2, 0, 2),
+  },
+  refreshContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
 }))
 
 const NotifierMyPurchasePage: FC = () => {
-  const titleStyles = useTitleStyles()
+  const classes = useStyles()
 
   const {
     state: { account, web3 },
@@ -92,7 +99,7 @@ const NotifierMyPurchasePage: FC = () => {
   ).length
   const isAwaitingConfs = Boolean(numberOfConfs)
 
-  useEffect(() => {
+  const fetchSubscriptions = useCallback(() => {
     if (account && subscriptionsApi) {
       setIsLoadingData(true)
       subscriptionsApi.connect(reportError)
@@ -113,6 +120,10 @@ const NotifierMyPurchasePage: FC = () => {
         })
     }
   }, [subscriptionsApi, account, reportError])
+
+  useEffect(() => {
+    fetchSubscriptions()
+  }, [fetchSubscriptions])
 
   const {
     crypto,
@@ -232,15 +243,37 @@ const NotifierMyPurchasePage: FC = () => {
       <>
         <MyPurchasesHeader />
         <RoundedCard color="secondary">
-          <GridRow>
-            <Typography
-              gutterBottom
-              color="primary"
-              variant="subtitle1"
-              classes={titleStyles}
+          <GridRow className={classes.titleContainer}>
+            <GridItem md={4}>
+              <Typography
+                gutterBottom
+                color="primary"
+                variant="subtitle1"
+              >
+                Active plans
+              </Typography>
+            </GridItem>
+            <GridItem
+              md={8}
+              className={classes.refreshContainer}
             >
-              Active plans
-            </Typography>
+              <Typography component="div" align="right">
+                <Box
+                  color="text.secondary"
+                  display="inline"
+                >
+                  {'Some subscriptions may have been updated '}
+                </Box>
+                <TooltipIconButton
+                  icon={<RefreshIcon />}
+                  tooltipTitle="Refresh"
+                  iconButtonProps={{
+                    onClick: fetchSubscriptions,
+                    disabled: isLoadingData,
+                  }}
+                />
+              </Typography>
+            </GridItem>
           </GridRow>
           <GridRow>
             {
