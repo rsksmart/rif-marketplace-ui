@@ -1,4 +1,5 @@
 import { Web3Store } from '@rsksmart/rif-ui'
+import SubscriptionPlans from 'api/rif-notifier-service/subscriptionPlans'
 import ItemWUnit from 'components/atoms/ItemWUnit'
 import { AddressItem, SelectRowButton } from 'components/molecules'
 import NotifierOffersFilters from 'components/organisms/filters/notifier/OffersFilters'
@@ -14,6 +15,8 @@ import React, {
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
+import Logger from 'utils/Logger'
+import Tooltip from '@material-ui/core/Tooltip'
 import { mapPlansToOffers } from './utils'
 
 const headers: TableHeaders = {
@@ -87,43 +90,69 @@ const NotifierOffersPage: FC = () => {
   }
 
   const [selectedProvider, setSelectedProvider] = useState<ProviderItem>()
+  const [collection, setCollection] = useState<MarketplaceItem[]>([])
 
-  const providers = Array.from(new Set(items.map(({ provider }) => provider)))
+  useEffect(() => {
+    if (items?.length) {
+      const providers = Array.from(new Set(items
+        .map(({ provider }) => provider)))
 
-  const collection: MarketplaceItem[] = providers
-    .map<MarketplaceItem>((provider) => {
-      const providerPlans = items.filter((item) => item.provider === provider)
+      Promise.all(providers
+        .map<Promise<MarketplaceItem>>(async (provider) => {
+          const providerPlans = items
+            .filter((item) => item.provider === provider)
+          const { url } = providerPlans[0]
 
-      const { priceFiatRange, ...offerDetails } = mapPlansToOffers(
-        providerPlans, crypto,
-      )
+          const notifierService = new SubscriptionPlans(url)
+          notifierService.connect(Logger.getInstance().debug)
+          const hasActivePlans = await notifierService.hasActivePlans()
 
-      const isSelected = selectedProvider?.id === provider
+          const { priceFiatRange, ...offerDetails } = mapPlansToOffers(
+            providerPlans, crypto,
+          )
 
-      return {
-        id: provider,
-        provider: <AddressItem value={provider} />,
-        ...offerDetails,
-        priceFiatRange: (
-          <ItemWUnit
-            type="mediumPrimary"
-            value={priceFiatRange}
-            unit={currentFiat}
-          />
-        ),
-        action1: account === provider ? 'your offer' : (
-          <SelectRowButton
-            id={provider}
-            isSelected={isSelected}
-            handleSelect={(): void => {
-              setSelectedProvider(isSelected
-                ? undefined
-                : { id: provider, plans: providerPlans })
-            }}
-          />
-        ),
-      }
-    })
+          const isSelected = selectedProvider?.id === provider
+
+          const selectButton = (
+            <SelectRowButton
+              disabled={!hasActivePlans}
+              id={provider}
+              isSelected={isSelected}
+              handleSelect={(): void => {
+                setSelectedProvider(isSelected
+                  ? undefined
+                  : { id: provider, plans: providerPlans })
+              }}
+            />
+          )
+          const action1 = hasActivePlans
+            ? selectButton
+            : (
+              <Tooltip title="This provider doesn't have any active plan at the moment">
+                <span>
+                  {selectButton}
+                </span>
+              </Tooltip>
+            )
+
+          return {
+            id: provider,
+            provider: <AddressItem value={provider} />,
+            ...offerDetails,
+            priceFiatRange: (
+              <ItemWUnit
+                type="mediumPrimary"
+                value={priceFiatRange}
+                unit={currentFiat}
+              />
+            ),
+            action1: account === provider ? 'your offer' : action1,
+          }
+        })).then((marketplaceItems) => {
+        setCollection(marketplaceItems)
+      })
+    }
+  }, [items, crypto, currentFiat, account, selectedProvider])
 
   return (
     <MarketPageTemplate
@@ -133,11 +162,9 @@ const NotifierOffersPage: FC = () => {
       headers={headers}
       dispatch={dispatch}
       outdatedCt={0}
-      itemDetail={
-        selectedProvider && showPlans(
-          selectedProvider, currentFiat, crypto, onPlanSelected,
-        )
-      }
+      itemDetail={selectedProvider && showPlans(
+        selectedProvider, currentFiat, crypto, onPlanSelected,
+      )}
     />
   )
 }
