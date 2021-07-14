@@ -125,17 +125,15 @@ const NotifierOffersPage: FC = () => {
               }}
             />
           )
-          let action1 = selectButton
-
-          if (!hasActivePlans) {
-            action1 = (
+          const action1 = hasActivePlans
+            ? selectButton
+            : (
               <Tooltip title="This provider doesn't have any active plan at the moment">
                 <span>
                   {selectButton}
                 </span>
               </Tooltip>
             )
-          }
 
           return {
             id: provider,
