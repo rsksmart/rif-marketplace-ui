@@ -109,7 +109,17 @@ const NotifierMyPurchasePage: FC = () => {
           $ne: SUBSCRIPTION_STATUSES.PENDING,
         },
       })
-        .then(setSubscriptions)
+        .then((incomingSubscriptions: Array<NotifierSubscriptionItem>) => {
+          const prevSubsMap = incomingSubscriptions.reduce((acc,
+            sub) => ({ ...acc, [sub.previousSubscription]: sub }),
+          {})
+
+          const filtered = incomingSubscriptions.filter(
+            ({ id }) => !prevSubsMap[id],
+          )
+
+          setSubscriptions(Object.values(filtered))
+        })
         .catch((error) => reportError(new UIError({
           id: 'service-fetch',
           text: 'Error while fetching subscriptions.',
