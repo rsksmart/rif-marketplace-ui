@@ -1,4 +1,4 @@
-import { SubscriptionPlanResponse } from 'api/rif-notifier-service/models/subscriptionPlan'
+import { SubscriptionPlanDTO, SubscriptionPlanResponse } from 'api/rif-notifier-service/models/subscriptionPlan'
 import { NOTIFIER_RESPONSE_STATUSES } from 'api/rif-notifier-service/models/response'
 import { logNotImplemented } from 'utils/utils'
 import { NotifierAPIService } from './interfaces'
@@ -12,13 +12,19 @@ export default class SubscriptionPlans
 
   _fetch = (): Promise<SubscriptionPlanResponse> => this.service.find()
 
-  hasActivePlans = async (): Promise<boolean> => {
+  getActivePlans = async (): Promise<Array<SubscriptionPlanDTO>> => {
     const { status, content }: SubscriptionPlanResponse = await this.fetch()
     const isValidResponse = status === NOTIFIER_RESPONSE_STATUSES.OK
 
-    const anyActive = content.some(({ planStatus }) => planStatus === 'ACTIVE')
+    if (!isValidResponse) {
+      this.errorReporter({
+        id: 'service-fetch',
+        text: 'Wrong response from notifier provider',
+        error: new Error(`Wrong response from notifier provider ${JSON.stringify(content)}`),
+      })
+    }
 
-    return isValidResponse && anyActive
+    return content.filter(({ planStatus }) => planStatus === 'ACTIVE')
   }
 
   _create = (): Promise<any> => Promise.resolve(logNotImplemented('Subscription Plans')())
