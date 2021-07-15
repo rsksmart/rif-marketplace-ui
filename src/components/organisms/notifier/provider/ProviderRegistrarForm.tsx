@@ -40,13 +40,13 @@ const ProviderRegistrarForm: FC<ProviderRegistrarFormProps> = ({
     },
   } = useContext<AppContextProps>(AppContext)
 
-  const validateProviderURL = async (url: string): Promise<boolean|string> => {
+  const validateProviderURL = async (url: string): Promise<boolean | string> => {
     const notifierService: SubscriptionPlans = new SubscriptionPlans(url)
     notifierService.connect(reportError)
     providersApi.connect(reportError)
     const providerService: ProvidersService = providersApi as ProvidersService
     const urlIsRegistered: boolean = await providerService.isRegisteredURL(url.replace(trailingSlashRegex, ''))
-    const hasActivePlans: boolean|undefined = await notifierService.hasActivePlans()
+    const hasActivePlans = Boolean((await notifierService.getActivePlans()).length)
     const urlMessage = urlIsRegistered ? URL_ALREADY_REGISTERED : ''
     const planMessage = hasActivePlans ? '' : NO_AVAILABLE_SUBSCRIPTION_PLAN
 
@@ -90,7 +90,7 @@ const ProviderRegistrarForm: FC<ProviderRegistrarFormProps> = ({
                 {
                   errors.endpointUrl && (
                     <Typography color="error" variant="caption">
-                      { errors.endpointUrl.message || 'Endpoint url is required'}
+                      {errors.endpointUrl.message || 'Endpoint url is required'}
                     </Typography>
                   )
                 }
