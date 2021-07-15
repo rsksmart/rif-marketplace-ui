@@ -105,7 +105,8 @@ const NotifierOffersPage: FC = () => {
 
           const notifierService = new SubscriptionPlans(url)
           notifierService.connect(Logger.getInstance().debug)
-          const hasActivePlans = await notifierService.hasActivePlans()
+          // TODO: keep the result of active plans to check against the plans we got from cache and disable their selection if no active
+          const hasActivePlans = Boolean((await notifierService.getActivePlans()).length)
 
           const { priceFiatRange, ...offerDetails } = mapPlansToOffers(
             providerPlans, crypto,
