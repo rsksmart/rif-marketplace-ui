@@ -105,18 +105,24 @@ const NotifierOffersPage: FC = () => {
 
           const notifierService = new SubscriptionPlans(url)
           notifierService.connect(Logger.getInstance().debug)
-          // TODO: keep the result of active plans to check against the plans we got from cache and disable their selection if no active
-          const hasActivePlans = Boolean((await notifierService.getActivePlans()).length)
+          const notifierActivePlans = await notifierService.getActivePlans()
+          // filters the plans we got with the plans that are active in the provider
+          const availablePlans = providerPlans.filter(
+            ({ id }) => notifierActivePlans.some(
+              ({ id: notifierPlanId }) => notifierPlanId === Number(id),
+            ),
+          )
+          const hasAvailablePlans = availablePlans.length > 0
 
           const { priceFiatRange, ...offerDetails } = mapPlansToOffers(
-            providerPlans, crypto,
+            availablePlans, crypto,
           )
 
           const isSelected = selectedProvider?.id === provider
 
           const selectButton = (
             <SelectRowButton
-              disabled={!hasActivePlans}
+              disabled={!hasAvailablePlans}
               id={provider}
               isSelected={isSelected}
               handleSelect={(): void => {
@@ -126,7 +132,7 @@ const NotifierOffersPage: FC = () => {
               }}
             />
           )
-          const action1 = hasActivePlans
+          const action1 = hasAvailablePlans
             ? selectButton
             : (
               <Tooltip title="This provider doesn't have any active plan at the moment">
