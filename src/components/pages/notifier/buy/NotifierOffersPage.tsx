@@ -109,8 +109,8 @@ const NotifierOffersPage: FC = () => {
           const notifierActivePlans = await notifierService.getActivePlans()
           // filters the plans we got with the plans that are active in the provider
           const availablePlans = providerPlans.filter(
-            ({ id }) => notifierActivePlans.some(
-              ({ id: notifierPlanId }) => notifierPlanId === Number(id),
+            ({ planId }) => notifierActivePlans.some(
+              ({ id: notifierPlanId }) => notifierPlanId === planId,
             ),
           )
           const hasAvailablePlans = availablePlans.length > 0
