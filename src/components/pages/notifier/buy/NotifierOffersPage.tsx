@@ -17,6 +17,7 @@ import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
 import Logger from 'utils/Logger'
 import Tooltip from '@material-ui/core/Tooltip'
+import Typography from '@material-ui/core/Typography'
 import { mapPlansToOffers } from './utils'
 
 const headers: TableHeaders = {
@@ -114,10 +115,6 @@ const NotifierOffersPage: FC = () => {
           )
           const hasAvailablePlans = availablePlans.length > 0
 
-          const { priceFiatRange, ...offerDetails } = mapPlansToOffers(
-            availablePlans, crypto,
-          )
-
           const isSelected = selectedProvider?.id === provider
 
           const selectButton = (
@@ -128,7 +125,7 @@ const NotifierOffersPage: FC = () => {
               handleSelect={(): void => {
                 setSelectedProvider(isSelected
                   ? undefined
-                  : { id: provider, plans: providerPlans })
+                  : { id: provider, plans: availablePlans })
               }}
             />
           )
@@ -142,9 +139,31 @@ const NotifierOffersPage: FC = () => {
               </Tooltip>
             )
 
-          return {
+          const commonResult = {
             id: provider,
             provider: <AddressItem value={provider} />,
+            action1: account === provider ? 'Your offer' : (action1),
+          }
+
+          if (!hasAvailablePlans) {
+            return {
+              ...commonResult,
+              channels: 'N/A',
+              currencies: 'N/A',
+              notifLimitRange: 'N/A',
+              priceFiatRange: <Typography>N/A</Typography>,
+            }
+          }
+
+          const {
+            priceFiatRange,
+            ...offerDetails
+          } = mapPlansToOffers(
+            availablePlans, crypto,
+          )
+
+          return {
+            ...commonResult,
             ...offerDetails,
             priceFiatRange: (
               <ItemWUnit
@@ -153,7 +172,6 @@ const NotifierOffersPage: FC = () => {
                 unit={currentFiat}
               />
             ),
-            action1: account === provider ? 'your offer' : action1,
           }
         })).then((marketplaceItems) => {
         setCollection(marketplaceItems)
