@@ -1,4 +1,3 @@
-import CustomError from 'models/CustomError'
 import { logNotImplemented } from 'utils/utils'
 import { NotifierAPIService, NotifierResponse } from './interfaces'
 import { NOTIFIER_RESPONSE_STATUSES } from './models/response'
@@ -57,10 +56,6 @@ export default class SubscriptionService
   async (user: string, planId: number):
   Promise<SubscriptionSummary|undefined> => {
     const userSubscriptions: Array<SubscriptionDTO> = await this.getUserSubscriptions(user)
-
-    if (this._getActiveSubscriptionFrom(userSubscriptions)) {
-      throw new CustomError('User already has an active subscription')
-    }
 
     const pendingSubscriptions: Array<SubscriptionDTO> = userSubscriptions.filter((subscription) => {
       const { subscriptionPlanId, status: subscriptionStatus } = subscription
