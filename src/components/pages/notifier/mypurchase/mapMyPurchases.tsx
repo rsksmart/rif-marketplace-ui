@@ -31,6 +31,8 @@ const getExpirationType = (
   return 'normal'
 }
 
+const RENEWABLE_STATUS = [String(SUBSCRIPTION_STATUSES.COMPLETED), String(SUBSCRIPTION_STATUSES.EXPIRED)]
+
 const mapMyPurchases = <V extends Function, R extends Function>(
   { currentFiat, crypto }: ExchangeRate,
   { onView, onRenew }: {
@@ -53,9 +55,7 @@ const mapMyPurchases = <V extends Function, R extends Function>(
 
     const expType = getExpirationType({ status, expirationDate }, plan)
     const { provider: providerAddress } = provider
-    const canRenew = (status === SUBSCRIPTION_STATUSES.COMPLETED
-      || status === SUBSCRIPTION_STATUSES.EXPIRED)
-      && getBrowserSessionCanRenew(id)
+    const canRenew = RENEWABLE_STATUS.includes(String(status)) && getBrowserSessionCanRenew(id)
 
     const renewButton = (
       <RoundBtn
