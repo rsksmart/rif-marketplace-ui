@@ -94,7 +94,7 @@ export type SubscribeToPlanDTO = {
   price: string
   currency: string
   subscriptionPlanId: number
-  topics: TopicDTO[]
+  topics?: TopicDTO[]
 }
 
 export type SubscribeToPlanResponseDTO = {
