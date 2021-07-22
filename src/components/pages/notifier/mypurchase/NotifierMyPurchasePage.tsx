@@ -42,6 +42,7 @@ import Box from '@material-ui/core/Box'
 import GridItem from 'components/atoms/GridItem'
 import RefreshIcon from '@material-ui/icons/Refresh'
 import mapMyPurchases from './mapMyPurchases'
+import { setBrowserSessionCannotRenew } from './utils'
 
 const useStyles = makeStyles((theme: Theme) => ({
   titleContainer: {
@@ -214,7 +215,7 @@ const NotifierMyPurchasePage: FC = () => {
 
       if (purchaseReceipt) {
         setTxOperationDone(true)
-        sessionStorage.setItem(subscriptionHash, '')
+        setBrowserSessionCannotRenew(subscriptionHash)
         confirmationsDispatch({
           type: 'NEW_REQUEST',
           payload: {

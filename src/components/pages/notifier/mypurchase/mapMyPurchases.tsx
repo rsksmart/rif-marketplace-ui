@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography'
 import Tooltip from '@material-ui/core/Tooltip'
 import RoundBtn from 'components/atoms/RoundBtn'
 import { PlanDTO, PLAN_STATUS } from 'api/rif-marketplace-cache/notifier/offers/models'
+import { getBrowserSessionCanRenew } from './utils'
 
 const EXPIRATION_WARNING_TRIGGER = 5
 const CANT_RENEW_MESSAGE = 'Subscriptions renewal is available only for completed or expired purchases'
@@ -54,7 +55,7 @@ const mapMyPurchases = <V extends Function, R extends Function>(
     const { provider: providerAddress } = provider
     const canRenew = (status === SUBSCRIPTION_STATUSES.COMPLETED
       || status === SUBSCRIPTION_STATUSES.EXPIRED)
-      && sessionStorage.getItem(id) === null
+      && getBrowserSessionCanRenew(id)
 
     const renewButton = (
       <RoundBtn
