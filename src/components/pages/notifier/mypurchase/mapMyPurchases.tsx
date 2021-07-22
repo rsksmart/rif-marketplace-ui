@@ -52,10 +52,9 @@ const mapMyPurchases = <V extends Function, R extends Function>(
 
     const expType = getExpirationType({ status, expirationDate }, plan)
     const { provider: providerAddress } = provider
-    const canRenew = (
-      status === SUBSCRIPTION_STATUSES.COMPLETED
-      || status === SUBSCRIPTION_STATUSES.EXPIRED
-    )
+    const canRenew = (status === SUBSCRIPTION_STATUSES.COMPLETED
+      || status === SUBSCRIPTION_STATUSES.EXPIRED)
+      && sessionStorage.getItem(id) === null
 
     const renewButton = (
       <RoundBtn

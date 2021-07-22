@@ -214,6 +214,7 @@ const NotifierMyPurchasePage: FC = () => {
 
       if (purchaseReceipt) {
         setTxOperationDone(true)
+        sessionStorage.setItem(subscriptionHash, '')
         confirmationsDispatch({
           type: 'NEW_REQUEST',
           payload: {
