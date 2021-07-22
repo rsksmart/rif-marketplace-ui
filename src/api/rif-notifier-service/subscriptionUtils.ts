@@ -96,8 +96,8 @@ type SubscriptionOrderItem = Pick<OrderItem, 'url' | 'planId' | 'value'> & {
 
 export const buildSubscribeToPlanDTO = (
   item: SubscriptionOrderItem,
-  topics: Array<TopicDTO>,
   account: string,
+  topics?: Array<TopicDTO>,
 ): SubscribeToPlanDTO => {
   const {
     symbol: currencySymbol,
@@ -132,7 +132,7 @@ export const createPendingSubscription = (
 ): Promise<SubscribeToPlanResponseDTO> => {
   const { url: providerUrl } = item
   const subscribeToPlanDTO = buildSubscribeToPlanDTO(
-    item, buildTopicsDTOFrom(notifierEventItems), account,
+    item, account, buildTopicsDTOFrom(notifierEventItems),
   )
 
   const subscribeToPlanService = new SubscribeToPlanService(providerUrl)
@@ -148,7 +148,7 @@ export const createRenewalSubscription = (
 ): Promise<SubscribeToPlanResponseDTO> => {
   const { url: providerUrl } = item
   const subscribeToPlanDTO = buildSubscribeToPlanDTO(
-    item, [], account,
+    item, account,
   )
   const renewSubscriptionService = new RenewSubscriptionService(providerUrl)
   renewSubscriptionService.connect(reportError)
