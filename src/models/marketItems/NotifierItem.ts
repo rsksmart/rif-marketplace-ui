@@ -21,10 +21,10 @@ export type NotifierPlan = Item & Provider & {
     planId: number
     name: string
     channels: Array<SupportedEventChannel>
-    planStatus: PlanStatus
     limit: number
     priceOptions: PriceOption[]
     daysLeft: number
+    planStatus: PlanStatus
 }
 
 export type NotifierOfferItem = NotifierPlan
