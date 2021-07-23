@@ -18,8 +18,8 @@ export const activeContractHeaders = {
   actions: '',
 }
 export type ActiveContractItem = Item & {
-    [K in keyof typeof activeContractHeaders]: React.ReactElement
-  }
+  [K in keyof typeof activeContractHeaders]: React.ReactElement
+}
 
 const mapActiveContracts = <T extends Function, U extends Function>(
   myCustomers: NotifierSubscriptionItem[] = [],
@@ -29,9 +29,9 @@ const mapActiveContracts = <T extends Function, U extends Function>(
     crypto: MarketCryptoRecord
   },
   { onWithdraw, onView }: {
-      onWithdraw: T
-      onView: U
-    },
+    onWithdraw: T
+    onView: U
+  },
 ): Array<ActiveContractItem> => myCustomers
     .filter(({ plan: { id } }) => String(id) === offerId)
     .map<ActiveContractItem>(({
@@ -74,6 +74,8 @@ const mapActiveContracts = <T extends Function, U extends Function>(
               id: `withdraw_${id}`,
               handleSelect: (): void => onWithdraw({ id, token, price }),
               children: 'Withdraw',
+            // TODO: disable if no funds to withdraw
+            // TODO: show spinner if being withdrawn?
             }, {
               id: `view_${id}`,
               handleSelect: (): void => onView(id),
@@ -83,4 +85,5 @@ const mapActiveContracts = <T extends Function, U extends Function>(
         />
       ),
     }))
+
 export default mapActiveContracts
