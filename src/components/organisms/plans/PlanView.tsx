@@ -26,11 +26,9 @@ const usePlanStyles = makeStyles({
 
 type Props<H extends TableHeaders> = Omit<AccordionProps, 'children'> & {
   summary: Omit<PlanViewSummaryProps, 'isExpanded'>
-  handlePlanEdit: () => void
-  isPlanEditDisabled: boolean
-  handlePlanCancel: () => void
-  isPlanCancelDisabled: boolean
-  isTableLoading: boolean
+    editButton: React.ReactElement
+    cancelButton: React.ReactElement
+    isTableLoading: boolean
   headers: H
   activeContracts: Array<{ id: string } & {
     [K in keyof H]: React.ReactElement
@@ -39,10 +37,8 @@ type Props<H extends TableHeaders> = Omit<AccordionProps, 'children'> & {
 
 const PlanView = <H extends TableHeaders>({
   summary: { name, ...summaryProps },
-  handlePlanEdit,
-  isPlanEditDisabled,
-  handlePlanCancel,
-  isPlanCancelDisabled,
+  editButton,
+  cancelButton,
   isTableLoading,
   headers,
   activeContracts,
@@ -65,10 +61,8 @@ const PlanView = <H extends TableHeaders>({
       />
       <ActiveContracts
         {...{
-          handlePlanEdit,
-          isPlanEditDisabled,
-          handlePlanCancel,
-          isPlanCancelDisabled,
+          editButton,
+          cancelButton,
         }}
       >
         {

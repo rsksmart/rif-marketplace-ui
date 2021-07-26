@@ -2,10 +2,11 @@ import {
   Grid,
 } from '@material-ui/core'
 import {
-  Button, shortenString, Web3Store,
+  shortenString, Web3Store,
 } from '@rsksmart/rif-ui'
 import { notifierSubscriptionsAddress } from 'api/rif-marketplace-cache/notifier/subscriptions'
 import LabelWithValue from 'components/atoms/LabelWithValue'
+import FeatureNotSupportedButton from 'components/atoms/FeatureNotSupportedButton'
 import RoundBtn from 'components/atoms/RoundBtn'
 import WithLoginCard from 'components/hoc/WithLoginCard'
 import InfoBar from 'components/molecules/InfoBar'
@@ -151,9 +152,6 @@ const NotifierMyOffersPage: FC = () => {
     }
   }, [account, web3, reportError])
 
-  const handleAddPlan = logNotImplemented('handle add plan')
-  const handleEditPlan = logNotImplemented('handle edit plan')
-  const handleCancelPlan = logNotImplemented('handle cancel plan')
   const handleEditProfile = (): void => {
     history.push(ROUTES.NOTIFIER.MYOFFERS.EDIT)
   }
@@ -257,9 +255,7 @@ const NotifierMyOffersPage: FC = () => {
         </Grid>
         {/* Header */ }
         <MyOffersHeader>
-          <Button variant="outlined" color="primary" rounded onClick={handleAddPlan}>
-            Add notification plan
-          </Button>
+          <FeatureNotSupportedButton>Add Notification Plan</FeatureNotSupportedButton>
         </MyOffersHeader>
 
         {/* Plans */}
@@ -278,8 +274,6 @@ const NotifierMyOffersPage: FC = () => {
                 exchangeRates,
                 { onWithdraw, onView },
               )
-              const isPlanEditDisabled = false
-              const isPlanCancelDisabled = false
               const isTableLoading = false
 
               const planSummary: Partial<PlanViewSummaryProps> = {
@@ -301,10 +295,8 @@ const NotifierMyOffersPage: FC = () => {
                 <Grid item key={id}>
                   <PlanView {...{
                     summary: planSummary as PlanViewSummaryProps,
-                    handlePlanEdit: handleEditPlan,
-                    isPlanEditDisabled,
-                    handlePlanCancel: handleCancelPlan,
-                    isPlanCancelDisabled,
+                    editButton: <FeatureNotSupportedButton>Edit Plan</FeatureNotSupportedButton>,
+                    cancelButton: <FeatureNotSupportedButton>Cancel Plan</FeatureNotSupportedButton>,
                     isTableLoading,
                     headers: activeContractHeaders,
                     activeContracts,

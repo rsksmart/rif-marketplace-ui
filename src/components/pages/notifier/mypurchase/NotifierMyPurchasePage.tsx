@@ -24,7 +24,6 @@ import React, {
 import { getShortDateString } from 'utils/dateUtils'
 import { shortChecksumAddress } from 'utils/stringUtils'
 import { getFiatPrice } from 'utils/priceUtils'
-import { logNotImplemented } from 'utils/utils'
 import { SubscriptionDetails, subscriptionHeaders } from 'components/organisms/notifier/mypurchase/details'
 import NotifierDetails, { SubscriptionEventsDisplayItem } from 'components/organisms/notifier/details/NotifierDetailsModal'
 import RoundBtn from 'components/atoms/RoundBtn'
@@ -41,6 +40,7 @@ import { getOrCreateRenewalSubscription } from 'api/rif-notifier-service/subscri
 import Box from '@material-ui/core/Box'
 import GridItem from 'components/atoms/GridItem'
 import RefreshIcon from '@material-ui/icons/Refresh'
+import FeatureNotSupportedButton from 'components/atoms/FeatureNotSupportedButton'
 import mapMyPurchases from './mapMyPurchases'
 import { setBrowserSessionCannotRenew } from './utils'
 
@@ -303,9 +303,7 @@ const NotifierMyPurchasePage: FC = () => {
               events={subscriptionEvents}
               onClose={onModalClose}
               actions={(
-                <RoundBtn onClick={logNotImplemented('cancel handle')}>
-                  Cancel plan
-                </RoundBtn>
+                <FeatureNotSupportedButton>Cancel Plan</FeatureNotSupportedButton>
               )}
             />
           )}
