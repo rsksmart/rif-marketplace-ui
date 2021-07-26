@@ -1,0 +1,19 @@
+name: Autosquash
+on:
+  push:
+    branches:
+      - backport-*
+  pull_request:
+    types:
+      - edited
+      - updated
+
+jobs:
+  backport:
+    runs-on: ubuntu-18.04
+    name: Autosquash
+    steps:
+      - name: Autosquash
+        uses: rsksmart/rif-marketplace-autosquash@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
