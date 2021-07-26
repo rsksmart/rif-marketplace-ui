@@ -15,4 +15,6 @@ export const API_RESPONSE_MESSAGES = {
   ERROR: 'error',
 }
 
+export const FEATURE_NOT_SUPPORTED = 'This feature is not supported yet'
+
 export default {}
