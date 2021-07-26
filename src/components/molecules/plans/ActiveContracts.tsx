@@ -9,37 +9,19 @@ import React, {
 } from 'react'
 
 type Props = {
-  handlePlanEdit: () => void
-  isPlanEditDisabled: boolean
-  isPlanEditUnsupported: boolean
-  handlePlanCancel: () => void
-  isPlanCancelDisabled: boolean
-  isPlanCancelUnsupported: boolean
+  editButton: React.ReactElement
+  cancelButton: React.ReactElement
 }
 
 const ActiveContracts: FC<Props> = ({
-  handlePlanEdit,
-  isPlanEditDisabled,
-  isPlanEditUnsupported,
-  handlePlanCancel,
-  isPlanCancelDisabled,
-  isPlanCancelUnsupported,
-  children,
+  editButton, cancelButton, children,
 }) => (
   <AccordionDetails>
     <Grid container direction="column" spacing={2}>
       <Grid item>
         <PlanViewActions
-          editProps={{
-            onClick: handlePlanEdit,
-            disabled: isPlanEditDisabled,
-            isUnsupportedButton: isPlanEditUnsupported,
-          }}
-          cancelProps={{
-            onClick: handlePlanCancel,
-            disabled: isPlanCancelDisabled,
-            isUnsupportedButton: isPlanCancelUnsupported,
-          }}
+          editButton={editButton}
+          cancelButton={cancelButton}
         />
       </Grid>
       <Grid item><Divider /></Grid>
