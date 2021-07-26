@@ -5,7 +5,6 @@ on:
       - backport-*
   pull_request:
     types:
-      - opened
       - edited
       - updated
 
