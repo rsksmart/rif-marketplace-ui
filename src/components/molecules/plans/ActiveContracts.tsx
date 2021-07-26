@@ -11,15 +11,19 @@ import React, {
 type Props = {
   handlePlanEdit: () => void
   isPlanEditDisabled: boolean
+  isPlanEditUnsupported: boolean
   handlePlanCancel: () => void
   isPlanCancelDisabled: boolean
+  isPlanCancelUnsupported: boolean
 }
 
 const ActiveContracts: FC<Props> = ({
   handlePlanEdit,
   isPlanEditDisabled,
+  isPlanEditUnsupported,
   handlePlanCancel,
   isPlanCancelDisabled,
+  isPlanCancelUnsupported,
   children,
 }) => (
   <AccordionDetails>
@@ -29,10 +33,12 @@ const ActiveContracts: FC<Props> = ({
           editProps={{
             onClick: handlePlanEdit,
             disabled: isPlanEditDisabled,
+            isUnsupportedButton: isPlanEditUnsupported,
           }}
           cancelProps={{
             onClick: handlePlanCancel,
             disabled: isPlanCancelDisabled,
+            isUnsupportedButton: isPlanCancelUnsupported,
           }}
         />
       </Grid>

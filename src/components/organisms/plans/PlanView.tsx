@@ -28,8 +28,10 @@ type Props<H extends TableHeaders> = Omit<AccordionProps, 'children'> & {
   summary: Omit<PlanViewSummaryProps, 'isExpanded'>
   handlePlanEdit: () => void
   isPlanEditDisabled: boolean
+  isPlanEditUnsupported: boolean
   handlePlanCancel: () => void
   isPlanCancelDisabled: boolean
+  isPlanCancelUnsupported: boolean
   isTableLoading: boolean
   headers: H
   activeContracts: Array<{ id: string } & {
@@ -41,8 +43,10 @@ const PlanView = <H extends TableHeaders>({
   summary: { name, ...summaryProps },
   handlePlanEdit,
   isPlanEditDisabled,
+  isPlanEditUnsupported,
   handlePlanCancel,
   isPlanCancelDisabled,
+  isPlanCancelUnsupported,
   isTableLoading,
   headers,
   activeContracts,
@@ -67,8 +71,10 @@ const PlanView = <H extends TableHeaders>({
         {...{
           handlePlanEdit,
           isPlanEditDisabled,
+          isPlanEditUnsupported,
           handlePlanCancel,
           isPlanCancelDisabled,
+          isPlanCancelUnsupported,
         }}
       >
         {

@@ -41,6 +41,7 @@ import { getOrCreateRenewalSubscription } from 'api/rif-notifier-service/subscri
 import Box from '@material-ui/core/Box'
 import GridItem from 'components/atoms/GridItem'
 import RefreshIcon from '@material-ui/icons/Refresh'
+import FeatureNotSupportedButton from 'components/atoms/FeatureNotSupportedButton'
 import mapMyPurchases from './mapMyPurchases'
 import { setBrowserSessionCannotRenew } from './utils'
 
@@ -303,9 +304,7 @@ const NotifierMyPurchasePage: FC = () => {
               events={subscriptionEvents}
               onClose={onModalClose}
               actions={(
-                <RoundBtn onClick={logNotImplemented('cancel handle')}>
-                  Cancel plan
-                </RoundBtn>
+                <FeatureNotSupportedButton message="cancel handle">Cancel Plan</FeatureNotSupportedButton>
               )}
             />
           )}

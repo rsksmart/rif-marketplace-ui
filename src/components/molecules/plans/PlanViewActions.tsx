@@ -5,10 +5,15 @@ import { ButtonProps } from '@material-ui/core/Button' // FIXME: this is meant t
 import React, {
   FC,
 } from 'react'
+import FeatureNotSupportedButton from 'components/atoms/FeatureNotSupportedButton'
+
+type UnsupportedButtonProps = ButtonProps & {
+  isUnsupportedButton: boolean
+}
 
 type Props = GridProps & {
-    editProps: ButtonProps
-    cancelProps: ButtonProps
+    editProps: UnsupportedButtonProps
+    cancelProps: UnsupportedButtonProps
 }
 
 const PlanViewActions: FC<Props> = ({ editProps, cancelProps, ...props }) => (
@@ -19,24 +24,30 @@ const PlanViewActions: FC<Props> = ({ editProps, cancelProps, ...props }) => (
     {...props}
   >
     <Grid item>
-      <Button
-        variant="outlined"
-        color="primary"
-        rounded
-        {...editProps}
-      >
-        Edit plan
-      </Button>
+      {editProps.isUnsupportedButton ? <FeatureNotSupportedButton message="edit plan not supported">Edit Plan</FeatureNotSupportedButton>
+        : (
+          <Button
+            variant="outlined"
+            color="primary"
+            rounded
+            {...editProps}
+          >
+            Edit plan
+          </Button>
+        )}
     </Grid>
     <Grid item>
-      <Button
-        variant="outlined"
-        rounded
-        color="primary"
-        {...cancelProps}
-      >
-        Cancel plan
-      </Button>
+      {cancelProps.isUnsupportedButton ? <FeatureNotSupportedButton message="cancel plan not supported">Cancel Plan</FeatureNotSupportedButton>
+        : (
+          <Button
+            variant="outlined"
+            rounded
+            color="primary"
+            {...cancelProps}
+          >
+            Cancel plan
+          </Button>
+        )}
     </Grid>
   </Grid>
 )
