@@ -1,17 +1,16 @@
 import Grid, { GridProps } from '@material-ui/core/Grid'
-import { Button } from '@rsksmart/rif-ui'
-import { ButtonProps } from '@material-ui/core/Button' // FIXME: this is meant to come from RUI, but @rsksmart/rif-ui/dist/components/atoms/Button module cannot be found. FIX RUI!
-// import Button, { ButtonProps } from '@rsksmart/rif-ui/dist/components/atoms/Button'
 import React, {
   FC,
 } from 'react'
 
 type Props = GridProps & {
-    editProps: ButtonProps
-    cancelProps: ButtonProps
+    editButton: React.ReactElement
+    cancelButton: React.ReactElement
 }
 
-const PlanViewActions: FC<Props> = ({ editProps, cancelProps, ...props }) => (
+const PlanViewActions: FC<Props> = ({
+  editButton, cancelButton, ...props
+}) => (
   <Grid
     container
     justify="flex-end"
@@ -19,24 +18,10 @@ const PlanViewActions: FC<Props> = ({ editProps, cancelProps, ...props }) => (
     {...props}
   >
     <Grid item>
-      <Button
-        variant="outlined"
-        color="primary"
-        rounded
-        {...editProps}
-      >
-        Edit plan
-      </Button>
+      {editButton}
     </Grid>
     <Grid item>
-      <Button
-        variant="outlined"
-        rounded
-        color="primary"
-        {...cancelProps}
-      >
-        Cancel plan
-      </Button>
+      {cancelButton}
     </Grid>
   </Grid>
 )
