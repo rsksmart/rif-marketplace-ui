@@ -152,8 +152,6 @@ const NotifierMyOffersPage: FC = () => {
     }
   }, [account, web3, reportError])
 
-  const handleEditPlan = logNotImplemented('handle edit plan')
-  const handleCancelPlan = logNotImplemented('handle cancel plan')
   const handleEditProfile = (): void => {
     history.push(ROUTES.NOTIFIER.MYOFFERS.EDIT)
   }
@@ -257,7 +255,7 @@ const NotifierMyOffersPage: FC = () => {
         </Grid>
         {/* Header */ }
         <MyOffersHeader>
-          <FeatureNotSupportedButton message="handle add plan">Add Notification Plan</FeatureNotSupportedButton>
+          <FeatureNotSupportedButton>Add Notification Plan</FeatureNotSupportedButton>
         </MyOffersHeader>
 
         {/* Plans */}
@@ -276,8 +274,6 @@ const NotifierMyOffersPage: FC = () => {
                 exchangeRates,
                 { onWithdraw, onView },
               )
-              const isPlanEditDisabled = false
-              const isPlanCancelDisabled = false
               const isTableLoading = false
 
               const planSummary: Partial<PlanViewSummaryProps> = {
@@ -299,12 +295,8 @@ const NotifierMyOffersPage: FC = () => {
                 <Grid item key={id}>
                   <PlanView {...{
                     summary: planSummary as PlanViewSummaryProps,
-                    handlePlanEdit: handleEditPlan,
-                    isPlanEditDisabled,
-                    isPlanEditUnsupported: true,
-                    handlePlanCancel: handleCancelPlan,
-                    isPlanCancelDisabled,
-                    isPlanCancelUnsupported: true,
+                    editButton: <FeatureNotSupportedButton>Edit Plan</FeatureNotSupportedButton>,
+                    cancelButton: <FeatureNotSupportedButton>Cancel Plan</FeatureNotSupportedButton>,
                     isTableLoading,
                     headers: activeContractHeaders,
                     activeContracts,

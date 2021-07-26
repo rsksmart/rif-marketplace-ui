@@ -303,7 +303,7 @@ const NotifierMyPurchasePage: FC = () => {
               events={subscriptionEvents}
               onClose={onModalClose}
               actions={(
-                <FeatureNotSupportedButton message="cancel handle">Cancel Plan</FeatureNotSupportedButton>
+                <FeatureNotSupportedButton>Cancel Plan</FeatureNotSupportedButton>
               )}
             />
           )}

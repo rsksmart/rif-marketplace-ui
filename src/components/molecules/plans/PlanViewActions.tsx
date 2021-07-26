@@ -1,5 +1,4 @@
 import Grid, { GridProps } from '@material-ui/core/Grid'
-// import Button, { ButtonProps } from '@rsksmart/rif-ui/dist/components/atoms/Button'
 import React, {
   FC,
 } from 'react'

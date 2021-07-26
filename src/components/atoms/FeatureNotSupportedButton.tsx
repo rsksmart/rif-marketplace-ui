@@ -1,19 +1,14 @@
 import React, { FC } from 'react'
-import { Button } from '@rsksmart/rif-ui'
 import { FEATURE_NOT_SUPPORTED } from 'constants/strings'
-import { logNotImplemented } from 'utils/utils'
-import { Tooltip } from '@material-ui/core'
+import Tooltip from '@material-ui/core/Tooltip'
+import RoundBtn from './RoundBtn'
 
-interface Props {
-  message: string
-}
-
-const FeatureNotSupported: FC<Props> = ({ message, children }) => (
+const FeatureNotSupported: FC<{}> = ({ children }) => (
   <Tooltip title={FEATURE_NOT_SUPPORTED}>
     <span>
-      <Button disabled variant="outlined" color="primary" rounded onClick={logNotImplemented(message)}>
+      <RoundBtn disabled>
         {children}
-      </Button>
+      </RoundBtn>
     </span>
   </Tooltip>
 
