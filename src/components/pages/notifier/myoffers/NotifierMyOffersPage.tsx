@@ -35,7 +35,6 @@ import ROUTES from 'routes'
 import { getShortDateString } from 'utils/dateUtils'
 import { shortChecksumAddress } from 'utils/stringUtils'
 import { getFiatPrice } from 'utils/priceUtils'
-import { logNotImplemented } from 'utils/utils'
 import Web3 from 'web3'
 import mapActiveContracts, { activeContractHeaders, ActiveContractItem } from './mapActiveContracts'
 
@@ -317,9 +316,9 @@ const NotifierMyOffersPage: FC = () => {
               events={subscriptionEvents}
               onClose={onModalClose}
               actions={(
-                <RoundBtn onClick={logNotImplemented('cancel handle')}>
+                <FeatureNotSupportedButton>
                   Cancel plan
-                </RoundBtn>
+                </FeatureNotSupportedButton>
               )}
             />
           )}
