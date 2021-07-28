@@ -46,6 +46,7 @@ const MOCK_ITEM_0: NotifierSubscriptionsTransportModel = {
     provider: 'TEST_PROVIDER_ADDR',
     url: 'nada',
   },
+  withdrawableFunds: '2'.padEnd(18, '0'),
 }
 
 const MOCK_RESPONSE: NotifierSubscriptionsTransportModel[] = [MOCK_ITEM_0]
