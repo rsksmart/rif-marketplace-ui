@@ -157,8 +157,8 @@ const NotifierMyOffersPage: FC = () => {
     history.push(ROUTES.NOTIFIER.MYOFFERS.EDIT)
   }
   const onWithdraw = ({
-    token, price, id,
-  }: Pick<NotifierSubscriptionItem, 'token' | 'price' | 'id'>): void => {
+    token, withdrawableFunds, id,
+  }: Pick<NotifierSubscriptionItem, 'token' | 'withdrawableFunds' | 'id'>): void => {
     if (account) {
       setProgress({
         title: 'Withdrawing your funds from the contract',
@@ -167,7 +167,7 @@ const NotifierMyOffersPage: FC = () => {
       setTxInProgress(true)
 
       NotifierContract.getInstance(web3 as Web3)
-        .withdrawFunds(id, token, price, account)
+        .withdrawFunds(id, token, withdrawableFunds, account)
         .then((receipt) => {
           if (receipt) {
             confirmationsDispatch({
@@ -321,8 +321,7 @@ const NotifierMyOffersPage: FC = () => {
               </FeatureNotSupportedButton>
             )}
           />
-        )
-      }
+        )}
       {/* Progress Overlay */}
       {progress && (
         <ProgressOverlay
