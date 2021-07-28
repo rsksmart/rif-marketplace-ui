@@ -30,11 +30,12 @@ export type NotifierPlan = Item & Provider & {
 export type NotifierOfferItem = NotifierPlan
 
 export type NotifierSubscriptionItem = Item & Omit<SubscriptionDTO,
-'hash' | 'price' | 'rateId' | 'providerId' | 'topics'> & {
+'hash' | 'price' | 'rateId' | 'providerId' | 'topics' | 'withdrawableFunds'> & {
     price: Big
     provider: Provider
     token: SupportedToken
     events: Array<TopicDTO>
+    withdrawableFunds: Big
 }
 
 export type NotifierChannel = {
