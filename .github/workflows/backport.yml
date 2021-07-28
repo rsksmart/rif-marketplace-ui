@@ -5,7 +5,6 @@ on:
       - hotfix/*
   pull_request:
     types:
-      - opened
       - closed
 
 jobs:
