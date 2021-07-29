@@ -39,6 +39,7 @@ import Web3 from 'web3'
 import useConfirmations from 'hooks/useConfirmations'
 import { SubscriptionWithdrawData } from 'context/Confirmations/interfaces'
 import mapActiveContracts, { activeContractHeaders, ActiveContractItem } from './mapActiveContracts'
+import { SUBSCRIPTION_STATUSES } from 'api/rif-notifier-service/models/subscriptions'
 
 const NotifierMyOffersPage: FC = () => {
   const {
@@ -129,6 +130,9 @@ const NotifierMyOffersPage: FC = () => {
       subscriptionsApi.connect(reportError)
       subscriptionsApi.fetch({
         providerId: myProfile.address,
+        status: {
+          $ne: SUBSCRIPTION_STATUSES.PENDING,
+        },
       })
         .then(setMyCustomers)
         .catch((error) => reportError({
@@ -238,7 +242,6 @@ const NotifierMyOffersPage: FC = () => {
 
   return (
     <CenteredPageTemplate>
-      {/* TODO: grab confirmations */}
       <InfoBar
         isVisible={Boolean(withdrawConfs.length)}
         text={`Awaiting confirmations for ${withdrawConfs.length} offer(s)`}
