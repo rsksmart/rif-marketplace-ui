@@ -37,6 +37,7 @@ import { shortChecksumAddress } from 'utils/stringUtils'
 import { getFiatPrice } from 'utils/priceUtils'
 import Web3 from 'web3'
 import useConfirmations from 'hooks/useConfirmations'
+import { SubscriptionWithdrawData } from 'context/Confirmations/interfaces'
 import mapActiveContracts, { activeContractHeaders, ActiveContractItem } from './mapActiveContracts'
 
 const NotifierMyOffersPage: FC = () => {
@@ -65,7 +66,7 @@ const NotifierMyOffersPage: FC = () => {
     },
     dispatch,
   } = useContext(NotifierOffersContext)
-  const pendingConfs = useConfirmations(['NOTIFIER_WITHDRAW_FUNDS'])
+  const withdrawConfs = useConfirmations(['NOTIFIER_WITHDRAW_FUNDS'])
 
   const history = useHistory()
 
@@ -175,6 +176,9 @@ const NotifierMyOffersPage: FC = () => {
               payload: {
                 contractAction: 'NOTIFIER_WITHDRAW_FUNDS',
                 txHash: receipt.transactionHash,
+                contractActionData: {
+                  subscriptionHash: id,
+                } as SubscriptionWithdrawData,
               },
             })
 
@@ -236,8 +240,8 @@ const NotifierMyOffersPage: FC = () => {
     <CenteredPageTemplate>
       {/* TODO: grab confirmations */}
       <InfoBar
-        isVisible={Boolean(pendingConfs.length)}
-        text={`Awaiting confirmations for ${pendingConfs.length} offer(s)`}
+        isVisible={Boolean(withdrawConfs.length)}
+        text={`Awaiting confirmations for ${withdrawConfs.length} offer(s)`}
         type="info"
       />
       <Staking isEnabled={isWhitelistedProvider} />
@@ -272,6 +276,7 @@ const NotifierMyOffersPage: FC = () => {
                 { id, limit },
                 exchangeRates,
                 { onWithdraw, onView },
+                withdrawConfs,
               )
               const isTableLoading = false
 
