@@ -10,6 +10,8 @@ import { getShortDateString } from 'utils/dateUtils'
 import { BaseFiat } from 'models/Fiat'
 import { getFiatPrice } from 'utils/priceUtils'
 import RoundBtn from 'components/atoms/RoundBtn'
+import { ConfirmationData, SubscriptionWithdrawData } from 'context/Confirmations/interfaces'
+import { Spinner } from '@rsksmart/rif-ui'
 
 export const activeContractHeaders = {
   customer: 'Customer',
@@ -33,6 +35,7 @@ const mapActiveContracts = <T extends Function, U extends Function>(
     onWithdraw: T
     onView: U
   },
+  withdrawConfs: ConfirmationData[],
 ): Array<ActiveContractItem> => myCustomers
     .filter(({ plan: { id } }) => String(id) === offerId)
     .map<ActiveContractItem>(({
@@ -62,6 +65,12 @@ const mapActiveContracts = <T extends Function, U extends Function>(
             </span>
           </Tooltip>
         )
+
+      const isProcessingConfs = withdrawConfs.some(
+        ({ contractActionData }) => (
+          (contractActionData as SubscriptionWithdrawData).subscriptionHash === id
+        ),
+      )
 
       return (
         {
@@ -97,12 +106,20 @@ const mapActiveContracts = <T extends Function, U extends Function>(
               justify="flex-end"
               wrap="nowrap"
             >
-              <Grid item>
-                {withdrawAction}
-              </Grid>
-              <Grid item>
-                <RoundBtn onClick={(): void => onView(id)}>View</RoundBtn>
-              </Grid>
+              {
+                isProcessingConfs
+                  ? <Spinner />
+                  : (
+                    <>
+                      <Grid item>
+                        {withdrawAction}
+                      </Grid>
+                      <Grid item>
+                        <RoundBtn onClick={(): void => onView(id)}>View</RoundBtn>
+                      </Grid>
+                    </>
+                  )
+              }
             </Grid>
           ),
         })

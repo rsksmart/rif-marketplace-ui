@@ -44,9 +44,16 @@ export type RnsContractData = {
   tokenId: string
 }
 
+export type SubscriptionWithdrawData = {
+  subscriptionHash: string
+}
+
+export type NotifierContractData = | SubscriptionWithdrawData
+
 export type ContractActionData =
   | AgreementContractData
   | RnsContractData
+  | NotifierContractData
 
 export type TxHash = string
 
