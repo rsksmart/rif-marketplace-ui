@@ -145,9 +145,10 @@ const NotifierMyOffersPage: FC = () => {
     }
   }, [subscriptionsApi, myProfile, reportError])
 
+  // re-fetches subscriptions on withdraw confirmations changes
   useEffect(() => {
     fetchSubscriptions()
-  }, [fetchSubscriptions])
+  }, [withdrawConfs.length, fetchSubscriptions])
 
   useEffect(() => {
     if (account) {
