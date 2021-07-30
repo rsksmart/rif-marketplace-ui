@@ -1,9 +1,6 @@
+import Grid from '@material-ui/core/Grid'
 import {
-  Box,
-  Grid, Typography,
-} from '@material-ui/core'
-import {
-  shortenString, TooltipIconButton, Web3Store,
+  shortenString, Web3Store,
 } from '@rsksmart/rif-ui'
 import { notifierSubscriptionsAddress } from 'api/rif-marketplace-cache/notifier/subscriptions'
 import LabelWithValue from 'components/atoms/LabelWithValue'
@@ -40,7 +37,7 @@ import Web3 from 'web3'
 import useConfirmations from 'hooks/useConfirmations'
 import { SubscriptionWithdrawData } from 'context/Confirmations/interfaces'
 import { SUBSCRIPTION_STATUSES } from 'api/rif-notifier-service/models/subscriptions'
-import RefreshIcon from '@material-ui/icons/Refresh'
+import Refresh from 'components/molecules/Refresh'
 import mapActiveContracts, { activeContractHeaders, ActiveContractItem } from './mapActiveContracts'
 
 const NotifierMyOffersPage: FC = () => {
@@ -273,24 +270,12 @@ const NotifierMyOffersPage: FC = () => {
           <FeatureNotSupportedButton>Add Notification Plan</FeatureNotSupportedButton>
         </MyOffersHeader>
 
-        <Grid container>
-          {/* TODO: extract component */}
-          <Typography component="div" align="right">
-            <Box
-              color="text.secondary"
-              display="inline"
-            >
-              {'Some subscriptions may have been updated '}
-            </Box>
-            <TooltipIconButton
-              icon={<RefreshIcon />}
-              tooltipTitle="Refresh"
-              iconButtonProps={{
-                onClick: fetchSubscriptions,
-                disabled: isLoadingSubscriptions,
-              }}
-            />
-          </Typography>
+        <Grid container justify="flex-end">
+          <Refresh
+            title="Some subscriptions may have been updated "
+            onClick={fetchSubscriptions}
+            disabled={isLoadingSubscriptions}
+          />
         </Grid>
         {/* Plans */}
         <Grid container direction="column">
