@@ -1,7 +1,7 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import {
-  shortenString, Web3Store, Spinner, TooltipIconButton,
+  shortenString, Web3Store, Spinner,
 } from '@rsksmart/rif-ui'
 import { notifierSubscriptionsAddress } from 'api/rif-marketplace-cache/notifier/subscriptions'
 import GridRow from 'components/atoms/GridRow'
@@ -37,10 +37,9 @@ import { convertToWeiString } from 'utils/parsers'
 import { useHistory } from 'react-router-dom'
 import { ConfirmationsContext } from 'context/Confirmations'
 import { getOrCreateRenewalSubscription } from 'api/rif-notifier-service/subscriptionUtils'
-import Box from '@material-ui/core/Box'
 import GridItem from 'components/atoms/GridItem'
-import RefreshIcon from '@material-ui/icons/Refresh'
 import FeatureNotSupportedButton from 'components/atoms/FeatureNotSupportedButton'
+import Refresh from 'components/molecules/Refresh'
 import mapMyPurchases from './mapMyPurchases'
 import { setBrowserSessionCannotRenew } from './utils'
 
@@ -269,22 +268,11 @@ const NotifierMyPurchasePage: FC = () => {
               md={8}
               className={classes.refreshContainer}
             >
-              <Typography component="div" align="right">
-                <Box
-                  color="text.secondary"
-                  display="inline"
-                >
-                  {'Some subscriptions may have been updated '}
-                </Box>
-                <TooltipIconButton
-                  icon={<RefreshIcon />}
-                  tooltipTitle="Refresh"
-                  iconButtonProps={{
-                    onClick: fetchSubscriptions,
-                    disabled: isLoadingData,
-                  }}
-                />
-              </Typography>
+              <Refresh
+                title="Some subscriptions may have been updated "
+                onClick={fetchSubscriptions}
+                disabled={isLoadingData}
+              />
             </GridItem>
           </GridRow>
           <GridRow>
