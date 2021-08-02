@@ -11,3 +11,5 @@ export const SUPPORTED_EVENT_TYPES: Array<SupportedEventType> = Object.keys(SUPP
 
 export const SUPPORTED_EVENT_CHANNELS: Array<SupportedEventChannel> = ['API', 'EMAIL']
 export const SUPPORTED_API_CHANNEL_PROTOCOLS = ['http:', 'https:']
+
+export const SUPPORTED_PROVIDER_PROTOCOLS = ['https:']
