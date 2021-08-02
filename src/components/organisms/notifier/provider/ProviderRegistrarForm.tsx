@@ -12,7 +12,10 @@ import useErrorReporter from 'hooks/useErrorReporter'
 import SubscriptionPlans from 'api/rif-notifier-service/subscriptionPlans'
 import ProvidersService, { notifierProvidersAddress } from 'api/rif-marketplace-cache/notifier/providers'
 import AppContext, { AppContextProps } from 'context/App'
-import { NO_AVAILABLE_SUBSCRIPTION_PLAN, URL_ALREADY_REGISTERED } from 'constants/notifier/strings'
+import {
+  HTTPS_REQUIRED, NO_AVAILABLE_SUBSCRIPTION_PLAN, URL_ALREADY_REGISTERED, WRONG_URL,
+} from 'constants/notifier/strings'
+import { SUPPORTED_PROVIDER_PROTOCOLS } from 'config/notifier'
 
 type Inputs = {
   endpointUrl: string
@@ -41,6 +44,16 @@ const ProviderRegistrarForm: FC<ProviderRegistrarFormProps> = ({
   } = useContext<AppContextProps>(AppContext)
 
   const validateProviderURL = async (url: string): Promise<boolean | string> => {
+    try {
+      const { protocol } = new URL(url)
+
+      if (!SUPPORTED_PROVIDER_PROTOCOLS.includes(protocol)) {
+        return HTTPS_REQUIRED
+      }
+    } catch {
+      return WRONG_URL
+    }
+
     const notifierService: SubscriptionPlans = new SubscriptionPlans(url)
     notifierService.connect(reportError)
     providersApi.connect(reportError)
