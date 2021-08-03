@@ -12,7 +12,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
 import RoundedCard from 'components/atoms/RoundedCard'
 import Big from 'big.js'
-import { Web3Store } from '@rsksmart/rif-ui'
+import { LabeledCheckbox, Web3Store } from '@rsksmart/rif-ui'
 import { getBalance } from 'contracts/utils/accountBalance'
 import NotEnoughFunds from 'components/atoms/NotEnoughFunds'
 import Web3 from 'web3'
@@ -34,6 +34,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   expirationDate: {
     justifyContent: 'center',
   },
+  termsCheckbox: {
+    width: 'auto',
+  },
 }))
 
 const CheckoutPayment: FC<Props> = ({
@@ -45,6 +48,7 @@ const CheckoutPayment: FC<Props> = ({
   const { state: { web3, account } } = useContext(Web3Store)
   const [hasEnoughFunds, setHasEnoughFunds] = useState(false)
   const [isLoadingBalance, setIsLoadingBalance] = useState(false)
+  const [termsChecked, setTermsChecked] = useState(false)
 
   const {
     symbol: selectedTokenSymbol,
@@ -71,6 +75,8 @@ const CheckoutPayment: FC<Props> = ({
     calculateBalance()
   }, [account, web3, selectedTokenSymbol, cryptoPrice, reportError])
 
+  const handleTermsChange = (): void => setTermsChecked((prev) => !prev)
+
   const colProps: GridProps = {
     container: true,
     item: true,
@@ -80,6 +86,7 @@ const CheckoutPayment: FC<Props> = ({
     alignItems: 'center',
     justify: 'center',
   }
+  const isBuyDisabled = !hasEnoughFunds || isLoadingBalance || !termsChecked
 
   return (
     <>
@@ -117,8 +124,14 @@ const CheckoutPayment: FC<Props> = ({
             )
           }
           <GridRow justify="center">
+            <LabeledCheckbox
+              checked={termsChecked}
+              onChange={handleTermsChange}
+              labelClassName={classes.termsCheckbox}
+              labelText="I have read and agreed with the terms and conditions"
+            />
             <RoundBtn
-              disabled={!hasEnoughFunds || isLoadingBalance}
+              disabled={isBuyDisabled}
               onClick={onBuy}
             >
               Buy
