@@ -48,4 +48,5 @@ export type SubscriptionDTO = {
   providerId: string
   provider: ProviderDTO
   signature: string
+  withdrawableFunds: string
 }

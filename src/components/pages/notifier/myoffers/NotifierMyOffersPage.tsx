@@ -1,6 +1,4 @@
-import {
-  Grid,
-} from '@material-ui/core'
+import Grid from '@material-ui/core/Grid'
 import {
   shortenString, Web3Store,
 } from '@rsksmart/rif-ui'
@@ -28,7 +26,7 @@ import NotifierContract from 'contracts/notifier/Notifier'
 import useErrorReporter from 'hooks/useErrorReporter'
 import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import React, {
-  FC, useContext, useEffect, useMemo, useState,
+  FC, useContext, useEffect, useMemo, useState, useCallback,
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
@@ -36,6 +34,10 @@ import { getShortDateString } from 'utils/dateUtils'
 import { shortChecksumAddress } from 'utils/stringUtils'
 import { getFiatPrice } from 'utils/priceUtils'
 import Web3 from 'web3'
+import useConfirmations from 'hooks/useConfirmations'
+import { SubscriptionWithdrawData } from 'context/Confirmations/interfaces'
+import { SUBSCRIPTION_STATUSES } from 'api/rif-notifier-service/models/subscriptions'
+import Refresh from 'components/molecules/Refresh'
 import mapActiveContracts, { activeContractHeaders, ActiveContractItem } from './mapActiveContracts'
 
 const NotifierMyOffersPage: FC = () => {
@@ -64,6 +66,7 @@ const NotifierMyOffersPage: FC = () => {
     },
     dispatch,
   } = useContext(NotifierOffersContext)
+  const withdrawConfs = useConfirmations(['NOTIFIER_WITHDRAW_FUNDS'])
 
   const history = useHistory()
 
@@ -84,6 +87,7 @@ const NotifierMyOffersPage: FC = () => {
     subscriptionEvents,
     setSubscriptionEvents,
   ] = useState<Array<SubscriptionEventsDisplayItem>>()
+  const [isLoadingSubscriptions, setIsLoadingSubscriptions] = useState(false)
 
   const onModalClose = (): void => {
     setSubscriptionDetails(undefined)
@@ -121,11 +125,15 @@ const NotifierMyOffersPage: FC = () => {
     })
   }, [account, dispatch, limits])
 
-  useEffect(() => {
+  const fetchSubscriptions = useCallback(() => {
     if (myProfile && subscriptionsApi) {
+      setIsLoadingSubscriptions(true)
       subscriptionsApi.connect(reportError)
       subscriptionsApi.fetch({
         providerId: myProfile.address,
+        status: {
+          $ne: SUBSCRIPTION_STATUSES.PENDING,
+        },
       })
         .then(setMyCustomers)
         .catch((error) => reportError({
@@ -133,8 +141,14 @@ const NotifierMyOffersPage: FC = () => {
           text: 'Error while fetching subscriptions.',
           error,
         }))
+        .finally(() => { setIsLoadingSubscriptions(false) })
     }
   }, [subscriptionsApi, myProfile, reportError])
+
+  // re-fetches subscriptions on withdraw confirmations changes
+  useEffect(() => {
+    fetchSubscriptions()
+  }, [withdrawConfs.length, fetchSubscriptions])
 
   useEffect(() => {
     if (account) {
@@ -155,8 +169,8 @@ const NotifierMyOffersPage: FC = () => {
     history.push(ROUTES.NOTIFIER.MYOFFERS.EDIT)
   }
   const onWithdraw = ({
-    token, price, id,
-  }: Pick<NotifierSubscriptionItem, 'token' | 'price' | 'id'>): void => {
+    token, withdrawableFunds, id,
+  }: Pick<NotifierSubscriptionItem, 'token' | 'withdrawableFunds' | 'id'>): void => {
     if (account) {
       setProgress({
         title: 'Withdrawing your funds from the contract',
@@ -165,7 +179,7 @@ const NotifierMyOffersPage: FC = () => {
       setTxInProgress(true)
 
       NotifierContract.getInstance(web3 as Web3)
-        .withdrawFunds(id, token, price, account)
+        .withdrawFunds(id, token, withdrawableFunds, account)
         .then((receipt) => {
           if (receipt) {
             confirmationsDispatch({
@@ -173,22 +187,22 @@ const NotifierMyOffersPage: FC = () => {
               payload: {
                 contractAction: 'NOTIFIER_WITHDRAW_FUNDS',
                 txHash: receipt.transactionHash,
+                contractActionData: {
+                  subscriptionHash: id,
+                } as SubscriptionWithdrawData,
               },
             })
 
             setTxDone(true)
-            setTxInProgress(true)
           }
         })
         .catch((error) => {
-          setTxInProgress(false)
-          setTxDone(false)
-
           reportError({
             error,
             id: 'contract-notifier',
             text: 'Could not withdraw funds from the contract.',
           })
+          setTxDone(false)
         })
         .finally(() => {
           setTxInProgress(false)
@@ -236,15 +250,15 @@ const NotifierMyOffersPage: FC = () => {
   return (
     <CenteredPageTemplate>
       <InfoBar
-        isVisible={false}
-        text={`Awaiting confirmations for ${false} offer(s)`}
+        isVisible={Boolean(withdrawConfs.length)}
+        text={`Awaiting confirmations for ${withdrawConfs.length} offer(s)`}
         type="info"
       />
       <Staking isEnabled={isWhitelistedProvider} />
 
       <Grid container spacing={8}>
         <Grid item md={5}>
-          {/* Profile description */ }
+          {/* Profile description */}
           <NotifierProviderDescription {...{
             account,
             myProfile,
@@ -252,11 +266,18 @@ const NotifierMyOffersPage: FC = () => {
           }}
           />
         </Grid>
-        {/* Header */ }
+        {/* Header */}
         <MyOffersHeader>
           <FeatureNotSupportedButton>Add Notification Plan</FeatureNotSupportedButton>
         </MyOffersHeader>
 
+        <Grid container justify="flex-end">
+          <Refresh
+            title="Some subscriptions may have been updated "
+            onClick={fetchSubscriptions}
+            disabled={isLoadingSubscriptions}
+          />
+        </Grid>
         {/* Plans */}
         <Grid container direction="column">
           {
@@ -272,8 +293,8 @@ const NotifierMyOffersPage: FC = () => {
                 { id, limit },
                 exchangeRates,
                 { onWithdraw, onView },
+                withdrawConfs,
               )
-              const isTableLoading = false
 
               const planSummary: Partial<PlanViewSummaryProps> = {
                 name: offerName,
@@ -296,7 +317,7 @@ const NotifierMyOffersPage: FC = () => {
                     summary: planSummary as PlanViewSummaryProps,
                     editButton: <FeatureNotSupportedButton>Edit Plan</FeatureNotSupportedButton>,
                     cancelButton: <FeatureNotSupportedButton>Cancel Plan</FeatureNotSupportedButton>,
-                    isTableLoading,
+                    isTableLoading: isLoadingSubscriptions,
                     headers: activeContractHeaders,
                     activeContracts,
                   }}
@@ -309,34 +330,33 @@ const NotifierMyOffersPage: FC = () => {
       </Grid>
 
       {subscriptionDetails
-          && (
-            <NotifierDetails
-              headers={subscriptionHeaders}
-              details={subscriptionDetails}
-              events={subscriptionEvents}
-              onClose={onModalClose}
-              actions={(
-                <FeatureNotSupportedButton>
-                  Cancel plan
-                </FeatureNotSupportedButton>
-              )}
-            />
-          )}
-
-      {/* Progress Overlay */ }
+        && (
+          <NotifierDetails
+            headers={subscriptionHeaders}
+            details={subscriptionDetails}
+            events={subscriptionEvents}
+            onClose={onModalClose}
+            actions={(
+              <FeatureNotSupportedButton>
+                Cancel plan
+              </FeatureNotSupportedButton>
+            )}
+          />
+        )}
+      {/* Progress Overlay */}
       {progress && (
-      <ProgressOverlay
-        {...progress}
-        inProgress={txInProgress}
-        isDone={txDone}
-        buttons={[
-          <RoundBtn
-            onClick={(): void => { setProgress(undefined) }}
-          >
-            Close
-          </RoundBtn>,
-        ]}
-      />
+        <ProgressOverlay
+          {...progress}
+          inProgress={txInProgress}
+          isDone={txDone}
+          buttons={[
+            <RoundBtn
+              onClick={(): void => { setProgress(undefined) }}
+            >
+              Close
+            </RoundBtn>,
+          ]}
+        />
       )}
     </CenteredPageTemplate>
   )

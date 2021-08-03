@@ -25,6 +25,7 @@ export const mapFromTransport = ({
   provider,
   providerId,
   topics,
+  withdrawableFunds,
   ...subscription
 }: SubscriptionDTO): NotifierSubscriptionItem => ({
   id: hash,
@@ -33,6 +34,7 @@ export const mapFromTransport = ({
   token: getSupportedTokenByName(rateId as SupportedTokenSymbol),
   provider: { url: provider.url, provider: providerId },
   events: topics,
+  withdrawableFunds: parseToBigDecimal(withdrawableFunds),
   ...subscription,
 })
 
