@@ -12,11 +12,13 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
 import RoundedCard from 'components/atoms/RoundedCard'
 import Big from 'big.js'
-import { LabeledCheckbox, Web3Store } from '@rsksmart/rif-ui'
+import { Web3Store } from '@rsksmart/rif-ui'
 import { getBalance } from 'contracts/utils/accountBalance'
 import NotEnoughFunds from 'components/atoms/NotEnoughFunds'
 import Web3 from 'web3'
 import useErrorReporter from 'hooks/useErrorReporter'
+import TermsAndConditions from 'components/organisms/TermsAndConditions'
+import { TERMS_CONDITIONS_BUY } from 'constants/notifier/strings'
 
 type Props = {
   onBuy: () => void
@@ -33,9 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   expirationDate: {
     justifyContent: 'center',
-  },
-  termsCheckbox: {
-    width: 'auto',
   },
 }))
 
@@ -124,12 +123,13 @@ const CheckoutPayment: FC<Props> = ({
             )
           }
           <GridRow justify="center">
-            <LabeledCheckbox
+            <TermsAndConditions
               checked={termsChecked}
               onChange={handleTermsChange}
-              labelClassName={classes.termsCheckbox}
-              labelText="I have read and agreed with the terms and conditions"
+              terms={TERMS_CONDITIONS_BUY}
             />
+          </GridRow>
+          <GridRow justify="center">
             <RoundBtn
               disabled={isBuyDisabled}
               onClick={onBuy}
