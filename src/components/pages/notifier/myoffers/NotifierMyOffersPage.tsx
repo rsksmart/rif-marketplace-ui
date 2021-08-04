@@ -87,20 +87,21 @@ const NotifierMyOffersPage: FC = () => {
   // Set provider upon wallet connection
   useEffect(() => {
     const fetchOffers = async (): Promise<void> => {
-      if (offersApi && !offersApi.service) {
-        offersApi.connect(reportError)
-        setIsLoadingOffers(true)
-        const offers = await offersApi.fetch({ provider: account }) as NotifierOfferItem[]
-        setIsLoadingOffers(false)
-        setMyOffers(offers)
+      if (!offersApi.service) offersApi.connect(reportError)
 
-        if (offers.length) {
-          const offer = offers[0]
-          setMyProfile({
-            address: offer.provider,
-            url: offer.url,
-          })
-        }
+      setIsLoadingOffers(true)
+      const offers = await offersApi.fetch(
+        { provider: account },
+      ) as NotifierOfferItem[]
+      setIsLoadingOffers(false)
+      setMyOffers(offers)
+
+      if (offers.length) {
+        const [offer] = offers
+        setMyProfile({
+          address: offer.provider,
+          url: offer.url,
+        })
       }
     }
 
