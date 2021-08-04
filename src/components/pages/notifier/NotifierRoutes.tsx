@@ -82,22 +82,19 @@ const NotifierRoutes: FC = () => {
             </Route>
             {/* MyOffers */}
             <Route path={ROUTES.NOTIFIER.MYOFFERS.BASE}>
-              <NotifierOffersContextProvider>
-                <Switch>
-                  <Route
-                    exact
-                    path={ROUTES.NOTIFIER.MYOFFERS.BASE}
-                    component={NotifierMyOffersPage}
-                  />
-                  <Route
-                    exact
-                    path={ROUTES.NOTIFIER.MYOFFERS.EDIT}
-                    component={NotifierEditOfferPage}
-                  />
-
-                  {DeadEndRoute}
-                </Switch>
-              </NotifierOffersContextProvider>
+              <Switch>
+                <Route
+                  exact
+                  path={ROUTES.NOTIFIER.MYOFFERS.BASE}
+                  component={NotifierMyOffersPage}
+                />
+                <Route
+                  exact
+                  path={ROUTES.NOTIFIER.MYOFFERS.EDIT}
+                  component={NotifierEditOfferPage}
+                />
+                {DeadEndRoute}
+              </Switch>
             </Route>
             {/* Sell */}
             <Route
