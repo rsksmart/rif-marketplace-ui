@@ -1,6 +1,6 @@
 import Grid from '@material-ui/core/Grid'
 import {
-  shortenString, Web3Store,
+  shortenString, Spinner, Web3Store,
 } from '@rsksmart/rif-ui'
 import { notifierSubscriptionsAddress } from 'api/rif-marketplace-cache/notifier/subscriptions'
 import LabelWithValue from 'components/atoms/LabelWithValue'
@@ -21,12 +21,11 @@ import ProgressOverlay, { ProgressOverlayProps } from 'components/templates/Prog
 import AppContext, { AppContextProps } from 'context/App'
 import { ConfirmationsContext } from 'context/Confirmations'
 import MarketContext from 'context/Market'
-import { NotifierOffersContext } from 'context/Services/notifier/offers'
 import NotifierContract from 'contracts/notifier/Notifier'
 import useErrorReporter from 'hooks/useErrorReporter'
-import { NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
+import { NotifierOfferItem, NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
 import React, {
-  FC, useContext, useEffect, useMemo, useState, useCallback,
+  FC, useContext, useEffect, useState, useCallback,
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import ROUTES from 'routes'
@@ -38,6 +37,7 @@ import useConfirmations from 'hooks/useConfirmations'
 import { SubscriptionWithdrawData } from 'context/Confirmations/interfaces'
 import { SUBSCRIPTION_STATUSES } from 'api/rif-notifier-service/models/subscriptions'
 import Refresh from 'components/molecules/Refresh'
+import { notifierOffersAddress } from 'api/rif-marketplace-cache/notifier/offers'
 import mapActiveContracts, { activeContractHeaders, ActiveContractItem } from './mapActiveContracts'
 
 const NotifierMyOffersPage: FC = () => {
@@ -48,6 +48,7 @@ const NotifierMyOffersPage: FC = () => {
     state: {
       apis: {
         [notifierSubscriptionsAddress]: subscriptionsApi,
+        [notifierOffersAddress]: offersApi,
       },
     },
   } = useContext<AppContextProps>(AppContext)
@@ -57,15 +58,6 @@ const NotifierMyOffersPage: FC = () => {
       exchangeRates,
     },
   } = useContext(MarketContext)
-  const {
-    state: {
-      listing: {
-        items,
-      },
-      limits,
-    },
-    dispatch,
-  } = useContext(NotifierOffersContext)
   const withdrawConfs = useConfirmations(['NOTIFIER_WITHDRAW_FUNDS'])
 
   const history = useHistory()
@@ -88,42 +80,33 @@ const NotifierMyOffersPage: FC = () => {
     setSubscriptionEvents,
   ] = useState<Array<SubscriptionEventsDisplayItem>>()
   const [isLoadingSubscriptions, setIsLoadingSubscriptions] = useState(false)
-
-  const onModalClose = (): void => {
-    setSubscriptionDetails(undefined)
-    setSubscriptionEvents([])
-  }
-
+  const [myOffers, setMyOffers] = useState<NotifierOfferItem[]>([])
+  const [isLoadingOffers, setIsLoadingOffers] = useState(true)
   const reportError = useErrorReporter()
 
   // Set provider upon wallet connection
-  const myOffers = useMemo(() => {
-    const offers = items
-      .filter(({ provider }) => provider === account)
+  useEffect(() => {
+    const fetchOffers = async (): Promise<void> => {
+      if (!offersApi.service) offersApi.connect(reportError)
 
-    if (offers.length) {
-      const offer = offers[0]
-      setMyProfile({
-        address: offer.provider,
-        url: offer.url,
-      })
+      setIsLoadingOffers(true)
+      const offers = await offersApi.fetch(
+        { provider: account },
+      ) as NotifierOfferItem[]
+      setIsLoadingOffers(false)
+      setMyOffers(offers)
+
+      if (offers.length) {
+        const [offer] = offers
+        setMyProfile({
+          address: offer.provider,
+          url: offer.url,
+        })
+      }
     }
 
-    return offers
-  }, [
-    items,
-    account,
-  ])
-
-  useEffect(() => {
-    dispatch({
-      type: 'FILTER',
-      payload: {
-        provider: account,
-        ...limits,
-      },
-    })
-  }, [account, dispatch, limits])
+    fetchOffers()
+  }, [offersApi, account, reportError])
 
   const fetchSubscriptions = useCallback(() => {
     if (myProfile && subscriptionsApi) {
@@ -165,9 +148,15 @@ const NotifierMyOffersPage: FC = () => {
     }
   }, [account, web3, reportError])
 
+  const onModalClose = (): void => {
+    setSubscriptionDetails(undefined)
+    setSubscriptionEvents([])
+  }
+
   const handleEditProfile = (): void => {
     history.push(ROUTES.NOTIFIER.MYOFFERS.EDIT)
   }
+
   const onWithdraw = ({
     token, withdrawableFunds, id,
   }: Pick<NotifierSubscriptionItem, 'token' | 'withdrawableFunds' | 'id'>): void => {
@@ -281,50 +270,52 @@ const NotifierMyOffersPage: FC = () => {
         {/* Plans */}
         <Grid container direction="column">
           {
-            myOffers.map(({
-              id,
-              name: offerName,
-              limit,
-              channels: offerChannels,
-              priceOptions: offerPriceOptions,
-            }) => {
-              const activeContracts: ActiveContractItem[] = mapActiveContracts(
-                myCustomers,
-                { id, limit },
-                exchangeRates,
-                { onWithdraw, onView },
-                withdrawConfs,
-              )
-
-              const planSummary: Partial<PlanViewSummaryProps> = {
+            isLoadingOffers
+              ? <Spinner />
+              : myOffers.map(({
+                id,
                 name: offerName,
-                info: [
-                  <LabelWithValue key="notifications" label="Notifications" value={String(limit)} />,
-                  <LabelWithValue key="channels" label="Channels" value={offerChannels.join(', ')} />,
-                  <LabelWithValue
-                    key="currency"
-                    label="Currency"
-                    value={offerPriceOptions
-                      .map((option) => option.token.displayName)
-                      .join(', ')}
-                  />,
-                ],
-              }
+                limit,
+                channels: offerChannels,
+                priceOptions: offerPriceOptions,
+              }) => {
+                const activeContracts: ActiveContractItem[] = mapActiveContracts(
+                  myCustomers,
+                  { id, limit },
+                  exchangeRates,
+                  { onWithdraw, onView },
+                  withdrawConfs,
+                )
 
-              return (
-                <Grid item key={id}>
-                  <PlanView {...{
-                    summary: planSummary as PlanViewSummaryProps,
-                    editButton: <FeatureNotSupportedButton>Edit Plan</FeatureNotSupportedButton>,
-                    cancelButton: <FeatureNotSupportedButton>Cancel Plan</FeatureNotSupportedButton>,
-                    isTableLoading: isLoadingSubscriptions,
-                    headers: activeContractHeaders,
-                    activeContracts,
-                  }}
-                  />
-                </Grid>
-              )
-            })
+                const planSummary: Partial<PlanViewSummaryProps> = {
+                  name: offerName,
+                  info: [
+                    <LabelWithValue key="notifications" label="Notifications" value={String(limit)} />,
+                    <LabelWithValue key="channels" label="Channels" value={offerChannels.join(', ')} />,
+                    <LabelWithValue
+                      key="currency"
+                      label="Currency"
+                      value={offerPriceOptions
+                        .map((option) => option.token.displayName)
+                        .join(', ')}
+                    />,
+                  ],
+                }
+
+                return (
+                  <Grid item key={id}>
+                    <PlanView {...{
+                      summary: planSummary as PlanViewSummaryProps,
+                      editButton: <FeatureNotSupportedButton>Edit Plan</FeatureNotSupportedButton>,
+                      cancelButton: <FeatureNotSupportedButton>Cancel Plan</FeatureNotSupportedButton>,
+                      isTableLoading: isLoadingSubscriptions,
+                      headers: activeContractHeaders,
+                      activeContracts,
+                    }}
+                    />
+                  </Grid>
+                )
+              })
           }
         </Grid>
       </Grid>
