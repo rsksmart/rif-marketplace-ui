@@ -7,13 +7,13 @@ import RoundBtn from 'components/atoms/RoundBtn'
 import GridItem from 'components/atoms/GridItem'
 import Typography from '@material-ui/core/Typography'
 import { useForm } from 'react-hook-form'
-import { toChecksum, trailingSlashRegex } from 'utils/stringUtils'
+import { ipRegex, toChecksum } from 'utils/stringUtils'
 import useErrorReporter from 'hooks/useErrorReporter'
 import SubscriptionPlans from 'api/rif-notifier-service/subscriptionPlans'
 import ProvidersService, { notifierProvidersAddress } from 'api/rif-marketplace-cache/notifier/providers'
 import AppContext, { AppContextProps } from 'context/App'
 import {
-  HTTPS_REQUIRED, NO_AVAILABLE_SUBSCRIPTION_PLAN, URL_ALREADY_REGISTERED, WRONG_URL,
+  HTTPS_REQUIRED, IP_NOT_ALLOWED, NO_AVAILABLE_SUBSCRIPTION_PLAN, URL_ALREADY_REGISTERED, WRONG_URL,
 } from 'constants/notifier/strings'
 import { SUPPORTED_PROVIDER_PROTOCOLS } from 'config/notifier'
 
@@ -45,10 +45,22 @@ const ProviderRegistrarForm: FC<ProviderRegistrarFormProps> = ({
 
   const validateProviderURL = async (url: string): Promise<boolean | string> => {
     try {
-      const { protocol } = new URL(url)
+      const { protocol, hostname } = new URL(url)
+
+      if ((ipRegex.test(hostname))) {
+        return IP_NOT_ALLOWED
+      }
 
       if (!SUPPORTED_PROVIDER_PROTOCOLS.includes(protocol)) {
         return HTTPS_REQUIRED
+      }
+
+      providersApi.connect(reportError)
+      const providerService: ProvidersService = providersApi as ProvidersService
+      const urlIsRegistered: boolean = await providerService.isRegisteredURL(hostname)
+
+      if (urlIsRegistered) {
+        return URL_ALREADY_REGISTERED
       }
     } catch {
       return WRONG_URL
@@ -56,14 +68,10 @@ const ProviderRegistrarForm: FC<ProviderRegistrarFormProps> = ({
 
     const notifierService: SubscriptionPlans = new SubscriptionPlans(url)
     notifierService.connect(reportError)
-    providersApi.connect(reportError)
-    const providerService: ProvidersService = providersApi as ProvidersService
-    const urlIsRegistered: boolean = await providerService.isRegisteredURL(url.replace(trailingSlashRegex, ''))
     const hasActivePlans = Boolean((await notifierService.getActivePlans()).length)
-    const urlMessage = urlIsRegistered ? URL_ALREADY_REGISTERED : ''
     const planMessage = hasActivePlans ? '' : NO_AVAILABLE_SUBSCRIPTION_PLAN
 
-    return (!urlIsRegistered && hasActivePlans) || urlMessage || planMessage
+    return hasActivePlans || planMessage
   }
 
   return (

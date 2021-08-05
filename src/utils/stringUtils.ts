@@ -27,3 +27,5 @@ export const removeURLProtocol = (url: string) => url.replace(/^http[s]*:\/\//, 
 export const trailingSlashRegex = new RegExp(/\/$/, '')
 
 export const emailRegex = new RegExp(/^\S+@\S+\.\S+$/)
+
+export const ipRegex = new RegExp(/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/)

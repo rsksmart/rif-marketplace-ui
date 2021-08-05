@@ -12,10 +12,12 @@ export const notifierEventTypeLabels: Record<SupportedEventType, string> = {
 
 export const NO_AVAILABLE_SUBSCRIPTION_PLAN = 'At least one active subscription plan must be available for registration.'
 
-export const URL_ALREADY_REGISTERED = 'The url is already registered.'
+export const URL_ALREADY_REGISTERED = 'The domain is already registered.'
 
 export const HTTPS_REQUIRED = 'The url must use https protocol.'
 
 export const WRONG_URL = 'Wrong url.'
+
+export const IP_NOT_ALLOWED = 'Ip addresses are not allowed.'
 
 export default {}
