@@ -15,7 +15,7 @@ import AppContext, { AppContextProps } from 'context/App'
 import {
   HTTPS_REQUIRED, IP_NOT_ALLOWED, NO_AVAILABLE_SUBSCRIPTION_PLAN, URL_ALREADY_REGISTERED, WRONG_URL,
 } from 'constants/notifier/strings'
-import { SUPPORTED_PROVIDER_PROTOCOLS } from 'config/notifier'
+import { ALLOW_INSECURE_CONNECTIONS, SUPPORTED_PROVIDER_PROTOCOLS } from 'config/notifier'
 
 type Inputs = {
   endpointUrl: string
@@ -44,34 +44,33 @@ const ProviderRegistrarForm: FC<ProviderRegistrarFormProps> = ({
   } = useContext<AppContextProps>(AppContext)
 
   const validateProviderURL = async (url: string): Promise<boolean | string> => {
+    let providerURL
     try {
-      const { protocol, hostname } = new URL(url)
-
-      if ((ipRegex.test(hostname))) {
-        return IP_NOT_ALLOWED
-      }
-
-      if (!SUPPORTED_PROVIDER_PROTOCOLS.includes(protocol)) {
-        return HTTPS_REQUIRED
-      }
-
-      providersApi.connect(reportError)
-      const providerService: ProvidersService = providersApi as ProvidersService
-      const urlIsRegistered: boolean = await providerService.isRegisteredURL(hostname)
-
-      if (urlIsRegistered) {
-        return URL_ALREADY_REGISTERED
-      }
+      providerURL = new URL(url)
     } catch {
       return WRONG_URL
     }
+    const { protocol, hostname } = providerURL
+
+    if (!ALLOW_INSECURE_CONNECTIONS && (ipRegex.test(hostname.replace(/\[/g, '').replace(/\]/g, '')))) {
+      return IP_NOT_ALLOWED
+    }
+
+    if (!ALLOW_INSECURE_CONNECTIONS && !SUPPORTED_PROVIDER_PROTOCOLS.includes(protocol)) {
+      return HTTPS_REQUIRED
+    }
+
+    providersApi.connect(reportError)
+    const providerService: ProvidersService = providersApi as ProvidersService
+    const urlIsRegistered: boolean = await providerService.isRegisteredURL(providerURL.hostname)
 
     const notifierService: SubscriptionPlans = new SubscriptionPlans(url)
     notifierService.connect(reportError)
     const hasActivePlans = Boolean((await notifierService.getActivePlans()).length)
+    const urlMessage = !urlIsRegistered ? '' : URL_ALREADY_REGISTERED
     const planMessage = hasActivePlans ? '' : NO_AVAILABLE_SUBSCRIPTION_PLAN
 
-    return hasActivePlans || planMessage
+    return (!urlIsRegistered && hasActivePlans) || urlMessage || planMessage
   }
 
   return (

@@ -18,6 +18,6 @@ export const HTTPS_REQUIRED = 'The url must use https protocol.'
 
 export const WRONG_URL = 'Wrong url.'
 
-export const IP_NOT_ALLOWED = 'Ip addresses are not allowed.'
+export const IP_NOT_ALLOWED = 'IP addresses are not allowed.'
 
 export default {}
