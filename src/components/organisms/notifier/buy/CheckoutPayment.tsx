@@ -17,6 +17,8 @@ import { getBalance } from 'contracts/utils/accountBalance'
 import NotEnoughFunds from 'components/atoms/NotEnoughFunds'
 import Web3 from 'web3'
 import useErrorReporter from 'hooks/useErrorReporter'
+import TermsAndConditions from 'components/organisms/TermsAndConditions'
+import { TERMS_CONDITIONS_BUY } from 'constants/notifier/strings'
 
 type Props = {
   onBuy: () => void
@@ -45,6 +47,7 @@ const CheckoutPayment: FC<Props> = ({
   const { state: { web3, account } } = useContext(Web3Store)
   const [hasEnoughFunds, setHasEnoughFunds] = useState(false)
   const [isLoadingBalance, setIsLoadingBalance] = useState(false)
+  const [termsChecked, setTermsChecked] = useState(false)
 
   const {
     symbol: selectedTokenSymbol,
@@ -71,6 +74,8 @@ const CheckoutPayment: FC<Props> = ({
     calculateBalance()
   }, [account, web3, selectedTokenSymbol, cryptoPrice, reportError])
 
+  const handleTermsChange = (): void => setTermsChecked((prev) => !prev)
+
   const colProps: GridProps = {
     container: true,
     item: true,
@@ -80,6 +85,7 @@ const CheckoutPayment: FC<Props> = ({
     alignItems: 'center',
     justify: 'center',
   }
+  const isBuyDisabled = !hasEnoughFunds || isLoadingBalance || !termsChecked
 
   return (
     <>
@@ -117,8 +123,15 @@ const CheckoutPayment: FC<Props> = ({
             )
           }
           <GridRow justify="center">
+            <TermsAndConditions
+              checked={termsChecked}
+              onChange={handleTermsChange}
+              terms={TERMS_CONDITIONS_BUY}
+            />
+          </GridRow>
+          <GridRow justify="center">
             <RoundBtn
-              disabled={!hasEnoughFunds || isLoadingBalance}
+              disabled={isBuyDisabled}
               onClick={onBuy}
             >
               Buy

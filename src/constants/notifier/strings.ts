@@ -19,5 +19,6 @@ export const HTTPS_REQUIRED = 'The url must use https protocol.'
 export const WRONG_URL = 'Wrong url.'
 
 export const IP_NOT_ALLOWED = 'IP addresses are not allowed.'
+export const TERMS_CONDITIONS_BUY = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut laoreet nisl, nec tempor dui. Proin purus eros, posuere pellentesque eros sodales, luctus cursus mauris. Sed elementum ultricies ligula, nec rutrum arcu porttitor eu. Maecenas malesuada porta arcu, ut ornare augue elementum eget. Vivamus eleifend elit nec cursus consectetur. Sed tincidunt malesuada diam nec pharetra. Praesent condimentum, diam interdum convallis accumsan, lacus erat consectetur ligula, a gravida erat leo ut risus. Vestibulum dapibus ipsum hendrerit semper ultrices. Donec id lacus eros. Aliquam varius hendrerit dui, vel congue eros commodo non. Etiam pretium, urna eu ornare consequat, nibh risus commodo nisl, ac vulputate libero dui pulvinar leo. Sed non ipsum varius, molestie libero eu, euismod felis. Etiam efficitur augue ut ligula dapibus sodales. Duis blandit consequat nisi pharetra interdum. Donec eget pretium elit.'
 
 export default {}
