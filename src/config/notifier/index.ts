@@ -13,3 +13,7 @@ export const SUPPORTED_EVENT_CHANNELS: Array<SupportedEventChannel> = ['API', 'E
 export const SUPPORTED_API_CHANNEL_PROTOCOLS = ['http:', 'https:']
 
 export const SUPPORTED_PROVIDER_PROTOCOLS = ['https:']
+
+export const ALLOW_INSECURE_CONNECTIONS = Boolean(Number(
+  process.env.REACT_APP_ALLOW_INSECURE_CONNECTIONS,
+)) || false
