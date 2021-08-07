@@ -114,7 +114,7 @@ const NotifierPlan: FC<NotifierPlanProps> = ({
         >
           <Grid item xs={12} className={classes.item}>
             <Typography className={classes.text} color="primary" noWrap>
-              {channels.join(' + ')}
+              {channels.map(({ type }) => type).join(' + ')}
             </Typography>
           </Grid>
           <Grid item xs={12} className={classes.item}>

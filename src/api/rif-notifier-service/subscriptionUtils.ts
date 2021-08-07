@@ -1,12 +1,15 @@
 import {
-  NotificationPreference, TopicDTO, TOPIC_TYPES, TopicParams, TOPIC_PARAM_TYPES, SubscribeToPlanDTO, NotificationServiceType, SubscribeToPlanResponseDTO,
+  NotificationPreference, TopicDTO,
+  TOPIC_TYPES, TopicParams,
+  TOPIC_PARAM_TYPES, SubscribeToPlanDTO,
+  NotificationServiceType, SubscribeToPlanResponseDTO,
 } from 'api/rif-notifier-service/models/subscriptions'
 import SubscribeToPlanService from 'api/rif-notifier-service/subscriptionBatch'
 import SubscriptionService, { SubscriptionSummary } from 'api/rif-notifier-service/subscriptionService'
 import { SupportedEventType } from 'config/notifier'
 import { OrderItem } from 'context/Services/notifier/offers/interfaces'
 import { NotifierEventItem } from 'models/marketItems/NotifierEventItem'
-import { NotifierChannel } from 'models/marketItems/NotifierItem'
+import { SelectedEventChannel } from 'models/marketItems/NotifierItem'
 import { SupportedTokenSymbol } from 'models/Token'
 import { UIError } from 'models/UIMessage'
 import { convertToWeiString } from 'utils/parsers'
@@ -72,7 +75,7 @@ export const buildTopicsDTOFrom = (
       event: { type: eventType, channels },
     } = notifierEventItem
     const notificationPreferences: Array<NotificationPreference> = channels.map(
-      (channel: NotifierChannel) => ({
+      (channel: SelectedEventChannel) => ({
         notificationService: channel.type as NotificationServiceType,
         destination: channel.destination,
         destinationParams: {
@@ -170,18 +173,28 @@ const getOrCreateNewOrRenewalSubscription = async (item: SubscriptionOrderItem,
   }
   const {
     signature, hash,
-  } = subscriptionHash ? await createRenewalSubscription(subscriptionHash, item, account, reportError)
+  } = subscriptionHash ? await createRenewalSubscription(
+    subscriptionHash, item, account, reportError,
+  )
     : await createPendingSubscription(item, eventsAdded, account, reportError)
   return {
     signature, hash, status: 'PENDING',
   }
 }
 
-export const getOrCreateSubscription = (item: SubscriptionOrderItem,
+export const getOrCreateSubscription = (
+  item: SubscriptionOrderItem,
   eventsAdded: Array<NotifierEventItem>, account: string,
-  reportError: (e: UIError) => void): Promise<SubscriptionSummary> => getOrCreateNewOrRenewalSubscription(item, account, reportError, eventsAdded)
+  reportError: (e: UIError) => void,
+): Promise<SubscriptionSummary> => getOrCreateNewOrRenewalSubscription(
+  item, account, reportError, eventsAdded,
+)
 
 export const getOrCreateRenewalSubscription = (
-  subscriptionHash: string, item: SubscriptionOrderItem, account: string,
+  subscriptionHash: string,
+  item: SubscriptionOrderItem,
+  account: string,
   reportError: (e: UIError) => void,
-): Promise<SubscriptionSummary> => getOrCreateNewOrRenewalSubscription(item, account, reportError, [], subscriptionHash)
+): Promise<SubscriptionSummary> => getOrCreateNewOrRenewalSubscription(
+  item, account, reportError, [], subscriptionHash,
+)
