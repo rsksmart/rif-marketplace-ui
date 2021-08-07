@@ -3,13 +3,13 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import { colors, shortenString } from '@rsksmart/rif-ui'
-import { NotifierChannel } from 'models/marketItems/NotifierItem'
+import { SelectedEventChannel } from 'models/marketItems/NotifierItem'
 import RemovableRow from 'components/organisms/RemovableRow'
 
 export interface NotificationChannelProps {
   className?: string
-  onRemoveClick: (e: any) => void
-  channel: NotifierChannel
+  onRemoveClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  channel: SelectedEventChannel
 }
 
 const NotificationChannel: FC<NotificationChannelProps> = ({

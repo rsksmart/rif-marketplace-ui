@@ -4,6 +4,7 @@ import { NotifierOfferItem } from 'models/marketItems/NotifierItem'
 import { SYSTEM_SUPPORTED_SYMBOL } from 'models/Token'
 import { NotifierOffersFilters } from 'models/marketItems/NotifierFilters'
 import { SYSTEM_SUPPORTED_FIAT } from 'models/Fiat'
+import { SupportedEventChannel } from 'config/notifier'
 import OffersService, { notifierOffersAddress, NotifierOffersTransportModel, notifierOffersWSChannel } from '../index'
 import { mapFromTransport } from '../api'
 import { NotifierOffersService } from '../..'
@@ -14,8 +15,8 @@ const MOCK_ITEM_0: NotifierOffersTransportModel = {
   planStatus: 'ACTIVE',
   channels: [
     {
-      id: 1,
-      name: 'MOCK_CHANNEL',
+      type: 'MOCK_CHANNEL' as SupportedEventChannel,
+      origin: 'MOCK_ORIGIN',
     },
   ],
   daysLeft: 122,
@@ -30,6 +31,7 @@ const MOCK_ITEM_0: NotifierOffersTransportModel = {
       price: '0.1',
     },
   ],
+  planId: 1,
 }
 
 const MOCK_RESPONSE: NotifierOffersTransportModel[] = [MOCK_ITEM_0]

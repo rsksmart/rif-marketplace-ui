@@ -55,7 +55,7 @@ const NotifierPlanDescription: FC<Props> = ({
           <Typography color="textPrimary">{limit}</Typography>
         </Grid>
         <Grid item xs={1} md={2}>
-          <Typography color="textPrimary">{channels.join(',')}</Typography>
+          <Typography color="textPrimary">{channels.map(({ type }) => type).join(', ')}</Typography>
         </Grid>
         <Grid item xs={1} md={2}>
           <Typography color="textPrimary">{token.displayName}</Typography>

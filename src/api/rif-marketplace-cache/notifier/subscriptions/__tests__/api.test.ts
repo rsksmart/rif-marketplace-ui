@@ -14,8 +14,9 @@ const MOCK_ITEM_0: NotifierSubscriptionsTransportModel = {
   status: 'ACTIVE',
   subscriptionId: 1,
   plan: {
+    id: 1,
     planId: 1,
-    channels: [{ id: 1, name: 'API' }],
+    channels: [{ type: 'API', origin: 'mock.origin' }],
     daysLeft: 100,
     name: '1k',
     planStatus: 'ACTIVE',
@@ -33,7 +34,12 @@ const MOCK_ITEM_0: NotifierSubscriptionsTransportModel = {
   },
   topics: [
     {
-      notificationPreferences: 'API',
+      notificationPreferences: [
+        {
+          notificationService: 'API',
+          destination: 'none',
+        },
+      ],
       topicParams: [],
       type: 'NEW_BLOCK',
     },
@@ -47,6 +53,7 @@ const MOCK_ITEM_0: NotifierSubscriptionsTransportModel = {
     url: 'nada',
   },
   withdrawableFunds: '2'.padEnd(18, '0'),
+  signature: '',
 }
 
 const MOCK_RESPONSE: NotifierSubscriptionsTransportModel[] = [MOCK_ITEM_0]
@@ -101,7 +108,8 @@ describe('Notifier Subscriptions Service', () => {
     })
 
     test('should return NotifierSubscriptionItem[] on success', async () => {
-      const actualSubscriptions: NotifierSubscriptionItem[] = await subscriptionsService.fetch()
+      const actualSubscriptions: NotifierSubscriptionItem[] = await subscriptionsService
+        .fetch()
 
       const expectedSubscriptions: NotifierSubscriptionItem[] = MOCK_RESPONSE
         .map(mapFromTransport)

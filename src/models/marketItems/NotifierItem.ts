@@ -17,10 +17,17 @@ export type Provider = {
     url: string
 }
 
+export type EventChannel = {
+    type: SupportedEventChannel
+    origin: string
+}
+
+export type EventChannels = Array<EventChannel>
+
 export type NotifierPlan = Item & Provider & {
     planId: number
     name: string
-    channels: Array<SupportedEventChannel>
+    channels: EventChannels
     limit: number
     priceOptions: PriceOption[]
     daysLeft: number
@@ -38,10 +45,11 @@ export type NotifierSubscriptionItem = Item & Omit<SubscriptionDTO,
     withdrawableFunds: Big
 }
 
-export type NotifierChannel = {
-    type: string
+export type SelectedEventChannel = EventChannel & {
     destination: string
 }
+
+export type SelectedEventChannels = Array<SelectedEventChannel>
 
 export type NotifierItem = NotifierOfferItem | NotifierSubscriptionItem
 
@@ -55,7 +63,7 @@ export type NotifierEventParam = {
 export type NotifierEvent = {
     name?: string
     params?: Array<NotifierEventParam>
-    channels: Array<NotifierChannel>
+    channels: SelectedEventChannels
     smartContract?: string
     type: SupportedEventType
     signature?: string
