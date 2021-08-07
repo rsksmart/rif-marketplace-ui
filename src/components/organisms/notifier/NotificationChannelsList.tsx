@@ -6,11 +6,11 @@ import React, {
   FC, useState,
 } from 'react'
 import { createStyles, Theme } from '@material-ui/core/styles'
-import { NotifierChannel } from 'models/marketItems/NotifierItem'
+import { EventChannels, SelectedEventChannel, SelectedEventChannels } from 'models/marketItems/NotifierItem'
 import NotificationChannel from 'components/organisms/notifier/NotificationChannel'
 import { colors } from '@rsksmart/rif-ui'
 import NotificationChannelCreate from 'components/organisms/notifier/NotificationChannelCreate'
-import { SupportedEventChannel, SUPPORTED_EVENT_CHANNELS } from 'config/notifier'
+import { SUPPORTED_EVENT_CHANNELS } from 'config/notifier'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
 
@@ -24,34 +24,38 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }))
 
 type Props = {
-  channels?: Array<SupportedEventChannel>
-  onEventChannelsUpdate: (channels: Array<NotifierChannel>) => void
+  channels: EventChannels
+  onEventChannelsUpdate: (channels: SelectedEventChannels) => void
 }
 
-const NotificationChannelsList: FC<Props> = ({ channels, onEventChannelsUpdate }) => {
+const NotificationChannelsList: FC<Props> = ({
+  channels, onEventChannelsUpdate,
+}) => {
   const classes = useStyles()
-  const [addedChannels, setAddedChannels] = useState<Array<NotifierChannel>>([])
+  const [
+    addedChannels,
+    setAddedChannels,
+  ] = useState<SelectedEventChannels>([])
 
-  if (!channels) {
-    return <Grid />
+  const availableChannels: EventChannels = channels.filter(
+    (channel) => SUPPORTED_EVENT_CHANNELS.includes(channel.type),
+  )
+
+  const addChannel = (notifierChannel: SelectedEventChannel): void => {
+    if (!addedChannels.find(({ type }) => type !== notifierChannel.type)) {
+      setAddedChannels([...addedChannels, notifierChannel])
+      onEventChannelsUpdate([...addedChannels, notifierChannel])
+    }
   }
-  const availableChannels: Array<SupportedEventChannel> = channels.filter((channel) => SUPPORTED_EVENT_CHANNELS.includes(channel as SupportedEventChannel))
 
-  const addChannel = (notifierChannel: NotifierChannel) => {
-    const newChannels = addedChannels.filter(({ type }) => type !== notifierChannel.type)
-    newChannels.push(notifierChannel)
+  const removeChannel = ({ currentTarget: { id: channelType } }): void => {
+    const newChannels = addedChannels.filter((i) => i.type !== channelType)
     setAddedChannels(newChannels)
     onEventChannelsUpdate(newChannels)
   }
 
-  const removeChannel = (event): void => {
-    const newChannels = addedChannels.filter((i) => i.type !== event.currentTarget.id)
-    setAddedChannels(newChannels)
-    onEventChannelsUpdate(newChannels)
-  }
-
-  const collection = addedChannels.map((channel) => ({
-    type: channel.type,
+  const collection: SelectedEventChannels = addedChannels.map((channel) => ({
+    ...channel,
     destination: channel.destination,
   }))
 

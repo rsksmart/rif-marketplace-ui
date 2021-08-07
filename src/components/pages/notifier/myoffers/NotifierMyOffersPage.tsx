@@ -227,7 +227,7 @@ const NotifierMyOffersPage: FC = () => {
       id: shortenString(id),
       customer: shortChecksumAddress(consumer),
       amount: String(notificationBalance),
-      channels: channels?.map(({ name }) => name).join(',') || '',
+      channels: channels?.map(({ type }) => type).join(',') || '',
       expDate: getShortDateString(expirationDate),
       price: `${getFiatPrice(price, crypto[tokenSymbol])} ${fiatDisplayName}`,
     }
@@ -291,7 +291,11 @@ const NotifierMyOffersPage: FC = () => {
                   name: offerName,
                   info: [
                     <LabelWithValue key="notifications" label="Notifications" value={String(limit)} />,
-                    <LabelWithValue key="channels" label="Channels" value={offerChannels.join(', ')} />,
+                    <LabelWithValue
+                      key="channels"
+                      label="Channels"
+                      value={offerChannels.map(({ type }) => type).join(', ')}
+                    />,
                     <LabelWithValue
                       key="currency"
                       label="Currency"
@@ -306,8 +310,14 @@ const NotifierMyOffersPage: FC = () => {
                   <Grid item key={id}>
                     <PlanView {...{
                       summary: planSummary as PlanViewSummaryProps,
-                      editButton: <FeatureNotSupportedButton>Edit Plan</FeatureNotSupportedButton>,
-                      cancelButton: <FeatureNotSupportedButton>Cancel Plan</FeatureNotSupportedButton>,
+                      editButton: (
+                        <FeatureNotSupportedButton>
+                          Edit Plan
+                        </FeatureNotSupportedButton>),
+                      cancelButton: (
+                        <FeatureNotSupportedButton>
+                          Cancel Plan
+                        </FeatureNotSupportedButton>),
                       isTableLoading: isLoadingSubscriptions,
                       headers: activeContractHeaders,
                       activeContracts,

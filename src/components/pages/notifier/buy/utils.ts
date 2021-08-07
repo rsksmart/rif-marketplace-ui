@@ -12,7 +12,7 @@ export function mapPlansToOffers(
   const planPrices: number[] = []
 
   for (const plan of plans) {
-    plan.channels.forEach((channel) => channelsSet.add(channel))
+    plan.channels.forEach(({ type }) => channelsSet.add(type))
     plan.priceOptions.forEach(({ token, value }) => {
       currencyOptions.add(token.displayName)
 
