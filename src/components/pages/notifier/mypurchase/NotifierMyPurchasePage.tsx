@@ -164,7 +164,7 @@ const NotifierMyPurchasePage: FC = () => {
       id: shortenString(id),
       provider: shortChecksumAddress(providerAddress),
       amount: String(notificationBalance),
-      channels: channels?.map(({ name }) => name).join(',') || '',
+      channels: channels?.map(({ type }) => type).join(',') || '',
       expDate: getShortDateString(expirationDate),
       price: `${getFiatPrice(price, crypto[tokenSymbol])} ${fiatDisplayName}`,
     }

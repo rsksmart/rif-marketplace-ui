@@ -1,3 +1,4 @@
+import { SupportedEventChannel } from 'config/notifier'
 import { SupportedFiatSymbol } from 'models/Fiat'
 import { MinMaxFilter } from 'models/Filters'
 import { NotifierOffersFilters } from 'models/marketItems/NotifierFilters'
@@ -10,9 +11,9 @@ type PricesDTO = {
     rate: number
   }
 
-type ChannelsDTO = {
-    id: number
-    name: string
+export type ChannelDTO = {
+    type: SupportedEventChannel
+    origin: string
   }
 
 export const PLAN_STATUS = {
@@ -31,7 +32,7 @@ export type PlanDTO = {
   quantity: number
   providerId: string
   url: string
-  channels: ChannelsDTO[]
+  channels: ChannelDTO[]
   prices: PricesDTO[]
 }
 

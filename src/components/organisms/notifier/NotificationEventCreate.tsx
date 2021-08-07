@@ -9,11 +9,13 @@ import { useForm } from 'react-hook-form'
 import GridItem from 'components/atoms/GridItem'
 import { notifierEventTypeLabels } from 'constants/notifier/strings'
 import {
-  SUPPORTED_EVENTS, SupportedEventType, SupportedEventChannel, SUPPORTED_EVENT_TYPES,
+  SUPPORTED_EVENTS, SupportedEventType, SUPPORTED_EVENT_TYPES,
 } from 'config/notifier'
 import NotificationChannelsList from 'components/organisms/notifier/NotificationChannelsList'
 import RoundBtn from 'components/atoms/RoundBtn'
-import { NotifierChannel, NotifierEvent, NotifierEventParam } from 'models/marketItems/NotifierItem'
+import {
+  EventChannels, NotifierEvent, NotifierEventParam, SelectedEventChannels,
+} from 'models/marketItems/NotifierItem'
 import { ContractABIEvent } from 'api/blockscout/interface'
 import getABIEvents from 'api/blockscout'
 import Typography from '@material-ui/core/Typography'
@@ -39,14 +41,14 @@ type Inputs = {
 
 type Props = {
   onAddEvent: (event: NotifierEvent) => void
-  channels?: Array<SupportedEventChannel>
+  channels: EventChannels
 }
 
 type EventData = {
   contract: string
   event: ContractABIEvent
   eventType: SupportedEventType
-  addedChannels: Array<NotifierChannel>
+  addedChannels: SelectedEventChannels
 }
 
 const NotificationEventCreate: FC<Props> = ({
@@ -94,7 +96,9 @@ const NotificationEventCreate: FC<Props> = ({
     setEventData({ ...eventData, contract: value })
   }
 
-  const handleAddChannels = (selectedChannels: Array<NotifierChannel>): void => {
+  const handleAddChannels = (
+    selectedChannels: SelectedEventChannels,
+  ): void => {
     setEventData({ ...eventData, addedChannels: selectedChannels })
   }
 
