@@ -1,4 +1,3 @@
-import { TopicDTO } from 'api/rif-notifier-service/models/subscriptions'
 import { PlanDTO } from '../offers/models'
 
 export const EVENT_TYPES = {
@@ -18,6 +17,15 @@ export const EVENT_PARAM_TYPES = {
 
 export type TopicParamType = keyof typeof EVENT_PARAM_TYPES
 
+export type TopicParams = {
+  type: TopicParamType
+  value: string
+  valueType?: string
+  indexed?: boolean
+  order?: number
+  filter?: string
+}
+
 export const SUBSCRIPTION_STATUS = {
   ACTIVE: 'ACTIVE',
   PENDING: 'PENDING',
@@ -30,6 +38,27 @@ export type SubscriptionStatus = keyof typeof SUBSCRIPTION_STATUS
 export type ProviderDTO = {
   url: string
   provider: string
+}
+export const TOPIC_TYPES = {
+  NEW_BLOCK: 'NEW_BLOCK',
+  NEW_TRANSACTIONS: 'NEW_TRANSACTIONS',
+  PENDING_TRANSACTIONS: 'PENDING_TRANSACTIONS',
+  CONTRACT_EVENT: 'CONTRACT_EVENT',
+} as const
+
+export type TopicType = keyof typeof TOPIC_TYPES
+
+export const NOTIFICATION_SVC_TYPES = {
+  API: 'API',
+  SMS: 'SMS',
+  EMAIL: 'EMAIL',
+} as const
+export type NotificationServiceType = keyof typeof NOTIFICATION_SVC_TYPES
+
+export type TopicDTO = {
+  notificationPreferences: Array<NotificationServiceType>
+  type: TopicType
+  topicParams?: Array<TopicParams>
 }
 
 export type SubscriptionDTO = {

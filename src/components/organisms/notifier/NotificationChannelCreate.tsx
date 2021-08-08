@@ -92,7 +92,7 @@ const NotificationChannelCreate: FC<Props> = ({
             >
               {
         availableChannels.map(
-          ({ type }) => <MenuItem value={type}>{type}</MenuItem>,
+          ({ type }) => <MenuItem key={type} value={type}>{type}</MenuItem>,
         )
       }
             </Select>

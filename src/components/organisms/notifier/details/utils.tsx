@@ -1,10 +1,11 @@
 import React from 'react'
 import {
-  EVENT_PARAM_TYPES, TopicParamType,
+  EVENT_PARAM_TYPES, TopicDTO, TopicParams, TopicParamType,
 } from 'api/rif-marketplace-cache/notifier/subscriptions/models'
 import MarketplaceCell from 'components/atoms/MarketplaceCell'
 import RifAddress from 'components/molecules/RifAddress'
-import { TopicDTO, TopicParams } from 'api/rif-notifier-service/models/subscriptions'
+import { EventChannel, EventChannels } from 'models/marketItems/NotifierItem'
+import Grid from '@material-ui/core/Grid'
 import { SubscriptionEventsDisplayItem } from './NotifierDetailsModal'
 
 export const getTopicParamValue = (
@@ -16,7 +17,7 @@ export const getTopicParamValue = (
 
 export const eventDisplayItemIterator = ({
   notificationPreferences, topicParams, type: eventType,
-}: TopicDTO): SubscriptionEventsDisplayItem => {
+}: TopicDTO, channels: EventChannels = []): SubscriptionEventsDisplayItem => {
   const nameValue = topicParams && getTopicParamValue(
     topicParams, EVENT_PARAM_TYPES.EVENT_NAME,
   )
@@ -35,14 +36,26 @@ export const eventDisplayItemIterator = ({
       value={contractAddress}
     />
   ) : <MarketplaceCell>N/A</MarketplaceCell>
+  const cleanPrefs = Array.isArray(notificationPreferences)
+    ? Array.from(new Set(notificationPreferences))
+    : [notificationPreferences]
 
-  const channels = (
+  const channelsCell = channels.length ? (
     <MarketplaceCell>
-      {Array.isArray(notificationPreferences)
-        ? notificationPreferences.join(', ')
-        : notificationPreferences}
+      <Grid container direction="column">
+        {cleanPrefs.map((channelType) => {
+          const channel = channels.find(
+            ({ type }) => type === channelType,
+          ) as EventChannel
+          return (
+            <Grid item key={channelType}>
+              {`${channelType} from ${channel.origin}`}
+            </Grid>
+          )
+        })}
+      </Grid>
     </MarketplaceCell>
-  )
+  ) : <MarketplaceCell>-</MarketplaceCell>
 
   const type = (
     <MarketplaceCell>
@@ -51,7 +64,7 @@ export const eventDisplayItemIterator = ({
   )
 
   return ({
-    channels,
+    channels: channelsCell,
     id: `${name}@${contractAddress}`,
     name,
     contract,
