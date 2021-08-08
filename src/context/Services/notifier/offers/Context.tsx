@@ -30,7 +30,6 @@ export const initialState: State = {
       fiatSymbol: SUPPORTED_FIAT.usd.symbol,
     },
     currency: new Set(),
-    channels: new Set(),
   },
   limits: {
     size: {

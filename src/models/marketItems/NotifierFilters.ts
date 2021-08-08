@@ -12,7 +12,6 @@ export type NotifierOffersFilters = {
     size: MinMaxFilter
     price: PriceFilter
     currency?: Set<SupportedTokenSymbol>
-    channels?: Set<string>
     provider?: string
 }
 

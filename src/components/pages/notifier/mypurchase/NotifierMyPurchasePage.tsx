@@ -170,7 +170,9 @@ const NotifierMyPurchasePage: FC = () => {
     }
 
     setSubscriptionDetails(viewItem)
-    setSubscriptionEvents(events.map(eventDisplayItemIterator))
+    setSubscriptionEvents(events.map(
+      (event) => eventDisplayItemIterator(event, channels),
+    ))
   }
 
   const onRenew = async (subscriptionId: string): Promise<void> => {
@@ -291,7 +293,9 @@ const NotifierMyPurchasePage: FC = () => {
               events={subscriptionEvents}
               onClose={onModalClose}
               actions={(
-                <FeatureNotSupportedButton>Cancel Plan</FeatureNotSupportedButton>
+                <FeatureNotSupportedButton>
+                  Cancel Plan
+                </FeatureNotSupportedButton>
               )}
             />
           )}

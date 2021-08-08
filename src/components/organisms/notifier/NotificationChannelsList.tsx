@@ -38,7 +38,7 @@ const NotificationChannelsList: FC<Props> = ({
   ] = useState<SelectedEventChannels>([])
 
   const availableChannels: EventChannels = channels.filter(
-    (channel) => SUPPORTED_EVENT_CHANNELS.includes(channel.type),
+    ({ type }) => SUPPORTED_EVENT_CHANNELS.includes(type),
   )
 
   const addChannel = (notifierChannel: SelectedEventChannel): void => {
@@ -49,7 +49,7 @@ const NotificationChannelsList: FC<Props> = ({
   }
 
   const removeChannel = ({ currentTarget: { id: channelType } }): void => {
-    const newChannels = addedChannels.filter((i) => i.type !== channelType)
+    const newChannels = addedChannels.filter(({ type }) => type !== channelType)
     setAddedChannels(newChannels)
     onEventChannelsUpdate(newChannels)
   }

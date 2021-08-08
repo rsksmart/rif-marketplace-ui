@@ -53,7 +53,6 @@ export default class NotifierFiltersTransport {
       size,
       price,
       currency,
-      channels,
       provider,
     }: NotifierOffersFilters) {
       this.size = size
@@ -64,6 +63,5 @@ export default class NotifierFiltersTransport {
         fiatSymbol: price.fiatSymbol,
       }
       this.currency = currency && Array.from(currency)
-      this.channels = channels && Array.from(channels)
     }
 }
