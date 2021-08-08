@@ -1,9 +1,8 @@
 import { Item } from 'models/Market'
 import Big from 'big.js'
 import { SupportedToken } from 'contracts/interfaces'
-import { SubscriptionDTO } from 'api/rif-marketplace-cache/notifier/subscriptions/models'
+import { SubscriptionDTO, TopicDTO } from 'api/rif-marketplace-cache/notifier/subscriptions/models'
 import { SupportedEventType, SupportedEventChannel } from 'config/notifier'
-import { TopicDTO } from 'api/rif-notifier-service/models/subscriptions'
 import { PlanStatus } from 'api/rif-marketplace-cache/notifier/offers/models'
 
 export type PriceOption = {

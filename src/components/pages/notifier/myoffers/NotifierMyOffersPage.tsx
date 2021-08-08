@@ -233,7 +233,7 @@ const NotifierMyOffersPage: FC = () => {
     }
 
     setSubscriptionDetails(viewItem)
-    setSubscriptionEvents(events.map(eventDisplayItemIterator))
+    setSubscriptionEvents(events.map((event) => eventDisplayItemIterator(event, channels)))
   }
 
   return (
