@@ -19,6 +19,8 @@ export class ContractBase {
     this.name = name
     this.contract = contact
     this.web3 = web3
+
+    this.web3.eth.handleRevert = true
   }
 
   public get methods(): Record<string, Function> {

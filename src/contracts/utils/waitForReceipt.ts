@@ -14,9 +14,15 @@ function waitForReceipt(
       timeElapsed += POLLING_INTERVAL
       const receipt = await web3.eth.getTransactionReceipt(txHash)
 
-      if (receipt != null) {
+      if (receipt?.status) {
         clearInterval(checkInterval)
         resolve(receipt)
+      }
+
+      if (receipt && !receipt.status) {
+        reject(
+          new Error(`Transaction reverted, ${web3.eth.handleRevert && 'please, see the "MetaMask - RPC Error" bellow, under "data.error.message" for details.'}  receipt: ${JSON.stringify(receipt, null, 2)}`),
+        )
       }
 
       if (timeElapsed > TIMEOUT_LIMIT) {
