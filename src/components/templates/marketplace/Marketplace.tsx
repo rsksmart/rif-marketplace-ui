@@ -18,7 +18,7 @@ export interface MarketplaceProps {
   items: MarketplaceItem[]
   headers: TableHeaders
   Heading?: React.ElementType
-  itemDetail?: FC<string>
+  itemDetail?: JSX.Element
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -76,7 +76,7 @@ const Marketplace: FC<MarketplaceProps> = ({
   items,
   headers,
   Heading,
-  itemDetail = (): null => null,
+  itemDetail,
 }) => {
   const classes = useStyles()
   return (
@@ -116,7 +116,7 @@ const Marketplace: FC<MarketplaceProps> = ({
                       className={classes.detail}
                       colSpan={6}
                     >
-                      {itemDetail(rowKey)}
+                      {itemDetail}
                     </TableCell>
                   </MUITableRow>
                 </React.Fragment>

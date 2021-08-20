@@ -15,6 +15,7 @@ export interface MarketPageTemplateProps extends MarketplaceProps {
   requiresAccount?: boolean
   dispatch: Dispatch<any>
   outdatedCt: number
+  isLoadingItems?: boolean
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -40,6 +41,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   requiresAccount,
   dispatch,
   outdatedCt,
+  isLoadingItems = false,
   ...props
 }) => {
   const classes = useStyles()
@@ -54,7 +56,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
   } = useContext<AppContextProps>(AppContext)
 
   const isLoadingFilters = loaders.filters
-  const isLoadingItems = loaders.data
+  const isLoadingData = loaders.data || isLoadingItems
 
   useEffect(() => {
     if (requiresAccount && !account) {
@@ -89,7 +91,7 @@ const MarketPageTemplate: FC<MarketPageTemplateProps> = ({
             },
           }}
         />
-        <Marketplace isLoading={isLoadingItems} {...props} />
+        <Marketplace isLoading={isLoadingData} {...props} />
       </Grid>
     </Grid>
   )

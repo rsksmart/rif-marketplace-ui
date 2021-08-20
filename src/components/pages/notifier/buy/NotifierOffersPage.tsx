@@ -1,6 +1,5 @@
-import Tooltip from '@material-ui/core/Tooltip'
 import Typography from '@material-ui/core/Typography'
-import { Web3Store } from '@rsksmart/rif-ui'
+import { Spinner, Web3Store } from '@rsksmart/rif-ui'
 import SubscriptionPlans from 'api/rif-notifier-service/subscriptionPlans'
 import ItemWUnit from 'components/atoms/ItemWUnit'
 import { AddressItem, SelectRowButton } from 'components/molecules'
@@ -29,29 +28,68 @@ const headers: TableHeaders = {
   action1: '',
 }
 
-type ProviderItem = {
-  id: string
+type ItemDetailProps = {
   plans: Array<NotifierOfferItem>
+  isOpen: boolean
+  currentFiat: string
+  crypto: MarketCryptoRecord
+  onPlanSelected: (plan: NotifierOfferItem, priceOption: PriceOption) => void
 }
 
-const showPlans = (
-  { id: selectedItemId, plans }: Partial<ProviderItem>,
-  currentFiat: string,
-  crypto: MarketCryptoRecord,
-  onPlanSelected: (plan: NotifierOfferItem, priceOption: PriceOption) => void,
-): FC<string> => (id): JSX.Element => {
-  const isSelected = selectedItemId && plans?.length
+const ItemDetail: FC<ItemDetailProps> = ({
+  plans, isOpen, currentFiat, crypto, onPlanSelected,
+}) => {
+  const [isLoadingPlans, setIsLoadingPlans] = useState(true)
+  const [activePlans, setActivePlans] = useState<Array<NotifierOfferItem>>([])
+
+  const { url } = plans[0]
+  const notifierService = new SubscriptionPlans(url)
+  notifierService.connect((er) => {
+    Logger.getInstance()
+      .debug(JSON.stringify(er, null, 2))
+  })
+
+  useEffect(() => {
+    const fetchPlans = async (): Promise<void> => {
+      setIsLoadingPlans(true)
+      try {
+        const notifierActivePlans = await notifierService.getActivePlans()
+
+        // filter out inactive plans
+        const providerActivePlans = plans.filter(
+          ({ planId }) => notifierActivePlans.some(
+            ({ id: notifierPlanId }) => notifierPlanId === planId,
+          ),
+        )
+        setActivePlans(providerActivePlans)
+      } catch (error) {
+        // show error
+      } finally {
+        setIsLoadingPlans(false)
+      }
+    }
+
+    fetchPlans()
+  }, [])
+
+  if (isLoadingPlans) return <Spinner />
+
+  const hasActivePlans = Boolean(activePlans.length)
+
+  if (!hasActivePlans) {
+    return (
+      <Typography>
+        This provider doesn&apos;t have any active plan at the moment
+      </Typography>
+    )
+  }
 
   return (
-    <>
-      {isSelected && (
-      <NotifierPlansDraw
-        plans={plans as Array<NotifierOfferItem>}
-        isOpen={selectedItemId === id}
-        {...{ onPlanSelected, currentFiat, crypto }}
-      />
-      )}
-    </>
+    <NotifierPlansDraw
+      plans={plans as Array<NotifierOfferItem>}
+      isOpen={isOpen}
+      {...{ onPlanSelected, currentFiat, crypto }}
+    />
   )
 }
 
@@ -114,32 +152,16 @@ const NotifierOffersPage: FC = () => {
 
   useEffect(() => {
     if (items?.length) {
-      Promise.all(providers
-        .map<Promise<MarketplaceItem>>(async (provider) => {
+      const marketplaceItems = providers
+        .map<MarketplaceItem>((provider) => {
           const providerPlans = items
             .filter((item) => item.provider === provider)
-          const { url } = providerPlans[0]
-
-          const notifierService = new SubscriptionPlans(url)
-          notifierService.connect((er) => {
-            Logger.getInstance()
-              .debug(JSON.stringify(er, null, 2))
-          })
-          const notifierActivePlans = await notifierService.getActivePlans()
-
-          // filter out inactive plans
-          const activePlans = providerPlans.filter(
-            ({ planId }) => notifierActivePlans.some(
-              ({ id: notifierPlanId }) => notifierPlanId === planId,
-            ),
-          )
-          const hasActivePlans = activePlans.length
 
           const isSelected = selectedProvider === provider
 
           const selectButton = (
             <SelectRowButton
-              disabled={!hasActivePlans}
+              disabled={!providerPlans.length}
               id={provider}
               isSelected={isSelected}
               handleSelect={(): void => {
@@ -149,37 +171,18 @@ const NotifierOffersPage: FC = () => {
               }}
             />
           )
-          const action1 = hasActivePlans
-            ? selectButton
-            : (
-              <Tooltip title="This provider doesn't have any active plan at the moment">
-                <span>
-                  {selectButton}
-                </span>
-              </Tooltip>
-            )
 
           const commonResult = {
             id: provider,
             provider: <AddressItem value={provider} />,
-            action1: account === provider ? 'Your offer' : (action1),
-          }
-
-          if (!hasActivePlans) {
-            return {
-              ...commonResult,
-              channels: 'N/A',
-              currencies: 'N/A',
-              notifLimitRange: 'N/A',
-              priceFiatRange: <Typography>N/A</Typography>,
-            }
+            action1: account === provider ? 'Your offer' : (selectButton),
           }
 
           const {
             priceFiatRange,
             ...offerDetails
           } = mapPlansToOffers(
-            activePlans, crypto,
+            providerPlans, crypto,
           )
 
           return {
@@ -193,9 +196,9 @@ const NotifierOffersPage: FC = () => {
               />
             ),
           }
-        })).then((marketplaceItems) => {
-        setCollection(marketplaceItems)
-      })
+        })
+
+      setCollection(marketplaceItems)
     }
   }, [items, crypto, currentFiat, account, selectedProvider, providers])
 
@@ -207,10 +210,19 @@ const NotifierOffersPage: FC = () => {
       headers={headers}
       dispatch={dispatch}
       outdatedCt={0}
-      itemDetail={showPlans(
-        { id: selectedProvider, plans: selectedProviderPlans },
-        currentFiat, crypto, onPlanSelected,
-      )}
+      itemDetail={
+        selectedProviderPlans.length
+          ? (
+            <ItemDetail
+              isOpen
+              plans={selectedProviderPlans}
+              crypto={crypto}
+              currentFiat={currentFiat}
+              onPlanSelected={onPlanSelected}
+            />
+          )
+          : <Typography>No plans yet!</Typography>
+      }
     />
   )
 }
