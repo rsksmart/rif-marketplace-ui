@@ -36,7 +36,9 @@
             "rnsDotRskOwner": "0xca0a477e19bac7e0e172ccfd2e3c28a7200bdb71",
             "marketplace": "0xFa5ade767a422C66cAFd94c3710f5b92467fB85e",
             "storageManager": "0x839856c0eC1aA2AeD25D47Fd3DDB7A14Dac3e76d",
-            "storageStaking": "0x11bE792f8fcfC84897b88e149dD3fb66b422256f"
+            "storageStaking": "0x11bE792f8fcfC84897b88e149dD3fb66b422256f",
+            "notifierManager": "0xcaED0CCbb3d9B9090d848Ea271f0abAa195f03EA",
+            "notifierStaking": "0x315645E455107213c3A35e56a12Aad595F10d922"
         },
         "rnsManagerUrl": "https://testnet.manager.rns.rifos.org",
         "services": {
@@ -44,7 +46,20 @@
                 "tokens": ["rif"]
             },
             "storage": {
+<<<<<<< HEAD
                 "tokens": ["rbtc", "rif"]
+=======
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
+            },
+            "notifier": {
+                "tokens": [
+                    "rbtc",
+                    "rif"
+                ]
+>>>>>>> ce7ff63 (chore: deploy notifier to the testnet)
             }
         }
     },
