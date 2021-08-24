@@ -22,8 +22,12 @@ export function mapPlansToOffers(
     notificationLimits.push(plan.limit)
   }
 
-  const minPrice = toFiatPrecision(Math.min(...planPrices))
-  const maxPrice = toFiatPrecision(Math.max(...planPrices))
+  const [minPrice, maxPrice] = planPrices.length
+    ? [
+      toFiatPrecision(Math.min(...planPrices)),
+      toFiatPrecision(Math.max(...planPrices)),
+    ]
+    : [0, 0]
 
   const priceFiatRange = minPrice === maxPrice
     ? `${minPrice}`

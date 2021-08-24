@@ -11,17 +11,28 @@ export default class SubscriptionPlans
   path = address
 
   _fetch = (): Promise<SubscriptionPlanResponse> => this.service.find()
+    .catch((error) => {
+      this.errorReporter({
+        id: 'service-fetch',
+        text: `Unable to connect to provider ${this.service.base}`,
+        error,
+      })
+    })
 
   getActivePlans = async (): Promise<Array<SubscriptionPlanDTO>> => {
-    const { status, content }: SubscriptionPlanResponse = await this.fetch()
+    const subscriptionPlan: SubscriptionPlanResponse = await this.fetch()
 
-    if (status === NOTIFIER_RESPONSE_STATUSES.OK) return content
+    if (subscriptionPlan?.status === NOTIFIER_RESPONSE_STATUSES.OK) {
+      return subscriptionPlan.content
+    }
 
-    this.errorReporter({
-      id: 'service-fetch',
-      text: 'Wrong response from notifier provider',
-      error: new Error(`Wrong response from notifier provider ${JSON.stringify(content)}`),
-    })
+    if (subscriptionPlan?.content) {
+      this.errorReporter({
+        id: 'service-fetch',
+        text: 'Wrong response from notifier provider',
+        error: new Error(`Wrong response from notifier provider ${JSON.stringify(subscriptionPlan.content)}`),
+      })
+    }
     return []
   }
 
