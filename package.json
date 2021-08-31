@@ -1,6 +1,10 @@
 {
   "name": "rif-marketplace-ui",
+<<<<<<< HEAD
   "version": "1.3.5",
+=======
+  "version": "1.4.1",
+>>>>>>> c95a872 (chore(vBump): hotfix v1.4.1)
   "description": "RIF Marketplace provides a digital catalogue with a wide range of decentralised services.",
   "keywords": [
     "RIF",
