@@ -49,7 +49,7 @@ const Footer: FC = () => {
         links: [
           {
             title: 'Roadmap',
-            to: 'https://www.rifos.org/marketplace#roadmap',
+            to: 'https://www.rifos.org/roadmap',
             target: '_blank',
             isExternal: true,
           },
