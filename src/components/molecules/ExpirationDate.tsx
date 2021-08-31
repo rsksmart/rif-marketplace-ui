@@ -1,4 +1,4 @@
-import Typography from '@material-ui/core/Typography'
+import Typography, { TypographyProps } from '@material-ui/core/Typography'
 import React, { FC } from 'react'
 import { getShortDateString } from 'utils/dateUtils'
 import {
@@ -35,10 +35,10 @@ type Props = {
   className?: string
   date: Date
   type: SubscriptionExpirationType
-}
+} & TypographyProps
 
 const ExpirationDate: FC<Props> = ({
-  className = '', date, type,
+  className = '', date, type, ...typoProps
 }) => {
   const classes = useStyles()
 
@@ -51,7 +51,7 @@ const ExpirationDate: FC<Props> = ({
       className={`${classes[type]} ${className}`}
     >
       <Grid item>
-        <Typography variant="body2">
+        <Typography variant="body2" {...typoProps}>
           {getShortDateString(date)}
         </Typography>
       </Grid>

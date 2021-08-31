@@ -19,9 +19,10 @@ type Props = {
 }
 
 const getExpirationDate = (daysLeft: number): Date => {
-  const retDate = new Date()
-  retDate.setDate(retDate.getDate() + daysLeft)
-  return retDate
+  const expirationDate = new Date()
+  expirationDate.setUTCHours(0, 0, 0, 0)
+  expirationDate.setUTCDate(expirationDate.getDate() + daysLeft)
+  return new Date(expirationDate)
 }
 
 const CheckoutStepper: FC<Props> = (

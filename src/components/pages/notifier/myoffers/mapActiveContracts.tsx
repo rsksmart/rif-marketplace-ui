@@ -6,12 +6,12 @@ import MarketplaceAddressCell from 'components/molecules/MarketplaceAddressCell'
 import NotificationsBalance from 'components/molecules/notifier/NotificationsBalance'
 import { Item, MarketCryptoRecord } from 'models/Market'
 import { NotifierOfferItem, NotifierSubscriptionItem } from 'models/marketItems/NotifierItem'
-import { getShortDateString } from 'utils/dateUtils'
 import { BaseFiat } from 'models/Fiat'
 import { getFiatPrice } from 'utils/priceUtils'
 import RoundBtn from 'components/atoms/RoundBtn'
 import { ConfirmationData, SubscriptionWithdrawData } from 'context/Confirmations/interfaces'
 import { Spinner } from '@rsksmart/rif-ui'
+import ExpirationDate from 'components/molecules/ExpirationDate'
 
 export const activeContractHeaders = {
   customer: 'Customer',
@@ -76,11 +76,7 @@ const mapActiveContracts = <T extends Function, U extends Function>(
         {
           id,
           customer: <MarketplaceAddressCell value={consumer} />,
-          expDate: (
-            <Typography color="textSecondary" variant="body2">
-              {getShortDateString(expirationDate)}
-            </Typography>
-          ),
+          expDate: <ExpirationDate date={expirationDate} type="normal" />,
           notifBalance: <NotificationsBalance
             balance={notificationBalance}
             limit={limit}
