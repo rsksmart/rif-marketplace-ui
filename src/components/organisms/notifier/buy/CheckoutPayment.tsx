@@ -61,7 +61,7 @@ const CheckoutPayment: FC<Props> = ({
           web3 as Web3, account as string, selectedTokenSymbol,
         )
         setHasEnoughFunds(Big(balance).gte(cryptoPrice))
-      } catch (error: any) {
+      } catch (error) {
         reportError({
           error,
           id: 'get-balance',
