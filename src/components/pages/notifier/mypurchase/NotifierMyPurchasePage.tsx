@@ -225,7 +225,7 @@ const NotifierMyPurchasePage: FC = () => {
           },
         })
       }
-    } catch (error: any) {
+    } catch (error) {
       const { customMessage } = error
       reportError({
         error,
