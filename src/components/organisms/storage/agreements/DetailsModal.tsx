@@ -7,7 +7,6 @@ import {
 } from '@rsksmart/rif-ui'
 /* eslint-disable-next-line import/no-unresolved */
 import { ModalProps } from '@rsksmart/rif-ui/dist/components/atoms/modal/Modal'
-import GridColumn from 'components/atoms/GridColumn'
 import GridItem from 'components/atoms/GridItem'
 import RifCard from 'components/organisms/RifCard'
 import { AgreementCustomerView, AgreementProviderView } from 'components/organisms/storage/agreements/utils'
@@ -35,7 +34,9 @@ const useModalStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const DetailsModal: FC<DetailsModalProps> = ({ modalProps, itemDetails, actions }) => {
+const DetailsModal: FC<DetailsModalProps> = ({
+  modalProps, itemDetails, actions,
+}) => {
   const modalCardStyleClasses = useModalStyles()
   return (
     <Modal
@@ -55,8 +56,11 @@ const DetailsModal: FC<DetailsModalProps> = ({ modalProps, itemDetails, actions 
             <ModalHeader className={modalCardStyleClasses.modalWidth}>
               <ModalTitle>{itemDetails?.title}</ModalTitle>
             </ModalHeader>
-            <GridColumn
+            <Grid
+              container
               spacing={2}
+              wrap="nowrap"
+              direction="column"
               className={modalCardStyleClasses.itemDetails}
             >
               {itemDetails ? Object.keys(itemDetails)
@@ -68,6 +72,7 @@ const DetailsModal: FC<DetailsModalProps> = ({ modalProps, itemDetails, actions 
                     container
                     direction="row"
                     spacing={6}
+                    wrap="nowrap"
                     xs={12}
                   >
                     <GridItem
@@ -84,7 +89,7 @@ const DetailsModal: FC<DetailsModalProps> = ({ modalProps, itemDetails, actions 
                     <GridItem xs={6}>{itemDetails[key]}</GridItem>
                   </Grid>
                 )) : ''}
-            </GridColumn>
+            </Grid>
           </RifCard>
         </ModalBody>
       </>

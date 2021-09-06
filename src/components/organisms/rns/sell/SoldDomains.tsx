@@ -1,4 +1,4 @@
-import { AddressItem, CombinedPriceCell } from 'components/molecules'
+import { RifAddress, CombinedPriceCell } from 'components/molecules'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsSoldDomain } from 'models/marketItems/DomainItem'
@@ -52,12 +52,12 @@ const SoldDomains: FC<{}> = () => {
       const pseudoResolvedName = name && `${name}.rsk`
       const displayDomainName = domainName || pseudoResolvedName
         ? <ShortenTextTooltip value={domainName || pseudoResolvedName as string} maxLength={30} />
-        : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+        : <RifAddress pretext="Unknown RNS:" value={tokenId} />
 
       const displayItem = {
         id,
         domainName: displayDomainName,
-        buyer: <AddressItem value={buyer} />,
+        buyer: <RifAddress value={buyer} />,
         currency: displayName,
         sellingPrice: <CombinedPriceCell
           price={price.toString()}
