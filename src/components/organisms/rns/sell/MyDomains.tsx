@@ -1,4 +1,4 @@
-import { AddressItem, SelectRowButton } from 'components/molecules'
+import { RifAddress, SelectRowButton } from 'components/molecules'
 import DomainFilters from 'components/organisms/filters/DomainFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { RnsDomain } from 'models/marketItems/DomainItem'
@@ -70,7 +70,7 @@ const MyDomains: FC = () => {
             maxLength={30}
           />
         )
-        : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+        : <RifAddress pretext="Unknown RNS:" value={tokenId} />
 
       const isProcessingConfs = pendingConfs.some(
         ({ contractActionData }) => (
