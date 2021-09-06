@@ -4,7 +4,7 @@ import { Spinner, Web3Store } from '@rsksmart/rif-ui'
 import { SubscriptionPlanDTO } from 'api/rif-notifier-service/models/subscriptionPlan'
 import SubscriptionPlans from 'api/rif-notifier-service/subscriptionPlans'
 import ItemWUnit from 'components/atoms/ItemWUnit'
-import { AddressItem, SelectRowButton } from 'components/molecules'
+import { RifAddress, SelectRowButton } from 'components/molecules'
 import { SelectRowButtonProps } from 'components/molecules/SelectRowButton'
 import NotifierOffersFilters from 'components/organisms/filters/notifier/OffersFilters'
 import NotifierPlansDraw from 'components/organisms/notifier/NotifierPlansDraw'
@@ -187,7 +187,7 @@ const NotifierOffersPage: FC = () => {
 
         const commonProperties = {
           id: provider,
-          provider: <AddressItem value={provider} />,
+          provider: <RifAddress value={provider} />,
           action1: account === provider ? 'Your offer' : (buttonSelect),
         }
 

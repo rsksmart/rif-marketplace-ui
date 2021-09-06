@@ -4,7 +4,7 @@ import StorageFilters from 'components/organisms/filters/storage/StorageFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
 import { TableHeaders, MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import { BillingPlan } from 'models/marketItems/StorageItem'
-import { SelectRowButton, AddressItem } from 'components/molecules'
+import { SelectRowButton, RifAddress } from 'components/molecules'
 import { StorageOffersContext, StorageOffersContextProps } from 'context/Services/storage/offers'
 import ItemWUnit from 'components/atoms/ItemWUnit'
 import ROUTES from 'routes'
@@ -65,7 +65,7 @@ const StorageOffersPage: FC = () => {
 
       return {
         id,
-        provider: <AddressItem value={id} />,
+        provider: <RifAddress value={id} />,
         system,
         availableSize: <ItemWUnit type="mediumPrimary" unit="GB" value={availableSizeGB.toString()} />,
         subscriptionOptions: Array.from(new Set(

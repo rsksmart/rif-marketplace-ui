@@ -1,6 +1,6 @@
 import { Spinner } from '@rsksmart/rif-ui'
 import ItemWUnit from 'components/atoms/ItemWUnit'
-import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
+import { RifAddress, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import { MarketplaceItem } from 'components/templates/marketplace/Marketplace'
 import { AgreementUpdateData, ConfirmationData } from 'context/Confirmations/interfaces'
 import { BaseFiat } from 'models/Fiat'
@@ -33,19 +33,17 @@ export type AgreementCustomerView = AgreementView & {
 
 const getCoreItemFields = (
   agreement: Agreement,
-  crypto: MarketCryptoRecord,
+  { rate, displayName }: TokenXR,
   currentFiat: BaseFiat,
 ): AgreementView => {
   const {
     monthlyFee,
     renewalDate,
-    paymentToken,
     size,
     subscriptionPeriod,
     id,
     dataReference,
   } = agreement
-  const currency: TokenXR = crypto[paymentToken.symbol]
 
   const sizeValue = (
     <ItemWUnit
@@ -57,38 +55,37 @@ const getCoreItemFields = (
   const feeValue = (
     <CombinedPriceCell
       price={monthlyFee.toString()}
-      priceFiat={currency && monthlyFee.times(currency.rate).toPrecision(3)}
-      currency={currency && currency.displayName}
-      currencyFiat={currentFiat.displayName}
+      priceFiat={monthlyFee.times(rate).toPrecision(3)}
+      currency={displayName}
+      currencyFiat={currentFiat?.displayName}
       divider=" "
     />
   )
-  const idValue = <AddressItem value={id} />
+  const idValue = <RifAddress value={id} />
 
   return {
-    HASH: <AddressItem value={dataReference} />,
+    HASH: <RifAddress value={dataReference} disableChecksum />,
     title: idValue,
     'PRICE/GB': feeValue,
     AMOUNT: sizeValue,
     'RENEWAL DATE': renewalDate ? getShortDateString(renewalDate) : 'Expired',
     'SUBSCRIPTION PERIOD': subscriptionPeriod,
-    CURRENCY: currency.displayName,
+    CURRENCY: displayName,
     SYSTEM: 'IPFS',
   }
 }
 
 export const getCustomerViewFrom = (
   agreement: Agreement,
-  crypto: MarketCryptoRecord,
+  currency: TokenXR,
   currentFiat: BaseFiat,
 ): AgreementCustomerView => {
-  const agreementInfo = getCoreItemFields(agreement, crypto, currentFiat)
+  const agreementInfo = getCoreItemFields(agreement, currency, currentFiat)
   const {
-    provider, paymentToken, withdrawableFunds,
+    provider, withdrawableFunds,
   } = agreement
-  const currency: TokenXR = crypto[paymentToken.symbol]
 
-  const providerValue = <AddressItem value={provider} />
+  const providerValue = <RifAddress value={provider} />
   const withdrawableFundsValue = (
     <ItemWUnit
       type="mediumPrimary"
@@ -115,66 +112,70 @@ export const createCustomerItemFields = (
     agreement: Agreement
   ) => void,
   withdrawAndRenewConfs: ConfirmationData[],
-): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
-  const {
-    id, expiresInSeconds, isActive,
-  } = agreement
-  const customerView = getCustomerViewFrom(agreement, crypto, currentFiat)
+): MarketplaceItem[] => agreements
+  .filter(({ paymentToken: { symbol } }) => crypto[symbol])
+  .map((agreement: Agreement) => {
+    const {
+      id, expiresInSeconds, isActive, paymentToken: { symbol },
+    } = agreement
+    const customerView = getCustomerViewFrom(
+      agreement,
+      crypto[symbol],
+      currentFiat,
+    )
 
-  const isProcessingConfs = withdrawAndRenewConfs.some(
-    ({ contractActionData }) => (
-      (contractActionData as AgreementUpdateData).agreementId === id
-    ),
-  )
+    const isProcessingConfs = withdrawAndRenewConfs.some(
+      ({ contractActionData }) => (
+        (contractActionData as AgreementUpdateData).agreementId === id
+      ),
+    )
 
-  return {
-    ...customerView,
-    id,
-    provider: customerView.PROVIDER,
-    contentSize: customerView.AMOUNT,
-    renewalDate: customerView['RENEWAL DATE'],
-    subscriptionPeriod: customerView['SUBSCRIPTION PERIOD'],
-    monthlyFee: customerView['PRICE/GB'],
-    withdrawableFunds: customerView['WITHDRAWABLE FUNDS'],
-    renew: isProcessingConfs
-      ? <Spinner />
-      : (
-        <SelectRowButton
-          id={id}
-          disabled={!expiresInSeconds || !isActive}
-          handleSelect={(event): void => {
-            onItemRenew(event, agreement)
-          }}
-        >
-          Renew
-        </SelectRowButton>
-      ),
-    view: isProcessingConfs
-      ? <></>
-      : (
-        <SelectRowButton
-          id={id}
-          handleSelect={(event): void => onItemSelect(
-            event, customerView, agreement,
-          )}
-        >
-          View
-        </SelectRowButton>
-      ),
-  }
-})
+    return {
+      ...customerView,
+      id,
+      provider: customerView.PROVIDER,
+      contentSize: customerView.AMOUNT,
+      renewalDate: customerView['RENEWAL DATE'],
+      subscriptionPeriod: customerView['SUBSCRIPTION PERIOD'],
+      monthlyFee: customerView['PRICE/GB'],
+      withdrawableFunds: customerView['WITHDRAWABLE FUNDS'],
+      renew: isProcessingConfs
+        ? <Spinner />
+        : (
+          <SelectRowButton
+            id={id}
+            disabled={!expiresInSeconds || !isActive}
+            handleSelect={(event): void => {
+              onItemRenew(event, agreement)
+            }}
+          >
+            Renew
+          </SelectRowButton>
+        ),
+      view: isProcessingConfs
+        ? <></>
+        : (
+          <SelectRowButton
+            id={id}
+            handleSelect={(event): void => onItemSelect(
+              event, customerView, agreement,
+            )}
+          >
+            View
+          </SelectRowButton>
+        ),
+    }
+  })
 
 export const getProviderViewFrom = (
   agreement: Agreement,
-  crypto: MarketCryptoRecord,
+  currency: TokenXR,
   currentFiat: BaseFiat,
 ): AgreementProviderView => {
-  const agreementInfo = getCoreItemFields(agreement, crypto, currentFiat)
   const {
-    consumer, paymentToken, toBePayedOut,
+    consumer, toBePayedOut,
   } = agreement
-  const currency: TokenXR = crypto[paymentToken.symbol]
-  const consumerValue = <AddressItem value={consumer} />
+  const consumerValue = <RifAddress value={consumer} />
   const toBePayedOutValue = (
     <ItemWUnit
       type="mediumPrimary"
@@ -182,6 +183,8 @@ export const getProviderViewFrom = (
       unit={currency.displayName}
     />
   )
+
+  const agreementInfo = getCoreItemFields(agreement, currency, currentFiat)
 
   return {
     ...agreementInfo,
@@ -201,51 +204,59 @@ export const createProviderItemFields = (
     agreement: Agreement,
   ) => void,
   payoutConfirmations: ConfirmationData[],
-): MarketplaceItem[] => agreements.map((agreement: Agreement) => {
-  const providerView = getProviderViewFrom(agreement, crypto, currentFiat)
-  const {
-    id,
-  } = agreement
+): MarketplaceItem[] => agreements
+  .filter(({ paymentToken: { symbol } }) => crypto[symbol])
+  .map((agreement: Agreement) => {
+    const {
+      id,
+      paymentToken: { symbol },
+    } = agreement
 
-  const isProcessingPayoutConfs = payoutConfirmations.some(
-    ({ contractActionData }) => (
-      (contractActionData as AgreementUpdateData).agreementId === id
-    ),
-  )
+    const isProcessingPayoutConfs = payoutConfirmations.some(
+      ({ contractActionData }) => (
+        (contractActionData as AgreementUpdateData).agreementId === id
+      ),
+    )
 
-  return {
-    ...providerView,
-    id,
-    customer: providerView.CONSUMER,
-    contentSize: providerView.AMOUNT,
-    renewalDate: providerView['RENEWAL DATE'],
-    subscriptionPeriod: providerView['SUBSCRIPTION PERIOD'],
-    monthlyFee: providerView['PRICE/GB'],
-    toBePayedOut: providerView['AVAILABLE FUNDS'],
-    withdraw: isProcessingPayoutConfs
-      ? <Spinner />
-      : (
-        <SelectRowButton
-          id={id}
-          handleSelect={(event): void => {
-            onItemWithdraw(event, agreement)
-          }}
-          disabled={Number(agreement.toBePayedOut) <= 0}
-        >
-          Withdraw
-        </SelectRowButton>
-      ),
-    view: isProcessingPayoutConfs
-      ? <></>
-      : (
-        <SelectRowButton
-          id={id}
-          handleSelect={(event): void => onItemSelect(
-            event, providerView, agreement,
-          )}
-        >
-          View
-        </SelectRowButton>
-      ),
-  }
-})
+    const providerView = getProviderViewFrom(
+      agreement,
+      crypto[symbol],
+      currentFiat,
+    )
+
+    return {
+      ...providerView,
+      id,
+      customer: providerView.CONSUMER,
+      contentSize: providerView.AMOUNT,
+      renewalDate: providerView['RENEWAL DATE'],
+      subscriptionPeriod: providerView['SUBSCRIPTION PERIOD'],
+      monthlyFee: providerView['PRICE/GB'],
+      toBePayedOut: providerView['AVAILABLE FUNDS'],
+      withdraw: isProcessingPayoutConfs
+        ? <Spinner />
+        : (
+          <SelectRowButton
+            id={id}
+            handleSelect={(event): void => {
+              onItemWithdraw(event, agreement)
+            }}
+            disabled={Number(agreement.toBePayedOut) <= 0}
+          >
+            Withdraw
+          </SelectRowButton>
+        ),
+      view: isProcessingPayoutConfs
+        ? <></>
+        : (
+          <SelectRowButton
+            id={id}
+            handleSelect={(event): void => onItemSelect(
+              event, providerView, agreement,
+            )}
+          >
+            View
+          </SelectRowButton>
+        ),
+    }
+  })
