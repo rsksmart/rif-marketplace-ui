@@ -9,7 +9,7 @@ export {
   CombinedPriceCell,
   IconedItem,
   ReturnButton,
-  RifAddress as AddressItem,
+  RifAddress,
   JobDoneBox,
   SelectRowButton,
 }
