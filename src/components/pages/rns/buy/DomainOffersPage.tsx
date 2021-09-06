@@ -1,7 +1,7 @@
 import { Web3Store, ShortenTextTooltip, Spinner } from '@rsksmart/rif-ui'
 import React, { FC, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
-import { AddressItem, CombinedPriceCell, SelectRowButton } from 'components/molecules'
+import { RifAddress, CombinedPriceCell, SelectRowButton } from 'components/molecules'
 import RifPaging from 'components/molecules/RifPaging'
 import DomainOfferFilters from 'components/organisms/filters/DomainOffersFilters'
 import MarketPageTemplate from 'components/templates/MarketPageTemplate'
@@ -158,7 +158,7 @@ const DomainOffersPage: FC = () => {
             maxLength={30}
           />
         )
-        : <AddressItem pretext="Unknown RNS:" value={tokenId} />
+        : <RifAddress pretext="Unknown RNS:" value={tokenId} />
 
       const isProcessingConfs = pendingConfs.some(
         ({ contractActionData }) => (
@@ -183,7 +183,7 @@ const DomainOffersPage: FC = () => {
       const displayItem = {
         id,
         domainName: displayDomainName,
-        ownerAddress: <AddressItem value={ownerAddress} />,
+        ownerAddress: <RifAddress value={ownerAddress} />,
         expirationDate: expirationDate.toLocaleDateString(),
         combinedPrice: <CombinedPriceCell
           price={price.toString()}
