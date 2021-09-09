@@ -47,11 +47,11 @@ const showPlans = (
   return (
     <>
       {isSelected && (
-      <NotifierPlansDraw
-        plans={plans as Array<NotifierOfferItem>}
-        isOpen={selectedItemId === id}
-        {...{ onPlanSelected, currentFiat, crypto }}
-      />
+        <NotifierPlansDraw
+          plans={plans as Array<NotifierOfferItem>}
+          isOpen={selectedItemId === id}
+          {...{ onPlanSelected, currentFiat, crypto }}
+        />
       )}
     </>
   )
@@ -146,11 +146,6 @@ const NotifierOffersPage: FC = () => {
   }, [setCollection])
 
   useEffect(() => {
-    setSelectedProviderPlans(cachedPlans
-      .filter(({ provider }) => provider === selectedProvider))
-  }, [cachedPlans, selectedProvider])
-
-  useEffect(() => {
     if (cachedPlans?.length) {
       setCollection([
         {
@@ -160,18 +155,39 @@ const NotifierOffersPage: FC = () => {
       ])
 
       Promise.all(providers.map(async (provider) => {
-        const providerPlans = cachedPlans
+        const providerCachedPlans = cachedPlans
           .filter((item) => item.provider === provider)
-        const [{ url }] = providerPlans
+        const [{ url }] = providerCachedPlans
 
         const notifierActivePlans = await getProviderPlans(url)
 
         // filter out inactive plans
-        const activePlans = providerPlans.filter(
-          ({ planId }) => notifierActivePlans && notifierActivePlans.some(
-            ({ id: notifierPlanId }) => notifierPlanId === planId,
-          ),
+        const activePlans = providerCachedPlans.filter(
+          ({
+            planId,
+            name: cachedName,
+            daysLeft: cachedDaysLeft,
+            limit: cachedQuantity,
+          }) => notifierActivePlans
+            && notifierActivePlans.some(
+              ({
+                id: notifierPlanId,
+                name,
+                validity,
+                notificationQuantity,
+              }) => (
+                notifierPlanId === planId
+                && cachedName === name
+                && cachedDaysLeft === validity
+                && cachedQuantity === notificationQuantity
+              ),
+            ),
         )
+
+        if (selectedProvider && selectedProvider === provider) {
+          setSelectedProviderPlans(activePlans)
+        }
+
         const hasActivePlans = activePlans.length
 
         const isSelected = selectedProvider === provider
