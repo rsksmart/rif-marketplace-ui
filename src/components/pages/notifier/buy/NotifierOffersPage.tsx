@@ -156,7 +156,7 @@ const NotifierOffersPage: FC = () => {
 
       Promise.all(providers.map(async (provider) => {
         const providerCachedPlans = cachedPlans
-          .filter((item) => item.provider === provider)
+          .filter(({ provider: cacheProvider }) => cacheProvider === provider)
         const [{ url }] = providerCachedPlans
 
         const notifierActivePlans = await getProviderPlans(url)
@@ -168,8 +168,7 @@ const NotifierOffersPage: FC = () => {
             name: cachedName,
             daysLeft: cachedDaysLeft,
             limit: cachedQuantity,
-          }) => notifierActivePlans
-            && notifierActivePlans.some(
+          }) => notifierActivePlans?.some(
               ({
                 id: notifierPlanId,
                 name,
@@ -183,14 +182,12 @@ const NotifierOffersPage: FC = () => {
               ),
             ),
         )
+        const hasActivePlans = activePlans.length
+        const isSelected = selectedProvider === provider
 
-        if (selectedProvider && selectedProvider === provider) {
+        if (isSelected) {
           setSelectedProviderPlans(activePlans)
         }
-
-        const hasActivePlans = activePlans.length
-
-        const isSelected = selectedProvider === provider
 
         const buttonSelect = createActionButton({
           disabled: !hasActivePlans,
