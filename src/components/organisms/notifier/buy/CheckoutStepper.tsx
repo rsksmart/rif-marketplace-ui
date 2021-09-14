@@ -19,9 +19,13 @@ type Props = {
 }
 
 const getExpirationDate = (daysLeft: number): Date => {
-  const expirationDate = new Date()
-  expirationDate.setUTCHours(0, 0, 0, 0)
-  expirationDate.setUTCDate(expirationDate.getDate() + daysLeft)
+  const now = new Date()
+  const expirationDate = new Date(Date.UTC(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  ))
+  expirationDate.setUTCDate(expirationDate.getUTCDate() + daysLeft)
   return new Date(expirationDate)
 }
 
